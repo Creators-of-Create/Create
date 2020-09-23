@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedServerWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,8 +29,10 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.server.ServerTickList;
+import net.minecraft.world.server.ServerWorld;
 
-public class SchematicWorld extends WrappedWorld implements IServerWorld {
+public class SchematicWorld extends WrappedServerWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
@@ -38,11 +41,11 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	public BlockPos anchor;
 	public boolean renderMode;
 
-	public SchematicWorld(World original) {
+	public SchematicWorld(ServerWorld original) {
 		this(BlockPos.ZERO, original);
 	}
 	
-	public SchematicWorld(BlockPos anchor, World original) {
+	public SchematicWorld(BlockPos anchor, ServerWorld original) {
 		super(original);
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
@@ -69,8 +72,8 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		return entities.add(entityIn);
 	}
 
-	public List<Entity> getEntities() {
-		return entities;
+	public Stream<Entity> getEntities() {
+		return entities.stream();
 	}
 
 	@Override
@@ -171,12 +174,12 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public ITickList<Block> getPendingBlockTicks() {
+	public ServerTickList<Block> getPendingBlockTicks() {
 		return EmptyTickList.get();
 	}
 
 	@Override
-	public ITickList<Fluid> getPendingFluidTicks() {
+	public ServerTickList<Fluid> getPendingFluidTicks() {
 		return EmptyTickList.get();
 	}
 

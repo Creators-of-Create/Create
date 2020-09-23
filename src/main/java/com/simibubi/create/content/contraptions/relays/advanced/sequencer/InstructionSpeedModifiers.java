@@ -14,10 +14,15 @@ public enum InstructionSpeedModifiers {
 
 	String translationKey;
 	int value;
-	String label;
+	ITextComponent label;
 
-	private InstructionSpeedModifiers(int modifier, String label) {
+	private InstructionSpeedModifiers(int modifier, ITextComponent label) {
 		this.label = label;
+		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
+		value = modifier;
+	}
+	private InstructionSpeedModifiers(int modifier, String label) {
+		this.label = ITextComponent.of(label);
 		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
 		value = modifier;
 	}

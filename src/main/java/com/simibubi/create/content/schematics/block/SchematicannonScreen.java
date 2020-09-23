@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -79,11 +80,11 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		// Play Pause Stop
 		playButton = new IconButton(x + 70, y + 55, AllIcons.I_PLAY);
-		playIndicator = new Indicator(x + 70, y + 50, "");
+		playIndicator = new Indicator(x + 70, y + 50, StringTextComponent.EMPTY);
 		pauseButton = new IconButton(x + 88, y + 55, AllIcons.I_PAUSE);
-		pauseIndicator = new Indicator(x + 88, y + 50, "");
+		pauseIndicator = new Indicator(x + 88, y + 50, StringTextComponent.EMPTY);
 		resetButton = new IconButton(x + 106, y + 55, AllIcons.I_STOP);
-		resetIndicator = new Indicator(x + 106, y + 50, "");
+		resetIndicator = new Indicator(x + 106, y + 50, StringTextComponent.EMPTY);
 		resetIndicator.state = State.RED;
 		Collections
 				.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton, resetIndicator);
@@ -101,7 +102,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 						Lang.translate("gui.schematicannon.option.replaceWithEmpty"));
 
 		for (int i = 0; i < 4; i++) {
-			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, ""));
+			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, StringTextComponent.EMPTY));
 			replaceLevelButtons.add(new IconButton(x + 16 + i * 18, y + 101, icons.get(i)));
 			replaceLevelButtons.get(i).setToolTip(toolTips.get(i));
 		}
@@ -111,12 +112,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Other Settings
 		skipMissingButton = new IconButton(x + 106, y + 101, AllIcons.I_SKIP_MISSING);
 		skipMissingButton.setToolTip(Lang.translate("gui.schematicannon.option.skipMissing"));
-		skipMissingIndicator = new Indicator(x + 106, y + 96, "");
+		skipMissingIndicator = new Indicator(x + 106, y + 96, StringTextComponent.EMPTY);
 		Collections.addAll(widgets, skipMissingButton, skipMissingIndicator);
 
 		skipTilesButton = new IconButton(x + 124, y + 101, AllIcons.I_SKIP_TILES);
 		skipTilesButton.setToolTip(Lang.translate("gui.schematicannon.option.skipTileEntities"));
-		skipTilesIndicator = new Indicator(x + 124, y + 96, "");
+		skipTilesIndicator = new Indicator(x + 124, y + 96, StringTextComponent.EMPTY);
 		Collections.addAll(widgets, skipTilesButton, skipTilesIndicator);
 
 		extraAreas = new ArrayList<>();
@@ -194,16 +195,13 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		boolean enabled = indicator.state == State.ON;
 		List<ITextComponent> tip = button.getToolTip();
 		tip.add((enabled ? optionEnabled : optionDisabled).copy().formatted(TextFormatting.BLUE));
-		tip
-				.addAll(TooltipHelper
-						.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY,
-								GRAY));
+		TooltipHelper.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY, GRAY).forEach(s -> tip.add(new StringTextComponent(s).formatted(GRAY)));
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.PLAYER_INVENTORY.draw(this, guiLeft - 10, guiTop + 145);
-		AllGuiTextures.SCHEMATICANNON_BG.draw(this, guiLeft + 20, guiTop);
+		AllGuiTextures.PLAYER_INVENTORY.draw(matrixStack, this, guiLeft - 10, guiTop + 145);
+		AllGuiTextures.SCHEMATICANNON_BG.draw(matrixStack, this, guiLeft + 20, guiTop);
 
 		SchematicannonTileEntity te = container.getTileEntity();
 		renderPrintingProgress(matrixStack, te.schematicProgress);
@@ -211,7 +209,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		renderChecklistPrinterProgress(matrixStack, te.bookPrintingProgress);
 
 		if (!te.inventory.getStackInSlot(0).isEmpty())
-			renderBlueprintHighlight();
+			renderBlueprintHighlight(matrixStack);
 
 		GuiGameElement.of(renderedItem)
 				.at(guiLeft + 240, guiTop + 120)
@@ -242,8 +240,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// 0xd3d3d3d3);
 	}
 
-	protected void renderBlueprintHighlight() {
-		AllGuiTextures.SCHEMATICANNON_HIGHLIGHT.draw(this, guiLeft + 20 + 8, guiTop + 31);
+	protected void renderBlueprintHighlight(MatrixStack matrixStack) {
+		AllGuiTextures.SCHEMATICANNON_HIGHLIGHT.draw(matrixStack, this, guiLeft + 20 + 8, guiTop + 31);
 	}
 
 	protected void renderPrintingProgress(MatrixStack matrixStack, float progress) {
@@ -264,7 +262,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	protected void renderFuelBar(MatrixStack matrixStack, float amount) {
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_FUEL;
 		if (container.getTileEntity().hasCreativeCrate) {
-			AllGuiTextures.SCHEMATICANNON_FUEL_CREATIVE.draw(this, guiLeft + 20 + 73, guiTop + 135);
+			AllGuiTextures.SCHEMATICANNON_FUEL_CREATIVE.draw(matrixStack, this, guiLeft + 20 + 73, guiTop + 135);
 			return;
 		}
 		client.getTextureManager().bindTexture(sprite.location);
@@ -285,17 +283,16 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			int shotsLeftWithItems = (int) (shotsLeft
 					+ te.inventory.getStackInSlot(4).getCount() * (te.getFuelAddedByGunPowder() / fuelUsageRate));
 
-			List<String> tooltip = new ArrayList<>();
+			List<ITextComponent> tooltip = new ArrayList<>();
 			float f = te.hasCreativeCrate ? 100 : te.fuelLevel * 100;
 			tooltip.add(Lang.translate(_gunpowderLevel, "" + (int) f));
 			if (!te.hasCreativeCrate)
-				tooltip.add(GRAY + Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft));
+				tooltip.add(Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft).formatted(GRAY));
 			if (shotsLeftWithItems != shotsLeft)
 				tooltip
-						.add(GRAY + Lang
-								.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems));
+						.add(Lang.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems).formatted(GRAY));
 
-			renderTooltip(tooltip, mouseX, mouseY);
+			renderTooltip(matrixStack, tooltip, mouseX, mouseY);
 		}
 
 		if (te.missingItem != null) {

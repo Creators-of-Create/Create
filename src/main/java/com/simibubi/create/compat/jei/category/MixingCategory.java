@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -76,7 +77,7 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 	}
 
 	@Override
-	public void draw(MixingRecipe recipe, double mouseX, double mouseY) {
+	public void draw(MixingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = actualIngredients.size();
@@ -84,16 +85,16 @@ public class MixingCategory extends CreateRecipeCategory<MixingRecipe> {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		int yOffset = requiredHeat != HeatCondition.NONE ? 30 : 10;
 		for (int i = 0; i < size; i++)
-			AllGuiTextures.JEI_SLOT.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
-		AllGuiTextures.JEI_SLOT.draw(141, 50 + yOffset);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32 + yOffset);
-		AllGuiTextures.JEI_SHADOW.draw(81, 57 + yOffset);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50 + yOffset);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32 + yOffset);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 57 + yOffset);
 
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(getBackground().getWidth() / 2 + 3, 55);
-		mixer.draw(getBackground().getWidth() / 2 + 3, 34);
+				.draw(matrixStack, getBackground().getWidth() / 2 + 3, 55);
+		mixer.draw(matrixStack, getBackground().getWidth() / 2 + 3, 34);
 	}
 
 }

@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -73,9 +75,9 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public static void serverAboutToStart(FMLServerAboutToStartEvent event) {
-		event.getServer()
-			.getResourceManager()
-			.addReloadListener(RecipeFinder.LISTENER);
+		IResourceManager manager = event.getServer().getDataPackRegistries().getResourceManager();
+		if (manager instanceof IReloadableResourceManager)
+			((IReloadableResourceManager) manager).addReloadListener(RecipeFinder.LISTENER);
 	}
 
 	@SubscribeEvent

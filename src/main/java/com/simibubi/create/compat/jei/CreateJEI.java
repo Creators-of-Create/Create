@@ -143,15 +143,13 @@ public class CreateJEI implements IModPlugin {
 
 		ItemStack splashingFan = fan
 				.copy()
-				.setDisplayName(new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.splashing.fan")));
+				.setDisplayName(Lang.translate("recipe.splashing.fan").formatted(TextFormatting.RESET));
 		ItemStack smokingFan = fan
 				.copy()
-				.setDisplayName(
-						new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.smokingViaFan.fan")));
+				.setDisplayName(Lang.translate("recipe.smokingViaFan.fan").formatted(TextFormatting.RESET));
 		ItemStack blastingFan = fan
 				.copy()
-				.setDisplayName(
-						new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.blastingViaFan.fan")));
+				.setDisplayName(Lang.translate("recipe.blastingViaFan.fan").formatted(TextFormatting.RESET));
 
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MILLSTONE.get()), millingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.CRUSHING_WHEEL.get()), crushingCategory.getUid());

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllEntityTypes;
 
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
@@ -95,8 +95,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		}
 
 		@Override
-		public boolean shouldRender(SeatEntity p_225626_1_, ClippingHelperImpl p_225626_2_, double p_225626_3_,
-			double p_225626_5_, double p_225626_7_) {
+		public boolean shouldRender(SeatEntity p_225626_1_, ClippingHelper p_225626_2_, double p_225626_3_, double p_225626_5_, double p_225626_7_) {
 			return false;
 		}
 

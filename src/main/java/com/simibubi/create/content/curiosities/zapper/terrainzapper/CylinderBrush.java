@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.utility.Lang;
@@ -72,7 +73,7 @@ public class CylinderBrush extends Brush {
 	}
 
 	@Override
-	String getParamLabel(int paramIndex) {
+	ITextComponent getParamLabel(int paramIndex) {
 		return paramIndex == 0 ? Lang.translate("generic.radius") : super.getParamLabel(paramIndex);
 	}
 

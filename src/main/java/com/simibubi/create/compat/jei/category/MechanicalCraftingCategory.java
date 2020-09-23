@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
@@ -40,9 +41,9 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		}
 
 		@Override
-		public void render(int xPosition, int yPosition, ItemStack ingredient) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(xPosition, yPosition, 0);
+		public void render(MatrixStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
+			matrixStack.push();
+			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
 			RenderSystem.scaled(scale, scale, scale);
 
@@ -62,16 +63,12 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		}
 
 		@Override
-		public List<String> getTooltip(ItemStack ingredient, ITooltipFlag tooltipFlag) {
+		public List<ITextComponent> getTooltip(ItemStack ingredient, ITooltipFlag tooltipFlag) {
 			Minecraft minecraft = Minecraft.getInstance();
 			PlayerEntity player = minecraft.player;
-			List<String> list;
+			List<ITextComponent> list;
 			try {
-				list = ingredient
-						.getTooltip(player, tooltipFlag)
-						.stream()
-						.map(ITextComponent::getFormattedText)
-						.collect(Collectors.toList());
+				list = ingredient.getTooltip(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
 				return new ArrayList<>();
 			}
@@ -85,9 +82,9 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 			for (int k = 0; k < list.size(); ++k) {
 				if (k == 0) {
-					list.set(k, rarity.color + list.get(k));
+					list.set(k, list.get(k).copy().formatted(rarity.color));
 				} else {
-					list.set(k, TextFormatting.GRAY + list.get(k));
+					list.set(k, list.get(k).copy().formatted(TextFormatting.GRAY));
 				}
 			}
 
@@ -149,26 +146,26 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 	}
 
 	@Override
-	public void draw(ShapedRecipe recipe, double mouseX, double mouseY) {
-		RenderSystem.pushMatrix();
+	public void draw(ShapedRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+		matrixStack.push();
 		float scale = getScale(recipe);
-		RenderSystem.translated(getXPadding(recipe), getYPadding(recipe), 0);
+		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
 		for (int row = 0; row < recipe.getHeight(); row++)
 			for (int col = 0; col < recipe.getWidth(); col++)
 				if (!recipe.getIngredients().get(row * recipe.getWidth() + col).hasNoMatchingItems()) {
-					RenderSystem.pushMatrix();
-					RenderSystem.translated((int) col * 19 * scale, (int) row * 19 * scale, 0);
-					RenderSystem.scaled(scale, scale, scale);
-					AllGuiTextures.JEI_SLOT.draw(0, 0);
-					RenderSystem.popMatrix();
+					matrixStack.push();
+					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
+					matrixStack.scale(scale, scale, scale);
+					AllGuiTextures.JEI_SLOT.draw(matrixStack, 0, 0);
+					matrixStack.pop();
 				}
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 
-		AllGuiTextures.JEI_SLOT.draw(133, 80);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(128, 59);
-		crafter.draw(129, 25);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 133, 80);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 128, 59);
+		crafter.draw(matrixStack, 129, 25);
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(0, 0, 300);
@@ -182,7 +179,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		}
 		
 		Minecraft.getInstance().fontRenderer
-				.drawStringWithShadow(amount + "", 142, 39, 0xFFFFFF);
+				.drawWithShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
 		RenderSystem.popMatrix();
 	}
 

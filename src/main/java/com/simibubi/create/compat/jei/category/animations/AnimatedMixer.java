@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -7,15 +8,16 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
 
 public class AnimatedMixer extends AnimatedKinetics {
 
 	@Override
-	public void draw(int xOffset, int yOffset) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(xOffset, yOffset, 200);
-		RenderSystem.rotatef(-15.5f, 1, 0, 0);
-		RenderSystem.rotatef(22.5f, 0, 1, 0);
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+		matrixStack.push();
+		matrixStack.translate(xOffset, yOffset, 200);
+		matrixStack.multiply(new Quaternion(-15.5f, 1, 0, 0));
+		matrixStack.multiply(new Quaternion( 22.5f, 0, 1, 0));
 		int scale = 23;
 
 		GuiGameElement.of(cogwheel())
@@ -47,7 +49,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 }

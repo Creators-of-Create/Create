@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -24,6 +25,7 @@ public class PartialItemModelRenderer {
 	ItemStack stack;
 	int overlay;
 	MatrixStack ms;
+	ItemCameraTransforms.TransformType transformType;
 	IRenderTypeBuffer buffer;
 
 	static PartialItemModelRenderer get() {
@@ -32,11 +34,12 @@ public class PartialItemModelRenderer {
 		return instance;
 	}
 
-	public static PartialItemModelRenderer of(ItemStack stack, MatrixStack ms, IRenderTypeBuffer buffer, int overlay) {
+	public static PartialItemModelRenderer of(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int overlay) {
 		PartialItemModelRenderer instance = get();
 		instance.stack = stack;
 		instance.buffer = buffer;
 		instance.ms = ms;
+		instance.transformType = transformType;
 		instance.overlay = overlay;
 		return instance;
 	}
@@ -70,7 +73,7 @@ public class PartialItemModelRenderer {
 		else
 			stack.getItem()
 				.getItemStackTileEntityRenderer()
-				.render(stack, ms, buffer, light, overlay);
+				.render(stack, transformType, ms, buffer, light, overlay);
 
 		ms.pop();
 	}
@@ -83,12 +86,12 @@ public class PartialItemModelRenderer {
 
 		for (Direction direction : Direction.values()) {
 			random.setSeed(42L);
-			ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads((BlockState) null, direction, random, data), stack,
+			ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads(null, direction, random, data), stack,
 				light, overlay);
 		}
 
 		random.setSeed(42L);
-		ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads((BlockState) null, (Direction) null, random, data),
+		ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads(null, null, random, data),
 			stack, light, overlay);
 	}
 

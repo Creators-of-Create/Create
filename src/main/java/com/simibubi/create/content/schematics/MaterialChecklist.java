@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -91,9 +92,9 @@ public class MaterialChecklist {
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
 			String name1 =
-				new TranslationTextComponent(item1.getTranslationKey()).getFormattedText().toLowerCase(locale);
+				new TranslationTextComponent(item1.getTranslationKey()).getUnformattedComponentText().toLowerCase(locale);
 			String name2 =
-				new TranslationTextComponent(item2.getTranslationKey()).getFormattedText().toLowerCase(locale);
+				new TranslationTextComponent(item2.getTranslationKey()).getUnformattedComponentText().toLowerCase(locale);
 			return name1.compareTo(name2);
 		});
 
@@ -149,20 +150,23 @@ public class MaterialChecklist {
 		return amount;
 	}
 
-	private String gatheredEntry(ItemStack item, int amount) {
+	private ITextComponent gatheredEntry(ItemStack item, int amount) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		ITextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return TextFormatting.DARK_GREEN + tc.getFormattedText() + " \\u2714\n x" + amount + TextFormatting.GRAY + " | "
-				+ stacks + "\\u25A4 +" + remainder + "\n";
+		TranslationTextComponent tc = new TranslationTextComponent(item.getTranslationKey());
+		return tc.append(" \\u2714\n x" + amount).formatted(TextFormatting.DARK_GREEN).append(new StringTextComponent(" | "
+			+ stacks + "\\u25A4 +" + remainder + "\n").formatted(TextFormatting.GRAY));
+		// return TextFormatting.DARK_GREEN + tc.getFormattedText() + " \\u2714\n x" + amount + TextFormatting.GRAY + " | "
+			//	+ stacks + "\\u25A4 +" + remainder + "\n";
 	}
 
-	private String unfinishedEntry(ItemStack item, int amount) {
+	private ITextComponent unfinishedEntry(ItemStack item, int amount) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		ITextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return TextFormatting.BLUE + tc.getFormattedText() + "\n x" + amount + TextFormatting.GRAY + " | " + stacks
-				+ "\\u25A4 +" + remainder + "\n";
+		TranslationTextComponent tc = new TranslationTextComponent(item.getTranslationKey());
+		return tc.append("\n x" + amount).formatted(TextFormatting.BLUE).append(new StringTextComponent(" | " + stacks + "\\u25A4 +" + remainder + "\n").formatted(TextFormatting.GRAY));
+		// return TextFormatting.BLUE + tc.getFormattedText() + "\n x" + amount + TextFormatting.GRAY + " | " + stacks
+			//	+ "\\u25A4 +" + remainder + "\n";
 	}
 
 }

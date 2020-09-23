@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -9,11 +10,11 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 public class AnimatedMillstone extends AnimatedKinetics {
 
 	@Override
-	public void draw(int xOffset, int yOffset) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(xOffset, yOffset, 0);
-		AllGuiTextures.JEI_SHADOW.draw(-16, 13);
-		RenderSystem.translatef(-2, 18, 0);
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+		matrixStack.push();
+		matrixStack.translate(xOffset, yOffset, 0);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);
+		matrixStack.translate(-2, 18, 0);
 		int scale = 22;
 
 		GuiGameElement.of(AllBlockPartials.MILLSTONE_COG)
@@ -26,7 +27,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 }

@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
@@ -27,8 +28,8 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private ScrollInput areaAlign;
 	private Label labelAlign;
 
-	private final String mirrorType = Lang.translate("gui.symmetryWand.mirrorType");
-	private final String orientation = Lang.translate("gui.symmetryWand.orientation");
+	private final ITextComponent mirrorType = Lang.translate("gui.symmetryWand.mirrorType");
+	private final ITextComponent orientation = Lang.translate("gui.symmetryWand.orientation");
 
 	private SymmetryMirror currentElement;
 	private ItemStack wand;
@@ -58,7 +59,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int state =
 			currentElement instanceof TriplePlaneMirror ? 2 : currentElement instanceof CrossPlaneMirror ? 1 : 0;
 		areaType = new SelectionScrollInput(guiLeft + 119, guiTop + 12, 70, 14).forOptions(SymmetryMirror.getMirrors())
-			.titled(mirrorType)
+			.titled(mirrorType.copy())
 			.writingTo(labelType)
 			.setState(state);
 
@@ -95,7 +96,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		}
 
 		areaAlign = new SelectionScrollInput(guiLeft + 119, guiTop + 32, 70, 14).forOptions(element.getAlignToolTips())
-			.titled(orientation)
+			.titled(orientation.copy())
 			.writingTo(labelAlign)
 			.setState(element.getOrientationIndex())
 			.calling(element::setOrientation);
@@ -105,7 +106,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.WAND_SYMMETRY.draw(this, guiLeft, guiTop);
+		AllGuiTextures.WAND_SYMMETRY.draw(matrixStack, this, guiLeft, guiTop);
 
 		int x = guiLeft + 63;
 		int y = guiTop + 15;

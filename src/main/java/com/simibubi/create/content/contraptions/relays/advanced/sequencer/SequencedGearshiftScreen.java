@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Vector;
 
@@ -20,7 +21,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private final ItemStack renderedItem = AllBlocks.SEQUENCED_GEARSHIFT.asStack();
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 
-	private final String title = Lang.translate("gui.sequenced_gearshift.title");
+	private final ITextComponent title = Lang.translate("gui.sequenced_gearshift.title");
 	private ListNBT compareTag;
 	private Vector<Instruction> instructions;
 	private BlockPos pos;
@@ -114,7 +115,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int hFontColor = 0xD3CBBE;
-		background.draw(this, guiLeft, guiTop);
+		background.draw(matrixStack, this, guiLeft, guiTop);
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
@@ -123,12 +124,12 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			if (row < instructions.size()) {
 				Instruction instruction = instructions.get(row);
 				SequencerInstructions def = instruction.instruction;
-				def.background.draw(guiLeft + 14, guiTop + 29 + yOffset);
+				def.background.draw(matrixStack, guiLeft + 14, guiTop + 29 + yOffset);
 
 				label(matrixStack, 32, 6 + yOffset, Lang.translate(def.translationKey));
 				if (def.hasValueParameter) {
-					String text = def.formatValue(instruction.value);
-					int stringWidth = textRenderer.getStringWidth(text);
+					ITextComponent text = ITextComponent.of(def.formatValue(instruction.value));
+					int stringWidth = textRenderer.getWidth(text);
 					label(matrixStack, 85 + (12 - stringWidth / 2), 6 + yOffset, text);
 				}
 				if (def.hasSpeedParameter)
@@ -137,10 +138,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				continue;
 			}
 
-			toDraw.draw(guiLeft + 14, guiTop + 29 + yOffset);
+			toDraw.draw(matrixStack, guiLeft + 14, guiTop + 29 + yOffset);
 		}
 
-		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getStringWidth(title)) / 2, guiTop + 10,
+		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 10,
 				hFontColor);
 
 		GuiGameElement.of(renderedItem)
@@ -149,7 +150,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				.render();
 	}
 
-	private void label(MatrixStack matrixStack, int x, int y, String text) {
+	private void label(MatrixStack matrixStack, int x, int y, ITextComponent text) {
 		textRenderer.drawWithShadow(matrixStack, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 

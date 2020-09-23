@@ -84,9 +84,9 @@ public class ServerSchematicLoader {
 
 	public void handleNewUpload(ServerPlayerEntity player, String schematic, long size, BlockPos pos) {
 		String playerPath = getSchematicPath() + "/" + player.getName()
-			.getFormattedText();
+			.getUnformattedComponentText();
 		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+			.getUnformattedComponentText() + "/" + schematic;
 		FilesHelper.createFolderIfMissing(playerPath);
 
 		// Unsupported Format
@@ -98,9 +98,9 @@ public class ServerSchematicLoader {
 		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
 		if (size > maxFileSize * 1000) {
 			player.sendMessage(new TranslationTextComponent("create.schematics.uploadTooLarge")
-				.appendSibling(new StringTextComponent(" (" + size / 1000 + " KB).")));
+				.append(new StringTextComponent(" (" + size / 1000 + " KB).")), player.getUniqueID());
 			player.sendMessage(new TranslationTextComponent("create.schematics.maxAllowedSize")
-				.appendSibling(new StringTextComponent(" " + maxFileSize + " KB")));
+				.append(new StringTextComponent(" " + maxFileSize + " KB")), player.getUniqueID());
 			return;
 		}
 
@@ -152,7 +152,7 @@ public class ServerSchematicLoader {
 
 	public void handleWriteRequest(ServerPlayerEntity player, String schematic, byte[] data) {
 		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+			.getUnformattedComponentText() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			SchematicUploadEntry entry = activeUploads.get(playerSchematicId);
@@ -223,7 +223,7 @@ public class ServerSchematicLoader {
 
 	public void handleFinishedUpload(ServerPlayerEntity player, String schematic) {
 		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+			.getUnformattedComponentText() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			try {
@@ -245,7 +245,7 @@ public class ServerSchematicLoader {
 					return;
 				table.finishUpload();
 				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getName()
-					.getFormattedText()));
+					.getUnformattedComponentText()));
 
 			} catch (IOException e) {
 				Create.logger.error("Exception Thrown when finishing Upload: " + playerSchematicId);

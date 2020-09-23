@@ -2,6 +2,7 @@ package com.simibubi.create.compat.jei;
 
 import java.util.function.Supplier;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -32,7 +33,7 @@ public class DoubleItemIcon implements IDrawable {
 	}
 
 	@Override
-	public void draw(int xOffset, int yOffset) {
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		if (primaryStack == null) {
 			primaryStack = primarySupplier.get();
 			secondaryStack = secondarySupplier.get();
@@ -41,21 +42,21 @@ public class DoubleItemIcon implements IDrawable {
 		RenderHelper.enable();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(xOffset, yOffset, 0);
+		matrixStack.push();
+		matrixStack.translate(xOffset, yOffset, 0);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(1, 1, 0);
+		matrixStack.push();
+		matrixStack.translate(1, 1, 0);
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(primaryStack, 0, 0);
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(10, 10, 100);
-		RenderSystem.scaled(.5, .5, .5);
+		matrixStack.push();
+		matrixStack.translate(10, 10, 100);
+		matrixStack.scale(.5f, .5f, .5f);
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(secondaryStack, 0, 0);
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 		RenderSystem.enableBlend();
 	}
 

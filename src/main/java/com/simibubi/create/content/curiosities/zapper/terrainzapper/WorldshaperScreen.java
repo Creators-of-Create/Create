@@ -22,9 +22,9 @@ import net.minecraft.util.text.ITextComponent;
 
 public class WorldshaperScreen extends ZapperScreen {
 
-	protected final String placementSection = Lang.translate("gui.terrainzapper.placement");
-	protected final String toolSection = Lang.translate("gui.terrainzapper.tool");
-	protected final List<String> brushOptions =
+	protected final ITextComponent placementSection = Lang.translate("gui.terrainzapper.placement");
+	protected final ITextComponent toolSection = Lang.translate("gui.terrainzapper.tool");
+	protected final List<ITextComponent> brushOptions =
 		Lang.translatedOptions("gui.terrainzapper.brush", "cuboid", "sphere", "cylinder");
 
 	protected Vector<IconButton> toolButtons;
@@ -72,7 +72,7 @@ public class WorldshaperScreen extends ZapperScreen {
 			TerrainTools tool = toolValues[id];
 			toolButtons.add(new IconButton(i + 8 + id * 18, j + 76, tool.icon));
 			toolButtons.get(id)
-				.setToolTip(ITextComponent.of(Lang.translate("gui.terrainzapper.tool." + tool.translationKey)));
+				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
 		}
 
 		if (nbt.contains("Tool"))
@@ -86,7 +86,7 @@ public class WorldshaperScreen extends ZapperScreen {
 			PlacementOptions option = placementValues[id];
 			placementButtons.add(new IconButton(i + 147 + id * 18, j + 76, option.icon));
 			placementButtons.get(id)
-				.setToolTip(ITextComponent.of(Lang.translate("gui.terrainzapper.placement." + option.translationKey)));
+				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
 		}
 
 		if (nbt.contains("Placement"))
@@ -122,9 +122,9 @@ public class WorldshaperScreen extends ZapperScreen {
 			ScrollInput input = new ScrollInput(i + 55 + 18 * index, j + 43, 14, 14)
 				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
 				.writingTo(label)
-				.titled(currentBrush.getParamLabel(index))
+				.titled(currentBrush.getParamLabel(index).copy())
 				.calling(state -> {
-					label.x = i + 62 + 18 * indexFinal - textRenderer.getStringWidth(label.text) / 2;
+					label.x = i + 62 + 18 * indexFinal - textRenderer.getWidth(label.text) / 2;
 				});
 			input.setState(params[index]);
 			input.onChanged();
@@ -178,7 +178,7 @@ public class WorldshaperScreen extends ZapperScreen {
 
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 2; index >= currentBrush.amtParams; index--) {
-			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(i + 55 + index * 18, j + 43);
+			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, i + 55 + index * 18, j + 43);
 		}
 
 		textRenderer.draw(matrixStack, toolSection, i + 8, j + 64, fontColor);

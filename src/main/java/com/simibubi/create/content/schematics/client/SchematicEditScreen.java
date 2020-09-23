@@ -133,7 +133,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
-		AllGuiTextures.SCHEMATIC.draw(this, x, y);
+		AllGuiTextures.SCHEMATIC.draw(matrixStack, this, x, y);
 
 		textRenderer.drawWithShadow(matrixStack, handler.getCurrentSchematicName(),
 				x + 103 - textRenderer.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 10, 0xDDEEFF);
@@ -142,11 +142,11 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		textRenderer.draw(matrixStack, rotationLabel, x + 10, y + 52, AllGuiTextures.FONT_COLOR);
 		textRenderer.draw(matrixStack, mirrorLabel, x + 10, y + 72, AllGuiTextures.FONT_COLOR);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + 220, guiTop + 20, 0);
-		RenderSystem.scaled(3, 3, 3);
+		matrixStack.push();
+		matrixStack.translate(guiLeft + 220, guiTop + 20, 0);
+		matrixStack.scale(3, 3, 3);
 		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.SCHEMATIC.get()), 0, 0);
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 	@Override

@@ -94,10 +94,10 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int mainLeft = guiLeft - 56;
 		int mainTop = guiTop - 16;
 
-		AllGuiTextures.PLAYER_INVENTORY.draw(this, x - 16, y + 70 + 14);
+		AllGuiTextures.PLAYER_INVENTORY.draw(matrixStack, this, x - 16, y + 70 + 14);
 		textRenderer.draw(matrixStack, playerInventory.getDisplayName(), x - 15 + 7, y + 64 + 26, 0x666666);
 
-		SCHEMATIC_TABLE.draw(this, mainLeft, mainTop);
+		SCHEMATIC_TABLE.draw(matrixStack, this, mainLeft, mainTop);
 		
 		if (container.getTileEntity().isUploading)
 			textRenderer.draw(matrixStack, uploading, mainLeft + 76, mainTop + 10, AllGuiTextures.FONT_COLOR);

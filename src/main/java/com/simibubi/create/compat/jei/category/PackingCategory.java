@@ -2,6 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -55,17 +56,17 @@ public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
 	}
 
 	@Override
-	public void draw(IRecipe<?> recipe, double mouseX, double mouseY) {
+	public void draw(IRecipe<?> recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
 		int size = ingredients2.size();
 		int rows = size == 4 ? 2 : 3;
 		for (int i = 0; i < size; i++) {
-			AllGuiTextures.JEI_SLOT.draw((rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
 		}
-		AllGuiTextures.JEI_SLOT.draw(141, 50);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32);
-		AllGuiTextures.JEI_SHADOW.draw(81, 57);
-		press.draw(getBackground().getWidth() / 2 + 6, 30);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 57);
+		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 30);
 	}
 
 }

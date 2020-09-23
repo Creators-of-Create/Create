@@ -33,7 +33,6 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ProjectileEntity;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
@@ -59,10 +58,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -207,7 +202,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	@Override
-	public void updatePassengerPosition(Entity passenger, IMoveCallback callback) {
+	protected void updatePassengerPosition(Entity passenger, IMoveCallback callback) {
 		if (!isPassenger(passenger))
 			return;
 		Vector3d transformedVector = getPassengerPosition(passenger);

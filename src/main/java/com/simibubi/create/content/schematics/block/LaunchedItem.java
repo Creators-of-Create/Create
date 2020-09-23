@@ -129,7 +129,7 @@ public abstract class LaunchedItem {
 			else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 				state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
-			if (world.dimension.doesWaterVaporize() && state.getFluidState().getFluid().isIn(FluidTags.WATER)) {
+			if (world.getDimension().isUltrawarm() && state.getFluidState().getFluid().isIn(FluidTags.WATER)) {
 				int i = target.getX();
 				int j = target.getY();
 				int k = target.getZ();

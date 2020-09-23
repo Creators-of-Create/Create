@@ -35,7 +35,7 @@ public class KineticBlockTrigger extends CriterionTriggerBase<KineticBlockTrigge
 		Block block = null;
 		if (json.has("block")) {
 			ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(json, "block"));
-			block = Registry.BLOCK.getValue(resourcelocation).orElseThrow(() -> {
+			block = Registry.BLOCK.getOrEmpty(resourcelocation).orElseThrow(() -> {
 				return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
 			});
 		}

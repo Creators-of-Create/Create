@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
@@ -64,25 +65,24 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 	}
 
 	@Override
-	public List<String> getTooltipStrings(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
-		List<String> list = new ArrayList<>();
+	public List<ITextComponent> getTooltipStrings(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
+		List<ITextComponent> list = new ArrayList<>();
 		if (mouseX < 91 || mouseX > 91 + 52 || mouseY < 1 || mouseY > 53)
 			return list;
 		list.addAll(recipe.getRecipeOutput()
 				.getTooltip(Minecraft.getInstance().player,
 						Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED
-								: ITooltipFlag.TooltipFlags.NORMAL)
-				.stream().map(ITextComponent::getFormattedText).collect(Collectors.toList()));
+								: ITooltipFlag.TooltipFlags.NORMAL));
 		return list;
 	}
 
 	@Override
-	public void draw(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
+	public void draw(BlockzapperUpgradeRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		String componentName =
+		ITextComponent componentName =
 				Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
 		String text = "+ " + recipe.getTier().color + componentName;
-		font.drawStringWithShadow(text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
+		font.drawWithShadow(matrixStack, text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
 				0x8B8B8B);
 		
 		RenderSystem.pushMatrix();

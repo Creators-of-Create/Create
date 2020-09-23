@@ -42,11 +42,6 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 	}
 
 	@Override
-	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
-		super.updateNeighbors(stateIn, worldIn, pos, flags);
-	}
-
-	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return super.getStateForPlacement(context).with(POWERED, context.getWorld().isBlockPowered(context.getPos()));
 	}

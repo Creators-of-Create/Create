@@ -46,8 +46,8 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 	}
 
 	@Override
-	public ITextComponent getTitle() {
-		return Lang.translate("recipe." + name);
+	public String getTitle() {
+		return Lang.translate("recipe." + name).getUnformattedComponentText();
 	}
 
 	@Override
@@ -86,8 +86,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 				return;
 			ProcessingOutput output = results.get(slotIndex - 1);
 			if (output.getChance() != 1)
-				tooltip.add(1, TextFormatting.GOLD
-						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
+				tooltip.add(1, Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)).formatted(TextFormatting.GOLD));
 		});
 	}
 
@@ -98,9 +97,8 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			if (!catalystIndices.containsKey(slotIndex))
 				return;
 			Float chance = catalystIndices.get(slotIndex);
-			tooltip.add(1, TextFormatting.YELLOW + Lang.translate("recipe.processing.catalyst"));
-			tooltip.add(2, TextFormatting.GOLD
-					+ Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)));
+			tooltip.add(1, Lang.translate("recipe.processing.catalyst").formatted(TextFormatting.YELLOW));
+			tooltip.add(2, Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)).formatted(TextFormatting.GOLD));
 		});
 	}
 

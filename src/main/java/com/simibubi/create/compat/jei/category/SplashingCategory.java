@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
@@ -57,37 +58,37 @@ public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe>
 	}
 
 	@Override
-	protected void renderWidgets(SplashingRecipe recipe, double mouseX, double mouseY) {
+	protected void renderWidgets(MatrixStack matrixStack, SplashingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 
-		AllGuiTextures.JEI_SLOT.draw(20, 47);
-		AllGuiTextures.JEI_SHADOW.draw(47, 29);
-		AllGuiTextures.JEI_SHADOW.draw(66, 39);
-		AllGuiTextures.JEI_LONG_ARROW.draw(53, 51);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 20, 47);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 47, 29);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 66, 39);
+		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 53, 51);
 
 		if (size == 1) {
-			getRenderedSlot(recipe, 0).draw(139, 47);
+			getRenderedSlot(recipe, 0).draw(matrixStack, 139, 47);
 			return;
 		}
 
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
-			getRenderedSlot(recipe, i).draw(133 + xOffset, 47 + yOffset);
+			getRenderedSlot(recipe, i).draw(matrixStack, 133 + xOffset, 47 + yOffset);
 		}
 	}
 
 	@Override
-	public void renderAttachedBlock() {
-		RenderSystem.pushMatrix();
+	public void renderAttachedBlock(MatrixStack matrixStack) {
+		matrixStack.push();
 
 		GuiGameElement.of(Fluids.WATER)
 				.scale(24)
 				.atLocal(0, 0, 2)
 				.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 }

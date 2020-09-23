@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
@@ -47,16 +48,16 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		blacklist.setToolTip(blacklistN);
 		whitelist = new IconButton(x + 76, y + 72, AllIcons.I_WHITELIST);
 		whitelist.setToolTip(whitelistN);
-		blacklistIndicator = new Indicator(x + 58, y + 67, "");
-		whitelistIndicator = new Indicator(x + 76, y + 67, "");
+		blacklistIndicator = new Indicator(x + 58, y + 67, StringTextComponent.EMPTY);
+		whitelistIndicator = new Indicator(x + 76, y + 67, StringTextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(blacklist, whitelist, blacklistIndicator, whitelistIndicator));
 
 		respectNBT = new IconButton(x + 98, y + 72, AllIcons.I_RESPECT_NBT);
 		respectNBT.setToolTip(respectDataN);
 		ignoreNBT = new IconButton(x + 116, y + 72, AllIcons.I_IGNORE_NBT);
 		ignoreNBT.setToolTip(ignoreDataN);
-		respectNBTIndicator = new Indicator(x + 98, y + 67, "");
-		ignoreNBTIndicator = new Indicator(x + 116, y + 67, "");
+		respectNBTIndicator = new Indicator(x + 98, y + 67, StringTextComponent.EMPTY);
+		ignoreNBTIndicator = new Indicator(x + 116, y + 67, StringTextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator));
 		handleIndicators();
 	}

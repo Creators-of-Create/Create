@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
@@ -57,16 +58,16 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void draw(CondensedBlockCuttingRecipe recipe, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(4, 4);
+	public void draw(CondensedBlockCuttingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 4, 4);
 		int size = recipe.getOutputs().size();
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 5) * 19;
 			int yOffset = (i / 5) * -19;
-			AllGuiTextures.JEI_SLOT.draw(77 + xOffset, 47 + yOffset);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, 77 + xOffset, 47 + yOffset);
 		}
-		AllGuiTextures.JEI_DOWN_ARROW.draw(31, 6);
-		saw.draw(33, 37);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 31, 6);
+		saw.draw(matrixStack, 33, 37);
 	}
 
 	public static class CondensedBlockCuttingRecipe extends StonecuttingRecipe {

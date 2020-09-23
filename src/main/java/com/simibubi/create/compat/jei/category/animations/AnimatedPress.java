@@ -2,6 +2,7 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -9,6 +10,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.vector.Quaternion;
 
 public class AnimatedPress extends AnimatedKinetics {
 
@@ -19,11 +21,11 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	@Override
-	public void draw(int xOffset, int yOffset) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(xOffset, yOffset, 100);
-		RenderSystem.rotatef(-15.5f, 1, 0, 0);
-		RenderSystem.rotatef(22.5f, 0, 1, 0);
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+		matrixStack.push();
+		matrixStack.translate(xOffset, yOffset, 100);
+		matrixStack.multiply(new Quaternion( -15.5f, 1, 0, 0));
+		matrixStack.multiply(new Quaternion( 22.5f, 0, 1, 0));
 		int scale = basin ? 20 : 24;
 
 		GuiGameElement.of(shaft(Axis.Z))
@@ -46,7 +48,7 @@ public class AnimatedPress extends AnimatedKinetics {
 					.scale(scale)
 					.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 	private float getAnimatedHeadOffset() {

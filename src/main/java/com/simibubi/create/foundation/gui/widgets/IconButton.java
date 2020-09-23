@@ -28,7 +28,7 @@ public class IconButton extends AbstractSimiWidget {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			AllGuiTextures.BUTTON.bind();
 			drawTexture(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
-			icon.draw(this, x + 1, y + 1);
+			icon.draw(matrixStack, this, x + 1, y + 1);
 		}
 	}
 

@@ -57,7 +57,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96)
 				.titled(lowerLimit)
 				.calling(state -> {
-					offBelowLabel.text = state + "%";
+					offBelowLabel.text = ITextComponent.of(state + "%");
 					lastModification = 0;
 					if (onAbove.getState() - 4 <= state) {
 						onAbove.setState(state + 5);
@@ -71,7 +71,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101)
 				.titled(upperLimit)
 				.calling(state -> {
-					onAboveLabel.text = state + "%";
+					onAboveLabel.text = ITextComponent.of(state + "%");
 					lastModification = 0;
 					if (offBelow.getState() + 4 >= state) {
 						offBelow.setState(state - 5);
@@ -89,7 +89,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		int hFontColor = 0xD3CBBE;
 		int fontColor = 0x4B3A22;
-		STOCKSWITCH.draw(this, guiLeft, guiTop);
+		STOCKSWITCH.draw(matrixStack, this, guiLeft, guiTop);
 		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (STOCKSWITCH.width - textRenderer.getWidth(title)) / 2,
 				guiTop + 10, hFontColor);
 		textRenderer.draw(matrixStack, onAbove.getState() == 100 ? startAt : startAbove, guiLeft + 13, guiTop + 55, fontColor);
@@ -108,14 +108,14 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		drawTexture(matrixStack, (int) (guiLeft + upperBound), guiTop + 26, (int) (sprite.startX + upperBound), sprite.startY,
 				(int) (sprite.width - upperBound), sprite.height);
 
-		AllGuiTextures.STOCKSWITCH_BOUND_LEFT.draw(this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);
-		AllGuiTextures.STOCKSWITCH_BOUND_RIGHT.draw(this, (int) (guiLeft + upperBound) - 5, guiTop + 24);
+		AllGuiTextures.STOCKSWITCH_BOUND_LEFT.draw(matrixStack, this, (int) (guiLeft + lowerBound) - 1, guiTop + 24);
+		AllGuiTextures.STOCKSWITCH_BOUND_RIGHT.draw(matrixStack, this, (int) (guiLeft + upperBound) - 5, guiTop + 24);
 
 		AllGuiTextures cursor =
 			te.powered ? AllGuiTextures.STOCKSWITCH_CURSOR_ON : AllGuiTextures.STOCKSWITCH_CURSOR_OFF;
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef((cursorPos * (sprite.width - 20) + 10), 0, 0);
-		cursor.draw(this, guiLeft - 4, guiTop + 24);
+		cursor.draw(matrixStack, this, guiLeft - 4, guiTop + 24);
 		RenderSystem.popMatrix();
 
 		RenderSystem.pushMatrix();

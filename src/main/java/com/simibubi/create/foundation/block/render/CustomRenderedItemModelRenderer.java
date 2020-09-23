@@ -17,7 +17,7 @@ public class CustomRenderedItemModelRenderer<M extends CustomRenderedItemModel> 
 		M mainModel = ((M) Minecraft.getInstance()
 			.getItemRenderer()
 			.getItemModelWithOverrides(stack, null, null));
-		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, ms, buffer, overlay);
+		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, p_239207_2_, ms, buffer, overlay);
 
 		ms.push();
 		ms.translate(0.5F, 0.5F, 0.5F);

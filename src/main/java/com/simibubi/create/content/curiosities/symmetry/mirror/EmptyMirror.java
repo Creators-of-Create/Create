@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class EmptyMirror extends SymmetryMirror {
 
@@ -54,7 +55,7 @@ public class EmptyMirror extends SymmetryMirror {
 	}
 	
 	@Override
-	public List<String> getAlignToolTips() {
+	public List<ITextComponent> getAlignToolTips() {
 		return ImmutableList.of();
 	}
 

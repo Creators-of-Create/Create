@@ -143,7 +143,7 @@ public class TooltipHelper {
 
 		// Summary
 		if (I18n.hasKey(summaryKey))
-			tooltip = tooltip.withSummary(I18n.format(summaryKey));
+			tooltip = tooltip.withSummary(ITextComponent.of(I18n.format(summaryKey)));
 
 		// Requirements
 		if (stack.getItem() instanceof BlockItem) {

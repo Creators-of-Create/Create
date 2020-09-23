@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class Brush {
 
@@ -33,7 +34,7 @@ public abstract class Brush {
 		return 0;
 	}
 
-	String getParamLabel(int paramIndex) {
+	ITextComponent getParamLabel(int paramIndex) {
 		return Lang
 				.translate(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
 	}

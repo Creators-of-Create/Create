@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -20,15 +21,15 @@ public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCoo
 	}
 
 	@Override
-	public void renderAttachedBlock() {
-		RenderSystem.pushMatrix();
+	public void renderAttachedBlock(MatrixStack matrixStack) {
+		matrixStack.push();
 
 		GuiGameElement.of(Fluids.LAVA)
 				.scale(24)
 				.atLocal(0, 0, 2)
 				.render();
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 }

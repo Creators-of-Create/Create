@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
@@ -51,14 +52,14 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	}
 
 	@Override
-	public void draw(PressingRecipe recipe, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(26, 50);
-		getRenderedSlot(recipe, 0).draw(131, 50);
+	public void draw(PressingRecipe recipe, MatrixStack matrixStack,  double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
+		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);
 		if (recipe.getRollableResults().size() > 1)
-			getRenderedSlot(recipe, 1).draw(131 + 19, 50);
-		AllGuiTextures.JEI_SHADOW.draw(61, 41);
-		AllGuiTextures.JEI_LONG_ARROW.draw(52, 54);
-		press.draw(getBackground().getWidth() / 2 - 17, 22);
+			getRenderedSlot(recipe, 1).draw(matrixStack, 131 + 19, 50);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 41);
+		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 54);
+		press.draw(matrixStack, getBackground().getWidth() / 2 - 17, 22);
 	}
 
 }

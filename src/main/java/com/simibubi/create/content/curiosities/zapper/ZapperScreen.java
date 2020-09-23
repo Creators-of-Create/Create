@@ -21,6 +21,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 @SuppressWarnings("deprecation")
 public class ZapperScreen extends AbstractSimiScreen {
@@ -30,9 +31,9 @@ public class ZapperScreen extends AbstractSimiScreen {
 	protected float animationProgress;
 	protected AllGuiTextures background;
 
-	protected final String patternSection = Lang.translate("gui.blockzapper.patternSection");
+	protected final ITextComponent patternSection = Lang.translate("gui.blockzapper.patternSection");
 
-	protected String title;
+	protected ITextComponent title;
 	protected Vector<IconButton> patternButtons;
 	protected int brightColor;
 	protected int fontColor;
@@ -42,7 +43,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		this.background = background;
 		this.zapper = zapper;
 		this.offhand = offhand;
-		title = "";
+		title = StringTextComponent.EMPTY;
 		brightColor = 0xCCDDFF;
 		fontColor = AllGuiTextures.FONT_COLOR;
 	}
@@ -65,7 +66,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
 				patternButtons.add(new IconButton(i + 147 + col * 18, j + 23 + row * 18, pattern.icon));
 				patternButtons.get(id)
-					.setToolTip(ITextComponent.of(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey)));
+					.setToolTip(Lang.translate("gui.blockzapper.pattern." + pattern.translationKey));
 			}
 		}
 
@@ -81,7 +82,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		int i = guiLeft - 20;
 		int j = guiTop;
 
-		background.draw(this, i, j);
+		background.draw(matrixStack, this, i, j);
 		drawOnBackground(matrixStack, i, j);
 
 		client.getTextureManager()

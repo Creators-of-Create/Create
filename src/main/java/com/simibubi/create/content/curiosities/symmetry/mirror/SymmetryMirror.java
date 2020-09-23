@@ -206,6 +206,6 @@ public abstract class SymmetryMirror {
 		this.position = pos3d;
 	}
 
-	public abstract List<String> getAlignToolTips();
+	public abstract List<ITextComponent> getAlignToolTips();
 
 }

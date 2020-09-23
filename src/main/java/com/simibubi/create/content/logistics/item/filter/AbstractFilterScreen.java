@@ -54,11 +54,11 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
-		background.draw(this, x, y);
+		background.draw(ms, this, x, y);
 
 		int invX = x + 50;
 		int invY = y + background.height + 10;
-		PLAYER_INVENTORY.draw(this, invX, invY);
+		PLAYER_INVENTORY.draw(ms, this, invX, invY);
 
 		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
 		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);

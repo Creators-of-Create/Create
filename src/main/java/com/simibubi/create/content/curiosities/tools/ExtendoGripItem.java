@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -38,19 +41,19 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 
-	static Multimap<String, AttributeModifier> rangeModifier;
-	static Multimap<String, AttributeModifier> doubleRangeModifier;
+	static Multimap<Attribute, AttributeModifier> rangeModifier;
+	static Multimap<Attribute, AttributeModifier> doubleRangeModifier;
 
 	static {
 		// Holding an ExtendoGrip
 		rangeModifier = HashMultimap.create();
-		rangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(),
+		rangeModifier.put(ForgeMod.REACH_DISTANCE.get(),
 			new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
 				AttributeModifier.Operation.ADDITION));
 
 		// Holding two ExtendoGrips o.O
 		doubleRangeModifier = HashMultimap.create();
-		doubleRangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(),
+		doubleRangeModifier.put(ForgeMod.REACH_DISTANCE.get(),
 			new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
 				AttributeModifier.Operation.ADDITION));
 	}
@@ -82,14 +85,13 @@ public class ExtendoGripItem extends Item {
 
 		if (holdingExtendo != wasHoldingExtendo) {
 			if (!holdingExtendo) {
-				player.getAttributes()
-					.removeAttributeModifiers(rangeModifier);
+				player.getAttributes().removeModifiers(rangeModifier);
 				persistentData.remove(marker);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.applyAttributeModifiers(rangeModifier);
+					.addTemporaryModifiers(rangeModifier);
 				persistentData.putBoolean(marker, true);
 			}
 		}
@@ -97,13 +99,13 @@ public class ExtendoGripItem extends Item {
 		if (holdingDualExtendo != wasHoldingDualExtendo) {
 			if (!holdingDualExtendo) {
 				player.getAttributes()
-					.removeAttributeModifiers(doubleRangeModifier);
+					.removeModifiers(doubleRangeModifier);
 				persistentData.remove(dualMarker);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.applyAttributeModifiers(doubleRangeModifier);
+					.addTemporaryModifiers(doubleRangeModifier);
 				persistentData.putBoolean(dualMarker, true);
 			}
 		}
@@ -121,7 +123,7 @@ public class ExtendoGripItem extends Item {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
-		double d0 = player.getAttribute(PlayerEntity.REACH_DISTANCE)
+		double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
@@ -162,7 +164,7 @@ public class ExtendoGripItem extends Item {
 		int strength = 2;
 		float yaw = entity.rotationYaw * ((float) Math.PI / 180F);
 		if (target instanceof LivingEntity) {
-			((LivingEntity) target).knockBack(entity, strength, MathHelper.sin(yaw), -MathHelper.cos(yaw));
+			((LivingEntity) target).takeKnockback(strength, MathHelper.sin(yaw), -MathHelper.cos(yaw));
 			return;
 		}
 		target.addVelocity(-MathHelper.sin(yaw) * strength, 0.1D, MathHelper.cos(yaw) * strength);

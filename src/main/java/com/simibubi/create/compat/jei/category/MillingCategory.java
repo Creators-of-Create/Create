@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
@@ -58,24 +59,24 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, double mouseX, double mouseY) {
+	public void draw(AbstractCrushingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
 			.size();
 
-		AllGuiTextures.JEI_SLOT.draw(14, 8);
-		AllGuiTextures.JEI_ARROW.draw(85, 32);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(43, 4);
-		millstone.draw(48, 27);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 14, 8);
+		AllGuiTextures.JEI_ARROW.draw(matrixStack, 85, 32);
+		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 43, 4);
+		millstone.draw(matrixStack, 48, 27);
 
 		if (size == 1) {
-			getRenderedSlot(recipe, 0).draw(139, 27);
+			getRenderedSlot(recipe, 0).draw(matrixStack, 139, 27);
 			return;
 		}
 
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
-			getRenderedSlot(recipe, i).draw(133 + xOffset, 27 + yOffset);
+			getRenderedSlot(recipe, i).draw(matrixStack, 133 + xOffset, 27 + yOffset);
 		}
 
 	}

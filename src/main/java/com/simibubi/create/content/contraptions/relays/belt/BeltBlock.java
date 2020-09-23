@@ -24,7 +24,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
@@ -58,8 +57,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
 import net.minecraft.loot.LootParameters;
+import net.minecraft.world.gen.DebugChunkGenerator;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -128,7 +128,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public void spawnAdditionalDrops(BlockState state, World worldIn, BlockPos pos, ItemStack stack) {
+	public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack p_220062_4_) {
 		BeltTileEntity controllerTE = BeltHelper.getControllerTE(worldIn, pos);
 		if (controllerTE != null)
 			controllerTE.getInventory()
@@ -370,7 +370,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	public static void initBelt(World world, BlockPos pos) {
-		if (world.isRemote || world.getWorldType() == WorldType.DEBUG_ALL_BLOCK_STATES)
+		if (world instanceof  ServerWorld && ((ServerWorld) world).getChunkProvider().getChunkGenerator() instanceof DebugChunkGenerator)
 			return;
 
 		BlockState state = world.getBlockState(pos);

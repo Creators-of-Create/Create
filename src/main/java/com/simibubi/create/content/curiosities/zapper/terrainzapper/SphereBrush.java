@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class SphereBrush extends Brush {
 
@@ -49,7 +50,7 @@ public class SphereBrush extends Brush {
 	}
 
 	@Override
-	String getParamLabel(int paramIndex) {
+	ITextComponent getParamLabel(int paramIndex) {
 		return Lang.translate("generic.radius");
 	}
 

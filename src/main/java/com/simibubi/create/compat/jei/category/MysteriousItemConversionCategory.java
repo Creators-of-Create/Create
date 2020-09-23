@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -49,11 +50,11 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	}
 
 	@Override
-	public void draw(ConversionRecipe recipe, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(26, 16);
-		AllGuiTextures.JEI_SLOT.draw(131, 16);
-		AllGuiTextures.JEI_LONG_ARROW.draw(52, 20);
-		AllGuiTextures.JEI_QUESTION_MARK.draw(77, 5);
+	public void draw(ConversionRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 16);
+		AllGuiTextures.JEI_SLOT.draw(matrixStack, 131, 16);
+		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 20);
+		AllGuiTextures.JEI_QUESTION_MARK.draw(matrixStack, 77, 5);
 	}
 
 }

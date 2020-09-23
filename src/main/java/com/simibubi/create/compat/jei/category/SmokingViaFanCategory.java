@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
@@ -19,7 +20,7 @@ public class SmokingViaFanCategory extends ProcessingViaFanCategory<SmokingRecip
 	}
 
 	@Override
-	public void renderAttachedBlock() {
+	public void renderAttachedBlock(MatrixStack matrixStack) {
 
 		GuiGameElement.of(Blocks.FIRE.getDefaultState())
 				.scale(24)

@@ -83,7 +83,7 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withSummary(ITextComponent summary) {
-		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
+		addStrings(linesOnShift, cutString(summary, palette.color, palette.hColor));
 		add(linesOnShift, "");
 		return this;
 	}
@@ -105,9 +105,9 @@ public class ItemDescription {
 			AllItems.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
 				.getItem();
 
-		String rpmUnit = Lang.translate("generic.unit.rpm");
+		ITextComponent rpmUnit = Lang.translate("generic.unit.rpm");
 		if (hasSpeedRequirement) {
-			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
+			List<ITextComponent> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
 			String level =
 				minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
@@ -115,13 +115,13 @@ public class ItemDescription {
 			if (hasGlasses)
 				level += " (" + minimumRequiredSpeedLevel.getSpeedValue() + rpmUnit + "+)";
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
+			add(linesOnShift, Lang.translate("tooltip.speedRequirement").formatted(GRAY));
 			add(linesOnShift, level);
 		}
 
-		String stressUnit = Lang.translate("generic.unit.stress");
+		ITextComponent stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
-			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
+			List<ITextComponent> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = impacts.get(id)
 				.get();
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
@@ -133,12 +133,12 @@ public class ItemDescription {
 				level += " (" + impacts.get(id)
 					.get() + stressUnit + ")";
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
+			add(linesOnShift, Lang.translate("tooltip.stressImpact").formatted(GRAY));
 			add(linesOnShift, level);
 		}
 
 		if (hasStressCapacity) {
-			List<String> stressCapacityLevels =
+			List<ITextComponent> stressCapacityLevels =
 				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
 			double capacity = capacities.get(id)
 				.get();
@@ -179,13 +179,13 @@ public class ItemDescription {
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
 		add(linesOnShift, GRAY + condition);
-		add(linesOnShift, cutString(behaviour, palette.color, palette.hColor, 1));
+		addStrings(linesOnShift, cutString(behaviour, palette.color, palette.hColor, 1));
 		return this;
 	}
 
 	public ItemDescription withControl(String condition, String action) {
 		add(linesOnCtrl, GRAY + condition);
-		add(linesOnCtrl, cutString(action, palette.color, palette.hColor, 1));
+		addStrings(linesOnCtrl, cutString(action, palette.color, palette.hColor, 1));
 		return this;
 	}
 
@@ -194,12 +194,12 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdKey = Lang.translate("tooltip.holdKey", "$")
+			String[] holdKey = Lang.translate("tooltip.holdKey", "$").getUnformattedComponentText()
 				.split("\\$");
-			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$")
+			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$").getUnformattedComponentText()
 				.split("\\$");
-			String keyShift = Lang.translate("tooltip.keyShift");
-			String keyCtrl = Lang.translate("tooltip.keyCtrl");
+			ITextComponent keyShift = Lang.translate("tooltip.keyShift");
+			ITextComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<ITextComponent> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;
@@ -248,7 +248,7 @@ public class ItemDescription {
 		return palette.hColor + s + palette.color;
 	}
 
-	public static void add(List<ITextComponent> infoList, List<String> textLines) {
+	public static void addStrings(List<ITextComponent> infoList, List<String> textLines) {
 		textLines.forEach(s -> add(infoList, s));
 	}
 
@@ -295,7 +295,7 @@ public class ItemDescription {
 		return linesOnShift;
 	}
 
-	private IFormattableTextComponent generatorSpeed(Block block, String unitRPM) {
+	private IFormattableTextComponent generatorSpeed(Block block, ITextComponent unitRPM) {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {

@@ -61,8 +61,6 @@ public interface ITE<T extends TileEntity> {
 			if (world == null)
 				return notAvailable;
 			DimensionType type = world.getDimension();
-			if (type == null)
-				return notAvailable;
 			ResourceLocation registryName = type.getRegistryName();
 			if (registryName == null)
 				return notAvailable;

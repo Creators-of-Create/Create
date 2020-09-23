@@ -68,9 +68,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		blacklist = new IconButton(x + 120, y + 58, AllIcons.I_WHITELIST_NOT);
 		blacklist.setToolTip(blacklistN);
 
-		whitelistDisIndicator = new Indicator(x + 84, y + 53, "");
-		whitelistConIndicator = new Indicator(x + 102, y + 53, "");
-		blacklistIndicator = new Indicator(x + 120, y + 53, "");
+		whitelistDisIndicator = new Indicator(x + 84, y + 53, StringTextComponent.EMPTY);
+		whitelistConIndicator = new Indicator(x + 102, y + 53, StringTextComponent.EMPTY);
+		blacklistIndicator = new Indicator(x + 120, y + 53, StringTextComponent.EMPTY);
 
 		widgets.addAll(Arrays.asList(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
 				whitelistDisIndicator));
