@@ -71,7 +71,7 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 				assign(map, RenderTypes.getOutlineSolid());
 				map.put(Atlases.getEntityCutout(), blockBuilders.get(RenderType.getCutout()));
 				map.put(Atlases.getBannerPatterns(), blockBuilders.get(RenderType.getCutoutMipped()));
-				map.put(Atlases.getEntityTranslucent(), blockBuilders.get(RenderType.getTranslucent()));
+				map.put(Atlases.getEntityTranslucentCull(), blockBuilders.get(RenderType.getTranslucent())); // FIXME new equivalent of getEntityTranslucent() ?
 				assign(map, Atlases.getShieldPatterns());
 				assign(map, Atlases.getBeds());
 				assign(map, Atlases.getShulkerBoxes());

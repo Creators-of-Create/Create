@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.Collections;
 import java.util.List;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -10,30 +11,35 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.scoreboard.ServerScoreboard;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.ITagCollectionSupplier;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.IServerWorldInfo;
 import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.SaveFormat;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class WrappedServerWorld extends ServerWorld {
 
 	protected World world;
 
 	public WrappedServerWorld(World world) {
-		super(world.getServer(), world.getServer().getBackgroundExecutor(), world.getSaveHandler(), world.getWorldInfo(), world.getDimension(), world.getProfiler(), null);
+		// Replace null with world.getChunkProvider().chunkManager.field_219266_t ? We had null in 1.15
+		super(world.getServer(), Util.getServerExecutor(), getLevelSaveFromWorld(world), (IServerWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), null, ((ServerChunkProvider) world.getChunkProvider()).getChunkGenerator(), world.isDebugWorld(), world.getBiomeAccess().seed, Collections.EMPTY_LIST, false); //, world.field_25143);
 		this.world = world;
-	}
-
-	@Override
-	public ServerWorld getWorld() {
-		return world;
 	}
 
 	@Override
@@ -52,13 +58,19 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public ITickList<Block> getPendingBlockTicks() {
-		return world.getPendingBlockTicks();
+	public ServerTickList<Block> getPendingBlockTicks() {
+		ITickList<Block> tl =  world.getPendingBlockTicks();
+		if (tl instanceof ServerTickList)
+			return (ServerTickList<Block>) tl;
+		return super.getPendingBlockTicks();
 	}
 
 	@Override
-	public ITickList<Fluid> getPendingFluidTicks() {
-		return world.getPendingFluidTicks();
+	public ServerTickList<Fluid> getPendingFluidTicks() {
+		ITickList<Fluid> tl =  world.getPendingFluidTicks();
+		if (tl instanceof ServerTickList)
+			return (ServerTickList<Fluid>) tl;
+		return super.getPendingFluidTicks();
 	}
 
 	@Override
@@ -110,11 +122,6 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public ServerScoreboard getScoreboard() {
-		return world.getScoreboard();
-	}
-
-	@Override
 	public RecipeManager getRecipeManager() {
 		return world.getRecipeManager();
 	}
@@ -129,4 +136,7 @@ public class WrappedServerWorld extends ServerWorld {
 		return world.getGeneratorStoredBiome(p_225604_1_, p_225604_2_, p_225604_3_);
 	}
 
+	private static SaveFormat.LevelSave getLevelSaveFromWorld(World world) {
+		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "field_71310_m");
+	}
 }

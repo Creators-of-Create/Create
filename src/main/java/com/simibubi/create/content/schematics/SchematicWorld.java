@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedServerWorld;
 
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,11 +29,8 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeRegistry;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.server.ServerTickList;
-import net.minecraft.world.server.ServerWorld;
 
-public class SchematicWorld extends WrappedServerWorld {
+public class SchematicWorld extends WrappedWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
@@ -180,7 +177,7 @@ public class SchematicWorld extends WrappedServerWorld {
 	}
 
 	@Override
-	public ServerTickList<Fluid> getPendingFluidTicks() {
+	public ITickList<Fluid> getPendingFluidTicks() {
 		return EmptyTickList.get();
 	}
 

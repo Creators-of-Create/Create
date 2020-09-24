@@ -128,7 +128,7 @@ public class SymmetryHandler {
 			Minecraft.getInstance()
 				.getBufferBuilders()
 				.getEntityVertexConsumers()
-				.draw(Atlases.getEntityTranslucent());
+				.draw(Atlases.getEntityTranslucentCull());  // FIXME new equivalent of getEntityTranslucent() ?
 
 			ms.pop();
 		}

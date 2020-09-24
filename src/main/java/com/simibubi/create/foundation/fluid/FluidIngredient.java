@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import com.simibubi.create.foundation.data.NamedTag;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -170,8 +171,8 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(PacketBuffer buffer) {
 			ResourceLocation resourcelocation = buffer.readResourceLocation();
-			tag = FluidTags.func_226157_a_()
-				.get(resourcelocation);
+			tag = new NamedTag<>(FluidTags.func_226157_a_()
+				.get(resourcelocation), resourcelocation);
 		}
 
 		@Override
@@ -182,10 +183,11 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluidTag"));
-			tag = FluidTags.func_226157_a_()
+			ITag<Fluid> tmpTag = FluidTags.func_226157_a_()
 				.get(id);
-			if (tag == null)
+			if (tmpTag == null)
 				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
+			tag = new NamedTag<>(tmpTag, id);
 		}
 
 		@Override

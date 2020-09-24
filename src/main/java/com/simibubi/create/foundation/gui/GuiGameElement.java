@@ -187,7 +187,7 @@ public class GuiGameElement {
 			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
 			IRenderTypeBuffer.Impl buffer = mc.getBufferBuilders()
 				.getEntityVertexConsumers();
-			RenderType renderType = blockState.getBlock() == Blocks.AIR ? Atlases.getEntityTranslucent()
+			RenderType renderType = blockState.getBlock() == Blocks.AIR ? Atlases.getEntityTranslucentCull() // FIXME .getEntityTranslucent()
 				: RenderTypeLookup.getEntityBlockLayer(blockState, true);
 			IVertexBuilder vb = buffer.getBuffer(renderType);
 
