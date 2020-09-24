@@ -7,16 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.item.ItemStack;
@@ -32,56 +29,20 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-
-// FIXME: Quite similar to FluidTankTileEntity, create a behaviour
 
 public class SpoutTileEntity extends SmartTileEntity {
 
-	protected FluidTank tank;
-	protected LazyOptional<IFluidHandler> capability;
-	protected LerpedFloat fluidLevel;
-	protected FluidStack renderedFluid;
-
 	public static final int FILLING_TIME = 20;
-	protected int processingTicks;
-
-	private static final int SYNC_RATE = 8;
-	protected int syncCooldown;
-	protected boolean queuedSync;
-
-	protected boolean sendSplash;
+	
 	protected BeltProcessingBehaviour beltProcessing;
+	protected int processingTicks;
+	protected boolean sendSplash;
+	
+	SmartFluidTankBehaviour tank;
 
 	public SpoutTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
-		tank = new SmartFluidTank(1000, this::onFluidStackChanged);
-		capability = LazyOptional.of(() -> tank);
-		fluidLevel = LerpedFloat.linear()
-			.startWithValue(0)
-			.chase(0, .25, Chaser.EXP);
-		renderedFluid = FluidStack.EMPTY;
 		processingTicks = -1;
-	}
-
-	protected void onFluidStackChanged(FluidStack newFluidStack) {
-		if (!hasWorld())
-			return;
-		fluidLevel.chase(tank.getFluidAmount() / (float) tank.getCapacity(), .25, Chaser.EXP);
-		if (!world.isRemote) {
-			markDirty();
-			sendData();
-		}
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-		if (!world.isRemote) {
-			fluidLevel.forceNextSync();
-			onFluidStackChanged(tank.getFluid());
-		}
 	}
 
 	@Override
@@ -91,9 +52,13 @@ public class SpoutTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		tank = SmartFluidTankBehaviour.single(this, 1000);
+		behaviours.add(tank);
+		
 		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
 			.whileItemHeld(this::whenItemHeld);
 		behaviours.add(beltProcessing);
+		
 	}
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
@@ -102,7 +67,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
-		if (FillingBySpout.getRequiredAmountForItem(world, transported.stack, tank.getFluid()) == -1)
+		if (FillingBySpout.getRequiredAmountForItem(world, transported.stack, getCurrentFluidInTank()) == -1)
 			return PASS;
 		return HOLD;
 	}
@@ -115,7 +80,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
-		FluidStack fluid = tank.getFluid();
+		FluidStack fluid = getCurrentFluidInTank();
 		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(world, transported.stack, fluid.copy());
 		if (requiredAmountForItem == -1)
 			return PASS;
@@ -142,24 +107,21 @@ public class SpoutTileEntity extends SmartTileEntity {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		tank.setFluid(fluid);
+		tank.getPrimaryHandler().setFluid(fluid);
 		sendSplash = true;
 		markDirty();
 		sendData();
 		return PASS;
 	}
 
-	@Override
-	public void remove() {
-		capability.invalidate();
-		super.remove();
+	private FluidStack getCurrentFluidInTank() {
+		return tank.getPrimaryHandler().getFluid();
 	}
 
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		compound.put("TankContent", tank.writeToNBT(new CompoundNBT()));
-		compound.put("Level", fluidLevel.writeNBT());
+		
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (sendSplash && clientPacket) {
 			compound.putBoolean("Splash", true);
@@ -170,61 +132,27 @@ public class SpoutTileEntity extends SmartTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		tank.readFromNBT(compound.getCompound("TankContent"));
-		fluidLevel.readNBT(compound.getCompound("Level"), clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
-		if (!tank.getFluid()
-			.isEmpty())
-			renderedFluid = tank.getFluid();
-
 		if (!clientPacket)
 			return;
 		if (compound.contains("Splash"))
-			spawnSplash(renderedFluid);
+			spawnSplash(tank.getPrimaryTank().getRenderedFluid());
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
-			return capability.cast();
+			return tank.getCapability().cast();
 		return super.getCapability(cap, side);
 	}
 
-	public Pair<FluidStack, LerpedFloat> getFluid() {
-		return Pair.of(renderedFluid, fluidLevel);
-	}
-
-	public void sendDataImmediately() {
-		syncCooldown = 0;
-		queuedSync = false;
-		sendData();
-	}
-
-	@Override
+	
 	public void tick() {
 		super.tick();
 		if (processingTicks >= 0)
 			processingTicks--;
 		if (processingTicks >= 8 && world.isRemote)
-			spawnProcessingParticles(renderedFluid);
-		if (syncCooldown > 0) {
-			syncCooldown--;
-			if (syncCooldown == 0 && queuedSync)
-				sendData();
-		}
-		if (fluidLevel != null)
-			fluidLevel.tickChaser();
-	}
-
-	@Override
-	public void sendData() {
-		if (syncCooldown > 0) {
-			queuedSync = true;
-			return;
-		}
-		super.sendData();
-		queuedSync = false;
-		syncCooldown = SYNC_RATE;
+			spawnProcessingParticles(tank.getPrimaryTank().getRenderedFluid());
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {

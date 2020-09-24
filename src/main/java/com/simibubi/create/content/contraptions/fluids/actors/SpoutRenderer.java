@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -27,9 +27,13 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 	protected void renderSafe(SpoutTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		Pair<FluidStack, LerpedFloat> fluid = te.getFluid();
-		FluidStack fluidStack = fluid.getFirst();
-		float level = fluid.getSecond()
+		SmartFluidTankBehaviour tank = te.tank;
+		if (tank == null)
+			return;
+
+		TankSegment primaryTank = tank.getPrimaryTank();
+		FluidStack fluidStack = primaryTank.getRenderedFluid();
+		float level = primaryTank.getFluidLevel()
 			.getValue(partialTicks);
 
 		if (!fluidStack.isEmpty() && level != 0) {
