@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.actors.HarvesterMovem
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
@@ -667,9 +668,10 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
 			.initialProperties(SharedProperties::stone)
-//			.onRegister(addMovementBehaviour(new StorageInterfaceMovement()))
-			.blockstate(BlockStateGen.directionalBlockProvider(false))
-			.simpleItem()
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =

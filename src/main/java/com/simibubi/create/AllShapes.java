@@ -32,8 +32,7 @@ public class AllShapes {
 		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(),
 		FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14)
 			.forHorizontal(Direction.SOUTH),
-		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 12, 16).add(3, 12, 3, 13, 16, 13)
-			.forDirectional(),
+		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 14, 16).forDirectional(),
 		PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),

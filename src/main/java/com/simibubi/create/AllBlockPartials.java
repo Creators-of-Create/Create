@@ -68,6 +68,10 @@ public class AllBlockPartials {
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
+		
+		PORTABLE_STORAGE_INTERFACE_MIDDLE = get("portable_storage_interface/block_middle"),
+		PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = get("portable_storage_interface/block_middle_powered"),
+		PORTABLE_STORAGE_INTERFACE_TOP = get("portable_storage_interface/block_top"),
 
 		ARM_COG = get("mechanical_arm/cog"), ARM_BASE = get("mechanical_arm/base"),
 		ARM_LOWER_BODY = get("mechanical_arm/lower_body"), ARM_UPPER_BODY = get("mechanical_arm/upper_body"),
