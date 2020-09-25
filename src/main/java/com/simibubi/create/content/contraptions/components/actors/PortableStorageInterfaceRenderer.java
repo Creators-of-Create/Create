@@ -33,7 +33,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		render(blockState, progress, te.isConnected(), sbb -> sbb.renderInto(ms, vb), ms);
+		render(blockState, progress, te.isConnected(), sbb -> sbb.light(light).renderInto(ms, vb), ms);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,

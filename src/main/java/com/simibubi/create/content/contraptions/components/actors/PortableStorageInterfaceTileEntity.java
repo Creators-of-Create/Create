@@ -95,7 +95,7 @@ public class PortableStorageInterfaceTileEntity extends SmartTileEntity {
 	
 	boolean isConnected() {
 		int timeUnit = getTransferTimeout() / 2;
-		return transferTimer >= timeUnit && transferTimer < timeUnit * 3;
+		return transferTimer >= timeUnit && transferTimer <= timeUnit * 3;
 	}
 	
 	float getExtensionDistance(float partialTicks) {
