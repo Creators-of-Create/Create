@@ -50,6 +50,8 @@ import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutRenderer;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveRenderer;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankRenderer;
@@ -182,7 +184,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
 		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.validBlocks(AllBlocks.HAND_CRANK)
+		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.VALVE_HANDLE)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -212,6 +214,12 @@ public class AllTileEntities {
 		.tileEntity("glass_fluid_pipe", StraightPipeTileEntity::new)
 		.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
 		.renderer(() -> TransparentStraightPipeRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<FluidValveTileEntity> FLUID_VALVE = Create.registrate()
+		.tileEntity("fluid_valve", FluidValveTileEntity::new)
+		.validBlocks(AllBlocks.FLUID_VALVE)
+		.renderer(() -> FluidValveRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<FluidTankTileEntity> FLUID_TANK = Create.registrate()

@@ -42,7 +42,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(), te.getBlockState()
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
 			.get(BearingBlock.FACING)
 			.getOpposite());
 	}

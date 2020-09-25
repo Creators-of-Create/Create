@@ -28,6 +28,7 @@ import com.simibubi.create.content.contraptions.components.clock.CuckooClockBloc
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
@@ -65,6 +66,7 @@ import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
@@ -489,6 +491,24 @@ public class AllBlocks {
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
+			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
+				state.get(FluidValveBlock.ENABLED) ? "open" : "closed")))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<ValveHandleBlock> VALVE_HANDLE = REGISTRATE.block("valve_handle", ValveHandleBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.directionalBlockProvider(false))
+		.transform(StressConfigDefaults.setCapacity(32.0))
+		.tag(AllBlockTags.BRITTLE.tag)
+		.simpleItem()
 		.register();
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)

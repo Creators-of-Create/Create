@@ -68,7 +68,7 @@ public class AllBlockPartials {
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
-		
+
 		PORTABLE_STORAGE_INTERFACE_MIDDLE = get("portable_storage_interface/block_middle"),
 		PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = get("portable_storage_interface/block_middle_powered"),
 		PORTABLE_STORAGE_INTERFACE_TOP = get("portable_storage_interface/block_top"),
@@ -82,7 +82,7 @@ public class AllBlockPartials {
 		FLAG_LONG_IN = get("mechanical_arm/flag/long_in"), FLAG_LONG_OUT = get("mechanical_arm/flag/long_out"),
 
 		MECHANICAL_PUMP_ARROW = get("mechanical_pump/arrow"), MECHANICAL_PUMP_COG = get("mechanical_pump/cog"),
-		FLUID_PIPE_CASING = get("fluid_pipe/casing"),
+		FLUID_PIPE_CASING = get("fluid_pipe/casing"), FLUID_VALVE_POINTER = get("fluid_valve/pointer"),
 
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
@@ -161,6 +161,11 @@ public class AllBlockPartials {
 		return CreateClient.bufferCache.renderPartial(this, referenceState);
 	}
 
+	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState) {
+		Direction facing = referenceState.get(FACING);
+		return renderOnDirectionalSouth(referenceState, facing);
+	}
+
 	public SuperByteBuffer renderOnDirectional(BlockState referenceState) {
 		Direction facing = referenceState.get(FACING);
 		return renderOnDirectional(referenceState, facing);
@@ -168,7 +173,18 @@ public class AllBlockPartials {
 
 	public SuperByteBuffer renderOnHorizontal(BlockState referenceState) {
 		Direction facing = referenceState.get(HORIZONTAL_FACING);
-		return renderOnDirectional(referenceState, facing);
+		return renderOnDirectionalSouth(referenceState, facing);
+	}
+
+	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState, Direction facing) {
+		MatrixStack ms = new MatrixStack();
+		// TODO 1.15 find a way to cache this model matrix computation
+		MatrixStacker.of(ms)
+			.centre()
+			.rotateY(AngleHelper.horizontalAngle(facing))
+			.rotateX(AngleHelper.verticalAngle(facing))
+			.unCentre();
+		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 	}
 
 	public SuperByteBuffer renderOnDirectional(BlockState referenceState, Direction facing) {
@@ -177,7 +193,7 @@ public class AllBlockPartials {
 		MatrixStacker.of(ms)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing))
+			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.unCentre();
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 	}

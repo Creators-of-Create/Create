@@ -89,8 +89,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 
 		if (processingTicks == -1) {
 			processingTicks = FILLING_TIME;
-			markDirty();
-			sendData();
+			notifyUpdate();
 			return HOLD;
 		}
 
@@ -109,8 +108,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 
 		tank.getPrimaryHandler().setFluid(fluid);
 		sendSplash = true;
-		markDirty();
-		sendData();
+		notifyUpdate();
 		return PASS;
 	}
 

@@ -1,0 +1,44 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "create:block/fluid_valve",
+		"3": "create:block/fluid_pipe",
+		"particle": "create:block/oxidized/copper_block_0"
+	},
+	"elements": [
+		{
+			"name": "ValveCenter",
+			"from": [2, 2, 2],
+			"to": [14, 14, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [24, 11, 11]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 6], "texture": "#3"},
+				"east": {"uv": [0, 0, 6, 6], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [0, 0, 6, 6], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [0, 0, 6, 6], "rotation": 90, "texture": "#3"},
+				"up": {"uv": [6, 0, 12, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [6, 0, 12, 6], "rotation": 90, "texture": "#2"}
+			}
+		},
+		{
+			"from": [0, 4, 4],
+			"to": [2, 12, 12],
+			"faces": {
+				"north": {"uv": [0, 6, 4, 7], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [0, 6, 4, 7], "rotation": 270, "texture": "#3"},
+				"up": {"uv": [0, 6, 4, 7], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [0, 6, 4, 7], "rotation": 270, "texture": "#3"}
+			}
+		},
+		{
+			"from": [14, 4, 4],
+			"to": [16, 12, 12],
+			"faces": {
+				"north": {"uv": [0, 7, 4, 6], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [0, 7, 4, 6], "rotation": 270, "texture": "#3"},
+				"up": {"uv": [0, 7, 4, 6], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [0, 7, 4, 6], "rotation": 270, "texture": "#3"}
+			}
+		}
+	]
+}

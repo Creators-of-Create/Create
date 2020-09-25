@@ -54,7 +54,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			this.tanks[i] = tankSegment;
 			handlers[i] = tankSegment.tank;
 		}
-		capability = LazyOptional.of(() -> new InternalFluidHandler(handlers));
+		capability = LazyOptional.of(() -> new InternalFluidHandler(handlers, enforceVariety));
 	}
 
 	public SmartFluidTankBehaviour allowInsertion() {
@@ -177,7 +177,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	
 	class InternalFluidHandler extends CombinedTankWrapper {
 		
-		public InternalFluidHandler(IFluidHandler[] handlers) {
+		public InternalFluidHandler(IFluidHandler[] handlers, boolean enforceVariety) {
 			super(handlers);
 			if (enforceVariety)
 				enforceVariety();
@@ -234,6 +234,10 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 		public LerpedFloat getFluidLevel() {
 			return fluidLevel;
+		}
+		
+		public float getTotalUnits(float partialTicks) {
+			return fluidLevel.getValue(partialTicks) * tank.getCapacity();
 		}
 
 		public CompoundNBT writeNBT() {

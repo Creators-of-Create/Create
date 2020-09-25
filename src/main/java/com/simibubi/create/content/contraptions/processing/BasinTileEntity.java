@@ -114,6 +114,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	@Override
 	public void tick() {
+		super.tick();
 		if (!contentsChanged)
 			return;
 		contentsChanged = false;

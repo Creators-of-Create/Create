@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -22,15 +23,22 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-			int light, int overlay) {
+		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		BlockState state = te.getBlockState();
+		Block block = state.getBlock();
+		AllBlockPartials renderedHandle = null;
+		if (block instanceof HandCrankBlock)
+			renderedHandle = ((HandCrankBlock) block).getRenderedHandle();
+		if (renderedHandle == null)
+			return;
+
 		Direction facing = state.get(FACING);
-		SuperByteBuffer handle = AllBlockPartials.HAND_CRANK_HANDLE.renderOnDirectional(state, facing.getOpposite());
+		SuperByteBuffer handle = renderedHandle.renderOnDirectionalSouth(state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
-				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
+			(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
 		handle.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 

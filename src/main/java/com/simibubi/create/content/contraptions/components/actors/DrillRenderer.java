@@ -27,11 +27,11 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectional(te.getBlockState());
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(te.getBlockState());
 	}
 
 	protected static SuperByteBuffer getRotatingModel(BlockState state) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectional(state);
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,

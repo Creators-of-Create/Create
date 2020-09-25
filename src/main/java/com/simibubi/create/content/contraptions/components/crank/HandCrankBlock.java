@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -22,6 +23,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandCrankTileEntity> {
 
@@ -32,6 +35,15 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CRANK.get(state.get(FACING));
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public AllBlockPartials getRenderedHandle() {
+		return AllBlockPartials.HAND_CRANK_HANDLE;
+	}
+	
+	public int getRotationSpeed() {
+		return 32;
 	}
 
 	@Override

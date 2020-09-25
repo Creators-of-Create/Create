@@ -3,6 +3,7 @@
   "values": [
     "create:nozzle",
     "create:hand_crank",
+    "create:valve_handle",
     "create:rope",
     "create:pulley_magnet",
     "create:furnace_engine",

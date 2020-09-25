@@ -95,7 +95,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 	}
 
 	private SuperByteBuffer transform(AllBlockPartials partial, KineticTileEntity te) {
-		return partial.renderOnDirectional(te.getBlockState(), te.getBlockState()
+		return partial.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
 			.get(CuckooClockBlock.HORIZONTAL_FACING)
 			.getOpposite());
 	}
