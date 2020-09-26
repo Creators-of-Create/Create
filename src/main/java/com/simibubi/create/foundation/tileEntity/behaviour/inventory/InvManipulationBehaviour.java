@@ -36,6 +36,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	protected LazyOptional<IItemHandler> targetCapability;
 	protected boolean simulateNext;
 	protected boolean bypassSided;
+	private boolean findNewNextTick;
 
 	private BehaviourType<InvManipulationBehaviour> behaviourType;
 
@@ -55,7 +56,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		InterfaceProvider target) {
 		super(te);
 		behaviourType = type;
-		setLazyTickRate(40);
+		setLazyTickRate(5);
 		this.target = target;
 		this.targetCapability = LazyOptional.empty();
 		simulateNext = false;
@@ -137,11 +138,12 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		findNewCapability();
+		findNewNextTick = true;
 	}
 
 	protected void onHandlerInvalidated(LazyOptional<IItemHandler> handler) {
-		findNewCapability();
+		findNewNextTick = true;
+		targetCapability = LazyOptional.empty();
 	}
 
 	@Override
@@ -149,6 +151,15 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		super.lazyTick();
 		if (!targetCapability.isPresent())
 			findNewCapability();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		if (findNewNextTick) {
+			findNewNextTick = false;
+			findNewCapability();
+		}
 	}
 
 	public int getAmountFromFilter() {

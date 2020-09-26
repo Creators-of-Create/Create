@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 429",
+	"_": "Missing Localizations: 431",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -134,6 +134,7 @@
 	"block.create.fancy_weathered_limestone_bricks_wall": "UNLOCALIZED: Fancy Weathered Limestone Bricks Wall",
 	"block.create.fluid_pipe": "UNLOCALIZED: Fluid Pipe",
 	"block.create.fluid_tank": "UNLOCALIZED: Fluid Tank",
+	"block.create.fluid_valve": "UNLOCALIZED: Fluid Valve",
 	"block.create.flywheel": "Volant d'inertie",
 	"block.create.framed_glass": "Grande fenêtre en verre",
 	"block.create.framed_glass_pane": "Grande vitre encadrée",
@@ -337,6 +338,7 @@
 	"block.create.tiled_glass": "Verre carrelé",
 	"block.create.tiled_glass_pane": "Vitre carrelé",
 	"block.create.turntable": "Plaque tournante",
+	"block.create.valve_handle": "UNLOCALIZED: Valve Handle",
 	"block.create.vertical_framed_glass": "Fenêtre en verre verticale",
 	"block.create.vertical_framed_glass_pane": "Vitre encadrée verticale",
 	"block.create.water_wheel": "Roue à eau",

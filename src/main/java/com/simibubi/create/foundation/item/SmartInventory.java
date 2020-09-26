@@ -7,11 +7,10 @@ import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class SmartInventory extends RecipeWrapper implements IItemHandlerModifiable, INBTSerializable<CompoundNBT> {
+public class SmartInventory extends RecipeWrapper implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundNBT> {
 
 	private boolean extractionAllowed;
 	private boolean insertionAllowed;
@@ -83,6 +82,11 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 		inv.setStackInSlot(slot, stack);
 	}
 
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return super.getStackInSlot(slot);
+	}
+	
 	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
 		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 	}
@@ -116,6 +120,11 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 			te.notifyUpdate();
 		}
 
+	}
+
+	@Override
+	public ItemStack getStackInSlotIntermediate(int slot) {
+		return getStackInSlot(slot);
 	}
 
 }

@@ -75,7 +75,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(), te.getBlockState()
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
 			.get(HORIZONTAL_FACING)
 			.getOpposite());
 	}

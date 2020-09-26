@@ -8,6 +8,7 @@ import static net.minecraft.util.Direction.UP;
 import static net.minecraft.util.Direction.WEST;
 
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 
 /**
  * A bunch of methods that got stripped out of Direction in 1.15
@@ -73,4 +74,9 @@ public class DirectionHelper {
 			return WEST;
 		}
 	}
+	
+	public static Direction getPositivePerpendicular(Axis horizontalAxis) {
+		return horizontalAxis == Axis.X ? SOUTH : EAST;
+	}
+	
 }

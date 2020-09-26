@@ -36,19 +36,18 @@ public class GlassFluidPipeBlock extends AxisPipeBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.GLASS_FLUID_PIPE.create();
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		BlockState newState = state;
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
-		if (!state.get(ALT))
-			newState = state.with(ALT, true);
-		else
-			newState = toRegularPipe(world, pos, state);
+//		if (!state.get(ALT))
+//			newState = state.with(ALT, true);
+//		else
+		newState = toRegularPipe(world, pos, state);
 		world.setBlockState(pos, newState, 3);
 		return ActionResultType.SUCCESS;
 	}
-
 
 }

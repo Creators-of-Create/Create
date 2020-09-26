@@ -218,6 +218,8 @@ class FluidNetworkFlow {
 					if (entry.getValue() != pulling)
 						continue;
 					Direction face = entry.getKey();
+					if (!pipe.canTransferToward(fluidStack, state, face, false))
+						continue;
 					BlockFace addedBlockFace = new BlockFace(currentPos.offset(face), face.getOpposite());
 					if (skipping && !canSkip(previousFlow, addedBlockFace)) {
 						allFlowsComplete = false;

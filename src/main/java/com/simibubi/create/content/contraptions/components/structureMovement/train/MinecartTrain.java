@@ -2,9 +2,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -55,6 +57,8 @@ public class MinecartTrain {
 		// SOFT collision - modify motion of carts with stressed links @t+1
 		double sharedMotion = 0;
 		int participants = 0;
+		boolean stall = false;
+		
 		for (int i = 0; i < couplings.size(); i++) {
 			MinecartCoupling minecartCoupling = couplings.get(i);
 			boolean last = i + 1 == couplings.size();
@@ -64,6 +68,14 @@ public class MinecartTrain {
 			sharedMotion += minecartCoupling.mainCart.get()
 				.getMotion()
 				.length();
+			
+			List<Entity> passengers = minecartCoupling.mainCart.get().getPassengers();
+			if (!passengers.isEmpty() && passengers.get(0) instanceof ContraptionEntity)
+				if (((ContraptionEntity) passengers.get(0)).isStalled()) {
+					stall = true;
+					break;
+				}
+				
 
 			if (last) {
 				participants++;
@@ -137,6 +149,12 @@ public class MinecartTrain {
 				MinecartCoupling minecartCoupling = couplings.get(i);
 				if (!minecartCoupling.areBothEndsPresent())
 					continue;
+				
+				if (stall) {
+					minecartCoupling.asCouple().forEach(ame -> ame.setMotion(Vec3d.ZERO));
+					continue;
+				}
+				
 				double stress = getStressOfCoupling(minecartCoupling);
 				if (stress > maxStress) {
 					maxStress = stress;

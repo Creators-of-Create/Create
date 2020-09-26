@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 806",
+	"_": "Missing Localizations: 808",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -135,6 +135,7 @@
 	"block.create.fluid_pipe": "Жидкостная труба",
 	"block.create.fluid_tank": "Жидкостный бак",
 	"block.create.flywheel": "Маховик",
+	"block.create.fluid_valve": "Жидкостный кран",
 	"block.create.framed_glass": "UNLOCALIZED: Framed Glass",
 	"block.create.framed_glass_pane": "UNLOCALIZED: Framed Glass Pane",
 	"block.create.furnace_engine": "Печной двигатель",
@@ -337,6 +338,7 @@
 	"block.create.tiled_glass": "Плиточное стекло",
 	"block.create.tiled_glass_pane": "Плиточная стеклянная панель",
 	"block.create.turntable": "Поворотный стол",
+	"block.create.valve_handle": "UNLOCALIZED: Valve Handle",
 	"block.create.vertical_framed_glass": "UNLOCALIZED: Vertical Framed Glass",
 	"block.create.vertical_framed_glass_pane": "UNLOCALIZED: Vertical Framed Glass Pane",
 	"block.create.water_wheel": "Водяное колесо",

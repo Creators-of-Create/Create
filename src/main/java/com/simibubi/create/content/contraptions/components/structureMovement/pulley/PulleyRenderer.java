@@ -77,7 +77,7 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return AllBlockPartials.ROPE_COIL.renderOnDirectional(blockState, horizontalFacing(blockState));
+		return AllBlockPartials.ROPE_COIL.renderOnDirectionalSouth(blockState, horizontalFacing(blockState));
 	}
 
 	public Direction horizontalFacing(BlockState blockState) {

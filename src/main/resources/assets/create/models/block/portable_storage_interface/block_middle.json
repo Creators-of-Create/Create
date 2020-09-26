@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/portable_storage_interface",
+		"particle": "create:block/portable_storage_interface"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 2],
+			"to": [14, 9, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 8, 10]},
+			"faces": {
+				"north": {"uv": [1, 3.5, 7, 8], "texture": "#0"},
+				"east": {"uv": [1, 3.5, 7, 8], "texture": "#0"},
+				"south": {"uv": [1, 3.5, 7, 8], "texture": "#0"},
+				"west": {"uv": [1, 3.5, 7, 8], "texture": "#0"},
+				"up": {"uv": [1.5, 3.5, 2, 4], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Middle",
+			"origin": [10, 22, 10],
+			"children": [0]
+		}
+	]
+}
