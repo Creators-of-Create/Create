@@ -1,7 +1,6 @@
 {
   "parent": "create:block/seat",
   "textures": {
-    "3": "create:block/valve_handle/valve_handle_gray",
     "1": "create:block/seat/top_gray",
     "2": "create:block/seat/side_gray"
   }
