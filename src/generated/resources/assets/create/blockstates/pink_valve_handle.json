@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "create:block/pink_valve_handle",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "create:block/pink_valve_handle"
+    },
+    "facing=north": {
+      "model": "create:block/pink_valve_handle",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "create:block/pink_valve_handle",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:block/pink_valve_handle",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create:block/pink_valve_handle",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

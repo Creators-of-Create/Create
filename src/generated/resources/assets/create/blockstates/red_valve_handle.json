@@ -1,28 +1,28 @@
 {
   "variants": {
     "facing=down": {
-      "model": "create:block/valve_handle",
+      "model": "create:block/red_valve_handle",
       "x": 180
     },
     "facing=up": {
-      "model": "create:block/valve_handle"
+      "model": "create:block/red_valve_handle"
     },
     "facing=north": {
-      "model": "create:block/valve_handle",
+      "model": "create:block/red_valve_handle",
       "x": 90
     },
     "facing=south": {
-      "model": "create:block/valve_handle",
+      "model": "create:block/red_valve_handle",
       "x": 90,
       "y": 180
     },
     "facing=west": {
-      "model": "create:block/valve_handle",
+      "model": "create:block/red_valve_handle",
       "x": 90,
       "y": 270
     },
     "facing=east": {
-      "model": "create:block/valve_handle",
+      "model": "create:block/red_valve_handle",
       "x": 90,
       "y": 90
     }

@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.clock.CuckooClockRend
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterRenderer;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.content.contraptions.components.crank.AllValveHandles;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankRenderer;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankTileEntity;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
@@ -184,7 +185,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
 		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.VALVE_HANDLE)
+		.validBlocks(AllBlocks.HAND_CRANK)
+		.validBlocks(AllValveHandles.variants)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 

@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/valve_handle",
+  "textures": {
+    "3": "create:block/valve_handle/valve_handle_blue"
+  }
+}
