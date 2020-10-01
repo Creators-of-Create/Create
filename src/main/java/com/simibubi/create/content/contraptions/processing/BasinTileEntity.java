@@ -167,4 +167,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	}
 
+	public void readOnlyItems(CompoundNBT compound) {
+		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+	}
 }
