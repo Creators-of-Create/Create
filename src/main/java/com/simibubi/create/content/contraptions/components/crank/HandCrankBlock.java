@@ -61,6 +61,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 			return ActionResultType.PASS;
 
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isSneaking()));
+		player.addExhaustion(getRotationSpeed()/100.f);
 		return ActionResultType.SUCCESS;
 	}
 
