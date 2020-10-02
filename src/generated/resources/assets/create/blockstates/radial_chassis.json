@@ -149,8 +149,8 @@
     },
     {
       "when": {
-        "axis": "x",
-        "sticky_north": "true"
+        "sticky_north": "true",
+        "axis": "x"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky"
@@ -158,8 +158,8 @@
     },
     {
       "when": {
-        "axis": "y",
-        "sticky_north": "true"
+        "sticky_north": "true",
+        "axis": "y"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_y_sticky",
@@ -168,8 +168,8 @@
     },
     {
       "when": {
-        "axis": "z",
-        "sticky_north": "true"
+        "sticky_north": "true",
+        "axis": "z"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
@@ -178,8 +178,8 @@
     },
     {
       "when": {
-        "axis": "x",
-        "sticky_north": "false"
+        "sticky_north": "false",
+        "axis": "x"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_x"
@@ -187,8 +187,8 @@
     },
     {
       "when": {
-        "axis": "y",
-        "sticky_north": "false"
+        "sticky_north": "false",
+        "axis": "y"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_y",
@@ -197,8 +197,8 @@
     },
     {
       "when": {
-        "axis": "z",
-        "sticky_north": "false"
+        "sticky_north": "false",
+        "axis": "z"
       },
       "apply": {
         "model": "create:block/radial_chassis_side_x",

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:valve_handle"
+          "name": "create:yellow_valve_handle"
         }
       ],
       "conditions": [
