@@ -26,6 +26,11 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 	public PulleyRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
+	
+	@Override
+	public boolean isGlobalRenderer(KineticTileEntity p_188185_1_) {
+		return true;
+	}
 
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

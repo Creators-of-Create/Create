@@ -63,7 +63,7 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, -yOffset, focused ? 100 : 0);
 
-		AllGuiTextures gray = AllGuiTextures.GRAY;
+		AllGuiTextures gray = AllGuiTextures.HUD_BACKGROUND;
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 

@@ -92,10 +92,14 @@ public class AllIcons {
 		I_ARM_ROUND_ROBIN = next(),
 		I_ARM_FORCED_ROUND_ROBIN = next(),
 		I_ARM_PREFER_FIRST = next(),
+		
+		I_ADD_INVERTED_ATTRIBUTE = next(),
+		I_FLIP = next(),
 	
 		I_PLAY = newRow(),
 		I_PAUSE = next(),
 		I_STOP = next(),
+		I_PLACEMENT_SETTINGS = next(),
 	
 		I_PATTERN_SOLID = newRow(),
 		I_PATTERN_CHECKERED = next(),
@@ -105,7 +109,9 @@ public class AllIcons {
 		I_PATTERN_CHANCE_50 = newRow(),
 		I_PATTERN_CHANCE_75 = next(),
 		I_FOLLOW_DIAGONAL = next(),
-		I_FOLLOW_MATERIAL = next();
+		I_FOLLOW_MATERIAL = next(),
+		
+		I_SCHEMATIC = newRow();
 	
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

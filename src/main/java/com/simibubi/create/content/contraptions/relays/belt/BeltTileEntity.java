@@ -76,7 +76,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		casing = CasingType.NONE;
 		color = -1;
 	}
-
+	
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);

@@ -13,6 +13,7 @@ import com.simibubi.create.content.logistics.InWorldProcessing.Type;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -305,7 +306,7 @@ public class AirCurrent {
 				InWorldProcessing.spawnParticlesForProcessing(world, handler.getWorldPositionOf(transported),
 					processingType);
 				if (world.isRemote)
-					return null;
+					return TransportedResult.doNothing();
 				return InWorldProcessing.applyProcessing(transported, world, processingType);
 			});
 		}

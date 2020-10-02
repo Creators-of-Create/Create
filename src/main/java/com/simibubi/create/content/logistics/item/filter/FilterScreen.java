@@ -42,20 +42,20 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		int x = guiLeft;
 		int y = guiTop;
 
-		blacklist = new IconButton(x + 58, y + 72, AllIcons.I_BLACKLIST);
+		blacklist = new IconButton(x + 18, y + 73, AllIcons.I_BLACKLIST);
 		blacklist.setToolTip(blacklistN);
-		whitelist = new IconButton(x + 76, y + 72, AllIcons.I_WHITELIST);
+		whitelist = new IconButton(x + 36, y + 73, AllIcons.I_WHITELIST);
 		whitelist.setToolTip(whitelistN);
-		blacklistIndicator = new Indicator(x + 58, y + 67, "");
-		whitelistIndicator = new Indicator(x + 76, y + 67, "");
+		blacklistIndicator = new Indicator(x + 18, y + 67, "");
+		whitelistIndicator = new Indicator(x + 36, y + 67, "");
 		widgets.addAll(Arrays.asList(blacklist, whitelist, blacklistIndicator, whitelistIndicator));
 
-		respectNBT = new IconButton(x + 98, y + 72, AllIcons.I_RESPECT_NBT);
+		respectNBT = new IconButton(x + 60, y + 73, AllIcons.I_RESPECT_NBT);
 		respectNBT.setToolTip(respectDataN);
-		ignoreNBT = new IconButton(x + 116, y + 72, AllIcons.I_IGNORE_NBT);
+		ignoreNBT = new IconButton(x + 78, y + 73, AllIcons.I_IGNORE_NBT);
 		ignoreNBT.setToolTip(ignoreDataN);
-		respectNBTIndicator = new Indicator(x + 98, y + 67, "");
-		ignoreNBTIndicator = new Indicator(x + 116, y + 67, "");
+		respectNBTIndicator = new Indicator(x + 60, y + 67, "");
+		ignoreNBTIndicator = new Indicator(x + 78, y + 67, "");
 		widgets.addAll(Arrays.asList(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator));
 		handleIndicators();
 	}

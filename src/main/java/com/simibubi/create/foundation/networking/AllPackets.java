@@ -23,6 +23,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
+import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
@@ -55,6 +56,7 @@ public enum AllPackets {
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
 	MINECART_COUPLING_CREATION(MinecartCouplingCreationPacket.class, MinecartCouplingCreationPacket::new),
 	PERSISTANT_DATA_REQUEST(PersistantDataPacketRequest.class, PersistantDataPacketRequest::new),
+	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

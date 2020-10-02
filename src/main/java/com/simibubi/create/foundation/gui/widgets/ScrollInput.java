@@ -45,6 +45,11 @@ public class ScrollInput extends AbstractSimiWidget {
 		this.onScroll = onScroll;
 		return this;
 	}
+	
+	public ScrollInput removeCallback() {
+		this.onScroll = null;
+		return this;
+	}
 
 	public ScrollInput titled(String title) {
 		this.title = title;

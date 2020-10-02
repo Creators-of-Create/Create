@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -27,7 +28,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	WhitelistMode whitelistMode;
-	List<ItemAttribute> selectedAttributes;
+	List<Pair<ItemAttribute, Boolean>> selectedAttributes;
 
 	public AttributeFilterContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(AllContainerTypes.ATTRIBUTE_FILTER.type, id, inv, extraData);
@@ -37,21 +38,21 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		super(AllContainerTypes.ATTRIBUTE_FILTER.type, id, inv, stack);
 	}
 
-	public void appendSelectedAttribute(ItemAttribute itemAttribute) {
-		selectedAttributes.add(itemAttribute);
+	public void appendSelectedAttribute(ItemAttribute itemAttribute, boolean inverted) {
+		selectedAttributes.add(Pair.of(itemAttribute, inverted));
 	}
 
 	@Override
 	protected void clearContents() {
 		selectedAttributes.clear();
 	}
-	
+
 	@Override
 	protected void init() {
 		super.init();
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.setDisplayName(
-				new StringTextComponent("Selected Tags").applyTextStyles(TextFormatting.RESET, TextFormatting.BLUE));
+			new StringTextComponent("Selected Tags").applyTextStyles(TextFormatting.RESET, TextFormatting.BLUE));
 		filterInventory.setStackInSlot(1, stack);
 	}
 
@@ -61,8 +62,8 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	protected void addFilterSlots() {
-		this.addSlot(new SlotItemHandler(filterInventory, 0, 16, 23));
-		this.addSlot(new SlotItemHandler(filterInventory, 1, 59, 56) {
+		this.addSlot(new SlotItemHandler(filterInventory, 0, 16, 22));
+		this.addSlot(new SlotItemHandler(filterInventory, 1, 22, 57) {
 			@Override
 			public boolean canTakeStack(PlayerEntity playerIn) {
 				return false;
@@ -110,29 +111,37 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected int getInventoryOffset() {
-		return 86;
+		return 83;
 	}
 
 	@Override
 	protected void readData(ItemStack filterItem) {
 		selectedAttributes = new ArrayList<>();
-		whitelistMode = WhitelistMode.values()[filterItem.getOrCreateTag().getInt("WhitelistMode")];
-		ListNBT attributes = filterItem.getOrCreateTag().getList("MatchedAttributes", NBT.TAG_COMPOUND);
-		attributes.forEach(inbt -> selectedAttributes.add(ItemAttribute.fromNBT((CompoundNBT) inbt)));
+		whitelistMode = WhitelistMode.values()[filterItem.getOrCreateTag()
+			.getInt("WhitelistMode")];
+		ListNBT attributes = filterItem.getOrCreateTag()
+			.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+		attributes.forEach(inbt -> {
+			CompoundNBT compound = (CompoundNBT) inbt;
+			selectedAttributes.add(Pair.of(ItemAttribute.fromNBT(compound), compound.getBoolean("Inverted")));
+		});
 	}
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
-		filterItem.getOrCreateTag().putInt("WhitelistMode", whitelistMode.ordinal());
+		filterItem.getOrCreateTag()
+			.putInt("WhitelistMode", whitelistMode.ordinal());
 		ListNBT attributes = new ListNBT();
 		selectedAttributes.forEach(at -> {
 			if (at == null)
 				return;
 			CompoundNBT compoundNBT = new CompoundNBT();
-			at.serializeNBT(compoundNBT);
+			at.getFirst().serializeNBT(compoundNBT);
+			compoundNBT.putBoolean("Inverted", at.getSecond());
 			attributes.add(compoundNBT);
 		});
-		filterItem.getOrCreateTag().put("MatchedAttributes", attributes);
+		filterItem.getOrCreateTag()
+			.put("MatchedAttributes", attributes);
 	}
 
 }

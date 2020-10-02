@@ -14,7 +14,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.IOUtils;
+
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.item.SchematicItem;
@@ -23,12 +26,17 @@ import com.simibubi.create.foundation.config.CSchematics;
 import com.simibubi.create.foundation.utility.FilesHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.template.Template;
 
 public class ServerSchematicLoader {
 
@@ -92,17 +100,12 @@ public class ServerSchematicLoader {
 		// Unsupported Format
 		if (!schematic.endsWith(".nbt")) {
 			Create.logger.warn("Attempted Schematic Upload with non-supported Format: " + playerSchematicId);
+			return;
 		}
 
 		// Too big
-		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
-		if (size > maxFileSize * 1000) {
-			player.sendMessage(new TranslationTextComponent("create.schematics.uploadTooLarge")
-				.appendSibling(new StringTextComponent(" (" + size / 1000 + " KB).")));
-			player.sendMessage(new TranslationTextComponent("create.schematics.maxAllowedSize")
-				.appendSibling(new StringTextComponent(" " + maxFileSize + " KB")));
+		if (!validateSchematicSizeOnServer(player, size))
 			return;
-		}
 
 		// Skip existing Uploads
 		if (activeUploads.containsKey(playerSchematicId))
@@ -134,8 +137,7 @@ public class ServerSchematicLoader {
 			// Open Stream
 			OutputStream writer =
 				Files.newOutputStream(Paths.get(getSchematicPath(), playerSchematicId), StandardOpenOption.CREATE_NEW);
-			activeUploads.put(playerSchematicId,
-				new SchematicUploadEntry(writer, size, player.getServerWorld(), pos));
+			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, player.getServerWorld(), pos));
 
 			// Notify Tile Entity
 			table.startUpload(schematic);
@@ -144,6 +146,18 @@ public class ServerSchematicLoader {
 			Create.logger.error("Exception Thrown when starting Upload: " + playerSchematicId);
 			e.printStackTrace();
 		}
+	}
+
+	protected boolean validateSchematicSizeOnServer(ServerPlayerEntity player, long size) {
+		Integer maxFileSize = getConfig().maxTotalSchematicSize.get();
+		if (size > maxFileSize * 1000) {
+			player.sendMessage(new TranslationTextComponent("create.schematics.uploadTooLarge")
+				.appendSibling(new StringTextComponent(" (" + size / 1000 + " KB).")));
+			player.sendMessage(new TranslationTextComponent("create.schematics.maxAllowedSize")
+				.appendSibling(new StringTextComponent(" " + maxFileSize + " KB")));
+			return false;
+		}
+		return true;
 	}
 
 	public CSchematics getConfig() {
@@ -231,7 +245,7 @@ public class ServerSchematicLoader {
 				SchematicUploadEntry removed = activeUploads.remove(playerSchematicId);
 				World world = removed.world;
 				BlockPos pos = removed.tablePos;
-				
+
 				Create.logger.info("New Schematic Uploaded: " + playerSchematicId);
 				if (pos == null)
 					return;
@@ -252,6 +266,65 @@ public class ServerSchematicLoader {
 				e.printStackTrace();
 			}
 		}
-
 	}
+
+	public void handleInstantSchematic(ServerPlayerEntity player, String schematic, World world, BlockPos pos,
+		BlockPos bounds) {
+		String playerPath = getSchematicPath() + "/" + player.getName()
+			.getFormattedText();
+		String playerSchematicId = player.getName()
+			.getFormattedText() + "/" + schematic;
+		FilesHelper.createFolderIfMissing(playerPath);
+
+		// Unsupported Format
+		if (!schematic.endsWith(".nbt")) {
+			Create.logger.warn("Attempted Schematic Upload with non-supported Format: " + playerSchematicId);
+			return;
+		}
+
+		// Not holding S&Q
+		if (!AllItems.SCHEMATIC_AND_QUILL.isIn(player.getHeldItemMainhand()))
+			return;
+
+		try {
+			// Delete schematic with same name
+			Path path = Paths.get(getSchematicPath(), playerSchematicId);
+			Files.deleteIfExists(path);
+
+			// Too many Schematics
+			Stream<Path> list = Files.list(Paths.get(playerPath));
+			if (list.count() >= getConfig().maxSchematics.get()) {
+				Stream<Path> list2 = Files.list(Paths.get(playerPath));
+				Optional<Path> lastFilePath = list2.filter(f -> !Files.isDirectory(f))
+					.min(Comparator.comparingLong(f -> f.toFile()
+						.lastModified()));
+				list2.close();
+				if (lastFilePath.isPresent()) 
+					Files.deleteIfExists(lastFilePath.get());
+			}
+			list.close();
+
+			Template t = new Template();
+			t.takeBlocksFromWorld(world, pos, bounds, true, Blocks.AIR);
+
+			OutputStream outputStream = null;
+			try {
+				outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
+				CompoundNBT nbttagcompound = t.writeToNBT(new CompoundNBT());
+				CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
+				player.setHeldItem(Hand.MAIN_HAND, SchematicItem.create(schematic, player.getName()
+					.getFormattedText()));
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (outputStream != null)
+					IOUtils.closeQuietly(outputStream);
+			}
+		} catch (IOException e) {
+			Create.logger.error("Exception Thrown in direct Schematic Upload: " + playerSchematicId);
+			e.printStackTrace();
+		}
+	}
+
 }

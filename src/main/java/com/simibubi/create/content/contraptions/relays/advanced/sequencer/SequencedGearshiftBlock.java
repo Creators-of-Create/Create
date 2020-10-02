@@ -141,5 +141,15 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
 	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+		return true;
+	}
+	
+	@Override
+	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
+		return state.get(STATE).intValue();
+	}
 
 }
