@@ -1,5 +1,5 @@
 {
-  "parent": "block/inner_stairs",
+  "parent": "minecraft:block/inner_stairs",
   "textures": {
     "side": "create:block/palettes/diorite/bricks",
     "bottom": "create:block/palettes/diorite/bricks",

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:lava_wheel"
+      "trigger": "create:lava_wheel",
+      "conditions": {}
     }
   },
   "requirements": [

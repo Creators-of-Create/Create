@@ -1,5 +1,5 @@
 {
-  "parent": "block/template_wall_post",
+  "parent": "minecraft:block/template_wall_post",
   "textures": {
     "wall": "create:block/palettes/dark_scoria/polished"
   }

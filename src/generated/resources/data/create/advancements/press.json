@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:bonk"
+      "trigger": "create:bonk",
+      "conditions": {}
     }
   },
   "requirements": [

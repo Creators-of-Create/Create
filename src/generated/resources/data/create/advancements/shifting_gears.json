@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:shifting_gears"
+      "trigger": "create:shifting_gears",
+      "conditions": {}
     }
   },
   "requirements": [

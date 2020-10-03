@@ -1,5 +1,5 @@
 {
-  "parent": "block/stairs",
+  "parent": "minecraft:block/stairs",
   "textures": {
     "side": "create:block/palettes/dark_scoria/fancy_bricks",
     "bottom": "create:block/palettes/dark_scoria/fancy_bricks",

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:connect_belt"
+      "trigger": "create:connect_belt",
+      "conditions": {}
     }
   },
   "requirements": [

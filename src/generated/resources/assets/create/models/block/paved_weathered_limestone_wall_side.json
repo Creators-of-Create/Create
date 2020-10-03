@@ -1,5 +1,5 @@
 {
-  "parent": "block/template_wall_side",
+  "parent": "minecraft:block/template_wall_side",
   "textures": {
     "wall": "create:block/palettes/weathered_limestone/paved"
   }

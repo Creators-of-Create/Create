@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:deployer"
+      "trigger": "create:deployer",
+      "conditions": {}
     }
   },
   "requirements": [

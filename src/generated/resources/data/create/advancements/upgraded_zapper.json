@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:upgraded_zapper"
+      "trigger": "create:upgraded_zapper",
+      "conditions": {}
     }
   },
   "requirements": [

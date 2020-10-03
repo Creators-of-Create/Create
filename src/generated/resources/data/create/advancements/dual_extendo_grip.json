@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:giga_extendo"
+      "trigger": "create:giga_extendo",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -2,6 +2,6 @@
   "parent": "create:block/connected_glass_pane/side",
   "textures": {
     "pane": "create:block/palettes/dark_oak_window",
-    "edge": "block/dark_oak_planks"
+    "edge": "minecraft:block/dark_oak_planks"
   }
 }

@@ -3,6 +3,6 @@
   "textures": {
     "1": "create:block/andesite_tunnel_top",
     "2": "create:block/andesite_tunnel",
-    "particle": "block/polished_andesite"
+    "particle": "minecraft:block/polished_andesite"
   }
 }

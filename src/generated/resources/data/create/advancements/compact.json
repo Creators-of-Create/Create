@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:compact"
+      "trigger": "create:compact",
+      "conditions": {}
     }
   },
   "requirements": [

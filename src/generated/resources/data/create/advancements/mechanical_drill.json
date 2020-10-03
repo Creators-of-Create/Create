@@ -24,9 +24,7 @@
     },
     "1": {
       "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:mechanical_drill"
-      }
+      "conditions": {}
     }
   },
   "requirements": [

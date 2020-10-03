@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:extendo"
+      "trigger": "create:extendo",
+      "conditions": {}
     }
   },
   "requirements": [

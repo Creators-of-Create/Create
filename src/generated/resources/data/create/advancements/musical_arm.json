@@ -24,12 +24,11 @@
     },
     "1": {
       "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:mechanical_arm"
-      }
+      "conditions": {}
     },
     "2": {
-      "trigger": "create:musical_arm"
+      "trigger": "create:musical_arm",
+      "conditions": {}
     }
   },
   "requirements": [

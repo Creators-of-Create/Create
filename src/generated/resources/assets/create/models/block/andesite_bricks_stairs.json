@@ -1,5 +1,5 @@
 {
-  "parent": "block/stairs",
+  "parent": "minecraft:block/stairs",
   "textures": {
     "side": "create:block/palettes/andesite/bricks",
     "bottom": "create:block/palettes/andesite/bricks",

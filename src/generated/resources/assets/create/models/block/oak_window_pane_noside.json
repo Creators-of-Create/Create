@@ -2,6 +2,6 @@
   "parent": "create:block/connected_glass_pane/noside",
   "textures": {
     "pane": "create:block/palettes/oak_window",
-    "edge": "block/oak_planks"
+    "edge": "minecraft:block/oak_planks"
   }
 }

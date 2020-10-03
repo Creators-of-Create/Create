@@ -1,5 +1,5 @@
 {
-  "parent": "block/slab",
+  "parent": "minecraft:block/slab",
   "textures": {
     "side": "create:block/palettes/weathered_limestone/bricks",
     "bottom": "create:block/palettes/weathered_limestone/bricks",

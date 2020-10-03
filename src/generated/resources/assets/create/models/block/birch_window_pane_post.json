@@ -2,6 +2,6 @@
   "parent": "create:block/connected_glass_pane/post",
   "textures": {
     "pane": "create:block/palettes/birch_window",
-    "edge": "block/birch_planks"
+    "edge": "minecraft:block/birch_planks"
   }
 }

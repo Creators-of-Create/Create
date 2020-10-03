@@ -85,6 +85,7 @@ public class AllTags {
 		private AllItemTags(NameSpace namespace, String path) {
 			tag = ItemTags.makeWrapperTag(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -120,6 +121,7 @@ public class AllTags {
 		private AllBlockTags(NameSpace namespace, String path) {
 			tag = BlockTags.makeWrapperTag(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
 		}
 
 		public boolean matches(BlockState block) {

@@ -2,6 +2,6 @@
   "parent": "create:block/connected_glass_pane/post",
   "textures": {
     "pane": "create:block/palettes/jungle_window",
-    "edge": "block/jungle_planks"
+    "edge": "minecraft:block/jungle_planks"
   }
 }

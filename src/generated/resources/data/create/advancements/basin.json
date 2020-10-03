@@ -23,7 +23,8 @@
       }
     },
     "1": {
-      "trigger": "create:basin"
+      "trigger": "create:basin",
+      "conditions": {}
     }
   },
   "requirements": [

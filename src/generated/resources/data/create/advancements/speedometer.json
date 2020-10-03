@@ -24,9 +24,7 @@
     },
     "1": {
       "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:speedometer"
-      }
+      "conditions": {}
     }
   },
   "requirements": [

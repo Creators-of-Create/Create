@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube_bottom_top",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
     "side": "create:block/palettes/granite/paved",
     "bottom": "create:block/palettes/granite/paved_borderless",

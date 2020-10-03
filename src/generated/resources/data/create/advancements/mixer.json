@@ -24,12 +24,11 @@
     },
     "1": {
       "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:mechanical_mixer"
-      }
+      "conditions": {}
     },
     "2": {
-      "trigger": "create:mixer"
+      "trigger": "create:mixer",
+      "conditions": {}
     }
   },
   "requirements": [

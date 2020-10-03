@@ -23,7 +23,8 @@
       }
     },
     "1": {
-      "trigger": "create:water_wheel"
+      "trigger": "create:water_wheel",
+      "conditions": {}
     }
   },
   "requirements": [

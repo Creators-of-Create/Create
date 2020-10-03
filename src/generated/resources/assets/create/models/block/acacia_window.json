@@ -1,7 +1,7 @@
 {
-  "parent": "block/cube_column",
+  "parent": "minecraft:block/cube_column",
   "textures": {
     "side": "create:block/palettes/acacia_window",
-    "end": "block/acacia_planks"
+    "end": "minecraft:block/acacia_planks"
   }
 }

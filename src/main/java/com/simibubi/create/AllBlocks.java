@@ -538,7 +538,7 @@ public class AllBlocks {
 			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
 				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
-					.name() + "/head"))))
+					.getString() + "/head"))))
 			.register();
 
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
