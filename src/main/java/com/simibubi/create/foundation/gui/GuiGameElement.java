@@ -244,7 +244,7 @@ public class GuiGameElement {
 				RenderHelper.disableStandardItemLighting();
 
 				ClientWorld world = Minecraft.getInstance().world;
-				if (renderWorld == null || renderWorld.getWorld() != world)
+				if (renderWorld == null || renderWorld.getWrappedWorld() != world)
 					renderWorld = new FluidRenderWorld(world);
 				
 				for (Direction d : Iterate.directions) {

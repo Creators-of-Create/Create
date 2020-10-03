@@ -60,7 +60,7 @@ public class ContraptionRenderer {
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c) {
-		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
+		if (renderWorld == null || renderWorld.getWrappedWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
 		MatrixStack ms = new MatrixStack();

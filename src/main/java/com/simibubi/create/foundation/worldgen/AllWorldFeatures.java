@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -56,7 +57,7 @@ public enum AllWorldFeatures {
 
 				if (biome.getRegistryName() == Biomes.THE_VOID.getRegistryName())
 					continue;
-				if (biome == Biomes.NETHER)
+				if (biome.getCategory() == Category.NETHER)
 					continue;
 
 				if (entry.featureInstances.containsKey(biome))

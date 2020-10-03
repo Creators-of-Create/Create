@@ -42,7 +42,7 @@ public class WrappedWorld extends World {
 
 	// FIXME
 	// @Override
-	public World getWorld() {
+	public World getWrappedWorld() {
 		return world;
 	}
 

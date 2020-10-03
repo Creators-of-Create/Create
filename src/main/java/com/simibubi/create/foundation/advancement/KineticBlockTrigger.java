@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.simibubi.create.Create;
 
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -52,7 +53,7 @@ public class KineticBlockTrigger extends CriterionTriggerBase<KineticBlockTrigge
 		private final Block block;
 
 		public Instance(Block block) {
-			super(KineticBlockTrigger.ID);
+			super(KineticBlockTrigger.ID, EntityPredicate.AndPredicate.EMPTY); // FIXME: Is this right?
 			this.block = block;
 		}
 		

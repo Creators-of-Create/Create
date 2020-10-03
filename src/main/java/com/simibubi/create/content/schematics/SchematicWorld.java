@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
-
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -26,11 +26,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.*;
+import net.minecraft.world.EmptyTickList;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.ITickList;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeRegistry;
+import net.minecraft.world.server.ServerWorld;
 
-public class SchematicWorld extends WrappedWorld {
+public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
@@ -189,4 +194,11 @@ public class SchematicWorld extends WrappedWorld {
 		return tileEntities.values();
 	}
 
+	@Override
+	public ServerWorld getWorld() {
+		if (this.world instanceof ServerWorld) {
+			return (ServerWorld) this.world;
+		}
+		throw new IllegalStateException("Cannot use IServerWorld#getWorld in a client environment");
+	}
 }
