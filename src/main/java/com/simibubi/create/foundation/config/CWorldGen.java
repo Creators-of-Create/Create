@@ -15,18 +15,6 @@ public class CWorldGen extends ConfigBase {
 	}
 
 	@Override
-	public void onReload() {
-		AllWorldFeatures.reload();
-		super.onReload();
-	}
-
-	@Override
-	public void onLoad() {
-		AllWorldFeatures.reload();
-		super.onLoad();
-	}
-
-	@Override
 	public String getName() {
 		return "worldgen.v" + AllWorldFeatures.forcedUpdateVersion;
 	}

@@ -17,7 +17,9 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.placement.TopSolidRangeConfig;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase implements IFeature {
 
@@ -58,7 +60,7 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 	}
 
 	@Override
-	public Optional<ConfiguredFeature<?, ?>> createFeature(Biome biome) {
+	public Optional<ConfiguredFeature<?, ?>> createFeature(BiomeLoadingEvent biome) {
 		if (specificCategory != null && biome.getCategory() != specificCategory)
 			return Optional.empty();
 		if (!canGenerate())
@@ -68,8 +70,12 @@ public abstract class OreFeature<T extends IPlacementConfig> extends ConfigBase 
 		ConfiguredFeature<?, ?> createdFeature = Feature.ORE
 			.configure(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, block.get()
 				.getDefaultState(), clusterSize.get()))
-			.createDecoratedFeature(placement.getKey()
-				.configure(placement.getValue()));
+			.decorate(placement.getKey()
+				.configure(placement.getValue()))
+			.decorate(Placement.RANGE
+				// TODO 1.16 worldgen verify this
+				.configure(new TopSolidRangeConfig(minHeight.get(), 0, maxHeight.get() - minHeight.get())))
+			.spreadHorizontally();
 
 		return Optional.of(createdFeature);
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import java.util.UUID;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -22,7 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -41,22 +41,23 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 
-	static Multimap<Attribute, AttributeModifier> rangeModifier;
-	static Multimap<Attribute, AttributeModifier> doubleRangeModifier;
+	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier = 
+		new LazyValue<Multimap<Attribute, AttributeModifier>>(() -> 
+			// Holding an ExtendoGrip
+			ImmutableMultimap.of(
+				ForgeMod.REACH_DISTANCE.get(),
+				new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
+					AttributeModifier.Operation.ADDITION))
+		);
 
-	static {
-		// Holding an ExtendoGrip
-		rangeModifier = HashMultimap.create();
-		rangeModifier.put(ForgeMod.REACH_DISTANCE.get(),
-			new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
-				AttributeModifier.Operation.ADDITION));
-
-		// Holding two ExtendoGrips o.O
-		doubleRangeModifier = HashMultimap.create();
-		doubleRangeModifier.put(ForgeMod.REACH_DISTANCE.get(),
-			new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
-				AttributeModifier.Operation.ADDITION));
-	}
+	static LazyValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = 
+		new LazyValue<Multimap<Attribute, AttributeModifier>>(() -> 
+			// Holding two ExtendoGrips o.O
+			ImmutableMultimap.of(
+				ForgeMod.REACH_DISTANCE.get(),
+				new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
+					AttributeModifier.Operation.ADDITION))
+		);
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties.maxStackSize(1)
@@ -85,13 +86,13 @@ public class ExtendoGripItem extends Item {
 
 		if (holdingExtendo != wasHoldingExtendo) {
 			if (!holdingExtendo) {
-				player.getAttributes().removeModifiers(rangeModifier);
+				player.getAttributes().removeModifiers(rangeModifier.getValue());
 				persistentData.remove(marker);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.addTemporaryModifiers(rangeModifier);
+					.addTemporaryModifiers(rangeModifier.getValue());
 				persistentData.putBoolean(marker, true);
 			}
 		}
@@ -99,13 +100,13 @@ public class ExtendoGripItem extends Item {
 		if (holdingDualExtendo != wasHoldingDualExtendo) {
 			if (!holdingDualExtendo) {
 				player.getAttributes()
-					.removeModifiers(doubleRangeModifier);
+					.removeModifiers(doubleRangeModifier.getValue());
 				persistentData.remove(dualMarker);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.addTemporaryModifiers(doubleRangeModifier);
+					.addTemporaryModifiers(doubleRangeModifier.getValue());
 				persistentData.putBoolean(dualMarker, true);
 			}
 		}
@@ -147,7 +148,6 @@ public class ExtendoGripItem extends Item {
 					mc.pointedEntity = entity1;
 			}
 		}
-
 	}
 
 	@SubscribeEvent

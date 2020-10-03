@@ -17,6 +17,7 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllWorldFeatures {
@@ -43,32 +44,24 @@ public enum AllWorldFeatures {
 	public static final int forcedUpdateVersion = 1;
 
 	public IFeature feature;
-	private Map<Biome, ConfiguredFeature<?, ?>> featureInstances;
 
 	AllWorldFeatures(IFeature feature) {
 		this.feature = feature;
-		this.featureInstances = new HashMap<>();
 		this.feature.setId(Lang.asId(name()));
 	}
 
-	public static void reload() {
+	public static void reload(BiomeLoadingEvent event) {
 		for (AllWorldFeatures entry : AllWorldFeatures.values()) {
-			for (Biome biome : ForgeRegistries.BIOMES) {
+			if (event.getName() == Biomes.THE_VOID.getRegistryName())
+				continue;
+			if (event.getCategory() == Category.NETHER)
+				continue;
 
-				if (biome.getRegistryName() == Biomes.THE_VOID.getRegistryName())
-					continue;
-				if (biome.getCategory() == Category.NETHER)
-					continue;
+			Optional<ConfiguredFeature<?, ?>> createFeature = entry.feature.createFeature(event);
+			if (!createFeature.isPresent())
+				continue;
 
-				if (entry.featureInstances.containsKey(biome))
-					biome.getFeatures(entry.feature.getGenerationStage()).remove(entry.featureInstances.remove(biome));
-				Optional<ConfiguredFeature<?, ?>> createFeature = entry.feature.createFeature(biome);
-				if (!createFeature.isPresent())
-					continue;
-
-				entry.featureInstances.put(biome, createFeature.get());
-				biome.addFeature(entry.feature.getGenerationStage(), createFeature.get());
-			}
+			event.getGeneration().feature(entry.feature.getGenerationStage(), createFeature.get());
 		}
 
 //		// Debug contained ore features

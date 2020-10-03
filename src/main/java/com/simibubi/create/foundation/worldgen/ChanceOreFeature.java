@@ -5,10 +5,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.world.gen.placement.ChanceRangeConfig;
+import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 
-public class ChanceOreFeature extends OreFeature<ChanceRangeConfig> {
+public class ChanceOreFeature extends OreFeature<ChanceConfig> {
 
 	private ConfigFloat clusterChance;
 
@@ -23,9 +23,9 @@ public class ChanceOreFeature extends OreFeature<ChanceRangeConfig> {
 	}
 
 	@Override
-	protected Pair<Placement<ChanceRangeConfig>, ChanceRangeConfig> getPlacement() {
-		return Pair.of(Placement.CHANCE_RANGE,
-				new ChanceRangeConfig(clusterChance.getF(), minHeight.get(), 0, maxHeight.get() - minHeight.get()));
+	protected Pair<Placement<ChanceConfig>, ChanceConfig> getPlacement() {
+		return Pair.of(Placement.CHANCE,
+			// TODO 1.16 worldgen verify this
+			new ChanceConfig((int) (1 / clusterChance.getF())));
 	}
-
 }

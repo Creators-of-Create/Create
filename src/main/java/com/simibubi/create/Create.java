@@ -36,6 +36,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -81,6 +82,7 @@ public class Create {
 		AllMovementBehaviours.register();
 
 		modEventBus.addListener(Create::init);
+		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
@@ -107,7 +109,10 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
-		AllWorldFeatures.reload();
+	}
+	
+	public static void onBiomeLoad(BiomeLoadingEvent event) {
+		AllWorldFeatures.reload(event);
 	}
 
 	public static CreateRegistrate registrate() {
