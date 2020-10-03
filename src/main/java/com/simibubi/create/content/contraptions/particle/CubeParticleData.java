@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.particle.ParticleManager;
@@ -14,6 +16,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CubeParticleData implements IParticleData, ICustomParticle<CubeParticleData> {
+
+	public static final Codec<CubeParticleData> CODEC = RecordCodecBuilder.create(i -> 
+		i.group(
+			Codec.FLOAT.fieldOf("r").forGetter(p -> p.r),
+			Codec.FLOAT.fieldOf("g").forGetter(p -> p.g),
+			Codec.FLOAT.fieldOf("b").forGetter(p -> p.b),
+			Codec.FLOAT.fieldOf("scale").forGetter(p -> p.scale),
+			Codec.INT.fieldOf("avgAge").forGetter(p -> p.avgAge),
+			Codec.BOOL.fieldOf("hot").forGetter(p -> p.hot))
+		.apply(i, CubeParticleData::new));
 
 	public static final IParticleData.IDeserializer<CubeParticleData> DESERIALIZER = new IParticleData.IDeserializer<CubeParticleData>() {
 		@Override
@@ -62,6 +74,11 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 	@Override
 	public IDeserializer<CubeParticleData> getDeserializer() {
 		return DESERIALIZER;
+	}
+
+	@Override
+	public Codec<CubeParticleData> getCodec() {
+		return CODEC;
 	}
 
 	@Override

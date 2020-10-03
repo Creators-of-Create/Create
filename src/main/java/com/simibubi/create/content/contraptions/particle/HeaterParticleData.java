@@ -6,6 +6,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
 import mcp.MethodsReturnNonnullByDefault;
@@ -19,6 +21,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HeaterParticleData implements IParticleData, ICustomParticle<HeaterParticleData> {
+
+	public static final Codec<HeaterParticleData> CODEC = RecordCodecBuilder.create(i -> 
+		i.group(
+			Codec.FLOAT.fieldOf("r").forGetter(p -> p.r),
+			Codec.FLOAT.fieldOf("g").forGetter(p -> p.g),
+			Codec.FLOAT.fieldOf("b").forGetter(p -> p.b))
+		.apply(i, HeaterParticleData::new));
 
 	public static final IParticleData.IDeserializer<HeaterParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<HeaterParticleData>() {
@@ -57,6 +66,11 @@ public class HeaterParticleData implements IParticleData, ICustomParticle<Heater
 	@Override
 	public IDeserializer<HeaterParticleData> getDeserializer() {
 		return DESERIALIZER;
+	}
+
+	@Override
+	public Codec<HeaterParticleData> getCodec() {
+		return CODEC;
 	}
 
 	@Override

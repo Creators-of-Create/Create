@@ -66,10 +66,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
+	// TODO 1.16 is this the right replacement for updateNeighbors?
 	@Override
-	@SuppressWarnings("deprecation")
-	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
-		super.updateNeighbors(stateIn, worldIn, pos, flags);
+	@Deprecated
+	public void updateDiagonalNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
+		super.updateDiagonalNeighbors(stateIn, worldIn, pos, flags, count);
 		if (worldIn.isRemote())
 			return;
 

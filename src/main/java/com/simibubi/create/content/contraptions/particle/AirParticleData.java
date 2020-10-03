@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
@@ -15,6 +17,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AirParticleData implements IParticleData, ICustomParticle<AirParticleData> {
 
+	public static final Codec<AirParticleData> CODEC = RecordCodecBuilder.create(i -> 
+		i.group(
+			Codec.FLOAT.fieldOf("drag").forGetter(p -> p.drag),
+			Codec.FLOAT.fieldOf("speed").forGetter(p -> p.speed))
+		.apply(i, AirParticleData::new));
+	
 	public static final IParticleData.IDeserializer<AirParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<AirParticleData>() {
 			public AirParticleData deserialize(ParticleType<AirParticleData> particleTypeIn, StringReader reader)
@@ -62,6 +70,11 @@ public class AirParticleData implements IParticleData, ICustomParticle<AirPartic
 	@Override
 	public IDeserializer<AirParticleData> getDeserializer() {
 		return DESERIALIZER;
+	}
+
+	@Override
+	public Codec<AirParticleData> getCodec() {
+		return CODEC;
 	}
 
 	@Override

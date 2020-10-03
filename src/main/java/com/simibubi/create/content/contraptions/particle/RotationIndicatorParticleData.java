@@ -4,6 +4,11 @@ import java.util.Locale;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.codecs.PrimitiveCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
@@ -15,6 +20,36 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RotationIndicatorParticleData implements IParticleData, ICustomParticle<RotationIndicatorParticleData> {
+
+	// TODO 1.16 make this unnecessary
+	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
+        @Override
+        public <T> DataResult<Character> read(final DynamicOps<T> ops, final T input) {
+            return ops
+                .getNumberValue(input)
+                .map(n -> (char) n.shortValue());
+        }
+
+        @Override
+        public <T> T write(final DynamicOps<T> ops, final Character value) {
+            return ops.createShort((short) value.charValue());
+        }
+
+        @Override
+        public String toString() {
+            return "Bool";
+        }
+    };
+
+	public static final Codec<RotationIndicatorParticleData> CODEC = RecordCodecBuilder.create(i -> 
+		i.group(
+			Codec.INT.fieldOf("color").forGetter(p -> p.color),
+			Codec.FLOAT.fieldOf("speed").forGetter(p -> p.speed),
+			Codec.FLOAT.fieldOf("radius1").forGetter(p -> p.radius1),
+			Codec.FLOAT.fieldOf("radius2").forGetter(p -> p.radius2),
+			Codec.INT.fieldOf("lifeSpan").forGetter(p -> p.lifeSpan),
+			CHAR.fieldOf("axis").forGetter(p -> p.axis))
+		.apply(i, RotationIndicatorParticleData::new));
 
 	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER = new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
 		public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
@@ -90,6 +125,11 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	@Override
 	public IDeserializer<RotationIndicatorParticleData> getDeserializer() {
 		return DESERIALIZER;
+	}
+
+	@Override
+	public Codec<RotationIndicatorParticleData> getCodec() {
+		return CODEC;
 	}
 
 	@Override

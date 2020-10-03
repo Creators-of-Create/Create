@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import com.mojang.serialization.Codec;
+
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.IParticleData.IDeserializer;
@@ -9,10 +11,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface ICustomParticle<T extends IParticleData> {
 
-	public IDeserializer<T> getDeserializer();
+	IDeserializer<T> getDeserializer();
+
+	Codec<T> getCodec(); 
 	
 	public default ParticleType<T> createType() {
-		return new ParticleType<T>(false, getDeserializer());
+		return new ParticleType<T>(false, getDeserializer()) {
+
+			@Override
+			public Codec<T> getCodec() {
+				return ICustomParticle.this.getCodec();
+			}
+		};
 	}
 	
 	@OnlyIn(Dist.CLIENT)
