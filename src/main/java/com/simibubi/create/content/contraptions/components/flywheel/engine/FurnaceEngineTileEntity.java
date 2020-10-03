@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import com.simibubi.create.foundation.utility.BlockHelper;
+
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

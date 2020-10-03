@@ -4,21 +4,17 @@ import static net.minecraft.world.biome.Biome.Category.DESERT;
 import static net.minecraft.world.biome.Biome.Category.OCEAN;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllWorldFeatures {
 

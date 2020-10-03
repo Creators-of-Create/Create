@@ -7,8 +7,8 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import com.simibubi.create.foundation.utility.BlockHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,8 +29,6 @@ import net.minecraft.world.storage.IServerWorldInfo;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.SaveFormat;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

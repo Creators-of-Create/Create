@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+
 import mezz.jei.api.gui.drawable.IDrawable;
 
 public class EmptyBackground implements IDrawable {

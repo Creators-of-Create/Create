@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
 
 public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 

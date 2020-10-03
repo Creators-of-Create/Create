@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehavi
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 
@@ -18,7 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidValveTileEntity extends KineticTileEntity {
@@ -28,7 +29,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	public FluidValveTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		pointer = LerpedFloat.linear()
-			.startWithValue(0).chase(0, 0, Chaser.LINEAR);
+			.startWithValue(0)
+			.chase(0, 0, Chaser.LINEAR);
 	}
 
 	@Override
@@ -38,20 +40,20 @@ public class FluidValveTileEntity extends KineticTileEntity {
 		pointer.chase(speed > 0 ? 1 : 0, getChaseSpeed(), Chaser.LINEAR);
 		sendData();
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
 		pointer.tickChaser();
-		
+
 		if (world.isRemote)
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof FluidValveBlock))
 			return;
 		boolean stateOpen = blockState.get(FluidValveBlock.ENABLED);
-		
+
 		if (stateOpen && pointer.getValue() == 0) {
 			switchToBlockState(world, pos, blockState.with(FluidValveBlock.ENABLED, false));
 			return;
@@ -73,8 +75,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		super.fromTag(state, compound, clientPacket);
 		pointer.readNBT(compound.getCompound("Pointer"), clientPacket);
 	}
 
@@ -97,11 +99,11 @@ public class FluidValveTileEntity extends KineticTileEntity {
 
 		@Override
 		public boolean canTransferToward(FluidStack fluid, BlockState state, Direction direction, boolean inbound) {
-			if (state.has(FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
+			if (BlockHelper.hasBlockStateProperty(state, FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
 				return super.canTransferToward(fluid, state, direction, inbound);
 			return false;
 		}
-		
+
 	}
 
 	class ValvePipeAttachmentBehaviour extends FluidPipeAttachmentBehaviour {
@@ -111,7 +113,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 		}
 
 		@Override
-		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
+		public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state,
+			Direction direction) {
 			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
 
 			BlockState facingState = world.getBlockState(pos.offset(direction));

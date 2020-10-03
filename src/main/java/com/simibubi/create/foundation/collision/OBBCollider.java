@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.collision;
 
-import net.minecraft.util.math.vector.Vector3d;
-
 import static com.simibubi.create.foundation.collision.CollisionDebugger.showDebugLine;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
+
+import net.minecraft.util.math.vector.Vector3d;
 
 
 

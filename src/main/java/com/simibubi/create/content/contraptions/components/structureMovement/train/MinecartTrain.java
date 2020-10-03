@@ -151,7 +151,7 @@ public class MinecartTrain {
 					continue;
 				
 				if (stall) {
-					minecartCoupling.asCouple().forEach(ame -> ame.setMotion(Vec3d.ZERO));
+					minecartCoupling.asCouple().forEach(ame -> ame.setMotion(Vector3d.ZERO));
 					continue;
 				}
 				

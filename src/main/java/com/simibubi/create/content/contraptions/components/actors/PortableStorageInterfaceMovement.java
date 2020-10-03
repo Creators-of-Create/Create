@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,8 +25,8 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 	static final String _clientPrevPos_ = "ClientPrevPos";
 
 	@Override
-	public Vec3d getActiveAreaOffset(MovementContext context) {
-		return new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING)
+	public Vector3d getActiveAreaOffset(MovementContext context) {
+		return Vector3d.of(context.state.get(PortableStorageInterfaceBlock.FACING)
 			.getDirectionVec()).scale(1.85f);
 	}
 
@@ -58,9 +58,9 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 			return false;
 		context.data.put(_workingPos_, NBTUtil.writeBlockPos(psi.getPos()));
 		if (!context.world.isRemote) {
-			Vec3d diff = VecHelper.getCenterOf(psi.getPos())
+			Vector3d diff = VecHelper.getCenterOf(psi.getPos())
 				.subtract(context.position);
-			diff = VecHelper.project(diff, new Vec3d(currentFacing.getDirectionVec()));
+			diff = VecHelper.project(diff, Vector3d.of(currentFacing.getDirectionVec()));
 			float distance = (float) (diff.length() + 1.85f - 1);
 			psi.startTransferringTo(context.contraption, distance);
 		} else {
@@ -136,11 +136,11 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 	}
 
 	private Optional<Direction> getCurrentFacingIfValid(MovementContext context) {
-		Vec3d directionVec = new Vec3d(context.state.get(PortableStorageInterfaceBlock.FACING)
+		Vector3d directionVec = Vector3d.of(context.state.get(PortableStorageInterfaceBlock.FACING)
 			.getDirectionVec());
 		directionVec = VecHelper.rotate(directionVec, context.rotation.x, context.rotation.y, context.rotation.z);
 		Direction facingFromVector = Direction.getFacingFromVector(directionVec.x, directionVec.y, directionVec.z);
-		if (directionVec.distanceTo(new Vec3d(facingFromVector.getDirectionVec())) > 1 / 8f)
+		if (directionVec.distanceTo(Vector3d.of(facingFromVector.getDirectionVec())) > 1 / 8f)
 			return Optional.empty();
 		return Optional.of(facingFromVector);
 	}

@@ -4,12 +4,11 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 

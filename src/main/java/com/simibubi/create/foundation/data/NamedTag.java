@@ -1,13 +1,14 @@
 package com.simibubi.create.foundation.data;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
-import java.util.List;
+
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

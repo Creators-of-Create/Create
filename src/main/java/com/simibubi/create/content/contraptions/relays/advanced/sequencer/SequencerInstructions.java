@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.util.text.ITextComponent;
 
 public enum SequencerInstructions {

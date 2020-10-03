@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -19,7 +18,6 @@ import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 

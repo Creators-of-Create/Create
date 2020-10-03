@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 

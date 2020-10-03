@@ -5,10 +5,8 @@ import java.util.Map;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-
 import com.simibubi.create.foundation.utility.WorldHelper;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
+
 import net.minecraft.world.IWorld;
 
 public class TorquePropagator {

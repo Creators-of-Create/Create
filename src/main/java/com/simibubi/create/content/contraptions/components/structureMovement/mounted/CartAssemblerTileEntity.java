@@ -9,13 +9,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxT
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class CartAssemblerTileEntity extends SmartTileEntity {
 	private static final int assemblyCooldown = 8;
@@ -55,7 +56,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity {
 				if (d.getAxis()
 					.isVertical())
 					return false;
-				if (!state.has(CartAssemblerBlock.RAIL_SHAPE))
+				if (!BlockHelper.hasBlockStateProperty(state, CartAssemblerBlock.RAIL_SHAPE))
 					return false;
 				RailShape railShape = state.get(CartAssemblerBlock.RAIL_SHAPE);
 				return (d.getAxis() == Axis.X) == (railShape == RailShape.NORTH_SOUTH);
@@ -63,7 +64,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity {
 		}
 		
 		@Override
-		protected Vec3d getSouthLocation() {
+		protected Vector3d getSouthLocation() {
 			return VecHelper.voxelSpace(8, 8, 18);
 		}
 		

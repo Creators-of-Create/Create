@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.collision;
 
-import net.minecraft.util.math.vector.Vector3d;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
+
+import net.minecraft.util.math.vector.Vector3d;
 
 
 public class ContinuousOBBCollider extends OBBCollider {

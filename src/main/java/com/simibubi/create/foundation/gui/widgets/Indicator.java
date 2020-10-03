@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.gui.widgets;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
 import net.minecraft.util.text.ITextComponent;
 
 public class Indicator extends AbstractSimiWidget {

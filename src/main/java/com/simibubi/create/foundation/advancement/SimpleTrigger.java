@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.advancement;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 
 import net.minecraft.advancements.criterion.EntityPredicate;

@@ -1,7 +1,10 @@
 package com.simibubi.create.content.schematics.client;
 
+import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_CRATE;
+
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -12,13 +15,15 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
-	private final String title = Lang.translate("schematicAndQuill.title");
-	private final String convertLabel = Lang.translate("schematicAndQuill.convert");
-	private final String abortLabel = Lang.translate("action.discard");
-	private final String confirmLabel = Lang.translate("action.saveToFile");
+	private final ITextComponent title = Lang.translate("schematicAndQuill.title");
+	private final ITextComponent convertLabel = Lang.translate("schematicAndQuill.convert");
+	private final ITextComponent abortLabel = Lang.translate("action.discard");
+	private final ITextComponent confirmLabel = Lang.translate("action.saveToFile");
 
 	private TextFieldWidget nameField;
 	private IconButton confirm;
@@ -31,7 +36,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		AllGuiTextures background = AllGuiTextures.SCHEMATIC_PROMPT;
 		setWindowSize(background.width, background.height + 30);
 
-		nameField = new TextFieldWidget(font, guiLeft + 49, guiTop + 26, 131, 10, "");
+		nameField = new TextFieldWidget(textRenderer, guiLeft + 49, guiTop + 26, 131, 10, StringTextComponent.EMPTY);
 		nameField.setTextColor(-1);
 		nameField.setDisabledTextColour(-1);
 		nameField.setEnableBackgroundDrawing(false);
@@ -57,9 +62,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.SCHEMATIC_PROMPT.draw(this, guiLeft, guiTop);
-		font.drawStringWithShadow(title, guiLeft + (sWidth / 2) - (font.getStringWidth(title) / 2), guiTop + 3,
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		AllGuiTextures.SCHEMATIC_PROMPT.draw(ms, this, guiLeft, guiTop);
+		textRenderer.drawWithShadow(ms, title, guiLeft + (sWidth / 2) - (textRenderer.getWidth(title) / 2), guiTop + 3,
 			0xffffff);
 		itemRenderer.renderItemIntoGUI(AllItems.SCHEMATIC.asStack(), guiLeft + 22, guiTop + 23);
 	}

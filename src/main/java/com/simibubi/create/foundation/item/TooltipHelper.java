@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
@@ -38,11 +39,20 @@ public class TooltipHelper {
 
 	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
-		return Lang.translate("tooltip.holdKey", DARK_GRAY).append(Lang.translate("tooltip.keyShift").formatted(colorFormat));
+		return Lang.translate("tooltip.holdKey", DARK_GRAY)
+			.append(Lang.translate("tooltip.keyShift")
+				.formatted(colorFormat));
 	}
 
 	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
 		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0);
+	}
+
+	public static List<ITextComponent> cutStringToComponents(ITextComponent s, TextFormatting defaultColor,
+		TextFormatting highlightColor) {
+		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0).stream()
+			.map(ITextComponent::of)
+			.collect(Collectors.toList());
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,
@@ -97,8 +107,8 @@ public class TooltipHelper {
 		checkLocale();
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean hasGlasses = player != null
-			&& AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses =
+			player != null && AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;

@@ -5,7 +5,6 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.BLOCKZAPPER_UPGR
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;

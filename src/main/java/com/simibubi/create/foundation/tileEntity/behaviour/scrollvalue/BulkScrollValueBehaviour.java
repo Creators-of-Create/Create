@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+
 import net.minecraft.util.text.ITextComponent;
 
 public class BulkScrollValueBehaviour extends ScrollValueBehaviour {

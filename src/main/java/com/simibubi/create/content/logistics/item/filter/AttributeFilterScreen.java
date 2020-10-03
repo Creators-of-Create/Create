@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.item.filter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.utility;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 
 public class MatrixStacker {
