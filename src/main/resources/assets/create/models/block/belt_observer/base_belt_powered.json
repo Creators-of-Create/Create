@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/belt_observer/base_belt",
-    "textures": {
-        "3": "create:block/extractor_powered"
-    }
-}

@@ -12,6 +12,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity {
 
@@ -145,6 +148,14 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 		if (behaviours.containsKey(type))
 			return (T) behaviours.get(type);
 		return null;
+	}
+	
+	protected boolean isItemHandlerCap(Capability<?> cap) {
+		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+	}
+	
+	protected boolean isFluidHandlerCap(Capability<?> cap) {
+		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
 
 }

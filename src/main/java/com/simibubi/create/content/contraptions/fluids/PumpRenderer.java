@@ -45,14 +45,14 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 				.rotateY(yRot)
 				.rotateZ(angle)
 				.translateBack(rotationOffset);
-			arrow.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 			ms.pop();
 		}
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectional(te.getBlockState());
+		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouth(te.getBlockState());
 	}
 
 }

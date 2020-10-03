@@ -45,26 +45,26 @@ public class BlockzapperScreen extends ZapperScreen {
 		int j = guiTop;
 		CompoundNBT nbt = zapper.getOrCreateTag();
 
-		replaceModeIndicator = new Indicator(i + 51, j + 36, StringTextComponent.EMPTY);
-		replaceModeButton = new IconButton(i + 51, j + 41, AllIcons.I_REPLACE_SOLID);
+		replaceModeIndicator = new Indicator(i + 49, j + 67, StringTextComponent.EMPTY);
+		replaceModeButton = new IconButton(i + 49, j + 73, AllIcons.I_REPLACE_SOLID);
 		if (nbt.contains("Replace") && nbt.getBoolean("Replace"))
 			replaceModeIndicator.state = State.ON;
 		replaceModeButton.setToolTip(Lang.translate("gui.blockzapper.replaceMode"));
 
-		spreadDiagonallyIndicator = new Indicator(i + 74, j + 36, StringTextComponent.EMPTY);
-		spreadDiagonallyButton = new IconButton(i + 74, j + 41, AllIcons.I_FOLLOW_DIAGONAL);
+		spreadDiagonallyIndicator = new Indicator(i + 8, j + 67, StringTextComponent.EMPTY);
+		spreadDiagonallyButton = new IconButton(i + 8, j + 73, AllIcons.I_FOLLOW_DIAGONAL);
 		if (nbt.contains("SearchDiagonal") && nbt.getBoolean("SearchDiagonal"))
 			spreadDiagonallyIndicator.state = State.ON;
 		spreadDiagonallyButton.setToolTip(Lang.translate("gui.blockzapper.searchDiagonal"));
 
-		spreadMaterialIndicator = new Indicator(i + 92, j + 36, StringTextComponent.EMPTY);
-		spreadMaterialButton = new IconButton(i + 92, j + 41, AllIcons.I_FOLLOW_MATERIAL);
+		spreadMaterialIndicator = new Indicator(i + 26, j + 67, StringTextComponent.EMPTY);
+		spreadMaterialButton = new IconButton(i + 26, j + 73, AllIcons.I_FOLLOW_MATERIAL);
 		if (nbt.contains("SearchFuzzy") && nbt.getBoolean("SearchFuzzy"))
 			spreadMaterialIndicator.state = State.ON;
 		spreadMaterialButton.setToolTip(Lang.translate("gui.blockzapper.searchFuzzy"));
 
-		spreadRangeLabel = new Label(i + 119, j + 46, "").withShadow().withSuffix("m");
-		spreadRangeInput = new ScrollInput(i + 115, j + 43, 22, 14).withRange(1, BlockzapperItem.getMaxAoe(zapper))
+		spreadRangeLabel = new Label(i + 79, j + 78, "").withShadow().withSuffix("m");
+		spreadRangeInput = new ScrollInput(i + 73, j + 73, 26, 18).withRange(1, BlockzapperItem.getMaxAoe(zapper))
 				.setState(1).titled(Lang.translate("gui.blockzapper.range")).writingTo(spreadRangeLabel);
 
 		if (nbt.contains("SearchDistance"))

@@ -160,7 +160,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!canTransport(state))
+		if (!canTransportObjects(state))
 			return;
 		if (entityIn instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) entityIn;
@@ -205,7 +205,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		}
 	}
 
-	public static boolean canTransport(BlockState state) {
+	public static boolean canTransportObjects(BlockState state) {
 		if (!AllBlocks.BELT.has(state))
 			return false;
 		BeltSlope slope = state.get(SLOPE);
@@ -414,7 +414,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				te.markDirty();
 				te.sendData();
 
-				if (te.isController() && !canTransport(currentState))
+				if (te.isController() && !canTransportObjects(currentState))
 					te.getInventory()
 						.ejectAll();
 			} else {

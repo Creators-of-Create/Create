@@ -32,8 +32,7 @@ public class AllShapes {
 		EIGHT_VOXEL_POLE = shape(4, 0, 4, 12, 16, 12).forAxis(),
 		FURNACE_ENGINE = shape(1, 1, 0, 15, 15, 16).add(0, 0, 9, 16, 16, 14)
 			.forHorizontal(Direction.SOUTH),
-		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 12, 16).add(3, 12, 3, 13, 16, 13)
-			.forDirectional(),
+		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 14, 16).forDirectional(),
 		PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
@@ -48,11 +47,17 @@ public class AllShapes {
 			.forDirectional(),
 		CRANK = shape(5, 0, 5, 11, 6, 11).add(1, 3, 1, 15, 8, 15)
 			.forDirectional(),
+		VALVE_HANDLE = shape(1, 0, 1, 15, 5, 15)
+			.forDirectional(),
 		CART_ASSEMBLER = shape(0, 12, 0, 16, 16, 16).add(-2, 0, 1, 18, 14, 15)
 			.forHorizontalAxis(),
 		STOCKPILE_SWITCH = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 16, 15)
 			.add(0, 14, 0, 16, 16, 16)
-			.add(3, 3, -1, 13, 13, 2)
+			.add(3, 3, -2, 13, 13, 2)
+			.forHorizontal(NORTH),
+		CONTENT_OBSERVER = shape(0, 0, 0, 16, 6, 16).add(1, 0, 1, 15, 16, 15)
+			.add(0, 14, 0, 16, 16, 16)
+			.add(3, 3, -2, 13, 13, 2)
 			.forHorizontal(NORTH),
 		NIXIE_TUBE = shape(0, 0, 0, 16, 4, 16).add(9, 0, 5, 15, 15, 11)
 			.add(1, 0, 5, 7, 15, 11)
@@ -68,16 +73,14 @@ public class AllShapes {
 			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 13, 16)
 			.forDirectional(UP),
-		BELT_FUNNEL_RETRACTED = 
-			shape(2, -5, 14, 12, 14, 18)
-			.add(0, -5, 8, 16, 16, 14)
+		BELT_FUNNEL_RETRACTED = shape(2, -5, 14, 12, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = 
-			shape(2, -4, 14, 14, 14, 18)
-			.add(3, -4, 10, 13, 13, 14)
+		BELT_FUNNEL_EXTENDED = shape(2, -4, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
 			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
 			.forHorizontal(NORTH),
+		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
+			.forAxis(),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP)

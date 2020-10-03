@@ -24,8 +24,8 @@ public class FilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected void addFilterSlots() {
-		int x = 16;
-		int y = 21;
+		int x = 23;
+		int y = 20;
 
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
@@ -39,7 +39,7 @@ public class FilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected int getInventoryOffset() {
-		return 100;
+		return 97;
 	}
 	
 	@Override

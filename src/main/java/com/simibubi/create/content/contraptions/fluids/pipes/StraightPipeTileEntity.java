@@ -56,6 +56,10 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 						return AttachmentTypes.NONE;
 				}
 			}
+			if (otherState.getBlock() instanceof FluidValveBlock
+				&& FluidValveBlock.getPipeAxis(otherState) == direction.getAxis())
+				return AttachmentTypes.NONE;
+			
 			return attachment;
 		}
 

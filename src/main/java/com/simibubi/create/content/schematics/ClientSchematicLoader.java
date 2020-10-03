@@ -22,10 +22,12 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSchematicLoader {
@@ -67,12 +69,8 @@ public class ClientSchematicLoader {
 			long size = Files.size(path);
 
 			// Too big
-			Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
-			if (size > maxSize * 1000) {
-				Minecraft.getInstance().player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), Minecraft.getInstance().player.getUniqueID());
-				Minecraft.getInstance().player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), Minecraft.getInstance().player.getUniqueID());
+			if (!validateSizeLimitation(size))
 				return;
-			}
 
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
@@ -80,6 +78,21 @@ public class ClientSchematicLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static boolean validateSizeLimitation(long size) {
+		if (Minecraft.getInstance().isSingleplayer())
+			return true;
+		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
+		if (size > maxSize * 1000) {
+			ClientPlayerEntity player = Minecraft.getInstance().player;
+			player.sendMessage(new StringTextComponent(
+					Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."), player.getUniqueID());
+			player.sendMessage(
+					new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"), player.getUniqueID());
+			return false;
+		}
+		return true;
 	}
 
 	private void continueUpload(String schematic) {

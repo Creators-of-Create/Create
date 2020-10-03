@@ -34,9 +34,9 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
 		
 		SuperByteBuffer shaftHalf =
-			AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(), direction.getOpposite());
+			AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
-			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectional(te.getBlockState(), direction.getOpposite());
+			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouth(te.getBlockState(), direction.getOpposite());
 		
 		float time = AnimationTickHolder.getRenderTick();
 		float speed = te.getSpeed() * 5;

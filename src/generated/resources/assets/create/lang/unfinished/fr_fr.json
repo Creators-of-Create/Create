@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 428",
+	"_": "Missing Localizations: 477",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -25,18 +25,24 @@
 	"block.create.andesite_tunnel": "UNLOCALIZED: Andesite Tunnel",
 	"block.create.basin": "Bassin",
 	"block.create.belt": "Tapis roulant",
+<<<<<<< HEAD
 	"block.create.belt_observer": "Observateur d'entitÃ©",
+=======
+>>>>>>> mc1.15/dev
 	"block.create.birch_window": "UNLOCALIZED: Birch Window",
 	"block.create.birch_window_pane": "UNLOCALIZED: Birch Window Pane",
 	"block.create.black_seat": "UNLOCALIZED: Black Seat",
+	"block.create.black_valve_handle": "UNLOCALIZED: Black Valve Handle",
 	"block.create.blaze_burner": "UNLOCALIZED: Blaze Burner",
 	"block.create.blue_seat": "UNLOCALIZED: Blue Seat",
+	"block.create.blue_valve_handle": "UNLOCALIZED: Blue Valve Handle",
 	"block.create.brass_belt_funnel": "UNLOCALIZED: Brass Belt Funnel",
 	"block.create.brass_block": "UNLOCALIZED: Brass Block",
 	"block.create.brass_casing": "BoÃ®tier en laiton",
 	"block.create.brass_funnel": "UNLOCALIZED: Brass Funnel",
 	"block.create.brass_tunnel": "UNLOCALIZED: Brass Tunnel",
 	"block.create.brown_seat": "UNLOCALIZED: Brown Seat",
+	"block.create.brown_valve_handle": "UNLOCALIZED: Brown Valve Handle",
 	"block.create.cart_assembler": "Assembleur de wagon",
 	"block.create.chiseled_dark_scoria": "UNLOCALIZED: Chiseled Dark Scoria",
 	"block.create.chiseled_dolomite": "UNLOCALIZED: Chiseled Dolomite",
@@ -47,18 +53,29 @@
 	"block.create.chute": "UNLOCALIZED: Chute",
 	"block.create.clockwork_bearing": "Roulement mÃ©canique horloger",
 	"block.create.clutch": "Embrayage",
+<<<<<<< HEAD
 	"block.create.cogwheel": "Roue dentÃ©e",
+=======
+	"block.create.cogwheel": "Roue dentée",
+	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+>>>>>>> mc1.15/dev
 	"block.create.copper_block": "Bloc de cuivre",
 	"block.create.copper_casing": "BoÃ®tier en cuivre",
 	"block.create.copper_ore": "Minerai de cuivre",
 	"block.create.copper_shingles": "Bardeaux de cuivre",
 	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
+<<<<<<< HEAD
 	"block.create.creative_crate": "CrÃ©ateur de schÃ©macanon",
+=======
+	"block.create.copper_valve_handle": "UNLOCALIZED: Copper Valve Handle",
+	"block.create.creative_crate": "Créateur de schémacanon",
+>>>>>>> mc1.15/dev
 	"block.create.creative_motor": "Moteur",
 	"block.create.crushing_wheel": "Roue de concassage",
 	"block.create.crushing_wheel_controller": "UNLOCALIZED: Crushing Wheel Controller",
 	"block.create.cuckoo_clock": "Horloge Ã  coucou",
 	"block.create.cyan_seat": "UNLOCALIZED: Cyan Seat",
+	"block.create.cyan_valve_handle": "UNLOCALIZED: Cyan Valve Handle",
 	"block.create.dark_oak_window": "UNLOCALIZED: Dark Oak Window",
 	"block.create.dark_oak_window_pane": "UNLOCALIZED: Dark Oak Window Pane",
 	"block.create.dark_scoria": "Scorie sombre",
@@ -134,6 +151,7 @@
 	"block.create.fancy_weathered_limestone_bricks_wall": "UNLOCALIZED: Fancy Weathered Limestone Bricks Wall",
 	"block.create.fluid_pipe": "UNLOCALIZED: Fluid Pipe",
 	"block.create.fluid_tank": "UNLOCALIZED: Fluid Tank",
+	"block.create.fluid_valve": "UNLOCALIZED: Fluid Valve",
 	"block.create.flywheel": "Volant d'inertie",
 	"block.create.framed_glass": "Grande fenÃªtre en verre",
 	"block.create.framed_glass_pane": "Grande vitre encadrÃ©e",
@@ -161,7 +179,9 @@
 	"block.create.granite_cobblestone_wall": "UNLOCALIZED: Granite Cobblestone Wall",
 	"block.create.granite_pillar": "UNLOCALIZED: Granite Pillar",
 	"block.create.gray_seat": "UNLOCALIZED: Gray Seat",
+	"block.create.gray_valve_handle": "UNLOCALIZED: Gray Valve Handle",
 	"block.create.green_seat": "UNLOCALIZED: Green Seat",
+	"block.create.green_valve_handle": "UNLOCALIZED: Green Valve Handle",
 	"block.create.hand_crank": "Manivelle",
 	"block.create.horizontal_framed_glass": "FenÃªtre en verre horizontale",
 	"block.create.horizontal_framed_glass_pane": "Vitre encadrÃ©e horizontale",
@@ -178,8 +198,11 @@
 	"block.create.layered_scoria": "UNLOCALIZED: Layered Scoria",
 	"block.create.layered_weathered_limestone": "UNLOCALIZED: Layered Weathered Limestone",
 	"block.create.light_blue_seat": "UNLOCALIZED: Light Blue Seat",
+	"block.create.light_blue_valve_handle": "UNLOCALIZED: Light Blue Valve Handle",
 	"block.create.light_gray_seat": "UNLOCALIZED: Light Gray Seat",
+	"block.create.light_gray_valve_handle": "UNLOCALIZED: Light Gray Valve Handle",
 	"block.create.lime_seat": "UNLOCALIZED: Lime Seat",
+	"block.create.lime_valve_handle": "UNLOCALIZED: Lime Valve Handle",
 	"block.create.limesand": "Chaux",
 	"block.create.limestone": "Calcaire",
 	"block.create.limestone_bricks": "Briques de calcaire",
@@ -193,6 +216,7 @@
 	"block.create.limestone_pillar": "Pillier de calcaire",
 	"block.create.linear_chassis": "ChÃ¢ssis linÃ©aire",
 	"block.create.magenta_seat": "UNLOCALIZED: Magenta Seat",
+	"block.create.magenta_valve_handle": "UNLOCALIZED: Magenta Valve Handle",
 	"block.create.mechanical_arm": "UNLOCALIZED: Mechanical Arm",
 	"block.create.mechanical_bearing": "Roulement mÃ©canique",
 	"block.create.mechanical_crafter": "Ã‰tabli mÃ©canique",
@@ -223,6 +247,7 @@
 	"block.create.oak_window": "UNLOCALIZED: Oak Window",
 	"block.create.oak_window_pane": "UNLOCALIZED: Oak Window Pane",
 	"block.create.orange_seat": "UNLOCALIZED: Orange Seat",
+	"block.create.orange_valve_handle": "UNLOCALIZED: Orange Valve Handle",
 	"block.create.ornate_iron_window": "UNLOCALIZED: Ornate Iron Window",
 	"block.create.ornate_iron_window_pane": "UNLOCALIZED: Ornate Iron Window Pane",
 	"block.create.overgrown_andesite": "UNLOCALIZED: Overgrown Andesite",
@@ -271,7 +296,12 @@
 	"block.create.paved_weathered_limestone_stairs": "UNLOCALIZED: Paved Weathered Limestone Stairs",
 	"block.create.paved_weathered_limestone_wall": "UNLOCALIZED: Paved Weathered Limestone Wall",
 	"block.create.pink_seat": "UNLOCALIZED: Pink Seat",
+<<<<<<< HEAD
 	"block.create.piston_extension_pole": "PÃ´le d'extension de piston",
+=======
+	"block.create.pink_valve_handle": "UNLOCALIZED: Pink Valve Handle",
+	"block.create.piston_extension_pole": "Pôle d'extension de piston",
+>>>>>>> mc1.15/dev
 	"block.create.polished_dark_scoria": "Scorie sombre polie",
 	"block.create.polished_dark_scoria_slab": "UNLOCALIZED: Polished Dark Scoria Slab",
 	"block.create.polished_dark_scoria_stairs": "UNLOCALIZED: Polished Dark Scoria Stairs",
@@ -302,8 +332,14 @@
 	"block.create.pulley_magnet": "Aimant de poulie",
 	"block.create.pulse_repeater": "RÃ©pÃ©teur d'impulsions",
 	"block.create.purple_seat": "UNLOCALIZED: Purple Seat",
+<<<<<<< HEAD
 	"block.create.radial_chassis": "ChÃ¢ssis radial",
+=======
+	"block.create.purple_valve_handle": "UNLOCALIZED: Purple Valve Handle",
+	"block.create.radial_chassis": "Châssis radial",
+>>>>>>> mc1.15/dev
 	"block.create.red_seat": "UNLOCALIZED: Red Seat",
+	"block.create.red_valve_handle": "UNLOCALIZED: Red Valve Handle",
 	"block.create.redstone_contact": "redstone_contact Redstone",
 	"block.create.redstone_link": "Liaison Redstone",
 	"block.create.refined_radiance_casing": "UNLOCALIZED: Radiant Casing",
@@ -351,7 +387,9 @@
 	"block.create.weathered_limestone_cobblestone_wall": "UNLOCALIZED: Weathered Limestone Cobblestone Wall",
 	"block.create.weathered_limestone_pillar": "Pillier de calcaire patinÃ©es",
 	"block.create.white_seat": "UNLOCALIZED: White Seat",
+	"block.create.white_valve_handle": "UNLOCALIZED: White Valve Handle",
 	"block.create.yellow_seat": "UNLOCALIZED: Yellow Seat",
+	"block.create.yellow_valve_handle": "UNLOCALIZED: Yellow Valve Handle",
 	"block.create.zinc_block": "UNLOCALIZED: Zinc Block",
 	"block.create.zinc_ore": "Minerai de zinc",
 
@@ -661,6 +699,7 @@
 	"create.gui.adjustable_crate.title": "Caisse rÃ©glable",
 	"create.gui.adjustable_crate.storageSpace": "Espace de stockage",
 	"create.gui.stockpile_switch.title": "Commutateur de stockage",
+<<<<<<< HEAD
 	"create.gui.stockpile_switch.lowerLimit": "Seuil infÃ©rieur",
 	"create.gui.stockpile_switch.upperLimit": "Seuil supÃ©rieur",
 	"create.gui.stockpile_switch.startAt": "Signal de dÃ©part Ã ",
@@ -668,6 +707,12 @@
 	"create.gui.stockpile_switch.stopAt": "Signal d'arrÃªt Ã ",
 	"create.gui.stockpile_switch.stopBelow": "Signal d'arrÃªt en-dessous",
 	"create.gui.sequenced_gearshift.title": "DÃ©caleur de rotation sÃ©quencÃ©",
+=======
+	"create.gui.stockpile_switch.invert_signal": "UNLOCALIZED: Invert Signal",
+	"create.gui.stockpile_switch.move_to_lower_at": "UNLOCALIZED: Move to lower lane at %1$s%%",
+	"create.gui.stockpile_switch.move_to_upper_at": "UNLOCALIZED: Move to upper lane at %1$s%%",
+	"create.gui.sequenced_gearshift.title": "Décaleur de rotation séquencé",
+>>>>>>> mc1.15/dev
 	"create.gui.sequenced_gearshift.instruction": "Instructions",
 	"create.gui.sequenced_gearshift.instruction.turn_angle": "Tourner",
 	"create.gui.sequenced_gearshift.instruction.turn_angle.angle": "Angle",
@@ -679,6 +724,7 @@
 	"create.gui.sequenced_gearshift.speed": "Vitesse, direction",
 	"create.gui.sequenced_gearshift.speed.forward": "Vitesse d'entrÃ©e, normal",
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Vitesse double, normal",
+<<<<<<< HEAD
 	"create.gui.sequenced_gearshift.speed.back": "Vitesse d'entrÃ©e, inversÃ©",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Vitesse double, inversÃ©e",
 
@@ -692,6 +738,22 @@
 	"create.schematicAndQuill.saved": "SauvegardÃ© en tant que %1$s",
 
 	"create.schematic.invalid": "[!] objet invalide - Utilisez plutÃ´t la table Ã  schÃ©ma",
+=======
+	"create.gui.sequenced_gearshift.speed.back": "Vitesse d'entrée, inversé",
+	"create.gui.sequenced_gearshift.speed.back_fast": "Vitesse double, inversée",
+
+	"create.schematicAndQuill.dimensions": "Taille du schéma: %1$sx%2$sx%3$s",
+	"create.schematicAndQuill.firstPos": "Première position définie.",
+	"create.schematicAndQuill.secondPos": "Seconde position définie.",
+	"create.schematicAndQuill.noTarget": "Enfoncez [Ctrl] pour sélectionner les blocs d'air.",
+	"create.schematicAndQuill.abort": "Sélection supprimée.",
+	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.fallbackName": "Mon schéma",
+	"create.schematicAndQuill.saved": "Sauvegardé en tant que %1$s",
+
+	"create.schematic.invalid": "[!] objet invalide - Utilisez plutôt la table à schéma",
+>>>>>>> mc1.15/dev
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "Aucune",
@@ -734,6 +796,7 @@
 	"create.schematic.tool.flip.description.3": "",
 
 	"create.schematics.synchronizing": "Synchronisation...",
+<<<<<<< HEAD
 	"create.schematics.uploadTooLarge": "Votre schÃ©ma est trop grand.",
 	"create.schematics.maxAllowedSize": "La taille de fichier schÃ©matique maximale autorisÃ©e est:",
 
@@ -750,12 +813,39 @@
 	"create.gui.schematicannon.shotsRemainingWithBackup": "Avec sauvegarde: %1$s",
 	"create.gui.schematicannon.optionEnabled": "Actuellement activÃ©",
 	"create.gui.schematicannon.optionDisabled": "Actuellement dÃ©sactivÃ©",
+=======
+	"create.schematics.uploadTooLarge": "Votre schéma est trop grand.",
+	"create.schematics.maxAllowedSize": "La taille de fichier schématique maximale autorisée est:",
+
+	"create.gui.schematicTable.title": "Table à schéma",
+	"create.gui.schematicTable.refresh": "UNLOCALIZED: Refresh Files",
+	"create.gui.schematicTable.open_folder": "UNLOCALIZED: Open Folder",
+	"create.gui.schematicTable.availableSchematics": "Schémas disponibles",
+	"create.gui.schematicTable.noSchematics": "Aucun schéma enregistré",
+	"create.gui.schematicTable.uploading": "Téléchargement...",
+	"create.gui.schematicTable.finished": "Téléchargement terminé!",
+	"create.gui.schematicannon.title": "Schémacanon",
+	"create.gui.schematicannon.listPrinter": "Imprimante de liste de matériaux",
+	"create.gui.schematicannon.gunpowderLevel": "Poudre à canon à %1$s%%",
+	"create.gui.schematicannon.shotsRemaining": "Tirs restants: %1$s",
+	"create.gui.schematicannon.shotsRemainingWithBackup": "Avec sauvegarde: %1$s",
+	"create.gui.schematicannon.optionEnabled": "Actuellement activé",
+	"create.gui.schematicannon.optionDisabled": "Actuellement désactivé",
+	"create.gui.schematicannon.showOptions": "UNLOCALIZED: Show Printer Settings",
+>>>>>>> mc1.15/dev
 	"create.gui.schematicannon.option.dontReplaceSolid": "Ne remplacez pas les blocs solides",
 	"create.gui.schematicannon.option.replaceWithSolid": "Remplacer solide par solide",
 	"create.gui.schematicannon.option.replaceWithAny": "Remplacer le solide par n'importe quoi",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Remplacer le solide par rien",
 	"create.gui.schematicannon.option.skipMissing": "Ignorer les blocs manquants",
+<<<<<<< HEAD
 	"create.gui.schematicannon.option.skipTileEntities": "ProtÃ©ger les Tile Entities",
+=======
+	"create.gui.schematicannon.option.skipTileEntities": "Protéger les Tile Entities",
+	"create.gui.schematicannon.slot.gunpowder": "UNLOCALIZED: Add gunpowder to fuel the cannon",
+	"create.gui.schematicannon.slot.listPrinter": "UNLOCALIZED: Place books here to print a Checklist for your Schematic",
+	"create.gui.schematicannon.slot.schematic": "UNLOCALIZED: Add your Schematic here. Make sure it is deployed at a specific location.",
+>>>>>>> mc1.15/dev
 	"create.gui.schematicannon.option.skipMissing.description": "Si le canon ne peut pas trouver un bloc requis pour le placement, il continuera au prochain emplacement.",
 	"create.gui.schematicannon.option.skipTileEntities.description": "Le canon Ã©vitera de remplacer les blocs de stockage de donnÃ©es tels que les coffres.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Le canon ne remplacera jamais les blocs solides dans sa zone de travail, seulement non solides et air.",
@@ -791,15 +881,36 @@
 	"create.gui.filter.ignore_data.description": "Les Ã©lÃ©ments correspondent indÃ©pendamment de leurs attributs.",
 
 	"create.item_attributes.placeable": "est placeable",
+<<<<<<< HEAD
 	"create.item_attributes.consumable": "peut Ãªtre mangÃ©",
+=======
+	"create.item_attributes.placeable.inverted": "UNLOCALIZED: is not placeable",
+	"create.item_attributes.consumable": "peut être mangé",
+	"create.item_attributes.consumable.inverted": "UNLOCALIZED: cannot be eaten",
+>>>>>>> mc1.15/dev
 	"create.item_attributes.smeltable": "UNLOCALIZED: can be Smelted",
+	"create.item_attributes.smeltable.inverted": "UNLOCALIZED: cannot be Smelted",
 	"create.item_attributes.washable": "UNLOCALIZED: can be Washed",
+	"create.item_attributes.washable.inverted": "UNLOCALIZED: cannot be Washed",
 	"create.item_attributes.smokable": "UNLOCALIZED: can be Smoked",
+	"create.item_attributes.smokable.inverted": "UNLOCALIZED: cannot be Smoked",
+	"create.item_attributes.crushable": "UNLOCALIZED: can be Crushed",
+	"create.item_attributes.crushable.inverted": "UNLOCALIZED: cannot be Crushed",
 	"create.item_attributes.blastable": "UNLOCALIZED: is smeltable in Blast Furnace",
+<<<<<<< HEAD
 	"create.item_attributes.enchanted": "est enchantÃ©",
 	"create.item_attributes.damaged": "est endommagÃ©",
+=======
+	"create.item_attributes.blastable.inverted": "UNLOCALIZED: is not smeltable in Blast Furnace",
+	"create.item_attributes.enchanted": "est enchanté",
+	"create.item_attributes.enchanted.inverted": "UNLOCALIZED: is unenchanted",
+	"create.item_attributes.damaged": "est endommagé",
+	"create.item_attributes.damaged.inverted": "UNLOCALIZED: is not damaged",
+>>>>>>> mc1.15/dev
 	"create.item_attributes.badly_damaged": "est fortement damaged",
+	"create.item_attributes.badly_damaged.inverted": "UNLOCALIZED: is not heavily damaged",
 	"create.item_attributes.not_stackable": "ne peut pas s'empiler",
+<<<<<<< HEAD
 	"create.item_attributes.equipable": "peut Ãªtre Ã©quipÃ©",
 	"create.item_attributes.furnace_fuel": "est du combustible",
 	"create.item_attributes.in_tag": "est Ã©tiquetÃ© %1$s",
@@ -808,6 +919,24 @@
 
 	"create.gui.attribute_filter.no_selected_attributes": "Aucun attribut sÃ©lectionnÃ©",
 	"create.gui.attribute_filter.selected_attributes": "Attributs sÃ©lectionnÃ©s:",
+=======
+	"create.item_attributes.not_stackable.inverted": "UNLOCALIZED: can be stacked",
+	"create.item_attributes.equipable": "peut être équipé",
+	"create.item_attributes.equipable.inverted": "UNLOCALIZED: cannot be equipped",
+	"create.item_attributes.furnace_fuel": "est du combustible",
+	"create.item_attributes.furnace_fuel.inverted": "UNLOCALIZED: is not furnace fuel",
+	"create.item_attributes.in_tag": "est étiqueté %1$s",
+	"create.item_attributes.in_tag.inverted": "UNLOCALIZED: is not tagged %1$s",
+	"create.item_attributes.in_item_group": "appartient à %1$s",
+	"create.item_attributes.in_item_group.inverted": "UNLOCALIZED: is not in group '%1$s'",
+	"create.item_attributes.added_by": "a été ajouté par %1$s",
+	"create.item_attributes.added_by.inverted": "UNLOCALIZED: was not added by %1$s",
+
+	"create.gui.attribute_filter.no_selected_attributes": "Aucun attribut sélectionné",
+	"create.gui.attribute_filter.selected_attributes": "Attributs sélectionnés:",
+	"create.gui.attribute_filter.add_attribute": "UNLOCALIZED: Add attribute to List",
+	"create.gui.attribute_filter.add_inverted_attribute": "UNLOCALIZED: Add opposite attribute to List",
+>>>>>>> mc1.15/dev
 	"create.gui.attribute_filter.whitelist_disjunctive": "Liste blanche (n'importe)",
 	"create.gui.attribute_filter.whitelist_disjunctive.description": "Les objets rÃ©ussissent s'ils possÃ¨dent l'un des attributs sÃ©lectionnÃ©s.",
 	"create.gui.attribute_filter.whitelist_conjunctive": "Liste blanche (tout)",

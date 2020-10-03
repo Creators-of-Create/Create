@@ -87,7 +87,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
-			return AllBlockPartials.SHAFT_HALF.renderOnDirectional(state.rotate(Rotation.CLOCKWISE_180));
+			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(state.rotate(Rotation.CLOCKWISE_180));
 		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}

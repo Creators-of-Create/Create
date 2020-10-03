@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -218,6 +219,9 @@ public class FluidNetwork {
 					continue;
 
 				for (Direction face : FluidPropagator.getPipeConnections(currentState, pipe)) {
+					if (!pipe.canTransferToward(FluidStack.EMPTY, world.getBlockState(currentPos), face, false))
+						continue;
+
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
@@ -229,7 +233,8 @@ public class FluidNetwork {
 						continue;
 					if (collectEndpoint(world, blockFace, openEnds, distance))
 						continue;
-					if (FluidPropagator.getPipe(world, connectedPos) == null)
+					FluidPipeBehaviour pipeBehaviour = FluidPropagator.getPipe(world, connectedPos);
+					if (pipeBehaviour == null)
 						continue;
 					if (visited.contains(connectedPos))
 						continue;

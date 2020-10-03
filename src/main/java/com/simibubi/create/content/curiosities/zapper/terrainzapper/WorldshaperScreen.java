@@ -40,8 +40,7 @@ public class WorldshaperScreen extends ZapperScreen {
 
 	public WorldshaperScreen(ItemStack zapper, boolean offhand) {
 		super(AllGuiTextures.TERRAINZAPPER, zapper, offhand);
-		brightColor = 0xDFF6FF;
-		fontColor = 0x436B77;
+		fontColor = 0x767676;
 		title = Lang.translate("gui.terrainzapper.title");
 		nbt = zapper.getOrCreateTag();
 	}
@@ -53,8 +52,8 @@ public class WorldshaperScreen extends ZapperScreen {
 		i = guiLeft - 20;
 		j = guiTop;
 
-		brushLabel = new Label(i + 58, j + 28, "").withShadow();
-		brushInput = new SelectionScrollInput(i + 55, j + 25, 78, 14).forOptions(brushOptions)
+		brushLabel = new Label(i + 61, j + 23, "").withShadow();
+		brushInput = new SelectionScrollInput(i + 56, j + 18, 77, 18).forOptions(brushOptions)
 			.titled(Lang.translate("gui.terrainzapper.brush"))
 			.writingTo(brushLabel)
 			.calling(this::brushChanged);
@@ -70,7 +69,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		TerrainTools[] toolValues = TerrainTools.values();
 		for (int id = 0; id < toolValues.length; id++) {
 			TerrainTools tool = toolValues[id];
-			toolButtons.add(new IconButton(i + 8 + id * 18, j + 76, tool.icon));
+			toolButtons.add(new IconButton(i + 7 + id * 18, j + 77, tool.icon));
 			toolButtons.get(id)
 				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
 		}
@@ -84,7 +83,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		PlacementOptions[] placementValues = PlacementOptions.values();
 		for (int id = 0; id < placementValues.length; id++) {
 			PlacementOptions option = placementValues[id];
-			placementButtons.add(new IconButton(i + 147 + id * 18, j + 76, option.icon));
+			placementButtons.add(new IconButton(i + 136 + id * 18, j + 77, option.icon));
 			placementButtons.get(id)
 				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
 		}
@@ -116,15 +115,15 @@ public class WorldshaperScreen extends ZapperScreen {
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 0; index < 3; index++) {
 
-			Label label = new Label(i + 62 + 18 * index, j + 46, "").withShadow();
+			Label label = new Label(i + 65 + 20 * index, j + 43, "").withShadow();
 			brushParamLabels.add(label);
 			int indexFinal = index;
-			ScrollInput input = new ScrollInput(i + 55 + 18 * index, j + 43, 14, 14)
+			ScrollInput input = new ScrollInput(i + 56 + 20 * index, j + 38, 18, 18)
 				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
 				.writingTo(label)
 				.titled(currentBrush.getParamLabel(index).copy())
 				.calling(state -> {
-					label.x = i + 62 + 18 * indexFinal - textRenderer.getWidth(label.text) / 2;
+					label.x = i + 65 + 20 * indexFinal - textRenderer.getWidth(label.text) / 2;
 				});
 			input.setState(params[index]);
 			input.onChanged();
@@ -177,12 +176,11 @@ public class WorldshaperScreen extends ZapperScreen {
 		super.drawOnBackground(matrixStack, i, j);
 
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
-		for (int index = 2; index >= currentBrush.amtParams; index--) {
-			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, i + 55 + index * 18, j + 43);
-		}
+		for (int index = 2; index >= currentBrush.amtParams; index--) 
+			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, i + 56 + 20 * index, j + 38);
 
-		textRenderer.draw(matrixStack, toolSection, i + 8, j + 64, fontColor);
-		textRenderer.draw(matrixStack, placementSection, i + 148, j + 64, fontColor);
+		textRenderer.draw(matrixStack, toolSection, i + 7, j + 66, fontColor);
+		textRenderer.draw(matrixStack, placementSection, i + 136, j + 66, fontColor);
 	}
 
 	@Override

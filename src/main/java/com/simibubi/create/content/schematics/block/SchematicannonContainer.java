@@ -41,21 +41,18 @@ public class SchematicannonContainer extends Container {
 		int x = 20;
 		int y = 0;
 
-		addSlot(new SlotItemHandler(te.inventory, 0, x + 14, y + 37));
-		addSlot(new SlotItemHandler(te.inventory, 1, x + 170, y + 37));
-		addSlot(new SlotItemHandler(te.inventory, 2, x + 222, y + 21));
-		addSlot(new SlotItemHandler(te.inventory, 3, x + 222, y + 60));
-		addSlot(new SlotItemHandler(te.inventory, 4, x + 51, y + 135));
+		addSlot(new SlotItemHandler(te.inventory, 0, x + 15, y + 65));
+		addSlot(new SlotItemHandler(te.inventory, 1, x + 171, y + 65));
+		addSlot(new SlotItemHandler(te.inventory, 2, x + 134, y + 19));
+		addSlot(new SlotItemHandler(te.inventory, 3, x + 174, y + 19));
+		addSlot(new SlotItemHandler(te.inventory, 4, x + 15, y + 19));
 
 		// player Slots
-		for (int row = 0; row < 3; ++row) {
-			for (int col = 0; col < 9; ++col) {
+		for (int row = 0; row < 3; ++row) 
+			for (int col = 0; col < 9; ++col) 
 				addSlot(new Slot(player.inventory, col + row * 9 + 9, -2 + col * 18, 163 + row * 18));
-			}
-		}
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
+		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) 
 			addSlot(new Slot(player.inventory, hotbarSlot, -2 + hotbarSlot * 18, 221));
-		}
 
 		detectAndSendChanges();
 	}

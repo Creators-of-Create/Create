@@ -656,7 +656,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("B B")
 				.patternLine("BBB")),
 
-		BELT_OBSERVER = create(AllBlocks.BELT_OBSERVER).unlockedBy(AllItems.BELT_CONNECTOR::get)
+		BELT_OBSERVER = create(AllBlocks.CONTENT_OBSERVER).unlockedBy(AllItems.BELT_CONNECTOR::get)
 			.viaShaped(b -> b.key('B', I.brassCasing())
 				.key('R', I.redstone())
 				.key('I', I.iron())

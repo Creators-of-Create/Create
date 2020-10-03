@@ -13,7 +13,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -103,7 +102,7 @@ public class SymmetryHandler {
 			double speed = 1 / 16d;
 			yShift = MathHelper.sin((float) (AnimationTickHolder.getRenderTick() * speed)) / 5f;
 
-			IRenderTypeBuffer buffer = Minecraft.getInstance()
+			IRenderTypeBuffer.Impl buffer = Minecraft.getInstance()
 				.getBufferBuilders()
 				.getEntityVertexConsumers();
 			ActiveRenderInfo info = mc.gameRenderer.getActiveRenderInfo();
@@ -117,7 +116,7 @@ public class SymmetryHandler {
 			mirror.applyModelTransform(ms);
 			IBakedModel model = mirror.getModel()
 				.get();
-			IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+			IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 
 			mc.getBlockRendererDispatcher()
 				.getBlockModelRenderer()
@@ -125,11 +124,7 @@ public class SymmetryHandler {
 					player.world.getRandom(), MathHelper.getPositionRandom(pos), OverlayTexture.DEFAULT_UV,
 					EmptyModelData.INSTANCE);
 
-			Minecraft.getInstance()
-				.getBufferBuilders()
-				.getEntityVertexConsumers()
-				.draw(Atlases.getEntityTranslucentCull());  // FIXME new equivalent of getEntityTranslucent() ?
-
+			buffer.draw();
 			ms.pop();
 		}
 	}

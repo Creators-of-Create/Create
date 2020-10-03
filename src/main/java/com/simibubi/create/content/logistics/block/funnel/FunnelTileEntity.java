@@ -108,6 +108,8 @@ public class FunnelTileEntity extends SmartTileEntity {
 		ItemStack stack = autoExtractor.extract(amountToExtract, filter, amountThreshold);
 		if (stack.isEmpty())
 			return;
+		
+		onTransfer(stack);
 		invManipulation.insert(stack);
 		startCooldown();
 	}
@@ -142,6 +144,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 		if (stack.isEmpty())
 			return;
 		flap(false);
+		onTransfer(stack);
 		inputBehaviour.handleInsertion(stack, facing, false);
 		startCooldown();
 	}
@@ -160,6 +163,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 			return ignore;
 
 		flap(true);
+		onTransfer(toInsert);
 
 		if (remainder.isEmpty())
 			return TransportedResult.removeItem();
@@ -216,6 +220,8 @@ public class FunnelTileEntity extends SmartTileEntity {
 			return inserted;
 		if (simulate)
 			invManipulation.simulate();
+		if (!simulate)
+			onTransfer(inserted);
 		return invManipulation.insert(inserted);
 	}
 
@@ -252,6 +258,10 @@ public class FunnelTileEntity extends SmartTileEntity {
 	@Override
 	public double getMaxRenderDistanceSquared() {
 		return hasFlap() ? super.getMaxRenderDistanceSquared() : 64;
+	}
+	
+	public void onTransfer(ItemStack stack) {
+		AllBlocks.CONTENT_OBSERVER.get().onFunnelTransfer(world, pos, stack);
 	}
 
 }

@@ -100,6 +100,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (!capability.isPresent())
 			return ActionResultType.PASS;
 
+		if (!player.isCreative()) 
+			return ActionResultType.FAIL;
+		
 		TileEntity te = world.getTileEntity(pos);
 		LazyOptional<IFluidHandler> tankCapability =
 			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, ray.getFace());

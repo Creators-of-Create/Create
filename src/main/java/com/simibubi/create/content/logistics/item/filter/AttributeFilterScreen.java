@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private IconButton whitelistDis, whitelistCon, blacklist;
 	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;
 	private IconButton add;
+	private IconButton addInverted;
+
+	private ITextComponent addDESC = Lang.translate(PREFIX + "add_attribute");
+	private ITextComponent addInvertedDESC = Lang.translate(PREFIX + "add_inverted_attribute");
 
 	private ITextComponent whitelistDisN = Lang.translate(PREFIX + "whitelist_disjunctive");
 	private ITextComponent whitelistDisDESC = Lang.translate(PREFIX + "whitelist_disjunctive.description");
@@ -61,29 +66,31 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		int x = guiLeft;
 		int y = guiTop;
 
-		whitelistDis = new IconButton(x + 84, y + 58, AllIcons.I_WHITELIST_OR);
+		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
 		whitelistDis.setToolTip(whitelistDisN);
-		whitelistCon = new IconButton(x + 102, y + 58, AllIcons.I_WHITELIST_AND);
+		whitelistCon = new IconButton(x + 65, y + 59, AllIcons.I_WHITELIST_AND);
 		whitelistCon.setToolTip(whitelistConN);
-		blacklist = new IconButton(x + 120, y + 58, AllIcons.I_WHITELIST_NOT);
+		blacklist = new IconButton(x + 83, y + 59, AllIcons.I_WHITELIST_NOT);
 		blacklist.setToolTip(blacklistN);
 
-		whitelistDisIndicator = new Indicator(x + 84, y + 53, StringTextComponent.EMPTY);
-		whitelistConIndicator = new Indicator(x + 102, y + 53, StringTextComponent.EMPTY);
-		blacklistIndicator = new Indicator(x + 120, y + 53, StringTextComponent.EMPTY);
+		whitelistDisIndicator = new Indicator(x + 47, y + 53, StringTextComponent.EMPTY);
+		whitelistConIndicator = new Indicator(x + 65, y + 53, StringTextComponent.EMPTY);
+		blacklistIndicator = new Indicator(x + 83, y + 53, StringTextComponent.EMPTY);
 
 		widgets.addAll(Arrays.asList(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
-				whitelistDisIndicator));
+			whitelistDisIndicator));
 
-		add = new IconButton(x + 159, y + 22, AllIcons.I_ADD);
-		widgets.add(add);
+		widgets.add(add = new IconButton(x + 182, y + 21, AllIcons.I_ADD));
+		widgets.add(addInverted = new IconButton(x + 200, y + 21, AllIcons.I_ADD_INVERTED_ATTRIBUTE));
+		add.setToolTip(addDESC);
+		addInverted.setToolTip(addInvertedDESC);
+
 		handleIndicators();
 
-		attributeSelectorLabel = new Label(x + 40, y + 27, "").colored(0xF3EBDE).withShadow();
-		attributeSelector = new SelectionScrollInput(x + 37, y + 24, 118, 14);
-		attributeSelector.forOptions(Collections.singletonList(StringTextComponent.EMPTY));
-		attributeSelector.calling(s -> {
-		});
+		attributeSelectorLabel = new Label(x + 43, y + 26, "").colored(0xF3EBDE).withShadow();
+		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
+		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
+		attributeSelector.removeCallback();
 		referenceItemChanged(container.filterInventory.getStackInSlot(0));
 
 		widgets.add(attributeSelector);
@@ -91,8 +98,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		selectedAttributes.clear();
 		selectedAttributes
-				.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy().formatted(TextFormatting.YELLOW));
-		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ").append(at.format()).formatted(TextFormatting.GRAY)));
+			.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy().formatted(TextFormatting.YELLOW));
+		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ").append(at.toString()).formatted(TextFormatting.GRAY)));
 
 	}
 
@@ -104,17 +111,20 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 			attributeSelector.visible = false;
 			attributeSelectorLabel.text = referenceH.copy().formatted(TextFormatting.ITALIC);
 			add.active = false;
+			addInverted.active = false;
 			attributeSelector.calling(s -> {
 			});
 			return;
 		}
 
 		add.active = true;
+
+		addInverted.active = true;
 		attributeSelector.titled(stack.getDisplayName().copy().append("..."));
 		attributesOfItem.clear();
 		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, this.client.world));
-		List<ITextComponent> options = attributesOfItem.stream().map(ItemAttribute::format).collect(Collectors.toList());
+			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, client.world));
+		List<ITextComponent> options = attributesOfItem.stream().map(a -> a.format(false)).collect(Collectors.toList());
 		attributeSelector.forOptions(options);
 		attributeSelector.active = true;
 		attributeSelector.visible = true;
@@ -122,17 +132,20 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector.calling(i -> {
 			attributeSelectorLabel.setTextAndTrim(options.get(i), true, 112);
 			ItemAttribute selected = attributesOfItem.get(i);
-			for (ItemAttribute existing : container.selectedAttributes) {
+			for (Pair<ItemAttribute, Boolean> existing : container.selectedAttributes) {
 				CompoundNBT testTag = new CompoundNBT();
 				CompoundNBT testTag2 = new CompoundNBT();
-				existing.serializeNBT(testTag);
+				existing.getFirst()
+					.serializeNBT(testTag);
 				selected.serializeNBT(testTag2);
 				if (testTag.equals(testTag2)) {
 					add.active = false;
+					addInverted.active = false;
 					return;
 				}
 			}
 			add.active = true;
+			addInverted.active = true;
 		});
 		attributeSelector.onChanged();
 	}
@@ -144,8 +157,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
 		this.setZOffset(200);
 		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 59, guiTop + 56,
-				String.valueOf(selectedAttributes.size() - 1));
+		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 22, guiTop + 57,
+			String.valueOf(selectedAttributes.size() - 1));
 		this.setZOffset(0);
 		this.itemRenderer.zLevel = 0.0F;
 		matrixStack.pop();
@@ -163,8 +176,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void drawMouseoverTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
-		if (this.client.player.inventory.getItemStack().isEmpty() && this.hoveredSlot != null
-				&& this.hoveredSlot.getHasStack()) {
+		if (this.client.player.inventory.getItemStack()
+			.isEmpty() && this.hoveredSlot != null && this.hoveredSlot.getHasStack()) {
 			if (this.hoveredSlot.slotNumber == 37) {
 				renderTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
 				return;
@@ -209,31 +222,40 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 			return true;
 		}
 
-		if (add.isHovered() && add.active) {
-			int index = attributeSelector.getState();
-			if (index < attributesOfItem.size()) {
-				add.active = false;
-				CompoundNBT tag = new CompoundNBT();
-				ItemAttribute itemAttribute = attributesOfItem.get(index);
-				itemAttribute.serializeNBT(tag);
-				AllPackets.channel.sendToServer(new FilterScreenPacket(Option.ADD_TAG, tag));
-				container.selectedAttributes.add(itemAttribute);
-				if (container.selectedAttributes.size() == 1)
-					selectedAttributes.set(0, selectedT.copy().formatted(TextFormatting.YELLOW));
-				selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format()).formatted(TextFormatting.GRAY));
-				return true;
-			}
-		}
+		if (add.isHovered() && add.active)
+			return handleAddedAttibute(false);
+		if (addInverted.isHovered() && addInverted.active)
+			return handleAddedAttibute(true);
 
 		return mouseClicked;
+	}
+
+	protected boolean handleAddedAttibute(boolean inverted) {
+		int index = attributeSelector.getState();
+		if (index >= attributesOfItem.size())
+			return false;
+		add.active = false;
+		addInverted.active = false;
+		CompoundNBT tag = new CompoundNBT();
+		ItemAttribute itemAttribute = attributesOfItem.get(index);
+		itemAttribute.serializeNBT(tag);
+		AllPackets.channel
+			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
+		container.appendSelectedAttribute(itemAttribute, inverted);
+		if (container.selectedAttributes.size() == 1)
+			selectedAttributes.set(0, selectedT.copy().formatted(TextFormatting.YELLOW));
+		selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format(inverted)).formatted(TextFormatting.GRAY));
+		return true;
 	}
 
 	@Override
 	protected void contentsCleared() {
 		selectedAttributes.clear();
 		selectedAttributes.add(noSelectedT.copy().formatted(TextFormatting.YELLOW));
-		if (!lastItemScanned.isEmpty())
+		if (!lastItemScanned.isEmpty()) {
 			add.active = true;
+			addInverted.active = true;
+		}
 	}
 
 	@Override

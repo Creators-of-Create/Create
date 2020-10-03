@@ -99,7 +99,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 			return true;
 		if (!(stateBelow.getBlock() instanceof BeltBlock))
 			return false;
-		if (!BeltBlock.canTransport(stateBelow))
+		if (!BeltBlock.canTransportObjects(stateBelow))
 			return false;
 		return true;
 	}

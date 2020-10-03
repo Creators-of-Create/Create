@@ -47,6 +47,11 @@ public class ScrollInput extends AbstractSimiWidget {
 		this.onScroll = onScroll;
 		return this;
 	}
+	
+	public ScrollInput removeCallback() {
+		this.onScroll = null;
+		return this;
+	}
 
 	public ScrollInput titled(IFormattableTextComponent title) {
 		this.title = title;

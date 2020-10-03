@@ -41,7 +41,7 @@ public class SchematicTableContainer extends Container {
 	}
 
 	protected void init() {
-		inputSlot = new SlotItemHandler(te.inventory, 0, -9, 40) {
+		inputSlot = new SlotItemHandler(te.inventory, 0, -35, 41) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return AllItems.EMPTY_SCHEMATIC.isIn(stack) || AllItems.SCHEMATIC_AND_QUILL.isIn(stack)
@@ -49,7 +49,7 @@ public class SchematicTableContainer extends Container {
 			}
 		};
 
-		outputSlot = new SlotItemHandler(te.inventory, 1, 75, 40) {
+		outputSlot = new SlotItemHandler(te.inventory, 1, 110, 41) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;

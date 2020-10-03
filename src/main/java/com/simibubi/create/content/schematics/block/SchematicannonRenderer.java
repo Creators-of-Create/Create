@@ -3,7 +3,6 @@ package com.simibubi.create.content.schematics.block;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
@@ -18,7 +17,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
@@ -27,18 +25,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-@SuppressWarnings("deprecation")
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	public SchematicannonRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
+	
+	@Override
+	public boolean isGlobalRenderer(SchematicannonTileEntity p_188185_1_) {
+		return true;
+	}
 
 	@Override
 	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
 			IRenderTypeBuffer buffer, int light, int overlay) {
-
-		Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
 		double yaw = 0;
 		double pitch = 40;
@@ -96,8 +96,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				ms.push();
 				ms.translate(blockLocation.x, blockLocation.y, blockLocation.z);
 
-				// Rotation and Scaling effects
-				ms.multiply(new Vector3f(1, 1, 0).getDegreesQuaternion(360 * t * 2));
+				ms.multiply(new Vector3f(0, 1, 0).getDegreesQuaternion(360 * t * 2));
+				ms.multiply(new Vector3f(1, 0, 0).getDegreesQuaternion(360 * t * 2));
 
 				// Render the Block
 				if (launched instanceof ForBlockState) {
@@ -109,8 +109,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 				// Render the item
 				if (launched instanceof ForEntity) {
-					double scale = 1.2f;
-					GlStateManager.scaled(scale, scale, scale);
+					float scale = 1.2f;
+					ms.scale(scale, scale, scale);
 					Minecraft.getInstance().getItemRenderer().renderItem(launched.stack, TransformType.GROUND, light,
 							overlay, ms, buffer);
 				}
@@ -118,9 +118,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				ms.pop();
 
 				// Apply Recoil if block was just launched
-				if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10) {
+				if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10) 
 					recoil = Math.max(recoil, (launched.ticksRemaining + 1 - partialTicks) - launched.totalTicks + 10);
-				}
 
 				// Render particles for launch
 				if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {

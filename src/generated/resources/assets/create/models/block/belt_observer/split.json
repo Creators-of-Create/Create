@@ -1,6 +1,0 @@
-{
-  "parent": "create:block/belt_observer/base",
-  "textures": {
-    "texture": "create:block/belt_observer_split"
-  }
-}

@@ -12,8 +12,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -73,12 +71,10 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 		if (solid)
 			return;
 
-		List<LivingEntity> entitiesWithinAABB = context.world.getEntitiesWithinAABB(LivingEntity.class,
-			new AxisAlignedBB(pos).shrink(1 / 16f), e -> !(e instanceof PlayerEntity));
-		if (entitiesWithinAABB.isEmpty())
-			return;
-		LivingEntity passenger = entitiesWithinAABB.get(0);
-		contraptionEntity.addSittingPassenger(passenger, index);
+		List<Entity> nearbyEntities = context.world.getEntitiesWithinAABB(Entity.class,
+			new AxisAlignedBB(pos).shrink(1 / 16f), SeatBlock::canBePickedUp);
+		if (!nearbyEntities.isEmpty())
+			contraptionEntity.addSittingPassenger(nearbyEntities.get(0), index);
 	}
 
 }

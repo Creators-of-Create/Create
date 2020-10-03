@@ -43,8 +43,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		super.init();
 		widgets.clear();
 
-		resetButton = new IconButton(guiLeft + 15, guiTop + background.height - 30, AllIcons.I_TRASH);
-		confirmButton = new IconButton(guiLeft + 159, guiTop + background.height - 30, AllIcons.I_CONFIRM);
+		resetButton = new IconButton(guiLeft + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
+		confirmButton = new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
@@ -59,16 +59,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		int invX = x + 50;
 		int invY = y + background.height + 10;
 		PLAYER_INVENTORY.draw(ms, this, invX, invY);
-
 		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
-		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 9, 0x5B5037);
-
-		/*RenderHelper.enableGuiDepthLighting();
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + background.width + 0, guiTop + background.height - 60, 0);
-		RenderSystem.scaled(5, 5, 5);
-		itemRenderer.renderItemIntoGUI(container.filterItem, 0, 0);
-		RenderSystem.popMatrix();*/
+		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
 		GuiGameElement.of(container.filterItem)
 				.at(guiLeft + background.width, guiTop +background.height -60)

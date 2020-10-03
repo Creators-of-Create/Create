@@ -33,7 +33,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			if (boxAxis == axis)
 				continue;
 
-			SuperByteBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectional(te.getBlockState(), direction);
+			SuperByteBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), direction);
 			float offset = getRotationOffsetForPosition(te, pos, axis);
 			float angle = (time * te.getSpeed() * 3f / 10) % 360;
 

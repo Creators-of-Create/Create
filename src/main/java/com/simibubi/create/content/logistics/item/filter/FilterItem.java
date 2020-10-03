@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
@@ -35,8 +37,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-
-import javax.annotation.Nonnull;
 
 public class FilterItem extends Item implements INamedContainerProvider {
 
@@ -119,12 +119,14 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			ListNBT attributes = filter.getOrCreateTag()
 				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {
-				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
+				CompoundNBT compound = (CompoundNBT) inbt;
+				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
 					list.add(new StringTextComponent("- ...").formatted(TextFormatting.DARK_GRAY));
 					break;
 				}
-				list.add(new StringTextComponent("- ").append(attribute.format()));
+				list.add(new StringTextComponent("- ").append(attribute.format(inverted)));
 				count++;
 			}
 
@@ -209,8 +211,9 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			ListNBT attributes = filter.getOrCreateTag()
 				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
 			for (INBT inbt : attributes) {
-				ItemAttribute attribute = ItemAttribute.fromNBT((CompoundNBT) inbt);
-				boolean matches = attribute.appliesTo(stack, world);
+				CompoundNBT compound = (CompoundNBT) inbt;
+				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				boolean matches = attribute.appliesTo(stack, world) != compound.getBoolean("Inverted");
 
 				if (matches) {
 					switch (whitelistMode) {

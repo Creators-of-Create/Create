@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.components.actors.HarvesterMovem
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
@@ -27,6 +28,7 @@ import com.simibubi.create.content.contraptions.components.clock.CuckooClockBloc
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.content.contraptions.components.crank.AllValveHandles;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
@@ -64,12 +66,14 @@ import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankModel;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
+import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -91,7 +95,6 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
-import com.simibubi.create.content.logistics.block.belts.observer.BeltObserverBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
@@ -120,6 +123,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
+import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
@@ -137,8 +141,8 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
-
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
@@ -409,6 +413,7 @@ public class AllBlocks {
 	public static final BlockEntry<BasinBlock> BASIN = REGISTRATE.block("basin", BasinBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.standardModel(ctx, prov)))
+		.onRegister(addMovementBehaviour(new BasinMovementBehaviour()))
 		.simpleItem()
 		.register();
 
@@ -493,6 +498,20 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel())
 		.register();
+
+	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
+			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
+				state.get(FluidValveBlock.ENABLED) ? "open" : "closed")))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	static {
+		AllValveHandles.register(REGISTRATE);
+	}
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
 		.initialProperties(SharedProperties::softMetal)
@@ -671,9 +690,10 @@ public class AllBlocks {
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
 			.initialProperties(SharedProperties::stone)
-//			.onRegister(addMovementBehaviour(new StorageInterfaceMovement()))
-			.blockstate(BlockStateGen.directionalBlockProvider(false))
-			.simpleItem()
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =
@@ -713,24 +733,14 @@ public class AllBlocks {
 						.patternLine("-")
 						.key('#', DyeHelper.getWoolOfDye(colour))
 						.key('-', ItemTags.WOODEN_SLABS)
-						.addCriterion("has_wool",
-							new InventoryChangeTrigger.Instance(AndPredicate.EMPTY, MinMaxBounds.IntBound.UNBOUNDED,
-								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
-								new ItemPredicate[] { ItemPredicate.Builder.create()
-									.tag(ItemTags.WOOL)
-									.build() }))
+						.addCriterion("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
 					ShapedRecipeBuilder.shapedRecipe(c.get())
 						.patternLine("#")
 						.patternLine("-")
 						.key('#', DyeHelper.getTagOfDye(colour))
 						.key('-', AllItemTags.SEATS.tag)
-						.addCriterion("has_seat",
-							new InventoryChangeTrigger.Instance(AndPredicate.EMPTY, MinMaxBounds.IntBound.UNBOUNDED,
-								MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED,
-								new ItemPredicate[] { ItemPredicate.Builder.create()
-									.tag(AllItemTags.SEATS.tag)
-									.build() }))
+						.addCriterion("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 				})
 				.tag(AllBlockTags.SEATS.tag)
@@ -882,12 +892,12 @@ public class AllBlocks {
 			.transform(customItemModel("_", "block"))
 			.register();
 
-	public static final BlockEntry<BeltObserverBlock> BELT_OBSERVER =
-		REGISTRATE.block("belt_observer", BeltObserverBlock::new)
+	public static final BlockEntry<ContentObserverBlock> CONTENT_OBSERVER =
+		REGISTRATE.block("content_observer", ContentObserverBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.blockstate(BlockStateGen.beltObserver())
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item()
-			.transform(customItemModel())
+			.transform(customItemModel("_", "block"))
 			.register();
 
 	public static final BlockEntry<StockpileSwitchBlock> STOCKPILE_SWITCH =

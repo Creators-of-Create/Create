@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.tileEntity.behaviour.inventory;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -34,17 +36,19 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	protected InterfaceProvider target;
 	protected LazyOptional<IItemHandler> targetCapability;
 	protected boolean simulateNext;
+	protected boolean bypassSided;
+	private boolean findNewNextTick;
 
 	private BehaviourType<InvManipulationBehaviour> behaviourType;
 
 	public static InvManipulationBehaviour forExtraction(SmartTileEntity te, InterfaceProvider target) {
 		return new InvManipulationBehaviour(EXTRACT, te, target);
 	}
-	
+
 	public static InvManipulationBehaviour forInsertion(SmartTileEntity te, InterfaceProvider target) {
 		return new InvManipulationBehaviour(INSERT, te, target);
 	}
-	
+
 	public InvManipulationBehaviour(SmartTileEntity te, InterfaceProvider target) {
 		this(TYPE, te, target);
 	}
@@ -53,10 +57,16 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		InterfaceProvider target) {
 		super(te);
 		behaviourType = type;
-		setLazyTickRate(40);
+		setLazyTickRate(5);
 		this.target = target;
 		this.targetCapability = LazyOptional.empty();
 		simulateNext = false;
+		bypassSided = false;
+	}
+
+	public InvManipulationBehaviour bypassSidedness() {
+		bypassSided = true;
+		return this;
 	}
 
 	/**
@@ -69,6 +79,11 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 
 	public boolean hasInventory() {
 		return targetCapability.isPresent();
+	}
+
+	@Nullable
+	public IItemHandler getInventory() {
+		return targetCapability.orElse(null);
 	}
 
 	public ItemStack extract() {
@@ -124,11 +139,12 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		findNewCapability();
+		findNewNextTick = true;
 	}
 
 	protected void onHandlerInvalidated(LazyOptional<IItemHandler> handler) {
-		findNewCapability();
+		findNewNextTick = true;
+		targetCapability = LazyOptional.empty();
 	}
 
 	@Override
@@ -136,6 +152,15 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		super.lazyTick();
 		if (!targetCapability.isPresent())
 			findNewCapability();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		if (findNewNextTick) {
+			findNewNextTick = false;
+			findNewCapability();
+		}
 	}
 
 	public int getAmountFromFilter() {
@@ -159,8 +184,8 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		TileEntity invTE = world.getTileEntity(pos);
 		if (invTE == null)
 			return;
-		targetCapability =
-			invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetBlockFace.getFace());
+		targetCapability = bypassSided ? invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			: invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetBlockFace.getFace());
 		if (targetCapability.isPresent())
 			targetCapability.addListener(this::onHandlerInvalidated);
 	}

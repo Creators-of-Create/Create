@@ -40,7 +40,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
     public double getMaxRenderDistanceSquared() {
         return super.getMaxRenderDistanceSquared() + offset * offset;
     }
-
+    
     @Override
     protected void assemble() {
         if (!(world.getBlockState(pos)

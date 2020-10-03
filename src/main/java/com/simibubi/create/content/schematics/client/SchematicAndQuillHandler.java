@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.client;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
@@ -11,9 +12,12 @@ import org.apache.commons.io.IOUtils;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.TextInputPromptScreen;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -98,19 +102,12 @@ public class SchematicAndQuillHandler {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
 		if (player.isSneaking()) {
-			firstPos = null;
-			secondPos = null;
-			Lang.sendStatus(player, "schematicAndQuill.abort");
+			discard();
 			return;
 		}
 
 		if (secondPos != null) {
-			TextInputPromptScreen guiScreenIn = new TextInputPromptScreen(this::saveSchematic, s -> {
-			});
-			guiScreenIn.setTitle(Lang.translate("schematicAndQuill.prompt"));
-			guiScreenIn.setButtonTextConfirm(Lang.translate("action.saveToFile"));
-			guiScreenIn.setButtonTextAbort(Lang.translate("action.discard"));
-			ScreenOpener.open(guiScreenIn);
+			ScreenOpener.open(new SchematicPromptScreen());
 			return;
 		}
 
@@ -127,6 +124,13 @@ public class SchematicAndQuillHandler {
 
 		firstPos = selectedPos;
 		Lang.sendStatus(player, "schematicAndQuill.firstPos");
+	}
+	
+	public void discard() {
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		firstPos = null;
+		secondPos = null;
+		Lang.sendStatus(player, "schematicAndQuill.abort");
 	}
 
 	public void tick() {
@@ -200,11 +204,13 @@ public class SchematicAndQuillHandler {
 			&& Minecraft.getInstance().currentScreen == null;
 	}
 
-	public void saveSchematic(String string) {
+	public void saveSchematic(String string, boolean convertImmediately) {
 		Template t = new Template();
 		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
-		t.takeBlocksFromWorld(Minecraft.getInstance().world, new BlockPos(bb.minX, bb.minY, bb.minZ),
-			new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize()), true, Blocks.AIR);
+		BlockPos origin = new BlockPos(bb.minX, bb.minY, bb.minZ);
+		BlockPos bounds = new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize());
+
+		t.takeBlocksFromWorld(Minecraft.getInstance().world, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
 			string = Lang.translate("schematicAndQuill.fallbackName").getUnformattedComponentText();
@@ -214,9 +220,10 @@ public class SchematicAndQuillHandler {
 		String filename = FilesHelper.findFirstValidFilename(string, folderPath, "nbt");
 		String filepath = folderPath + "/" + filename;
 
+		Path path = Paths.get(filepath);
 		OutputStream outputStream = null;
 		try {
-			outputStream = Files.newOutputStream(Paths.get(filepath), StandardOpenOption.CREATE);
+			outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
 			CompoundNBT nbttagcompound = t.writeToNBT(new CompoundNBT());
 			CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
 		} catch (IOException e) {
@@ -228,6 +235,23 @@ public class SchematicAndQuillHandler {
 		firstPos = null;
 		secondPos = null;
 		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.saved", filepath);
+
+		if (!convertImmediately)
+			return;
+		if (!Files.exists(path)) {
+			Create.logger.fatal("Missing Schematic file: " + path.toString());
+			return;
+		}
+		try {
+			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(path)))
+				return;
+			AllPackets.channel.sendToServer(new InstantSchematicPacket(filename, origin, bounds));
+
+		} catch (IOException e) {
+			Create.logger.fatal("Error finding Schematic file: " + path.toString());
+			e.printStackTrace();
+			return;
+		}
 	}
 
 	private Outliner outliner() {

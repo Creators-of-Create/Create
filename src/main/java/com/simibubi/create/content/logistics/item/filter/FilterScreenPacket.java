@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public class FilterScreenPacket extends SimplePacketBase {
 
 	enum Option {
-		CLEAR, WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, ADD_TAG;
+		CLEAR, WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, ADD_TAG, ADD_INVERTED_TAG;
 	}
 
 	private Option option;
@@ -75,7 +75,9 @@ public class FilterScreenPacket extends SimplePacketBase {
 				if (option == Option.BLACKLIST)
 					c.whitelistMode = WhitelistMode.BLACKLIST;
 				if (option == Option.ADD_TAG)
-					c.appendSelectedAttribute(ItemAttribute.fromNBT(data));
+					c.appendSelectedAttribute(ItemAttribute.fromNBT(data), false);
+				if (option == Option.ADD_INVERTED_TAG)
+					c.appendSelectedAttribute(ItemAttribute.fromNBT(data), true);
 			}
 
 		});

@@ -303,9 +303,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "true",
         "up": "true",
         "down": "false"
+=======
+        "down": "false",
+        "east": "true",
+        "up": "true"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/lu_z"
@@ -314,9 +320,15 @@
     {
       "when": {
         "west": "true",
+<<<<<<< HEAD
         "east": "false",
         "up": "true",
         "down": "false"
+=======
+        "down": "false",
+        "east": "false",
+        "up": "true"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/ru_z"
@@ -325,9 +337,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "true",
         "up": "false",
         "down": "true"
+=======
+        "down": "true",
+        "east": "true",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/ld_z"
@@ -336,9 +354,15 @@
     {
       "when": {
         "west": "true",
+<<<<<<< HEAD
         "east": "false",
         "up": "false",
         "down": "true"
+=======
+        "down": "true",
+        "east": "false",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/rd_z"
@@ -347,9 +371,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "false",
         "up": "true",
         "down": "true"
+=======
+        "down": "true",
+        "east": "false",
+        "up": "true"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -358,9 +388,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "false",
         "up": "true",
         "down": "false"
+=======
+        "down": "false",
+        "east": "false",
+        "up": "true"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -369,9 +405,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "false",
         "up": "false",
         "down": "true"
+=======
+        "down": "true",
+        "east": "false",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -380,9 +422,15 @@
     {
       "when": {
         "west": "true",
+<<<<<<< HEAD
         "east": "true",
         "up": "false",
         "down": "false"
+=======
+        "down": "false",
+        "east": "true",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -391,9 +439,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "true",
         "up": "false",
         "down": "false"
+=======
+        "down": "false",
+        "east": "true",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -402,9 +456,15 @@
     {
       "when": {
         "west": "true",
+<<<<<<< HEAD
         "east": "false",
         "up": "false",
         "down": "false"
+=======
+        "down": "false",
+        "east": "false",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -413,9 +473,15 @@
     {
       "when": {
         "west": "false",
+<<<<<<< HEAD
         "east": "false",
         "up": "false",
         "down": "false"
+=======
+        "down": "false",
+        "east": "false",
+        "up": "false"
+>>>>>>> mc1.15/dev
       },
       "apply": {
         "model": "create:block/fluid_pipe/none_z"

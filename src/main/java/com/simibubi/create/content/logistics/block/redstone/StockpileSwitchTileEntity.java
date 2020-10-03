@@ -4,17 +4,16 @@ import java.util.List;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchTileEntity extends SmartTileEntity {
@@ -22,27 +21,30 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float onWhenAbove;
 	public float offWhenBelow;
 	public float currentLevel;
-	public boolean powered;
-	private LazyOptional<IItemHandler> observedInventory;
+	private boolean state;
+	private boolean inverted;
+
+	private FilteringBehaviour filtering;
+	private InvManipulationBehaviour observedInventory;
 
 	public StockpileSwitchTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
 		onWhenAbove = .75f;
 		offWhenBelow = .25f;
 		currentLevel = -1;
-		powered = false;
-		observedInventory = LazyOptional.empty();
+		state = false;
+		inverted = false;
 		setLazyTickRate(10);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		onWhenAbove = compound.getFloat("OnAbove");
 		offWhenBelow = compound.getFloat("OffBelow");
 		currentLevel = compound.getFloat("Current");
-		powered = compound.getBoolean("Powered");
-
-		super.fromTag(state, compound, clientPacket);
+		state = compound.getBoolean("Powered");
+		inverted = compound.getBoolean("Inverted");
+		super.fromTag(blockState, compound, clientPacket);
 	}
 
 	@Override
@@ -50,8 +52,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		compound.putFloat("OnAbove", onWhenAbove);
 		compound.putFloat("OffBelow", offWhenBelow);
 		compound.putFloat("Current", currentLevel);
-		compound.putBoolean("Powered", powered);
-
+		compound.putBoolean("Powered", state);
+		compound.putBoolean("Inverted", inverted);
 		super.write(compound, clientPacket);
 	}
 
@@ -60,19 +62,21 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	public void updateCurrentLevel() {
-		if (!observedInventory.isPresent()) {
-			if (!findNewInventory() && currentLevel != -1) {
-				world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, 0), 3);
-				currentLevel = -1;
-				powered = false;
-				world.updateNeighbors(pos, getBlockState().getBlock());
-			}
+		boolean changed = false;
+		if (!observedInventory.hasInventory()) {
+			if (currentLevel == -1)
+				return;
+			world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, 0), 3);
+			currentLevel = -1;
+			state = false;
+			world.updateNeighbors(pos, getBlockState().getBlock());
+			sendData();
 			return;
 		}
 
 		float occupied = 0;
 		float totalSpace = 0;
-		IItemHandler inv = observedInventory.orElse(null);
+		IItemHandler inv = observedInventory.getInventory();
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			ItemStack stackInSlot = inv.getStackInSlot(slot);
@@ -83,18 +87,23 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				continue;
 
 			totalSpace += 1;
-			occupied += count * (1f / space);
+
+			if (filtering.test(stackInSlot))
+				occupied += count * (1f / space);
 		}
 
-		currentLevel = (float) occupied / totalSpace;
+		float level = (float) occupied / totalSpace;
+		if (currentLevel != level)
+			changed = true;
+		currentLevel = level;
 		currentLevel = MathHelper.clamp(currentLevel, 0, 1);
 
-		boolean previouslyPowered = powered;
-		if (powered && currentLevel <= offWhenBelow)
-			powered = false;
-		else if (!powered && currentLevel >= onWhenAbove)
-			powered = true;
-		boolean update = previouslyPowered != powered;
+		boolean previouslyPowered = state;
+		if (state && currentLevel <= offWhenBelow)
+			state = false;
+		else if (!state && currentLevel >= onWhenAbove)
+			state = true;
+		boolean update = previouslyPowered != state;
 
 		int displayLevel = 0;
 		if (currentLevel > 0)
@@ -102,6 +111,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
 		if (update)
 			world.updateNeighbors(pos, getBlockState().getBlock());
+		if (changed || update)
+			sendData();
 	}
 
 	@Override
@@ -109,36 +120,39 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		super.lazyTick();
 		if (world.isRemote)
 			return;
-		findNewInventory();
 		updateCurrentLevel();
-	}
-
-	private boolean findNewInventory() {
-		observedInventory = LazyOptional.empty();
-		BlockPos invPos = getPos().offset(getBlockState().get(BlockStateProperties.HORIZONTAL_FACING));
-
-		if (!world.isBlockPresent(invPos))
-			return false;
-		BlockState invState = world.getBlockState(invPos);
-
-		if (!invState.hasTileEntity())
-			return false;
-		TileEntity invTE = world.getTileEntity(invPos);
-		if (invTE == null)
-			return false;
-
-		observedInventory = invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		if (observedInventory.isPresent()) {
-			updateCurrentLevel();
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vector3d(0, 5, 0))
+			.withCallback($ -> updateCurrentLevel());
+		behaviours.add(filtering);
 
+		observedInventory = new InvManipulationBehaviour(this, InterfaceProvider.towardBlockFacing()).bypassSidedness();
+		behaviours.add(observedInventory);
 	}
 
+	public float getLevelForDisplay() {
+		return currentLevel == -1 ? 0 : currentLevel;
+	}
+	
+	public boolean getState() {
+		return state;
+	}
+	
+	public boolean isPowered() {
+		return inverted != state;
+	}
+	
+	public boolean isInverted() {
+		return inverted;
+	}
+	
+	public void setInverted(boolean inverted) {
+		if (inverted == this.inverted)
+			return;
+		this.inverted = inverted;
+		world.updateNeighbors(pos, getBlockState().getBlock());
+	}
 }

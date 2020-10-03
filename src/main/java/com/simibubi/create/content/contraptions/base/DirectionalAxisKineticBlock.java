@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.utility.DirectionHelper;
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -46,54 +49,53 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		BlockPos pos = context.getPos();
 		World world = context.getWorld();
 		boolean alongFirst = false;
+		Axis faceAxis = facing.getAxis();
 
-		if (facing.getAxis()
-			.isHorizontal()) {
-			alongFirst = facing.getAxis() == Axis.Z;
+		if (faceAxis.isHorizontal()) {
+			alongFirst = faceAxis == Axis.Z;
+			Direction positivePerpendicular = DirectionHelper.getPositivePerpendicular(faceAxis);
 
-			Block blockAbove = world.getBlockState(pos.offset(Direction.UP))
-				.getBlock();
-			boolean shaftAbove = blockAbove instanceof IRotate && ((IRotate) blockAbove).hasShaftTowards(world,
-				pos.up(), world.getBlockState(pos.up()), Direction.DOWN);
-			Block blockBelow = world.getBlockState(pos.offset(Direction.DOWN))
-				.getBlock();
-			boolean shaftBelow = blockBelow instanceof IRotate && ((IRotate) blockBelow).hasShaftTowards(world,
-				pos.down(), world.getBlockState(pos.down()), Direction.UP);
+			boolean shaftAbove = prefersConnectionTo(world, pos, Direction.UP, true);
+			boolean shaftBelow = prefersConnectionTo(world, pos, Direction.DOWN, true);
+			boolean preferLeft = prefersConnectionTo(world, pos, positivePerpendicular, false);
+			boolean preferRight = prefersConnectionTo(world, pos, positivePerpendicular.getOpposite(), false);
 
-			if (shaftAbove || shaftBelow)
-				alongFirst = facing.getAxis() == Axis.X;
+			if (shaftAbove || shaftBelow || preferLeft || preferRight)
+				alongFirst = faceAxis == Axis.X;
 		}
 
-		if (facing.getAxis()
-			.isVertical()) {
+		if (faceAxis.isVertical()) {
 			alongFirst = getAxisAlignmentForPlacement(context);
 			Direction prefferedSide = null;
-			for (Direction side : Direction.values()) {
-				if (side.getAxis()
-					.isVertical())
+
+			for (Direction side : Iterate.horizontalDirections) {
+				if (!prefersConnectionTo(world, pos, side, true)
+					&& !prefersConnectionTo(world, pos, side.rotateY(), false))
 					continue;
-				BlockState blockState = context.getWorld()
-					.getBlockState(context.getPos()
-						.offset(side));
-				if (blockState.getBlock() instanceof IRotate) {
-					if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
-						.offset(side), blockState, side.getOpposite()))
-						if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
-							prefferedSide = null;
-							break;
-						} else {
-							prefferedSide = side;
-						}
+				if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
+					prefferedSide = null;
+					break;
 				}
+				prefferedSide = side;
 			}
-			if (prefferedSide != null) {
+
+			if (prefferedSide != null)
 				alongFirst = prefferedSide.getAxis() == Axis.X;
-			}
 		}
 
 		return this.getDefaultState()
 			.with(FACING, facing)
 			.with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
+	}
+
+	protected boolean prefersConnectionTo(IWorldReader reader, BlockPos pos, Direction facing, boolean shaftAxis) {
+		if (!shaftAxis)
+			return false;
+		BlockPos neighbourPos = pos.offset(facing);
+		BlockState blockState = reader.getBlockState(neighbourPos);
+		Block block = blockState.getBlock();
+		return block instanceof IRotate
+			&& ((IRotate) block).hasShaftTowards(reader, neighbourPos, blockState, facing.getOpposite());
 	}
 
 	@Override
