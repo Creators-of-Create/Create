@@ -45,6 +45,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -632,9 +633,9 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(ITextComponent.of(spacing + TextFormatting.GOLD + "Pull: " + TextFormatting.WHITE + pull));
-		tooltip.add(ITextComponent.of(spacing + TextFormatting.GOLD + "Push: " + TextFormatting.WHITE + push));
-		tooltip.add(ITextComponent.of(TextFormatting.YELLOW + "-> Item Motion: " + TextFormatting.WHITE + getItemMotion()));
+		tooltip.add(componentSpacing.copy().append(new StringTextComponent("Pull: ").formatted(TextFormatting.GOLD).append(new StringTextComponent(String.valueOf(pull)).formatted(TextFormatting.WHITE))));
+		tooltip.add(componentSpacing.copy().append(new StringTextComponent("Push: ").formatted(TextFormatting.GOLD).append(new StringTextComponent(String.valueOf(push)).formatted(TextFormatting.WHITE))));
+		tooltip.add(new StringTextComponent("-> Item Motion: ").formatted(TextFormatting.YELLOW).append(new StringTextComponent(String.valueOf(getItemMotion())).formatted(TextFormatting.WHITE)));
 		return true;
 	}
 

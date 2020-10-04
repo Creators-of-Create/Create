@@ -377,7 +377,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("gui.stressometer.overstressed")));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
 			List<String> cutString = TooltipHelper.cutString(new StringTextComponent(spacing).append(hint), GRAY, TextFormatting.WHITE);
@@ -405,8 +405,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		float stressAtBase = calculateStressApplied();
 
 		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
-			tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.goggles.kinetic_stats")));
-			tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("tooltip.stressImpact")));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.kinetic_stats")));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.stressImpact").formatted(TextFormatting.GRAY)));
 
 			float stressTotal = stressAtBase * Math.abs(getSpeed());
 

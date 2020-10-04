@@ -23,8 +23,8 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class ValueBox extends ChasingAABBOutline {
 
-	protected ITextComponent label = ITextComponent.of("Value Box");
-	protected ITextComponent sublabel = ITextComponent.of("");
+	protected ITextComponent label;
+	protected ITextComponent sublabel = StringTextComponent.EMPTY;
 	protected ITextComponent scrollTooltip = StringTextComponent.EMPTY;
 	protected Vector3d labelOffset = Vector3d.ZERO;
 

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class GoggleConfigScreen extends AbstractSimiScreen {
@@ -22,19 +23,19 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	private final List<ITextComponent> tooltip;
 
 	public GoggleConfigScreen() {
-		String spacing = "    ";
+		ITextComponent spacing = ITextComponent.of("    ");
 		tooltip = new ArrayList<>();
-		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay1")));
-		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay2")));
-		tooltip.add(ITextComponent.of(""));
-		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay3")));
-		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay4")));
-		tooltip.add(ITextComponent.of(""));
-		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay5")));
-		tooltip.add(ITextComponent.of(spacing + TextFormatting.GRAY + Lang.translate("gui.config.overlay6")));
-		tooltip.add(ITextComponent.of(""));
-		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay7")));
-		tooltip.add(ITextComponent.of(spacing + Lang.translate("gui.config.overlay8")));
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay1")));
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay2").formatted(TextFormatting.GRAY)));
+		tooltip.add(StringTextComponent.EMPTY);
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay3")));
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay4")));
+		tooltip.add(StringTextComponent.EMPTY);
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay5").formatted(TextFormatting.GRAY)));
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay6").formatted(TextFormatting.GRAY)));
+		tooltip.add(StringTextComponent.EMPTY);
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay7")));
+		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay8")));
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.client;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_CRATE;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;

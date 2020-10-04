@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -62,7 +63,7 @@ public class GoggleOverlayRenderer {
 		if (hoveringInformation) {
 			boolean goggleAddedInformation = !tooltip.isEmpty();
 			if (goggleAddedInformation)
-				tooltip.add(ITextComponent.of(""));
+				tooltip.add(StringTextComponent.EMPTY);
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
 			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
 				hoveringInformation = false;
