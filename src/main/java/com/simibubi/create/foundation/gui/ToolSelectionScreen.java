@@ -25,6 +25,7 @@ public class ToolSelectionScreen extends Screen {
 	public boolean focused;
 	private float yOffset;
 	protected int selection;
+	private boolean initialized;
 
 	protected int w;
 	protected int h;
@@ -37,6 +38,7 @@ public class ToolSelectionScreen extends Screen {
 		focused = false;
 		yOffset = 0;
 		selection = 0;
+		initialized = false;
 
 		callback.accept(tools.get(selection));
 
@@ -56,7 +58,11 @@ public class ToolSelectionScreen extends Screen {
 	}
 
 	private void draw(MatrixStack matrixStack, float partialTicks) {
-		MainWindow mainWindow = Minecraft.getInstance().getWindow();
+		Minecraft mc = Minecraft.getInstance();
+		MainWindow mainWindow = mc.getWindow();
+		if (!initialized)
+			init(mc, mainWindow.getScaledWidth(), mainWindow.getScaledHeight());
+
 
 		int x = (mainWindow.getScaledWidth() - w) / 2 + 15;
 		int y = mainWindow.getScaledHeight() - h - 75;
@@ -140,4 +146,9 @@ public class ToolSelectionScreen extends Screen {
 		callback.accept(tools.get(selection));
 	}
 
+	@Override
+	protected void init() {
+		super.init();
+		initialized = true;
+	}
 }

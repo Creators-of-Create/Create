@@ -182,7 +182,7 @@ public class SchematicHandler {
 
 	}
 
-	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, float partialTicks) {
 		if (!active)
 			return;
 		if (activeSchematicItem != null)
@@ -190,8 +190,7 @@ public class SchematicHandler {
 
 		currentTool.getTool()
 			.renderOverlay(ms, buffer);
-		selectionScreen.renderPassive(ms, Minecraft.getInstance()
-			.getRenderPartialTicks());
+		selectionScreen.renderPassive(ms, partialTicks);
 	}
 
 	public void onMouseInput(int button, boolean pressed) {

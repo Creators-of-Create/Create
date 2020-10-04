@@ -129,13 +129,13 @@ public class ClientEvents {
 		if (event.getType() != ElementType.HOTBAR)
 			return;
 
-		onRenderHotbar(new MatrixStack(), Minecraft.getInstance()
+		onRenderHotbar(event.getMatrixStack(), Minecraft.getInstance()
 			.getBufferBuilders()
-			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
+			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV, event.getPartialTicks());
 	}
 
-	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		CreateClient.schematicHandler.renderOverlay(ms, buffer, light, overlay);
+	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, float partialTicks) {
+		CreateClient.schematicHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent
