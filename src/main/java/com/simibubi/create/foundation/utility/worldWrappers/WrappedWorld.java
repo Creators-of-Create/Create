@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mcp.MethodsReturnNonnullByDefault;
@@ -47,22 +48,22 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public BlockState getBlockState(BlockPos pos) {
+	public BlockState getBlockState(@Nullable BlockPos pos) {
 		return world.getBlockState(pos);
 	}
 
 	@Override
-	public boolean hasBlockState(BlockPos p_217375_1_, Predicate<BlockState> p_217375_2_) {
+	public boolean hasBlockState(@Nullable BlockPos p_217375_1_, @Nullable Predicate<BlockState> p_217375_2_) {
 		return world.hasBlockState(p_217375_1_, p_217375_2_);
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getTileEntity(@Nullable BlockPos pos) {
 		return world.getTileEntity(pos);
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+	public boolean setBlockState(@Nullable BlockPos pos, @Nullable BlockState newState, int flags) {
 		return world.setBlockState(pos, newState, flags);
 	}
 
@@ -88,11 +89,11 @@ public class WrappedWorld extends World {
 
 	@Override
 	public AbstractChunkProvider getChunkProvider() {
-		return null;
+		return world.getChunkProvider(); // fixme
 	}
 
 	@Override
-	public void playEvent(PlayerEntity player, int type, BlockPos pos, int data) {}
+	public void playEvent(@Nullable PlayerEntity player, int type, BlockPos pos, int data) {}
 
 	@Override
 	public List<? extends PlayerEntity> getPlayers() {
@@ -100,11 +101,11 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
+	public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
 			float volume, float pitch) {}
 
 	@Override
-	public void playMovingSound(PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
+	public void playMovingSound(@Nullable PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
 			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
 
 	@Override
@@ -118,7 +119,9 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public boolean addEntity(Entity entityIn) {
+	public boolean addEntity(@Nullable Entity entityIn) {
+		if(entityIn == null)
+			return false;
 		entityIn.setWorld(world);
 		return world.addEntity(entityIn);
 	}
