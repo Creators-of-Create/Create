@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -35,8 +36,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -115,16 +116,8 @@ public class GuiGameElement {
 
 		public abstract void render(MatrixStack matrixStack);
 
-		protected void prepare() {
-			RenderSystem.pushMatrix();
-			RenderSystem.enableBlend();
-			RenderSystem.enableRescaleNormal();
-			RenderSystem.enableAlphaTest();
-			RenderHelper.enableGuiDepthLighting();
-			RenderSystem.alphaFunc(516, 0.1F);
-			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		}
+		@Deprecated
+		protected void prepare() {}
 
 		protected void prepareMatrix(MatrixStack matrixStack) {
 			matrixStack.push();
@@ -137,6 +130,7 @@ public class GuiGameElement {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 
+		@Deprecated
 		protected void transform() {
 			RenderSystem.translated(xBeforeScale, yBeforeScale, 0);
 			RenderSystem.scaled(scale, scale, scale);
@@ -155,17 +149,14 @@ public class GuiGameElement {
 			matrixStack.translate(x, y, z);
 			matrixStack.scale(1, -1, 1);
 			matrixStack.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
-			matrixStack.multiply(new Quaternion((float) zRot, 0, 0, 1));
-			matrixStack.multiply(new Quaternion((float) xRot, 1, 0, 0));
-			matrixStack.multiply(new Quaternion((float) yRot, 0, 1, 0));
+			matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) zRot));
+			matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) xRot));
+			matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) yRot));
 			matrixStack.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 		}
 
-		protected void cleanUp() {
-			RenderSystem.popMatrix();
-			RenderSystem.disableAlphaTest();
-			RenderSystem.disableRescaleNormal();
-		}
+		@Deprecated
+		protected void cleanUp() {}
 
 		protected void cleanUpMatrix(MatrixStack matrixStack) {
 			matrixStack.pop();
@@ -259,8 +250,8 @@ public class GuiGameElement {
 					
 					ms.push();
 					ms.translate(.5, .5, .5);
-					ms.multiply(new Quaternion(AngleHelper.horizontalAngle(d), 0, 1, 0));
-					ms.multiply(new Quaternion(AngleHelper.verticalAngle(d) - 90, 0, 0, 1));
+					ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(d)));
+					ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(AngleHelper.verticalAngle(d) - 90));
 					ms.translate(-.5, -.5, -.5);
 					blockRenderer.renderFluid(new BlockPos(0, 1, 0), renderWorld, vb, blockState.getFluidState());
 					buffer.draw(type);
@@ -315,11 +306,12 @@ public class GuiGameElement {
 		}
 
 		@Override
-		public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
+		public int getLightLevel(@Nullable LightType p_226658_1_, @Nullable BlockPos p_226658_2_) {
 			return 15;
 		}
 
 		@Override
+		@Nonnull
 		public BlockState getBlockState(BlockPos pos) {
 			return Blocks.AIR.getDefaultState();
 		}

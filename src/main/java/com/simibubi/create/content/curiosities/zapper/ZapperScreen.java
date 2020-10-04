@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -142,7 +142,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 	protected void renderBlock(MatrixStack matrixStack) {
 		matrixStack.push();
 		matrixStack.translate(guiLeft + 7f, guiTop + 43.5f, 120);
-		matrixStack.multiply(new Quaternion( -30f, .5f, .9f, -.1f));
+		matrixStack.multiply(new Vector3f(.5f, .9f, -.1f).getDegreesQuaternion(-30f));
 		matrixStack.scale(20, 20, 20);
 
 		BlockState state = Blocks.AIR.getDefaultState();

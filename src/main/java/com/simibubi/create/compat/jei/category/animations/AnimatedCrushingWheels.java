@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class AnimatedCrushingWheels extends AnimatedKinetics {
 
@@ -16,8 +16,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		RenderSystem.enableDepthTest();
 		matrixStack.translate(xOffset, yOffset, 100);
-		matrixStack.multiply(new Quaternion(-22.5f, 0, 1, 0));
-		// RenderSystem.rotatef(-22.5f, 0, 1, 0);
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-22.5f));
 		int scale = 22;
 		
 		BlockState wheel = AllBlocks.CRUSHING_WHEEL.get()

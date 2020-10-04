@@ -15,7 +15,9 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
+
+import javax.annotation.Nullable;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 
@@ -30,7 +32,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, T recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, T recipe, @Nullable IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 20, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
@@ -50,12 +52,14 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	}
 
 	@Override
-	public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(@Nullable T recipe, @Nullable MatrixStack matrixStack, double mouseX, double mouseY) {
+		if (matrixStack == null)
+			return;
 		renderWidgets(matrixStack, recipe, mouseX, mouseY);
 		matrixStack.push();
 		matrixStack.translate(56, 33, 0);
-		matrixStack.multiply(new Quaternion( -12.5f, 1, 0, 0));
-		matrixStack.multiply(new Quaternion( 22.5f, 0, 1, 0));
+		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-12.5f));
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
 		int scale = 24;
 
 		GuiGameElement.of(AllBlockPartials.ENCASED_FAN_INNER)

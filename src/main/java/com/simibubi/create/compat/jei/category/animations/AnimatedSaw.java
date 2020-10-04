@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class AnimatedSaw extends AnimatedKinetics {
 
@@ -20,8 +20,8 @@ public class AnimatedSaw extends AnimatedKinetics {
 
 		matrixStack.translate(0, 0, 200);
 		matrixStack.translate(-6, 19, 0);
-		matrixStack.multiply(new Quaternion( -22.5f, 1, 0, 0));
-		matrixStack.multiply(new Quaternion(90 - 22.5f, 0, 1, 0));
+		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-22.5f));
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90-225f));
 		int scale = 25;
 
 		GuiGameElement.of(shaft(Axis.X))

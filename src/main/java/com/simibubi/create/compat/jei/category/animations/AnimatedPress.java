@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class AnimatedPress extends AnimatedKinetics {
 
@@ -23,8 +23,8 @@ public class AnimatedPress extends AnimatedKinetics {
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.push();
 		matrixStack.translate(xOffset, yOffset, 100);
-		matrixStack.multiply(new Quaternion( -15.5f, 1, 0, 0));
-		matrixStack.multiply(new Quaternion( 22.5f, 0, 1, 0));
+		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-15.5f));
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
 		int scale = basin ? 20 : 24;
 
 		GuiGameElement.of(shaft(Axis.Z))

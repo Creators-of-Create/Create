@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class AnimatedMixer extends AnimatedKinetics {
 
@@ -15,8 +15,8 @@ public class AnimatedMixer extends AnimatedKinetics {
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.push();
 		matrixStack.translate(xOffset, yOffset, 200);
-		matrixStack.multiply(new Quaternion(-15.5f, 1, 0, 0));
-		matrixStack.multiply(new Quaternion( 22.5f, 0, 1, 0));
+		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-15.5f));
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
 		int scale = 23;
 
 		GuiGameElement.of(cogwheel())

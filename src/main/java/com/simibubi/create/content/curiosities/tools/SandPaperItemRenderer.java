@@ -71,9 +71,9 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			if (itemInUseCount > 0) {
 				int modifier = leftHand ? -1 : 1;
 				ms.translate(modifier * .5f, 0, -.25f);
-				ms.multiply(new Quaternion(modifier * 40, 0, 0, 1));
-				ms.multiply(new Quaternion(modifier * 10, 1, 0, 0));
-				ms.multiply(new Quaternion(modifier * 90, 0, 1, 0));
+				ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(modifier * 40));
+				ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(modifier * 10));
+				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(modifier * 90));
 			}
 		}
 
