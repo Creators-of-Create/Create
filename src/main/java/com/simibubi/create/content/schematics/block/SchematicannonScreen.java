@@ -242,7 +242,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		boolean enabled = indicator.state == State.ON;
 		List<ITextComponent> tip = button.getToolTip();
 		tip.add((enabled ? optionEnabled : optionDisabled).copy().formatted(TextFormatting.BLUE));
-		TooltipHelper.cutString(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY, GRAY).forEach(s -> tip.add(new StringTextComponent(s).formatted(GRAY)));
+		tip.addAll(TooltipHelper.cutTextComponent(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY, GRAY));
 
 	}
 
@@ -325,15 +325,15 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (hoveredSlot != null && !hoveredSlot.getHasStack()) {
 			if (hoveredSlot.getSlotIndex() == 0)
 				renderTooltip(matrixStack,
-					TooltipHelper.cutStringToComponents(Lang.translate(_slotSchematic), TextFormatting.GRAY, TextFormatting.BLUE),
+					TooltipHelper.cutTextComponent(Lang.translate(_slotSchematic), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
 			if (hoveredSlot.getSlotIndex() == 2)
 				renderTooltip(matrixStack,
-					TooltipHelper.cutStringToComponents(Lang.translate(_slotListPrinter), TextFormatting.GRAY, TextFormatting.BLUE),
+					TooltipHelper.cutTextComponent(Lang.translate(_slotListPrinter), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
 			if (hoveredSlot.getSlotIndex() == 4)
 				renderTooltip(matrixStack,
-					TooltipHelper.cutStringToComponents(Lang.translate(_slotGunpowder), TextFormatting.GRAY, TextFormatting.BLUE),
+					TooltipHelper.cutTextComponent(Lang.translate(_slotGunpowder), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
 		}
 

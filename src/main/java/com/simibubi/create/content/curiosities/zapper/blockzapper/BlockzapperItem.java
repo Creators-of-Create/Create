@@ -40,6 +40,7 @@ import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -67,7 +68,7 @@ public class BlockzapperItem extends ZapperItem {
 				ITextComponent componentName =
 					Lang.translate("blockzapper.component." + Lang.asId(c.name())).formatted(TextFormatting.GRAY);
 				ITextComponent tierName = Lang.translate("blockzapper.componentTier." + Lang.asId(tier.name())).formatted(tier.color);
-				ItemDescription.add(tooltip, "> " + componentName + ": " + tierName);
+				ItemDescription.add(tooltip, new StringTextComponent("> ").append(componentName).append(": ").append(tierName));
 			}
 		}
 	}

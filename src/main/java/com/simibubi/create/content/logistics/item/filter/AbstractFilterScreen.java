@@ -121,7 +121,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		if (!button.isHovered())
 			return;
 		List<ITextComponent> tip = button.getToolTip();
-		TooltipHelper.cutString(tooltip, GRAY, GRAY).stream().map(ITextComponent::of).forEachOrdered(tip::add);
+		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
 	}
 
 	@Override

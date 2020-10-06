@@ -2,11 +2,8 @@ package com.simibubi.create.foundation.item;
 
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
@@ -26,9 +23,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 
 public class TooltipHelper {
 
@@ -44,17 +39,12 @@ public class TooltipHelper {
 				.formatted(colorFormat));
 	}
 
+	@Deprecated
 	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
 		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0);
 	}
 
-	public static List<ITextComponent> cutStringToComponents(ITextComponent s, TextFormatting defaultColor,
-		TextFormatting highlightColor) {
-		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0).stream()
-			.map(ITextComponent::of)
-			.collect(Collectors.toList());
-	}
-
+	@Deprecated
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,
 		int indent) {
 		String lineStart = defaultColor.toString();
@@ -88,6 +78,57 @@ public class TooltipHelper {
 
 		if (!firstWord) {
 			lines.add(currentLine.toString());
+		}
+
+		return lines;
+	}
+
+	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor, TextFormatting highlightColor) {
+		return cutTextComponent(ITextComponent.of(c), defaultColor, highlightColor, 0);
+	}
+
+	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor, TextFormatting highlightColor) {
+		return cutTextComponent(c, defaultColor, highlightColor, 0);
+	}
+
+	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor, TextFormatting highlightColor,
+															  int indent) {
+		return cutTextComponent(ITextComponent.of(c), defaultColor, highlightColor, indent);
+	}
+
+	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor, TextFormatting highlightColor,
+												int indent) {
+		IFormattableTextComponent lineStart = StringTextComponent.EMPTY.copy();
+		for (int i = 0; i < indent; i++)
+			lineStart.append(" ");
+		lineStart.formatted(defaultColor);
+
+		List<ITextComponent> lines = new ArrayList<>();
+		String rawText = c.getUnformattedComponentText();
+		String[] words = rawText.split(" ");
+		String word;
+		IFormattableTextComponent currentLine = lineStart.copy();
+
+		boolean firstWord = true;
+		boolean lastWord;
+
+		// Apply hard wrap
+		for (int i = 0; i < words.length; i++) {
+			word = words[i];
+			lastWord = i == words.length - 1;
+
+			if (!lastWord && !firstWord && getComponentLength(currentLine) + word.length() > maxCharsPerLine) {
+				lines.add(currentLine);
+				currentLine = lineStart.copy();
+				firstWord = true;
+			}
+
+			currentLine.append(new StringTextComponent((firstWord ? "" : " ") + word.replace("_", "")).formatted(word.matches("_([^_]+)_") ? highlightColor : defaultColor));
+			firstWord = false;
+		}
+
+		if (!firstWord) {
+			lines.add(currentLine);
 		}
 
 		return lines;
@@ -199,6 +240,15 @@ public class TooltipHelper {
 
 		return stack.getItem()
 			.getTranslationKey(stack) + ".tooltip";
+	}
+
+	private static int getComponentLength(ITextComponent component) {
+		AtomicInteger l = new AtomicInteger();
+		TextProcessing.visitFormatted(component, Style.EMPTY, (s, style, charConsumer) -> {
+			l.getAndIncrement();
+			return true;
+		});
+		return l.get();
 	}
 
 }

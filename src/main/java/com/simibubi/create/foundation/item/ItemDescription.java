@@ -1,20 +1,7 @@
 package com.simibubi.create.foundation.item;
 
-import static com.simibubi.create.foundation.item.TooltipHelper.cutString;
-import static net.minecraft.util.text.TextFormatting.AQUA;
-import static net.minecraft.util.text.TextFormatting.BLUE;
-import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import static net.minecraft.util.text.TextFormatting.DARK_GREEN;
-import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
-import static net.minecraft.util.text.TextFormatting.DARK_RED;
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-import static net.minecraft.util.text.TextFormatting.GREEN;
-import static net.minecraft.util.text.TextFormatting.LIGHT_PURPLE;
-import static net.minecraft.util.text.TextFormatting.RED;
-import static net.minecraft.util.text.TextFormatting.STRIKETHROUGH;
-import static net.minecraft.util.text.TextFormatting.WHITE;
-import static net.minecraft.util.text.TextFormatting.YELLOW;
+import static com.simibubi.create.foundation.item.TooltipHelper.*;
+import static net.minecraft.util.text.TextFormatting.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,8 +70,8 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withSummary(ITextComponent summary) {
-		addStrings(linesOnShift, cutString(summary, palette.color, palette.hColor));
-		add(linesOnShift, "");
+		addStrings(linesOnShift, cutTextComponent(summary, palette.color, palette.hColor));
+		add(linesOnShift, StringTextComponent.EMPTY);
 		return this;
 	}
 
@@ -109,11 +96,10 @@ public class ItemDescription {
 		if (hasSpeedRequirement) {
 			List<ITextComponent> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			String level =
-				minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(speedLevels.get(index)).formatted(minimumRequiredSpeedLevel.getTextColor());
 
 			if (hasGlasses)
-				level += " (" + minimumRequiredSpeedLevel.getSpeedValue() + rpmUnit + "+)";
+				level.append(" (" + minimumRequiredSpeedLevel.getSpeedValue()).append(rpmUnit).append("+)");
 
 			add(linesOnShift, Lang.translate("tooltip.speedRequirement").formatted(GRAY));
 			add(linesOnShift, level);
@@ -127,11 +113,10 @@ public class ItemDescription {
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
-			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressLevels.get(index);
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level += " (" + impacts.get(id)
-					.get() + stressUnit + ")";
+				level.append(" (" + impacts.get(id).get()).append(stressUnit).append(")");
 
 			add(linesOnShift, Lang.translate("tooltip.stressImpact").formatted(GRAY));
 			add(linesOnShift, level);
@@ -145,25 +130,24 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
-			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressCapacityLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level += " (" + capacity + stressUnit + ")";
+				level.append(" (" + capacity).append(stressUnit).append(")");
 			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
-				level +=
-					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
+				level.append(" ").append(Lang.translate("tooltip.capacityProvided.asGenerator").formatted(DARK_GRAY, ITALIC));
 
 			add(linesOnShift, Lang.translate("tooltip.capacityProvided").formatted(GRAY));
 			add(linesOnShift, level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
 			if (!genSpeed.getUnformattedComponentText().equals("")) {
-				add(linesOnShift, GREEN + " " + genSpeed);
+				add(linesOnShift, new StringTextComponent(" ").append(genSpeed).formatted(GREEN));
 			}
 		}
 
 		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
-			add(linesOnShift, "");
+			add(linesOnShift, StringTextComponent.EMPTY);
 		return this;
 	}
 
@@ -178,14 +162,14 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
-		add(linesOnShift, GRAY + condition);
-		addStrings(linesOnShift, cutString(behaviour, palette.color, palette.hColor, 1));
+		add(linesOnShift, new StringTextComponent(condition).formatted(GRAY));
+		addStrings(linesOnShift, cutStringTextComponent(behaviour, palette.color, palette.hColor, 1));
 		return this;
 	}
 
 	public ItemDescription withControl(String condition, String action) {
-		add(linesOnCtrl, GRAY + condition);
-		addStrings(linesOnCtrl, cutString(action, palette.color, palette.hColor, 1));
+		add(linesOnCtrl, new StringTextComponent(condition).formatted(GRAY));
+		addStrings(linesOnCtrl, cutStringTextComponent(action, palette.color, palette.hColor, 1));
 		return this;
 	}
 
@@ -248,16 +232,12 @@ public class ItemDescription {
 		return palette.hColor + s + palette.color;
 	}
 
-	public static void addStrings(List<ITextComponent> infoList, List<String> textLines) {
+	public static void addStrings(List<ITextComponent> infoList, List<ITextComponent> textLines) {
 		textLines.forEach(s -> add(infoList, s));
 	}
 
 	public static void add(List<ITextComponent> infoList, List<ITextComponent> textLines) {
 		infoList.addAll(textLines);
-	}
-
-	public static void add(List<ITextComponent> infoList, String line) {
-		infoList.add(new StringTextComponent(line));
 	}
 
 	public static void add(List<ITextComponent> infoList, ITextComponent line) {
