@@ -27,6 +27,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+	
+	public CStress stressValues = nested(0, CStress::new, Comments.stress);
 
 	public ConfigGroup state = group(0, "stats", Comments.stats);
 	public ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
@@ -36,8 +38,6 @@ public class CKinetics extends ConfigBase {
 	public ConfigFloat highStressImpact = f(8, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
 	public ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
 	public ConfigFloat highCapacity = f(512, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
-
-	public CStress stressValues = nested(0, CStress::new, Comments.stress);
 
 	@Override
 	public String getName() {

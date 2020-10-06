@@ -201,9 +201,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('A', Tags.Items.NUGGETS_IRON)
 				.patternLine("ASA")),
 
-		ATTRIBUTE_FILTER = create(AllItems.ATTRIBUTE_FILTER).unlockedBy(I::andesite)
+		ATTRIBUTE_FILTER = create(AllItems.ATTRIBUTE_FILTER).unlockedByTag(I::brass)
 			.viaShaped(b -> b.key('S', ItemTags.WOOL)
-				.key('A', I.copperNugget())
+				.key('A', I.brassNugget())
 				.patternLine("ASA")),
 
 		BRASS_HAND = create(AllItems.BRASS_HAND).unlockedByTag(I::brass)

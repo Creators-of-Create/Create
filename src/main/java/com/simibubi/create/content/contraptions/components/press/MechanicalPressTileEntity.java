@@ -10,6 +10,8 @@ import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEnt
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.ITriggerable;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -41,29 +43,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	private static final Object compressingRecipesKey = new Object();
 	public List<ItemStack> pressedItems = new ArrayList<>();
-
-	public static class PressingInv extends RecipeWrapper {
-		public PressingInv() {
-			super(new ItemStackHandler(1));
-		}
-	}
-
-	enum Mode {
-		WORLD(1), BELT(19f / 16f), BASIN(22f / 16f)
-
-		;
-
-		float headOffset;
-
-		Mode(float headOffset) {
-			this.headOffset = headOffset;
-		}
-	}
-
-	private static final PressingInv pressingInv = new PressingInv();
 	public BeltProcessingBehaviour processingBehaviour;
 
+	public int prevRunningTicks;
 	public int runningTicks;
+	static final int CYCLE = 240;
+
 	public boolean running;
 	public Mode mode;
 	public boolean finished;
@@ -87,7 +72,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
-		runningTicks = compound.getInt("Ticks");
+		prevRunningTicks = runningTicks = compound.getInt("Ticks");
 		super.read(compound, clientPacket);
 
 		if (clientPacket) {
@@ -105,8 +90,10 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		compound.putInt("Ticks", runningTicks);
 		super.write(compound, clientPacket);
 
-		if (clientPacket)
+		if (clientPacket) {
 			compound.put("ParticleItems", NBTHelper.writeCompoundList(pressedItems, ItemStack::serializeNBT));
+			pressedItems.clear();
+		}
 	}
 
 	@Override
@@ -116,15 +103,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
-		if (running) {
-			if (runningTicks < 40) {
-				float num = (runningTicks - 1 + partialTicks) / 30f;
-				return MathHelper.clamp(num * num * num, 0, mode.headOffset);
-			}
-			return MathHelper.clamp(((60 - runningTicks) + 1 - partialTicks) / 20f * mode.headOffset, 0,
-				mode.headOffset);
-		}
-		return 0;
+		if (!running)
+			return 0;
+		float ticks = MathHelper.lerp(partialTicks, prevRunningTicks, runningTicks);
+		if (runningTicks < (CYCLE * 2) / 3)
+			return (float) MathHelper.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, mode.headOffset);
+		return MathHelper.clamp((CYCLE - ticks) / CYCLE * 3 * mode.headOffset, 0, mode.headOffset);
 	}
 
 	public void start(Mode mode) {
@@ -150,50 +134,11 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		if (!running || world == null)
 			return;
 
-		if (runningTicks == 30) {
-
-			if (inWorld()) {
-				AxisAlignedBB bb = new AxisAlignedBB(pos.down(1));
-				pressedItems.clear();
-				for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
-					if (!(entity instanceof ItemEntity))
-						continue;
-
-					ItemEntity itemEntity = (ItemEntity) entity;
-
-					if (!world.isRemote) {
-						pressedItems.add(itemEntity.getItem());
-						sendData();
-						Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
-						if (recipe.isPresent()) {
-							InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
-							AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
-						}
-					}
-				}
-			}
-
-			if (onBasin()) {
-				if (!world.isRemote) {
-					pressedItems.clear();
-					applyBasinRecipe();
-
-					Optional<BasinTileEntity> basin = getBasin();
-					SmartInventory inputs = basin.get()
-						.getInputInventory();
-					if (basin.isPresent()) {
-						for (int slot = 0; slot < inputs.getSlots(); slot++) {
-							ItemStack stackInSlot = inputs.getStackInSlot(slot);
-							if (stackInSlot.isEmpty())
-								continue;
-							pressedItems.add(stackInSlot);
-						}
-					}
-					sendData();
-				}
-
-			}
-
+		if (runningTicks == CYCLE / 2) {
+			if (inWorld())
+				applyPressingInWorld();
+			if (onBasin())
+				applyCompactingOnBasin();
 			if (!world.isRemote) {
 				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS,
 					.5f, 1f);
@@ -202,105 +147,125 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			}
 		}
 
-		if (!world.isRemote && runningTicks > 60) {
+		if (!world.isRemote && runningTicks > CYCLE) {
 			finished = true;
 			if (inWorld())
 				finished = world.isBlockPowered(pos);
 			running = false;
 
-			if (onBasin()) {
-				gatherInputs();
-				if (matchBasinRecipe(lastRecipe)) {
-					startProcessingBasin();
-				}
-			}
+			if (onBasin() && matchBasinRecipe(currentRecipe))
+				startProcessingBasin();
 
 			pressedItems.clear();
 			sendData();
 			return;
 		}
 
-		runningTicks++;
+		prevRunningTicks = runningTicks;
+		runningTicks += getRunningTickSpeed();
+		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2)
+			runningTicks = CYCLE / 2;
+	}
+
+	protected void applyCompactingOnBasin() {
+		if (world.isRemote)
+			return;
+		pressedItems.clear();
+		applyBasinRecipe();
+		Optional<BasinTileEntity> basin = getBasin();
+		SmartInventory inputs = basin.get()
+			.getInputInventory();
+		if (basin.isPresent()) {
+			for (int slot = 0; slot < inputs.getSlots(); slot++) {
+				ItemStack stackInSlot = inputs.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				pressedItems.add(stackInSlot);
+			}
+		}
+		sendData();
+	}
+
+	protected void applyPressingInWorld() {
+		AxisAlignedBB bb = new AxisAlignedBB(pos.down(1));
+		pressedItems.clear();
+		if (world.isRemote)
+			return;
+		for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
+			if (!(entity instanceof ItemEntity))
+				continue;
+			ItemEntity itemEntity = (ItemEntity) entity;
+			pressedItems.add(itemEntity.getItem());
+			sendData();
+			Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
+			if (!recipe.isPresent())
+				continue;
+			InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
+		}
+	}
+
+	public int getRunningTickSpeed() {
+		if (getSpeed() == 0)
+			return 0;
+		return (int) MathHelper.lerp(MathHelper.clamp(Math.abs(getSpeed()) / 512f, 0, 1), 1, 60);
 	}
 
 	protected void spawnParticles() {
 		if (pressedItems.isEmpty())
 			return;
 
-		if (mode == Mode.BASIN) {
+		if (mode == Mode.BASIN)
 			pressedItems.forEach(stack -> makeCompactingParticleEffect(VecHelper.getCenterOf(pos.down(2)), stack));
-		}
-		if (mode == Mode.BELT) {
+		if (mode == Mode.BELT)
 			pressedItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(2))
 				.add(0, 8 / 16f, 0), stack));
-		}
-		if (mode == Mode.WORLD) {
+		if (mode == Mode.WORLD)
 			pressedItems.forEach(stack -> makePressingParticleEffect(VecHelper.getCenterOf(pos.down(1))
 				.add(0, -1 / 4f, 0), stack));
-		}
 
 		pressedItems.clear();
 	}
 
 	public void makePressingParticleEffect(Vec3d pos, ItemStack stack) {
-		if (world != null && world.isRemote) {
-			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
-					.mul(1, 0, 1);
-				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
-					motion.y + .125f, motion.z);
-			}
+		if (world == null || !world.isRemote)
+			return;
+		for (int i = 0; i < 20; i++) {
+			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .125f)
+				.mul(1, 0, 1);
+			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y - .25f, pos.z, motion.x,
+				motion.y + .125f, motion.z);
 		}
 	}
 
 	public void makeCompactingParticleEffect(Vec3d pos, ItemStack stack) {
-		if (world != null && world.isRemote) {
-			for (int i = 0; i < 20; i++) {
-				Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f)
-					.mul(1, 0, 1);
-				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
-					motion.y + .25f, motion.z);
-			}
+		if (world == null || !world.isRemote)
+			return;
+		for (int i = 0; i < 20; i++) {
+			Vec3d motion = VecHelper.offsetRandomly(Vec3d.ZERO, world.rand, .175f)
+				.mul(1, 0, 1);
+			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z, motion.x,
+				motion.y + .25f, motion.z);
 		}
 	}
 
+	private static final RecipeWrapper pressingInv = new RecipeWrapper(new ItemStackHandler(1));
+
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
 		pressingInv.setInventorySlotContents(0, item);
-		return world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.PRESSING.getType(), pressingInv, world);
+		return AllRecipeTypes.PRESSING.find(pressingInv, world);
 	}
 
 	public static boolean canCompress(NonNullList<Ingredient> ingredients) {
-		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
-			.size() == 1;
+		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
+			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
+				.size() == 1;
 	}
 
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe) {
-		return recipe instanceof ICraftingRecipe && canCompress(recipe.getIngredients());
-	}
-
-	@Override
-	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (!super.matchBasinRecipe(recipe))
-			return false;
-
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		List<ItemStack> remainingItems = new ArrayList<>();
-		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
-
-		Ingredients: for (Ingredient ingredient : ingredients) {
-			for (ItemStack stack : remainingItems) {
-				if (stack.isEmpty())
-					continue;
-				if (ingredient.test(stack)) {
-					stack.shrink(1);
-					continue Ingredients;
-				}
-			}
-			return false;
-		}
-		return true;
+		return (recipe instanceof ICraftingRecipe && canCompress(recipe.getIngredients()))
+			|| recipe.getType() == AllRecipeTypes.COMPACTING.type;
 	}
 
 	@Override
@@ -310,7 +275,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	public void startProcessingBasin() {
-		if (running && runningTicks <= 30)
+		if (running && runningTicks <= CYCLE / 2)
 			return;
 		super.startProcessingBasin();
 		start(Mode.BASIN);
@@ -327,6 +292,23 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected boolean isRunning() {
 		return running;
+	}
+
+	@Override
+	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
+		return Optional.of(AllTriggers.PRESS_COMPACT);
+	}
+
+	enum Mode {
+		WORLD(1), BELT(19f / 16f), BASIN(22f / 16f)
+
+		;
+
+		float headOffset;
+
+		Mode(float headOffset) {
+			this.headOffset = headOffset;
+		}
 	}
 
 }

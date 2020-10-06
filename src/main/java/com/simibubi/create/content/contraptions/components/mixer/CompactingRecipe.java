@@ -4,10 +4,10 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-public class MixingRecipe extends BasinRecipe {
+public class CompactingRecipe extends BasinRecipe {
 
-	public MixingRecipe(ProcessingRecipeParams params) {
-		super(AllRecipeTypes.MIXING, params);
+	public CompactingRecipe(ProcessingRecipeParams params) {
+		super(AllRecipeTypes.COMPACTING, params);
 	}
 
 }

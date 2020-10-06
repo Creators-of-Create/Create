@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllTags;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -13,30 +16,36 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
-	public BasinInputInventory inputInventory;
+	public BasinInventory inputInventory;
 	public SmartFluidTankBehaviour inputTank;
-
 	protected SmartInventory outputInventory;
 	protected SmartFluidTankBehaviour outputTank;
 
@@ -48,12 +57,11 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 
 	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
 		super(type);
-		inputInventory = new BasinInputInventory(9, this);
-		inputInventory.withMaxStackSize(8)
-			.forbidExtraction();
-		outputInventory = new SmartInventory(9, this).forbidInsertion();
-		itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));
+		inputInventory = new BasinInventory(9, this);
+		inputInventory.whenContentsChanged(() -> contentsChanged = true);
+		outputInventory = new BasinInventory(9, this).forbidInsertion();
 
+		itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));
 		contentsChanged = true;
 	}
 
@@ -65,7 +73,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			.forRecipes();
 		behaviours.add(filtering);
 
-		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, 1000, true).forbidExtraction();
+		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, 1000, true)
+			.whenFluidUpdates(() -> contentsChanged = true);
 		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, 1000, true).forbidInsertion();
 		behaviours.add(inputTank);
 		behaviours.add(outputTank);
@@ -113,12 +122,33 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	}
 
 	@Override
+	public void notifyUpdate() {
+		super.notifyUpdate();
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+	}
+
+	@Override
 	public void tick() {
 		super.tick();
 		if (!contentsChanged)
 			return;
 		contentsChanged = false;
 		getOperator().ifPresent(te -> te.basinChecker.scheduleUpdate());
+
+		for (Direction offset : Iterate.horizontalDirections) {
+			BlockPos toUpdate = pos.up()
+				.offset(offset);
+			BlockState stateToUpdate = world.getBlockState(toUpdate);
+			if (stateToUpdate.getBlock() instanceof BasinBlock && stateToUpdate.get(BasinBlock.FACING) == offset.getOpposite()) {
+				TileEntity te = world.getTileEntity(toUpdate);
+				if (te instanceof BasinTileEntity)
+					((BasinTileEntity) te).contentsChanged = true;
+			}
+		}
 	}
 
 	private Optional<BasinOperatingTileEntity> getOperator() {
@@ -152,11 +182,64 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		return 256;
 	}
 
+	public boolean acceptOutputs(List<ItemStack> outputItems, List<FluidStack> outputFluids, boolean simulate) {
+		outputInventory.allowInsertion();
+		outputTank.allowInsertion();
+		boolean acceptOutputsInner = acceptOutputsInner(outputItems, outputFluids, simulate);
+		outputInventory.forbidInsertion();
+		outputTank.forbidInsertion();
+		return acceptOutputsInner;
+	}
+
+	private boolean acceptOutputsInner(List<ItemStack> outputItems, List<FluidStack> outputFluids, boolean simulate) {
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof BasinBlock))
+			return false;
+		Direction direction = blockState.get(BasinBlock.FACING);
+
+		IItemHandler targetInv = null;
+		IFluidHandler targetTank = null;
+
+		if (direction == Direction.DOWN) {
+			// No output basin, gather locally
+			targetInv = outputInventory;
+			targetTank = outputTank.getCapability()
+				.orElse(null);
+
+		} else {
+			// Output basin, try moving items to it
+			TileEntity te = world.getTileEntity(pos.down()
+				.offset(direction));
+			if (!(te instanceof BasinTileEntity))
+				return false;
+			targetInv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				.orElse(null);
+			targetTank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.orElse(null);
+		}
+
+		if (targetInv == null)
+			return false;
+		for (ItemStack itemStack : outputItems)
+			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
+				.isEmpty())
+				return false;
+
+		if (targetTank == null)
+			return false;
+		for (FluidStack fluidStack : outputFluids)
+			if (targetTank.fill(fluidStack.copy(), simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE) != fluidStack
+				.getAmount())
+				return false;
+
+		return true;
+	}
+
 	class BasinValueBox extends ValueBoxTransform.Sided {
 
 		@Override
 		protected Vec3d getSouthLocation() {
-			return VecHelper.voxelSpace(8, 12, 16);
+			return VecHelper.voxelSpace(8, 12, 15.75);
 		}
 
 		@Override
@@ -170,5 +253,12 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	public void readOnlyItems(CompoundNBT compound) {
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+	}
+
+	public HeatLevel getHeatLevel() {
+		BlockState state = world.getBlockState(pos.down(1));
+		if (state.has(BlazeBurnerBlock.HEAT_LEVEL))
+			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}
 }

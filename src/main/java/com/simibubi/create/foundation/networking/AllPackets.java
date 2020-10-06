@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.LimbSwingUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingSyncPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacket;
@@ -68,6 +69,7 @@ public enum AllPackets {
 	MINECART_COUPLING_SYNC(MinecartCouplingSyncPacket.class, MinecartCouplingSyncPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	PERSISTANT_DATA(PersistantDataPacket.class, PersistantDataPacket::new),
+	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
 	
 	;
 

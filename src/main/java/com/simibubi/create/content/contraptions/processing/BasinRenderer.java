@@ -79,16 +79,19 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				if (tankSegment.getRenderedFluid()
 					.isEmpty())
 					continue;
-				totalUnits += tankSegment.getTotalUnits(partialTicks);
+				float units = tankSegment.getTotalUnits(partialTicks);
+				if (units < 1)
+					continue;
+				totalUnits += units;
 				renderedFluids++;
 			}
 		}
 
 		if (renderedFluids == 0)
 			return 0;
-		if (totalUnits == 0)
+		if (totalUnits < 1)
 			return 0;
-		
+
 		float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);
 
 		float xMin = 2 / 16f;
@@ -105,8 +108,11 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				FluidStack renderedFluid = tankSegment.getRenderedFluid();
 				if (renderedFluid.isEmpty())
 					continue;
-
-				float partial = tankSegment.getTotalUnits(partialTicks) / totalUnits;
+				float units = tankSegment.getTotalUnits(partialTicks);
+				if (units < 1)
+					continue;
+				
+				float partial = units / totalUnits;
 				xMax += partial * 12 / 16f;
 				FluidRenderer.renderTiledFluidBB(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light,
 					false);
@@ -114,7 +120,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				xMin = xMax;
 			}
 		}
-		
+
 		return fluidLevel;
 	}
 

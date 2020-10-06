@@ -74,6 +74,9 @@ public class FluidHelper {
 		int amount = JSONUtils.getInt(json, "amount");
 		FluidStack stack = new FluidStack(fluid, amount);
 
+		if (!json.has("nbt")) 
+			return stack;
+			
 		try {
 			JsonElement element = json.get("nbt");
 			stack.setTag(JsonToNBT.getTagFromJson(

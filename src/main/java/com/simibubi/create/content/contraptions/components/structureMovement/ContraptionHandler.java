@@ -4,6 +4,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -28,7 +29,8 @@ public class ContraptionHandler {
 		if (!(entity instanceof ContraptionEntity))
 			return;
 		try {
-			List<WeakReference<ContraptionEntity>> list = activeContraptions.get(world, ArrayList::new);
+			List<WeakReference<ContraptionEntity>> list =
+				activeContraptions.get(world, () -> Collections.synchronizedList(new ArrayList<>()));
 			ContraptionEntity contraption = (ContraptionEntity) entity;
 			list.add(new WeakReference<>(contraption));
 		} catch (ExecutionException e) {

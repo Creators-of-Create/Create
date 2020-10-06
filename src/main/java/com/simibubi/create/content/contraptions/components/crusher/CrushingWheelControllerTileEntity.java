@@ -206,11 +206,9 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	}
 
 	public Optional<ProcessingRecipe<RecipeWrapper>> findRecipe() {
-		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe = world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.CRUSHING.getType(), wrapper, world);
+		Optional<ProcessingRecipe<RecipeWrapper>> crushingRecipe = AllRecipeTypes.CRUSHING.find(wrapper, world);
 		if (!crushingRecipe.isPresent())
-			crushingRecipe = world.getRecipeManager()
-				.getRecipe(AllRecipeTypes.MILLING.getType(), wrapper, world);
+			crushingRecipe = AllRecipeTypes.MILLING.find(wrapper, world);
 		return crushingRecipe;
 	}
 
