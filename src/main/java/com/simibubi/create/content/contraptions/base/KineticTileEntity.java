@@ -380,19 +380,19 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
-			List<String> cutString = TooltipHelper.cutString(new StringTextComponent(spacing).append(hint), GRAY, TextFormatting.WHITE);
+			List<String> cutString = TooltipHelper.cutString(componentSpacing.copy().append(hint), GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
+				tooltip.add((i == 0 ? StringTextComponent.EMPTY : componentSpacing).copy().append(cutString.get(i)));
 			return true;
 		}
 
 		if (notFastEnough) {
-			tooltip.add(ITextComponent.of(spacing + GOLD + Lang.translate("tooltip.speedRequirement")));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.speedRequirement").formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
-			List<String> cutString = TooltipHelper.cutString(new StringTextComponent(spacing).append(hint), GRAY, TextFormatting.WHITE);
+			List<String> cutString = TooltipHelper.cutString(componentSpacing.copy().append(hint), GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(ITextComponent.of((i == 0 ? "" : spacing) + cutString.get(i)));
+				tooltip.add((i == 0 ? StringTextComponent.EMPTY : componentSpacing).copy().append(cutString.get(i)));
 			return true;
 		}
 
@@ -410,13 +410,12 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 			float stressTotal = stressAtBase * Math.abs(getSpeed());
 
-			String stressString =
-				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressAtBase))
+				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.base_value").formatted(TextFormatting.DARK_GRAY)));
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressTotal))
+				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.GRAY)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
 
-			tooltip.add(ITextComponent.of(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressAtBase),
-				Lang.translate("gui.goggles.base_value"))));
-			tooltip.add(ITextComponent.of(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal),
-				Lang.translate("gui.goggles.at_current_speed"))));
+
 
 			added = true;
 		}

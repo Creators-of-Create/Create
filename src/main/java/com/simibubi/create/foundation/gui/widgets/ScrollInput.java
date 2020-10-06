@@ -15,9 +15,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected IFormattableTextComponent title = Lang.translate("gui.scrollInput.defaultTitle");
-	protected final IFormattableTextComponent scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
-	protected final IFormattableTextComponent shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
+	protected ITextComponent title = Lang.translate("gui.scrollInput.defaultTitle");
+	protected final ITextComponent scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
+	protected final ITextComponent shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 
 	protected int min, max;
@@ -136,9 +136,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.formatted(TextFormatting.BLUE));
-		toolTip.add(scrollToModify.formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
-		toolTip.add(shiftScrollsFaster.formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(title.copy().formatted(TextFormatting.BLUE));
+		toolTip.add(scrollToModify.copy().formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(shiftScrollsFaster.copy().formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
 	}
 
 }

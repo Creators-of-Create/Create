@@ -133,22 +133,6 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
 		replaceLevelIndicators = new Vector<>(4);
-		/*
-<<<<<<< HEAD
-		List<AllIcons> icons = ImmutableList
-				.of(AllIcons.I_DONT_REPLACE, AllIcons.I_REPLACE_SOLID, AllIcons.I_REPLACE_ANY,
-						AllIcons.I_REPLACE_EMPTY);
-		List<ITextComponent> toolTips = ImmutableList
-				.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),
-						Lang.translate("gui.schematicannon.option.replaceWithSolid"),
-						Lang.translate("gui.schematicannon.option.replaceWithAny"),
-						Lang.translate("gui.schematicannon.option.replaceWithEmpty"));
-
-		for (int i = 0; i < 4; i++) {
-			replaceLevelIndicators.add(new Indicator(x + 16 + i * 18, y + 96, StringTextComponent.EMPTY));
-			replaceLevelButtons.add(new IconButton(x + 16 + i * 18, y + 101, icons.get(i)));
-			replaceLevelButtons.get(i).setToolTip(toolTips.get(i));
-=======*/
 		List<AllIcons> icons = ImmutableList.of(AllIcons.I_DONT_REPLACE, AllIcons.I_REPLACE_SOLID,
 			AllIcons.I_REPLACE_ANY, AllIcons.I_REPLACE_EMPTY);
 		List<ITextComponent> toolTips = ImmutableList.of(Lang.translate("gui.schematicannon.option.dontReplaceSolid"),

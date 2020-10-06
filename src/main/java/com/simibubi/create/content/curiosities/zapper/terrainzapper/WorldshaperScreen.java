@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class WorldshaperScreen extends ZapperScreen {
 
@@ -52,7 +53,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		i = guiLeft - 20;
 		j = guiTop;
 
-		brushLabel = new Label(i + 61, j + 23, "").withShadow();
+		brushLabel = new Label(i + 61, j + 23, StringTextComponent.EMPTY).withShadow();
 		brushInput = new SelectionScrollInput(i + 56, j + 18, 77, 18).forOptions(brushOptions)
 			.titled(Lang.translate("gui.terrainzapper.brush"))
 			.writingTo(brushLabel)
@@ -115,7 +116,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 0; index < 3; index++) {
 
-			Label label = new Label(i + 65 + 20 * index, j + 43, "").withShadow();
+			Label label = new Label(i + 65 + 20 * index, j + 43, StringTextComponent.EMPTY).withShadow();
 			brushParamLabels.add(label);
 			int indexFinal = index;
 			ScrollInput input = new ScrollInput(i + 56 + 20 * index, j + 38, 18, 18)

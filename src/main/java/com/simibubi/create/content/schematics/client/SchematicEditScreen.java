@@ -89,14 +89,14 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 		PlacementSettings settings = handler.getTransformation()
 			.toSettings();
-		Label labelR = new Label(x + 50, y + 48, "").withShadow();
+		Label labelR = new Label(x + 50, y + 48, StringTextComponent.EMPTY).withShadow();
 		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
 			.titled(rotationLabel.copy())
 			.setState(settings.getRotation()
 				.ordinal())
 			.writingTo(labelR);
 
-		Label labelM = new Label(x + 50, y + 70, "").withShadow();
+		Label labelM = new Label(x + 50, y + 70, StringTextComponent.EMPTY).withShadow();
 		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
 			.titled(mirrorLabel.copy())
 			.setState(settings.getMirror()

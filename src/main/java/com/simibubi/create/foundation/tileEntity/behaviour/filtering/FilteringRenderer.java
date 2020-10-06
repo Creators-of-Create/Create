@@ -75,7 +75,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 			.withColors(0x7A6A2C, 0xB79D64)
-			.scrollTooltip(ITextComponent.of(showCount ? "[" + Lang.translate("action.scroll").getUnformattedComponentText() + "]" : ""))
+			.scrollTooltip(showCount ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
 			.passive(!hit);
 
 		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))

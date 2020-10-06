@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class AdjustableCrateScreen extends AbstractSimiContainerScreen<AdjustableCrateContainer> {
 
@@ -48,7 +49,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		super.init();
 		widgets.clear();
 
-		allowedItemsLabel = new Label(guiLeft + 100 + 69, guiTop + 108, "").colored(0xfefefe)
+		allowedItemsLabel = new Label(guiLeft + 100 + 69, guiTop + 108, StringTextComponent.EMPTY).colored(0xfefefe)
 			.withShadow();
 		allowedItems = new ScrollInput(guiLeft + 100 + 65, guiTop + 104, 41, 14).titled(storageSpace.copy())
 			.withRange(1, (container.doubleCrate ? 2049 : 1025))

@@ -63,7 +63,7 @@ public class BlockzapperScreen extends ZapperScreen {
 			spreadMaterialIndicator.state = State.ON;
 		spreadMaterialButton.setToolTip(Lang.translate("gui.blockzapper.searchFuzzy"));
 
-		spreadRangeLabel = new Label(i + 79, j + 78, "").withShadow().withSuffix("m");
+		spreadRangeLabel = new Label(i + 79, j + 78, StringTextComponent.EMPTY).withShadow().withSuffix("m");
 		spreadRangeInput = new ScrollInput(i + 73, j + 73, 26, 18).withRange(1, BlockzapperItem.getMaxAoe(zapper))
 				.setState(1).titled(Lang.translate("gui.blockzapper.range")).writingTo(spreadRangeLabel);
 

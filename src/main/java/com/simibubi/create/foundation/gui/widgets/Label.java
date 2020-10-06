@@ -16,8 +16,8 @@ public class Label extends AbstractSimiWidget {
 	protected int color;
 	protected FontRenderer font;
 
-	public Label(int x, int y, String text) {
-		super(x, y, Minecraft.getInstance().fontRenderer.getStringWidth(text), 10);
+	public Label(int x, int y, ITextComponent text) {
+		super(x, y, Minecraft.getInstance().fontRenderer.getWidth(text), 10);
 		font = Minecraft.getInstance().fontRenderer;
 		this.text = ITextComponent.of("Label");
 		color = 0xFFFFFF;
@@ -76,9 +76,9 @@ public class Label extends AbstractSimiWidget {
 
 		RenderSystem.color4f(1, 1, 1, 1);
 		if (hasShadow)
-			font.drawWithShadow(matrixStack, text + suffix, x, y, color);
+			font.drawWithShadow(matrixStack, text.copy().append(suffix), x, y, color);
 		else
-			font.draw(matrixStack, text + suffix, x, y, color);
+			font.draw(matrixStack, text.copy().append(suffix), x, y, color);
 	}
 
 }

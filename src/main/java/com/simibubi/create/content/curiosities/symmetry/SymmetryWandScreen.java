@@ -25,6 +25,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
@@ -59,9 +60,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		AllGuiTextures background = AllGuiTextures.WAND_OF_SYMMETRY;
 		this.setWindowSize(background.width + 50, background.height + 50);
 
-		labelType = new Label(guiLeft + 49, guiTop + 26, "").colored(0xFFFFFFFF)
+		labelType = new Label(guiLeft + 49, guiTop + 26, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
-		labelAlign = new Label(guiLeft + 49, guiTop + 48, "").colored(0xFFFFFFFF)
+		labelAlign = new Label(guiLeft + 49, guiTop + 48, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
 
 		int state =

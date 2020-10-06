@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class ScrollValueRenderer {
 
@@ -62,12 +63,12 @@ public class ScrollValueRenderer {
 		if (behaviour instanceof ScrollOptionBehaviour) {
 			box = new IconValueBox(label, ((ScrollOptionBehaviour<?>) behaviour).getIconForSelected(), bb, pos);
 		} else {
-			box = new TextValueBox(label, bb, pos, behaviour.formatValue());
+			box = new TextValueBox(label, bb, pos, new StringTextComponent(behaviour.formatValue()));
 			if (behaviour.unit != null)
-				box.subLabel(ITextComponent.of("(" + behaviour.unit.apply(behaviour.scrollableValue) + ")"));
+				box.subLabel(new StringTextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(ITextComponent.of("[" + Lang.translate("action.scroll").getUnformattedComponentText() + "]"));
+		box.scrollTooltip(new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 			.withColors(0x5A5D5A, 0xB5B7B6)
 			.passive(!highlight);

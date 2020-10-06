@@ -40,7 +40,7 @@ public class SelectionScrollInput extends ScrollInput {
 	@Override
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.formatted(TextFormatting.BLUE));
+		toolTip.add(title.copy().formatted(TextFormatting.BLUE));
 		for (int i = min; i < max; i++) {
 			if (i == state)
 				toolTip.add(StringTextComponent.EMPTY.copy().append("-> ").append(options.get(i)).formatted(TextFormatting.WHITE));

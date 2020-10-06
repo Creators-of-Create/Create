@@ -162,9 +162,9 @@ public class ValueBox extends ChasingAABBOutline {
 	}
 
 	public static class TextValueBox extends ValueBox {
-		String text;
+		ITextComponent text;
 
-		public TextValueBox(ITextComponent label, AxisAlignedBB bb, BlockPos pos, String text) {
+		public TextValueBox(ITextComponent label, AxisAlignedBB bb, BlockPos pos, ITextComponent text) {
 			super(label, bb, pos);
 			this.text = text;
 		}
@@ -177,7 +177,7 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.scale(scale, scale, 1);
 			ms.translate(-4, -4, 5);
 
-			int stringWidth = font.getStringWidth(text);
+			int stringWidth = font.getWidth(text);
 			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
 			boolean singleDigit = stringWidth < 10;
 			if (singleDigit)
@@ -187,7 +187,7 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.scale(numberScale, numberScale, numberScale);
 			ms.translate(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin, 0);
 
-			renderHoveringText(ms, buffer, ITextComponent.of(text), 0xEDEDED, 0x4f4f4f);
+			renderHoveringText(ms, buffer, text, 0xEDEDED, 0x4f4f4f);
 		}
 
 	}

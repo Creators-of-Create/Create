@@ -68,7 +68,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		CreateClient.schematicSender.refresh();
 		List<ITextComponent> availableSchematics = CreateClient.schematicSender.getAvailableSchematics();
 
-		schematicsLabel = new Label(mainLeft + 49, mainTop + 26, "").withShadow();
+		schematicsLabel = new Label(mainLeft + 49, mainTop + 26, StringTextComponent.EMPTY).withShadow();
 		schematicsLabel.text = StringTextComponent.EMPTY;
 		if (!availableSchematics.isEmpty()) {
 			schematicsArea =

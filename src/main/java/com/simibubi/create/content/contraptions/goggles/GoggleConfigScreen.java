@@ -23,19 +23,19 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	private final List<ITextComponent> tooltip;
 
 	public GoggleConfigScreen() {
-		ITextComponent spacing = ITextComponent.of("    ");
+		ITextComponent componentSpacing = ITextComponent.of("    ");
 		tooltip = new ArrayList<>();
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay1")));
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay2").formatted(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay1")));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay2").formatted(TextFormatting.GRAY)));
 		tooltip.add(StringTextComponent.EMPTY);
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay3")));
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay4")));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay3")));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay4")));
 		tooltip.add(StringTextComponent.EMPTY);
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay5").formatted(TextFormatting.GRAY)));
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay6").formatted(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay5").formatted(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay6").formatted(TextFormatting.GRAY)));
 		tooltip.add(StringTextComponent.EMPTY);
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay7")));
-		tooltip.add(spacing.copy().append(Lang.translate("gui.config.overlay8")));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay7")));
+		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay8")));
 	}
 
 	@Override

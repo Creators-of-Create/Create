@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.utility;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,22 +14,22 @@ import net.minecraftforge.fml.common.thread.EffectiveSide;
 public class Debug {
 
 	@Deprecated
-	public static void debugChat(String message) {
+	public static void debugChat(ITextComponent message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(message), false);
+			Minecraft.getInstance().player.sendStatusMessage(message, false);
 	}
 
 	@Deprecated
-	public static void debugChatAndShowStack(String message, int depth) {
+	public static void debugChatAndShowStack(ITextComponent message, int depth) {
 		if (Minecraft.getInstance().player != null)
 			Minecraft.getInstance().player
-					.sendStatusMessage(new StringTextComponent(message + " @" + debugStack(depth)), false);
+					.sendStatusMessage(message.copy().append("@").append(debugStack(depth)), false);
 	}
 
 	@Deprecated
-	public static void debugMessage(String message) {
+	public static void debugMessage(ITextComponent message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(message), true);
+			Minecraft.getInstance().player.sendStatusMessage(message, true);
 	}
 
 	@Deprecated
@@ -36,19 +38,19 @@ public class Debug {
 	}
 
 	@Deprecated
-	public static String debugStack(int depth) {
+	public static ITextComponent debugStack(int depth) {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		String text = "[" + TextFormatting.GOLD + getLogicalSide() + TextFormatting.WHITE + "] ";
+		IFormattableTextComponent text = new StringTextComponent("[").append(new StringTextComponent(getLogicalSide()).formatted(TextFormatting.GOLD)).append("] ");
 		for (int i = 1; i < depth + 2 && i < stackTraceElements.length; i++) {
 			StackTraceElement e = stackTraceElements[i];
 			if (e.getClassName().equals(Debug.class.getName()))
 				continue;
-			text = text + TextFormatting.YELLOW + e.getMethodName() + TextFormatting.WHITE + ", ";
+			text.append(new StringTextComponent(e.getMethodName()).formatted(TextFormatting.YELLOW)).append(", ");
 		}
-		return text + TextFormatting.GRAY + " ...";
+		return text.append(new StringTextComponent(" ...").formatted(TextFormatting.GRAY));
 	}
 	
 	@Deprecated
-	public static void markTemporary() {};
+	public static void markTemporary() {}
 
 }
