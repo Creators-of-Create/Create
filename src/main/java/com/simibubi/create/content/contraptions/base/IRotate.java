@@ -10,6 +10,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IWorldReader;
 
@@ -56,23 +59,22 @@ public interface IRotate extends IWrenchable {
 			}
 		}
 
-		public static String getFormattedSpeedText(float speed, boolean overstressed){
+		public static ITextComponent getFormattedSpeedText(float speed, boolean overstressed){
 			SpeedLevel speedLevel = of(speed);
 
-			String color;
-			if (overstressed)
-				color = TextFormatting.DARK_GRAY + "" + TextFormatting.STRIKETHROUGH;
-			else
-				color = speedLevel.getTextColor() + "";
-
-			String level = color + ItemDescription.makeProgressBar(3, speedLevel.ordinal());
+			IFormattableTextComponent level = new StringTextComponent(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
 
 			if (speedLevel == SpeedLevel.MEDIUM)
-				level += Lang.translate("tooltip.speedRequirement.medium");
+				level.append(Lang.translate("tooltip.speedRequirement.medium"));
 			if (speedLevel == SpeedLevel.FAST)
-				level += Lang.translate("tooltip.speedRequirement.high");
+				level.append(Lang.translate("tooltip.speedRequirement.high"));
 
-			level += String.format(" (%s%s) ", IHaveGoggleInformation.format(Math.abs(speed)), Lang.translate("generic.unit.rpm"));
+			level.append(" (" + IHaveGoggleInformation.format(Math.abs(speed))).append(Lang.translate("generic.unit.rpm")).append(") ");
+
+			if (overstressed)
+				level.formatted(TextFormatting.DARK_GRAY, TextFormatting.STRIKETHROUGH);
+			else
+				level.formatted(speedLevel.getTextColor());
 
 			return level;
 		}
@@ -104,16 +106,16 @@ public interface IRotate extends IWrenchable {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
 		}
 
-		public static String getFormattedStressText(double stressPercent){
+		public static ITextComponent getFormattedStressText(double stressPercent){
 			StressImpact stressLevel = of(stressPercent);
 			TextFormatting color = stressLevel.getRelativeColor();
 
-			String level = color + ItemDescription.makeProgressBar(3, stressLevel.ordinal());
-			level += Lang.translate("tooltip.stressImpact."+Lang.asId(stressLevel.name()));
+			IFormattableTextComponent level = new StringTextComponent(ItemDescription.makeProgressBar(3, stressLevel.ordinal()));
+			level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name())));
 
-			level += String.format(" (%s%%) ", (int) (stressPercent * 100));
+			level.append(String.format(" (%s%%) ", (int) (stressPercent * 100)));
 
-			return level;
+			return level.formatted(color);
 		}
 	}
 
