@@ -35,7 +35,7 @@ public class ItemDescription {
 
 	public static final ItemDescription MISSING = new ItemDescription(null);
 	public static ITextComponent trim =
-		new StringTextComponent(WHITE + "" + STRIKETHROUGH + "                          ");
+		new StringTextComponent("                          ").formatted(WHITE, STRIKETHROUGH);
 
 	public enum Palette {
 
@@ -82,7 +82,7 @@ public class ItemDescription {
 		SpeedLevel minimumRequiredSpeedLevel =
 			isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
-		ResourceLocation id = ((Block) block).getRegistryName();
+		ResourceLocation id = block.getRegistryName();
 		Map<ResourceLocation, ConfigValue<Double>> impacts = config.stressValues.getImpacts();
 		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.getCapacities();
 		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id)
@@ -178,9 +178,9 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdKey = Lang.translate("tooltip.holdKey", "$").getUnformattedComponentText()
+			String[] holdKey = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdKey", "$"))
 				.split("\\$");
-			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$").getUnformattedComponentText()
+			String[] holdKeyOrKey = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdKeyOrKey", "$", "$"))
 				.split("\\$");
 			ITextComponent keyShift = Lang.translate("tooltip.keyShift");
 			ITextComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
@@ -193,30 +193,23 @@ public class ItemDescription {
 					continue;
 				}
 
-				StringBuilder tabBuilder = new StringBuilder();
-				tabBuilder.append(DARK_GRAY);
+				IFormattableTextComponent tabBuilder = StringTextComponent.EMPTY.copy();
 				if (hasDescription && hasControls) {
 					tabBuilder.append(holdKeyOrKey[0]);
-					tabBuilder.append(shift ? palette.hColor : palette.color);
-					tabBuilder.append(keyShift);
-					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(keyShift.copy().formatted(shift ? palette.hColor : palette.color));
 					tabBuilder.append(holdKeyOrKey[1]);
-					tabBuilder.append(ctrl ? palette.hColor : palette.color);
-					tabBuilder.append(keyCtrl);
-					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(keyCtrl.copy().formatted(ctrl ? palette.hColor : palette.color));
 					tabBuilder.append(holdKeyOrKey[2]);
 
 				} else {
 					tabBuilder.append(holdKey[0]);
-					tabBuilder.append((hasDescription ? shift : ctrl) ? palette.hColor : palette.color);
-					tabBuilder.append(hasDescription ? keyShift : keyCtrl);
-					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append((hasDescription ? keyShift : keyCtrl).copy().formatted((hasDescription ? shift : ctrl) ? palette.hColor : palette.color));
 					tabBuilder.append(holdKey[1]);
 				}
-
-				list.add(0, new StringTextComponent(tabBuilder.toString()));
+				tabBuilder.formatted(DARK_GRAY);
+				list.add(0, tabBuilder);
 				if (shift || ctrl)
-					list.add(1, new StringTextComponent(""));
+					list.add(1, StringTextComponent.EMPTY);
 			}
 		}
 

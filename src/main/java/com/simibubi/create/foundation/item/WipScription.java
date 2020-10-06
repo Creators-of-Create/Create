@@ -30,14 +30,13 @@ public class WipScription extends ItemDescription {
 	
 	@Override
 	public List<ITextComponent> addInformation(List<ITextComponent> tooltip) {
-		tooltip.set(0, new StringTextComponent(decorateName(tooltip.get(0).getString())));
+		tooltip.set(0, decorateName(tooltip.get(0)));
 		tooltip.addAll(getLines());
 		return tooltip;
 	}
 
-	public static String decorateName(String name) {
-		return TextFormatting.GRAY + "" + TextFormatting.STRIKETHROUGH + name + TextFormatting.GOLD + " "
-				+ Lang.translate("tooltip.wip");
+	public static ITextComponent decorateName(ITextComponent name) {
+		return StringTextComponent.EMPTY.copy().append(name.copy().formatted(TextFormatting.GRAY, TextFormatting.STRIKETHROUGH)).append(" ").append(Lang.translate("tooltip.wip").formatted(TextFormatting.GOLD));
 	}
 
 }

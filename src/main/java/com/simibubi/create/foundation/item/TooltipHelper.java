@@ -104,7 +104,7 @@ public class TooltipHelper {
 		lineStart.formatted(defaultColor);
 
 		List<ITextComponent> lines = new ArrayList<>();
-		String rawText = c.getUnformattedComponentText();
+		String rawText = getUnformattedDeepText(c);
 		String[] words = rawText.split(" ");
 		String word;
 		IFormattableTextComponent currentLine = lineStart.copy();
@@ -249,6 +249,15 @@ public class TooltipHelper {
 			return true;
 		});
 		return l.get();
+	}
+
+	public static String getUnformattedDeepText(ITextComponent component) {
+		StringBuilder b = new StringBuilder();
+		b.append(component.getString());
+		component.getSiblings().forEach(c -> {
+			b.append(getUnformattedDeepText(c));
+		});
+		return b.toString();
 	}
 
 }
