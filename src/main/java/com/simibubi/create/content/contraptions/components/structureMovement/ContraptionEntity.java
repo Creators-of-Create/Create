@@ -78,6 +78,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	final List<Entity> collidingEntities = new ArrayList<>();
 	private boolean isSerializingFurnaceCart;
 	private boolean attachedExtraInventories;
+	private boolean prevPosInvalid;
 
 	private static final Ingredient FUEL_ITEMS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 	private static final DataParameter<Boolean> STALLED =
@@ -107,6 +108,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		isSerializingFurnaceCart = false;
 		attachedExtraInventories = false;
 		forcedAngle = -1;
+		prevPosInvalid = true;
 	}
 
 	public static ContraptionEntity createMounted(World world, Contraption contraption, float initialAngle) {
@@ -289,15 +291,20 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			remove();
 			return;
 		}
+		
+		prevPosX = getX();
+		prevPosY = getY();
+		prevPosZ = getZ();
+		prevPosInvalid = false;
 
 		if (!initialized)
 			contraptionInitialize();
-
 		checkController();
 
 		Entity mountedEntity = getRidingEntity();
 		if (mountedEntity != null) {
 			tickAsPassenger(mountedEntity);
+			super.tick();
 			return;
 		}
 
@@ -308,7 +315,8 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (ContraptionCollider.collideBlocks(this))
 			getController().collided();
 
-		tickActors(getPositionVec().subtract(prevPosX, prevPosY, prevPosZ));
+		Vector3d movement = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
+		tickActors(movement);
 
 		prevYaw = yaw;
 		prevPitch = pitch;
@@ -439,8 +447,6 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 				furnaceCart.deserializeNBT(nbt);
 			}
 		}
-
-		super.tick();
 	}
 
 	public void tickActors(Vector3d movementVector) {
@@ -846,6 +852,9 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	}
 
 	public Vector3d getContactPointMotion(Vector3d globalContactPoint) {
+		if (prevPosInvalid)
+			return Vector3d.ZERO;
+
 		Vector3d positionVec = getPositionVec();
 		Vector3d conMotion = positionVec.subtract(getPrevPositionVec());
 		Vector3d conAngularMotion = getRotationVec().subtract(getPrevRotationVec());
@@ -905,6 +914,11 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 	public void setCoupledCart(UUID id) {
 		dataManager.set(COUPLED_CART, Optional.ofNullable(id));
+	}
+	
+	@Override
+	public boolean isOnePlayerRiding() {
+		return false;
 	}
 
 }

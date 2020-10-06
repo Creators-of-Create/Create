@@ -24,8 +24,7 @@ public class FillingBySpout {
 
 	public static boolean canItemBeFilled(World world, ItemStack stack) {
 		wrapper.setInventorySlotContents(0, stack);
-		if (world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.FILLING.getType(), wrapper, world)
+		if (AllRecipeTypes.FILLING.find(wrapper, world)
 			.isPresent())
 			return true;
 
@@ -44,8 +43,7 @@ public class FillingBySpout {
 
 	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
 		wrapper.setInventorySlotContents(0, stack);
-		Optional<IRecipe<RecipeWrapper>> recipe = world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.FILLING.getType(), wrapper, world);
+		Optional<IRecipe<RecipeWrapper>> recipe = AllRecipeTypes.FILLING.find(wrapper, world);
 		if (recipe.isPresent()) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe.get();
 			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
@@ -71,8 +69,7 @@ public class FillingBySpout {
 		availableFluid.shrink(requiredAmount);
 
 		wrapper.setInventorySlotContents(0, stack);
-		Optional<IRecipe<RecipeWrapper>> recipe = world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.FILLING.getType(), wrapper, world);
+		Optional<IRecipe<RecipeWrapper>> recipe = AllRecipeTypes.FILLING.find(wrapper, world);
 		if (recipe.isPresent()) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe.get();
 			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();

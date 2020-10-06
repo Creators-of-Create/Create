@@ -66,8 +66,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe = world.getRecipeManager()
-				.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
+			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, world);
 			if (!recipe.isPresent()) {
 				timer = 100;
 				sendData();
@@ -87,8 +86,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 
 		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe = world.getRecipeManager()
-				.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world);
+			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, world);
 			if (!recipe.isPresent())
 				return;
 			lastRecipe = recipe.get();
@@ -154,8 +152,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 		if (lastRecipe != null && lastRecipe.matches(inventoryIn, world))
 			return true;
-		return world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.MILLING.getType(), inventoryIn, world)
+		return AllRecipeTypes.MILLING.find(inventoryIn, world)
 			.isPresent();
 	}
 

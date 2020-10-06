@@ -15,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.block.BlockState;
@@ -139,16 +140,16 @@ public class RecipeGridHandler {
 	public static ItemStack tryToApplyRecipe(World world, GroupedItems items) {
 		items.calcStats();
 		CraftingInventory craftinginventory = new MechanicalCraftingInventory(items);
-		ItemStack result = world.getRecipeManager()
-			.getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
-			.map(r -> r.getCraftingResult(craftinginventory))
-			.orElse(null);
-		if (result == null)
+		ItemStack result = null;
+		if (AllConfigs.SERVER.recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
-				.getRecipe(AllRecipeTypes.MECHANICAL_CRAFTING.getType(), craftinginventory, world)
+				.getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
 				.map(r -> r.getCraftingResult(craftinginventory))
 				.orElse(null);
-
+		if (result == null)
+			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftinginventory, world)
+				.map(r -> r.getCraftingResult(craftinginventory))
+				.orElse(null);
 		return result;
 	}
 

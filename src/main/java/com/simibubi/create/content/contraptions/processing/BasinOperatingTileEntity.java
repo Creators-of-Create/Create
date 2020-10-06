@@ -1,49 +1,29 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.advancement.SimpleTrigger;
-import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	public DeferralBehaviour basinChecker;
 	public boolean basinRemoved;
-	protected IRecipe<?> lastRecipe;
-
-	protected LazyOptional<IItemHandler> basinItemInv = LazyOptional.empty();
-	protected List<ItemStack> itemInputs;
-	protected LazyOptional<IFluidHandler> basinFluidInv = LazyOptional.empty();
-	protected List<FluidStack> fluidInputs;
+	protected IRecipe<?> currentRecipe;
 
 	public BasinOperatingTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
-		itemInputs = new ArrayList<>();
-		fluidInputs = new ArrayList<>();
 	}
 
 	@Override
@@ -58,27 +38,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		super.onSpeedChanged(prevSpeed);
 		if (getSpeed() == 0)
 			basinRemoved = true;
+		basinRemoved = false;
 		basinChecker.scheduleUpdate();
-	}
-
-	public void gatherInputs() {
-		itemInputs.clear();
-		basinItemInv.ifPresent(handler -> {
-			for (int slot = 0; slot < handler.getSlots(); ++slot) {
-				ItemStack itemstack = handler.getStackInSlot(slot);
-				if (!itemstack.isEmpty())
-					itemInputs.add(itemstack);
-			}
-		});
-
-		fluidInputs.clear();
-		basinFluidInv.ifPresent(handler -> {
-			for (int tank = 0; tank < handler.getTanks(); tank++) {
-				FluidStack fluidInTank = handler.getFluidInTank(tank);
-				if (!fluidInTank.isEmpty())
-					fluidInputs.add(fluidInTank);
-			}
-		});
 	}
 
 	@Override
@@ -100,28 +61,13 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return true;
 		if (isRunning())
 			return false;
-
-		Optional<BasinTileEntity> basinTe = getBasin();
-		if (!basinTe.isPresent())
-			return true;
-		if (!basinItemInv.isPresent())
-			basinItemInv = basinTe.get()
-				.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		if (!basinFluidInv.isPresent())
-			basinFluidInv = basinTe.get()
-				.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		if (!basinFluidInv.isPresent() || !basinItemInv.isPresent())
-			return true;
-
 		if (world == null || world.isRemote)
 			return true;
 
-		gatherInputs();
 		List<IRecipe<?>> recipes = getMatchingRecipes();
 		if (recipes.isEmpty())
 			return true;
-
-		lastRecipe = recipes.get(0);
+		currentRecipe = recipes.get(0);
 		startProcessingBasin();
 		sendData();
 		return true;
@@ -135,58 +81,37 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		return true;
 	}
 
-	public void applyBasinRecipe() {
-		if (lastRecipe == null)
-			return;
-		if (!basinItemInv.isPresent() || !basinFluidInv.isPresent())
-			return;
-
+	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
+		if (recipe == null)
+			return false;
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
+			return false;
+		return BasinRecipe.match(basin.get(), recipe);
+	}
+	
+	protected void applyBasinRecipe() {
+		if (currentRecipe == null)
 			return;
-		SmartInventory inputs = basin.get().getInputInventory();
-		SmartInventory outputs = basin.get().getOutputInventory();
-		List<ItemStack> containers = new ArrayList<>();
-
-		NonNullList<Ingredient> ingredients = lastRecipe.getIngredients();
-		Ingredients: for (int i = 0; i < ingredients.size(); i++) {
-			Ingredient ingredient = ingredients.get(i);
-
-			for (int slot = 0; slot < inputs.getSlots(); slot++) {
-				if (!ingredient.test(inputs.extractItem(slot, 1, true)))
-					continue;
-				ItemStack extracted = inputs.extractItem(slot, 1, false);
-				if (extracted.hasContainerItem())
-					containers.add(extracted.getContainerItem()
-						.copy());
-				continue Ingredients;
-			}
-
-			// something wasn't found
+		
+		Optional<BasinTileEntity> optionalBasin = getBasin();
+		if (!optionalBasin.isPresent())
 			return;
-		}
-
-		if (world != null && !world.isRemote) {
-			SimpleTrigger trigger = AllTriggers.MIXER_MIX;
-			if (AllTileEntities.MECHANICAL_PRESS.is(this))
-				trigger = AllTriggers.PRESS_COMPACT;
-			AllTriggers.triggerForNearbyPlayers(trigger, world, pos, 4);
-		}
-
-		outputs.allowInsertion();
-		ItemHandlerHelper.insertItemStacked(outputs, lastRecipe.getRecipeOutput()
-			.copy(), false); // TODO only works for single item output
-		containers.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputs, stack, false));
-		outputs.forbidInsertion();
-
+		BasinTileEntity basin = optionalBasin.get();
+		if (!BasinRecipe.apply(basin, currentRecipe))
+			return;
+		Optional<ITriggerable> processedRecipeTrigger = getProcessedRecipeTrigger();
+		if (world != null && !world.isRemote && processedRecipeTrigger.isPresent()) 
+			AllTriggers.triggerForNearbyPlayers(processedRecipeTrigger.get(), world, pos, 4);
+		basin.inputTank.sendDataImmediately();
+	
 		// Continue mixing
-		gatherInputs();
-		if (matchBasinRecipe(lastRecipe)) {
+		if (matchBasinRecipe(currentRecipe)) {
 			continueWithPreviousRecipe();
 			sendData();
 		}
 
-		getBasin().ifPresent(BasinTileEntity::notifyChangeOfContents);
+		basin.notifyChangeOfContents();
 	}
 
 	protected List<IRecipe<?>> getMatchingRecipes() {
@@ -210,27 +135,12 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return Optional.empty();
 		return Optional.of((BasinTileEntity) basinTE);
 	}
+	
+	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
+		return Optional.empty();
+	}
 
 	protected abstract <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe);
-
-	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (recipe == null)
-			return false;
-
-		Optional<BasinTileEntity> basin = getBasin();
-		if (!basin.isPresent())
-			return false;
-		BasinTileEntity basinTileEntity = basin.get();
-		if (!basinTileEntity.getFilter()
-			.test(recipe.getRecipeOutput()))
-			return false;
-
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		if (!ingredients.stream()
-			.allMatch(ingredient -> (ingredient.isSimple() || ingredient.getMatchingStacks().length == 1)))
-			return false;
-		return true;
-	}
 
 	protected abstract Object getRecipeCacheKey();
 

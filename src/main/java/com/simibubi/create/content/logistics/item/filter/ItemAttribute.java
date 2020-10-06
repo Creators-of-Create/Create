@@ -127,10 +127,10 @@ public interface ItemAttribute {
 			this.test = test;
 		}
 
-		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> smelting) {
+		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> type) {
 			RECIPE_WRAPPER.setInventorySlotContents(0, s.copy());
 			return w.getRecipeManager()
-				.getRecipe(smelting, RECIPE_WRAPPER, w)
+				.getRecipe(type, RECIPE_WRAPPER, w)
 				.isPresent();
 		}
 

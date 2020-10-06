@@ -1,7 +1,22 @@
 {
   "variants": {
-    "": {
-      "model": "create:block/basin"
+    "facing=down": {
+      "model": "create:block/basin/block"
+    },
+    "facing=north": {
+      "model": "create:block/basin/block_directional",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "create:block/basin/block_directional"
+    },
+    "facing=west": {
+      "model": "create:block/basin/block_directional",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "create:block/basin/block_directional",
+      "y": 270
     }
   }
 }

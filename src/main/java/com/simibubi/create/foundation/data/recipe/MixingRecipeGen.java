@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Items;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 
@@ -15,6 +16,11 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
+	TEMPCOBBLE = create("temp_cobble", b -> b
+		.require(FluidTags.WATER, 250)
+		.require(FluidTags.LAVA, 250)
+		.output(Blocks.COBBLESTONE, 1)),
+	
 	BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
 		.require(I.zinc())
 		.output(AllItems.BRASS_INGOT.get(), 2)

@@ -62,6 +62,9 @@ public class CombinedTankWrapper implements IFluidHandler {
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
+		if (resource.isEmpty())
+			return 0;
+		
 		int filled = 0;
 		resource = resource.copy();
 
@@ -85,6 +88,9 @@ public class CombinedTankWrapper implements IFluidHandler {
 
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction action) {
+		if (resource.isEmpty())
+			return resource;
+		
 		FluidStack drained = FluidStack.EMPTY;
 		resource = resource.copy();
 

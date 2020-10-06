@@ -5,18 +5,16 @@ import java.util.Arrays;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
+import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 
-public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
+public class PackingCategory extends BasinCategory {
 
 	private AnimatedPress press = new AnimatedPress(true);
 
@@ -26,18 +24,12 @@ public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
 	}
 
 	@Override
-	public Class<? extends IRecipe<?>> getRecipeClass() {
-		return ICraftingRecipe.class;
-	}
-
-	@Override
-	public void setIngredients(IRecipe<?> recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipe<?> recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, BasinRecipe recipe, IIngredients ingredients) {
+		if (!recipe.convertedRecipe) {
+			super.setRecipe(recipeLayout, recipe, ingredients);
+			return;
+		}
+		
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		int i = 0;
 
@@ -56,16 +48,21 @@ public class PackingCategory extends CreateRecipeCategory<IRecipe<?>> {
 	}
 
 	@Override
-	public void draw(IRecipe<?> recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
-		int size = ingredients2.size();
-		int rows = size == 4 ? 2 : 3;
-		for (int i = 0; i < size; i++) {
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
+	public void draw(BasinRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+		if (!recipe.convertedRecipe) {
+			super.draw(recipe, matrixStack, mouseX, mouseY);
+			
+		} else {
+			NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
+			int size = ingredients2.size();
+			int rows = size == 4 ? 2 : 3;
+			for (int i = 0; i < size; i++) 
+				AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
+			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
+			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 57);
 		}
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 57);
+		
 		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 30);
 	}
 

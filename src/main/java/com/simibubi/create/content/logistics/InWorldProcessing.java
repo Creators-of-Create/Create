@@ -120,8 +120,7 @@ public class InWorldProcessing {
 
 	public static boolean isWashable(ItemStack stack, World world) {
 		splashingInv.setInventorySlotContents(0, stack);
-		Optional<SplashingRecipe> recipe = world.getRecipeManager()
-			.getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
+		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(splashingInv, world);
 		return recipe.isPresent();
 	}
 
@@ -176,8 +175,7 @@ public class InWorldProcessing {
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
 			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = world.getRecipeManager()
-				.getRecipe(AllRecipeTypes.SPLASHING.getType(), splashingInv, world);
+			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(splashingInv, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
 			return null;

@@ -1,18 +1,14 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.advancement.ITriggerable;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -22,13 +18,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -101,13 +95,6 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void lazyTick() {
-		super.lazyTick();
-		if (world != null && world.isRemote && running && !basinItemInv.isPresent())
-			updateBasin();
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 
@@ -169,43 +156,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
-		return (r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS || r.getType() == AllRecipeTypes.MIXING.type)
+		return ((r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
+			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get()) || r.getType() == AllRecipeTypes.MIXING.type)
 			&& !MechanicalPressTileEntity.canCompress(r.getIngredients());
-	}
-
-	@Override
-	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
-		if (!super.matchBasinRecipe(recipe))
-			return false;
-
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		List<ItemStack> remainingItems = new ArrayList<>();
-		itemInputs.forEach(stack -> remainingItems.add(stack.copy()));
-		List<FluidStack> remainingFluids = new ArrayList<>();
-		fluidInputs.forEach(stack -> remainingFluids.add(stack.copy()));
-
-		// TODO: match fluid inputs
-
-		// Sort by leniency
-		List<Ingredient> sortedIngredients = new LinkedList<>(ingredients);
-		sortedIngredients.sort(Comparator.comparingInt(i -> i.getMatchingStacks().length));
-
-		Ingredients: for (Ingredient ingredient : sortedIngredients) {
-			for (ItemStack stack : remainingItems) {
-				if (stack.isEmpty())
-					continue;
-				if (ingredient.test(stack)) {
-					stack.shrink(1);
-					continue Ingredients;
-				}
-			}
-			return false;
-		}
-
-		if (!(recipe instanceof MixingRecipe))
-			return true;
-		return ((MixingRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(getHeatLevel());
 	}
 
 	@Override
@@ -240,13 +193,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected boolean isRunning() {
 		return running;
 	}
-
-	private HeatLevel getHeatLevel() {
-		if (world == null)
-			return HeatLevel.NONE;
-		BlockState state = world.getBlockState(pos.down(3));
-		if (BlockHelper.hasBlockStateProperty(state, BlazeBurnerBlock.HEAT_LEVEL))
-			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+	
+	@Override
+	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
+		return Optional.of(AllTriggers.MIXER_MIX);
 	}
 }
