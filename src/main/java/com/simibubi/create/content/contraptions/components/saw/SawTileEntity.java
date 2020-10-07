@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Predicate;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -264,8 +266,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	private List<? extends IRecipe<?>> getRecipes() {
-		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world,
-			RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType()));
+		Predicate<IRecipe<?>> types = AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get()
+			? RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType())
+			: RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
+		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world, types);
 		return startedSearch.stream()
 			.filter(RecipeConditions.outputMatchesFilter(filtering))
 			.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))

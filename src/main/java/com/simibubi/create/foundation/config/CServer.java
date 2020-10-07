@@ -6,6 +6,7 @@ public class CServer extends ConfigBase {
 	public ConfigInt tickrateSyncTimer =
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);
 
+	public CRecipes recipes = nested(0, CRecipes::new, Comments.recipes);
 	public CKinetics kinetics = nested(0, CKinetics::new, Comments.kinetics);
 	public CFluids fluids = nested(0, CFluids::new, Comments.fluids);
 	public CLogistics logistics = nested(0, CLogistics::new, Comments.logistics);
@@ -19,6 +20,7 @@ public class CServer extends ConfigBase {
 	}
 
 	private static class Comments {
+		static String recipes = "Packmakers' control panel for internal recipe compat";
 		static String schematics = "Everything related to Schematic tools";
 		static String kinetics = "Parameters and abilities of Create's kinetic mechanisms";
 		static String fluids = "Create's liquid manipulation tools";

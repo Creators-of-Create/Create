@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -95,8 +96,9 @@ public interface ItemAttribute {
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	default String format() {
-		return Lang.translate("item_attributes." + getTranslationKey(), getTranslationParameters());
+	default String format(boolean inverted) {
+		return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+			getTranslationParameters());
 	}
 
 	public static enum StandardTraits implements ItemAttribute {
@@ -111,6 +113,8 @@ public interface ItemAttribute {
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
 		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
+		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
+			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, IRecipeType.SMELTING)),
 		SMOKABLE((s, w) -> testRecipe(s, w, IRecipeType.SMOKING)),
 		BLASTABLE((s, w) -> testRecipe(s, w, IRecipeType.BLASTING));
@@ -123,11 +127,13 @@ public interface ItemAttribute {
 			this.test = test;
 		}
 
-		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> smelting) {
+		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> type) {
 			RECIPE_WRAPPER.setInventorySlotContents(0, s.copy());
-			return w.getRecipeManager().getRecipe(smelting, RECIPE_WRAPPER, w).isPresent();
+			return w.getRecipeManager()
+				.getRecipe(type, RECIPE_WRAPPER, w)
+				.isPresent();
 		}
-		
+
 		private StandardTraits(BiPredicate<ItemStack, World> test) {
 			this.testWithWorld = test;
 		}
@@ -193,12 +199,18 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return stack.getItem().getTags().contains(tagName);
+			return stack.getItem()
+				.getTags()
+				.contains(tagName);
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			return stack.getItem().getTags().stream().map(InTag::new).collect(Collectors.toList());
+			return stack.getItem()
+				.getTags()
+				.stream()
+				.map(InTag::new)
+				.collect(Collectors.toList());
 		}
 
 		@Override
@@ -240,7 +252,8 @@ public interface ItemAttribute {
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			ItemGroup group = stack.getItem().getGroup();
+			ItemGroup group = stack.getItem()
+				.getGroup();
 			return group == null ? Collections.emptyList() : Arrays.asList(new InItemGroup(group));
 		}
 
@@ -249,9 +262,11 @@ public interface ItemAttribute {
 			return "in_item_group";
 		}
 
+		@Override
 		@OnlyIn(value = Dist.CLIENT)
-		public String format() {
-			return Lang.translate("item_attributes." + getTranslationKey(), I18n.format(group.getTranslationKey()));
+		public String format(boolean inverted) {
+			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
+				I18n.format(group.getTranslationKey()));
 		}
 
 		@Override
@@ -263,7 +278,8 @@ public interface ItemAttribute {
 		public ItemAttribute readNBT(CompoundNBT nbt) {
 			String readPath = nbt.getString("path");
 			for (ItemGroup group : ItemGroup.GROUPS)
-				if (group.getPath().equals(readPath))
+				if (group.getPath()
+					.equals(readPath))
 					return new InItemGroup(group);
 			return null;
 		}
@@ -280,12 +296,14 @@ public interface ItemAttribute {
 
 		@Override
 		public boolean appliesTo(ItemStack stack) {
-			return modId.equals(stack.getItem().getCreatorModId(stack));
+			return modId.equals(stack.getItem()
+				.getCreatorModId(stack));
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			String id = stack.getItem().getCreatorModId(stack);
+			String id = stack.getItem()
+				.getCreatorModId(stack);
 			return id == null ? Collections.emptyList() : Arrays.asList(new AddedBy(id));
 		}
 
@@ -296,9 +314,11 @@ public interface ItemAttribute {
 
 		@Override
 		public Object[] getTranslationParameters() {
-			Optional<? extends ModContainer> modContainerById = ModList.get().getModContainerById(modId);
-			String name = modContainerById.map(ModContainer::getModInfo).map(IModInfo::getDisplayName)
-					.orElse(StringUtils.capitalize(modId));
+			Optional<? extends ModContainer> modContainerById = ModList.get()
+				.getModContainerById(modId);
+			String name = modContainerById.map(ModContainer::getModInfo)
+				.map(IModInfo::getDisplayName)
+				.orElse(StringUtils.capitalize(modId));
 			return new Object[] { name };
 		}
 

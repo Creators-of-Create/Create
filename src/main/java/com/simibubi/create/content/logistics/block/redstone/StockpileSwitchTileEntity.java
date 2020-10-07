@@ -20,7 +20,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float onWhenAbove;
 	public float offWhenBelow;
 	public float currentLevel;
-	public boolean powered;
+	private boolean state;
+	private boolean inverted;
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
@@ -30,7 +31,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		onWhenAbove = .75f;
 		offWhenBelow = .25f;
 		currentLevel = -1;
-		powered = false;
+		state = false;
+		inverted = false;
 		setLazyTickRate(10);
 	}
 
@@ -39,7 +41,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		onWhenAbove = compound.getFloat("OnAbove");
 		offWhenBelow = compound.getFloat("OffBelow");
 		currentLevel = compound.getFloat("Current");
-		powered = compound.getBoolean("Powered");
+		state = compound.getBoolean("Powered");
+		inverted = compound.getBoolean("Inverted");
 		super.read(compound, clientPacket);
 	}
 
@@ -48,7 +51,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		compound.putFloat("OnAbove", onWhenAbove);
 		compound.putFloat("OffBelow", offWhenBelow);
 		compound.putFloat("Current", currentLevel);
-		compound.putBoolean("Powered", powered);
+		compound.putBoolean("Powered", state);
+		compound.putBoolean("Inverted", inverted);
 		super.write(compound, clientPacket);
 	}
 
@@ -57,13 +61,15 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	public void updateCurrentLevel() {
+		boolean changed = false;
 		if (!observedInventory.hasInventory()) {
 			if (currentLevel == -1)
 				return;
 			world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, 0), 3);
 			currentLevel = -1;
-			powered = false;
+			state = false;
 			world.notifyNeighbors(pos, getBlockState().getBlock());
+			sendData();
 			return;
 		}
 
@@ -85,15 +91,18 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				occupied += count * (1f / space);
 		}
 
-		currentLevel = (float) occupied / totalSpace;
+		float level = (float) occupied / totalSpace;
+		if (currentLevel != level)
+			changed = true;
+		currentLevel = level;
 		currentLevel = MathHelper.clamp(currentLevel, 0, 1);
 
-		boolean previouslyPowered = powered;
-		if (powered && currentLevel <= offWhenBelow)
-			powered = false;
-		else if (!powered && currentLevel >= onWhenAbove)
-			powered = true;
-		boolean update = previouslyPowered != powered;
+		boolean previouslyPowered = state;
+		if (state && currentLevel <= offWhenBelow)
+			state = false;
+		else if (!state && currentLevel >= onWhenAbove)
+			state = true;
+		boolean update = previouslyPowered != state;
 
 		int displayLevel = 0;
 		if (currentLevel > 0)
@@ -101,6 +110,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
 		if (update)
 			world.notifyNeighbors(pos, getBlockState().getBlock());
+		if (changed || update)
+			sendData();
 	}
 
 	@Override
@@ -119,5 +130,28 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 		observedInventory = new InvManipulationBehaviour(this, InterfaceProvider.towardBlockFacing()).bypassSidedness();
 		behaviours.add(observedInventory);
+	}
+
+	public float getLevelForDisplay() {
+		return currentLevel == -1 ? 0 : currentLevel;
+	}
+	
+	public boolean getState() {
+		return state;
+	}
+	
+	public boolean isPowered() {
+		return inverted != state;
+	}
+	
+	public boolean isInverted() {
+		return inverted;
+	}
+	
+	public void setInverted(boolean inverted) {
+		if (inverted == this.inverted)
+			return;
+		this.inverted = inverted;
+		world.notifyNeighbors(pos, getBlockState().getBlock());
 	}
 }

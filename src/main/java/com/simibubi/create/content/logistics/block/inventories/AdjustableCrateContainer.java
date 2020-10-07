@@ -40,17 +40,17 @@ public class AdjustableCrateContainer extends Container {
 
 	private void init() {
 		doubleCrate = te.isDoubleCrate();
-		int x = doubleCrate ? 52 : 124;
+		int x = doubleCrate ? 51 : 123;
 		int maxCol = doubleCrate ? 8 : 4;
 		for (int row = 0; row < 4; ++row) {
 			for (int col = 0; col < maxCol; ++col) {
-				this.addSlot(new SlotItemHandler(te.inventory, col + row * maxCol, x + col * 18, 25 + row * 18));
+				this.addSlot(new SlotItemHandler(te.inventory, col + row * maxCol, x + col * 18, 20 + row * 18));
 			}
 		}
 
 		// player Slots
 		int xOffset = 58;
-		int yOffset = 157;
+		int yOffset = 155;
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
 				this.addSlot(new Slot(playerInventory, col + row * 9 + 9, xOffset + col * 18, yOffset + row * 18));

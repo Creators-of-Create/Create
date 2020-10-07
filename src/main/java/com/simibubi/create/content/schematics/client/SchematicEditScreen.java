@@ -8,11 +8,14 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
@@ -26,12 +29,12 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private TextFieldWidget xInput;
 	private TextFieldWidget yInput;
 	private TextFieldWidget zInput;
+	private IconButton confirmButton;
 
 	private final List<String> rotationOptions =
 		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
 	private final List<String> mirrorOptions =
 		Lang.translatedOptions("schematic.mirror", "none", "leftRight", "frontBack");
-	private final String positionLabel = Lang.translate("schematic.position");
 	private final String rotationLabel = Lang.translate("schematic.rotation");
 	private final String mirrorLabel = Lang.translate("schematic.mirror");
 
@@ -41,16 +44,18 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(AllGuiTextures.SCHEMATIC.width + 50, AllGuiTextures.SCHEMATIC.height);
+		AllGuiTextures background = AllGuiTextures.SCHEMATIC;
+		setWindowSize(background.width + 50, background.height);
 		int x = guiLeft;
 		int y = guiTop;
 		handler = CreateClient.schematicHandler;
 
-		xInput = new TextFieldWidget(font, x + 75, y + 32, 32, 10, "");
-		yInput = new TextFieldWidget(font, x + 115, y + 32, 32, 10, "");
-		zInput = new TextFieldWidget(font, x + 155, y + 32, 32, 10, "");
+		xInput = new TextFieldWidget(font, x + 50, y + 26, 34, 10, "");
+		yInput = new TextFieldWidget(font, x + 90, y + 26, 34, 10, "");
+		zInput = new TextFieldWidget(font, x + 130, y + 26, 34, 10, "");
 
-		BlockPos anchor = handler.getTransformation().getAnchor();
+		BlockPos anchor = handler.getTransformation()
+			.getAnchor();
 		if (handler.isDeployed()) {
 			xInput.setText("" + anchor.getX());
 			yInput.setText("" + anchor.getY());
@@ -80,17 +85,28 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			});
 		}
 
-		PlacementSettings settings = handler.getTransformation().toSettings();
-		Label labelR = new Label(x + 99, y + 52, "").withShadow();
-		rotationArea = new SelectionScrollInput(x + 96, y + 49, 94, 14).forOptions(rotationOptions).titled("Rotation")
-				.setState(settings.getRotation().ordinal()).writingTo(labelR);
+		PlacementSettings settings = handler.getTransformation()
+			.toSettings();
+		Label labelR = new Label(x + 50, y + 48, "").withShadow();
+		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
+			.titled(rotationLabel)
+			.setState(settings.getRotation()
+				.ordinal())
+			.writingTo(labelR);
 
-		Label labelM = new Label(x + 99, y + 72, "").withShadow();
-		mirrorArea = new SelectionScrollInput(x + 96, y + 69, 94, 14).forOptions(mirrorOptions).titled("Mirror")
-				.setState(settings.getMirror().ordinal()).writingTo(labelM);
+		Label labelM = new Label(x + 50, y + 70, "").withShadow();
+		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
+			.titled(mirrorLabel)
+			.setState(settings.getMirror()
+				.ordinal())
+			.writingTo(labelM);
 
 		Collections.addAll(widgets, xInput, yInput, zInput);
 		Collections.addAll(widgets, labelR, labelM, rotationArea, mirrorArea);
+
+		confirmButton =
+			new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		widgets.add(confirmButton);
 
 		super.init();
 	}
@@ -132,14 +148,10 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		AllGuiTextures.SCHEMATIC.draw(this, x, y);
 
 		font.drawStringWithShadow(handler.getCurrentSchematicName(),
-				x + 103 - font.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 10, 0xDDEEFF);
-
-		font.drawString(positionLabel, x + 10, y + 32, AllGuiTextures.FONT_COLOR);
-		font.drawString(rotationLabel, x + 10, y + 52, AllGuiTextures.FONT_COLOR);
-		font.drawString(mirrorLabel, x + 10, y + 72, AllGuiTextures.FONT_COLOR);
+			x + 93 - font.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 3, 0xffffff);
 
 		RenderSystem.pushMatrix();
-		RenderSystem.translated(guiLeft + 220, guiTop + 20, 0);
+		RenderSystem.translated(guiLeft + 200, guiTop + 80, 0);
 		RenderSystem.scaled(3, 3, 3);
 		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.SCHEMATIC.get()), 0, 0);
 		RenderSystem.popMatrix();
@@ -151,7 +163,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		BlockPos newLocation = null;
 		try {
 			newLocation = new BlockPos(Integer.parseInt(xInput.getText()), Integer.parseInt(yInput.getText()),
-					Integer.parseInt(zInput.getText()));
+				Integer.parseInt(zInput.getText()));
 		} catch (NumberFormatException e) {
 			validCoords = false;
 		}
@@ -159,19 +171,31 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.values()[rotationArea.getState()]);
 		settings.setMirror(Mirror.values()[mirrorArea.getState()]);
-		
+
 		if (validCoords && newLocation != null) {
 			ItemStack item = handler.getActiveSchematicItem();
 			if (item != null) {
-				item.getTag().putBoolean("Deployed", true);
-				item.getTag().put("Anchor", NBTUtil.writeBlockPos(newLocation));
+				item.getTag()
+					.putBoolean("Deployed", true);
+				item.getTag()
+					.put("Anchor", NBTUtil.writeBlockPos(newLocation));
 			}
 
-			handler.getTransformation().init(newLocation, settings, handler.getBounds());
+			handler.getTransformation()
+				.init(newLocation, settings, handler.getBounds());
 			handler.markDirty();
 			handler.deploy();
 		}
+	}
 
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		if (confirmButton.isHovered()) {
+			Minecraft.getInstance().player.closeScreen();
+			return true;
+		}
+
+		return super.mouseClicked(x, y, button);
 	}
 
 }

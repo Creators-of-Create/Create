@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.simibubi.create.AllMovementBehaviours;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CocoaBlock;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,6 +38,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -44,6 +46,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class ContraptionCollider {
 
@@ -54,12 +59,18 @@ public class ContraptionCollider {
 		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
 			WeakReference<ContraptionEntity> weakReference = iterator.next();
 			ContraptionEntity contraptionEntity = weakReference.get();
-			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
+			if (contraptionEntity == null) {
 				iterator.remove();
 				continue;
 			}
+			if (!contraptionEntity.isAlive())
+				continue;
 			collideEntities(contraptionEntity);
 		}
+	}
+
+	enum PlayerType {
+		NONE, CLIENT, REMOTE, SERVER
 	}
 
 	private static void collideEntities(ContraptionEntity contraptionEntity) {
@@ -87,8 +98,10 @@ public class ContraptionCollider {
 
 		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2)
 			.expand(0, 32, 0), contraptionEntity::canCollideWith)) {
-			boolean player = entity instanceof PlayerEntity;
-			boolean serverPlayer = player && !world.isRemote;
+
+			PlayerType playerType = getPlayerType(entity);
+			if (playerType == PlayerType.REMOTE)
+				continue;
 
 			// Init matrix
 			if (rotation == null) {
@@ -199,7 +212,7 @@ public class ContraptionCollider {
 			totalResponse = rotation.transform(totalResponse);
 			rotation.transpose();
 
-			if (futureCollision.isTrue() && !serverPlayer) {
+			if (futureCollision.isTrue() && playerType != PlayerType.SERVER) {
 				if (motionResponse.y != entityMotion.y) {
 					entity.setMotion(entityMotion.mul(1, 0, 1)
 						.add(0, motionResponse.y, 0));
@@ -212,7 +225,7 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				contraptionEntity.collidingEntities.add(entity);
-				if (!serverPlayer)
+				if (playerType != PlayerType.SERVER)
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
@@ -236,7 +249,7 @@ public class ContraptionCollider {
 			if (!hardCollision && surfaceCollision.isFalse())
 				continue;
 
-			if (serverPlayer && entity instanceof ServerPlayerEntity) {
+			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayerEntity) {
 				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 				continue;
 			}
@@ -249,8 +262,15 @@ public class ContraptionCollider {
 				entityPosition.z + allowedMovement.z);
 			entity.setMotion(entityMotion);
 
-			if (!serverPlayer && player)
-				AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true));
+			if (playerType != PlayerType.CLIENT)
+				continue;
+			
+			double d0 = entity.getX() - entity.prevPosX - contactPointMotion.x;
+			double d1 = entity.getZ() - entity.prevPosZ - contactPointMotion.z;
+			float limbSwing = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
+			if (limbSwing > 1.0F)
+				limbSwing = 1.0F;
+			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 		}
 
 	}
@@ -294,6 +314,21 @@ public class ContraptionCollider {
 		}
 
 		return vec3d;
+	}
+
+	private static PlayerType getPlayerType(Entity entity) {
+		if (!(entity instanceof PlayerEntity))
+			return PlayerType.NONE;
+		if (!entity.world.isRemote)
+			return PlayerType.SERVER;
+		MutableBoolean isClient = new MutableBoolean(false);
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
+		return isClient.booleanValue() ? PlayerType.CLIENT : PlayerType.REMOTE;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static boolean isClientPlayerEntity(Entity entity) {
+		return entity instanceof ClientPlayerEntity;
 	}
 
 	private static ReuseableStream<VoxelShape> getPotentiallyCollidedShapes(World world, Contraption contraption,
@@ -395,10 +430,10 @@ public class ContraptionCollider {
 			BlockInfo blockInfo = contraption.blocks.get(pos);
 
 			if (AllMovementBehaviours.hasMovementBehaviour(blockInfo.state.getBlock())) {
-				MovementBehaviour movementBehaviour = AllMovementBehaviours.getMovementBehaviour(blockInfo.state.getBlock());
+				MovementBehaviour movementBehaviour =
+					AllMovementBehaviours.getMovementBehaviour(blockInfo.state.getBlock());
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
-					BlockBreakingMovementBehaviour behaviour =
-						(BlockBreakingMovementBehaviour) movementBehaviour;
+					BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
 					if (!behaviour.canBreak(world, colliderPos, collidedState)
 						&& !collidedState.getCollisionShape(world, pos)
 							.isEmpty()) {

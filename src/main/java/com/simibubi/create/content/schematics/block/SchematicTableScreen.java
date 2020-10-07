@@ -38,6 +38,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private final String title = Lang.translate("gui.schematicTable.title");
 	private final String uploading = Lang.translate("gui.schematicTable.uploading");
 	private final String finished = Lang.translate("gui.schematicTable.finished");
+	private final String refresh = Lang.translate("gui.schematicTable.refresh");
+	private final String folder = Lang.translate("gui.schematicTable.open_folder");
 	private final String noSchematics = Lang.translate("gui.schematicTable.noSchematics");
 	private final String availableSchematicsTitle = Lang.translate("gui.schematicTable.availableSchematics");
 	private final ItemStack renderedItem = AllBlocks.SCHEMATIC_TABLE.asStack();
@@ -63,20 +65,24 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		CreateClient.schematicSender.refresh();
 		List<String> availableSchematics = CreateClient.schematicSender.getAvailableSchematics();
 
-		schematicsLabel = new Label(mainLeft + 36, mainTop + 26, "").withShadow();
+		schematicsLabel = new Label(mainLeft + 49, mainTop + 26, "").withShadow();
 		schematicsLabel.text = "";
 		if (!availableSchematics.isEmpty()) {
 			schematicsArea =
-				new SelectionScrollInput(mainLeft + 33, mainTop + 23, 134, 14).forOptions(availableSchematics)
+				new SelectionScrollInput(mainLeft + 45, mainTop + 21, 139, 18).forOptions(availableSchematics)
 					.titled(availableSchematicsTitle)
 					.writingTo(schematicsLabel);
 			widgets.add(schematicsArea);
 			widgets.add(schematicsLabel);
 		}
 
-		confirmButton = new IconButton(mainLeft + 69, mainTop + 55, AllIcons.I_CONFIRM);
-		folderButton = new IconButton(mainLeft + 204, mainTop + 6, AllIcons.I_OPEN_FOLDER);
-		refreshButton = new IconButton(mainLeft + 204, mainTop + 26, AllIcons.I_REFRESH);
+		confirmButton = new IconButton(mainLeft + 44, mainTop + 56, AllIcons.I_CONFIRM);
+		
+		folderButton = new IconButton(mainLeft + 21, mainTop + 21, AllIcons.I_OPEN_FOLDER);
+		folderButton.setToolTip(folder);
+		refreshButton = new IconButton(mainLeft + 207, mainTop + 21, AllIcons.I_REFRESH);
+		refreshButton.setToolTip(refresh);
+		
 		widgets.add(confirmButton);
 		widgets.add(folderButton);
 		widgets.add(refreshButton);
@@ -104,13 +110,13 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		SCHEMATIC_TABLE.draw(this, mainLeft, mainTop);
 		
 		if (container.getTileEntity().isUploading)
-			font.drawString(uploading, mainLeft + 76, mainTop + 10, AllGuiTextures.FONT_COLOR);
+			font.drawStringWithShadow(uploading, mainLeft + 11, mainTop + 3, 0xffffff);
 		else if (container.getSlot(1).getHasStack())
-			font.drawString(finished, mainLeft + 60, mainTop + 10, AllGuiTextures.FONT_COLOR);
+			font.drawStringWithShadow(finished, mainLeft + 11, mainTop + 3, 0xffffff);
 		else
-			font.drawString(title, mainLeft + 60, mainTop + 10, AllGuiTextures.FONT_COLOR);
+			font.drawStringWithShadow(title, mainLeft + 11, mainTop + 3, 0xffffff);
 		if (schematicsArea == null) 
-			font.drawStringWithShadow(noSchematics, mainLeft + 39, mainTop + 26, 0xFFDD44);
+			font.drawStringWithShadow(noSchematics, mainLeft + 54, mainTop + 26, 0xd3d3d3);
 
 		GuiGameElement.of(renderedItem)
 				.at(mainLeft + 217, mainTop + 48)
@@ -123,7 +129,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
 		RenderSystem.disableLighting();
-		blit(mainLeft + 94, mainTop + 56, SCHEMATIC_TABLE_PROGRESS.startX, SCHEMATIC_TABLE_PROGRESS.startY, width,
+		blit(mainLeft + 70, mainTop + 58, SCHEMATIC_TABLE_PROGRESS.startX, SCHEMATIC_TABLE_PROGRESS.startY, width,
 			height);
 
 	}
@@ -194,6 +200,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 					.forOptions(availableSchematics)
 					.titled(availableSchematicsTitle)
 					.writingTo(schematicsLabel);
+				schematicsArea.onChanged();
 				widgets.add(schematicsArea);
 			} else {
 				schematicsArea = null;

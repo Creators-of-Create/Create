@@ -10,17 +10,29 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class SmartInventory extends RecipeWrapper implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundNBT> {
+public class SmartInventory extends RecipeWrapper
+	implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundNBT> {
 
-	private boolean extractionAllowed;
-	private boolean insertionAllowed;
-	private int stackSize;
+	protected boolean extractionAllowed;
+	protected boolean insertionAllowed;
+	protected boolean stackNonStackables;
+	protected int stackSize;
 
 	public SmartInventory(int slots, SyncedTileEntity te) {
-		super(new SyncedStackHandler(slots, te));
+		this(slots, te, 64, false);
+	}
+
+	public SmartInventory(int slots, SyncedTileEntity te, int stackSize, boolean stackNonStackables) {
+		super(new SyncedStackHandler(slots, te, stackNonStackables, stackSize));
+		this.stackNonStackables = stackNonStackables;
 		insertionAllowed = true;
 		extractionAllowed = true;
-		stackSize = 64;
+		this.stackSize = stackSize;
+	}
+
+	public SmartInventory whenContentsChanged(Runnable updateCallback) {
+		((SyncedStackHandler) inv).whenContentsChange(updateCallback);
+		return this;
 	}
 
 	public SmartInventory allowInsertion() {
@@ -43,11 +55,6 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 		return this;
 	}
 
-	public SmartInventory withMaxStackSize(int stackSize) {
-		this.stackSize = stackSize;
-		return this;
-	}
-
 	@Override
 	public int getSlots() {
 		return inv.getSlots();
@@ -64,6 +71,11 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (!extractionAllowed)
 			return ItemStack.EMPTY;
+		if (stackNonStackables) {
+			ItemStack extractItem = inv.extractItem(slot, amount, true);
+			if (!extractItem.isEmpty() && extractItem.getMaxStackSize() < extractItem.getCount())
+				amount = extractItem.getMaxStackSize();
+		}
 		return inv.extractItem(slot, amount, simulate);
 	}
 
@@ -86,7 +98,7 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 	public ItemStack getStackInSlot(int slot) {
 		return super.getStackInSlot(slot);
 	}
-	
+
 	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
 		return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 	}
@@ -100,7 +112,7 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 	public void deserializeNBT(CompoundNBT nbt) {
 		getInv().deserializeNBT(nbt);
 	}
-	
+
 	private SyncedStackHandler getInv() {
 		return (SyncedStackHandler) inv;
 	}
@@ -108,16 +120,32 @@ public class SmartInventory extends RecipeWrapper implements IItemHandlerModifia
 	private static class SyncedStackHandler extends ItemStackHandler {
 
 		private SyncedTileEntity te;
+		private boolean stackNonStackables;
+		private int stackSize;
+		private Runnable updateCallback;
 
-		public SyncedStackHandler(int slots, SyncedTileEntity te) {
+		public SyncedStackHandler(int slots, SyncedTileEntity te, boolean stackNonStackables, int stackSize) {
 			super(slots);
 			this.te = te;
+			this.stackNonStackables = stackNonStackables;
+			this.stackSize = stackSize;
 		}
 
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
+			if (updateCallback != null)
+				updateCallback.run();
 			te.notifyUpdate();
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return Math.min(stackNonStackables ? 64 : super.getSlotLimit(slot), stackSize);
+		}
+
+		public void whenContentsChange(Runnable updateCallback) {
+			this.updateCallback = updateCallback;
 		}
 
 	}

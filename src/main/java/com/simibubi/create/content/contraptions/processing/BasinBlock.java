@@ -9,16 +9,23 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -26,19 +33,32 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
+	public static final DirectionProperty FACING = BlockStateProperties.FACING_EXCEPT_UP;
+
 	public BasinBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
+		setDefaultState(getDefaultState().with(FACING, Direction.DOWN));
 	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
+		super.fillStateContainer(p_206840_1_.add(FACING));
 	}
 
 	@Override
@@ -54,12 +74,16 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (!player.getHeldItem(handIn)
-			.isEmpty())
-			return ActionResultType.PASS;
+		ItemStack heldItem = player.getHeldItem(handIn);
 
 		try {
 			BasinTileEntity te = getTileEntity(worldIn, pos);
+			if (!heldItem.isEmpty()) {
+				if (tryEmptyItemIntoBasin(worldIn, player, handIn, heldItem, te))
+					return ActionResultType.SUCCESS;
+				return ActionResultType.PASS;
+			}
+
 			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
 				player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
@@ -70,6 +94,30 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		}
 
 		return ActionResultType.SUCCESS;
+	}
+
+	protected boolean tryEmptyItemIntoBasin(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
+		BasinTileEntity te) {
+		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
+			return false;
+
+		Pair<FluidStack, ItemStack> emptyItem = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		IFluidHandler tank = capability.orElse(null);
+		FluidStack fluidStack = emptyItem.getFirst();
+
+		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
+			return false;
+		if (worldIn.isRemote)
+			return true;
+
+		EmptyingByBasin.emptyItem(worldIn, heldItem, false);
+		tank.fill(fluidStack, FluidAction.EXECUTE);
+		if (heldItem.isEmpty())
+			player.setHeldItem(handIn, emptyItem.getSecond());
+		else
+			player.inventory.placeItemBackInInventory(worldIn, emptyItem.getSecond());
+		return true;
 	}
 
 	@Override
@@ -103,6 +151,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+		updateDiagonalNeighbours(state, world, pos);
+	}
+
+	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext ctx) {
 		if (ctx.getEntity() instanceof ItemEntity)
 			return AllShapes.BASIN_COLLISION_SHAPE;
@@ -111,6 +164,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		updateDiagonalNeighbours(state, worldIn, pos);
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
@@ -138,6 +192,37 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public Class<BasinTileEntity> getTileEntityClass() {
 		return BasinTileEntity.class;
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		BlockState state = super.getStateForPlacement(ctx);
+		World world = ctx.getWorld();
+		BlockPos pos = ctx.getPos();
+		return updateDiagonalState(state, world, pos);
+	}
+
+	protected void updateDiagonalNeighbours(BlockState state, World world, BlockPos pos) {
+		for (Direction direction : Iterate.horizontalDirections) {
+			BlockPos toUpdate = pos.up()
+				.offset(direction);
+			BlockState stateToUpdate = world.getBlockState(toUpdate);
+			BlockState updated = updateDiagonalState(stateToUpdate, world, toUpdate);
+			if (stateToUpdate != updated && !world.isRemote)
+				world.setBlockState(toUpdate, updated);
+		}
+	}
+
+	public static BlockState updateDiagonalState(BlockState state, IBlockReader world, BlockPos pos) {
+		if (!(state.getBlock() instanceof BasinBlock))
+			return state;
+		for (Direction direction : Iterate.horizontalDirections) {
+			BlockState diagonaloutputBasin = world.getBlockState(pos.down()
+				.offset(direction));
+			if (diagonaloutputBasin.getBlock() instanceof BasinBlock)
+				return state.with(FACING, direction);
+		}
+		return state.with(FACING, Direction.DOWN);
 	}
 
 }

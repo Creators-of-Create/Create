@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.FLEXCRATE;
-import static com.simibubi.create.foundation.gui.AllGuiTextures.FLEXCRATE_DOUBLE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_CRATE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_DOUBLE_CRATE;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
 
 import java.util.ArrayList;
@@ -43,11 +43,11 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 
 	@Override
 	protected void init() {
-		setWindowSize(PLAYER_INVENTORY.width + 100, FLEXCRATE.height + PLAYER_INVENTORY.height + 20);
+		setWindowSize(PLAYER_INVENTORY.width + 100, ADJUSTABLE_CRATE.height + PLAYER_INVENTORY.height + 20);
 		super.init();
 		widgets.clear();
 
-		allowedItemsLabel = new Label(guiLeft + 100 + 70, guiTop + 107, "").colored(0xD3CBBE)
+		allowedItemsLabel = new Label(guiLeft + 100 + 69, guiTop + 108, "").colored(0xfefefe)
 			.withShadow();
 		allowedItems = new ScrollInput(guiLeft + 100 + 65, guiTop + 104, 41, 14).titled(storageSpace)
 			.withRange(1, (container.doubleCrate ? 2049 : 1025))
@@ -60,7 +60,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		widgets.add(allowedItems);
 
 		extraAreas = new ArrayList<>();
-		extraAreas.add(new Rectangle2d(guiLeft + FLEXCRATE.width + 110, guiTop + 46, 71, 70));
+		extraAreas.add(new Rectangle2d(guiLeft + ADJUSTABLE_CRATE.width + 110, guiTop + 46, 71, 70));
 	}
 
 	@Override
@@ -68,18 +68,17 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		int crateLeft = guiLeft + 100;
 		int crateTop = guiTop;
 		int invLeft = guiLeft + 50;
-		int invTop = crateTop + FLEXCRATE.height + 10;
-		int hFontColor = 0xD3CBBE;
+		int invTop = crateTop + ADJUSTABLE_CRATE.height + 10;
 		int fontColor = 0x4B3A22;
 
 		if (container.doubleCrate) {
 			crateLeft -= 72;
-			FLEXCRATE_DOUBLE.draw(this, crateLeft, crateTop);
+			ADJUSTABLE_DOUBLE_CRATE.draw(this, crateLeft, crateTop);
 		} else
-			FLEXCRATE.draw(this, crateLeft, crateTop);
+			ADJUSTABLE_CRATE.draw(this, crateLeft, crateTop);
 
-		font.drawStringWithShadow(title, crateLeft - 3 + (FLEXCRATE.width - font.getStringWidth(title)) / 2,
-			crateTop + 10, hFontColor);
+		font.drawStringWithShadow(title, crateLeft - 3 + (ADJUSTABLE_CRATE.width - font.getStringWidth(title)) / 2,
+			crateTop + 3, 0xfefefe);
 		String itemCount = "" + te.itemCount;
 		font.drawString(itemCount, guiLeft + 100 + 53 - font.getStringWidth(itemCount), crateTop + 107, fontColor);
 
@@ -91,13 +90,13 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 			if (allowedItems.getState() > slot * 64)
 				continue;
 			int slotsPerRow = (container.doubleCrate ? 8 : 4);
-			int x = crateLeft + 23 + (slot % slotsPerRow) * 18;
-			int y = crateTop + 24 + (slot / slotsPerRow) * 18;
-			AllGuiTextures.FLEXCRATE_LOCKED_SLOT.draw(this, x, y);
+			int x = crateLeft + 22 + (slot % slotsPerRow) * 18;
+			int y = crateTop + 19 + (slot / slotsPerRow) * 18;
+			AllGuiTextures.ADJUSTABLE_CRATE_LOCKED_SLOT.draw(this, x, y);
 		}
 
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + FLEXCRATE.width + 110, guiTop + 40)
+				.at(guiLeft + ADJUSTABLE_CRATE.width + 110, guiTop + 40)
 				.scale(5)
 				.render();
 	}

@@ -66,14 +66,8 @@ public class ClientSchematicLoader {
 			long size = Files.size(path);
 
 			// Too big
-			Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
-			if (size > maxSize * 1000) {
-				Minecraft.getInstance().player.sendMessage(new StringTextComponent(
-						Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."));
-				Minecraft.getInstance().player.sendMessage(
-						new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"));
+			if (!validateSizeLimitation(size))
 				return;
-			}
 
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
@@ -81,6 +75,20 @@ public class ClientSchematicLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static boolean validateSizeLimitation(long size) {
+		if (Minecraft.getInstance().isSingleplayer())
+			return true;
+		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
+		if (size > maxSize * 1000) {
+			Minecraft.getInstance().player.sendMessage(new StringTextComponent(
+					Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."));
+			Minecraft.getInstance().player.sendMessage(
+					new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"));
+			return false;
+		}
+		return true;
 	}
 
 	private void continueUpload(String schematic) {

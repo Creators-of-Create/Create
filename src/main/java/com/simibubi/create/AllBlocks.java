@@ -73,6 +73,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankModel;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
+import com.simibubi.create.content.contraptions.processing.BasinGenerator;
 import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
@@ -408,9 +409,10 @@ public class AllBlocks {
 
 	public static final BlockEntry<BasinBlock> BASIN = REGISTRATE.block("basin", BasinBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.standardModel(ctx, prov)))
+		.blockstate(new BasinGenerator()::generate)
 		.onRegister(addMovementBehaviour(new BasinMovementBehaviour()))
-		.simpleItem()
+		.item()
+		.transform(customItemModel("_", "block"))
 		.register();
 
 	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER =

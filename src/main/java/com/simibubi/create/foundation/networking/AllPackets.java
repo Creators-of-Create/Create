@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.LimbSwingUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingSyncPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacket;
@@ -23,6 +24,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
+import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
@@ -55,6 +57,7 @@ public enum AllPackets {
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
 	MINECART_COUPLING_CREATION(MinecartCouplingCreationPacket.class, MinecartCouplingCreationPacket::new),
 	PERSISTANT_DATA_REQUEST(PersistantDataPacketRequest.class, PersistantDataPacketRequest::new),
+	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
@@ -66,6 +69,7 @@ public enum AllPackets {
 	MINECART_COUPLING_SYNC(MinecartCouplingSyncPacket.class, MinecartCouplingSyncPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	PERSISTANT_DATA(PersistantDataPacket.class, PersistantDataPacket::new),
+	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
 	
 	;
 

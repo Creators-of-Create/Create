@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.Lang;
 public enum SequencerInstructions {
 
 	TURN_ANGLE("angle", AllGuiTextures.SEQUENCER_INSTRUCTION, true, true, 360, 45, 90),
-	TURN_DISTANCE("distance", AllGuiTextures.SEQUENCER_INSTRUCTION, true, true, 50, 5, 5),
+	TURN_DISTANCE("distance", AllGuiTextures.SEQUENCER_INSTRUCTION, true, true, 128, 5, 5),
 	WAIT("duration", AllGuiTextures.SEQUENCER_WAIT, true, false, 600, 20, 10),
 	END("", AllGuiTextures.SEQUENCER_END),
 

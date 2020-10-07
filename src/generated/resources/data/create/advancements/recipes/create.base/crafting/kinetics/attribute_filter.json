@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:andesite_alloy"
+            "tag": "forge:ingots/brass"
           }
         ]
       }
