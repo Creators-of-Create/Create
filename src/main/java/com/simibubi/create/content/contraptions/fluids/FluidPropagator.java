@@ -14,7 +14,6 @@ import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 

@@ -1,18 +1,20 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class ConfigureConfigPacket extends SimplePacketBase {
 

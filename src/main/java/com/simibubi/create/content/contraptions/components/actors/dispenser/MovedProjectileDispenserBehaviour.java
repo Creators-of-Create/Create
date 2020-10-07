@@ -1,6 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
+import java.lang.reflect.Method;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.Entity;
@@ -11,9 +16,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import javax.annotation.Nullable;
-import java.lang.reflect.Method;
 
 public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDispenseItemBehaviour {
 

@@ -39,9 +39,6 @@ public class ClockworkContraption extends Contraption {
 
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
 			Direction direction) {
-		if (isFrozen())
-			return null;
-
 		int hourArmBlocks = 0;
 
 		ClockworkContraption hourArm = new ClockworkContraption();

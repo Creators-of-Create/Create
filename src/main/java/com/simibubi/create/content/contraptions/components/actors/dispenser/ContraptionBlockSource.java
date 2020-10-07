@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.dispenser.IBlockSource;
@@ -9,8 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 @MethodsReturnNonnullByDefault
 public class ContraptionBlockSource implements IBlockSource {

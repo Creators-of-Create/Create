@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
@@ -24,8 +26,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

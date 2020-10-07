@@ -15,7 +15,9 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
@@ -27,8 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class MountedContraption extends Contraption {
@@ -46,9 +46,6 @@ public class MountedContraption extends Contraption {
 	}
 
 	public static MountedContraption assembleMinecart(World world, BlockPos pos) {
-		if (isFrozen())
-			return null;
-
 		BlockState state = world.getBlockState(pos);
 		if (!state.has(RAIL_SHAPE))
 			return null;

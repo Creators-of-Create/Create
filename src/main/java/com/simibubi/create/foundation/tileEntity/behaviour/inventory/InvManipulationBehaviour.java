@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicates;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -102,8 +101,6 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		simulateNext = false;
 
 		if (getWorld().isRemote)
-			return ItemStack.EMPTY;
-		if (AllConfigs.SERVER.control.freezeExtractors.get())
 			return ItemStack.EMPTY;
 		IItemHandler inventory = targetCapability.orElse(null);
 		if (inventory == null)

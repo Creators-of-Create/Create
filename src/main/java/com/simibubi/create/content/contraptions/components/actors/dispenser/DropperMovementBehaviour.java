@@ -1,18 +1,19 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class DropperMovementBehaviour extends MovementBehaviour {
 	protected static final MovedDefaultDispenseItemBehaviour defaultBehaviour = new MovedDefaultDispenseItemBehaviour();

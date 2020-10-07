@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Consumer;
 
-import net.minecraft.item.Items;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import net.minecraft.block.Block;
@@ -13,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.tileentity.TileEntity;

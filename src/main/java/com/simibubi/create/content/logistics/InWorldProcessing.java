@@ -321,8 +321,4 @@ public class InWorldProcessing {
 		}
 	}
 
-	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezeInWorldProcessing.get();
-	}
-
 }

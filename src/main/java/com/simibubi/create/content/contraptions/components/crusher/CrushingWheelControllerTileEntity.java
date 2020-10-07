@@ -69,8 +69,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (isFrozen())
-			return;
 		if (searchForEntity) {
 			searchForEntity = false;
 			List<Entity> search = world.getEntitiesInAABBexcluding(null, new AxisAlignedBB(getPos()),
@@ -224,7 +222,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		if (compound.contains("Entity") && !isFrozen() && !isOccupied()) {
+		if (compound.contains("Entity") && !isOccupied()) {
 			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
 			this.searchForEntity = true;
 		}
@@ -262,10 +260,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 	public boolean hasEntity() {
 		return processingEntity != null;
-	}
-
-	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezeCrushing.get();
 	}
 
 }

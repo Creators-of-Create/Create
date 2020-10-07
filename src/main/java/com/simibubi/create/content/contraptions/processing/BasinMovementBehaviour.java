@@ -1,16 +1,17 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BasinMovementBehaviour extends MovementBehaviour {
 	public Map<String, ItemStackHandler> getOrReadInventory(MovementContext context) {

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.Vector;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -15,8 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Vector;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 

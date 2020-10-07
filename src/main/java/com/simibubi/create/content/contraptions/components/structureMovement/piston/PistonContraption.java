@@ -49,8 +49,6 @@ public class PistonContraption extends Contraption {
 	}
 
 	public static PistonContraption movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
-		if (isFrozen())
-			return null;
 		PistonContraption construct = new PistonContraption();
 		construct.orientation = direction;
 		if (!construct.collectExtensions(world, pos, direction))

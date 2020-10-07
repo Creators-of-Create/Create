@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.tracks;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,8 +15,8 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.RailShape;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -22,8 +24,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 public class ReinforcedRailBlock extends AbstractRailBlock {
 

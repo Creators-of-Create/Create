@@ -1,5 +1,12 @@
 package com.simibubi.create.content.schematics.block;
 
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
@@ -24,13 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-
-import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 

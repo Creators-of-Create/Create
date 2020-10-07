@@ -6,7 +6,7 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CCuriosities;
+import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -21,9 +21,13 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 
@@ -42,7 +46,7 @@ public class ChromaticCompoundItem extends Item {
 	public double getDurabilityForDisplay(ItemStack stack) {
 		int light = stack.getOrCreateTag()
 			.getInt("CollectingLight");
-		return 1 - light / (float) AllConfigs.SERVER.curiosities.lightSourceCountForRefinedRadiance.get();
+		return 1 - light / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get();
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class ChromaticCompoundItem extends Item {
 			.getOrCreateTag();
 
 		Vec3d positionVec = entity.getPositionVec();
-		CCuriosities config = AllConfigs.SERVER.curiosities;
+		CRecipes config = AllConfigs.SERVER.recipes;
 		if (world.isRemote) {
 			int light = itemData.getInt("CollectingLight");
 			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {

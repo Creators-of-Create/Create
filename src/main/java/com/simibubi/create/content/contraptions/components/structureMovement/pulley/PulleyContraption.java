@@ -17,8 +17,6 @@ public class PulleyContraption extends Contraption {
 	}
 
 	public static PulleyContraption assemblePulleyAt(World world, BlockPos pos, int initialOffset) {
-		if (isFrozen())
-			return null;
 		PulleyContraption construct = new PulleyContraption();
 		construct.initialOffset = initialOffset;
 		if (!construct.searchMovedStructure(world, pos, null))

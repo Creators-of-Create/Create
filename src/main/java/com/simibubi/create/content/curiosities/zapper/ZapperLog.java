@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.foundation.config.AllConfigs;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,8 +28,8 @@ public class ZapperLog {
 	 */
 
 	public void record(World world, List<BlockPos> positions) {
-		if (maxLogLength() == 0)
-			return;
+//		if (maxLogLength() == 0)
+//			return;
 		if (world != activeWorld)
 			log.clear();
 		activeWorld = world;
@@ -44,13 +42,13 @@ public class ZapperLog {
 		log.add(0, blocks);
 //		redoIndex = 0;
 
-		if (maxLogLength() < log.size())
-			log.remove(log.size() - 1);
+//		if (maxLogLength() < log.size())
+//			log.remove(log.size() - 1);
 	}
 
-	protected Integer maxLogLength() {
-		return AllConfigs.SERVER.curiosities.zapperUndoLogLength.get();
-	}
+//	protected Integer maxLogLength() {
+//		return AllConfigs.SERVER.curiosities.zapperUndoLogLength.get();
+//	}
 
 	public void undo() {
 

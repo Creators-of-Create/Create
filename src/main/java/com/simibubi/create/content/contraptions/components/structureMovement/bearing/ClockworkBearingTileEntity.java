@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption.HandType;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -44,9 +43,6 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			clientMinuteAngleDiff /= 2;
 			clientHourAngleDiff /= 2;
 		}
-
-		if (running && Contraption.isFrozen())
-			disassemble();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;

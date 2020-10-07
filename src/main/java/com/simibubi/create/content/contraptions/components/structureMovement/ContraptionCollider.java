@@ -358,8 +358,6 @@ public class ContraptionCollider {
 	}
 
 	public static boolean collideBlocks(ContraptionEntity contraptionEntity) {
-		if (Contraption.isFrozen())
-			return true;
 		if (!contraptionEntity.collisionEnabled())
 			return false;
 

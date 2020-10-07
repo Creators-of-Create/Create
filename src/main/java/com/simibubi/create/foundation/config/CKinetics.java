@@ -13,7 +13,7 @@ public class CKinetics extends ConfigBase {
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
 	public ConfigInt kineticValidationFrequency = i(60, 5, "kineticValidationFrequency", Comments.kineticValidationFrequency);
 
-	public ConfigGroup fan = group(0, "encasedFan", "Encased Fan");
+	public ConfigGroup fan = group(1, "encasedFan", "Encased Fan");
 	public ConfigInt fanPushDistance = i(20, 5, "fanPushDistance", Comments.fanPushDistance);
 	public ConfigInt fanPullDistance = i(20, 5, "fanPullDistance", Comments.fanPullDistance);
 	public ConfigInt fanBlockCheckRate = i(30, 10, "fanBlockCheckRate", Comments.fanBlockCheckRate);
@@ -21,16 +21,16 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt generatingFanSpeed = i(16, 0, "generatingFanSpeed", Comments.rpm, Comments.generatingFanSpeed);
 	public ConfigInt inWorldProcessingTime = i(150, 0, "inWorldProcessingTime", Comments.inWorldProcessingTime);
 
-	public ConfigGroup contraptions = group(0, "contraptions", "Moving Contraptions");
+	public ConfigGroup contraptions = group(1, "contraptions", "Moving Contraptions");
 	public ConfigInt maxBlocksMoved = i(2048, 1, "maxBlocksMoved", Comments.maxBlocksMoved);
 	public ConfigInt maxChassisRange = i(16, 1, "maxChassisRange", Comments.maxChassisRange);
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	
-	public CStress stressValues = nested(0, CStress::new, Comments.stress);
+	public CStress stressValues = nested(1, CStress::new, Comments.stress);
 
-	public ConfigGroup state = group(0, "stats", Comments.stats);
+	public ConfigGroup state = group(1, "stats", Comments.stats);
 	public ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
 	public ConfigFloat mediumStressImpact =

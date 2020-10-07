@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -41,8 +43,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import javax.annotation.Nonnull;
 
 public abstract class ZapperItem extends Item {
 

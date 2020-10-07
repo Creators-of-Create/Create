@@ -69,7 +69,7 @@ public class CrushingWheelControllerBlock extends Block
 	}
 
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen())
+		if (!state.get(VALID))
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.processingEntity == entityIn)
@@ -80,9 +80,6 @@ public class CrushingWheelControllerBlock extends Block
 	@Override
 	public void onLanded(IBlockReader worldIn, Entity entityIn) {
 		super.onLanded(worldIn, entityIn);
-		if (CrushingWheelControllerTileEntity.isFrozen())
-			return;
-
 		try {
 			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, entityIn.getPosition().down());
 			if (te.crushingspeed == 0)
@@ -122,7 +119,7 @@ public class CrushingWheelControllerBlock extends Block
 
 	public void updateSpeed(BlockState state, World world, BlockPos pos) {
 		withTileEntityDo(world, pos, te -> {
-			if (!state.get(VALID) || CrushingWheelControllerTileEntity.isFrozen()) {
+			if (!state.get(VALID)) {
 				if (te.crushingspeed != 0) {
 					te.crushingspeed = 0;
 					te.sendData();

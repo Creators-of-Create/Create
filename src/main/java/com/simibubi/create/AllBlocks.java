@@ -27,8 +27,8 @@ import com.simibubi.create.content.contraptions.components.actors.SeatMovementBe
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
-import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.crank.AllValveHandles;
+import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;

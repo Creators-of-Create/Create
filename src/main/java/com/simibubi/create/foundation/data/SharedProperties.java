@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.data;
 
 import mcp.MethodsReturnNonnullByDefault;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;

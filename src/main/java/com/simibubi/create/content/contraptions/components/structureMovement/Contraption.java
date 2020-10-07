@@ -141,10 +141,6 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezeContraptions.get();
-	}
-
 	protected static MovementBehaviour getMovement(BlockState state) {
 		Block block = state.getBlock();
 		if (!AllMovementBehaviours.hasMovementBehaviour(block))

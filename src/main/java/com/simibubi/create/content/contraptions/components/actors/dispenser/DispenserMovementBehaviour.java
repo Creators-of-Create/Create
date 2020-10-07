@@ -1,7 +1,12 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
+import java.util.HashMap;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -14,9 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
 
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();

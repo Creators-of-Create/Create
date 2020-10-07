@@ -200,7 +200,7 @@ public class RotationPropagator {
 	 * @param pos
 	 */
 	public static void handleAdded(World worldIn, BlockPos pos, KineticTileEntity addedTE) {
-		if (worldIn.isRemote || isFrozen())
+		if (worldIn.isRemote)
 			return;
 		if (!worldIn.isBlockPresent(pos))
 			return;
@@ -297,7 +297,7 @@ public class RotationPropagator {
 	 * @param removedTE
 	 */
 	public static void handleRemoved(World worldIn, BlockPos pos, KineticTileEntity removedTE) {
-		if (worldIn.isRemote || isFrozen())
+		if (worldIn.isRemote)
 			return;
 		if (removedTE == null)
 			return;
@@ -452,10 +452,6 @@ public class RotationPropagator {
 		}
 
 		return neighbours;
-	}
-
-	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezeRotationPropagator.get();
 	}
 
 }

@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
@@ -40,8 +42,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
-
-import javax.annotation.Nonnull;
 
 public class SchematicItem extends Item {
 

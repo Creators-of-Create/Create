@@ -1,14 +1,15 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.item.DyeColor;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.item.DyeColor;
 
 public class AllValveHandles {
 	private static final List<String> types = new ArrayList<>();
