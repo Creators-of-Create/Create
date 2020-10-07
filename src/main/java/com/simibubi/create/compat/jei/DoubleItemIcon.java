@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
@@ -47,13 +48,15 @@ public class DoubleItemIcon implements IDrawable {
 
 		matrixStack.push();
 		matrixStack.translate(1, 1, 0);
-		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(primaryStack, 0, 0);
+		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, primaryStack);
+		// Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(primaryStack, 0, 0);
 		matrixStack.pop();
 
 		matrixStack.push();
 		matrixStack.translate(10, 10, 100);
 		matrixStack.scale(.5f, .5f, .5f);
-		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(secondaryStack, 0, 0);
+		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, secondaryStack);
+		// Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(secondaryStack, 0, 0);
 		matrixStack.pop();
 
 		matrixStack.pop();

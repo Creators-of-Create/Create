@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.client;
 
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -64,7 +65,11 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		AllGuiTextures.SCHEMATIC_PROMPT.draw(ms, this, guiLeft, guiTop);
 		textRenderer.drawWithShadow(ms, title, guiLeft + (sWidth / 2) - (textRenderer.getWidth(title) / 2), guiTop + 3,
 			0xffffff);
-		itemRenderer.renderItemIntoGUI(AllItems.SCHEMATIC.asStack(), guiLeft + 22, guiTop + 23);
+		ms.push();
+		ms.translate(guiLeft + 22, guiTop + 23, 0);
+		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(ms, AllItems.SCHEMATIC.asStack());
+		ms.pop();
+		// itemRenderer.renderItemIntoGUI(AllItems.SCHEMATIC.asStack(), guiLeft + 22, guiTop + 23);
 	}
 
 	@Override

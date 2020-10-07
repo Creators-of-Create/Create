@@ -9,6 +9,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
@@ -154,7 +155,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		matrixStack.push();
 		matrixStack.translate(guiLeft + 200, guiTop + 80, 0);
 		matrixStack.scale(3, 3, 3);
-		itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.SCHEMATIC.get()), 0, 0);
+		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, new ItemStack(AllItems.SCHEMATIC.get()));
+		// itemRenderer.renderItemIntoGUI(new ItemStack(AllItems.SCHEMATIC.get()), 0, 0);
 		matrixStack.pop();
 	}
 

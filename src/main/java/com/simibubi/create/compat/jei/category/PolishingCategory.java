@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import com.simibubi.create.foundation.gui.GuiGameElement;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -72,7 +73,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		tag.putBoolean("JEI", true);
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		matrixStack.scale(2, 2, 2);
-		itemRenderer.renderItemIntoGUI(renderedSandpaper, getBackground().getWidth() / 4 - 8, 1);
+		matrixStack.translate(getBackground().getWidth() / 4 - 8, 1, 0);
+		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, renderedSandpaper);
 		matrixStack.pop();
 	}
 
