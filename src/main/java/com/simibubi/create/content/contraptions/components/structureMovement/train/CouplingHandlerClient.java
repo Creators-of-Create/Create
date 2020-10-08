@@ -18,7 +18,7 @@ import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
-public class ClientMinecartCouplingHandler {
+public class CouplingHandlerClient {
 
 	static AbstractMinecartEntity selectedCart;
 	static Random r = new Random();
@@ -44,7 +44,7 @@ public class ClientMinecartCouplingHandler {
 			return;
 		}
 		spawnSelectionParticles(entity.getBoundingBox(), true);
-		AllPackets.channel.sendToServer(new MinecartCouplingCreationPacket(selectedCart, entity));
+		AllPackets.channel.sendToServer(new CouplingCreationPacket(selectedCart, entity));
 		selectedCart = null;
 	}
 

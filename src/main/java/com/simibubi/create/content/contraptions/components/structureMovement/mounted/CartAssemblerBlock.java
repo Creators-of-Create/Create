@@ -11,7 +11,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -217,7 +217,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 		boolean couplingFound = contraption.connectedCart != null;
 		if (couplingFound) {
-			MinecartCouplingHandler.connectCarts(null, world, cart.getEntityId(),
+			CouplingHandler.tryToCoupleCarts(null, world, cart.getEntityId(),
 				contraption.connectedCart.getEntityId());
 			Vec3d diff = contraption.connectedCart.getPositionVec()
 				.subtract(cart.getPositionVec());
@@ -285,16 +285,22 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@Nonnull
 	public VoxelShape getShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos,
 		@Nonnull ISelectionContext context) {
-		return AllShapes.CART_ASSEMBLER
-			.get(state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X);
+		return AllShapes.CART_ASSEMBLER.get(getRailAxis(state));
+	}
+
+	protected Axis getRailAxis(BlockState state) {
+		return state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X;
 	}
 
 	@Override
 	@Nonnull
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos,
 		ISelectionContext context) {
-		if (context.getEntity() instanceof AbstractMinecartEntity)
+		Entity entity = context.getEntity();
+		if (entity instanceof AbstractMinecartEntity)
 			return VoxelShapes.empty();
+		if (entity instanceof PlayerEntity)
+			return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
 		return VoxelShapes.fullCube();
 	}
 

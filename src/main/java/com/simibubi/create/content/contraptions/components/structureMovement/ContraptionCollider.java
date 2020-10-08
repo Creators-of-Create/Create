@@ -3,9 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import static net.minecraft.entity.Entity.collideBoundingBoxHeuristically;
 import static net.minecraft.entity.Entity.horizontalMag;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,28 +50,11 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class ContraptionCollider {
 
-	public static void runCollisions(World world) {
-		List<WeakReference<ContraptionEntity>> list = ContraptionHandler.activeContraptions.getIfPresent(world);
-		if (list == null)
-			return;
-		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
-			WeakReference<ContraptionEntity> weakReference = iterator.next();
-			ContraptionEntity contraptionEntity = weakReference.get();
-			if (contraptionEntity == null) {
-				iterator.remove();
-				continue;
-			}
-			if (!contraptionEntity.isAlive())
-				continue;
-			collideEntities(contraptionEntity);
-		}
-	}
-
 	enum PlayerType {
 		NONE, CLIENT, REMOTE, SERVER
 	}
 
-	private static void collideEntities(ContraptionEntity contraptionEntity) {
+	static void collideEntities(ContraptionEntity contraptionEntity) {
 		World world = contraptionEntity.getEntityWorld();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();

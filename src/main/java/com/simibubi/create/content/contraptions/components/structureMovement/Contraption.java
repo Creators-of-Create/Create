@@ -348,12 +348,14 @@ public abstract class Contraption {
 			}
 
 			boolean wasVisited = visited.contains(offsetPos);
+			boolean isMinecartAssembler = AllBlocks.CART_ASSEMBLER.has(blockState) && offset == Direction.DOWN;
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
 				BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
-			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
+			if (!wasVisited
+				&& ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue || isMinecartAssembler))
 				frontier.add(offsetPos);
 
 			if (faceHasGlue)

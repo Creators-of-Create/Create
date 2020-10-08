@@ -1,17 +1,15 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.WorldAttached;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,21 +19,39 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class ContraptionHandler {
 
-	public static Cache<World, List<WeakReference<ContraptionEntity>>> activeContraptions = CacheBuilder.newBuilder()
-		.expireAfterAccess(400, SECONDS)
-		.build();
+	/* Global map of loaded contraptions */
+
+	public static WorldAttached<List<WeakReference<ContraptionEntity>>> loadedContraptions;
+	static WorldAttached<List<ContraptionEntity>> queuedAdditions;
+
+	static {
+		loadedContraptions = new WorldAttached<>(ArrayList::new);
+		queuedAdditions = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
+	}
+
+	public static void tick(World world) {
+		List<WeakReference<ContraptionEntity>> list = loadedContraptions.get(world);
+		List<ContraptionEntity> queued = queuedAdditions.get(world);
+
+		for (ContraptionEntity contraptionEntity : queued)
+			list.add(new WeakReference<>(contraptionEntity));
+		queued.clear();
+
+		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
+			WeakReference<ContraptionEntity> weakReference = iterator.next();
+			ContraptionEntity contraptionEntity = weakReference.get();
+			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
+				iterator.remove();
+				continue;
+			}
+			ContraptionCollider.collideEntities(contraptionEntity);
+		}
+	}
 
 	public static void addSpawnedContraptionsToCollisionList(Entity entity, World world) {
-		if (!(entity instanceof ContraptionEntity))
-			return;
-		try {
-			List<WeakReference<ContraptionEntity>> list =
-				activeContraptions.get(world, () -> Collections.synchronizedList(new ArrayList<>()));
-			ContraptionEntity contraption = (ContraptionEntity) entity;
-			list.add(new WeakReference<>(contraption));
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
+		if (entity instanceof ContraptionEntity)
+			queuedAdditions.get(world)
+				.add((ContraptionEntity) entity);
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, World world) {

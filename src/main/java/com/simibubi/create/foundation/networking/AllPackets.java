@@ -11,10 +11,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.LimbSwingUpdatePacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingCreationPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingSyncPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.PersistantDataPacketRequest;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingCreationPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
@@ -55,8 +53,7 @@ public enum AllPackets {
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
 	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new),
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
-	MINECART_COUPLING_CREATION(MinecartCouplingCreationPacket.class, MinecartCouplingCreationPacket::new),
-	PERSISTANT_DATA_REQUEST(PersistantDataPacketRequest.class, PersistantDataPacketRequest::new),
+	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new),
 	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
 
 	// Server to Client
@@ -66,10 +63,9 @@ public enum AllPackets {
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
-	MINECART_COUPLING_SYNC(MinecartCouplingSyncPacket.class, MinecartCouplingSyncPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
-	PERSISTANT_DATA(PersistantDataPacket.class, PersistantDataPacket::new),
 	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
+	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new),
 	
 	;
 

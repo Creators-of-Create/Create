@@ -1,9 +1,10 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -14,11 +15,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -39,14 +43,20 @@ public class CommonEvents {
 		Create.lagger.tick();
 		ServerSpeedProvider.serverTick();
 	}
+	
+	@SubscribeEvent
+	public static void onChunkUnloaded(ChunkEvent.Unload event) {
+		CapabilityMinecartController.onChunkUnloaded(event);
+	}
 
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
 		World world = event.world;
-		ContraptionCollider.runCollisions(world);
-		MinecartCouplingHandler.tick(world);
+		ContraptionHandler.tick(world);
+		CapabilityMinecartController.tick(world);
+		CouplingPhysics.tick(world);
 	}
 
 	@SubscribeEvent
@@ -63,7 +73,11 @@ public class CommonEvents {
 		Entity entity = event.getEntity();
 		World world = event.getWorld();
 		ContraptionHandler.addSpawnedContraptionsToCollisionList(entity, world);
-		MinecartCouplingHandler.handleAddedMinecart(entity, world);
+	}
+	
+	@SubscribeEvent
+	public static void onEntityAttackedByPlayer(AttackEntityEvent event) {
+		WrenchItem.wrenchInstaKillsMinecarts(event);
 	}
 
 	@SubscribeEvent
@@ -96,6 +110,11 @@ public class CommonEvents {
 		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
 		Create.torquePropagator.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
+	}
+	
+	@SubscribeEvent
+	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		CapabilityMinecartController.attach(event);
 	}
 
 }

@@ -20,8 +20,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCoupling;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -62,6 +62,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -291,7 +292,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			remove();
 			return;
 		}
-		
+
 		prevPosX = getX();
 		prevPosY = getY();
 		prevPosZ = getZ();
@@ -310,13 +311,12 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 		if (getMotion().length() < 1 / 4098f)
 			setMotion(Vec3d.ZERO);
-		
+
 		move(getMotion().x, getMotion().y, getMotion().z);
 		if (ContraptionCollider.collideBlocks(this))
 			getController().collided();
 
-		Vec3d movement = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
-		tickActors(movement);
+		tickActors();
 
 		prevYaw = yaw;
 		prevPitch = pitch;
@@ -329,6 +329,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		boolean rotationLock = false;
 		boolean pauseWhileRotating = false;
 		boolean rotating = false;
+		boolean wasStalled = isStalled();
 
 		Entity riding = e;
 		while (riding.getRidingEntity() != null)
@@ -338,39 +339,38 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			attachedExtraInventories = true;
 		}
 
-		boolean isOnCoupling = false;
 		if (contraption instanceof MountedContraption) {
 			MountedContraption mountedContraption = (MountedContraption) contraption;
-			UUID couplingId = getCouplingId();
-			isOnCoupling = couplingId != null && riding instanceof AbstractMinecartEntity;
-			if (isOnCoupling) {
-				MinecartCoupling coupling = MinecartCouplingHandler.getCoupling(world, couplingId);
-				if (coupling != null && coupling.areBothEndsPresent()) {
-					boolean notOnMainCart = !coupling.getId()
-						.equals(riding.getUniqueID());
-					Vec3d positionVec = coupling.asCouple()
-						.get(notOnMainCart)
-						.getPositionVec();
-					prevYaw = yaw;
-					prevPitch = pitch;
-					double diffZ = positionVec.z - riding.getZ();
-					double diffX = positionVec.x - riding.getX();
-					yaw = (float) (MathHelper.atan2(diffZ, diffX) * 180 / Math.PI);
-					pitch = (float) (Math.atan2(positionVec.y - getY(), Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180
-						/ Math.PI);
-
-					if (notOnMainCart) {
-						yaw += 180;
-					}
-				}
-			}
-
 			rotationLock = mountedContraption.rotationMode == CartMovementMode.ROTATION_LOCKED;
 			pauseWhileRotating = mountedContraption.rotationMode == CartMovementMode.ROTATE_PAUSED;
 		}
 
-		Vec3d movementVector = riding.getMotion();
-		if (!isOnCoupling) {
+		boolean isOnCoupling = false;
+		UUID couplingId = getCouplingId();
+		isOnCoupling = couplingId != null && riding instanceof AbstractMinecartEntity;
+
+		if (isOnCoupling) {
+//			MinecartCoupling coupling = MinecartCouplingHandler.getCoupling(world, couplingId);
+//			if (coupling != null && coupling.areBothEndsPresent()) {
+//				boolean notOnMainCart = !coupling.getId()
+//					.equals(riding.getUniqueID());
+//				Vec3d positionVec = coupling.asCouple()
+//					.get(notOnMainCart)
+//					.getPositionVec();
+//				prevYaw = yaw;
+//				prevPitch = pitch;
+//				double diffZ = positionVec.z - riding.getZ();
+//				double diffX = positionVec.x - riding.getX();
+//				yaw = (float) (MathHelper.atan2(diffZ, diffX) * 180 / Math.PI);
+//				pitch = (float) (Math.atan2(positionVec.y - getY(), Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180
+//					/ Math.PI);
+//
+//				if (notOnMainCart) {
+//					yaw += 180;
+//				}
+//			}
+		} else if (!wasStalled) {
+			Vec3d movementVector = riding.getMotion();
 			if (riding instanceof BoatEntity)
 				movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
 			Vec3d motion = movementVector.normalize();
@@ -393,18 +393,26 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 			}
 		}
 
-		boolean wasStalled = isStalled();
 		if (!rotating || !pauseWhileRotating)
-			tickActors(movementVector);
-		if (isStalled()) {
-			if (!wasStalled)
-				motionBeforeStall = riding.getMotion();
-			riding.setMotion(0, 0, 0);
-		}
+			tickActors();
+		boolean isStalled = isStalled();
 
-		if (wasStalled && !isStalled()) {
-			riding.setMotion(motionBeforeStall);
-			motionBeforeStall = Vec3d.ZERO;
+		LazyOptional<MinecartController> capability =
+			riding.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+		if (capability.isPresent()) {
+			if (!world.isRemote())
+				capability.orElse(null)
+					.setStalledExternally(isStalled);
+		} else {
+			if (isStalled) {
+				if (!wasStalled)
+					motionBeforeStall = riding.getMotion();
+				riding.setMotion(0, 0, 0);
+			}
+			if (wasStalled && !isStalled) {
+				riding.setMotion(motionBeforeStall);
+				motionBeforeStall = Vec3d.ZERO;
+			}
 		}
 
 		if (!isStalled() && (riding instanceof FurnaceMinecartEntity)) {
@@ -449,7 +457,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		}
 	}
 
-	public void tickActors(Vec3d movementVector) {
+	public void tickActors() {
 		Vec3d rotationVec = getRotationVec();
 		Vec3d reversedRotationVec = rotationVec.scale(-1);
 		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
@@ -508,6 +516,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 
 			context.rotation = rotationVec;
 			context.position = actorPosition;
+
 			if (actor.isActive(context)) {
 				if (newPosVisited && !context.stall) {
 					actor.visitNewPosition(context, gridPosition);
@@ -854,7 +863,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public Vec3d getContactPointMotion(Vec3d globalContactPoint) {
 		if (prevPosInvalid)
 			return Vec3d.ZERO;
-		
+
 		Vec3d positionVec = getPositionVec();
 		Vec3d conMotion = positionVec.subtract(getPrevPositionVec());
 		Vec3d conAngularMotion = getRotationVec().subtract(getPrevRotationVec());
@@ -915,7 +924,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public void setCoupledCart(UUID id) {
 		dataManager.set(COUPLED_CART, Optional.ofNullable(id));
 	}
-	
+
 	@Override
 	public boolean isOnePlayerRiding() {
 		return false;
