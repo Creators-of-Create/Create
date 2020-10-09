@@ -40,6 +40,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -687,6 +688,17 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return airCurrent;
 	}
 
+	@Nullable
+	@Override
+	public World getAirCurrentWorld() {
+		return world;
+	}
+
+	@Override
+	public BlockPos getAirCurrentPos() {
+		return pos;
+	}
+
 	@Override
 	public float getSpeed() {
 		if (getBlockState().get(ChuteBlock.SHAPE) == Shape.NORMAL && getBlockState().get(ChuteBlock.FACING) != Direction.DOWN)
@@ -701,6 +713,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (speed == 0)
 			return null;
 		return speed > 0 ? Direction.UP : Direction.DOWN;
+	}
+
+	@Override
+	public boolean isSourceRemoved() {
+		return removed;
 	}
 
 	@Override
