@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
+import com.simibubi.create.content.contraptions.components.fan.IAirCurrentSource;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -21,11 +21,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class AirFlowParticle extends SimpleAnimatedParticle {
 
-	private EncasedFanTileEntity source;
+	private final IAirCurrentSource source;
 
-	protected AirFlowParticle(World world, EncasedFanTileEntity source, double x, double y, double z,
+	protected AirFlowParticle(World world, IAirCurrentSource source, double x, double y, double z,
 			IAnimatedSprite sprite) {
 		super(world, x, y, z, sprite, world.rand.nextFloat() * .5f);
 		this.source = source;
@@ -41,6 +43,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		setAlphaF(.25f);
 	}
 
+	@Nonnull
 	public IParticleRenderType getRenderType() {
 		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
@@ -57,24 +60,24 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		if (this.age++ >= this.maxAge) {
 			this.setExpired();
 		} else {
-			if (source.airCurrent == null || !source.airCurrent.bounds.grow(.25f).contains(posX, posY, posZ)) {
+			if (source.getAirCurrent() == null || !source.getAirCurrent().bounds.grow(.25f).contains(posX, posY, posZ)) {
 				dissipate();
 				return;
 			}
 
-			Vec3d directionVec = new Vec3d(source.airCurrent.direction.getDirectionVec());
+			Vec3d directionVec = new Vec3d(source.getAirCurrent().direction.getDirectionVec());
 			Vec3d motion = directionVec.scale(1 / 8f);
-			if (!source.airCurrent.pushing)
+			if (!source.getAirCurrent().pushing)
 				motion = motion.scale(-1);
 
 			double distance = new Vec3d(posX, posY, posZ).subtract(VecHelper.getCenterOf(source.getPos()))
 					.mul(directionVec).length() - .5f;
-			if (distance > source.airCurrent.maxDistance + 1 || distance < -.25f) {
+			if (distance > source.getAirCurrent().maxDistance + 1 || distance < -.25f) {
 				dissipate();
 				return;
 			}
-			motion = motion.scale(source.airCurrent.maxDistance - (distance - 1f)).scale(.5f);
-			selectSprite((int) MathHelper.clamp((distance / source.airCurrent.maxDistance) * 8 + world.rand.nextInt(4),
+			motion = motion.scale(source.getAirCurrent().maxDistance - (distance - 1f)).scale(.5f);
+			selectSprite((int) MathHelper.clamp((distance / source.getAirCurrent().maxDistance) * 8 + world.rand.nextInt(4),
 					0, 7));
 
 			morphType(distance);
@@ -84,8 +87,8 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 			motionZ = motion.z;
 
 			if (this.onGround) {
-				this.motionX *= (double) 0.7F;
-				this.motionZ *= (double) 0.7F;
+				this.motionX *= 0.7;
+				this.motionZ *= 0.7;
 			}
 			this.move(this.motionX, this.motionY, this.motionZ);
 
@@ -94,7 +97,9 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 	}
 
 	public void morphType(double distance) {
-		InWorldProcessing.Type type = source.airCurrent.getSegmentAt((float) distance);
+		if(source.getAirCurrent() == null)
+			return;
+		InWorldProcessing.Type type = source.getAirCurrent().getSegmentAt((float) distance);
 
 		if (type == InWorldProcessing.Type.SPLASHING) {
 			setColor(ColorHelper.mixColors(0x4499FF, 0x2277FF, world.rand.nextFloat()));
@@ -162,9 +167,9 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		public Particle makeParticle(AirFlowParticleData data, World worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
 			TileEntity te = worldIn.getTileEntity(new BlockPos(data.posX, data.posY, data.posZ));
-			if (!(te instanceof EncasedFanTileEntity))
+			if (!(te instanceof IAirCurrentSource))
 				te = null;
-			return new AirFlowParticle(worldIn, (EncasedFanTileEntity) te, x, y, z, this.spriteSet);
+			return new AirFlowParticle(worldIn, (IAirCurrentSource) te, x, y, z, this.spriteSet);
 		}
 	}
 

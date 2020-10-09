@@ -411,7 +411,7 @@ public class BeltInventory {
 			if (Math.abs(position - transforted.beltPosition) >= maxDistanceToPosition)
 				continue;
 			TransportedResult result = processFunction.apply(transforted);
-			if (result.didntChangeFrom(stackBefore))
+			if (result == null|| result.didntChangeFrom(stackBefore))
 				continue;
 
 			dirty = true;
