@@ -124,19 +124,18 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 	private float calcRange() {
 		TileEntity te = world.getTileEntity(fanPos);
-		if (!(te instanceof EncasedFanTileEntity))
+		if (!(te instanceof IAirCurrentSource))
 			return 0;
 
-		EncasedFanTileEntity fan = (EncasedFanTileEntity) te;
-		if (fan.isGenerator)
+		IAirCurrentSource source = (IAirCurrentSource) te;
+		if (source instanceof EncasedFanTileEntity && ((EncasedFanTileEntity) source).isGenerator)
 			return 0;
-		if (fan.airCurrent == null)
+		if (source.getAirCurrent() == null)
 			return 0;
-		if (fan.getSpeed() == 0)
+		if (source.getSpeed() == 0)
 			return 0;
-		pushing = fan.getAirFlowDirection() == fan.getBlockState()
-			.get(EncasedFanBlock.FACING);
-		return fan.getMaxDistance();
+		pushing = source.getAirFlowDirection() == source.getAirflowOriginSide();
+		return source.getMaxDistance();
 	}
 
 	@Override

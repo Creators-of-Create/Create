@@ -23,7 +23,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -41,12 +40,12 @@ import net.minecraft.world.World;
 
 public class AirCurrent {
 
-	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
+	private static final DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
 		.setFireDamage();
-	private static DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
+	private static final DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
 		.setFireDamage();
 
-	public final EncasedFanTileEntity source;
+	public final IAirCurrentSource source;
 	public AxisAlignedBB bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	public List<AirCurrentSegment> segments = new ArrayList<>();
 	public Direction direction;
@@ -57,14 +56,16 @@ public class AirCurrent {
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
-	public AirCurrent(EncasedFanTileEntity source) {
+	public AirCurrent(IAirCurrentSource source) {
 		this.source = source;
 	}
 
 	public void tick() {
+		if (direction == null)
+			rebuild();
 		World world = source.getWorld();
 		Direction facing = direction;
-		if (world.isRemote) {
+		if (world != null && world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
 			Vector3d pos = VecHelper.getCenterOf(source.getPos())
 				.add(Vector3d.of(facing.getDirectionVec()).scale(offset));
@@ -160,8 +161,7 @@ public class AirCurrent {
 			return;
 		}
 		
-		direction = source.getBlockState()
-			.get(BlockStateProperties.FACING);
+		direction = source.getAirflowOriginSide();
 		pushing = source.getAirFlowDirection() == direction;
 		maxDistance = source.getMaxDistance();
 

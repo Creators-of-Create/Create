@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
@@ -178,7 +179,7 @@ public class DepotTileEntity extends SmartTileEntity {
 		TransportedItemStack transportedItemStack = heldItem;
 		ItemStack stackBefore = transportedItemStack.stack.copy();
 		TransportedResult result = processFunction.apply(transportedItemStack);
-		if (result.didntChangeFrom(stackBefore))
+		if (result == null || result.didntChangeFrom(stackBefore))
 			return;
 
 		dirty = true;
