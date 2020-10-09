@@ -50,7 +50,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 	@Override
 	public void tick() {
-		if (source == null || source.isRemoved()) {
+		if (source == null || source.isSourceRemoved()) {
 			dissipate();
 			return;
 		}
@@ -70,7 +70,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 			if (!source.getAirCurrent().pushing)
 				motion = motion.scale(-1);
 
-			double distance = new Vec3d(posX, posY, posZ).subtract(VecHelper.getCenterOf(source.getPos()))
+			double distance = new Vec3d(posX, posY, posZ).subtract(VecHelper.getCenterOf(source.getAirCurrentPos()))
 					.mul(directionVec).length() - .5f;
 			if (distance > source.getAirCurrent().maxDistance + 1 || distance < -.25f) {
 				dissipate();
