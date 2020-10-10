@@ -14,6 +14,11 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+
 
 @MethodsReturnNonnullByDefault
 public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {
@@ -94,6 +99,17 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		return airCurrent;
 	}
 
+	@Nullable
+	@Override
+	public World getAirCurrentWorld() {
+		return world;
+	}
+
+	@Override
+	public BlockPos getAirCurrentPos() {
+		return pos;
+	}
+
 	@Override
 	public Direction getAirflowOriginSide() {
 		return this.getBlockState()
@@ -108,6 +124,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		Direction facing = getBlockState().get(BlockStateProperties.FACING);
 		speed = convertToDirection(speed, facing);
 		return speed > 0 ? facing : facing.getOpposite();
+	}
+
+	@Override
+	public boolean isSourceRemoved() {
+		return removed;
 	}
 
 	@Override

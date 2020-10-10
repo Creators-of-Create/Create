@@ -63,14 +63,14 @@ public class AirCurrent {
 	public void tick() {
 		if (direction == null)
 			rebuild();
-		World world = source.getWorld();
+		World world = source.getAirCurrentWorld();
 		Direction facing = direction;
 		if (world != null && world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
-			Vector3d pos = VecHelper.getCenterOf(source.getPos())
+			Vector3d pos = VecHelper.getCenterOf(source.getAirCurrentPos())
 				.add(Vector3d.of(facing.getDirectionVec()).scale(offset));
 			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
-				world.addParticle(new AirFlowParticleData(source.getPos()), pos.x, pos.y, pos.z, 0, 0, 0);
+				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
@@ -81,7 +81,7 @@ public class AirCurrent {
 				continue;
 			}
 
-			Vector3d center = VecHelper.getCenterOf(source.getPos());
+			Vector3d center = VecHelper.getCenterOf(source.getAirCurrentPos());
 			Vector3i flow = (pushing ? facing : facing.getOpposite()).getDirectionVec();
 
 			float sneakModifier = entity.isSneaking() ? 4096f : 512f;
@@ -165,8 +165,8 @@ public class AirCurrent {
 		pushing = source.getAirFlowDirection() == direction;
 		maxDistance = source.getMaxDistance();
 
-		World world = source.getWorld();
-		BlockPos start = source.getPos();
+		World world = source.getAirCurrentWorld();
+		BlockPos start = source.getAirCurrentPos();
 		float max = this.maxDistance;
 		Direction facing = direction;
 		Vector3d directionVec = Vector3d.of(facing.getDirectionVec());
@@ -269,13 +269,13 @@ public class AirCurrent {
 
 	public void findEntities() {
 		caughtEntities.clear();
-		caughtEntities = source.getWorld()
+		caughtEntities = source.getAirCurrentWorld()
 			.getEntitiesWithinAABBExcludingEntity(null, bounds);
 	}
 
 	public void findAffectedHandlers() {
-		World world = source.getWorld();
-		BlockPos start = source.getPos();
+		World world = source.getAirCurrentWorld();
+		BlockPos start = source.getAirCurrentPos();
 		affectedItemHandlers.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
 			Type type = getSegmentAt(i);

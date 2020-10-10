@@ -16,9 +16,9 @@ public interface IAirCurrentSource {
 	AirCurrent getAirCurrent();
 
 	@Nullable
-	World getWorld();
+	World getAirCurrentWorld();
 
-	BlockPos getPos();
+	BlockPos getAirCurrentPos();
 
 	float getSpeed();
 
@@ -36,5 +36,5 @@ public interface IAirCurrentSource {
 		return this.getSpeed() > 0 ? pushDistance : pullDistance;
 	}
 
-	boolean isRemoved();
+	boolean isSourceRemoved();
 }
