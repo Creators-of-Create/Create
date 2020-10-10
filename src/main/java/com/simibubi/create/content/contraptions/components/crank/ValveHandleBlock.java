@@ -34,11 +34,6 @@ public class ValveHandleBlock extends HandCrankBlock {
 	}
 	
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.VALVE_HANDLE.get(state.get(FACING));
-	}
-	
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AllBlockPartials getRenderedHandle() {
 		return null;
