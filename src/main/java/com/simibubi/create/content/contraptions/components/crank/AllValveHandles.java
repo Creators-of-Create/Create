@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllTags;
-import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -28,7 +27,6 @@ public class AllValveHandles {
 				.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 					.withExistingParent(type + "_valve_handle", p.modLoc("block/valve_handle"))
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + type))))
-				.transform(StressConfigDefaults.setCapacity(32.0))
 				.tag(AllTags.AllBlockTags.BRITTLE.tag)
 				.simpleItem()
 				.register();

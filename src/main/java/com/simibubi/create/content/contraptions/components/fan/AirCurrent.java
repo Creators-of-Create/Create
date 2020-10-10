@@ -23,7 +23,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -41,12 +40,12 @@ import net.minecraft.world.World;
 
 public class AirCurrent {
 
-	private static DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
+	private static final DamageSource damageSourceFire = new DamageSource("create.fan_fire").setDifficultyScaled()
 		.setFireDamage();
-	private static DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
+	private static final DamageSource damageSourceLava = new DamageSource("create.fan_lava").setDifficultyScaled()
 		.setFireDamage();
 
-	public final EncasedFanTileEntity source;
+	public final IAirCurrentSource source;
 	public AxisAlignedBB bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 	public List<AirCurrentSegment> segments = new ArrayList<>();
 	public Direction direction;
@@ -57,19 +56,21 @@ public class AirCurrent {
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
-	public AirCurrent(EncasedFanTileEntity source) {
+	public AirCurrent(IAirCurrentSource source) {
 		this.source = source;
 	}
 
 	public void tick() {
-		World world = source.getWorld();
+		if (direction == null)
+			rebuild();
+		World world = source.getAirCurrentWorld();
 		Direction facing = direction;
-		if (world.isRemote) {
+		if (world != null && world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
-			Vec3d pos = VecHelper.getCenterOf(source.getPos())
+			Vec3d pos = VecHelper.getCenterOf(source.getAirCurrentPos())
 				.add(new Vec3d(facing.getDirectionVec()).scale(offset));
 			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
-				world.addParticle(new AirFlowParticleData(source.getPos()), pos.x, pos.y, pos.z, 0, 0, 0);
+				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
@@ -80,7 +81,7 @@ public class AirCurrent {
 				continue;
 			}
 
-			Vec3d center = VecHelper.getCenterOf(source.getPos());
+			Vec3d center = VecHelper.getCenterOf(source.getAirCurrentPos());
 			Vec3i flow = (pushing ? facing : facing.getOpposite()).getDirectionVec();
 
 			float sneakModifier = entity.isSneaking() ? 4096f : 512f;
@@ -157,17 +158,16 @@ public class AirCurrent {
 			return;
 		}
 		
-		direction = source.getBlockState()
-			.get(BlockStateProperties.FACING);
+		direction = source.getAirflowOriginSide();
 		pushing = source.getAirFlowDirection() == direction;
 		maxDistance = source.getMaxDistance();
 
-		World world = source.getWorld();
-		BlockPos start = source.getPos();
+		World world = source.getAirCurrentWorld();
+		BlockPos start = source.getAirCurrentPos();
 		float max = this.maxDistance;
-		Direction facing = direction;
-		Vec3d directionVec = new Vec3d(facing.getDirectionVec());
-		maxDistance = getFlowLimit(world, start, max, facing);
+		Vec3d directionVec = new Vec3d(direction.getDirectionVec());
+		// if (source instanceof EncasedFanTileEntity) // debug
+		maxDistance = getFlowLimit(world, start, max, direction);
 
 		// Determine segments with transported fluids/gases
 		AirCurrentSegment currentSegment = new AirCurrentSegment();
@@ -266,13 +266,13 @@ public class AirCurrent {
 
 	public void findEntities() {
 		caughtEntities.clear();
-		caughtEntities = source.getWorld()
+		caughtEntities = source.getAirCurrentWorld()
 			.getEntitiesWithinAABBExcludingEntity(null, bounds);
 	}
 
 	public void findAffectedHandlers() {
-		World world = source.getWorld();
-		BlockPos start = source.getPos();
+		World world = source.getAirCurrentWorld();
+		BlockPos start = source.getAirCurrentPos();
 		affectedItemHandlers.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
 			Type type = getSegmentAt(i);

@@ -43,6 +43,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.Nullable;
+
 public class InWorldProcessing {
 
 	public static class SplashingInv extends RecipeWrapper {
@@ -295,8 +297,8 @@ public class InWorldProcessing {
 		return stacks;
 	}
 
-	public static void spawnParticlesForProcessing(World world, Vec3d vec, Type type) {
-		if (!world.isRemote)
+	public static void spawnParticlesForProcessing(@Nullable World world, Vec3d vec, Type type) {
+		if (world == null || !world.isRemote)
 			return;
 		if (world.rand.nextInt(8) != 0)
 			return;

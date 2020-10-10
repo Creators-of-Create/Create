@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
@@ -145,9 +146,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateAddedStressCapacity() {
-		float capacity = (float) AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(getBlockState().getBlock());
+		float capacity = (float) AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(getStressConfigKey());
 		this.lastCapacityProvided = capacity;
 		return capacity;
+	}
+
+	protected Block getStressConfigKey() {
+		return getBlockState().getBlock();
 	}
 
 	public float calculateStressApplied() {
@@ -402,7 +407,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return false;
 	}
 
-	@Override
+	@Override	
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
 		float stressAtBase = calculateStressApplied();

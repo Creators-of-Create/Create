@@ -5,17 +5,22 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CKinetics;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
+import javax.annotation.Nullable;
+
+
+@MethodsReturnNonnullByDefault
+public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {
 
 	public AirCurrent airCurrent;
 	protected int airCurrentUpdateCooldown;
@@ -88,15 +93,29 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		return true;
 	}
 
-	public float getMaxDistance() {
-		float speed = Math.abs(this.getSpeed());
-		CKinetics config = AllConfigs.SERVER.kinetics;
-		float distanceFactor = Math.min(speed / config.fanRotationArgmax.get(), 1);
-		float pushDistance = MathHelper.lerp(distanceFactor, 3, config.fanPushDistance.get());
-		float pullDistance = MathHelper.lerp(distanceFactor, 3f, config.fanPullDistance.get());
-		return this.getSpeed() > 0 ? pushDistance : pullDistance;
+	@Override
+	public AirCurrent getAirCurrent() {
+		return airCurrent;
 	}
 
+	@Nullable
+	@Override
+	public World getAirCurrentWorld() {
+		return world;
+	}
+
+	@Override
+	public BlockPos getAirCurrentPos() {
+		return pos;
+	}
+
+	@Override
+	public Direction getAirflowOriginSide() {
+		return this.getBlockState()
+			.get(EncasedFanBlock.FACING);
+	}
+
+	@Override
 	public Direction getAirFlowDirection() {
 		float speed = getSpeed();
 		if (speed == 0)
@@ -104,6 +123,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity {
 		Direction facing = getBlockState().get(BlockStateProperties.FACING);
 		speed = convertToDirection(speed, facing);
 		return speed > 0 ? facing : facing.getOpposite();
+	}
+
+	@Override
+	public boolean isSourceRemoved() {
+		return removed;
 	}
 
 	@Override

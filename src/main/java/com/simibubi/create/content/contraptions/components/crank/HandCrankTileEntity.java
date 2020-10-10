@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 
 import net.minecraft.block.Block;
@@ -67,4 +68,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		}
 	}
 
+	@Override
+	protected Block getStressConfigKey() {
+		return AllBlocks.HAND_CRANK.get();
+	}
 }
