@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -28,6 +29,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 
 	public DepotBlock(Properties p_i48440_1_) {
@@ -128,6 +134,20 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 		itemEntity.setItem(remainder);
 		if (remainder.isEmpty())
 			itemEntity.remove();
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		try {
+			return ItemHelper.calcRedstoneFromInventory(getTileEntity(worldIn, pos).itemHandler);
+		} catch (TileEntityException ignored) {
+		}
+		return 0;
 	}
 
 }
