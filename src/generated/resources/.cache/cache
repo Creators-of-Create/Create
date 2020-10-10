@@ -368,6 +368,7 @@ a3a11524cd3515fc01d905767b4b7ea782adaf03 assets/create/blockstates/yellow_seat.j
 7f39521b211441f5c3e06d60c5978cebe16cacfb assets/create/blockstates/zinc_block.json
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
 c113d0a180880243538e9b1c3019c863df3fbdc1 assets/create/lang/en_ud.json
+<<<<<<< HEAD
 a4cd12907a1ddfd60883077b2d11c5459d436016 assets/create/lang/en_us.json
 063195daed96a4420588e6d6d13f4a9b1f099ff4 assets/create/lang/unfinished/de_de.json
 30da89bafac8a5ea4d82903928ba4d2a63385117 assets/create/lang/unfinished/fr_fr.json
@@ -384,6 +385,24 @@ b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_windo
 1358ff546e99004444fccca5355853d1738ef191 assets/create/models/block/acacia_window_pane_post.json
 bd33b944ec6ad89850a1d275b3d2843fe6f831cc assets/create/models/block/acacia_window_pane_side.json
 b272035cd746364a0bd3bf13061f51190e9b46d6 assets/create/models/block/acacia_window_pane_side_alt.json
+=======
+ee39bea21ca57e7b61f1af0d609d63cbbf8c8425 assets/create/lang/en_us.json
+233e7fae9df99bcb79d3e08f57e6d5e02bdf49ad assets/create/lang/unfinished/de_de.json
+d56a40fa6097af1badd3ab24bbcfa191ea5074ca assets/create/lang/unfinished/fr_fr.json
+1945bf0aebfc97e6f2ee1ac7e4dd754e7fd19fa5 assets/create/lang/unfinished/it_it.json
+3f76057ebb1c0e9a5c285fb79c1ef72ddec83a32 assets/create/lang/unfinished/ja_jp.json
+504d30d63a19e117c51be32f16c778bc1a7114c7 assets/create/lang/unfinished/ko_kr.json
+654efcd49befcac96bd632e65f0a36247bd0fc2e assets/create/lang/unfinished/nl_nl.json
+2c0f9c853b85a47b91877cd7b89faddc918f0170 assets/create/lang/unfinished/pt_br.json
+7193bf2573473b3fa8ffd7c8a6dd58ce069201a7 assets/create/lang/unfinished/ru_ru.json
+28b75a0dd8c021a7e385b3479b91b1edd47f13f4 assets/create/lang/unfinished/zh_cn.json
+846200eb548d3bfa2e77b41039de159b4b6cfb45 assets/create/models/block/acacia_window.json
+1930fa3a3c98d53dd19e4ee7f55bc27fd47aa281 assets/create/models/block/acacia_window_pane_noside.json
+1763ea2c9b981d187f5031ba608f3d5d3be3986a assets/create/models/block/acacia_window_pane_noside_alt.json
+7d23c8e4543108f5f53b78ccb4908f7a5bb76c54 assets/create/models/block/acacia_window_pane_post.json
+3bdcc6bd616a179ffc22e66307aab538e9bcb75f assets/create/models/block/acacia_window_pane_side.json
+7b5b6809e3ef685a497ba15b549d3918aeb6c135 assets/create/models/block/acacia_window_pane_side_alt.json
+>>>>>>> mc1.15/dev
 7c81658c8839fdb23429e54f847c2a0aee0e866e assets/create/models/block/adjustable_pulley_end_horizontal.json
 20cfb751fc395a0e07c66ce87ab035207f9d1e0e assets/create/models/block/adjustable_pulley_end_horizontal_powered.json
 bb02f94b260be8fe1944b801cc4050b4d213f1df assets/create/models/block/adjustable_pulley_end_vertical.json

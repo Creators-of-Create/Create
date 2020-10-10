@@ -142,10 +142,6 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public static boolean isFrozen() {
-		return AllConfigs.SERVER.control.freezeContraptions.get();
-	}
-
 	protected static MovementBehaviour getMovement(BlockState state) {
 		Block block = state.getBlock();
 		if (!AllMovementBehaviours.hasMovementBehaviour(block))
@@ -337,9 +333,14 @@ public abstract class Contraption {
 				frontier.add(otherPartPos);
 		}
 
+		// Cart assemblers attach themselves
+		BlockState stateBelow = world.getBlockState(pos.down());
+		if (!visited.contains(pos.down()) && AllBlocks.CART_ASSEMBLER.has(stateBelow))
+			frontier.add(pos.down());
+
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
 
-		// Slime blocks drag adjacent blocks if possible
+		// Slime blocks and super glue drag adjacent blocks if possible
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
 		for (Direction offset : Direction.values()) {
 			BlockPos offsetPos = pos.offset(offset);
@@ -360,7 +361,6 @@ public abstract class Contraption {
 
 			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
 				frontier.add(offsetPos);
-
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
 		}
@@ -764,7 +764,7 @@ public abstract class Contraption {
 			ctx.position = null;
 			ctx.motion = Vector3d.ZERO;
 			ctx.relativeMotion = Vector3d.ZERO;
-			ctx.rotation = Vector3d.ZERO;
+			ctx.rotation = v -> v;
 		});
 	}
 

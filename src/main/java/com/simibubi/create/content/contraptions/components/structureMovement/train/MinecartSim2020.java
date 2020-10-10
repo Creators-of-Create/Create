@@ -2,16 +2,15 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import static net.minecraft.entity.Entity.horizontalMag;
 
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.state.properties.RailShape;
@@ -21,37 +20,37 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraftforge.common.util.LazyOptional;
 
+/**
+ * Useful methods for dealing with Minecarts
+ *
+ */
 public class MinecartSim2020 {
-
 	private static final Map<RailShape, Pair<Vector3i, Vector3i>> MATRIX =
-		Util.make(Maps.newEnumMap(RailShape.class), (p_226574_0_) -> {
-			Vector3i vec3i = Direction.WEST.getDirectionVec();
-			Vector3i vec3i1 = Direction.EAST.getDirectionVec();
-			Vector3i vec3i2 = Direction.NORTH.getDirectionVec();
-			Vector3i vec3i3 = Direction.SOUTH.getDirectionVec();
-			Vector3i vec3i4 = vec3i.down();
-			Vector3i vec3i5 = vec3i1.down();
-			Vector3i vec3i6 = vec3i2.down();
-			Vector3i vec3i7 = vec3i3.down();
-			p_226574_0_.put(RailShape.NORTH_SOUTH, Pair.of(vec3i2, vec3i3));
-			p_226574_0_.put(RailShape.EAST_WEST, Pair.of(vec3i, vec3i1));
-			p_226574_0_.put(RailShape.ASCENDING_EAST, Pair.of(vec3i4, vec3i1));
-			p_226574_0_.put(RailShape.ASCENDING_WEST, Pair.of(vec3i, vec3i5));
-			p_226574_0_.put(RailShape.ASCENDING_NORTH, Pair.of(vec3i2, vec3i7));
-			p_226574_0_.put(RailShape.ASCENDING_SOUTH, Pair.of(vec3i6, vec3i3));
-			p_226574_0_.put(RailShape.SOUTH_EAST, Pair.of(vec3i3, vec3i1));
-			p_226574_0_.put(RailShape.SOUTH_WEST, Pair.of(vec3i3, vec3i));
-			p_226574_0_.put(RailShape.NORTH_WEST, Pair.of(vec3i2, vec3i));
-			p_226574_0_.put(RailShape.NORTH_EAST, Pair.of(vec3i2, vec3i1));
+		Util.make(Maps.newEnumMap(RailShape.class), (map) -> {
+			Vector3i west = Direction.WEST.getDirectionVec();
+			Vector3i east = Direction.EAST.getDirectionVec();
+			Vector3i north = Direction.NORTH.getDirectionVec();
+			Vector3i south = Direction.SOUTH.getDirectionVec();
+			map.put(RailShape.NORTH_SOUTH, Pair.of(north, south));
+			map.put(RailShape.EAST_WEST, Pair.of(west, east));
+			map.put(RailShape.ASCENDING_EAST, Pair.of(west.down(), east));
+			map.put(RailShape.ASCENDING_WEST, Pair.of(west, east.down()));
+			map.put(RailShape.ASCENDING_NORTH, Pair.of(north, south.down()));
+			map.put(RailShape.ASCENDING_SOUTH, Pair.of(north.down(), south));
+			map.put(RailShape.SOUTH_EAST, Pair.of(south, east));
+			map.put(RailShape.SOUTH_WEST, Pair.of(south, west));
+			map.put(RailShape.NORTH_WEST, Pair.of(north, west));
+			map.put(RailShape.NORTH_EAST, Pair.of(north, east));
 		});
 
 	public static Vector3d predictMotionOf(AbstractMinecartEntity cart) {
-		if (cart instanceof FurnaceMinecartEntity) {
-			return cart.getPositionVec()
-				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
-		}
-		return cart.getMotion().scale(1.03f);
+//		if (cart instanceof FurnaceMinecartEntity) {
+//			return cart.getPositionVec()
+//				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
+//		}
+		return cart.getMotion().scale(1f);
 //		if (cart instanceof ContainerMinecartEntity) {
 //			ContainerMinecartEntity containerCart = (ContainerMinecartEntity) cart;
 //			float f = 0.98F;
@@ -71,15 +70,9 @@ public class MinecartSim2020 {
 		if (c instanceof FurnaceMinecartEntity)
 			return MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushX, 0)
 				&& MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushZ, 0);
-		List<Entity> passengers = c.getPassengers();
-		if (passengers.isEmpty())
-			return true;
-		for (Entity entity : passengers) {
-			if (entity instanceof ContraptionEntity) {
-				ContraptionEntity contraptionEntity = (ContraptionEntity) entity;
-				return !contraptionEntity.isStalled();
-			}
-		}
+		LazyOptional<MinecartController> capability = c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+		if (capability.isPresent() && capability.orElse(null).isStalled()) 
+			return false;
 		return true;
 	}
 
@@ -216,6 +209,27 @@ public class MinecartSim2020 {
 //				furnaceCart.setMotion(Vector3d.mul(0.8D, 0.0D, 0.8D)
 //					.add(furnaceCart.pushX, 0.0D, furnaceCart.pushZ));
 //			}
+		}
+	}
+
+	public static Vector3d getRailVec(RailShape shape) {
+		switch (shape) {
+		case ASCENDING_NORTH:
+		case ASCENDING_SOUTH:
+		case NORTH_SOUTH:
+			return new Vector3d(0, 0, 1);
+		case ASCENDING_EAST:
+		case ASCENDING_WEST:
+		case EAST_WEST:
+			return new Vector3d(1, 0, 0);
+		case NORTH_EAST:
+		case SOUTH_WEST:
+			return new Vector3d(1, 0, 1).normalize();
+		case NORTH_WEST:
+		case SOUTH_EAST:
+			return new Vector3d(1, 0, -1).normalize();
+		default:
+			return new Vector3d(0, 1, 0);
 		}
 	}
 

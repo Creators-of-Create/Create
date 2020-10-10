@@ -5,6 +5,10 @@ import static net.minecraft.util.math.MathHelper.lerp;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -24,13 +28,24 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class MinecartCouplingRenderer {
+public class CouplingRenderer {
 
-	public static void renderCoupling(MatrixStack ms, IRenderTypeBuffer buffer, MinecartCoupling coupling) {
-		if (!coupling.areBothEndsPresent())
-			return;
+	public static void renderAll(MatrixStack ms, IRenderTypeBuffer buffer) {
+		CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().world,
+			c -> {
+				if (c.getFirst().hasContraptionCoupling(true))
+					return;
+				CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart));	
+			});
+	}
+
+	public static void tickDebugModeRenders() {
+		if (KineticDebugger.isActive())
+			CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().world, CouplingRenderer::doDebugRender);
+	}
+
+	public static void renderCoupling(MatrixStack ms, IRenderTypeBuffer buffer, Couple<AbstractMinecartEntity> carts) {
 		ClientWorld world = Minecraft.getInstance().world;
-		Couple<AbstractMinecartEntity> carts = coupling.asCouple();
 		Couple<Integer> lightValues =
 			carts.map(c -> WorldRenderer.getLightmapCoordinates(world, new BlockPos(c.getBoundingBox()
 				.getCenter())));
@@ -192,6 +207,31 @@ public class MinecartCouplingRenderer {
 				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180));
 		}
 
+	}
+
+	public static void doDebugRender(Couple<MinecartController> c) {
+		int yOffset = 1;
+		MinecartController first = c.getFirst();
+		AbstractMinecartEntity mainCart = first.cart();
+		Vector3d mainCenter = mainCart.getPositionVec()
+			.add(0, yOffset, 0);
+		Vector3d connectedCenter = c.getSecond()
+			.cart()
+			.getPositionVec()
+			.add(0, yOffset, 0);
+
+		int color = ColorHelper.mixColors(0xabf0e9, 0xee8572, (float) MathHelper
+			.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
+
+		CreateClient.outliner.showLine(mainCart.getEntityId() + "", mainCenter, connectedCenter)
+			.colored(color)
+			.lineWidth(1 / 8f);
+
+		Vector3d point = mainCart.getPositionVec()
+			.add(0, yOffset, 0);
+		CreateClient.outliner.showLine(mainCart.getEntityId() + "_dot", point, point.add(0, 1 / 128f, 0))
+			.colored(0xffffff)
+			.lineWidth(1 / 4f);
 	}
 
 }

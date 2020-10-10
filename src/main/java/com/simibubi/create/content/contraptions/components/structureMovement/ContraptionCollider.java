@@ -3,9 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import static net.minecraft.entity.Entity.collideBoundingBoxHeuristically;
 import static net.minecraft.entity.Entity.horizontalMag;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -33,6 +31,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -51,28 +50,11 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class ContraptionCollider {
 
-	public static void runCollisions(World world) {
-		List<WeakReference<ContraptionEntity>> list = ContraptionHandler.activeContraptions.getIfPresent(world);
-		if (list == null)
-			return;
-		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
-			WeakReference<ContraptionEntity> weakReference = iterator.next();
-			ContraptionEntity contraptionEntity = weakReference.get();
-			if (contraptionEntity == null) {
-				iterator.remove();
-				continue;
-			}
-			if (!contraptionEntity.isAlive())
-				continue;
-			collideEntities(contraptionEntity);
-		}
-	}
-
 	enum PlayerType {
 		NONE, CLIENT, REMOTE, SERVER
 	}
 
-	private static void collideEntities(ContraptionEntity contraptionEntity) {
+	static void collideEntities(ContraptionEntity contraptionEntity) {
 		World world = contraptionEntity.getEntityWorld();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
@@ -89,8 +71,18 @@ public class ContraptionCollider {
 
 		Vector3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 		double conRotX = contraptionRotation.x;
-		double conRotY = contraptionRotation.y;
+		double conRotY = contraptionRotation.y + contraptionEntity.getInitialYaw();
 		double conRotZ = contraptionRotation.z;
+
+		double reverseYaw = 0;
+
+		// Collision algorithm does not support rotation around two axes -> rotate
+		// entities manually
+		if (conRotZ != 0 && contraptionRotation.y != 0) {
+			reverseYaw = contraptionRotation.y;
+			conRotY = contraptionEntity.getInitialYaw();
+		}
+
 		Vector3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vector3d.ZERO.add(0, 0.5, 0);
 		boolean axisAlignedCollision = contraptionRotation.equals(Vector3d.ZERO);
 		Matrix3d rotation = null;
@@ -118,13 +110,15 @@ public class ContraptionCollider {
 			Vector3d centerY = new Vector3d(0, entityBounds.getYSize() / 2, 0);
 			Vector3d motion = entity.getMotion();
 
-			Vector3d position = entityPosition.subtract(contraptionCentreOffset)
-				.add(centerY);
+			Vector3d position = entityPosition;
+			position = position.subtract(contraptionCentreOffset);
+			position = position.add(centerY);
 			position = position.subtract(contraptionPosition);
+			position = VecHelper.rotate(position, -reverseYaw, Axis.Y);
 			position = rotation.transform(position);
-			position = position.add(centerOfBlock)
-				.subtract(centerY)
-				.subtract(entityPosition);
+			position = position.add(centerOfBlock);
+			position = position.subtract(centerY);
+			position = position.subtract(entityPosition);
 
 			// Find all potential block shapes to collide with
 			AxisAlignedBB localBB = entityBounds.offset(position)
@@ -209,6 +203,7 @@ public class ContraptionCollider {
 			motionResponse = rotation.transform(motionResponse)
 				.add(contraptionMotion);
 			totalResponse = rotation.transform(totalResponse);
+			totalResponse = VecHelper.rotate(totalResponse, reverseYaw, Axis.Y);
 			rotation.transpose();
 
 			if (futureCollision.isTrue() && playerType != PlayerType.SERVER) {
@@ -224,7 +219,7 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				entity.setOnGround(true);
 				contraptionEntity.collidingEntities.add(entity);
-				if (playerType != PlayerType.SERVER)
+				if (playerType != PlayerType.SERVER) 
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
@@ -253,6 +248,7 @@ public class ContraptionCollider {
 				continue;
 			}
 
+			
 			totalResponse = totalResponse.add(contactPointMotion);
 			Vector3d allowedMovement = getAllowedMovement(totalResponse, entity);
 			contraptionEntity.collidingEntities.add(entity);
@@ -263,7 +259,7 @@ public class ContraptionCollider {
 
 			if (playerType != PlayerType.CLIENT)
 				continue;
-			
+
 			double d0 = entity.getX() - entity.prevPosX - contactPointMotion.x;
 			double d1 = entity.getZ() - entity.prevPosZ - contactPointMotion.z;
 			float limbSwing = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
@@ -357,8 +353,6 @@ public class ContraptionCollider {
 	}
 
 	public static boolean collideBlocks(ContraptionEntity contraptionEntity) {
-		if (Contraption.isFrozen())
-			return true;
 		if (!contraptionEntity.collisionEnabled())
 			return false;
 

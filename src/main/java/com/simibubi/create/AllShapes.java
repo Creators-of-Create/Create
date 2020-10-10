@@ -49,6 +49,7 @@ public class AllShapes {
 			.forDirectional(),
 		CART_ASSEMBLER = shape(0, 12, 0, 16, 16, 16).add(-2, 0, 1, 18, 14, 15)
 			.forHorizontalAxis(),
+		CART_ASSEMBLER_PLAYER_COLLISION = shape(0, 0, 1, 16, 16, 15).forHorizontalAxis(),
 		STOCKPILE_SWITCH = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 16, 15)
 			.add(0, 14, 0, 16, 16, 16)
 			.add(3, 3, -2, 13, 13, 2)

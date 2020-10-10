@@ -33,13 +33,6 @@ public class MatrixStacker {
 		return multiply(Vector3f.POSITIVE_Z, angle);
 	}
 
-	public MatrixStacker rotateRadians(double angleRoll, double angleYaw, double anglePitch) {
-		rotateX(AngleHelper.deg(angleRoll));
-		rotateY(AngleHelper.deg(angleYaw));
-		rotateZ(AngleHelper.deg(anglePitch));
-		return this;
-	}
-
 	public MatrixStacker centre() {
 		return translate(center);
 	}

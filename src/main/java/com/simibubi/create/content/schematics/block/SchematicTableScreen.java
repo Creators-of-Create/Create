@@ -29,6 +29,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
 	implements IHasContainer<SchematicTableContainer> {
 

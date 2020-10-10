@@ -22,7 +22,7 @@ public abstract class ConfigBase {
 	protected List<ConfigBase> children;
 
 	protected void registerAll(final ForgeConfigSpec.Builder builder) {
-		for (CValue<?, ?> cValue : allValues)
+		for (CValue<?, ?> cValue : allValues) 
 			cValue.register(builder);
 	}
 
@@ -75,9 +75,10 @@ public abstract class ConfigBase {
 		T config = constructor.get();
 		new ConfigGroup(config.getName(), depth, comment);
 		new CValue<Boolean, ForgeConfigSpec.BooleanValue>(config.getName(), builder -> {
+			config.depth = depth;
 			config.registerAll(builder);
-			if (config.depth > 0)
-				builder.pop(config.depth);
+			if (config.depth > depth)
+				builder.pop(config.depth - depth);
 			return null;
 		});
 		if (children == null)
@@ -124,6 +125,10 @@ public abstract class ConfigBase {
 		public void set(V value) {
 			this.value.set(value);
 		}
+
+		public String getName() {
+			return name;
+		}
 	}
 
 	/**
@@ -146,7 +151,7 @@ public abstract class ConfigBase {
 				builder.pop(depth - groupDepth);
 			depth = groupDepth;
 			addComments(builder, comment);
-			builder.push(name);
+			builder.push(getName());
 			depth++;
 		}
 

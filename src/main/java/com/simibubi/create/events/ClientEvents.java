@@ -7,10 +7,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.ClientMinecartCouplingHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
@@ -80,8 +82,10 @@ public class ClientEvents {
 		CreateClient.schematicAndQuillHandler.tick();
 		CreateClient.schematicHandler.tick();
 		
-		ContraptionCollider.runCollisions(world);
-		MinecartCouplingHandler.tick(world);
+		ContraptionHandler.tick(world);
+		CapabilityMinecartController.tick(world);
+		CouplingPhysics.tick(world);
+		
 		ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
@@ -92,7 +96,8 @@ public class ClientEvents {
 		EdgeInteractionRenderer.tick();
 		WorldshaperRenderHandler.tick();
 		BlockzapperRenderHandler.tick();
-		ClientMinecartCouplingHandler.tick();
+		CouplingHandlerClient.tick();
+		CouplingRenderer.tickDebugModeRenders();
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
@@ -115,7 +120,7 @@ public class ClientEvents {
 		ms.translate(-view.getX(), -view.getY(), -view.getZ());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		
-		MinecartCouplingHandler.render(ms, buffer);
+		CouplingRenderer.renderAll(ms, buffer);
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);

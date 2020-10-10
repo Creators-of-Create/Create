@@ -121,6 +121,12 @@
 	"create.blockzapper.componentTier.chromatic": "Chromatic",
 	"create.blockzapper.leftClickToSet": "Left-Click a Block to set Material",
 	"create.blockzapper.empty": "Out of Blocks!",
+	
+	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
+	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
+	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
+	"create.minecart_coupling.removed": "Removed all couplings from minecart",
+	"create.minecart_coupling.too_far": "Minecarts are too far apart",
 
 	"create.contraptions.movement_mode": "Movement Mode",
 	"create.contraptions.movement_mode.move_place": "Always Place when Stopped",

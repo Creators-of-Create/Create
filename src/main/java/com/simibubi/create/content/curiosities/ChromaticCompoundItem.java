@@ -6,7 +6,7 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CCuriosities;
+import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -46,7 +46,7 @@ public class ChromaticCompoundItem extends Item {
 	public double getDurabilityForDisplay(ItemStack stack) {
 		int light = stack.getOrCreateTag()
 			.getInt("CollectingLight");
-		return 1 - light / (float) AllConfigs.SERVER.curiosities.lightSourceCountForRefinedRadiance.get();
+		return 1 - light / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get();
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ChromaticCompoundItem extends Item {
 			.getOrCreateTag();
 
 		Vector3d positionVec = entity.getPositionVec();
-		CCuriosities config = AllConfigs.SERVER.curiosities;
+		CRecipes config = AllConfigs.SERVER.recipes;
 		if (world.isRemote) {
 			int light = itemData.getInt("CollectingLight");
 			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {

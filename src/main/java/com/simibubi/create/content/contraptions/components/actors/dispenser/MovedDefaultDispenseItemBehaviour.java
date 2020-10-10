@@ -37,7 +37,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	@Override
 	public ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos) {
 		Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
-		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+		facingVec = context.rotation.apply(facingVec);
 		facingVec.normalize();
 
 		Direction closestToFacing = getClosestFacingDirection(facingVec);

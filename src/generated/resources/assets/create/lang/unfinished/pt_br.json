@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 860",
+	"_": "Missing Localizations: 865",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -646,6 +646,12 @@
 	"create.blockzapper.componentTier.chromatic": "UNLOCALIZED: Chromatic",
 	"create.blockzapper.leftClickToSet": "Botão-Esquerdo em um Bloco para selecionar Material",
 	"create.blockzapper.empty": "Sem Blocos!",
+
+	"create.minecart_coupling.two_couplings_max": "UNLOCALIZED: Minecarts cannot have more than two couplings each",
+	"create.minecart_coupling.unloaded": "UNLOCALIZED: Parts of your train seem to be in unloaded chunks",
+	"create.minecart_coupling.no_loops": "UNLOCALIZED: Couplings cannot form a loop",
+	"create.minecart_coupling.removed": "UNLOCALIZED: Removed all couplings from minecart",
+	"create.minecart_coupling.too_far": "UNLOCALIZED: Minecarts are too far apart",
 
 	"create.contraptions.movement_mode": "UNLOCALIZED: Movement Mode",
 	"create.contraptions.movement_mode.move_place": "UNLOCALIZED: Always Place when Stopped",

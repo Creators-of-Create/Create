@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,7 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 	public void tick(MovementContext context) {
 		super.tick(context);
 		if (context.temporaryData == null || (boolean) context.temporaryData) {
-			Vector3d facingVec = VecHelper.rotate(Vector3d.of(Direction.UP.getDirectionVec()), context.rotation.x, context.rotation.y, context.rotation.z);
+			Vector3d facingVec = context.rotation.apply(Vector3d.of(Direction.UP.getDirectionVec()));
 			facingVec.normalize();
 			if (Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z) == Direction.DOWN)
 				dump(context, facingVec);
@@ -41,16 +40,21 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 	private void dump(MovementContext context, Vector3d facingVec) {
 		getOrReadInventory(context).forEach((key, itemStackHandler) -> {
 			for (int i = 0; i < itemStackHandler.getSlots(); i++) {
-				if (itemStackHandler.getStackInSlot(i).isEmpty())
+				if (itemStackHandler.getStackInSlot(i)
+					.isEmpty())
 					continue;
-				ItemEntity itemEntity = new ItemEntity(context.world, context.position.x, context.position.y, context.position.z, itemStackHandler.getStackInSlot(i));
+				ItemEntity itemEntity = new ItemEntity(context.world, context.position.x, context.position.y,
+					context.position.z, itemStackHandler.getStackInSlot(i));
 				itemEntity.setMotion(facingVec.scale(.05));
 				context.world.addEntity(itemEntity);
 				itemStackHandler.setStackInSlot(i, ItemStack.EMPTY);
 			}
 			context.tileData.put(key, itemStackHandler.serializeNBT());
 		});
-		context.contraption.customRenderTEs.stream().filter(te -> te.getPos().equals(context.localPos) && te instanceof BasinTileEntity).forEach(te -> ((BasinTileEntity) te).readOnlyItems(context.tileData));
+		context.contraption.customRenderTEs.stream()
+			.filter(te -> te.getPos()
+				.equals(context.localPos) && te instanceof BasinTileEntity)
+			.forEach(te -> ((BasinTileEntity) te).readOnlyItems(context.tileData));
 		context.temporaryData = false; // did already dump, so can't any more
 	}
 }

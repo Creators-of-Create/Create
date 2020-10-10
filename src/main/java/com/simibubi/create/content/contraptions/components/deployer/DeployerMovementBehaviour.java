@@ -13,7 +13,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,7 +51,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
 		Vector3d facingVec = Vector3d.of(context.state.get(DeployerBlock.FACING)
 			.getDirectionVec());
-		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+		facingVec = context.rotation.apply(facingVec);
 		Vector3d vec = context.position.subtract(facingVec.scale(2));
 		player.rotationYaw = ContraptionEntity.yawFromVector(facingVec);
 		player.rotationPitch = ContraptionEntity.pitchFromVector(facingVec) - 90;

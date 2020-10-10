@@ -1,12 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
@@ -27,6 +29,7 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -154,18 +157,21 @@ public class MinecartContraptionItem extends Item {
 		CompoundNBT tag = itemstack.getOrCreateTag();
 		if (tag.contains("Contraption")) {
 			CompoundNBT contraptionTag = tag.getCompound("Contraption");
-			float initialAngle = contraptionTag.getFloat("InitialAngle");
+
+			Direction initialOrientation = Direction.SOUTH;
+			if (contraptionTag.contains("InitialOrientation"))
+				initialOrientation = NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class);
+
 			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag);
-			ContraptionEntity contraption;
+			ContraptionEntity contraptionEntity =
+				ContraptionEntity.createMounted(world, mountedContraption, Optional.of(initialOrientation));
 
 			if (newFacing != null)
-				contraption = ContraptionEntity.createMounted(world, mountedContraption, initialAngle, newFacing);
-			else
-				contraption = ContraptionEntity.createMounted(world, mountedContraption, initialAngle);
+				contraptionEntity.reOrientate(newFacing.getAxis() == Axis.X ? newFacing : newFacing.getOpposite());
 
-			contraption.startRiding(cart);
-			contraption.setPosition(cart.getX(), cart.getY(), cart.getZ());
-			world.addEntity(contraption);
+			contraptionEntity.startRiding(cart);
+			contraptionEntity.setPosition(cart.getX(), cart.getY(), cart.getZ());
+			world.addEntity(contraptionEntity);
 		}
 	}
 
@@ -218,7 +224,11 @@ public class MinecartContraptionItem extends Item {
 		tag.remove("UUID");
 		tag.remove("Pos");
 		tag.remove("Motion");
-		tag.putFloat("InitialAngle", entity.getInitialAngle());
+
+		Optional<Direction> initialOrientation = entity.getInitialOrientation();
+		if (initialOrientation.isPresent())
+			NBTHelper.writeEnum(tag, "InitialOrientation", initialOrientation.orElse(null));
+
 		stack.getOrCreateTag()
 			.put("Contraption", tag);
 		return stack;

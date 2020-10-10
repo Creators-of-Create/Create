@@ -105,9 +105,6 @@ public class AirCurrent {
 			if (entity instanceof ServerPlayerEntity)
 				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
 
-			if (InWorldProcessing.isFrozen())
-				return;
-
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
 			if (processingType != null) {

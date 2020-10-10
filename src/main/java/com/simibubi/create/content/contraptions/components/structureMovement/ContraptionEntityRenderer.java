@@ -39,13 +39,10 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 		MatrixStack msLocal = getLocalTransform(entity);
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 
-		float degYaw = entity.getYaw(partialTicks);
-		float degPitch = entity.getPitch(partialTicks);
-		float degRoll = entity.getRoll(partialTicks);
-
-		float angleYaw = (float) (degYaw / 180 * Math.PI);
-		float anglePitch = (float) (degPitch / 180 * Math.PI);
-		float angleRoll = (float) (degRoll / 180 * Math.PI);
+		float angleInitialYaw = entity.getInitialYaw();
+		float angleYaw = entity.getYaw(partialTicks);
+		float anglePitch = entity.getPitch(partialTicks);
+		float angleRoll = entity.getRoll(partialTicks);
 
 		ms.push();
 		Entity ridingEntity = entity.getRidingEntity();
@@ -80,7 +77,10 @@ public class ContraptionEntityRenderer extends EntityRenderer<ContraptionEntity>
 			MatrixStacker.of(stack)
 				.nudge(entity.getEntityId())
 				.centre()
-				.rotateRadians(angleRoll, angleYaw, anglePitch)
+				.rotateY(angleYaw)
+				.rotateZ(anglePitch)
+				.rotateY(angleInitialYaw)
+				.rotateX(angleRoll)
 				.unCentre();
 		ContraptionRenderer.render(entity.world, entity.getContraption(), ms, msLocal, buffers);
 		ms.pop();

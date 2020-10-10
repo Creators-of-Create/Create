@@ -24,8 +24,6 @@ public class BearingContraption extends Contraption {
 	}
 
 	public static BearingContraption assembleBearingAt(World world, BlockPos pos, Direction direction) {
-		if (isFrozen())
-			return null;
 		BearingContraption construct = new BearingContraption();
 		construct.facing = direction;
 		BlockPos offset = pos.offset(direction);

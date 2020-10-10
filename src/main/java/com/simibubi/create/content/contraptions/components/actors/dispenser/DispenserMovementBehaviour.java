@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -63,7 +62,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 				}
 
 				Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
-				facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+				facingVec = context.rotation.apply(facingVec);
 				facingVec.normalize();
 				Direction clostestFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);

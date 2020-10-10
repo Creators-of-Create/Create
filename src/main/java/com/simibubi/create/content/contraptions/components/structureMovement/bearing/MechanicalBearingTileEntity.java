@@ -5,7 +5,6 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.DirectionalExtenderScrollOptionSlot;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -207,8 +206,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 		if (world.isRemote)
 			clientAngleDiff /= 2;
-		if (running && Contraption.isFrozen())
-			disassemble();
 
 		if (!world.isRemote && assembleNextTick) {
 			assembleNextTick = false;
