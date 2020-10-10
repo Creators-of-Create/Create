@@ -18,8 +18,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 	public void onSpeedChanged(MovementContext context, Vec3d oldMotion, Vec3d motion) {
 		double dotProduct = oldMotion.dotProduct(motion);
 
-		if (dotProduct <= 0 && (context.relativeMotion.length() != 0 || context.rotation.length() == 0)
-			|| context.firstMovement)
+		if (dotProduct <= 0 && (context.relativeMotion.length() != 0) || context.firstMovement)
 			context.world.playSound(null, new BlockPos(context.position), SoundEvents.BLOCK_BELL_USE,
 				SoundCategory.BLOCKS, 2.0F, 1.0F);
 	}

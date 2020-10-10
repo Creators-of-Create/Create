@@ -29,7 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class MountedContraption extends Contraption {
 
@@ -57,10 +59,6 @@ public class MountedContraption extends Contraption {
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
 		contraption.add(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
 			.with(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
-		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-		contraption.initActors(world);
-		contraption.expandBoundsAroundAxis(Axis.Y);
-
 		return contraption;
 	}
 
@@ -75,33 +73,49 @@ public class MountedContraption extends Contraption {
 	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		Pair<BlockInfo, TileEntity> pair = super.capture(world, pos);
 		BlockInfo capture = pair.getKey();
-		if (AllBlocks.CART_ASSEMBLER.has(capture.state)) {
-			if (!pos.equals(anchor)) {
-				for (Axis axis : Iterate.axes) {
-					if (axis.isVertical())
-						continue;
-					if (VecHelper.onSameAxis(anchor, pos, axis) && connectedCart == null) {
-						for (AbstractMinecartEntity abstractMinecartEntity : world
-							.getEntitiesWithinAABB(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
-							if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
-								break;
-							connectedCart = abstractMinecartEntity;
-							addExtraInventories(abstractMinecartEntity);
-						}
-					}
-				}
+		if (!AllBlocks.CART_ASSEMBLER.has(capture.state))
+			return pair;
+
+		Pair<BlockInfo, TileEntity> anchorSwap =
+			Pair.of(new BlockInfo(pos, CartAssemblerBlock.createAnchor(capture.state), null), pair.getValue());
+		if (pos.equals(anchor) || connectedCart != null)
+			return anchorSwap;
+
+		for (Axis axis : Iterate.axes) {
+			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
+				continue;
+			for (AbstractMinecartEntity abstractMinecartEntity : world
+				.getEntitiesWithinAABB(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
+				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
+					break;
+				connectedCart = abstractMinecartEntity;
+				connectedCart.setPosition(pos.getX() + .5, pos.getY(), pos.getZ() + .5f);
 			}
-			return Pair.of(new BlockInfo(pos, CartAssemblerBlock.createAnchor(capture.state), null), pair.getValue());
 		}
-		return pair;
+
+		return anchorSwap;
 	}
 
 	@Override
 	protected boolean movementAllowed(World world, BlockPos pos) {
 		BlockState blockState = world.getBlockState(pos);
 		if (!pos.equals(anchor) && AllBlocks.CART_ASSEMBLER.has(blockState))
-			return true;
+			return testSecondaryCartAssembler(world, blockState, pos);
 		return super.movementAllowed(world, pos);
+	}
+
+	protected boolean testSecondaryCartAssembler(World world, BlockState state, BlockPos pos) {
+		for (Axis axis : Iterate.axes) {
+			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
+				continue;
+			for (AbstractMinecartEntity abstractMinecartEntity : world
+				.getEntitiesWithinAABB(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
+				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
+					break;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -129,7 +143,9 @@ public class MountedContraption extends Contraption {
 
 	@Override
 	public void addExtraInventories(Entity cart) {
-		if (cart instanceof IInventory)
-			inventory = new CombinedInvWrapper(new ItemHandlerModifiableFromIInventory((IInventory) cart), inventory);
+		if (!(cart instanceof IInventory))
+			return;
+		IItemHandlerModifiable handlerFromInv = new InvWrapper((IInventory) cart);
+		inventory = new CombinedInvWrapper(handlerFromInv, inventory);
 	}
 }

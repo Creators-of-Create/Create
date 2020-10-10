@@ -32,6 +32,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ReuseableStream;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -71,8 +72,18 @@ public class ContraptionCollider {
 
 		Vec3d centerOfBlock = VecHelper.getCenterOf(BlockPos.ZERO);
 		double conRotX = contraptionRotation.x;
-		double conRotY = contraptionRotation.y;
+		double conRotY = contraptionRotation.y + contraptionEntity.getInitialYaw();
 		double conRotZ = contraptionRotation.z;
+
+		double reverseYaw = 0;
+
+		// Collision algorithm does not support rotation around two axes -> rotate
+		// entities manually
+		if (conRotZ != 0 && contraptionRotation.y != 0) {
+			reverseYaw = contraptionRotation.y;
+			conRotY = contraptionEntity.getInitialYaw();
+		}
+
 		Vec3d contraptionCentreOffset = contraptionEntity.stationary ? centerOfBlock : Vec3d.ZERO.add(0, 0.5, 0);
 		boolean axisAlignedCollision = contraptionRotation.equals(Vec3d.ZERO);
 		Matrix3d rotation = null;
@@ -100,13 +111,15 @@ public class ContraptionCollider {
 			Vec3d centerY = new Vec3d(0, entityBounds.getYSize() / 2, 0);
 			Vec3d motion = entity.getMotion();
 
-			Vec3d position = entityPosition.subtract(contraptionCentreOffset)
-				.add(centerY);
+			Vec3d position = entityPosition;
+			position = position.subtract(contraptionCentreOffset);
+			position = position.add(centerY);
 			position = position.subtract(contraptionPosition);
+			position = VecHelper.rotate(position, -reverseYaw, Axis.Y);
 			position = rotation.transform(position);
-			position = position.add(centerOfBlock)
-				.subtract(centerY)
-				.subtract(entityPosition);
+			position = position.add(centerOfBlock);
+			position = position.subtract(centerY);
+			position = position.subtract(entityPosition);
 
 			// Find all potential block shapes to collide with
 			AxisAlignedBB localBB = entityBounds.offset(position)
@@ -186,11 +199,13 @@ public class ContraptionCollider {
 			Vec3d totalResponse = collisionResponse.getValue();
 			Vec3d motionResponse = allowedMotion.getValue();
 			boolean hardCollision = !totalResponse.equals(Vec3d.ZERO);
+			
 
 			rotation.transpose();
 			motionResponse = rotation.transform(motionResponse)
 				.add(contraptionMotion);
 			totalResponse = rotation.transform(totalResponse);
+			totalResponse = VecHelper.rotate(totalResponse, reverseYaw, Axis.Y);
 			rotation.transpose();
 
 			if (futureCollision.isTrue() && playerType != PlayerType.SERVER) {
@@ -206,7 +221,7 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				entity.onGround = true;
 				contraptionEntity.collidingEntities.add(entity);
-				if (playerType != PlayerType.SERVER)
+				if (playerType != PlayerType.SERVER) 
 					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 			}
 
@@ -235,6 +250,7 @@ public class ContraptionCollider {
 				continue;
 			}
 
+			
 			totalResponse = totalResponse.add(contactPointMotion);
 			Vec3d allowedMovement = getAllowedMovement(totalResponse, entity);
 			contraptionEntity.collidingEntities.add(entity);
@@ -245,7 +261,7 @@ public class ContraptionCollider {
 
 			if (playerType != PlayerType.CLIENT)
 				continue;
-			
+
 			double d0 = entity.getX() - entity.prevPosX - contactPointMotion.x;
 			double d1 = entity.getZ() - entity.prevPosZ - contactPointMotion.z;
 			float limbSwing = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;

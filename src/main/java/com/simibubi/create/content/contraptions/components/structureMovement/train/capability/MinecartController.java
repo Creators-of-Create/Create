@@ -11,11 +11,14 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -72,7 +75,7 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 			UUID idOfOther = cd.idOfCart(!main);
 			MinecartController otherCart = CapabilityMinecartController.getIfPresent(world, idOfOther);
 			internalStall.setValue(
-				internalStall.booleanValue() || otherCart == null || !otherCart.isPresent() || otherCart.isStalled());
+				internalStall.booleanValue() || otherCart == null || !otherCart.isPresent() || otherCart.isStalled(false));
 
 		}));
 		if (!world.isRemote)
@@ -91,6 +94,18 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 	public boolean isConnectedToCoupling() {
 		return couplings.get(false)
 			.isPresent();
+	}
+
+	public boolean isCoupledThroughContraption() {
+		for (boolean current : Iterate.trueAndFalse)
+			if (hasContraptionCoupling(current))
+				return true;
+		return false;
+	}
+
+	public boolean hasContraptionCoupling(boolean current) {
+		Optional<CouplingData> optional = couplings.get(current);
+		return optional.isPresent() && optional.get().contraption;
 	}
 
 	public float getCouplingLength(boolean leading) {
@@ -113,6 +128,15 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 	}
 
 	public void removeConnection(boolean main) {
+		if (hasContraptionCoupling(main) && !getWorld().isRemote) {
+			List<Entity> passengers = cart().getPassengers();
+			if (!passengers.isEmpty()) {
+				Entity entity = passengers.get(0);
+				if (entity instanceof ContraptionEntity) 
+					((ContraptionEntity) entity).disassemble();
+			}
+		}
+		
 		couplings.set(main, Optional.empty());
 		needsEntryRefresh |= main;
 		sendData();
@@ -140,7 +164,28 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 
 			for (MinecartController minecartController : cartsToFlip) {
 				MinecartController mc = minecartController;
-				mc.couplings.forEach(opt -> opt.ifPresent(CouplingData::flip));
+				mc.couplings.forEachWithContext((opt, leading) -> opt.ifPresent(cd -> {
+					cd.flip();
+					if (!cd.contraption)
+						return;
+					List<Entity> passengers = mc.cart()
+						.getPassengers();
+					if (passengers.isEmpty())
+						return;
+					Entity entity = passengers.get(0);
+					if (!(entity instanceof ContraptionEntity))
+						return;
+					ContraptionEntity contraption = (ContraptionEntity) entity;
+					UUID couplingId = contraption.getCouplingId();
+					if (couplingId == cd.mainCartID) {
+						contraption.setCouplingId(cd.connectedCartID);
+						return;
+					}
+					if (couplingId == cd.connectedCartID) {
+						contraption.setCouplingId(cd.mainCartID);
+						return;
+					}
+				}));
 				mc.couplings = mc.couplings.swap();
 				if (mc == this)
 					continue;
@@ -150,10 +195,10 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 		}
 	}
 
-	public void coupleWith(boolean isLeading, UUID coupled, float length) {
+	public void coupleWith(boolean isLeading, UUID coupled, float length, boolean contraption) {
 		UUID mainID = isLeading ? cart().getUniqueID() : coupled;
 		UUID connectedID = isLeading ? coupled : cart().getUniqueID();
-		couplings.set(isLeading, Optional.of(new CouplingData(mainID, connectedID, length)));
+		couplings.set(isLeading, Optional.of(new CouplingData(mainID, connectedID, length, contraption)));
 		needsEntryRefresh |= isLeading;
 		sendData();
 	}
@@ -261,11 +306,13 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 		private UUID mainCartID;
 		private UUID connectedCartID;
 		private float length;
+		private boolean contraption;
 
-		public CouplingData(UUID mainCartID, UUID connectedCartID, float length) {
+		public CouplingData(UUID mainCartID, UUID connectedCartID, float length, boolean contraption) {
 			this.mainCartID = mainCartID;
 			this.connectedCartID = connectedCartID;
 			this.length = length;
+			this.contraption = contraption;
 		}
 
 		void flip() {
@@ -279,13 +326,16 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 			nbt.put("Main", NBTUtil.writeUniqueId(mainCartID));
 			nbt.put("Connected", NBTUtil.writeUniqueId(connectedCartID));
 			nbt.putFloat("Length", length);
+			nbt.putBoolean("Contraption", contraption);
 			return nbt;
 		}
 
 		static CouplingData read(CompoundNBT nbt) {
 			UUID mainCartID = NBTUtil.readUniqueId(nbt.getCompound("Main"));
 			UUID connectedCartID = NBTUtil.readUniqueId(nbt.getCompound("Connected"));
-			return new CouplingData(mainCartID, connectedCartID, nbt.getFloat("Length"));
+			float length = nbt.getFloat("Length");
+			boolean contraption = nbt.getBoolean("Contraption");
+			return new CouplingData(mainCartID, connectedCartID, length, contraption);
 		}
 
 		public UUID idOfCart(boolean main) {

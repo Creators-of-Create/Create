@@ -2,16 +2,15 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import static net.minecraft.entity.Entity.horizontalMag;
 
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.state.properties.RailShape;
@@ -21,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Useful methods for dealing with Minecarts
@@ -47,10 +47,10 @@ public class MinecartSim2020 {
 		});
 
 	public static Vec3d predictMotionOf(AbstractMinecartEntity cart) {
-		if (cart instanceof FurnaceMinecartEntity) {
-			return cart.getPositionVec()
-				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
-		}
+//		if (cart instanceof FurnaceMinecartEntity) {
+//			return cart.getPositionVec()
+//				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
+//		}
 		return cart.getMotion().scale(1f);
 //		if (cart instanceof ContainerMinecartEntity) {
 //			ContainerMinecartEntity containerCart = (ContainerMinecartEntity) cart;
@@ -71,15 +71,9 @@ public class MinecartSim2020 {
 		if (c instanceof FurnaceMinecartEntity)
 			return MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushX, 0)
 				&& MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushZ, 0);
-		List<Entity> passengers = c.getPassengers();
-		if (passengers.isEmpty())
-			return true;
-		for (Entity entity : passengers) {
-			if (entity instanceof ContraptionEntity) {
-				ContraptionEntity contraptionEntity = (ContraptionEntity) entity;
-				return !contraptionEntity.isStalled();
-			}
-		}
+		LazyOptional<MinecartController> capability = c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+		if (capability.isPresent() && capability.orElse(null).isStalled()) 
+			return false;
 		return true;
 	}
 

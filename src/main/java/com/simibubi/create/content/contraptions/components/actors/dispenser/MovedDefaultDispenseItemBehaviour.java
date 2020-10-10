@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors.dispenser;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.item.ItemEntity;
@@ -37,7 +36,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	@Override
 	public ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos) {
 		Vec3d facingVec = new Vec3d(context.state.get(DispenserBlock.FACING).getDirectionVec());
-		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
+		facingVec = context.rotation.apply(facingVec);
 		facingVec.normalize();
 
 		Direction closestToFacing = getClosestFacingDirection(facingVec);

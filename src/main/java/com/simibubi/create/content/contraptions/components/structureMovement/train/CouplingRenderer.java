@@ -32,7 +32,11 @@ public class CouplingRenderer {
 
 	public static void renderAll(MatrixStack ms, IRenderTypeBuffer buffer) {
 		CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().world,
-			c -> CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart)));
+			c -> {
+				if (c.getFirst().hasContraptionCoupling(true))
+					return;
+				CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart));	
+			});
 	}
 
 	public static void tickDebugModeRenders() {

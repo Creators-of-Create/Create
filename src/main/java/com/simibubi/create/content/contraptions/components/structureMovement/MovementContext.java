@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.util.function.UnaryOperator;
+
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -15,7 +17,7 @@ public class MovementContext {
 	public Vec3d position;
 	public Vec3d motion;
 	public Vec3d relativeMotion;
-	public Vec3d rotation;
+	public UnaryOperator<Vec3d> rotation;
 	public World world;
 	public BlockState state;
 	public BlockPos localPos;
@@ -36,7 +38,7 @@ public class MovementContext {
 		firstMovement = true;
 		motion = Vec3d.ZERO;
 		relativeMotion = Vec3d.ZERO;
-		rotation = Vec3d.ZERO;
+		rotation = v -> v;
 		position = null;
 		data = new CompoundNBT();
 		stall = false;
@@ -56,7 +58,6 @@ public class MovementContext {
 		MovementContext context = new MovementContext(world, info);
 		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));
-		context.rotation = VecHelper.readNBT(nbt.getList("Rotation", NBT.TAG_DOUBLE));
 		if (nbt.contains("Position"))
 			context.position = VecHelper.readNBT(nbt.getList("Position", NBT.TAG_DOUBLE));
 		context.stall = nbt.getBoolean("Stall");
@@ -68,7 +69,6 @@ public class MovementContext {
 	public CompoundNBT writeToNBT(CompoundNBT nbt) {
 		nbt.put("Motion", VecHelper.writeNBT(motion));
 		nbt.put("RelativeMotion", VecHelper.writeNBT(relativeMotion));
-		nbt.put("Rotation", VecHelper.writeNBT(rotation));
 		if (position != null)
 			nbt.put("Position", VecHelper.writeNBT(position));
 		nbt.putBoolean("Stall", stall);

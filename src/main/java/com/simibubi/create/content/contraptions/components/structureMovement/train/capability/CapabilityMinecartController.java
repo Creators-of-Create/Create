@@ -130,6 +130,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 				continue;
 			
 			next.removeConnection(!forward);
+			if (controller.hasContraptionCoupling(forward))
+				continue;
 			AbstractMinecartEntity cart = next.cart();
 			if (cart == null)
 				continue;

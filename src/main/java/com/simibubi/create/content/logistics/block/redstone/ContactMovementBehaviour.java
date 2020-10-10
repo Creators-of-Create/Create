@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NBTUtil;
@@ -36,7 +35,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 			return;
 
 		Vec3d contact = new Vec3d(block.get(RedstoneContactBlock.FACING).getDirectionVec());
-		contact = VecHelper.rotate(contact, context.rotation.x, context.rotation.y, context.rotation.z);
+		contact = context.rotation.apply(contact);
 		Direction direction = Direction.getFacingFromVector(contact.x, contact.y, contact.z);
 
 		if (!RedstoneContactBlock.hasValidContact(world, pos.offset(direction.getOpposite()), direction))

@@ -332,9 +332,14 @@ public abstract class Contraption {
 				frontier.add(otherPartPos);
 		}
 
+		// Cart assemblers attach themselves
+		BlockState stateBelow = world.getBlockState(pos.down());
+		if (!visited.contains(pos.down()) && AllBlocks.CART_ASSEMBLER.has(stateBelow))
+			frontier.add(pos.down());
+
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
 
-		// Slime blocks drag adjacent blocks if possible
+		// Slime blocks and super glue drag adjacent blocks if possible
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
 		for (Direction offset : Direction.values()) {
 			BlockPos offsetPos = pos.offset(offset);
@@ -348,16 +353,13 @@ public abstract class Contraption {
 			}
 
 			boolean wasVisited = visited.contains(offsetPos);
-			boolean isMinecartAssembler = AllBlocks.CART_ASSEMBLER.has(blockState) && offset == Direction.DOWN;
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
 				BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
-			if (!wasVisited
-				&& ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue || isMinecartAssembler))
+			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
 				frontier.add(offsetPos);
-
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
 		}
@@ -763,7 +765,7 @@ public abstract class Contraption {
 			ctx.position = null;
 			ctx.motion = Vec3d.ZERO;
 			ctx.relativeMotion = Vec3d.ZERO;
-			ctx.rotation = Vec3d.ZERO;
+			ctx.rotation = v -> v;
 		});
 	}
 

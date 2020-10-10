@@ -78,8 +78,8 @@ public class ContraptionHandlerClient {
 		for (ContraptionEntity contraptionEntity : mc.world.getEntitiesWithinAABB(ContraptionEntity.class,
 			new AxisAlignedBB(origin, target))) {
 
-			Vec3d localOrigin = contraptionEntity.toLocalVector(origin);
-			Vec3d localTarget = contraptionEntity.toLocalVector(target);
+			Vec3d localOrigin = contraptionEntity.toLocalVector(origin, 1);
+			Vec3d localTarget = contraptionEntity.toLocalVector(target, 1);
 			Contraption contraption = contraptionEntity.getContraption();
 
 			MutableObject<BlockRayTraceResult> mutableResult = new MutableObject<>();
