@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -224,7 +225,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		if (compound.contains("Entity") && !isOccupied()) {
-			entityUUID = NBTUtil.readUniqueId(compound.getCompound("Entity"));
+			entityUUID = NBTUtil.readUniqueId(NBTHelper.getINBT(compound, "Entity"));
 			this.searchForEntity = true;
 		}
 		crushingspeed = compound.getFloat("Speed");

@@ -12,7 +12,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vector3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class CouplingPhysics {
@@ -76,7 +76,7 @@ public class CouplingPhysics {
 
 	public static void softCollisionStep(World world, Couple<AbstractMinecartEntity> carts, double couplingLength) {
 
-		Couple<Vector3d> positions = carts.map(Entity::getPositionVector);
+		Couple<Vector3d> positions = carts.map(Entity::getPositionVec);
 		Couple<Float> maxSpeed = carts.map(AbstractMinecartEntity::getMaxCartSpeedOnRail);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
 

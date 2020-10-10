@@ -8,8 +8,11 @@ import java.util.function.Function;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.FloatNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import javax.annotation.Nonnull;
 
 public class NBTHelper {
 
@@ -74,6 +77,14 @@ public class NBTHelper {
 		return new AxisAlignedBB(bbtag.getFloat(0), bbtag.getFloat(1), bbtag.getFloat(2), bbtag.getFloat(3),
 				bbtag.getFloat(4), bbtag.getFloat(5));
 
+	}
+
+	@Nonnull
+	public static INBT getINBT(CompoundNBT nbt, String id) {
+		INBT inbt = nbt.get(id);
+		if (inbt != null)
+			return inbt;
+		return new CompoundNBT();
 	}
 
 }

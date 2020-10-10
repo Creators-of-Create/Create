@@ -765,7 +765,7 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 		if (compound.contains("Controller"))
 			controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 		setCouplingId(
-			compound.contains("OnCoupling") ? NBTUtil.readUniqueId(compound.getCompound("OnCoupling")) : null);
+			compound.contains("OnCoupling") ? NBTUtil.readUniqueId(NBTHelper.getINBT(compound, "OnCoupling")) : null);
 	}
 
 	public void startAtInitialYaw() {

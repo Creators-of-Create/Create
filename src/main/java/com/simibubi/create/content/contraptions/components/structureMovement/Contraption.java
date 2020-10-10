@@ -512,7 +512,7 @@ public abstract class Contraption {
 
 		seatMapping.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
-			c -> seatMapping.put(NBTUtil.readUniqueId(c.getCompound("Id")), c.getInt("Seat")));
+			c -> seatMapping.put(NBTUtil.readUniqueId(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage

@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.NBTHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.Create;
@@ -22,7 +24,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -323,16 +324,16 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 
 		CompoundNBT serialize() {
 			CompoundNBT nbt = new CompoundNBT();
-			nbt.put("Main", NBTUtil.writeUniqueId(mainCartID));
-			nbt.put("Connected", NBTUtil.writeUniqueId(connectedCartID));
+			nbt.put("Main", NBTUtil.fromUuid(mainCartID));
+			nbt.put("Connected", NBTUtil.fromUuid(connectedCartID));
 			nbt.putFloat("Length", length);
 			nbt.putBoolean("Contraption", contraption);
 			return nbt;
 		}
 
 		static CouplingData read(CompoundNBT nbt) {
-			UUID mainCartID = NBTUtil.readUniqueId(nbt.getCompound("Main"));
-			UUID connectedCartID = NBTUtil.readUniqueId(nbt.getCompound("Connected"));
+			UUID mainCartID = NBTUtil.readUniqueId(NBTHelper.getINBT(nbt, "Main"));
+			UUID connectedCartID = NBTUtil.readUniqueId(NBTHelper.getINBT(nbt, "Connected"));
 			float length = nbt.getFloat("Length");
 			boolean contraption = nbt.getBoolean("Contraption");
 			return new CouplingData(mainCartID, connectedCartID, length, contraption);

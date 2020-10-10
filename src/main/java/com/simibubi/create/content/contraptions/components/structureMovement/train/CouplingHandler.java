@@ -21,7 +21,6 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityMountEvent;
@@ -178,7 +177,7 @@ public class CouplingHandler {
 	public static void status(PlayerEntity player, String key) {
 		if (player == null)
 			return;
-		player.sendStatusMessage(new StringTextComponent(Lang.translate("minecart_coupling." + key)), true);
+		player.sendStatusMessage(Lang.translate("minecart_coupling." + key), true);
 	}
 
 }
