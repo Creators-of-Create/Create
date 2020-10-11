@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -28,13 +27,10 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.DistExecutor;
 
 public class FluidPropagator {
 
@@ -137,20 +133,21 @@ public class FluidPropagator {
 		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
 	}
 
+	@Deprecated // Remove after pipes are fixed; comment out for production
 	public static OutlineParams showBlockFace(BlockFace face) {
 		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			Vector3d directionVec = Vector3d.of(face.getFace()
-				.getDirectionVec());
-			Vector3d scaleVec = directionVec.scale(-.25f * face.getFace()
-				.getAxisDirection()
-				.getOffset());
-			directionVec = directionVec.scale(.5f);
-			params.setValue(CreateClient.outliner.showAABB(face,
-				FluidPropagator.smallCenter.offset(directionVec.add(Vector3d.of(face.getPos())))
-					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
-					.grow(1 / 16f)));
-		});
+//		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+//			Vec3d directionVec = new Vec3d(face.getFace()
+//				.getDirectionVec());
+//			Vec3d scaleVec = directionVec.scale(-.25f * face.getFace()
+//				.getAxisDirection()
+//				.getOffset());
+//			directionVec = directionVec.scale(.5f);
+//			params.setValue(CreateClient.outliner.showAABB(face,
+//				FluidPropagator.smallCenter.offset(directionVec.add(new Vec3d(face.getPos())))
+//					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
+//					.grow(1 / 16f)));
+//		});
 		return params.getValue();
 	}
 
