@@ -83,11 +83,12 @@ repositories {
         name "Progwml6 maven"
         url "https://dvs1.progwml6.com/files/maven/"
     }
+    /*
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name "ModMaven"
         url "https://modmaven.k-4u.nl"
-    }
+    }*/
     maven {
         //location of the maven for vazkii's mods
         name "blamejared"
@@ -110,11 +111,11 @@ dependencies {
     def registrate = "com.tterrag.registrate:Registrate:MC1.16.2-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
-    
+
     // compile against the JEI API but do not include it at runtime
- 	compileOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}:api")
-  	// at runtime, use the full JEI jar
-  	runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
