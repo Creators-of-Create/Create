@@ -8,12 +8,18 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -27,6 +33,60 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	public NixieTubeBlock(Properties properties) {
 		super(properties);
 		setDefaultState(getDefaultState().with(CEILING, false));
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult ray) {
+		try {
+
+			ItemStack heldItem = player.getHeldItem(hand);
+			NixieTubeTileEntity nixie = getTileEntity(world, pos);
+
+			if (player.isSneaking())
+				return ActionResultType.PASS;
+
+			if (heldItem.isEmpty()) {
+				if (nixie.reactsToRedstone())
+					return ActionResultType.PASS;
+				nixie.clearCustomText();
+				updateDisplayedRedstoneValue(state, world, pos);
+				return ActionResultType.SUCCESS;
+			}
+
+			if (heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
+				Direction left = state.get(HORIZONTAL_FACING)
+					.rotateY();
+				Direction right = left.getOpposite();
+
+				if (world.isRemote)
+					return ActionResultType.SUCCESS;
+
+				BlockPos currentPos = pos;
+				while (true) {
+					BlockPos nextPos = currentPos.offset(left);
+					if (world.getBlockState(nextPos) != state)
+						break;
+					currentPos = nextPos;
+				}
+
+				int index = 0;
+
+				while (true) {
+					final int rowPosition = index;
+					withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
+					BlockPos nextPos = currentPos.offset(right);
+					if (world.getBlockState(nextPos) != state)
+						break;
+					currentPos = nextPos;
+					index++;
+				}
+			}
+
+		} catch (TileEntityException e) {
+		}
+
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -57,12 +117,12 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	@Override
 	public void neighborChanged(BlockState p_220069_1_, World p_220069_2_, BlockPos p_220069_3_, Block p_220069_4_,
 		BlockPos p_220069_5_, boolean p_220069_6_) {
-		updateDisplayedValue(p_220069_1_, p_220069_2_, p_220069_3_);
+		updateDisplayedRedstoneValue(p_220069_1_, p_220069_2_, p_220069_3_);
 	}
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		updateDisplayedValue(state, worldIn, pos);
+		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
 	@Override
@@ -75,12 +135,13 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 		return true;
 	}
 
-	private void updateDisplayedValue(BlockState state, World worldIn, BlockPos pos) {
+	private void updateDisplayedRedstoneValue(BlockState state, World worldIn, BlockPos pos) {
 		if (worldIn.isRemote)
 			return;
-		int power = getPower(worldIn, pos);
-		String display = (power < 10 ? "0" : "") + power;
-		withTileEntityDo(worldIn, pos, te -> te.display(display.charAt(0), display.charAt(1)));
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.reactsToRedstone())
+				te.displayRedstoneStrength(getPower(worldIn, pos));
+		});
 	}
 
 	static boolean isValidBlock(IBlockReader world, BlockPos pos, boolean above) {
