@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.fluid;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -182,11 +183,11 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluidTag"));
-			ITag<Fluid> tmpTag = FluidTags.func_226157_a_()
-				.get(id);
-			if (tmpTag == null)
+			Optional<? extends ITag.INamedTag<Fluid>> optionalINamedTag = FluidTags.getRequiredTags().stream()
+				.filter(fluidINamedTag -> fluidINamedTag.getId().equals(id)).findFirst(); // fixme
+			if (!optionalINamedTag.isPresent())
 				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
-			tag = new NamedTag<>(tmpTag, id);
+			tag = optionalINamedTag.get();
 		}
 
 		@Override
