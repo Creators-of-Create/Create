@@ -15,6 +15,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.KelpBlock;
+import net.minecraft.block.KelpTopBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
@@ -43,7 +44,8 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
 		return Vector3d.of(context.state.get(HORIZONTAL_FACING)
-			.getDirectionVec()).scale(.45);
+			.getDirectionVec())
+			.scale(.45);
 	}
 
 	@Override
@@ -109,6 +111,11 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
+			if (state.getBlock() instanceof KelpBlock)
+				return true;
+			if (state.getBlock() instanceof KelpTopBlock)
+				return true;
+
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
@@ -118,8 +125,6 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return false;
 			}
 
-			if (state.getBlock() instanceof KelpBlock)
-				return true;
 			if (state.getBlock() instanceof IPlantable)
 				return true;
 		}
@@ -132,7 +137,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			CropsBlock crop = (CropsBlock) state.getBlock();
 			return crop.withAge(0);
 		}
-		if (state.getBlock() == Blocks.SUGAR_CANE) {
+		if (state.getBlock() == Blocks.SUGAR_CANE || state.getBlock() == Blocks.KELP) {
 			if (state.getFluidState()
 				.isEmpty())
 				return Blocks.AIR.getDefaultState();
