@@ -82,11 +82,14 @@ public class AllItems {
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag),
 
-		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
+		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"), CINDER_FLOUR = ingredient("cinder_flour"),
 		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),
 		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
 		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover");
+
+	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
+		.register();
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
 		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
@@ -186,10 +189,6 @@ public class AllItems {
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
 			.register();
-
-	public static final ItemEntry<CombustibleItem> FUEL_PELLET = REGISTRATE.item("fuel_pellet", CombustibleItem::new)
-		// .onRegister(item -> item.setBurnTime(2048))
-		.register();
 
 	public static final ItemEntry<BlockzapperItem> BLOCKZAPPER =
 		REGISTRATE.item("handheld_blockzapper", BlockzapperItem::new)

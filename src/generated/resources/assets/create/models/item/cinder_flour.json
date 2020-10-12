@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "create:item/fuel_pellet"
+    "layer0": "create:item/cinder_flour"
   }
 }

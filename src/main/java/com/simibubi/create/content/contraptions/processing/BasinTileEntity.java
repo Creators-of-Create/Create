@@ -255,8 +255,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 	}
 
-	public HeatLevel getHeatLevel() {
-		BlockState state = world.getBlockState(pos.down(1));
+	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (state.has(BlazeBurnerBlock.HEAT_LEVEL))
 			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
 		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;

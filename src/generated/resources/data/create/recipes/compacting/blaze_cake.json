@@ -1,0 +1,24 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "create:cinder_flour"
+    },
+    {
+      "fluidTag": "minecraft:lava",
+      "amount": 125
+    }
+  ],
+  "results": [
+    {
+      "item": "create:blaze_cake",
+      "count": 1
+    }
+  ]
+}
