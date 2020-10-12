@@ -24,6 +24,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FunnelTileEntity extends SmartTileEntity {
 
@@ -95,9 +96,12 @@ public class FunnelTileEntity extends SmartTileEntity {
 			amountToExtract = 1;
 
 		Predicate<ItemStack> filter = s -> !filtering.isActive() || filtering.test(s);
-		Function<ItemStack, Integer> amountThreshold = s -> s.getMaxStackSize() - invManipulation.simulate()
-			.insert(s)
-			.getCount();
+		Function<ItemStack, Integer> amountThreshold = s -> {
+			int maxStackSize = s.getMaxStackSize();
+			return maxStackSize - invManipulation.simulate()
+				.insert(ItemHandlerHelper.copyStackWithSize(s, maxStackSize))
+				.getCount();
+		};
 
 		if (amountToExtract != -1 && !invManipulation.simulate()
 			.insert(autoExtractor.simulate()
@@ -108,7 +112,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 		ItemStack stack = autoExtractor.extract(amountToExtract, filter, amountThreshold);
 		if (stack.isEmpty())
 			return;
-		
+
 		onTransfer(stack);
 		invManipulation.insert(stack);
 		startCooldown();
@@ -192,8 +196,9 @@ public class FunnelTileEntity extends SmartTileEntity {
 		BlockState blockState = getBlockState();
 		boolean pushingToBelt = blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
 			&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING);
-		boolean hopper = FunnelBlock.getFunnelFacing(blockState) == Direction.UP && invManipulation.hasInventory()
-			&& autoExtractor.hasInventory();
+		boolean hopper = FunnelBlock.getFunnelFacing(blockState) == Direction.UP && !world.getBlockState(pos.up())
+			.getMaterial()
+			.isReplaceable();
 		return pushingToBelt || hopper;
 	}
 
@@ -259,9 +264,10 @@ public class FunnelTileEntity extends SmartTileEntity {
 	public double getMaxRenderDistanceSquared() {
 		return hasFlap() ? super.getMaxRenderDistanceSquared() : 64;
 	}
-	
+
 	public void onTransfer(ItemStack stack) {
-		AllBlocks.CONTENT_OBSERVER.get().onFunnelTransfer(world, pos, stack);
+		AllBlocks.CONTENT_OBSERVER.get()
+			.onFunnelTransfer(world, pos, stack);
 	}
 
 }

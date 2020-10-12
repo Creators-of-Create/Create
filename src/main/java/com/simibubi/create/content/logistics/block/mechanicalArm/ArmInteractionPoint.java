@@ -8,11 +8,16 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
@@ -24,6 +29,7 @@ import net.minecraft.block.JukeboxBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.MusicDiscItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -56,14 +62,17 @@ public abstract class ArmInteractionPoint {
 
 	private static ImmutableMap<ArmInteractionPoint, Supplier<ArmInteractionPoint>> POINTS =
 		ImmutableMap.<ArmInteractionPoint, Supplier<ArmInteractionPoint>>builder()
+			.put(new Saw(), Saw::new)
 			.put(new Belt(), Belt::new)
 			.put(new Depot(), Depot::new)
-			.put(new Saw(), Saw::new)
 			.put(new Chute(), Chute::new)
-			.put(new Jukebox(), Jukebox::new)
 			.put(new Basin(), Basin::new)
-			.put(new Millstone(), Millstone::new)
 			.put(new Funnel(), Funnel::new)
+			.put(new Jukebox(), Jukebox::new)
+			.put(new Crafter(), Crafter::new)
+			.put(new Deployer(), Deployer::new)
+			.put(new Millstone(), Millstone::new)
+			.put(new BlazeBurner(), BlazeBurner::new)
 			.put(new CrushingWheels(), CrushingWheels::new)
 			.build();
 
@@ -88,6 +97,10 @@ public abstract class ArmInteractionPoint {
 
 	Direction getInteractionDirection() {
 		return Direction.DOWN;
+	}
+
+	boolean isStillValid(IBlockReader reader) {
+		return isValid(reader, pos, reader.getBlockState(pos));
 	}
 
 	abstract boolean isValid(IBlockReader reader, BlockPos pos, BlockState state);
@@ -228,6 +241,84 @@ public abstract class ArmInteractionPoint {
 
 	}
 
+	static class Deployer extends ArmInteractionPoint {
+
+		@Override
+		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+			return AllBlocks.DEPLOYER.has(state);
+		}
+
+		@Override
+		Direction getInteractionDirection() {
+			return state.get(DeployerBlock.FACING)
+				.getOpposite();
+		}
+
+		@Override
+		Vec3d getInteractionPositionVector() {
+			return super.getInteractionPositionVector()
+				.add(new Vec3d(getInteractionDirection().getDirectionVec()).scale(.65f));
+		}
+
+	}
+
+	static class BlazeBurner extends ArmInteractionPoint {
+
+		@Override
+		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+			return AllBlocks.BLAZE_BURNER.has(state);
+		}
+
+		@Override
+		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		ItemStack insert(World world, ItemStack stack, boolean simulate) {
+			boolean success = BlazeBurnerBlock.tryInsert(state, world, pos, stack.copy(), false, simulate);
+			return success ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1) : stack;
+		}
+
+		@Override
+		void cycleMode() {}
+
+	}
+
+	static class Crafter extends ArmInteractionPoint {
+
+		@Override
+		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+			return AllBlocks.MECHANICAL_CRAFTER.has(state);
+		}
+
+		@Override
+		Direction getInteractionDirection() {
+			return state.get(MechanicalCrafterBlock.HORIZONTAL_FACING)
+				.getOpposite();
+		}
+		
+		@Override
+		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+			TileEntity te = world.getTileEntity(pos);
+			if (!(te instanceof MechanicalCrafterTileEntity))
+				return ItemStack.EMPTY;
+			MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
+			SmartInventory inventory = crafter.getInventory();
+			inventory.allowExtraction();
+			ItemStack extract = super.extract(world, slot, amount, simulate);
+			inventory.forbidExtraction();
+			return extract;
+		}
+
+		@Override
+		Vec3d getInteractionPositionVector() {
+			return super.getInteractionPositionVector()
+				.add(new Vec3d(getInteractionDirection().getDirectionVec()).scale(.5f));
+		}
+
+	}
+
 	static class Basin extends ArmInteractionPoint {
 
 		@Override
@@ -260,6 +351,8 @@ public abstract class ArmInteractionPoint {
 			JukeboxTileEntity jukeboxTE = (JukeboxTileEntity) tileEntity;
 			if (!jukeboxTE.getRecord()
 				.isEmpty())
+				return stack;
+			if (!(stack.getItem() instanceof MusicDiscItem))
 				return stack;
 			ItemStack remainder = stack.copy();
 			ItemStack toInsert = remainder.split(1);

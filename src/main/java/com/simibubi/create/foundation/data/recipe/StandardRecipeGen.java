@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -336,6 +337,16 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("CCC")
 				.patternLine("  S")),
 
+		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('S', I.andesite())
+				.key('C', I.copperSheet())
+				.patternLine("CCC")
+				.patternLine(" S ")),
+
+		COPPER_VALVE_HANDLE_FROM_OTHER_HANDLES = create(AllBlocks.COPPER_VALVE_HANDLE).withSuffix("_from_others")
+			.unlockedByTag(I::copper)
+			.viaShapeless(b -> b.addIngredient(AllItemTags.VALVE_HANDLES.tag)),
+
 		NOZZLE = create(AllBlocks.NOZZLE).unlockedBy(AllBlocks.ENCASED_FAN::get)
 			.viaShaped(b -> b.key('S', I.andesite())
 				.key('C', ItemTags.WOOL)
@@ -415,6 +426,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('S', AllBlocks.FLUID_PIPE.get())
 				.patternLine("P")
 				.patternLine("S")),
+
+		FLUID_VALVE = create(AllBlocks.FLUID_VALVE).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('P', I.shaft())
+				.key('S', AllBlocks.FLUID_PIPE.get())
+				.key('I', I.ironSheet())
+				.patternLine("I")
+				.patternLine("S")
+				.patternLine("P")),
 
 		SPOUT = create(AllBlocks.SPOUT).unlockedBy(I::copperCasing)
 			.viaShaped(b -> b.key('T', AllBlocks.FLUID_TANK.get())
@@ -851,20 +870,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	GeneratedRecipeBuilder create(Supplier<IItemProvider> result) {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
-	
+
 	GeneratedRecipeBuilder create(ItemProviderEntry<? extends IItemProvider> result) {
 		return create(result::get);
 	}
 
 	GeneratedRecipe blastCrushedMetal(Supplier<? extends IItemProvider> result,
 		Supplier<? extends IItemProvider> ingredient) {
-		return create(result::get).withSuffix("_from_crushed").viaCooking(ingredient::get)
+		return create(result::get).withSuffix("_from_crushed")
+			.viaCooking(ingredient::get)
 			.rewardXP(.1f)
 			.inBlastFurnace();
 	}
 
 	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, Tag<Item> ore) {
-		return create(result::get).withSuffix("_from_ore").viaCookingTag(() -> ore)
+		return create(result::get).withSuffix("_from_ore")
+			.viaCookingTag(() -> ore)
 			.rewardXP(.1f)
 			.inBlastFurnace();
 	}

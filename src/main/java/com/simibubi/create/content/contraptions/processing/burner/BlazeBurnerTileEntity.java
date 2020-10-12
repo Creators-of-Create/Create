@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -14,7 +13,6 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EggEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -171,7 +169,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	/**
 	 * @return true if the heater updated its burn time and a item should be consumed
 	 */
-	boolean tryUpdateFuel(ItemStack itemStack, PlayerEntity player) {
+	boolean tryUpdateFuel(ItemStack itemStack, boolean forceOverflow, boolean simulate) {
 		FuelType newFuel = FuelType.NONE;
 		int burnTick = ForgeHooks.getBurnTime(itemStack);
 		if (burnTick > 0)
@@ -185,20 +183,22 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			return false;
 
 		if (newFuel == activeFuel) {
-			if (remainingBurnTime + burnTick > maxHeatCapacity && player instanceof DeployerFakePlayer)
+			if (remainingBurnTime + burnTick > maxHeatCapacity && !forceOverflow)
 				return false;
-
+			if (simulate)
+				return true;
 			remainingBurnTime = MathHelper.clamp(remainingBurnTime + burnTick, 0, maxHeatCapacity);
 		} else {
+			if (simulate)
+				return true;
 			activeFuel = newFuel;
 			remainingBurnTime = burnTick;
 		}
 
 		updateHeatLevel();
 		HeatLevel level = getHeatLevel();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) 
 			spawnParticles(level, 1 + (.25 * (i / 4)));
-		}
 		return true;
 	}
 

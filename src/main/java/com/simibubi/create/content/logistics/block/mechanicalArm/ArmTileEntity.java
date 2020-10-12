@@ -60,6 +60,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
 	protected int lastInputIndex = -1;
 	protected int lastOutputIndex = -1;
+	protected boolean redstoneLocked;
 
 	enum Phase {
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
@@ -79,6 +80,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		previousTarget = ArmAngleTarget.NO_TARGET;
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
+		redstoneLocked = false;
 	}
 
 	@Override
@@ -188,6 +190,9 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	protected void searchForItem() {
+		if (redstoneLocked)
+			return;
+		
 		boolean foundInput = false;
 		// for round robin, we start looking after the last used index, for default we
 		// start at 0;
@@ -201,6 +206,8 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		InteractionPoints: for (int i = startIndex; i < scanRange; i++) {
 			ArmInteractionPoint armInteractionPoint = inputs.get(i);
+			if (!armInteractionPoint.isStillValid(world))
+				continue;
 			for (int j = 0; j < armInteractionPoint.getSlotCount(world); j++) {
 				if (getDistributableAmount(armInteractionPoint, j) == 0)
 					continue;
@@ -237,6 +244,9 @@ public class ArmTileEntity extends KineticTileEntity {
 
 		for (int i = startIndex; i < scanRange; i++) {
 			ArmInteractionPoint armInteractionPoint = outputs.get(i);
+			if (!armInteractionPoint.isStillValid(world))
+				continue;
+			
 			ItemStack remainder = armInteractionPoint.insert(world, held, true);
 			if (remainder.equals(heldItem, false))
 				continue;
@@ -325,6 +335,18 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 		return stack;
 	}
+	
+	public void redstoneUpdate() {
+		if (world.isRemote)
+			return;
+		boolean blockPowered = world.isBlockPowered(pos);
+		if (blockPowered == redstoneLocked)
+			return;
+		redstoneLocked = blockPowered;
+		sendData();
+		if (!redstoneLocked)
+			searchForItem();
+	}
 
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
@@ -366,6 +388,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
+		compound.putBoolean("Powered", redstoneLocked);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
@@ -383,6 +406,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		chasedPointIndex = compound.getInt("TargetPointIndex");
 		chasedPointProgress = compound.getFloat("MovementProgress");
 		interactionPointTag = compound.getList("InteractionPoints", NBT.TAG_COMPOUND);
+		redstoneLocked = compound.getBoolean("Powered");
 
 		if (!clientPacket)
 			return;

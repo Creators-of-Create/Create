@@ -100,11 +100,10 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void onClose() {
+	public void removed() {
 		CompoundNBT nbt = zapper.getTag();
 		writeAdditionalOptions(nbt);
 		AllPackets.channel.sendToServer(new NbtPacket(zapper, offhand ? Hand.OFF_HAND : Hand.MAIN_HAND));
-		super.onClose();
 	}
 
 	@Override
@@ -122,7 +121,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		}
 		
 		if (confirmButton.isHovered()) {
-			Minecraft.getInstance().player.closeScreen();
+			onClose();
 			return true;
 		}
 

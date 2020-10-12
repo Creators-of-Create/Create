@@ -49,6 +49,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected boolean boop = false;
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	protected FilteringBehaviour filtering;
+	protected boolean redstoneLocked;
 	private LazyOptional<IItemHandlerModifiable> invHandler;
 	private ListNBT deferredInventoryList;
 
@@ -65,6 +66,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		state = State.WAITING;
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;
+		redstoneLocked = false;
 	}
 
 	@Override
@@ -148,6 +150,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 			if (mode == Mode.PUNCH && !boop && startBoop(facing))
 				return;
 
+			if (redstoneLocked)
+				return;
+			
 			state = State.EXPANDING;
 			Vec3d movementVector = getMovementVector();
 			Vec3d rayOrigin = VecHelper.getCenterOf(pos)
@@ -259,6 +264,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
+		redstoneLocked = compound.getBoolean("Powered");
+		
 		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
@@ -280,6 +287,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		NBTHelper.writeEnum(compound, "Mode", mode);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
+		compound.putBoolean("Powered", redstoneLocked);
+		
 		if (player != null) {
 			compound.put("HeldItem", player.getHeldItemMainhand()
 				.serializeNBT());
@@ -308,6 +317,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 		return new DeployerItemHandler(this);
 	}
 
+	public void redstoneUpdate() {
+		if (world.isRemote)
+			return;
+		boolean blockPowered = world.isBlockPowered(pos);
+		if (blockPowered == redstoneLocked)
+			return;
+		redstoneLocked = blockPowered;
+		sendData();
+	}
+	
 	@Override
 	public boolean hasFastRenderer() {
 		return false;

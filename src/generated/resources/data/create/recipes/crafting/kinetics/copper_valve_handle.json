@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "item": "create:andesite_alloy"
+    },
+    "C": {
+      "tag": "forge:plates/copper"
+    }
+  },
+  "result": {
+    "item": "create:copper_valve_handle"
+  }
+}

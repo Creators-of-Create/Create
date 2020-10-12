@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -106,6 +107,18 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	@Override
 	public Class<DeployerTileEntity> getTileEntityClass() {
 		return DeployerTileEntity.class;
+	}
+	
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, world, pos, oldState, isMoving);
+		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
+	}
+	
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_,
+		BlockPos p_220069_5_, boolean p_220069_6_) {
+		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
 	}
 
 }
