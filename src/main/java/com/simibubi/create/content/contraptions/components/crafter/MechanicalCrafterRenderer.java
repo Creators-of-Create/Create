@@ -65,7 +65,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		if (te.phase == Phase.IDLE) {
-			ItemStack stack = te.inventory.getStackInSlot(0);
+			ItemStack stack = te.getInventory().getStackInSlot(0);
 			if (!stack.isEmpty()) {
 				ms.push();
 				ms.translate(0, 0, -1 / 256f);

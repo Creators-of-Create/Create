@@ -1,8 +1,12 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockPartials;
+import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -12,9 +16,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 public class ValveHandleBlock extends HandCrankBlock {
+	
+	public static final List<BlockEntry<ValveHandleBlock>> entries = new ArrayList<>();
+	
 	private final boolean inCreativeTab;
 
-	public ValveHandleBlock(Properties properties, boolean inCreativeTab) {
+	public static ValveHandleBlock copper(Properties properties) {
+		return new ValveHandleBlock(properties, true);
+	}
+	
+	public static ValveHandleBlock dyed(Properties properties) {
+		return new ValveHandleBlock(properties, false);
+	}
+	
+	private ValveHandleBlock(Properties properties, boolean inCreativeTab) {
 		super(properties);
 		this.inCreativeTab = inCreativeTab;
 	}

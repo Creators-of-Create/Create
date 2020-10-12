@@ -58,6 +58,18 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 		ISelectionContext p_220053_4_) {
 		return state.get(CEILING) ? AllShapes.MECHANICAL_ARM_CEILING : AllShapes.MECHANICAL_ARM;
 	}
+	
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, world, pos, oldState, isMoving);
+		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
+	}
+	
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_,
+		BlockPos p_220069_5_, boolean p_220069_6_) {
+		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
+	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {

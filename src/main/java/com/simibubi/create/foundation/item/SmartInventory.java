@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.item;
 
+import java.util.function.Consumer;
+
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
@@ -30,7 +32,7 @@ public class SmartInventory extends RecipeWrapper
 		this.stackSize = stackSize;
 	}
 
-	public SmartInventory whenContentsChanged(Runnable updateCallback) {
+	public SmartInventory whenContentsChanged(Consumer<Integer> updateCallback) {
 		((SyncedStackHandler) inv).whenContentsChange(updateCallback);
 		return this;
 	}
@@ -122,7 +124,7 @@ public class SmartInventory extends RecipeWrapper
 		private SyncedTileEntity te;
 		private boolean stackNonStackables;
 		private int stackSize;
-		private Runnable updateCallback;
+		private Consumer<Integer> updateCallback;
 
 		public SyncedStackHandler(int slots, SyncedTileEntity te, boolean stackNonStackables, int stackSize) {
 			super(slots);
@@ -135,7 +137,7 @@ public class SmartInventory extends RecipeWrapper
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
 			if (updateCallback != null)
-				updateCallback.run();
+				updateCallback.accept(slot);
 			te.notifyUpdate();
 		}
 
@@ -144,7 +146,7 @@ public class SmartInventory extends RecipeWrapper
 			return Math.min(stackNonStackables ? 64 : super.getSlotLimit(slot), stackSize);
 		}
 
-		public void whenContentsChange(Runnable updateCallback) {
+		public void whenContentsChange(Consumer<Integer> updateCallback) {
 			this.updateCallback = updateCallback;
 		}
 

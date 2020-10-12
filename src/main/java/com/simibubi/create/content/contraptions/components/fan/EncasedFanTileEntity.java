@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -16,8 +18,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 
 @MethodsReturnNonnullByDefault

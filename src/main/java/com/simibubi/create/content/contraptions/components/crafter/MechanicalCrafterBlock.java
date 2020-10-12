@@ -169,6 +169,9 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
 		boolean wrenched = AllItems.WRENCH.isIn(heldItem);
 
+		if (AllBlocks.MECHANICAL_ARM.isIn(heldItem))
+			return ActionResultType.PASS;
+		
 		if (hit.getFace() == state.get(HORIZONTAL_FACING)) {
 
 			if (crafter.phase != Phase.IDLE && !wrenched) {
@@ -202,7 +205,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				return ActionResultType.SUCCESS;
 			}
 
-			ItemStack inSlot = crafter.inventory.getStackInSlot(0);
+			ItemStack inSlot = crafter.getInventory().getStackInSlot(0);
 			if (inSlot.isEmpty()) {
 				if (crafter.covered && !wrenched) {
 					if (worldIn.isRemote)
@@ -221,7 +224,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 			if (worldIn.isRemote)
 				return ActionResultType.SUCCESS;
 			player.inventory.placeItemBackInInventory(worldIn, inSlot);
-			crafter.inventory.setStackInSlot(0, ItemStack.EMPTY);
+			crafter.getInventory().setStackInSlot(0, ItemStack.EMPTY);
 			return ActionResultType.SUCCESS;
 		}
 

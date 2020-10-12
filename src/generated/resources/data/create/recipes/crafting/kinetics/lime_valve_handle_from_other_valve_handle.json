@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "-"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:dyes/lime"
+    },
+    "-": {
+      "tag": "create:valve_handles"
+    }
+  },
+  "result": {
+    "item": "create:lime_valve_handle"
+  }
+}

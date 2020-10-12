@@ -27,8 +27,8 @@ import com.simibubi.create.content.contraptions.components.actors.SeatMovementBe
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
-import com.simibubi.create.content.contraptions.components.crank.AllValveHandles;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
@@ -508,8 +508,28 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
+	public static final BlockEntry<ValveHandleBlock> COPPER_VALVE_HANDLE =
+		REGISTRATE.block("copper_valve_handle", ValveHandleBlock::copper)
+			.transform(BuilderTransformers.valveHandle(null))
+			.register();
+
+	public static final BlockEntry<?>[] DYED_VALVE_HANDLES = new BlockEntry<?>[DyeColor.values().length];
+
 	static {
-		AllValveHandles.register(REGISTRATE);
+		for (DyeColor colour : DyeColor.values()) {
+			String colourName = colour.getName();
+			DYED_VALVE_HANDLES[colour.ordinal()] =
+				REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
+					.transform(BuilderTransformers.valveHandle(colour))
+					.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
+						.patternLine("#")
+						.patternLine("-")
+						.key('#', DyeHelper.getTagOfDye(colour))
+						.key('-', AllItemTags.VALVE_HANDLES.tag)
+						.addCriterion("has_valve", p.hasItem(AllItemTags.VALVE_HANDLES.tag))
+						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
+					.register();
+		}
 	}
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)

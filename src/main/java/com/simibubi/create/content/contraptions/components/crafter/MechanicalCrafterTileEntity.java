@@ -14,6 +14,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionBehaviour;
@@ -38,7 +39,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
@@ -46,34 +46,34 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		IDLE, ACCEPTING, ASSEMBLING, EXPORTING, WAITING, CRAFTING, INSERTING;
 	}
 
-	protected ItemStackHandler inventory = new ItemStackHandler(1) {
+	static class Inventory extends SmartInventory {
 
-		@Override
-		public int getSlotLimit(int slot) {
-			return 1;
+		private MechanicalCrafterTileEntity te;
+
+		public Inventory(MechanicalCrafterTileEntity te) {
+			super(1, te, 1, false);
+			this.te = te;
+			forbidExtraction();
+			whenContentsChanged(slot -> {
+				if (getStackInSlot(slot).isEmpty())
+					return;
+				if(te.phase == Phase.IDLE)
+					te.checkCompletedRecipe(false);
+			});
 		}
-
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			return ItemStack.EMPTY;
-		};
-
+		
+		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (phase != Phase.IDLE)
+			if (te.phase != Phase.IDLE)
 				return stack;
-			if (covered)
+			if (te.covered)
 				return stack;
 			return super.insertItem(slot, stack, simulate);
-		};
-
-		protected void onContentsChanged(int slot) {
-			if (!getStackInSlot(slot).isEmpty() && phase == Phase.IDLE)
-				checkCompletedRecipe(false);
-			markDirty();
-			sendData();
-		};
-
-	};
-
+		}
+		
+	}
+	
+	protected Inventory inventory;
 	protected GroupedItems groupedItems = new GroupedItems();
 	protected ConnectedInput input = new ConnectedInput();
 	protected LazyOptional<IItemHandler> invSupplier = LazyOptional.of(() -> input.getItemHandler(world, pos));
@@ -92,7 +92,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();
-
+		inventory = new Inventory(this);
+		
 		// Does not get serialized due to active checking in tick
 		wasPoweredBefore = true;
 	}
@@ -478,6 +479,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		sendData();
 		invSupplier.invalidate();
 		invSupplier = LazyOptional.of(() -> input.getItemHandler(world, pos));
+	}
+
+	public Inventory getInventory() {
+		return inventory;
 	}
 
 }

@@ -184,7 +184,7 @@ public class ConnectedInputHandler {
 			List<IItemHandlerModifiable> list = data.stream()
 				.map(l -> CrafterHelper.getCrafter(world, pos.add(l)))
 				.filter(Objects::nonNull)
-				.map(crafter -> crafter.inventory)
+				.map(crafter -> crafter.getInventory())
 				.collect(Collectors.toList());
 			return new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 		}

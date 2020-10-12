@@ -3,6 +3,7 @@
   "values": [
     "create:nozzle",
     "create:hand_crank",
+    "create:copper_valve_handle",
     "create:white_valve_handle",
     "create:orange_valve_handle",
     "create:magenta_valve_handle",
@@ -19,7 +20,6 @@
     "create:green_valve_handle",
     "create:red_valve_handle",
     "create:black_valve_handle",
-    "create:copper_valve_handle",
     "create:rope",
     "create:pulley_magnet",
     "create:furnace_engine",

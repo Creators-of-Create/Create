@@ -59,7 +59,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
 		super(type);
 		inputInventory = new BasinInventory(9, this);
-		inputInventory.whenContentsChanged(() -> contentsChanged = true);
+		inputInventory.whenContentsChanged($ -> contentsChanged = true);
 		outputInventory = new BasinInventory(9, this).forbidInsertion();
 
 		itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));

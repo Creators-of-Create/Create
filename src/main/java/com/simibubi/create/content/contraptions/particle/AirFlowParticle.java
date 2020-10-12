@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.fan.IAirCurrentSource;
 import com.simibubi.create.content.logistics.InWorldProcessing;
@@ -20,8 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-
-import javax.annotation.Nonnull;
 
 public class AirFlowParticle extends SimpleAnimatedParticle {
 

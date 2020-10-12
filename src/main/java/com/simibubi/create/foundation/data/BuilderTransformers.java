@@ -6,8 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
+import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -24,6 +29,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.util.Direction;
@@ -42,6 +48,21 @@ public class BuilderTransformers {
 			.transform(StressConfigDefaults.setImpact(1.0))
 			.item()
 			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
+	}
+
+	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
+		@Nullable DyeColor color) {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> {
+				String variant = color == null ? "copper" : color.getName();
+				p.directionalBlock(c.get(), p.models()
+					.withExistingParent(variant + "_valve_handle", p.modLoc("block/valve_handle"))
+					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
+			})
+			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
+			.item()
+			.tag(AllItemTags.VALVE_HANDLES.tag)
+			.build();
 	}
 
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(

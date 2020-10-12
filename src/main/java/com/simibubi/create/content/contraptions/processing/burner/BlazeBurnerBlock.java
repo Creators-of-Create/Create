@@ -42,6 +42,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -86,21 +87,29 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult blockRayTraceResult) {
-		if (!hasTileEntity(state))
+		ItemStack heldItem = player.getHeldItem(hand);
+		boolean dontConsume = player.isCreative();
+		boolean forceOverflow = !(player instanceof FakePlayer);
+		
+		if (!tryInsert(state, world, pos, dontConsume ? heldItem.copy() : heldItem, forceOverflow, false))
 			return ActionResultType.PASS;
+		return ActionResultType.SUCCESS;
+	}
 
+	public static boolean tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean forceOverflow, boolean simulate) {
+		if (!state.hasTileEntity())
+			return false;
+		
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof BlazeBurnerTileEntity))
-			return ActionResultType.PASS;
+			return false;
+		BlazeBurnerTileEntity burnerTE = (BlazeBurnerTileEntity) te;
 
-		if (!((BlazeBurnerTileEntity) te).tryUpdateFuel(player.getHeldItem(hand), player))
-			return ActionResultType.PASS;
-
-		if (!player.isCreative())
-			player.getHeldItem(hand)
-				.shrink(1);
-
-		return ActionResultType.SUCCESS;
+		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, simulate))
+			return false;
+		if (!simulate && !world.isRemote)
+			stack.shrink(1);
+		return true;
 	}
 
 	@Override
