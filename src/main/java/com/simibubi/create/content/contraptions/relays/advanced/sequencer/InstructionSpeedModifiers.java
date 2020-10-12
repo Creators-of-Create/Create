@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public enum InstructionSpeedModifiers {
 
@@ -23,7 +24,7 @@ public enum InstructionSpeedModifiers {
 		value = modifier;
 	}
 	private InstructionSpeedModifiers(int modifier, String label) {
-		this.label = ITextComponent.of(label);
+		this.label = new StringTextComponent(label);
 		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
 		value = modifier;
 	}

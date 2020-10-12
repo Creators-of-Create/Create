@@ -9,7 +9,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,7 +35,7 @@ public class BlazeBurnerHandler {
 
 		event.setCanceled(true);
 		event.getThrowable()
-			.setMotion(Vec3d.ZERO);
+			.setMotion(Vector3d.ZERO);
 		event.getThrowable()
 			.remove();
 

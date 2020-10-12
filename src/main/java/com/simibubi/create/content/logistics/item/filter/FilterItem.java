@@ -74,7 +74,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			List<ITextComponent> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
-			ItemDescription.add(tooltip, ITextComponent.of(" "));
+			ItemDescription.add(tooltip, new StringTextComponent(" "));
 			ItemDescription.add(tooltip, makeSummary);
 		}
 	}

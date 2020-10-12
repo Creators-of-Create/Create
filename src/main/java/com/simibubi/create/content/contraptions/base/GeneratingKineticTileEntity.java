@@ -71,8 +71,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 			// FIXME add colours back
 			// String stressString = spacing + "%s" + Lang.translate("generic.unit.stress").getUnformattedComponentText() + " %s";
-			// tooltip.add(ITextComponent.of(String.format(stressString, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value").getUnformattedComponentText())));
-			// tooltip.add(ITextComponent.of(String.format(stressString, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed").getUnformattedComponentText())));
+			// tooltip.add(new StringTextComponent(String.format(stressString, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value").getUnformattedComponentText())));
+			// tooltip.add(new StringTextComponent(String.format(stressString, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed").getUnformattedComponentText())));
 			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressBase))
 				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.base_value").formatted(TextFormatting.DARK_GRAY)));
 			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressTotal))

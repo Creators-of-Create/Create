@@ -71,7 +71,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 
 		if (getTheoreticalSpeed() == 0)
 			tooltip.add(new StringTextComponent(ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).formatted(TextFormatting.DARK_GRAY));
-		//	tooltip.add(ITextComponent.of(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
+		//	tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
 		//			+ Lang.translate("gui.stressometer.no_rotation")));
 		else {
 			tooltip.add(componentSpacing.copy().append(StressImpact.getFormattedStressText(stressFraction)));

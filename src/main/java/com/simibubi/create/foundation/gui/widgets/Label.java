@@ -19,7 +19,7 @@ public class Label extends AbstractSimiWidget {
 	public Label(int x, int y, ITextComponent text) {
 		super(x, y, Minecraft.getInstance().fontRenderer.getWidth(text), 10);
 		font = Minecraft.getInstance().fontRenderer;
-		this.text = ITextComponent.of("Label");
+		this.text = new StringTextComponent("Label");
 		color = 0xFFFFFF;
 		hasShadow = false;
 		suffix = "";

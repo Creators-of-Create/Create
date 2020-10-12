@@ -136,7 +136,7 @@ public class ValueBox extends ChasingAABBOutline {
 		public void renderContents(MatrixStack ms, IRenderTypeBuffer buffer) {
 			super.renderContents(ms, buffer);
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
-			ITextComponent countString = ITextComponent.of(count == 0 ? "*" : count + "");
+			ITextComponent countString = new StringTextComponent(count == 0 ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;

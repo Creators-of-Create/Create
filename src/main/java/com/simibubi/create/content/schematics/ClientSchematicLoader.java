@@ -137,7 +137,7 @@ public class ClientSchematicLoader {
 						if (Files.isDirectory(path))
 							return;
 
-						availableSchematics.add(ITextComponent.of(path.getFileName().toString()));
+						availableSchematics.add(new StringTextComponent(path.getFileName().toString()));
 					});
 		} catch (NoSuchFileException e) {
 			// No Schematics created yet

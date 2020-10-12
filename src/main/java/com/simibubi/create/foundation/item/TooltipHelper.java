@@ -2,7 +2,10 @@ package com.simibubi.create.foundation.item;
 
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mojang.bridge.game.Language;
@@ -23,7 +26,12 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextProcessing;
 
 public class TooltipHelper {
 
@@ -84,7 +92,7 @@ public class TooltipHelper {
 	}
 
 	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor, TextFormatting highlightColor) {
-		return cutTextComponent(ITextComponent.of(c), defaultColor, highlightColor, 0);
+		return cutTextComponent(new StringTextComponent(c), defaultColor, highlightColor, 0);
 	}
 
 	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor, TextFormatting highlightColor) {
@@ -93,7 +101,7 @@ public class TooltipHelper {
 
 	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor, TextFormatting highlightColor,
 															  int indent) {
-		return cutTextComponent(ITextComponent.of(c), defaultColor, highlightColor, indent);
+		return cutTextComponent(new StringTextComponent(c), defaultColor, highlightColor, indent);
 	}
 
 	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor, TextFormatting highlightColor,
@@ -194,7 +202,7 @@ public class TooltipHelper {
 
 		// Summary
 		if (I18n.hasKey(summaryKey))
-			tooltip = tooltip.withSummary(ITextComponent.of(I18n.format(summaryKey)));
+			tooltip = tooltip.withSummary(new StringTextComponent(I18n.format(summaryKey)));
 
 		// Requirements
 		if (stack.getItem() instanceof BlockItem) {

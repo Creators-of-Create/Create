@@ -23,7 +23,7 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	private final List<ITextComponent> tooltip;
 
 	public GoggleConfigScreen() {
-		ITextComponent componentSpacing = ITextComponent.of("    ");
+		ITextComponent componentSpacing = new StringTextComponent("    ");
 		tooltip = new ArrayList<>();
 		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay1")));
 		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.config.overlay2").formatted(TextFormatting.GRAY)));

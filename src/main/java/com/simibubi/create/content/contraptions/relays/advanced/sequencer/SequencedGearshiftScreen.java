@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
@@ -142,7 +143,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = textRenderer.getStringWidth(text);
-				label(matrixStack, 90 + (12 - stringWidth / 2), yOffset - 3, ITextComponent.of(text));
+				label(matrixStack, 90 + (12 - stringWidth / 2), yOffset - 3, new StringTextComponent(text));
 			}
 			if (def.hasSpeedParameter)
 				label(matrixStack, 127, yOffset - 3, instruction.speedModifier.label);

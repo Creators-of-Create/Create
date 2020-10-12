@@ -58,7 +58,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96)
 				.titled(lowerLimit)
 				.calling(state -> {
-					offBelowLabel.text = ITextComponent.of(state + "%");
+					offBelowLabel.text = new StringTextComponent(state + "%");
 					lastModification = 0;
 					if (onAbove.getState() - 4 <= state) {
 						onAbove.setState(state + 5);
@@ -72,7 +72,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101)
 				.titled(upperLimit)
 				.calling(state -> {
-					onAboveLabel.text = ITextComponent.of(state + "%");
+					onAboveLabel.text = new StringTextComponent(state + "%");
 					lastModification = 0;
 					if (offBelow.getState() + 4 >= state) {
 						offBelow.setState(state - 5);

@@ -8,8 +8,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.NBTHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.Create;
@@ -18,12 +16,14 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;

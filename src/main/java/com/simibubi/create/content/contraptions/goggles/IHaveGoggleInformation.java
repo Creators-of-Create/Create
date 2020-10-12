@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
@@ -12,7 +13,7 @@ public interface IHaveGoggleInformation {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	String spacing = "    ";
-	ITextComponent componentSpacing = ITextComponent.of(spacing);
+	ITextComponent componentSpacing = new StringTextComponent(spacing);
 
 	/**
 	* this method will be called when looking at a TileEntity that implemented this interface

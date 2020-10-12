@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class ScrollInput extends AbstractSimiWidget {
@@ -131,7 +132,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	}
 
 	protected void writeToLabel() {
-		displayLabel.text = ITextComponent.of(String.valueOf(state));
+		displayLabel.text = new StringTextComponent(String.valueOf(state));
 	}
 
 	protected void updateTooltip() {

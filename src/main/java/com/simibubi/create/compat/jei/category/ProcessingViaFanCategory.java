@@ -2,6 +2,8 @@ package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -16,8 +18,6 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.math.vector.Vector3f;
-
-import javax.annotation.Nullable;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 

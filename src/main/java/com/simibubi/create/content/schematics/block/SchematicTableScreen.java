@@ -149,7 +149,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 			if (schematicsLabel != null) {
 				schematicsLabel.colored(0xCCDDFF);
-				schematicsLabel.text = ITextComponent.of(container.getTileEntity().uploadingSchematic);
+				schematicsLabel.text = new StringTextComponent(container.getTileEntity().uploadingSchematic);
 			}
 			if (schematicsArea != null)
 				schematicsArea.visible = false;

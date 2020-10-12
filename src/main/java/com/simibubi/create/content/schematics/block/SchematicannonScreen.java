@@ -1,5 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
+import static net.minecraft.util.text.TextFormatting.BLUE;
+import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
@@ -32,8 +35,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import static net.minecraft.util.text.TextFormatting.*;
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
 	private static final AllGuiTextures BG_BOTTOM = AllGuiTextures.SCHEMATICANNON_BOTTOM;
