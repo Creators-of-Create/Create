@@ -255,9 +255,9 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		Vec3d getInteractionPositionVector() {
+		Vector3d getInteractionPositionVector() {
 			return super.getInteractionPositionVector()
-				.add(new Vec3d(getInteractionDirection().getDirectionVec()).scale(.65f));
+				.add(Vector3d.of(getInteractionDirection().getDirectionVec()).scale(.65f));
 		}
 
 	}
@@ -312,9 +312,9 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		Vec3d getInteractionPositionVector() {
+		Vector3d getInteractionPositionVector() {
 			return super.getInteractionPositionVector()
-				.add(new Vec3d(getInteractionDirection().getDirectionVec()).scale(.5f));
+				.add(Vector3d.of(getInteractionDirection().getDirectionVec()).scale(.5f));
 		}
 
 	}

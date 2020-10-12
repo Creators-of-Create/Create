@@ -517,7 +517,7 @@ public class AllBlocks {
 
 	static {
 		for (DyeColor colour : DyeColor.values()) {
-			String colourName = colour.getName();
+			String colourName = colour.getString();
 			DYED_VALVE_HANDLES[colour.ordinal()] =
 				REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
 					.transform(BuilderTransformers.valveHandle(colour))

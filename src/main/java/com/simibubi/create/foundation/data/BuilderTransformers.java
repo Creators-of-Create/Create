@@ -54,7 +54,7 @@ public class BuilderTransformers {
 		@Nullable DyeColor color) {
 		return b -> b.initialProperties(SharedProperties::softMetal)
 			.blockstate((c, p) -> {
-				String variant = color == null ? "copper" : color.getName();
+				String variant = color == null ? "copper" : color.getString();
 				p.directionalBlock(c.get(), p.models()
 					.withExistingParent(variant + "_valve_handle", p.modLoc("block/valve_handle"))
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
