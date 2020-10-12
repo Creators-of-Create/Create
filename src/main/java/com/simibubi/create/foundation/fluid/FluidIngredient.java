@@ -1,11 +1,14 @@
 package com.simibubi.create.foundation.fluid;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -24,6 +27,8 @@ import net.minecraftforge.fluids.FluidStack;
 public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static final FluidIngredient EMPTY = new FluidStackIngredient();
+
+	public List<FluidStack> matchingFluidStacks;
 
 	public static FluidIngredient fromTag(ITag.INamedTag<Fluid> tag, int amount) {
 		FluidTagIngredient ingredient = new FluidTagIngredient();
@@ -51,8 +56,16 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	protected abstract void writeInternal(JsonObject json);
 
+	protected abstract List<FluidStack> determineMatchingFluidStacks();
+
 	public int getRequiredAmount() {
 		return amountRequired;
+	}
+
+	public List<FluidStack> getMatchingFluidStacks() {
+		if (matchingFluidStacks != null)
+			return matchingFluidStacks;
+		return matchingFluidStacks = determineMatchingFluidStacks();
 	}
 
 	@Override
@@ -156,6 +169,11 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			json.add("nbt", new JsonParser().parse(tagToMatch.toString()));
 		}
 
+		@Override
+		protected List<FluidStack> determineMatchingFluidStacks() {
+			return ImmutableList.of(new FluidStack(fluid, amountRequired, tagToMatch));
+		}
+
 	}
 
 	public static class FluidTagIngredient extends FluidIngredient {
@@ -183,8 +201,11 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluidTag"));
-			Optional<? extends ITag.INamedTag<Fluid>> optionalINamedTag = FluidTags.getRequiredTags().stream()
-				.filter(fluidINamedTag -> fluidINamedTag.getId().equals(id)).findFirst(); // fixme
+			Optional<? extends ITag.INamedTag<Fluid>> optionalINamedTag = FluidTags.getRequiredTags()
+				.stream()
+				.filter(fluidINamedTag -> fluidINamedTag.getId()
+					.equals(id))
+				.findFirst(); // fixme
 			if (!optionalINamedTag.isPresent())
 				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
 			tag = optionalINamedTag.get();
@@ -194,6 +215,14 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected void writeInternal(JsonObject json) {
 			json.addProperty("fluidTag", tag.getId()
 				.toString());
+		}
+
+		@Override
+		protected List<FluidStack> determineMatchingFluidStacks() {
+			return tag.values()
+				.stream()
+				.map(f -> new FluidStack(f, amountRequired))
+				.collect(Collectors.toList());
 		}
 
 	}

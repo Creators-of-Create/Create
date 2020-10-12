@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 482",
+	"_": "Missing Localizations: 483",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -381,11 +381,13 @@
 	"item.create.andesite_alloy": "Alliage d'andésite",
 	"item.create.attribute_filter": "Filtre d'attribut",
 	"item.create.belt_connector": "Tapis roulant",
+	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.brass_hand": "Main",
 	"item.create.brass_ingot": "Lingot de laiton",
 	"item.create.brass_nugget": "Pépite de laiton",
 	"item.create.brass_sheet": "Plaques de laiton",
 	"item.create.chromatic_compound": "Composé chromatique",
+	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Lingot de cuivre",
 	"item.create.copper_nugget": "Pépite de cuivre",
 	"item.create.copper_sheet": "Plaques de cuivre",
@@ -402,7 +404,6 @@
 	"item.create.empty_schematic": "Schéma vide",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "Filtre",
-	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",
 	"item.create.goggles": "Lunettes d'ingénieur",
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 146",
+	"_": "Missing Localizations: 147",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -381,11 +381,13 @@
 	"item.create.andesite_alloy": "安山合金",
 	"item.create.attribute_filter": "属性过滤器",
 	"item.create.belt_connector": "传送带",
+	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.brass_hand": "黄铜手部零件",
 	"item.create.brass_ingot": "黄铜锭",
 	"item.create.brass_nugget": "黄铜粒",
 	"item.create.brass_sheet": "黄铜板",
 	"item.create.chromatic_compound": "异彩化合物",
+	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "铜锭",
 	"item.create.copper_nugget": "铜粒",
 	"item.create.copper_sheet": "铜板",
@@ -402,7 +404,6 @@
 	"item.create.empty_schematic": "空白蓝图",
 	"item.create.extendo_grip": "伸缩机械手",
 	"item.create.filter": "过滤器",
-	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "装配过的动力矿车",
 	"item.create.goggles": "工程师护目镜",
 	"item.create.golden_sheet": "金板",

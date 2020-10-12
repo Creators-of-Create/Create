@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 466",
+	"_": "Missing Localizations: 467",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -381,11 +381,13 @@
 	"item.create.andesite_alloy": "Lega di Andesite",
 	"item.create.attribute_filter": "Filtro Attributi",
 	"item.create.belt_connector": "Nastro Meccanico",
+	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.brass_hand": "Mano",
 	"item.create.brass_ingot": "Lingotto di Ottone",
 	"item.create.brass_nugget": "Pepita di Ottone",
 	"item.create.brass_sheet": "Lamiera di Ottone",
 	"item.create.chromatic_compound": "Composto Cromatico",
+	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Lingotto di Rame",
 	"item.create.copper_nugget": "Pepita di Rame",
 	"item.create.copper_sheet": "Lamiera di Rame",
@@ -402,7 +404,6 @@
 	"item.create.empty_schematic": "Schematica Vuota",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "Filtro",
-	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",
 	"item.create.goggles": "Occhiali da Ingegnere",
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",

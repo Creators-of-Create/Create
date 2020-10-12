@@ -29,11 +29,14 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateSc
 import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IModIngredientRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -53,6 +56,15 @@ import net.minecraft.util.text.TextFormatting;
 public class CreateJEI implements IModPlugin {
 
 	private static ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
+
+	public static final IIngredientType<FluidIngredient> FLUIDS = new IIngredientType<FluidIngredient>() {
+
+		@Override
+		public Class<? extends FluidIngredient> getIngredientClass() {
+			return FluidIngredient.class;
+		}
+	};
+
 	private MillingCategory millingCategory;
 	private CrushingCategory crushingCategory;
 	private SplashingCategory splashingCategory;

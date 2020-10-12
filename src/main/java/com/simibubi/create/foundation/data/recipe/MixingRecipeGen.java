@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
@@ -16,15 +17,18 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	TEMPCOBBLE = create("temp_cobble", b -> b
-		.require(FluidTags.WATER, 250)
-		.require(FluidTags.LAVA, 250)
+	TEMPCOBBLE = create("temp_cobble", b -> b.require(FluidTags.WATER, 250)
+		.require(FluidTags.LAVA, 25)
 		.output(Blocks.COBBLESTONE, 1)),
-	
-	BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
-		.require(I.zinc())
-		.output(AllItems.BRASS_INGOT.get(), 2)
-		.requiresHeat(HeatCondition.HEATED)),
+
+		TEMP_LAVA = create("temp_lava", b -> b.require(Tags.Items.COBBLESTONE)
+			.output(Fluids.LAVA, 25)
+			.requiresHeat(HeatCondition.SUPERHEATED)),
+
+		BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
+			.require(I.zinc())
+			.output(AllItems.BRASS_INGOT.get(), 2)
+			.requiresHeat(HeatCondition.HEATED)),
 
 		CRUSHED_BRASS = create("crushed_brass", b -> b.require(AllItems.CRUSHED_COPPER.get())
 			.require(AllItems.CRUSHED_ZINC.get())

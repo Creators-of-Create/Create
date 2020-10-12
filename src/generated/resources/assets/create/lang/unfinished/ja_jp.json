@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 461",
+	"_": "Missing Localizations: 462",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -381,11 +381,13 @@
 	"item.create.andesite_alloy": "安山岩合金",
 	"item.create.attribute_filter": "属性フィルター",
 	"item.create.belt_connector": "メカニカルベルト",
+	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.brass_hand": "手",
 	"item.create.brass_ingot": "真鍮インゴット",
 	"item.create.brass_nugget": "真鍮ナゲット",
 	"item.create.brass_sheet": "真鍮シート",
 	"item.create.chromatic_compound": "色彩の化合物",
+	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "銅インゴット",
 	"item.create.copper_nugget": "銅塊",
 	"item.create.copper_sheet": "銅板",
@@ -402,7 +404,6 @@
 	"item.create.empty_schematic": "空の概略図",
 	"item.create.extendo_grip": "UNLOCALIZED: Extendo Grip",
 	"item.create.filter": "フィルター",
-	"item.create.fuel_pellet": "UNLOCALIZED: Fuel Pellet",
 	"item.create.furnace_minecart_contraption": "UNLOCALIZED: Furnace Minecart Contraption",
 	"item.create.goggles": "エンジニアのゴーグル",
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",

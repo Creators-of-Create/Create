@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -60,6 +61,18 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		super.fillStateContainer(builder);
 		builder.add(HEAT_LEVEL);
 	}
+	
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_,
+		boolean p_220082_5_) {
+		if (world.isRemote)
+			return;
+		TileEntity tileEntity = world.getTileEntity(pos.up());
+		if (!(tileEntity instanceof BasinTileEntity))
+			return;
+		BasinTileEntity basin = (BasinTileEntity) tileEntity;
+		basin.notifyChangeOfContents();
+	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
@@ -90,16 +103,17 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		ItemStack heldItem = player.getHeldItem(hand);
 		boolean dontConsume = player.isCreative();
 		boolean forceOverflow = !(player instanceof FakePlayer);
-		
+
 		if (!tryInsert(state, world, pos, dontConsume ? heldItem.copy() : heldItem, forceOverflow, false))
 			return ActionResultType.PASS;
 		return ActionResultType.SUCCESS;
 	}
 
-	public static boolean tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean forceOverflow, boolean simulate) {
+	public static boolean tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean forceOverflow,
+		boolean simulate) {
 		if (!state.hasTileEntity())
 			return false;
-		
+
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof BlazeBurnerTileEntity))
 			return false;
@@ -141,13 +155,6 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
 		return MathHelper.clamp(state.get(HEAT_LEVEL)
 			.ordinal() * 4 - 1, 0, 15);
-	}
-
-	static void setBlazeLevel(World world, BlockPos pos, HeatLevel blazeLevel) {
-		BlockState blockState = world.getBlockState(pos);
-		if (!(blockState.getBlock() instanceof BlazeBurnerBlock))
-			return;
-		world.setBlockState(pos, blockState.with(HEAT_LEVEL, blazeLevel));
 	}
 
 	public static HeatLevel getHeatLevelOf(BlockState blockState) {

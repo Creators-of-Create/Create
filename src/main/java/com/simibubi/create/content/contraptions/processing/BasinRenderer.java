@@ -33,7 +33,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		int light, int overlay) {
 		super.renderSafe(basin, partialTicks, ms, buffer, light, overlay);
 
-		float fluidSurface = renderFluids(basin, partialTicks, ms, buffer, light, overlay);
+		renderFluids(basin, partialTicks, ms, buffer, light, overlay);
 
 		ms.push();
 		BlockPos pos = basin.getPos();

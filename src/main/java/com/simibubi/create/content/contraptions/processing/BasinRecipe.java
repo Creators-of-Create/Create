@@ -51,7 +51,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = basin.getHeatLevel();
+		HeatLevel heat = BasinTileEntity.getHeatLevelOf(basin.getWorld()
+			.getBlockState(basin.getPos()
+				.down(1)));
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
 			.testBlazeBurner(heat))
 			return false;
@@ -148,16 +150,16 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	 * For JEI purposes only
 	 */
 	public boolean convertedRecipe;
-	
+
 	public static BasinRecipe convert(IRecipe<?> recipe) {
-		BasinRecipe basinRecipe = new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId())
-			.withItemIngredients(recipe.getIngredients())
-			.withSingleItemOutput(recipe.getRecipeOutput())
-			.build();
+		BasinRecipe basinRecipe =
+			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
+				.withSingleItemOutput(recipe.getRecipeOutput())
+				.build();
 		basinRecipe.convertedRecipe = true;
 		return basinRecipe;
 	}
-	
+
 	protected BasinRecipe(AllRecipeTypes type, ProcessingRecipeParams params) {
 		super(type, params);
 	}

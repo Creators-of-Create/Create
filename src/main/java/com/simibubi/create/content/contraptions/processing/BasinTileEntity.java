@@ -27,8 +27,8 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -144,7 +144,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			BlockPos toUpdate = pos.up()
 				.offset(offset);
 			BlockState stateToUpdate = world.getBlockState(toUpdate);
-			if (stateToUpdate.getBlock() instanceof BasinBlock && stateToUpdate.get(BasinBlock.FACING) == offset.getOpposite()) {
+			if (stateToUpdate.getBlock() instanceof BasinBlock
+				&& stateToUpdate.get(BasinBlock.FACING) == offset.getOpposite()) {
 				TileEntity te = world.getTileEntity(toUpdate);
 				if (te instanceof BasinTileEntity)
 					((BasinTileEntity) te).contentsChanged = true;
@@ -256,8 +257,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 	}
 
-	public HeatLevel getHeatLevel() {
-		BlockState state = world.getBlockState(pos.down(1));
+	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (BlockHelper.hasBlockStateProperty(state, BlazeBurnerBlock.HEAT_LEVEL))
 			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
 		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
