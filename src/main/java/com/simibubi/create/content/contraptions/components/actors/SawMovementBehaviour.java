@@ -41,8 +41,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
 		Vec3d facingVec = new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec());
-		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
-		facingVec.normalize();
+		facingVec = context.rotation.apply(facingVec);
 
 		Direction closestToFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
 		if(closestToFacing.getAxis().isVertical() && context.data.contains("BreakingPos")) {

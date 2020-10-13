@@ -70,7 +70,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			if(!blockState.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
 				MatrixStacker.of(ms).centre().rotateY(90).unCentre();
 		}
-		superBuffer = partial.renderOnDirectional(blockState);
+		superBuffer = partial.renderOnDirectionalSouth(blockState);
 		superBuffer.light(light).renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 
 		ms.pop();
@@ -141,8 +141,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		Direction facing = state.get(SawBlock.FACING);
 
 		Vec3d facingVec = new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec());
-		facingVec = VecHelper.rotate(facingVec, context.rotation.x, context.rotation.y, context.rotation.z);
-		facingVec.normalize();
+		facingVec = context.rotation.apply(facingVec);
 
 		Direction closestToFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
 
