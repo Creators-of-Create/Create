@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,10 +9,12 @@ import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
@@ -19,6 +22,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
 
 public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
@@ -62,7 +66,9 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		List<ProcessingOutput> rollableResults = processingRecipe.getRollableResults();
 		if (rollableResults.size() <= index)
 			return jeiSlot;
-		if (processingRecipe.getRollableResults().get(index).getChance() == 1)
+		if (processingRecipe.getRollableResults()
+			.get(index)
+			.getChance() == 1)
 			return jeiSlot;
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
@@ -85,8 +91,25 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 				return;
 			ProcessingOutput output = results.get(slotIndex - 1);
 			if (output.getChance() != 1)
-				tooltip.add(1, TextFormatting.GOLD
-						+ Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
+				tooltip.add(1,
+					TextFormatting.GOLD + Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
+		});
+	}
+
+	protected static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
+		List<FluidStack> outputs) {
+		List<Integer> amounts = new ArrayList<>();
+		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
+		outputs.forEach(f -> amounts.add(f.getAmount()));
+
+		fluidStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			int amount = amounts.get(slotIndex);
+			String text = TextFormatting.GOLD + (amount == 1000 ? Lang.translate("generic.unit.bucket")
+				: Lang.translate("generic.unit.millibuckets", amount));
+			if (tooltip.isEmpty())
+				tooltip.add(0, text);
+			else
+				tooltip.set(0, tooltip.get(0) + " " + text);
 		});
 	}
 
@@ -99,7 +122,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			Float chance = catalystIndices.get(slotIndex);
 			tooltip.add(1, TextFormatting.YELLOW + Lang.translate("recipe.processing.catalyst"));
 			tooltip.add(2, TextFormatting.GOLD
-					+ Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)));
+				+ Lang.translate("recipe.processing.chanceToReturn", (int) (chance.floatValue() * 100)));
 		});
 	}
 

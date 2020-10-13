@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 483",
+	"_": "Missing Localizations: 486",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -549,7 +549,7 @@
 	"create.recipe.pressing": "Pressage",
 	"create.recipe.mixing": "Mixage",
 	"create.recipe.packing": "Compactage",
-	"create.recipe.mechanical_sawing": "Sciage",
+	"create.recipe.sawing": "UNLOCALIZED: Sawing",
 	"create.recipe.mechanical_crafting": "Fabrication mécanique",
 	"create.recipe.block_cutting": "Coupe de bloc",
 	"create.recipe.blockzapper_upgrade": "Blockzappeur portable",
@@ -572,6 +572,8 @@
 	"create.generic.unit.rpm": "tr/min",
 	"create.generic.unit.stress": "us",
 	"create.generic.unit.degrees": "°",
+	"create.generic.unit.bucket": "UNLOCALIZED: 1 Bucket",
+	"create.generic.unit.millibuckets": "UNLOCALIZED: %1$smB",
 
 	"create.action.scroll": "Faire défiler",
 	"create.action.confirm": "Confirmer",

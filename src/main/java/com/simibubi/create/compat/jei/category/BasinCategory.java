@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -108,6 +109,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			fluidStacks.init(j, false, 142, 51 + yOffset);
 			fluidStacks.set(j, fluidOutput);
 		}
+		
+		addFluidTooltip(fluidStacks, fluidIngredients, ImmutableList.of(fluidOutput));
 	}
 
 	@Override
@@ -118,6 +121,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		int yOffset = requiredHeat != HeatCondition.NONE ? 30 : 10;
+		
 		for (int i = 0; i < size; i++)
 			AllGuiTextures.JEI_SLOT.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
@@ -125,5 +129,5 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32 + yOffset);
 		AllGuiTextures.JEI_SHADOW.draw(81, 57 + yOffset);
 	}
-
+	
 }
