@@ -97,7 +97,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		}
 
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + ADJUSTABLE_CRATE.width + 110, guiTop + 40)
+				.at(guiLeft + ADJUSTABLE_CRATE.width + 110, guiTop + 120)
 				.scale(5)
 				.render(matrixStack);
 	}

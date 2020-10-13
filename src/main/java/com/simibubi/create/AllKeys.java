@@ -45,9 +45,8 @@ public enum AllKeys {
 		return keybind.isKeyDown();
 	}
 
-	// TODO this should return ITextComponent
 	public String getBoundKey() {
-		return keybind.getBoundKeyLocalizedText().getUnformattedComponentText().toUpperCase();
+		return keybind.getBoundKeyLocalizedText().getString().toUpperCase();
 	}
 
 	public int getBoundCode() {

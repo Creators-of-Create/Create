@@ -43,8 +43,10 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		super.init();
 		widgets.clear();
 
-		resetButton = new IconButton(guiLeft + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
-		confirmButton = new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		resetButton =
+			new IconButton(guiLeft + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
+		confirmButton =
+			new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
@@ -63,9 +65,9 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
 		GuiGameElement.of(container.filterItem)
-				.at(guiLeft + background.width, guiTop +background.height -60)
-				.scale(5)
-				.render(ms);
+			.at(guiLeft + background.width, guiTop + background.height + 25)
+			.scale(5)
+			.render(ms);
 
 	}
 
@@ -75,7 +77,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		super.tick();
 		handleIndicators();
 
-		if (!container.player.getHeldItemMainhand().equals(container.filterItem, false))
+		if (!container.player.getHeldItemMainhand()
+			.equals(container.filterItem, false))
 			client.player.closeScreen();
 	}
 
@@ -96,9 +99,12 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		List<IconButton> tooltipButtons = getTooltipButtons();
 
 		for (IconButton button : tooltipButtons) {
-			if (!button.getToolTip().isEmpty()) {
-				button.setToolTip(button.getToolTip().get(0));
-				button.getToolTip().add(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown()));
+			if (!button.getToolTip()
+				.isEmpty()) {
+				button.setToolTip(button.getToolTip()
+					.get(0));
+				button.getToolTip()
+					.add(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown()));
 			}
 		}
 
@@ -144,8 +150,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		return mouseClicked;
 	}
 
-	protected void contentsCleared() {
-	}
+	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
 		AllPackets.channel.sendToServer(new FilterScreenPacket(option));

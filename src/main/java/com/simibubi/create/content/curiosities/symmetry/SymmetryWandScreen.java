@@ -123,7 +123,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		renderBlock(matrixStack);
 		GuiGameElement.of(wand)
-			.at(guiLeft + 170, guiTop + 200)
+			.at(guiLeft + 190, guiTop + 420)
 			.scale(4)
 			.rotate(-70, 20, 20)
 			.render(matrixStack);
@@ -131,10 +131,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	protected void renderBlock(MatrixStack ms) {
 		ms.push();
-		ms.translate(guiLeft + 18, guiTop + 11, 20);
-		ms.translate(guiLeft + 25.5f, guiTop + 21, 20);
+		ms.translate(guiLeft + 26f, guiTop + 37, 20);
+		ms.scale(16, 16, 16);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
-		ms.scale(16, -16, 16);
 		currentElement.applyModelTransform(ms);
 		// RenderSystem.multMatrix(ms.peek().getModel());
 		GuiGameElement.of(currentElement.getModel())

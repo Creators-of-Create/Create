@@ -149,11 +149,11 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				label(matrixStack, 127, yOffset - 3, instruction.speedModifier.label);
 		}
 
-		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 10,
-			hFontColor);
+		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 3,
+			0xffffff);
 
 		GuiGameElement.of(renderedItem)
-			.at(guiLeft + background.width + 20, guiTop + 50)
+			.at(guiLeft + background.width + 10, guiTop + 180)
 			.scale(5)
 			.render(matrixStack);
 	}

@@ -46,7 +46,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 
 	@Override
 	public String getTitle() {
-		return Lang.translate("recipe." + name).getUnformattedComponentText();
+		return Lang.translate("recipe." + name).getString();
 	}
 
 	@Override

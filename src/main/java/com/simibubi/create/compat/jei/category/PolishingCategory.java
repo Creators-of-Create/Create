@@ -71,10 +71,10 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		CompoundNBT tag = renderedSandpaper.getOrCreateTag();
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		matrixStack.translate(0, 30, 0);
 		matrixStack.scale(2, 2, 2);
 		matrixStack.translate(getBackground().getWidth() / 4 - 8, 1, 0);
-		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, renderedSandpaper);
+		GuiGameElement.of(renderedSandpaper).render(matrixStack);
 		matrixStack.pop();
 	}
 

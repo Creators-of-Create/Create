@@ -17,7 +17,8 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class ToolSelectionScreen extends Screen {
 
-	public final String scrollToCycle = Lang.translate("gui.toolmenu.cycle").getUnformattedComponentText();
+	public final String scrollToCycle = Lang.translate("gui.toolmenu.cycle")
+		.getString();
 	public final String holdToFocus = "gui.toolmenu.focusKey";
 
 	protected List<Tools> tools;
@@ -63,7 +64,6 @@ public class ToolSelectionScreen extends Screen {
 		if (!initialized)
 			init(mc, mainWindow.getScaledWidth(), mainWindow.getScaledHeight());
 
-
 		int x = (mainWindow.getScaledWidth() - w) / 2 + 15;
 		int y = mainWindow.getScaledHeight() - h - 75;
 
@@ -74,11 +74,14 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
-		Minecraft.getInstance().getTextureManager().bindTexture(gray.location);
+		Minecraft.getInstance()
+			.getTextureManager()
+			.bindTexture(gray.location);
 		drawTexture(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
-		List<ITextComponent> toolTip = tools.get(selection).getDescription();
+		List<ITextComponent> toolTip = tools.get(selection)
+			.getDescription();
 		int stringAlphaComponent = ((int) (toolTipAlpha * 0xFF)) << 24;
 
 		if (toolTipAlpha > 0.25f) {
@@ -99,10 +102,11 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.color4f(1, 1, 1, 1);
 		if (tools.size() > 1) {
 			String keyName = AllKeys.TOOL_MENU.getBoundKey();
-			int width = client.getWindow().getScaledWidth();
+			int width = client.getWindow()
+				.getScaledWidth();
 			if (!focused)
-				drawCenteredString(matrixStack, client.fontRenderer, Lang.translate(holdToFocus, keyName).getUnformattedComponentText(), width / 2, y - 10,
-						0xCCDDFF);
+				drawCenteredText(matrixStack, client.fontRenderer, Lang.translate(holdToFocus, keyName), width / 2,
+					y - 10, 0xCCDDFF);
 			else
 				drawCenteredString(matrixStack, client.fontRenderer, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
 		} else {
@@ -115,14 +119,19 @@ public class ToolSelectionScreen extends Screen {
 			float alpha = focused ? 1 : .2f;
 			if (i == selection) {
 				matrixStack.translate(0, -10, 0);
-				drawCenteredString(matrixStack, client.fontRenderer, tools.get(i).getDisplayName().getUnformattedComponentText(), x + i * 50 + 24, y + 28,
-						0xCCDDFF);
+				drawCenteredString(matrixStack, client.fontRenderer, tools.get(i)
+					.getDisplayName()
+					.getString(), x + i * 50 + 24, y + 28, 0xCCDDFF);
 				alpha = 1;
 			}
 			RenderSystem.color4f(0, 0, 0, alpha);
-			tools.get(i).getIcon().draw(matrixStack, this, x + i * 50 + 16, y + 12);
+			tools.get(i)
+				.getIcon()
+				.draw(matrixStack, this, x + i * 50 + 16, y + 12);
 			RenderSystem.color4f(1, 1, 1, alpha);
-			tools.get(i).getIcon().draw(matrixStack, this, x + i * 50 + 16, y + 11);
+			tools.get(i)
+				.getIcon()
+				.draw(matrixStack, this, x + i * 50 + 16, y + 11);
 
 			matrixStack.pop();
 		}
