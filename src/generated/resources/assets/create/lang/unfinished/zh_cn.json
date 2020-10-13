@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 147",
+	"_": "Missing Localizations: 150",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -549,7 +549,7 @@
 	"create.recipe.pressing": "金属压片",
 	"create.recipe.mixing": "混合搅拌",
 	"create.recipe.packing": "压块塑形",
-	"create.recipe.mechanical_sawing": "木材切割",
+	"create.recipe.sawing": "UNLOCALIZED: Sawing",
 	"create.recipe.mechanical_crafting": "自动合成",
 	"create.recipe.block_cutting": "方块切割",
 	"create.recipe.blockzapper_upgrade": "UNLOCALIZED: Handheld Blockzapper",
@@ -572,6 +572,8 @@
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
+	"create.generic.unit.bucket": "UNLOCALIZED: 1 Bucket",
+	"create.generic.unit.millibuckets": "UNLOCALIZED: %1$smB",
 
 	"create.action.scroll": "滚轮",
 	"create.action.confirm": "确认",

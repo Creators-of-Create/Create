@@ -60,6 +60,7 @@ public class OpenEndedPipe {
 				return;
 			if (waterlog) {
 				world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, false), 3);
+				world.getPendingFluidTicks().scheduleTick(outputPos, Fluids.WATER, 1);
 				return;
 			}
 			world.setBlockState(outputPos, fluidState.getBlockState()
@@ -80,6 +81,7 @@ public class OpenEndedPipe {
 			if (providedFluid.getFluid() != Fluids.WATER)
 				return;
 			world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, true), 3);
+			world.getPendingFluidTicks().scheduleTick(outputPos, Fluids.WATER, 1);
 			return;
 		}
 		world.setBlockState(outputPos, providedFluid.getDefaultState()
