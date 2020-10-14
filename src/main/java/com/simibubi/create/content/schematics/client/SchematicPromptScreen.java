@@ -66,10 +66,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		textRenderer.drawWithShadow(ms, title, guiLeft + (sWidth / 2) - (textRenderer.getWidth(title) / 2), guiTop + 3,
 			0xffffff);
 		ms.push();
-		ms.translate(guiLeft + 22, guiTop + 23, 0);
-		GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(ms, AllItems.SCHEMATIC.asStack());
+		ms.translate(guiLeft + 22, guiTop + 39, 0);
+		GuiGameElement.of(AllItems.SCHEMATIC.asStack()).render(ms);
 		ms.pop();
-		// itemRenderer.renderItemIntoGUI(AllItems.SCHEMATIC.asStack(), guiLeft + 22, guiTop + 23);
 	}
 
 	@Override

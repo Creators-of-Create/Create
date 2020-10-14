@@ -72,13 +72,6 @@ public class OxidizingBlock extends Block {
 	}
 
 	@Override
-	public float getPlayerRelativeBlockHardness(BlockState blockState, PlayerEntity player, IBlockReader worldIn,
-			BlockPos pos) {
-		return super.getPlayerRelativeBlockHardness(blockState, player, worldIn, pos)
-				- 0.2f * blockState.get(OXIDIZATION);
-	}
-	
-	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos,
 			PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult) {
 		if(state.get(OXIDIZATION) > 0 && player.getHeldItem(hand).getItem() instanceof SandPaperItem) {

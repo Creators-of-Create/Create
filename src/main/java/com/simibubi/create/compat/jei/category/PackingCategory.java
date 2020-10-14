@@ -20,7 +20,7 @@ public class PackingCategory extends BasinCategory {
 
 	public PackingCategory() {
 		super("packing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get()),
-				emptyBackground(177, 70));
+			emptyBackground(177, 110));
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class PackingCategory extends BasinCategory {
 			super.setRecipe(recipeLayout, recipe, ingredients);
 			return;
 		}
-		
+
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		int i = 0;
 
@@ -38,12 +38,12 @@ public class PackingCategory extends BasinCategory {
 		int rows = size == 4 ? 2 : 3;
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
-			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
+			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 60 - (i / rows) * 19);
 			itemStacks.set(i, Arrays.asList(ingredient.getMatchingStacks()));
 			i++;
 		}
 
-		itemStacks.init(i, false, 141, 50);
+		itemStacks.init(i, false, 141, 60);
 		itemStacks.set(i, recipe.getRecipeOutput());
 	}
 
@@ -51,19 +51,20 @@ public class PackingCategory extends BasinCategory {
 	public void draw(BasinRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		if (!recipe.convertedRecipe) {
 			super.draw(recipe, matrixStack, mouseX, mouseY);
-			
+
 		} else {
 			NonNullList<Ingredient> ingredients2 = recipe.getIngredients();
 			int size = ingredients2.size();
 			int rows = size == 4 ? 2 : 3;
-			for (int i = 0; i < size; i++) 
-				AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
-			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
-			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 57);
+			for (int i = 0; i < size; i++)
+				AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
+					60 - (i / rows) * 19);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 60);
+			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 42);
+			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 67);
 		}
-		
-		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 30);
+
+		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 40);
 	}
 
 }

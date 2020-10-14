@@ -548,7 +548,7 @@
 	"create.recipe.pressing": "Pressing",
 	"create.recipe.mixing": "Mixing",
 	"create.recipe.packing": "Compacting",
-	"create.recipe.mechanical_sawing": "Sawing",
+	"create.recipe.sawing": "Sawing",
 	"create.recipe.mechanical_crafting": "Mechanical Crafting",
 	"create.recipe.block_cutting": "Block Cutting",
 	"create.recipe.blockzapper_upgrade": "Handheld Blockzapper",
@@ -571,6 +571,8 @@
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
+	"create.generic.unit.bucket": "1 Bucket",
+	"create.generic.unit.millibuckets": "%1$smB",
 
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",

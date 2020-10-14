@@ -49,38 +49,6 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		setWindowSize(background.width + 50, background.height);
 		super.init();
 		widgets.clear();
-		/*
-<<<<<<< HEAD
-		cursorPos = te.currentLevel == -1 ? 0 : te.currentLevel;
-
-		offBelowLabel = new Label(guiLeft + 116, guiTop + 72, "").colored(0xD3CBBE)
-				.withShadow();
-		offBelow = new ScrollInput(guiLeft + 113, guiTop + 69, 33, 14).withRange(0, 96)
-				.titled(lowerLimit)
-				.calling(state -> {
-					offBelowLabel.text = new StringTextComponent(state + "%");
-					lastModification = 0;
-					if (onAbove.getState() - 4 <= state) {
-						onAbove.setState(state + 5);
-						onAbove.onChanged();
-					}
-				})
-				.setState((int) (te.offWhenBelow * 100));
-
-		onAboveLabel = new Label(guiLeft + 116, guiTop + 55, "").colored(0xD3CBBE)
-				.withShadow();
-		onAbove = new ScrollInput(guiLeft + 113, guiTop + 52, 33, 14).withRange(5, 101)
-				.titled(upperLimit)
-				.calling(state -> {
-					onAboveLabel.text = new StringTextComponent(state + "%");
-					lastModification = 0;
-					if (offBelow.getState() + 4 >= state) {
-						offBelow.setState(state - 5);
-						offBelow.onChanged();
-					}
-				})
-				.setState((int) (te.onWhenAbove * 100));
-=======*/
 
 		cursor = LerpedFloat.linear()
 			.startWithValue(te.getLevelForDisplay());
@@ -158,7 +126,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 
 		matrixStack.push();
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 20)
+				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 120)
 				.scale(5)
 				.render(matrixStack);
 		matrixStack.pop();

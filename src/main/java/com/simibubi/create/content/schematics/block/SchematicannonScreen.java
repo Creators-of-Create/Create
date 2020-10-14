@@ -261,7 +261,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			renderBlueprintHighlight(matrixStack);
 
 		GuiGameElement.of(renderedItem)
-			.at(guiLeft + 230, guiTop + 110)
+			.at(guiLeft + 230, guiTop + 190)
 			.scale(5)
 			.render(matrixStack);
 

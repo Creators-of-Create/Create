@@ -22,12 +22,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
 
@@ -47,6 +47,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
+				RenderSystem.pushMatrix();
+				RenderSystem.multMatrix(matrixStack.peek().getModel());
 				RenderSystem.enableDepthTest();
 				RenderHelper.enable();
 				Minecraft minecraft = Minecraft.getInstance();
@@ -56,6 +58,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				itemRenderer.renderItemOverlayIntoGUI(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
 				RenderHelper.disableStandardItemLighting();
+				RenderSystem.popMatrix();
 			}
 			
 			matrixStack.pop();
@@ -65,29 +68,14 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		public List<ITextComponent> getTooltip(ItemStack ingredient, ITooltipFlag tooltipFlag) {
 			Minecraft minecraft = Minecraft.getInstance();
 			PlayerEntity player = minecraft.player;
-			List<ITextComponent> list;
 			try {
-				list = ingredient.getTooltip(player, tooltipFlag);
+				return ingredient.getTooltip(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
-				return new ArrayList<>();
+				List<ITextComponent> list = new ArrayList<>();
+				TranslationTextComponent crash = new TranslationTextComponent("jei.tooltip.error.crash");
+				list.add(crash.formatted(TextFormatting.RED));
+				return list;
 			}
-
-			Rarity rarity;
-			try {
-				rarity = ingredient.getRarity();
-			} catch (RuntimeException | LinkageError e) {
-				rarity = Rarity.COMMON;
-			}
-
-			for (int k = 0; k < list.size(); ++k) {
-				if (k == 0) {
-					list.set(k, list.get(k).copy().formatted(rarity.color));
-				} else {
-					list.set(k, list.get(k).copy().formatted(TextFormatting.GRAY));
-				}
-			}
-
-			return list;
 		}
 	}
 
