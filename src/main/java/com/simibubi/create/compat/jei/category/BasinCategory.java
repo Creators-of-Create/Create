@@ -7,11 +7,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -20,6 +24,7 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -38,7 +43,15 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 	@Override
 	public void setIngredients(BasinRecipe recipe, IIngredients ingredients) {
-		ingredients.setInputIngredients(recipe.getIngredients());
+		List<Ingredient> itemIngredients = new ArrayList<>(recipe.getIngredients());
+		
+		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE))
+			itemIngredients.add(Ingredient.fromItems(AllBlocks.BLAZE_BURNER.get()));
+		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED))
+			itemIngredients.add(Ingredient.fromItems(AllItems.BLAZE_CAKE.get()));
+		
+		ingredients.setInputIngredients(itemIngredients);
 		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
 			.stream()
 			.map(FluidIngredient::getMatchingFluidStacks)
@@ -70,7 +83,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		int size = ingredients.size() + fluidIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
-		int yOffset = recipe.getRequiredHeat() != HeatCondition.NONE ? 30 : 10;
+		int yOffset = 0;
 
 		int i;
 		for (i = 0; i < ingredients.size(); i++) {
@@ -109,25 +122,45 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			fluidStacks.init(j, false, 142, 51 + yOffset);
 			fluidStacks.set(j, fluidOutput);
 		}
-		
+
 		addFluidTooltip(fluidStacks, fluidIngredients, ImmutableList.of(fluidOutput));
+		
+		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
+			itemStacks.init(++i, true, 133, 80);
+			itemStacks.set(i, AllBlocks.BLAZE_BURNER.asStack());
+		}
+		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
+			itemStacks.init(++i, true, 152, 80);
+			itemStacks.set(i, AllItems.BLAZE_CAKE.asStack());
+		}
 	}
 
 	@Override
 	public void draw(BasinRecipe recipe, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());
 
-		int size = actualIngredients.size() + recipe.getFluidIngredients().size();
+		int size = actualIngredients.size() + recipe.getFluidIngredients()
+			.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
-		int yOffset = requiredHeat != HeatCondition.NONE ? 30 : 10;
-		
+		int yOffset = 0;
+
 		for (int i = 0; i < size; i++)
 			AllGuiTextures.JEI_SLOT.draw(16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
+		boolean noHeat = requiredHeat == HeatCondition.NONE;
 		AllGuiTextures.JEI_SLOT.draw(141, 50 + yOffset);
 		AllGuiTextures.JEI_DOWN_ARROW.draw(136, 32 + yOffset);
-		AllGuiTextures.JEI_SHADOW.draw(81, 57 + yOffset);
+
+		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
+		shadow.draw(81, 58 + (noHeat ? 10 : 30));
+
+		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
+		heatBar.draw(4, 80);
+		
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(Lang.translate(requiredHeat.getTranslationKey()), 9,
+			85, requiredHeat.getColor());
 	}
-	
+
 }

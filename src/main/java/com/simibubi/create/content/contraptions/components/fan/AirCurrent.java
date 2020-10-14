@@ -73,6 +73,11 @@ public class AirCurrent {
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
+		tickAffectedEntities(world, facing);
+		tickAffectedHandlers();
+	}
+
+	protected void tickAffectedEntities(World world, Direction facing) {
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
 			if (!entity.getBoundingBox()
@@ -107,47 +112,51 @@ public class AirCurrent {
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
-			if (processingType != null) {
-				if (entity instanceof ItemEntity) {
-					InWorldProcessing.spawnParticlesForProcessing(world, entity.getPositionVec(), processingType);
-					if (InWorldProcessing.canProcess(((ItemEntity) entity), processingType))
-						InWorldProcessing.applyProcessing((ItemEntity) entity, processingType);
+			if (processingType == null)
+				continue;
 
-				} else {
-					switch (processingType) {
-					case BLASTING:
-						if (!entity.isImmuneToFire()) {
-							entity.setFire(10);
-							entity.attackEntityFrom(damageSourceLava, 4);
-						}
-						break;
-					case SMOKING:
-						if (!entity.isImmuneToFire()) {
-							entity.setFire(2);
-							entity.attackEntityFrom(damageSourceFire, 2);
-						}
-						break;
-					case SPLASHING:
-						if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM
-							|| entity.getType() == EntityType.BLAZE) {
-							entity.attackEntityFrom(DamageSource.DROWN, 2);
-						}
-						if (!entity.isBurning())
-							break;
-						entity.extinguish();
-						world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-							SoundCategory.NEUTRAL, 0.7F,
-							1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
-						break;
-					default:
-						break;
-					}
-				}
+			if (entity instanceof ItemEntity) {
+				InWorldProcessing.spawnParticlesForProcessing(world, entity.getPositionVec(), processingType);
+				ItemEntity itemEntity = (ItemEntity) entity;
+				if (world.isRemote)
+					continue;
+				if (InWorldProcessing.canProcess(itemEntity, processingType))
+					InWorldProcessing.applyProcessing(itemEntity, processingType);
+				continue;
 			}
-
+			
+			if (world.isRemote)
+				continue;
+			
+			switch (processingType) {
+			case BLASTING:
+				if (!entity.isImmuneToFire()) {
+					entity.setFire(10);
+					entity.attackEntityFrom(damageSourceLava, 4);
+				}
+				break;
+			case SMOKING:
+				if (!entity.isImmuneToFire()) {
+					entity.setFire(2);
+					entity.attackEntityFrom(damageSourceFire, 2);
+				}
+				break;
+			case SPLASHING:
+				if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM
+					|| entity.getType() == EntityType.BLAZE) {
+					entity.attackEntityFrom(DamageSource.DROWN, 2);
+				}
+				if (!entity.isBurning())
+					break;
+				entity.extinguish();
+				world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
+					SoundCategory.NEUTRAL, 0.7F, 1.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.4F);
+				break;
+			default:
+				break;
+			}
 		}
 
-		tickAffectedHandlers();
 	}
 
 	public void rebuild() {
@@ -157,7 +166,7 @@ public class AirCurrent {
 			bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 			return;
 		}
-		
+
 		direction = source.getAirflowOriginSide();
 		pushing = source.getAirFlowDirection() == direction;
 		maxDistance = source.getMaxDistance();
@@ -257,7 +266,7 @@ public class AirCurrent {
 				if (limitedDistance < distance)
 					limitedDistance = (float) distance;
 			}
-			
+
 			max = limitedDistance;
 			break;
 		}

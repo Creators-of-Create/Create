@@ -7,9 +7,15 @@ import com.simibubi.create.foundation.utility.Lang;
 
 public enum HeatCondition {
 
-	NONE, HEATED, SUPERHEATED,
+	NONE(0xffffff), HEATED(0xFFD528), SUPERHEATED(0xA2DFFF),
 
 	;
+	
+	private int color;
+
+	private HeatCondition(int color) {
+		this.color = color;
+	}
 
 	public boolean testBlazeBurner(BlazeBurnerBlock.HeatLevel level) {
 		if (this == SUPERHEATED)
@@ -30,6 +36,10 @@ public enum HeatCondition {
 	public String serialize() {
 		return Lang.asId(name());
 	}
+	
+	public String getTranslationKey() {
+		return "recipe.heat_requirement." + serialize();
+	}
 
 	public static HeatCondition deserialize(String name) {
 		for (HeatCondition heatCondition : values())
@@ -38,6 +48,10 @@ public enum HeatCondition {
 				return heatCondition;
 		Create.logger.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
 		return NONE;
+	}
+
+	public int getColor() {
+		return color;
 	}
 
 }

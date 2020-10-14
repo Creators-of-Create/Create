@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -23,6 +24,7 @@ import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
@@ -30,6 +32,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.util.Direction;
@@ -58,6 +61,10 @@ public class BuilderTransformers {
 				p.directionalBlock(c.get(), p.models()
 					.withExistingParent(variant + "_valve_handle", p.modLoc("block/valve_handle"))
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
+			})
+			.onRegisterAfter(Item.class, v -> {
+				if (color != null)
+					TooltipHelper.referTo(v, AllBlocks.COPPER_VALVE_HANDLE);
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
 			.item()

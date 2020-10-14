@@ -14,13 +14,6 @@
 	"block.create.andesite_casing.tooltip.condition1": "When used on Mechanical Belt",
 	"block.create.andesite_casing.tooltip.behaviour1": "_Reinforces_ _belts_ with a Brass foundation. Reinforced Belts can support _Belt_ _Tunnels_ and allows _Chutes_ to directly take _items_.",
 	
-	"block.create.andesite_belt_funnel.tooltip": "ANDESITE BELT FUNNEL",
-	"block.create.andesite_belt_funnel.tooltip.summary": "Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_.",
-	"block.create.andesite_belt_funnel.tooltip.condition1": "When used on Item Container",
-	"block.create.andesite_belt_funnel.tooltip.behaviour1": "Items _Collected_ by the _Funnel_ will be placed in the attached _Item_ _Containers_ such as _Chests_, _Belts_ and _Chutes_.",
-	"block.create.andesite_belt_funnel.tooltip.condition2": "When placed above a belt",
-	"block.create.andesite_belt_funnel.tooltip.behaviour2": "a _Funnel_ powered by a _Belt_ allows for items to be automatically placed into or taken from the attached _Item_ _Container_.",
-	
 	"block.create.andesite_funnel.tooltip": "ANDESITE FUNNEL",
 	"block.create.andesite_funnel.tooltip.summary": "Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_.",
 	"block.create.andesite_funnel.tooltip.condition1": "When used on Item Container",
@@ -33,13 +26,6 @@
 	"block.create.andesite_tunnel.tooltip.control1": "R-Click with Wrench on Side",
 	"block.create.andesite_tunnel.tooltip.action1": "_Adjusts_ _window_ _shutters_ if the tunnel has a window on that face.",
 	
-	"block.create.brass_belt_funnel.tooltip": "BRASS BELT FUNNEL",
-	"block.create.brass_belt_funnel.tooltip.summary": "Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_. Comes with a handy Filter!",
-	"block.create.brass_belt_funnel.tooltip.condition1": "When used on Item Container",
-	"block.create.brass_belt_funnel.tooltip.behaviour1": "Items _Collected_ by the _Funnel_ will be placed in the attached _Item_ _Containers_ such as _Chests_, _Belts_ and _Chutes_.",
-	"block.create.brass_belt_funnel.tooltip.condition2": "When placed above a belt",
-	"block.create.brass_belt_funnel.tooltip.behaviour2": "a _Funnel_ powered by a _Belt_ allows for items to be automatically placed into or taken from the attached _Item_ _Container_.",
-	
 	"block.create.brass_funnel.tooltip": "BRASS FUNNEL",
 	"block.create.brass_funnel.tooltip.summary": "Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_. Comes with a handy Filter!",
 	"block.create.brass_funnel.tooltip.condition1": "When used on Item Container",
@@ -48,7 +34,7 @@
 	"block.create.brass_funnel.tooltip.behaviour2": "a _Funnel_ powered by a _Belt_ allows for items to be automatically placed into or taken from the attached _Item_ _Container_.",
 	
 	"block.create.brass_tunnel.tooltip": "BRASS TUNNEL",
-	"block.create.brass_tunnel.tooltip.summary": "A Stylish cover for your _Belts_ and a great way to cover the holes left in your wall because of them. _Brass_ _Tunnels_ also come with an number of _Filtering_ and _Splitting_ options for your _Belts_.",
+	"block.create.brass_tunnel.tooltip.summary": "_Brass_ _Tunnels_ come with a number of _Filtering_ and _Splitting_ options for your _Belts_.",
 	"block.create.brass_tunnel.tooltip.condition1": "When placed side by side",
 	"block.create.brass_tunnel.tooltip.behaviour1": "_Brass_ _Tunnels_ connect to each other allowing for content from one _Belt_ to be redirected to another.",
 	"block.create.brass_tunnel.tooltip.condition2": "Filtering",
@@ -68,90 +54,10 @@
 	"block.create.encased_fluid_pipe.tooltip": "ENCASED FLUID PIPE",
 	"block.create.encased_fluid_pipe.tooltip.summary": "A _Fluid_ _Pipe_ encased with the _Copper_ _Casing_.",
 	
-	"block.create.black_valve_handle.tooltip": "BLACK VALVE HANDLE",
-	"block.create.black_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.black_valve_handle.tooltip.condition1": "When Used",
-	"block.create.black_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.blue_valve_handle.tooltip": "BLUE VALVE HANDLE",
-	"block.create.blue_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.blue_valve_handle.tooltip.condition1": "When Used",
-	"block.create.blue_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.brown_valve_handle.tooltip": "BROWN VALVE HANDLE",
-	"block.create.brown_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.brown_valve_handle.tooltip.condition1": "When Used",
-	"block.create.brown_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
 	"block.create.copper_valve_handle.tooltip": "COPPER VALVE HANDLE",
 	"block.create.copper_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
 	"block.create.copper_valve_handle.tooltip.condition1": "When Used",
 	"block.create.copper_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.cyan_valve_handle.tooltip": "CYAN VALVE HANDLE",
-	"block.create.cyan_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.cyan_valve_handle.tooltip.condition1": "When Used",
-	"block.create.cyan_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.gray_valve_handle.tooltip": "GRAY VALVE HANDLE",
-	"block.create.gray_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.gray_valve_handle.tooltip.condition1": "When Used",
-	"block.create.gray_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.light_blue_valve_handle.tooltip": "LIGHT BLUE VALVE HANDLE",
-	"block.create.light_blue_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.light_blue_valve_handle.tooltip.condition1": "When Used",
-	"block.create.light_blue_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.light_gray_valve_handle.tooltip": "LIGHT GRAY VALVE HANDLE",
-	"block.create.light_gray_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.light_gray_valve_handle.tooltip.condition1": "When Used",
-	"block.create.light_gray_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.lime_valve_handle.tooltip": "LIME VALVE HANDLE",
-	"block.create.lime_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.lime_valve_handle.tooltip.condition1": "When Used",
-	"block.create.lime_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.magenta_valve_handle.tooltip": "MAGENTA VALVE HANDLE",
-	"block.create.magenta_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.magenta_valve_handle.tooltip.condition1": "When Used",
-	"block.create.magenta_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.Orange_valve_handle.tooltip": "ORANGE VALVE HANDLE",
-	"block.create.Orange_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.Orange_valve_handle.tooltip.condition1": "When Used",
-	"block.create.Orange_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.pink_valve_handle.tooltip": "PINK VALVE HANDLE",
-	"block.create.pink_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.pink_valve_handle.tooltip.condition1": "When Used",
-	"block.create.pink_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.purple_valve_handle.tooltip": "PURPLE VALVE HANDLE",
-	"block.create.purple_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.purple_valve_handle.tooltip.condition1": "When Used",
-	"block.create.purple_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.red_valve_handle.tooltip": "RED VALVE HANDLE",
-	"block.create.red_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.red_valve_handle.tooltip.condition1": "When Used",
-	"block.create.red_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.white_valve_handle.tooltip": "WHITE VALVE HANDLE",
-	"block.create.white_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.white_valve_handle.tooltip.condition1": "When Used",
-	"block.create.white_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.yellow_valve_handle.tooltip": "YELLOW VALVE HANDLE",
-	"block.create.yellow_valve_handle.tooltip.summary": "A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
-	"block.create.yellow_valve_handle.tooltip.condition1": "When Used",
-	"block.create.yellow_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
-	
-	"block.create.chute.tooltip": "CHUTE",
-	"block.create.chute.tooltip.summary": "Will _Collect_ items and transport them vertically. Can both take and place items into _item_ _containers_.",
-	"block.create.chute.tooltip.control1": "When powered by a fan",
-	"block.create.chute.tooltip.action1": "_Fan_ powered _chutes can convey _Items_ upwards, and suck _items_ off of _Depots_ and _Belts_.",
 	
 	"block.create.chute.tooltip": "CHUTE",
 	"block.create.chute.tooltip.summary": "Will _Collect_ items and transport them vertically. Can both take and place items into _item_ _containers_.",
@@ -164,10 +70,7 @@
 	"block.create.depot.tooltip.action1": "Places or takes an _Item_ from the _Depot_. _Blocks_ and _Contraptions_ that would interact with a _Belt_ also work on a _Depot_.",
 	
 	"item.create.blaze_cake.tooltip": "BLAZE CAKE",
-	"item.create.blaze_cake.tooltip.summary": "A Delicious treat for your hard-working _Blazes_. Gets them all fired up!",
-	
-	"item.create.cinder_flour.tooltip": "CINDER FLOUR",
-	"item.create.cinder_flour.tooltip.summary": "Ground up _Netherack_. I'm sure something will find this tasty.",
+	"item.create.blaze_cake.tooltip.summary": "A Delicious treat for your hard-working _Blaze_ _Burners_. Gets them all fired up!",
 	
 	"item.create.empty_blaze_burner.tooltip": "EMPTY BLAZE BURNER",
 	"item.create.empty_blaze_burner.tooltip.summary": "A little iron home for your fiery friends. I'm sure you could put them to good use.",
@@ -275,9 +178,6 @@
 
 	"block.create.gearbox.tooltip": "GEARBOX",
 	"block.create.gearbox.tooltip.summary": "_Relays_ _Rotation_ in _four_ _directions_ Reverses straight connections.",
-
-	"item.create.vertical_gearbox.tooltip": " VERTICAL GEARBOX",
-	"item.create.vertical_gearbox.tooltip.summary": "_Relays_ _Rotation_ in _four_ _directions_ Reverses straight connections.",
 
 	"block.create.gearshift.tooltip": "GEARSHIFT",
 	"block.create.gearshift.tooltip.summary": "A control to toggle rotation direction for connected shafts.",
@@ -475,7 +375,7 @@
 	"block.create.rope_pulley.tooltip.condition1": "When Rotated",
 	"block.create.rope_pulley.tooltip.behaviour1": "Starts moving the attached structure. Speed and direction correlate to the incoming Rotation Speed.",
 
-	"block.create.linear_chassis.tooltip": "TRANSLATION CHASSIS",
+	"block.create.linear_chassis.tooltip": "LINEAR CHASSIS",
 	"block.create.linear_chassis.tooltip.summary": "A configurable base block connecting structures for movement.",
 	"block.create.linear_chassis.tooltip.condition1": "When Moved",
 	"block.create.linear_chassis.tooltip.behaviour1": "_Moves_ all _attached_ _Chassis_ with the same orientation, and a column of Blocks within its range. Blocks will only be pulled if the chassis' face is _Sticky_ (See [Ctrl]).",
@@ -483,6 +383,9 @@
 	"block.create.linear_chassis.tooltip.behaviour2": "Configure the _range_ for this chassis block. Hold CTRL to modify the range of all attached chassis blocks as well.",
 	"block.create.linear_chassis.tooltip.control1": "When R-Clicked with Slime Ball",
 	"block.create.linear_chassis.tooltip.action1": "Makes the clicked face _Sticky_. When moved, the chassis will _pull_ attached Blocks, regardless of movement direction.",
+
+	"block.create.secondary_linear_chassis.tooltip": "SECONDARY LINEAR CHASSIS",
+	"block.create.secondary_linear_chassis.tooltip.summary": "A second type of _Linear_ _Chassis_ that does not connect to the other.",
 
 	"block.create.radial_chassis.tooltip": "ROTATION CHASSIS",
 	"block.create.radial_chassis.tooltip.summary": "A configurable base block connecting structures for movement.",
@@ -622,10 +525,10 @@
 	"block.create.stressometer.tooltip.condition1": "When Rotated",
 	"block.create.stressometer.tooltip.behaviour1": "Indicates a color corresponding to the level of stress. _Over-stressed_ _networks_ will cease to move. Stress can be relieved by adding more _rotational_ _sources_ to the network.",
 	
-	"tool.create.sand_paper.tooltip": "SAND PAPER",
-	"tool.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
-	"tool.create.sand_paper.tooltip.condition1": "When Used",
-	"tool.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
+	"item.create.sand_paper.tooltip": "SAND PAPER",
+	"item.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
+	"item.create.sand_paper.tooltip.condition1": "When Used",
+	"item.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
 	
 	"item.create.super_glue.tooltip": "SUPER GLUE",
 	"item.create.super_glue.tooltip.summary": "Glue a block to another, and they will forever be inseparable.",

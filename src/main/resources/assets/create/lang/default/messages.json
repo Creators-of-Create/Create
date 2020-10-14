@@ -32,6 +32,10 @@
 	"create.recipe.processing.catalyst": "Catalyst",
 	"create.recipe.processing.chance": "%1$s%% Chance",
 	"create.recipe.processing.chanceToReturn": "%1$s%% Chance to Return",
+	
+	"create.recipe.heat_requirement.none": "No Heating Required",
+	"create.recipe.heat_requirement.heated": "Heated",
+	"create.recipe.heat_requirement.superheated": "Super-Heated",
 
 	"create.generic.range": "Range",
 	"create.generic.radius": "Radius",

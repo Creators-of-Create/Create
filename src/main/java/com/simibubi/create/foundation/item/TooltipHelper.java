@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
@@ -13,7 +14,6 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
-import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -25,6 +25,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.TextFormatting;
 
 public class TooltipHelper {
@@ -33,11 +34,16 @@ public class TooltipHelper {
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
+	private static final Map<Item, Supplier<? extends IItemProvider>> tooltipReferrals = new HashMap<>();
 
 	public static String holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
 		return DARK_GRAY
 			+ Lang.translate("tooltip.holdKey", colorFormat + Lang.translate("tooltip.keyShift") + DARK_GRAY);
+	}
+
+	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
+		tooltipReferrals.put(item.asItem(), itemWithTooltip);
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor) {
@@ -96,8 +102,8 @@ public class TooltipHelper {
 		checkLocale();
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean hasGlasses = player != null
-			&& AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses =
+			player != null && AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
@@ -176,18 +182,20 @@ public class TooltipHelper {
 	public static String getTooltipTranslationKey(ItemStack stack) {
 		Item item = stack.getItem();
 		if (item instanceof TieredItem) {
-			TieredItem tieredItem = (TieredItem) stack.getItem();
+			TieredItem tieredItem = (TieredItem) item;
 			if (tieredItem.getTier() instanceof AllToolTiers) {
 				AllToolTiers allToolTiers = (AllToolTiers) tieredItem.getTier();
 				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
 			}
 		}
 
-		if (stack.getItem() instanceof SandPaperItem)
-			return "tool.create.sand_paper.tooltip";
+		if (tooltipReferrals.containsKey(item))
+			return tooltipReferrals.get(item)
+				.get()
+				.asItem()
+				.getTranslationKey() + ".tooltip";
 
-		return stack.getItem()
-			.getTranslationKey(stack) + ".tooltip";
+		return item.getTranslationKey(stack) + ".tooltip";
 	}
 
 }
