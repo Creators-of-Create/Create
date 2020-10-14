@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 470",
+	"_": "Missing Localizations: 531",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -558,6 +558,9 @@
 	"create.recipe.processing.catalyst": "Catalizzatore",
 	"create.recipe.processing.chance": "%1$s%% Possibilità",
 	"create.recipe.processing.chanceToReturn": "%1$s%% Possibilità di Ritorno",
+	"create.recipe.heat_requirement.none": "UNLOCALIZED: No Heating Required",
+	"create.recipe.heat_requirement.heated": "UNLOCALIZED: Heated",
+	"create.recipe.heat_requirement.superheated": "UNLOCALIZED: Super-Heated",
 
 	"create.generic.range": "Gamma",
 	"create.generic.radius": "Raggio",
@@ -944,6 +947,72 @@
 	"item.create.example_item.tooltip.control1": "Quando premi Ctrl",
 	"item.create.example_item.tooltip.action1": "Questi controlli vengono visualizzati.",
 
+	"block.create.andesite_casing.tooltip": "UNLOCALIZED: ANDESITE CASING",
+	"block.create.andesite_casing.tooltip.summary": "UNLOCALIZED: Simple machine casing with a variety of uses. Safe for decoration.",
+	"block.create.andesite_casing.tooltip.condition1": "UNLOCALIZED: When used on Mechanical Belt",
+	"block.create.andesite_casing.tooltip.behaviour1": "UNLOCALIZED: _Reinforces_ _belts_ with a Brass foundation. Reinforced Belts can support _Belt_ _Tunnels_ and allows _Chutes_ to directly take _items_.",
+
+	"block.create.andesite_funnel.tooltip": "UNLOCALIZED: ANDESITE FUNNEL",
+	"block.create.andesite_funnel.tooltip.summary": "UNLOCALIZED: Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_.",
+	"block.create.andesite_funnel.tooltip.condition1": "UNLOCALIZED: When used on Item Container",
+	"block.create.andesite_funnel.tooltip.behaviour1": "UNLOCALIZED: Items _Collected_ by the _Funnel_ will be placed in the attached _Item_ _Containers_ such as _Chests_, _Belts_ and _Chutes_.",
+	"block.create.andesite_funnel.tooltip.condition2": "UNLOCALIZED: When placed above a belt",
+	"block.create.andesite_funnel.tooltip.behaviour2": "UNLOCALIZED: a _Funnel_ powered by a _Belt_ allows for items to be automatically placed into or taken from the attached _Item_ _Container_.",
+
+	"block.create.andesite_tunnel.tooltip": "UNLOCALIZED: ANDESITE TUNNEL",
+	"block.create.andesite_tunnel.tooltip.summary": "UNLOCALIZED: A protective cover for your _Belts_ and a great way to cover the holes left in your wall because of them.",
+	"block.create.andesite_tunnel.tooltip.control1": "UNLOCALIZED: R-Click with Wrench on Side",
+	"block.create.andesite_tunnel.tooltip.action1": "UNLOCALIZED: _Adjusts_ _window_ _shutters_ if the tunnel has a window on that face.",
+
+	"block.create.brass_funnel.tooltip": "UNLOCALIZED: BRASS FUNNEL",
+	"block.create.brass_funnel.tooltip.summary": "UNLOCALIZED: Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_. Comes with a handy Filter!",
+	"block.create.brass_funnel.tooltip.condition1": "UNLOCALIZED: When used on Item Container",
+	"block.create.brass_funnel.tooltip.behaviour1": "UNLOCALIZED: Items _Collected_ by the _Funnel_ will be placed in the attached _Item_ _Containers_ such as _Chests_, _Belts_ and _Chutes_.",
+	"block.create.brass_funnel.tooltip.condition2": "UNLOCALIZED: When placed above a belt",
+	"block.create.brass_funnel.tooltip.behaviour2": "UNLOCALIZED: a _Funnel_ powered by a _Belt_ allows for items to be automatically placed into or taken from the attached _Item_ _Container_.",
+
+	"block.create.brass_tunnel.tooltip": "UNLOCALIZED: BRASS TUNNEL",
+	"block.create.brass_tunnel.tooltip.summary": "UNLOCALIZED: _Brass_ _Tunnels_ come with a number of _Filtering_ and _Splitting_ options for your _Belts_.",
+	"block.create.brass_tunnel.tooltip.condition1": "UNLOCALIZED: When placed side by side",
+	"block.create.brass_tunnel.tooltip.behaviour1": "UNLOCALIZED: _Brass_ _Tunnels_ connect to each other allowing for content from one _Belt_ to be redirected to another.",
+	"block.create.brass_tunnel.tooltip.condition2": "UNLOCALIZED: Filtering",
+	"block.create.brass_tunnel.tooltip.behaviour2": "UNLOCALIZED: _Brass_ _Tunnels_ come with filters for both _Input_ and _Output_. If an _Item_ isn't permitted from the filtered output of a _Tunnel_ it will be transferred to the output of a connected _Tunnel_.",
+	"block.create.brass_tunnel.tooltip.condition3": "UNLOCALIZED: Splitting",
+	"block.create.brass_tunnel.tooltip.behaviour3": "UNLOCALIZED: _Brass_ _Tunnels_ can be configured to change the method in which _Items_ are sorted onto connected _Belts_.",
+	"block.create.brass_tunnel.tooltip.control1": "UNLOCALIZED: R-Click with Wrench on Side",
+	"block.create.brass_tunnel.tooltip.action1": "UNLOCALIZED: _Adjusts_ _window_ _shutters_ if the tunnel has a window on that face.",
+	"block.create.brass_tunnel.tooltip.control2": "UNLOCALIZED: Scroll with Wrench on Top",
+	"block.create.brass_tunnel.tooltip.action2": "UNLOCALIZED: Change the splitting method of connected _Tunnels_.",
+
+	"block.create.copper_casing.tooltip": "UNLOCALIZED: COPPER CASING",
+	"block.create.copper_casing.tooltip.summary": "UNLOCALIZED: Robust machine casing with a variety of uses. Safe for decoration.",
+	"block.create.copper_casing.tooltip.condition1": "UNLOCALIZED: When used on Fluid Pipe",
+	"block.create.copper_casing.tooltip.behaviour1": "UNLOCALIZED: _Encases_ the _Fluid_ _Pipe_ with the _Copper_ _Casing_. Useful for passing _Fluid_ _Pipes_ through Walls.",
+
+	"block.create.encased_fluid_pipe.tooltip": "UNLOCALIZED: ENCASED FLUID PIPE",
+	"block.create.encased_fluid_pipe.tooltip.summary": "UNLOCALIZED: A _Fluid_ _Pipe_ encased with the _Copper_ _Casing_.",
+
+	"block.create.copper_valve_handle.tooltip": "UNLOCALIZED: COPPER VALVE HANDLE",
+	"block.create.copper_valve_handle.tooltip.summary": "UNLOCALIZED: A precise _source_ of _Rotational_ _Force_ that requires the interaction of players. Be careful not to wear yourself out!",
+	"block.create.copper_valve_handle.tooltip.condition1": "UNLOCALIZED: When Used",
+	"block.create.copper_valve_handle.tooltip.behaviour1": "UNLOCALIZED: Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
+
+	"block.create.chute.tooltip": "UNLOCALIZED: CHUTE",
+	"block.create.chute.tooltip.summary": "UNLOCALIZED: Will _Collect_ items and transport them vertically. Can both take and place items into _item_ _containers_.",
+	"block.create.chute.tooltip.control1": "UNLOCALIZED: When powered by a fan",
+	"block.create.chute.tooltip.action1": "UNLOCALIZED: _Fan_ powered _chutes can convey _Items_ upwards, and suck _items_ off of _Depots_ and _Belts_.",
+
+	"block.create.depot.tooltip": "UNLOCALIZED: DEPOT",
+	"block.create.depot.tooltip.summary": "UNLOCALIZED: A handy location to place your _Items_. Provides an interaction point for several machines",
+	"block.create.depot.tooltip.control1": "UNLOCALIZED: Right Click on Depot",
+	"block.create.depot.tooltip.action1": "UNLOCALIZED: Places or takes an _Item_ from the _Depot_. _Blocks_ and _Contraptions_ that would interact with a _Belt_ also work on a _Depot_.",
+
+	"item.create.blaze_cake.tooltip": "UNLOCALIZED: BLAZE CAKE",
+	"item.create.blaze_cake.tooltip.summary": "UNLOCALIZED: A Delicious treat for your hard-working _Blaze_ _Burners_. Gets them all fired up!",
+
+	"item.create.empty_blaze_burner.tooltip": "UNLOCALIZED: EMPTY BLAZE BURNER",
+	"item.create.empty_blaze_burner.tooltip.summary": "UNLOCALIZED: A little iron home for your fiery friends. I'm sure you could put them to good use.",
+
 	"item.create.wand_of_symmetry.tooltip": "ASTA DI SIMETRIA",
 	"item.create.wand_of_symmetry.tooltip.summary": "Rispecchia perfettamente il posizionamento dei blocchi su piani configurati.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "In Hotbar",
@@ -1047,9 +1116,6 @@
 
 	"block.create.gearbox.tooltip": "RIDUTTORE",
 	"block.create.gearbox.tooltip.summary": "_Rotazione_ _Relè_ in _quatro_ _direzioni_ Inverte le connessioni diritte.",
-
-	"item.create.vertical_gearbox.tooltip": "UNLOCALIZED:  VERTICAL GEARBOX",
-	"item.create.vertical_gearbox.tooltip.summary": "UNLOCALIZED: _Relays_ _Rotation_ in _four_ _directions_ Reverses straight connections.",
 
 	"block.create.gearshift.tooltip": "CAMBIO",
 	"block.create.gearshift.tooltip.summary": "Un controllo per attivare / disattivare la direzione di rotazione per gli alberi collegati.",
@@ -1256,6 +1322,9 @@
 	"block.create.linear_chassis.tooltip.control1": "Quando si fa Clic-Destro con la Palla di slime",
 	"block.create.linear_chassis.tooltip.action1": "Crea la faccia cliccata _Appiccicosa_. Quando viene spostato, il telaio tirerà i blocchi collegati, indipendentemente dalla direzione del movimento.",
 
+	"block.create.secondary_linear_chassis.tooltip": "UNLOCALIZED: SECONDARY LINEAR CHASSIS",
+	"block.create.secondary_linear_chassis.tooltip.summary": "UNLOCALIZED: A second type of _Linear_ _Chassis_ that does not connect to the other.",
+
 	"block.create.radial_chassis.tooltip": "TELAIO RADIALE",
 	"block.create.radial_chassis.tooltip.summary": "Un blocco base configurabile che collega le strutture per il movimento.",
 	"block.create.radial_chassis.tooltip.condition1": "Quando Spostato",
@@ -1394,10 +1463,10 @@
 	"block.create.stressometer.tooltip.condition1": "Quando Ruotato",
 	"block.create.stressometer.tooltip.behaviour1": "Indica un colore corrispondente al livello di stress. Le _reti_ _troppo_ _stressate_ cesseranno di muoversi. Lo stress può essere alleviato aggiungendo più _fonti_ _di_ _rotazione_ alla rete.",
 
-	"tool.create.sand_paper.tooltip": "CARTA VETRATA",
-	"tool.create.sand_paper.tooltip.summary": "Una carta ruvida che può essere utilizzata per _levigare_ _materiali_ o affilare i tuoi _strumenti_.",
-	"tool.create.sand_paper.tooltip.condition1": "Quando Usata",
-	"tool.create.sand_paper.tooltip.behaviour1": "Applica la lucidatura agli oggetti _tenuti_ _in_ _mano_ o distesi a _terra_ quando _li_ _guardi_",
+	"item.create.sand_paper.tooltip": "UNLOCALIZED: SAND PAPER",
+	"item.create.sand_paper.tooltip.summary": "UNLOCALIZED: A rough paper that can be used to _polish_ _materials_. Can be automatically applied using the Deployer.",
+	"item.create.sand_paper.tooltip.condition1": "UNLOCALIZED: When Used",
+	"item.create.sand_paper.tooltip.behaviour1": "UNLOCALIZED: Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking_ _at_ _them_",
 
 	"item.create.super_glue.tooltip": "UNLOCALIZED: SUPER GLUE",
 	"item.create.super_glue.tooltip.summary": "UNLOCALIZED: Glue a block to another, and they will forever be inseparable.",

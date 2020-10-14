@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
@@ -14,7 +15,6 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
-import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -26,6 +26,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -39,6 +40,7 @@ public class TooltipHelper {
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
+	private static final Map<Item, Supplier<? extends IItemProvider>> tooltipReferrals = new HashMap<>();
 
 	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
@@ -47,6 +49,10 @@ public class TooltipHelper {
 				.formatted(colorFormat));
 	}
 
+	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
+		tooltipReferrals.put(item.asItem(), itemWithTooltip);
+	}
+	
 	@Deprecated
 	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
 		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0);
@@ -236,18 +242,20 @@ public class TooltipHelper {
 	public static String getTooltipTranslationKey(ItemStack stack) {
 		Item item = stack.getItem();
 		if (item instanceof TieredItem) {
-			TieredItem tieredItem = (TieredItem) stack.getItem();
+			TieredItem tieredItem = (TieredItem) item;
 			if (tieredItem.getTier() instanceof AllToolTiers) {
 				AllToolTiers allToolTiers = (AllToolTiers) tieredItem.getTier();
 				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
 			}
 		}
 
-		if (stack.getItem() instanceof SandPaperItem)
-			return "tool.create.sand_paper.tooltip";
+		if (tooltipReferrals.containsKey(item))
+			return tooltipReferrals.get(item)
+				.get()
+				.asItem()
+				.getTranslationKey() + ".tooltip";
 
-		return stack.getItem()
-			.getTranslationKey(stack) + ".tooltip";
+		return item.getTranslationKey(stack) + ".tooltip";
 	}
 
 	private static int getComponentLength(ITextComponent component) {

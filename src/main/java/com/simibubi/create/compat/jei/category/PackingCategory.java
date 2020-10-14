@@ -20,7 +20,7 @@ public class PackingCategory extends BasinCategory {
 
 	public PackingCategory() {
 		super("packing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllBlocks.BASIN.get()),
-			emptyBackground(177, 110));
+			emptyBackground(177, 103));
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class PackingCategory extends BasinCategory {
 		int rows = size == 4 ? 2 : 3;
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
-			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 60 - (i / rows) * 19);
+			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
 			itemStacks.set(i, Arrays.asList(ingredient.getMatchingStacks()));
 			i++;
 		}
 
-		itemStacks.init(i, false, 141, 60);
+		itemStacks.init(i, false, 141, 50);
 		itemStacks.set(i, recipe.getRecipeOutput());
 	}
 
@@ -58,10 +58,11 @@ public class PackingCategory extends BasinCategory {
 			int rows = size == 4 ? 2 : 3;
 			for (int i = 0; i < size; i++)
 				AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
-					60 - (i / rows) * 19);
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 60);
-			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 42);
-			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 67);
+					50 - (i / rows) * 19);
+			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
+			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
+			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 68);
+			AllGuiTextures.JEI_NO_HEAT_BAR.draw(matrixStack, 4, 80);
 		}
 
 		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 40);

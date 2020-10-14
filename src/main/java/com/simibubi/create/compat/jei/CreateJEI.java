@@ -190,7 +190,6 @@ public class CreateJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(AllItems.BLOCKZAPPER.get()), blockzapperCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_MIXER.get()), mixingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BASIN.get()), mixingCategory.getUid());
-		registration.addRecipeCatalyst(new ItemStack(AllBlocks.BLAZE_BURNER.get()), mixingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_SAW.get()), sawingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MECHANICAL_SAW.get()), blockCuttingCategory.getUid());
 		registration.addRecipeCatalyst(new ItemStack(Blocks.STONECUTTER), blockCuttingCategory.getUid());

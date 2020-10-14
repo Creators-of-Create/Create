@@ -40,7 +40,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 @ParametersAreNonnullByDefault
 public class BlazeBurnerBlockItem extends BlockItem {
 
-	private boolean capturedBlaze;
+	private final boolean capturedBlaze;
 
 	public static BlazeBurnerBlockItem empty(Properties properties) {
 		return new BlazeBurnerBlockItem(AllBlocks.BLAZE_BURNER.get(), properties, false);
@@ -104,7 +104,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 				continue;
 
 			spawnCaptureEffects(world, VecHelper.getCenterOf(pos));
-			if (world.isRemote)
+			if (world.isRemote || player == null)
 				return ActionResultType.SUCCESS;
 
 			giveBurnerItemTo(player, context.getItem(), context.getHand());
@@ -128,7 +128,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		giveBurnerItemTo(player, heldItem, hand);
 		entity.remove();
-		return ActionResultType.SUCCESS;
+		return ActionResultType.FAIL;
 	}
 
 	protected void giveBurnerItemTo(PlayerEntity player, ItemStack heldItem, Hand hand) {

@@ -67,6 +67,8 @@ public enum AllGuiTextures {
 	JEI_QUESTION_MARK("jei/widgets.png", 0, 178, 12, 16),
 	JEI_SHADOW("jei/widgets.png", 0, 56, 52, 11),
 	BLOCKZAPPER_UPGRADE_RECIPE("jei/widgets.png", 0, 75, 144, 66),
+	JEI_HEAT_BAR("jei/widgets.png", 0, 201, 169, 19),
+	JEI_NO_HEAT_BAR("jei/widgets.png", 0, 221, 169, 19),
 
 	// Widgets
 	BUTTON("widgets.png", 18, 18),

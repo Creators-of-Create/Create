@@ -43,6 +43,7 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
@@ -125,6 +126,7 @@ public class AllItems {
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
 			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
+			.onRegister(v -> TooltipHelper.referTo(v, AllBlocks.GEARBOX))
 			.register();
 
 	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
@@ -145,6 +147,7 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)

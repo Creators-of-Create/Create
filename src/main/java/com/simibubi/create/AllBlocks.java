@@ -140,6 +140,7 @@ import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
@@ -153,6 +154,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -357,6 +359,7 @@ public class AllBlocks {
 		REGISTRATE.block("mysterious_cuckoo_clock", CuckooClockBlock::mysterious)
 			.transform(BuilderTransformers.cuckooClock())
 			.lang("Cuckoo Clock")
+			.onRegisterAfter(Item.class, c -> TooltipHelper.referTo(c, CUCKOO_CLOCK))
 			.register();
 
 	public static final BlockEntry<MillstoneBlock> MILLSTONE = REGISTRATE.block("millstone", MillstoneBlock::new)

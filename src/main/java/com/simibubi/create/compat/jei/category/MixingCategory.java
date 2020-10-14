@@ -14,7 +14,7 @@ public class MixingCategory extends BasinCategory {
 
 	public MixingCategory() {
 		super("mixing", doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
-			emptyBackground(177, 110));
+			emptyBackground(177, 103));
 	}
 
 	@Override
