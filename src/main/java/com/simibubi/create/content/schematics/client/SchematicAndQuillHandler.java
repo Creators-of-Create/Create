@@ -213,7 +213,7 @@ public class SchematicAndQuillHandler {
 		t.takeBlocksFromWorld(Minecraft.getInstance().world, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translate("schematicAndQuill.fallbackName").getUnformattedComponentText();
+			string = Lang.translate("schematicAndQuill.fallbackName").getString();
 
 		String folderPath = "schematics";
 		FilesHelper.createFolderIfMissing(folderPath);

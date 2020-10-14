@@ -71,7 +71,7 @@ public class Label extends AbstractSimiWidget {
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (!visible)
 			return;
-		if (text == null || text.toString().isEmpty())
+		if (text == null || text.getString().isEmpty())
 			return;
 
 		RenderSystem.color4f(1, 1, 1, 1);
