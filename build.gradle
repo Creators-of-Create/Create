@@ -79,7 +79,7 @@ sourceSets.main.resources {
 
 repositories {
     maven {
-        // location of the maven that hosts JEI files
+        // location of the maven that hosts JEI files (And TiC)
         name "Progwml6 maven"
         url "https://dvs1.progwml6.com/files/maven/"
     }
@@ -120,6 +120,8 @@ dependencies {
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
+    runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.3-1.6.40")
+    runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.3-3.0.1.24")
 }
 
 jar {

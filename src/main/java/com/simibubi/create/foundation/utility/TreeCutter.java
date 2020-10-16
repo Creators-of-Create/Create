@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.google.common.base.Predicates;
 
+import com.simibubi.create.AllTags;
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -204,7 +205,7 @@ public class TreeCutter {
 	}
 
 	private static boolean isLog(BlockState state) {
-		return state.isIn(BlockTags.LOGS);
+		return state.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state);
 	}
 
 	private static boolean isLeaf(BlockState state) {

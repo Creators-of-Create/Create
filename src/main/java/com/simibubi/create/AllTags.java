@@ -1,11 +1,9 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllTags.NameSpace.FORGE;
-import static com.simibubi.create.AllTags.NameSpace.MOD;
-
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.utility.EmptyNamedTag;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -23,6 +21,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModList;
+
+import static com.simibubi.create.AllTags.NameSpace.*;
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
@@ -53,7 +54,7 @@ public class AllTags {
 
 	public static enum NameSpace {
 
-		MOD(Create.ID), FORGE("forge"), MC("minecraft")
+		MOD(Create.ID), FORGE("forge"), MC("minecraft"), TIC("tconstruct")
 
 		;
 		String id;
@@ -105,7 +106,7 @@ public class AllTags {
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, VALVE_HANDLES, FAN_TRANSPARENT
+		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, VALVE_HANDLES, FAN_TRANSPARENT, SLIMY_LOGS(TIC)
 
 		;
 
@@ -120,9 +121,13 @@ public class AllTags {
 		}
 
 		private AllBlockTags(NameSpace namespace, String path) {
-			tag = BlockTags.makeWrapperTag(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
+			ResourceLocation id = new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
+			if (ModList.get().isLoaded(namespace.id)) {
+				tag = BlockTags.makeWrapperTag(id.toString());
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
+			} else {
+				tag = new EmptyNamedTag<>(id);
+			}
 		}
 
 		public boolean matches(BlockState block) {

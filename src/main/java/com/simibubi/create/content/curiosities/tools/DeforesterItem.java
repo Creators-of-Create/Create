@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.TreeCutter.Tree;
@@ -32,7 +33,7 @@ public class DeforesterItem extends AxeItem {
 	// Moved away from Item#onBlockDestroyed as it does not get called in Creative
 	public static void destroyTree(ItemStack stack, IWorld iWorld, BlockState state, BlockPos pos,
 			PlayerEntity player) {
-		if (!state.isIn(BlockTags.LOGS) || player.isSneaking() || !(iWorld instanceof  World))
+		if (!(state.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state)) || player.isSneaking() || !(iWorld instanceof  World))
 			return;
 		World worldIn = (World) iWorld;
 		Tree tree = TreeCutter.cutTree(worldIn, pos);
