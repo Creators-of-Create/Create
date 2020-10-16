@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -366,7 +367,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	public static boolean isSawable(BlockState stateToBreak) {
-		if (stateToBreak.isIn(BlockTags.LOGS) || stateToBreak.isIn(BlockTags.LEAVES))
+		if (stateToBreak.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(stateToBreak) || stateToBreak.isIn(BlockTags.LEAVES))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)
