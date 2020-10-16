@@ -1,11 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -15,29 +9,51 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.ModList;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
 
 public class SpoutTileEntity extends SmartTileEntity {
+	private static final boolean IS_TIC_LOADED = ModList.get().isLoaded("tconstruct");
+	private static final Class<?> CASTING_FLUID_HANDLER_CLASS;
+	static {
+		Class<?> testClass;
+		try {
+			testClass = Class.forName("slimeknights.tconstruct.library.smeltery.CastingFluidHandler");
+		} catch (ClassNotFoundException e) {
+			testClass = null;
+		}
+		CASTING_FLUID_HANDLER_CLASS = testClass;
+	}
 
 	public static final int FILLING_TIME = 20;
 	
 	protected BeltProcessingBehaviour beltProcessing;
 	protected int processingTicks;
 	protected boolean sendSplash;
+	private boolean shouldAnimate = true;
 	
 	SmartFluidTankBehaviour tank;
 
@@ -75,6 +91,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 
 	protected ProcessingResult whenItemHeld(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
+		shouldAnimate = true;
 		if (processingTicks != -1 && processingTicks != 5)
 			return HOLD;
 		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
@@ -113,6 +130,57 @@ public class SpoutTileEntity extends SmartTileEntity {
 		return PASS;
 	}
 
+	private void processTicCastBlock() {
+		if (!IS_TIC_LOADED || CASTING_FLUID_HANDLER_CLASS == null)
+			return;
+		if (world == null)
+			return;
+		IFluidHandler localTank = this.tank.getCapability().orElse(null);
+		if (localTank == null)
+			return;
+		FluidStack fluid = getCurrentFluidInTank();
+		if (fluid.getAmount() == 0)
+			return;
+		TileEntity te = world.getTileEntity(pos.down(2));
+		if (te == null)
+			return;
+		IFluidHandler handler = getFluidHandler(pos.down(2), Direction.UP);
+		if (!CASTING_FLUID_HANDLER_CLASS.isInstance(handler))
+			return;
+		if (handler.getTanks() != 1)
+			return;
+		if (!handler.isFluidValid(0, this.getCurrentFluidInTank()))
+			return;
+		FluidStack containedFluid = handler.getFluidInTank(0);
+		if (!(containedFluid.isEmpty() || containedFluid.isFluidEqual(fluid)))
+			return;
+		if (processingTicks == -1) {
+			processingTicks = FILLING_TIME;
+			notifyUpdate();
+			return;
+		}
+		FluidStack drained = localTank.drain(144, IFluidHandler.FluidAction.SIMULATE);
+		if (!drained.isEmpty()) {
+			int filled = handler.fill(drained, IFluidHandler.FluidAction.SIMULATE);
+			shouldAnimate = filled > 0;
+			sendSplash = shouldAnimate;
+			if (processingTicks == 5) {
+				if (filled > 0) {
+					drained = localTank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+					if (!drained.isEmpty()) {
+						FluidStack fillStack = drained.copy();
+						fillStack.setAmount(Math.min(drained.getAmount(), 6));
+						drained.shrink(filled);
+						fillStack.setAmount(filled);
+						handler.fill(fillStack, IFluidHandler.FluidAction.EXECUTE);
+					}
+				}
+				tank.getPrimaryHandler().setFluid(fluid);
+				this.notifyUpdate();
+			}
+		}
+	}
+
 	private FluidStack getCurrentFluidInTank() {
 		return tank.getPrimaryHandler().getFluid();
 	}
@@ -148,9 +216,10 @@ public class SpoutTileEntity extends SmartTileEntity {
 	
 	public void tick() {
 		super.tick();
+		processTicCastBlock();
 		if (processingTicks >= 0)
 			processingTicks--;
-		if (processingTicks >= 8 && world.isRemote)
+		if (processingTicks >= 8 && world.isRemote && shouldAnimate)
 			spawnProcessingParticles(tank.getPrimaryTank().getRenderedFluid());
 	}
 
@@ -176,6 +245,22 @@ public class SpoutTileEntity extends SmartTileEntity {
 			m = new Vector3d(m.x, Math.abs(m.y), m.z);
 			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
+	}
+
+	@Nullable
+	private IFluidHandler getFluidHandler(BlockPos pos, Direction direction) {
+		if (this.world == null) {
+			return null;
+		} else {
+			TileEntity te = this.world.getTileEntity(pos);
+			return te != null ? te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).orElse(null) : null;
+		}
+	}
+
+	public int getCorrectedProcessingTicks() {
+		if(shouldAnimate)
+			return processingTicks;
+		return -1;
 	}
 
 }

@@ -47,8 +47,8 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			ms.pop();
 		}
 
-		int processingTicks = te.processingTicks;
-		float processingPT = te.processingTicks - partialTicks;
+		int processingTicks = te.getCorrectedProcessingTicks();
+		float processingPT = te.getCorrectedProcessingTicks() - partialTicks;
 		float processingProgress = 1 - (processingPT - 5) / 10;
 		processingProgress = MathHelper.clamp(processingProgress, 0, 1);
 		float radius = 0;
