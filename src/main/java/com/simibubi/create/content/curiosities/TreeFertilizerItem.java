@@ -31,7 +31,7 @@ public class TreeFertilizerItem extends Item {
 				return ActionResultType.SUCCESS;
 			}
 
-			TreesDreamWorld world = new TreesDreamWorld((ServerWorld) context.getWorld());
+			TreesDreamWorld world = new TreesDreamWorld((ServerWorld) context.getWorld(), context.getPos());
 			BlockPos saplingPos = context.getPos();
 
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(-1, 0, -1, 1, 0, 1)) {
@@ -83,15 +83,17 @@ public class TreeFertilizerItem extends Item {
 	}
 
 	private class TreesDreamWorld extends PlacementSimulationServerWorld {
+		private final BlockPos saplingPos;
 
-		protected TreesDreamWorld(ServerWorld wrapped) {
+		protected TreesDreamWorld(ServerWorld wrapped, BlockPos saplingPos) {
 			super(wrapped);
+			this.saplingPos = saplingPos;
 		}
 
 		@Override
 		public BlockState getBlockState(BlockPos pos) {
 			if (pos.getY() <= 9)
-				return Blocks.GRASS_BLOCK.getDefaultState();
+				return world.getBlockState(saplingPos.down());
 			return super.getBlockState(pos);
 		}
 
