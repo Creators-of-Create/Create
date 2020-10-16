@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -29,11 +28,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
 
-	private final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
+	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 
-		private ShapedRecipe recipe;
+		private final ShapedRecipe recipe;
 
 		public CrafterIngredientRenderer(ShapedRecipe recipe) {
 			this.recipe = recipe;
@@ -60,7 +64,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				RenderHelper.disableStandardItemLighting();
 				RenderSystem.popMatrix();
 			}
-			
+
 			matrixStack.pop();
 		}
 
@@ -79,10 +83,13 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		}
 	}
 
-	private AnimatedCrafter crafter = new AnimatedCrafter();
+	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
-	public MechanicalCraftingCategory() {
-		super("mechanical_crafting", itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
+	public MechanicalCraftingCategory(boolean isForNormalCraftingOnly) {
+		super(
+				isForNormalCraftingOnly ? "mechanical_crafting" : "mechanical_crafting_exclusive",
+				itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()),
+				emptyBackground(177, 107));
 	}
 
 	@Override
@@ -164,7 +171,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				continue;
 			amount++;
 		}
-		
+
 		Minecraft.getInstance().fontRenderer
 				.drawWithShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
 		matrixStack.pop();
