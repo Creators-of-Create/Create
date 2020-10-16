@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 213",
+	"_": "Missing Localizations: 215",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -548,9 +548,11 @@
 	"create.recipe.blasting_via_fan.fan": "UNLOCALIZED: Fan behind Lava",
 	"create.recipe.pressing": "金属压片",
 	"create.recipe.mixing": "混合搅拌",
+	"create.recipe.shapeless_mixing": "UNLOCALIZED: Shapeless Crafting",
 	"create.recipe.packing": "压块塑形",
 	"create.recipe.sawing": "UNLOCALIZED: Sawing",
 	"create.recipe.mechanical_crafting": "自动合成",
+	"create.recipe.mechanical_crafting_exclusive": "UNLOCALIZED: Mechanical Crafting",
 	"create.recipe.block_cutting": "方块切割",
 	"create.recipe.blockzapper_upgrade": "UNLOCALIZED: Handheld Blockzapper",
 	"create.recipe.sandpaper_polishing": "砂纸抛光",

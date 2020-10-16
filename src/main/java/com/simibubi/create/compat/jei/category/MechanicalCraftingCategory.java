@@ -1,15 +1,9 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -29,11 +23,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
 
-	private final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
+	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 
-		private ShapedRecipe recipe;
+		private final ShapedRecipe recipe;
 
 		public CrafterIngredientRenderer(ShapedRecipe recipe) {
 			this.recipe = recipe;
@@ -57,7 +56,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				RenderSystem.disableBlend();
 				RenderHelper.disableStandardItemLighting();
 			}
-			
+
 			RenderSystem.popMatrix();
 		}
 
@@ -95,10 +94,13 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		}
 	}
 
-	private AnimatedCrafter crafter = new AnimatedCrafter();
+	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
-	public MechanicalCraftingCategory() {
-		super("mechanical_crafting", itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
+	public MechanicalCraftingCategory(boolean isForNormalCraftingOnly) {
+		super(
+				isForNormalCraftingOnly ? "mechanical_crafting" : "mechanical_crafting_exclusive",
+				itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()),
+				emptyBackground(177, 107));
 	}
 
 	@Override
@@ -158,7 +160,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 			for (int col = 0; col < recipe.getWidth(); col++)
 				if (!recipe.getIngredients().get(row * recipe.getWidth() + col).hasNoMatchingItems()) {
 					RenderSystem.pushMatrix();
-					RenderSystem.translated((int) col * 19 * scale, (int) row * 19 * scale, 0);
+					RenderSystem.translated(col * 19 * scale, row * 19 * scale, 0);
 					RenderSystem.scaled(scale, scale, scale);
 					AllGuiTextures.JEI_SLOT.draw(0, 0);
 					RenderSystem.popMatrix();
@@ -172,7 +174,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(0, 0, 300);
-		
+
 		RenderHelper.disableStandardItemLighting();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
@@ -180,7 +182,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 				continue;
 			amount++;
 		}
-		
+
 		Minecraft.getInstance().fontRenderer
 				.drawStringWithShadow(amount + "", 142, 39, 0xFFFFFF);
 		RenderSystem.popMatrix();
