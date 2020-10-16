@@ -144,18 +144,9 @@ public class CreateJEI implements IModPlugin {
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		ItemStack fan = new ItemStack(AllBlocks.ENCASED_FAN.get());
 
-		ItemStack splashingFan = fan.copy().setDisplayName(new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.splashing.fan")));
-		ItemStack smokingFan = fan.copy().setDisplayName(new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.smokingViaFan.fan")));
-		ItemStack blastingFan = fan.copy().setDisplayName(new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe.blastingViaFan.fan")));
-		ItemStack splashingFan = fan
-				.copy()
-				.setDisplayName(Lang.translate("recipe.splashing.fan").formatted(TextFormatting.RESET));
-		ItemStack smokingFan = fan
-				.copy()
-				.setDisplayName(Lang.translate("recipe.smokingViaFan.fan").formatted(TextFormatting.RESET));
-		ItemStack blastingFan = fan
-				.copy()
-				.setDisplayName(Lang.translate("recipe.blastingViaFan.fan").formatted(TextFormatting.RESET));
+		ItemStack splashingFan = fan.copy().setDisplayName(Lang.translate("recipe.splashing.fan").formatted(TextFormatting.RESET));
+		ItemStack smokingFan = fan.copy().setDisplayName(Lang.translate("recipe.smokingViaFan.fan").formatted(TextFormatting.RESET));
+		ItemStack blastingFan = fan.copy().setDisplayName(Lang.translate("recipe.blastingViaFan.fan").formatted(TextFormatting.RESET));
 
 		registration.addRecipeCatalyst(new ItemStack(AllBlocks.MILLSTONE.get()), millingCategory.getUid());
 

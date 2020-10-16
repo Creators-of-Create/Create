@@ -1,9 +1,5 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -31,7 +27,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
 
@@ -163,7 +158,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 		matrixStack.push();
 		matrixStack.translate(0, 0, 300);
-		
+
 		RenderHelper.disableStandardItemLighting();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
