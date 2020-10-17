@@ -1,13 +1,9 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
@@ -24,6 +20,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
@@ -81,12 +80,10 @@ public class GoggleOverlayRenderer {
 		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
 		int posY = tooltipScreen.height / 2 + AllConfigs.CLIENT.overlayOffsetY.get();
-		//tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
 		tooltipScreen.renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
-		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render(ms);
+		GuiGameElement.of(item).atLocal(posX + 10, posY, 450).render(ms);
 		ms.pop();
 	}
 	

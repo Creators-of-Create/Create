@@ -1,14 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import static net.minecraft.util.text.TextFormatting.BLUE;
-import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
@@ -25,7 +16,6 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
@@ -35,6 +25,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import static net.minecraft.util.text.TextFormatting.*;
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
 	private static final AllGuiTextures BG_BOTTOM = AllGuiTextures.SCHEMATICANNON_BOTTOM;
@@ -261,7 +258,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			renderBlueprintHighlight(matrixStack);
 
 		GuiGameElement.of(renderedItem)
-			.at(guiLeft + 230, guiTop + 190)
+			.at(guiLeft + 230, guiTop + 190, -200)
 			.scale(5)
 			.render(matrixStack);
 

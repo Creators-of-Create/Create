@@ -1,11 +1,5 @@
 package com.simibubi.create.content.schematics.block;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
-
-import java.nio.file.Paths;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -20,7 +14,6 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -28,6 +21,12 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+
+import java.nio.file.Paths;
+import java.util.List;
+
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
 
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
@@ -116,7 +115,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			textRenderer.drawWithShadow(matrixStack, noSchematics, mainLeft + 54, mainTop + 26, 0xd3d3d3);
 
 		GuiGameElement.of(renderedItem)
-				.at(mainLeft + 217, mainTop + 98)
+				.at(mainLeft + 217, mainTop + 98, -150)
 				.scale(3)
 				.render(matrixStack);
 

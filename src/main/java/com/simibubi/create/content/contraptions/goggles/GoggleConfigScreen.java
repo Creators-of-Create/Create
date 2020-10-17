@@ -1,20 +1,19 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GoggleConfigScreen extends AbstractSimiScreen {
 
@@ -78,12 +77,10 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		ms.push();
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
-		//tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
 		renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
-		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render(ms);
+		GuiGameElement.of(item).atLocal(posX + 10, posY, 450).render(ms);
 		ms.pop();
 	}
 }

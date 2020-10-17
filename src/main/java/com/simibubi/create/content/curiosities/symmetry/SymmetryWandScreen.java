@@ -1,11 +1,7 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
-import com.simibubi.create.content.curiosities.symmetry.mirror.TriplePlaneMirror;
+import com.simibubi.create.content.curiosities.symmetry.mirror.*;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -17,7 +13,6 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -123,7 +118,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		renderBlock(matrixStack);
 		GuiGameElement.of(wand)
-			.at(guiLeft + 190, guiTop + 420)
+			.at(guiLeft + 190, guiTop + 420, -150)
 			.scale(4)
 			.rotate(-70, 20, 20)
 			.render(matrixStack);

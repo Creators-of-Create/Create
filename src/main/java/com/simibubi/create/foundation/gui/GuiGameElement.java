@@ -1,8 +1,5 @@
 package com.simibubi.create.foundation.gui;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
@@ -15,19 +12,12 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -45,6 +35,9 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class GuiGameElement {
 
@@ -71,7 +64,7 @@ public class GuiGameElement {
 	}
 
 	public static abstract class GuiRenderBuilder {
-		double xBeforeScale, yBeforeScale;
+		double xBeforeScale, yBeforeScale, zBeforeScale = 0;
 		double x, y, z;
 		double xRot, yRot, zRot;
 		double scale = 1;
@@ -88,6 +81,13 @@ public class GuiGameElement {
 		public GuiRenderBuilder at(double x, double y) {
 			this.xBeforeScale = x;
 			this.yBeforeScale = y;
+			return this;
+		}
+
+		public GuiRenderBuilder at(double x, double y, double z) {
+			this.xBeforeScale = x;
+			this.yBeforeScale = y;
+			this.zBeforeScale = z;
 			return this;
 		}
 
@@ -148,7 +148,7 @@ public class GuiGameElement {
 		}
 
 		protected void transformMatrix(MatrixStack matrixStack) {
-			matrixStack.translate(xBeforeScale, yBeforeScale, 0);
+			matrixStack.translate(xBeforeScale, yBeforeScale, zBeforeScale);
 			matrixStack.scale((float) scale, (float) scale, (float) scale);
 			matrixStack.translate(x, y, z);
 			matrixStack.scale(1, -1, 1);

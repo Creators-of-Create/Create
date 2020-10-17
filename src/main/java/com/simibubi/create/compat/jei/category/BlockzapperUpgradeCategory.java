@@ -1,19 +1,11 @@
 package com.simibubi.create.compat.jei.category;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.BLOCKZAPPER_UPGRADE_RECIPE;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ScreenResourceWrapper;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
-
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -24,7 +16,15 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.simibubi.create.foundation.gui.AllGuiTextures.BLOCKZAPPER_UPGRADE_RECIPE;
 
 public class BlockzapperUpgradeCategory extends CreateRecipeCategory<BlockzapperUpgradeRecipe> {
 
@@ -78,18 +78,17 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 	@Override
 	public void draw(BlockzapperUpgradeRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		ITextComponent componentName =
-				Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
-		String text = "+ " + recipe.getTier().color + componentName;
-		font.drawWithShadow(matrixStack, text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
-				0x8B8B8B);
-		
-		matrixStack.push();
-		matrixStack.translate(126, 0, 0);
-		matrixStack.scale(3.5f, 3.5f, 3.5f);
-		matrixStack.translate(-10, 0, 0);
-		RenderSystem.color3f(1, 1, 1);
-		GuiGameElement.of(recipe.getRecipeOutput()).render(matrixStack);
-		matrixStack.pop();
+
+		IFormattableTextComponent textComponent =
+				new StringTextComponent("+ ")
+				.append(Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name())))
+				.formatted(recipe.getTier().color);
+
+		font.drawWithShadow(matrixStack, textComponent, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(textComponent.getString())) / 2f, 57, 0x8B8B8B);
+
+		GuiGameElement.of(recipe.getRecipeOutput())
+				.at(90, 55)
+				.scale(3.5)
+				.render(matrixStack);
 	}
 }

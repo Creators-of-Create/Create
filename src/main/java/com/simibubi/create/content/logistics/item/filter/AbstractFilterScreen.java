@@ -1,11 +1,5 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -18,12 +12,17 @@ import com.simibubi.create.foundation.gui.widgets.Indicator.State;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
-
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+
+import java.util.Collections;
+import java.util.List;
+
+import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
 
@@ -65,7 +64,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
 		GuiGameElement.of(container.filterItem)
-			.at(guiLeft + background.width, guiTop + background.height + 25)
+			.at(guiLeft + background.width, guiTop + background.height + 25, -150)
 			.scale(5)
 			.render(ms);
 
