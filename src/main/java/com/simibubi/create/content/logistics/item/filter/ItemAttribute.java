@@ -10,6 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
@@ -45,6 +47,7 @@ public interface ItemAttribute {
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute hasEnchant = register(new EnchantAttribute("dummy"));
+	static ItemAttribute hasFluid = register(new FluidContentsAttribute("dummy"));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
@@ -108,6 +111,7 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isFood),
+		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
