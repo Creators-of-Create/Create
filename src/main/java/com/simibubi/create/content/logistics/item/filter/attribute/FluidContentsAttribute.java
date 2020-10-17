@@ -2,12 +2,8 @@ package com.simibubi.create.content.logistics.item.filter.attribute;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.GlassBottleItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.LazyOptional;
@@ -15,30 +11,28 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FluidContentsAttribute implements ItemAttribute {
-    String fluidName;
+    public static final FluidContentsAttribute EMPTY = new FluidContentsAttribute(null);
 
-    public FluidContentsAttribute(String fluidName) {
-        this.fluidName = fluidName;
+    private final Fluid fluid;
+
+    public FluidContentsAttribute(@Nullable Fluid fluid) {
+        this.fluid = fluid;
     }
 
     @Override
     public boolean appliesTo(ItemStack itemStack) {
-        return extractFluidNames(itemStack).contains(fluidName);
+        return extractFluids(itemStack).contains(fluid);
     }
 
     @Override
     public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        List<String> names = extractFluidNames(itemStack);
-
-        List<ItemAttribute> atts = new ArrayList<>();
-        for(String name : names) {
-            atts.add(new FluidContentsAttribute(name));
-        }
-        return atts;
+        return extractFluids(itemStack).stream().map(FluidContentsAttribute::new).collect(Collectors.toList());
     }
 
     @Override
@@ -48,33 +42,36 @@ public class FluidContentsAttribute implements ItemAttribute {
 
     @Override
     public Object[] getTranslationParameters() {
-        ResourceLocation fluidResource = new ResourceLocation(fluidName);
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidResource);
-        String trans = "";
+        String parameter = "";
         if(fluid != null)
-            trans = new TranslationTextComponent(fluid.getAttributes().getTranslationKey()).getString();
-        return new Object[] {trans};
+            parameter = new TranslationTextComponent(fluid.getAttributes().getTranslationKey()).getString();
+        return new Object[] { parameter };
     }
 
     @Override
     public void writeNBT(CompoundNBT nbt) {
-        nbt.putString("fluidName", this.fluidName);
+        if (fluid == null)
+            return;
+        ResourceLocation id = ForgeRegistries.FLUIDS.getKey(fluid);
+        if (id == null)
+            return;
+        nbt.putString("id", id.toString());
     }
 
     @Override
     public ItemAttribute readNBT(CompoundNBT nbt) {
-        return new FluidContentsAttribute(nbt.getString("fluidName"));
+        return nbt.contains("id") ? new FluidContentsAttribute(ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(nbt.getString("id")))) : EMPTY;
     }
 
-    private List<String> extractFluidNames(ItemStack stack) {
-        List<String> fluids = new ArrayList<>();
+    private List<Fluid> extractFluids(ItemStack stack) {
+        List<Fluid> fluids = new ArrayList<>();
 
         LazyOptional<IFluidHandlerItem> capability =
                 stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 
         capability.ifPresent((cap) -> {
             for(int i = 0; i < cap.getTanks(); i++) {
-                fluids.add(cap.getFluidInTank(i).getFluid().getRegistryName().toString());
+                fluids.add(cap.getFluidInTank(i).getFluid());
             }
         });
 

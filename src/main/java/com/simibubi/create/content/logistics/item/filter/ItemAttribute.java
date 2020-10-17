@@ -50,7 +50,7 @@ public interface ItemAttribute {
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
-	static ItemAttribute hasFluid = register(new FluidContentsAttribute("dummy"));
+	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
 	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
 	static ItemAttribute astralAttunement = register(new AstralSorceryAttunementAttribute("dummy"));
