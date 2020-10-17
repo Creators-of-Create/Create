@@ -9,9 +9,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,6 +48,8 @@ public interface ItemAttribute {
 	static ItemAttribute hasEnchant = register(new EnchantAttribute("dummy"));
 	static ItemAttribute hasFluid = register(new FluidContentsAttribute("dummy"));
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
+	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
+	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
