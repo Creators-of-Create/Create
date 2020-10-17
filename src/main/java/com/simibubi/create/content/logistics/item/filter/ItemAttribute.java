@@ -10,6 +10,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.*;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +52,10 @@ public interface ItemAttribute {
 	static ItemAttribute hasEnchant = register(new EnchantAttribute("dummy"));
 	static ItemAttribute hasFluid = register(new FluidContentsAttribute("dummy"));
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
+	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
+	static ItemAttribute astralAttunement = register(new AstralSorceryAttunementAttribute("dummy"));
+	static ItemAttribute astralCrystal = register(new AstralSorceryCrystalAttribute("dummy"));
+	static ItemAttribute astralPerkGem = register(new AstralSorceryPerkGemAttribute("dummy"));
 	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
 	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));

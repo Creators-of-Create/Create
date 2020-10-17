@@ -876,7 +876,14 @@
 	"create.item_attributes.book_copy_second.inverted": "is not a second-generation copy",
 	"create.item_attributes.book_copy_tattered": "is a tattered mess",
 	"create.item_attributes.book_copy_tattered.inverted": "is not a tattered mess",
-
+	"create.item_attributes.astralsorcery_crystal": "has crystal attribute %1$s",
+	"create.item_attributes.astralsorcery_crystal.inverted": "does not have crystal attribute %1$s",
+	"create.item_attributes.astralsorcery_constellation": "is attuned to %1$s",
+	"create.item_attributes.astralsorcery_constellation.inverted": "is not attuned to %1$s",
+	"create.item_attributes.astralsorcery_perk_gem": "has perk attribute %1$s",
+	"create.item_attributes.astralsorcery_perk_gem.inverted": "does not have perk attribute %1$s",
+	"create.item_attributes.astralsorcery_amulet": "improves %1$s",
+	"create.item_attributes.astralsorcery_amulet.inverted": "does not improve %1$s",
 
 	"create.gui.attribute_filter.no_selected_attributes": "No attributes selected",
 	"create.gui.attribute_filter.selected_attributes": "Selected attributes:",
