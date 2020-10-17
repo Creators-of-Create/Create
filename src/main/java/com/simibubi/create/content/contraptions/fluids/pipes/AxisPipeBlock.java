@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -27,7 +28,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable {
+public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable, IAxisPipe {
 
 	public AxisPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -92,6 +93,11 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable {
 			.updateBlockState(AllBlocks.FLUID_PIPE.getDefaultState()
 				.with(facingToPropertyMap.get(side), true)
 				.with(facingToPropertyMap.get(side.getOpposite()), true), side, null, world, pos);
+	}
+
+	@Override
+	public Axis getAxis(BlockState state) {
+		return state.get(AXIS);
 	}
 
 }

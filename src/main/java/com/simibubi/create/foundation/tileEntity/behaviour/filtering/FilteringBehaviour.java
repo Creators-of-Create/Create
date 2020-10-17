@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
@@ -37,6 +38,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	int ticksUntilScrollPacket;
 	boolean forceClientState;
 	boolean recipeFilter;
+	boolean fluidFilter;
 
 	public FilteringBehaviour(SmartTileEntity te, ValueBoxTransform slot) {
 		super(te);
@@ -51,6 +53,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		ticksUntilScrollPacket = -1;
 		showCountPredicate = () -> showCount;
 		recipeFilter = false;
+		fluidFilter = false;
 	}
 
 	@Override
@@ -100,6 +103,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public FilteringBehaviour forRecipes() {
 		recipeFilter = true;
+		return this;
+	}
+	
+	public FilteringBehaviour forFluids() {
+		fluidFilter = true;
 		return this;
 	}
 
@@ -167,6 +175,10 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean test(ItemStack stack) {
+		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
+	}
+	
+	public boolean test(FluidStack stack) {
 		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
 	}
 

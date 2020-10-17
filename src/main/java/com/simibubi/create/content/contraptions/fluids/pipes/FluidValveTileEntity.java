@@ -2,10 +2,9 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeAttachmentBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
@@ -15,10 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ILightReader;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidValveTileEntity extends KineticTileEntity {
@@ -81,7 +77,7 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new ValvePipeBehaviour(this));
-		behaviours.add(new ValvePipeAttachmentBehaviour(this));
+		behaviours.add(new StraightPipeAttachmentBehaviour(this));
 	}
 
 	class ValvePipeBehaviour extends FluidPipeBehaviour {
@@ -102,27 +98,6 @@ public class FluidValveTileEntity extends KineticTileEntity {
 			return false;
 		}
 		
-	}
-
-	class ValvePipeAttachmentBehaviour extends FluidPipeAttachmentBehaviour {
-
-		public ValvePipeAttachmentBehaviour(SmartTileEntity te) {
-			super(te);
-		}
-
-		@Override
-		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
-			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
-
-			BlockState facingState = world.getBlockState(pos.offset(direction));
-			if (AllBlocks.FLUID_VALVE.has(facingState)
-				&& FluidValveBlock.getPipeAxis(facingState) == FluidValveBlock.getPipeAxis(state)
-				&& direction.getAxisDirection() == AxisDirection.NEGATIVE)
-				return AttachmentTypes.NONE;
-
-			return attachment;
-		}
-
 	}
 
 }

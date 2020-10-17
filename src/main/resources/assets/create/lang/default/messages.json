@@ -150,6 +150,7 @@
 	
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",
+	"create.logistics.fluid_filter": "Fluid Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 

@@ -80,6 +80,24 @@ public class AllShapes {
 			.forHorizontal(NORTH),
 		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),
+		SMART_FLUID_PIPE_FLOOR = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)
+			.add(5, 13, 3, 11, 14, 11)
+			.add(5, 14, 4, 11, 15, 10)
+			.add(5, 15, 5, 11, 16, 9)
+			.add(5, 16, 6, 11, 17, 8)
+			.forHorizontal(Direction.SOUTH),
+		SMART_FLUID_PIPE_WALL = shape(4, 0, 4, 12, 16, 12).add(3, 3, 3, 13, 13, 13)
+			.add(5, 5, 13, 11, 13, 14)
+			.add(5, 6, 14, 11, 12, 15)
+			.add(5, 7, 15, 11, 11, 16)
+			.add(5, 8, 16, 11, 10, 17)
+			.forHorizontal(Direction.SOUTH),
+		SMART_FLUID_PIPE_CEILING = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)
+			.add(5, 3, 3, 11, 2, 11)
+			.add(5, 2, 4, 11, 1, 10)
+			.add(5, 1, 5, 11, 0, 9)
+			.add(5, 0, 6, 11, -1, 8)
+			.forHorizontal(Direction.SOUTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP)
