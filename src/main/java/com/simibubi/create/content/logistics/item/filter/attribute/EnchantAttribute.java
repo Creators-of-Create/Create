@@ -2,41 +2,34 @@ package com.simibubi.create.content.logistics.item.filter.attribute;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EnchantAttribute implements ItemAttribute {
-    String enchantName;
+    public static final EnchantAttribute EMPTY = new EnchantAttribute(null);
 
-    public EnchantAttribute(String enchantName) {
-        this.enchantName = enchantName;
+    private final Enchantment enchantment;
+
+    public EnchantAttribute(@Nullable Enchantment enchantment) {
+        this.enchantment = enchantment;
     }
 
     @Override
     public boolean appliesTo(ItemStack itemStack) {
-        ListNBT enchants = extractEnchants(itemStack);
-        for (int i = 0; i < enchants.size(); i++) {
-            if(enchants.getCompound(i).getString("id").equals(this.enchantName))
-                return true;
-        }
-        return false;
+        return EnchantmentHelper.getEnchantments(itemStack).containsKey(enchantment);
     }
 
     @Override
     public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        ListNBT enchants = extractEnchants(itemStack);
-        List<ItemAttribute> atts = new ArrayList<>();
-        for (int i = 0; i < enchants.size(); i++) {
-            atts.add(new EnchantAttribute(enchants.getCompound(i).getString("id")));
-        }
-        return atts;
+        return EnchantmentHelper.getEnchantments(itemStack).keySet().stream().map(EnchantAttribute::new).collect(Collectors.toList());
     }
 
     @Override
@@ -46,26 +39,24 @@ public class EnchantAttribute implements ItemAttribute {
 
     @Override
     public Object[] getTranslationParameters() {
-        String something = "";
-        Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(enchantName));
-        if(enchant != null) {
-            something = new TranslationTextComponent(enchant.getName()).getString();
-        }
-        return new Object[] { something };
+        String parameter = "";
+        if(enchantment != null)
+            parameter = new TranslationTextComponent(enchantment.getName()).getString();
+        return new Object[] { parameter };
     }
 
     @Override
     public void writeNBT(CompoundNBT nbt) {
-        nbt.putString("id", this.enchantName);
+        if (enchantment == null)
+            return;
+        ResourceLocation id = ForgeRegistries.ENCHANTMENTS.getKey(enchantment);
+        if (id == null)
+            return;
+        nbt.putString("id", id.toString());
     }
 
     @Override
     public ItemAttribute readNBT(CompoundNBT nbt) {
-        return new EnchantAttribute(nbt.getString("id"));
-    }
-
-    private ListNBT extractEnchants(ItemStack stack) {
-        CompoundNBT tag = stack.getTag() != null ? stack.getTag() : new CompoundNBT();
-        return tag.contains("Enchantments") ? stack.getEnchantmentTagList() : tag.getList("StoredEnchantments", 10);
+        return nbt.contains("id") ? new EnchantAttribute(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(nbt.getString("id")))) : EMPTY;
     }
 }
