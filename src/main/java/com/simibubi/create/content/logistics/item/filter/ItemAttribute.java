@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +49,7 @@ public interface ItemAttribute {
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute hasEnchant = register(new EnchantAttribute("dummy"));
 	static ItemAttribute hasFluid = register(new FluidContentsAttribute("dummy"));
+	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
@@ -113,6 +115,7 @@ public interface ItemAttribute {
 		CONSUMABLE(ItemStack::isFood),
 		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
+		RENAMED(ItemStack::hasDisplayName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(Predicates.not(ItemStack::isStackable)),
