@@ -9,6 +9,7 @@ import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlo
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
@@ -26,6 +27,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class CreateJEI implements IModPlugin {
 	public static final IIngredientType<FluidIngredient> FLUIDS = new IIngredientType<FluidIngredient>() {
 
 		@Override
+		@Nonnull
 		public Class<? extends FluidIngredient> getIngredientClass() {
 			return FluidIngredient.class;
 		}
@@ -61,6 +64,7 @@ public class CreateJEI implements IModPlugin {
 	private final MechanicalCraftingCategory mechanicalCraftingExclusiveCategory;
 
 	@Override
+	@Nonnull
 	public ResourceLocation getPluginUid() {
 		return ID;
 	}
@@ -189,6 +193,8 @@ public class CreateJEI implements IModPlugin {
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(AdjustableCrateScreen.class, new SlotMover<>());
 		registration.addGuiContainerHandler(SchematicannonScreen.class, new SlotMover<>());
+
+		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
 	}
 
 	private static List<IRecipe<?>> findRecipes(AllRecipeTypes recipe) {
