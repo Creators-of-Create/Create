@@ -1,15 +1,11 @@
 package com.simibubi.create.content.curiosities;
 
-import java.util.List;
-import java.util.Random;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
@@ -21,15 +17,15 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
+
+import java.util.List;
+import java.util.Random;
 
 public class ChromaticCompoundItem extends Item {
 
@@ -122,22 +118,27 @@ public class ChromaticCompoundItem extends Item {
 		int entityX = MathHelper.floor(entity.getX());
 		int entityZ = MathHelper.floor(entity.getZ());
 		int localWorldHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, entityX, entityZ);
-		if (entity.getY() > localWorldHeight) {
-			BlockPos.Mutable testPos = new BlockPos.Mutable(entityX, localWorldHeight, entityZ);
-			while (testPos.getY() > 0) {
-				testPos.move(Direction.DOWN);
-				BlockState state = world.getBlockState(testPos);
-				if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
-					break;
-				if (state.getBlock() == Blocks.BEACON) {
-					TileEntity te = world.getTileEntity(testPos);
-					if (!(te instanceof BeaconTileEntity))
-						break;
-					BeaconTileEntity bte = (BeaconTileEntity) te;
-					if (bte.getLevels() != 0)
-						isOverBeacon = true;
-					break;
-				}
+
+		BlockPos.Mutable testPos = new BlockPos.Mutable(
+				entityX,
+				Math.min(MathHelper.floor(entity.getY()), localWorldHeight),
+				entityZ);
+
+		while (testPos.getY() > 0) {
+			testPos.move(Direction.DOWN);
+			BlockState state = world.getBlockState(testPos);
+			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+				break;
+			if (state.getBlock() == Blocks.BEACON) {
+				TileEntity te = world.getTileEntity(testPos);
+
+				if (!(te instanceof BeaconTileEntity)) break;
+
+				BeaconTileEntity bte = (BeaconTileEntity) te;
+
+				if (!bte.getBeamSegments().isEmpty()) isOverBeacon = true;
+
+				break;
 			}
 		}
 
