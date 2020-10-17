@@ -9,6 +9,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
@@ -43,6 +44,7 @@ public interface ItemAttribute {
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
+	static ItemAttribute hasEnchant = register(new EnchantAttribute("dummy"));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
