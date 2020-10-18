@@ -52,6 +52,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveRenderer;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankRenderer;
@@ -199,6 +200,12 @@ public class AllTileEntities {
 		.tileEntity("mechanical_pump", PumpTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_PUMP)
 		.renderer(() -> PumpRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<SmartFluidPipeTileEntity> SMART_FLUID_PIPE = Create.registrate()
+		.tileEntity("smart_fluid_pipe", SmartFluidPipeTileEntity::new)
+		.validBlocks(AllBlocks.SMART_FLUID_PIPE)
+		.renderer(() -> SmartTileEntityRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<FluidPipeTileEntity> FLUID_PIPE = Create.registrate()

@@ -62,8 +62,10 @@ public class FilteringRenderer {
 		ItemStack filter = behaviour.getFilter();
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
+		boolean fluids = behaviour.fluidFilter;
 		ITextComponent label = isFilterSlotted ? StringTextComponent.EMPTY
-			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter" : "logistics.filter");
+			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter"
+				: fluids ? "logistics.fluid_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
 			.subtract(Vector3d.of(pos)));
 
@@ -74,7 +76,7 @@ public class FilteringRenderer {
 			: new ValueBox(label, bb, pos);
 
 		box.offsetLabel(behaviour.textShift)
-			.withColors(0x7A6A2C, 0xB79D64)
+			.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
 			.scrollTooltip(showCount ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
 			.passive(!hit);
 
@@ -120,7 +122,7 @@ public class FilteringRenderer {
 			}
 			sided.fromSide(side);
 			return;
-		} else if(slotPositioning.shouldRender(blockState)) {
+		} else if (slotPositioning.shouldRender(blockState)) {
 			ms.push();
 			slotPositioning.transform(blockState, ms);
 			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);

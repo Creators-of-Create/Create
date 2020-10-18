@@ -427,6 +427,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P")
 				.patternLine("S")),
 
+		SMART_FLUID_PIPE = create(AllBlocks.SMART_FLUID_PIPE).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('P', I.electronTube())
+				.key('S', AllBlocks.FLUID_PIPE.get())
+				.key('I', I.brassSheet())
+				.patternLine("I")
+				.patternLine("S")
+				.patternLine("P")),
+
 		FLUID_VALVE = create(AllBlocks.FLUID_VALVE).unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('P', I.shaft())
 				.key('S', AllBlocks.FLUID_PIPE.get())
@@ -459,6 +467,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('C', I.andesiteCasing())
 				.patternLine(" B ")
 				.patternLine("SCS")
+				.patternLine(" I ")),
+
+		PORTABLE_STORAGE_INTERFACE = create(AllBlocks.PORTABLE_STORAGE_INTERFACE).unlockedBy(I::brassCasing)
+			.viaShaped(b -> b.key('I', AllBlocks.REDSTONE_CONTACT.get())
+				.key('B', AllBlocks.ANDESITE_FUNNEL.get())
+				.patternLine(" B ")
 				.patternLine(" I ")),
 
 		ROPE_PULLEY = create(AllBlocks.ROPE_PULLEY).unlockedBy(I::andesite)

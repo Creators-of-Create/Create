@@ -137,14 +137,14 @@ public class FluidPropagator {
 	public static OutlineParams showBlockFace(BlockFace face) {
 		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
 //		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-//			Vec3d directionVec = new Vec3d(face.getFace()
+//			Vector3d directionVec = new Vector3d(face.getFace()
 //				.getDirectionVec());
-//			Vec3d scaleVec = directionVec.scale(-.25f * face.getFace()
+//			Vector3d scaleVec = directionVec.scale(-.25f * face.getFace()
 //				.getAxisDirection()
 //				.getOffset());
 //			directionVec = directionVec.scale(.5f);
 //			params.setValue(CreateClient.outliner.showAABB(face,
-//				FluidPropagator.smallCenter.offset(directionVec.add(new Vec3d(face.getPos())))
+//				FluidPropagator.smallCenter.offset(directionVec.add(new Vector3d(face.getPos())))
 //					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
 //					.grow(1 / 16f)));
 //		});

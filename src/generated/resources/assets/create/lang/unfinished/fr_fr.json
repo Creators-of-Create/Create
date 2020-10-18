@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 545",
+	"_": "Missing Localizations: 547",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -343,6 +343,7 @@
 	"block.create.sequenced_gearshift": "Décaleur de rotation séquencé",
 	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Casing",
 	"block.create.shaft": "Arbre mécanique",
+	"block.create.smart_fluid_pipe": "UNLOCALIZED: Smart Fluid Pipe",
 	"block.create.speedometer": "Compteur de vitesse",
 	"block.create.spout": "UNLOCALIZED: Spout",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",
@@ -675,6 +676,7 @@
 
 	"create.logistics.filter": "Filtre",
 	"create.logistics.recipe_filter": "UNLOCALIZED: Recipe Filter",
+	"create.logistics.fluid_filter": "UNLOCALIZED: Fluid Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 

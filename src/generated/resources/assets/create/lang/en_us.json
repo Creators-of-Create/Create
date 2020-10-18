@@ -342,6 +342,7 @@
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
 	"block.create.shadow_steel_casing": "Shadow Casing",
 	"block.create.shaft": "Shaft",
+	"block.create.smart_fluid_pipe": "Smart Fluid Pipe",
 	"block.create.speedometer": "Speedometer",
 	"block.create.spout": "Spout",
 	"block.create.spruce_window": "Spruce Window",
@@ -674,6 +675,7 @@
 
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",
+	"create.logistics.fluid_filter": "Fluid Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
 

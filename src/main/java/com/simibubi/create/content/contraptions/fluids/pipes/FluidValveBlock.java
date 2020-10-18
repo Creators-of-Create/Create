@@ -18,7 +18,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class FluidValveBlock extends DirectionalAxisKineticBlock {
+public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
@@ -68,6 +68,11 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock {
 			return axis;
 		}
 		return null;
+	}
+
+	@Override
+	public Axis getAxis(BlockState state) {
+		return getPipeAxis(state);
 	}
 
 }

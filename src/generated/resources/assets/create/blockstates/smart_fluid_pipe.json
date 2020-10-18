@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "face=floor,facing=north": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "y": 180
+    },
+    "face=wall,facing=north": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
+      "y": 180
+    },
+    "face=ceiling,facing=north": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 180
+    },
+    "face=floor,facing=south": {
+      "model": "create:block/smart_fluid_pipe/block"
+    },
+    "face=wall,facing=south": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270
+    },
+    "face=ceiling,facing=south": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 180,
+      "y": 180
+    },
+    "face=floor,facing=west": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "y": 90
+    },
+    "face=wall,facing=west": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
+      "y": 90
+    },
+    "face=ceiling,facing=west": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 180,
+      "y": 270
+    },
+    "face=floor,facing=east": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "y": 270
+    },
+    "face=wall,facing=east": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
+      "y": 270
+    },
+    "face=ceiling,facing=east": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 180,
+      "y": 90
+    }
+  }
+}
