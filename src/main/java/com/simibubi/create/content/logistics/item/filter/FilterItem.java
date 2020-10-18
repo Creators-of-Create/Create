@@ -34,6 +34,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -180,6 +182,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		return test(world, stack, filter, false);
 	}
 
+	public static boolean test(World world, FluidStack stack, ItemStack filter) {
+		return test(world, stack, filter, false);
+	}
+
 	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
@@ -246,6 +252,41 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			}
 		}
 
+		return false;
+	}
+
+	private static boolean test(World world, FluidStack stack, ItemStack filter, boolean matchNBT) {
+		if (filter.isEmpty())
+			return true;
+		if (stack.isEmpty())
+			return false;
+
+		if (!(filter.getItem() instanceof FilterItem)) {
+			if (!matchNBT)
+				return filter.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+					.filter(ifh -> ifh.getTanks() > 0)
+					.map(ifh -> ifh.getFluidInTank(0)
+						.getFluid() == stack.getFluid())
+					.orElse(false);
+			return stack.isFluidEqual(filter);
+		}
+
+		if (AllItems.FILTER.get() == filter.getItem()) {
+			ItemStackHandler filterItems = getFilterItems(filter);
+			boolean respectNBT = filter.getOrCreateTag()
+				.getBoolean("RespectNBT");
+			boolean blacklist = filter.getOrCreateTag()
+				.getBoolean("Blacklist");
+			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
+				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				boolean matches = test(world, stack, stackInSlot, respectNBT);
+				if (matches)
+					return !blacklist;
+			}
+			return blacklist;
+		}
 		return false;
 	}
 

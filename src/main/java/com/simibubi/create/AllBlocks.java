@@ -68,6 +68,8 @@ import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
@@ -501,6 +503,15 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
+	public static final BlockEntry<SmartFluidPipeBlock> SMART_FLUID_PIPE =
+		REGISTRATE.block("smart_fluid_pipe", SmartFluidPipeBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(new SmartFluidPipeGenerator()::generate)
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.item()
+			.transform(customItemModel())
+			.register();
+	
 	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,

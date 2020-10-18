@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:redstone_contact"
+    },
+    "B": {
+      "item": "create:andesite_funnel"
+    }
+  },
+  "result": {
+    "item": "create:portable_storage_interface"
+  }
+}
