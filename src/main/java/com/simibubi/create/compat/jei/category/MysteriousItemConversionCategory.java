@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -18,13 +19,14 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 
 	public static List<ConversionRecipe> getRecipes() {
 		List<ConversionRecipe> recipes = new ArrayList<>();
+		recipes.add(ConversionRecipe.create(AllItems.EMPTY_BLAZE_BURNER.asStack(), AllBlocks.BLAZE_BURNER.asStack()));
 		recipes.add(ConversionRecipe.create(AllItems.CHROMATIC_COMPOUND.asStack(), AllItems.SHADOW_STEEL.asStack()));
 		recipes.add(ConversionRecipe.create(AllItems.CHROMATIC_COMPOUND.asStack(), AllItems.REFINED_RADIANCE.asStack()));
 		return recipes;
 	}
 	
 	public MysteriousItemConversionCategory() {
-		super("mystery_conversion", itemIcon(AllItems.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
+		super(itemIcon(AllItems.CHROMATIC_COMPOUND.get()), emptyBackground(177, 50));
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.fluid;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
@@ -64,23 +66,29 @@ public class CombinedTankWrapper implements IFluidHandler {
 	public int fill(FluidStack resource, FluidAction action) {
 		if (resource.isEmpty())
 			return 0;
-		
+
 		int filled = 0;
 		resource = resource.copy();
 
-		for (IFluidHandler iFluidHandler : itemHandler) {
-			boolean skipRest = false;
-			int filledIntoCurrent = iFluidHandler.fill(resource, action);
-			
-			for (int i = 0; i < iFluidHandler.getTanks(); i++) 
-				if (iFluidHandler.getFluidInTank(i).isFluidEqual(resource) && enforceVariety)
-					skipRest = true;
-			
-			resource.shrink(filledIntoCurrent);
-			filled += filledIntoCurrent;
+		boolean fittingHandlerFound = false;
+		Outer: for (boolean searchPass : Iterate.trueAndFalse) {
+			for (IFluidHandler iFluidHandler : itemHandler) {
 
-			if (resource.isEmpty() || skipRest)
-				break;
+				for (int i = 0; i < iFluidHandler.getTanks(); i++)
+					if (searchPass && iFluidHandler.getFluidInTank(i)
+						.isFluidEqual(resource))
+						fittingHandlerFound = true;
+
+				if (searchPass && !fittingHandlerFound)
+					continue;
+
+				int filledIntoCurrent = iFluidHandler.fill(resource, action);
+				resource.shrink(filledIntoCurrent);
+				filled += filledIntoCurrent;
+
+				if (resource.isEmpty() || fittingHandlerFound || enforceVariety && filledIntoCurrent != 0)
+					break Outer;
+			}
 		}
 
 		return filled;
@@ -90,7 +98,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 	public FluidStack drain(FluidStack resource, FluidAction action) {
 		if (resource.isEmpty())
 			return resource;
-		
+
 		FluidStack drained = FluidStack.EMPTY;
 		resource = resource.copy();
 
@@ -99,8 +107,8 @@ public class CombinedTankWrapper implements IFluidHandler {
 			int amount = drainedFromCurrent.getAmount();
 			resource.shrink(amount);
 
-			if (!drainedFromCurrent.isEmpty())
-				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount());
+			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
+				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(), drained.getTag());
 			if (resource.isEmpty())
 				break;
 		}
@@ -117,8 +125,9 @@ public class CombinedTankWrapper implements IFluidHandler {
 			int amount = drainedFromCurrent.getAmount();
 			maxDrain -= amount;
 
-			if (!drainedFromCurrent.isEmpty())
-				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount());
+			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
+				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(),
+					drainedFromCurrent.getTag());
 			if (maxDrain == 0)
 				break;
 		}

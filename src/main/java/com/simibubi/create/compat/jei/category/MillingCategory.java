@@ -20,8 +20,7 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	private AnimatedMillstone millstone = new AnimatedMillstone();
 
 	public MillingCategory() {
-		super("milling", doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get()),
-			emptyBackground(177, 53));
+		super(doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get()), emptyBackground(177, 53));
 	}
 
 	@Override

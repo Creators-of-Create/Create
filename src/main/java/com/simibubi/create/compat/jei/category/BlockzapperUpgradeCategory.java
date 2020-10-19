@@ -29,8 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 public class BlockzapperUpgradeCategory extends CreateRecipeCategory<BlockzapperUpgradeRecipe> {
 
 	public BlockzapperUpgradeCategory() {
-		super("blockzapper_upgrade", itemIcon(AllItems.BLOCKZAPPER.get()),
-				new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
+		super(itemIcon(AllItems.BLOCKZAPPER.get()), new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
 	}
 
 	@Override
@@ -57,7 +56,8 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		for (int y = 0; y < shape.getRecipeHeight(); y++) {
 			for (int x = 0; x < shape.getRecipeWidth(); x++) {
 				itemStacks.init(i, true, left + x * 18, top + y * 18);
-				itemStacks.set(i, Arrays.asList(shapedIngredients.get(i).getMatchingStacks()));
+				itemStacks.set(i, Arrays.asList(shapedIngredients.get(i)
+					.getMatchingStacks()));
 				i++;
 			}
 		}
@@ -69,28 +69,31 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		if (mouseX < 91 || mouseX > 91 + 52 || mouseY < 1 || mouseY > 53)
 			return list;
 		list.addAll(recipe.getRecipeOutput()
-				.getTooltip(Minecraft.getInstance().player,
-						Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED
-								: ITooltipFlag.TooltipFlags.NORMAL)
-				.stream().map(ITextComponent::getFormattedText).collect(Collectors.toList()));
+			.getTooltip(Minecraft.getInstance().player,
+				Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED
+					: ITooltipFlag.TooltipFlags.NORMAL)
+			.stream()
+			.map(ITextComponent::getFormattedText)
+			.collect(Collectors.toList()));
 		return list;
 	}
 
 	@Override
 	public void draw(BlockzapperUpgradeRecipe recipe, double mouseX, double mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		String componentName =
-				Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent().name()));
+		String componentName = Lang.translate("blockzapper.component." + Lang.asId(recipe.getUpgradedComponent()
+			.name()));
 		String text = "+ " + recipe.getTier().color + componentName;
 		font.drawStringWithShadow(text, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(text)) / 2, 57,
-				0x8B8B8B);
-		
+			0x8B8B8B);
+
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(126, 0, 0);
 		RenderSystem.scaled(3.5, 3.5, 3.5);
 		RenderSystem.translated(-10, 0, 0);
 		RenderSystem.color3f(1, 1, 1);
-		GuiGameElement.of(recipe.getRecipeOutput()).render();
+		GuiGameElement.of(recipe.getRecipeOutput())
+			.render();
 		RenderSystem.popMatrix();
 	}
 }

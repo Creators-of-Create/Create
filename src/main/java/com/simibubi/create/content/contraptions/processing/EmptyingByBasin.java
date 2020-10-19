@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.PotionItem;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -22,6 +24,9 @@ public class EmptyingByBasin {
 	static RecipeWrapper wrapper = new RecipeWrapper(new ItemStackHandler(1));
 
 	public static boolean canItemBeEmptied(World world, ItemStack stack) {
+		if (stack.getItem() instanceof PotionItem)
+			return true;
+		
 		wrapper.setInventorySlotContents(0, stack);
 		if (AllRecipeTypes.EMPTYING.find(wrapper, world)
 			.isPresent())
@@ -44,6 +49,9 @@ public class EmptyingByBasin {
 		FluidStack resultingFluid = FluidStack.EMPTY;
 		ItemStack resultingItem = ItemStack.EMPTY;
 
+		if (stack.getItem() instanceof PotionItem)
+			return PotionFluidHandler.emptyPotion(stack, simulate);
+		
 		wrapper.setInventorySlotContents(0, stack);
 		Optional<IRecipe<RecipeWrapper>> recipe = AllRecipeTypes.EMPTYING.find(wrapper, world);
 		if (recipe.isPresent()) {

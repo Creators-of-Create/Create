@@ -42,6 +42,15 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		return ingredient;
 	}
 
+	public static FluidIngredient fromFluidStack(FluidStack fluidStack) {
+		FluidStackIngredient ingredient = new FluidStackIngredient();
+		ingredient.fluid = fluidStack.getFluid();
+		ingredient.amountRequired = fluidStack.getAmount();
+		if (fluidStack.hasTag())
+			ingredient.tagToMatch = fluidStack.getTag();
+		return ingredient;
+	}
+
 	protected int amountRequired;
 
 	protected abstract boolean testInternal(FluidStack t);
@@ -135,10 +144,12 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			if (!t.getFluid()
 				.isEquivalentTo(fluid))
 				return false;
-			CompoundNBT tag = t.getTag()
-				.copy();
-			return tag.merge(tagToMatch)
-				.equals(t.getTag());
+			if (tagToMatch.isEmpty())
+				return true;
+			CompoundNBT tag = t.getOrCreateTag();
+			return tag.copy()
+				.merge(tagToMatch)
+				.equals(tag);
 		}
 
 		@Override

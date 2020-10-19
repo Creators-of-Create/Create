@@ -3,10 +3,14 @@ package com.simibubi.create.compat.jei.category;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -21,21 +25,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
-	private ResourceLocation uid;
-	private String name;
+	public List<Supplier<? extends Object>> recipeCatalysts = new ArrayList<>();
+	public List<Supplier<List<? extends IRecipe<?>>>> recipes = new ArrayList<>();
+	public ResourceLocation uid;
+
+	protected String name;
 	private IDrawable icon;
 	private IDrawable background;
 
-	public CreateRecipeCategory(String id, IDrawable icon, IDrawable background) {
-		uid = new ResourceLocation(Create.ID, id);
-		name = id;
+	public CreateRecipeCategory(IDrawable icon, IDrawable background) {
 		this.background = background;
 		this.icon = icon;
+	}
+
+	public void setCategoryId(String name) {
+		this.uid = new ResourceLocation(Create.ID, name);
+		this.name = name;
 	}
 
 	@Override
@@ -102,10 +113,25 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
 		outputs.forEach(f -> amounts.add(f.getAmount()));
 
-		fluidStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
+			if (fluid.getFluid()
+				.isEquivalentTo(AllFluids.POTION.get())) {
+				String name = PotionFluidHandler.getPotionName(fluid)
+					.getFormattedText();
+				if (tooltip.isEmpty())
+					tooltip.add(0, name);
+				else
+					tooltip.set(0, name);
+
+				ArrayList<ITextComponent> potionTooltip = new ArrayList<>();
+				PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
+				tooltip.addAll(1, potionTooltip.stream()
+					.map(ITextComponent::getFormattedText)
+					.collect(Collectors.toList()));
+			}
+
 			int amount = amounts.get(slotIndex);
-			String text = TextFormatting.GOLD + (amount == 1000 ? Lang.translate("generic.unit.bucket")
-				: Lang.translate("generic.unit.millibuckets", amount));
+			String text = TextFormatting.GOLD + Lang.translate("generic.unit.millibuckets", amount);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else

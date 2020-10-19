@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.IBlockVertexColor;
@@ -16,6 +18,7 @@ import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
+import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -29,10 +32,13 @@ import net.minecraft.block.Block.Properties;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -114,11 +120,24 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.simpleItem();
 	}
 
+	/* Fluids */
+
+	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
+		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+		NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		return entry(name,
+			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
+				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
+	}
+
+	/* Util */
+
 	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
-	
-	public static <T extends Block> NonNullConsumer<? super T> blockModel(Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+
+	public static <T extends Block> NonNullConsumer<? super T> blockModel(
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 

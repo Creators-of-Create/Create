@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
@@ -81,7 +82,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			if (!heldItem.isEmpty()) {
 				if (tryEmptyItemIntoBasin(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
-				return ActionResultType.PASS;
+				if (tryFillItemFromBasin(worldIn, player, handIn, heldItem, te))
+					return ActionResultType.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 
 			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
@@ -101,23 +104,70 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
 			return false;
 
-		Pair<FluidStack, ItemStack> emptyItem = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
+		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
 		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		IFluidHandler tank = capability.orElse(null);
-		FluidStack fluidStack = emptyItem.getFirst();
+		FluidStack fluidStack = emptyingResult.getFirst();
 
 		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
 			return false;
 		if (worldIn.isRemote)
 			return true;
 
-		EmptyingByBasin.emptyItem(worldIn, heldItem, false);
+		ItemStack copyOfHeld = heldItem.copy();
+		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
 		tank.fill(fluidStack, FluidAction.EXECUTE);
-		if (heldItem.isEmpty())
-			player.setHeldItem(handIn, emptyItem.getSecond());
-		else
-			player.inventory.placeItemBackInInventory(worldIn, emptyItem.getSecond());
+
+		if (!player.isCreative()) {
+			if (copyOfHeld.isEmpty())
+				player.setHeldItem(handIn, emptyingResult.getSecond());
+			else {
+				player.setHeldItem(handIn, copyOfHeld);
+				player.inventory.placeItemBackInInventory(worldIn, emptyingResult.getSecond());
+			}
+		}
 		return true;
+	}
+
+	protected boolean tryFillItemFromBasin(World world, PlayerEntity player, Hand handIn, ItemStack heldItem,
+		BasinTileEntity te) {
+		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
+			return false;
+
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		IFluidHandler tank = capability.orElse(null);
+
+		if (tank == null)
+			return false;
+
+		for (int i = 0; i < tank.getTanks(); i++) {
+			FluidStack fluid = tank.getFluidInTank(i);
+			if (fluid.isEmpty())
+				continue;
+			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
+			if (requiredAmountForItem == -1)
+				continue;
+			if (requiredAmountForItem > fluid.getAmount())
+				continue;
+			
+			if (world.isRemote)
+				return true;
+
+			if (player.isCreative())
+				heldItem = heldItem.copy();
+			ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
+			
+			FluidStack copy = fluid.copy();
+			copy.setAmount(requiredAmountForItem);
+			tank.drain(copy, FluidAction.EXECUTE);
+			
+			if (!player.isCreative())
+				player.inventory.placeItemBackInInventory(world, out);
+			te.notifyUpdate();
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

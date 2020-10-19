@@ -32,8 +32,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
-	public BasinCategory(String id, IDrawable icon, IDrawable background) {
-		super(id, icon, background);
+	private boolean needsHeating;
+
+	public BasinCategory(boolean needsHeating, IDrawable icon, IDrawable background) {
+		super(icon, background);
+		this.needsHeating = needsHeating;
 	}
 
 	@Override
@@ -44,13 +47,13 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 	@Override
 	public void setIngredients(BasinRecipe recipe, IIngredients ingredients) {
 		List<Ingredient> itemIngredients = new ArrayList<>(recipe.getIngredients());
-		
+
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE))
 			itemIngredients.add(Ingredient.fromItems(AllBlocks.BLAZE_BURNER.get()));
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED))
 			itemIngredients.add(Ingredient.fromItems(AllItems.BLAZE_CAKE.get()));
-		
+
 		ingredients.setInputIngredients(itemIngredients);
 		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
 			.stream()
@@ -108,7 +111,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			fluidStacks.init(j, true, 17 + xOffset + (i2 % 3) * 19, 51 - (i2 / 3) * 19 + yOffset);
 			List<FluidStack> stacks = fluidIngredients.get(j)
 				.getMatchingFluidStacks();
-			fluidStacks.set(j, stacks);
+			fluidStacks.set(j, withImprovedVisibility(stacks));
 		}
 
 		if (!itemOutput.isEmpty()) {
@@ -120,11 +123,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		if (!fluidOutput.isEmpty()) {
 			fluidStacks.init(j, false, 142, 51 + yOffset);
-			fluidStacks.set(j, fluidOutput);
+			fluidStacks.set(j, withImprovedVisibility(fluidOutput));
 		}
 
 		addFluidTooltip(fluidStacks, fluidIngredients, ImmutableList.of(fluidOutput));
-		
+
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
 			itemStacks.init(++i, true, 133, 80);
@@ -134,6 +137,19 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			itemStacks.init(++i, true, 152, 80);
 			itemStacks.set(i, AllItems.BLAZE_CAKE.asStack());
 		}
+	}
+
+	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
+		return stacks.stream()
+			.map(this::withImprovedVisibility)
+			.collect(Collectors.toList());
+	}
+
+	public FluidStack withImprovedVisibility(FluidStack stack) {
+		FluidStack display = stack.copy();
+		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
+		display.setAmount(displayedAmount);
+		return display;
 	}
 
 	@Override
@@ -156,9 +172,11 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
 		shadow.draw(81, 58 + (noHeat ? 10 : 30));
 
+		if (!needsHeating)
+			return;
+		
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.draw(4, 80);
-		
 		Minecraft.getInstance().fontRenderer.drawStringWithShadow(Lang.translate(requiredHeat.getTranslationKey()), 9,
 			85, requiredHeat.getColor());
 	}

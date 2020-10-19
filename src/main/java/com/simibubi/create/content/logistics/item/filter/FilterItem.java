@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
@@ -35,7 +36,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -185,7 +185,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	public static boolean test(World world, FluidStack stack, ItemStack filter) {
-		return test(world, stack, filter, false);
+		return test(world, stack, filter, true);
 	}
 
 	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
@@ -264,13 +264,17 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return false;
 
 		if (!(filter.getItem() instanceof FilterItem)) {
+			if (!EmptyingByBasin.canItemBeEmptied(world, filter))
+				return false;
+			FluidStack fluidInFilter = EmptyingByBasin.emptyItem(world, filter, true)
+				.getFirst();
+			if (fluidInFilter == null)
+				return false;
 			if (!matchNBT)
-				return filter.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-					.filter(ifh -> ifh.getTanks() > 0)
-					.map(ifh -> ifh.getFluidInTank(0)
-						.getFluid() == stack.getFluid())
-					.orElse(false);
-			return stack.isFluidEqual(filter);
+				return fluidInFilter.getFluid()
+					.isEquivalentTo(stack.getFluid());
+			boolean fluidEqual = fluidInFilter.isFluidEqual(stack);
+			return fluidEqual;
 		}
 
 		if (AllItems.FILTER.get() == filter.getItem()) {

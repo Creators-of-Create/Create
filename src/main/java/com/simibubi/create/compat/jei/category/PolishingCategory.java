@@ -25,7 +25,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	private ItemStack renderedSandpaper;
 
 	public PolishingCategory() {
-		super("sandpaper_polishing", itemIcon(AllItems.SAND_PAPER.get()), emptyBackground(177, 55));
+		super(itemIcon(AllItems.SAND_PAPER.get()), emptyBackground(177, 55));
 		renderedSandpaper = AllItems.SAND_PAPER.asStack();
 	}
 
@@ -46,9 +46,12 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		List<ProcessingOutput> results = recipe.getRollableResults();
 
 		itemStacks.init(0, true, 26, 28);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
+			.get(0)
+			.getMatchingStacks()));
 		itemStacks.init(1, false, 131, 28);
-		itemStacks.set(1, results.get(0).getStack());
+		itemStacks.set(1, results.get(0)
+			.getStack());
 
 		addStochasticTooltip(itemStacks, results);
 	}
@@ -61,7 +64,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		AllGuiTextures.JEI_LONG_ARROW.draw(52, 32);
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		ItemStack[] matchingStacks = ingredients.get(0).getMatchingStacks();
+		ItemStack[] matchingStacks = ingredients.get(0)
+			.getMatchingStacks();
 		if (matchingStacks.length == 0)
 			return;
 
@@ -69,7 +73,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		CompoundNBT tag = renderedSandpaper.getOrCreateTag();
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
 		RenderSystem.scaled(2, 2, 2);
 		itemRenderer.renderItemIntoGUI(renderedSandpaper, getBackground().getWidth() / 4 - 8, 1);
 		RenderSystem.popMatrix();
