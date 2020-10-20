@@ -90,7 +90,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				.getBoolean("Blacklist");
 
 			list.add(TextFormatting.GOLD
-				+ (blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")));
+				+ (blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
@@ -114,10 +114,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
 			list.add(TextFormatting.GOLD + (whitelistMode == WhitelistMode.WHITELIST_CONJ
-				? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
+				? Lang.translate("gui.attribute_filter.allow_list_conjunctive")
 				: whitelistMode == WhitelistMode.WHITELIST_DISJ
-					? Lang.translate("gui.attribute_filter.whitelist_disjunctive")
-					: Lang.translate("gui.attribute_filter.blacklist")));
+					? Lang.translate("gui.attribute_filter.allow_list_disjunctive")
+					: Lang.translate("gui.attribute_filter.deny_list")));
 
 			int count = 0;
 			ListNBT attributes = filter.getOrCreateTag()
