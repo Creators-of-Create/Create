@@ -135,7 +135,7 @@ public class ChromaticCompoundItem extends Item {
 
 				BeaconTileEntity bte = (BeaconTileEntity) te;
 
-				if (!bte.getBeamSegments().isEmpty()) isOverBeacon = true;
+				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty()) isOverBeacon = true;
 
 				break;
 			}
