@@ -21,8 +21,7 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	private AnimatedPress press = new AnimatedPress(false);
 
 	public PressingCategory() {
-		super("pressing", doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()),
-				emptyBackground(177, 70));
+		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()), emptyBackground(177, 70));
 	}
 
 	@Override
@@ -40,12 +39,15 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	public void setRecipe(IRecipeLayout recipeLayout, PressingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 26, 50);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
+			.get(0)
+			.getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			itemStacks.init(outputIndex + 1, false, 131 + 19 * outputIndex, 50);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+			itemStacks.set(outputIndex + 1, results.get(outputIndex)
+				.getStack());
 		}
 
 		addStochasticTooltip(itemStacks, results);
@@ -55,7 +57,8 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	public void draw(PressingRecipe recipe, MatrixStack matrixStack,  double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);
-		if (recipe.getRollableResults().size() > 1)
+		if (recipe.getRollableResults()
+			.size() > 1)
 			getRenderedSlot(recipe, 1).draw(matrixStack, 131 + 19, 50);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 41);
 		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 54);

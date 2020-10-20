@@ -17,10 +17,10 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 
-public class SplashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
+public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
-	public SplashingCategory() {
-		super("splashing", doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
+	public FanWashingCategory() {
+		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
 	}
 
 	@Override

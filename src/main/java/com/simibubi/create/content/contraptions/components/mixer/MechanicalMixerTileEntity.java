@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -25,6 +27,8 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -153,6 +157,35 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
+	protected List<IRecipe<?>> getMatchingRecipes() {
+		List<IRecipe<?>> matchingRecipes = super.getMatchingRecipes();
+
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.isPresent())
+			return matchingRecipes;
+		IItemHandler availableItems = basin.get()
+			.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			.orElse(null);
+		if (availableItems == null)
+			return matchingRecipes;
+
+		for (int i = 0; i < availableItems.getSlots(); i++) {
+			ItemStack stack = availableItems.getStackInSlot(i);
+			if (stack.isEmpty())
+				continue;
+
+			List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(stack.getItem());
+			if (list == null)
+				continue;
+			for (MixingRecipe mixingRecipe : list)
+				if (matchBasinRecipe(mixingRecipe))
+					matchingRecipes.add(mixingRecipe);
+		}
+
+		return matchingRecipes;
+	}
+
+	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
 		return ((r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get()) || r.getType() == AllRecipeTypes.MIXING.type)
@@ -191,7 +224,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected boolean isRunning() {
 		return running;
 	}
-	
+
 	@Override
 	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
 		return Optional.of(AllTriggers.MIXER_MIX);

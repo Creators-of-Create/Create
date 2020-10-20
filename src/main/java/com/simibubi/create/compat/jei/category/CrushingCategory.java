@@ -21,8 +21,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	private AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
 
 	public CrushingCategory() {
-		super("crushing", doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()),
-				emptyBackground(177, 100));
+		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()), emptyBackground(177, 100));
 	}
 
 	@Override
@@ -40,14 +39,17 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	public void setRecipe(IRecipeLayout recipeLayout, AbstractCrushingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 50, 2);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
+			.get(0)
+			.getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		int size = results.size();
 		int offset = -size * 19 / 2;
 		for (int outputIndex = 0; outputIndex < size; outputIndex++) {
 			itemStacks.init(outputIndex + 1, false, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+			itemStacks.set(outputIndex + 1, results.get(outputIndex)
+				.getStack());
 		}
 
 		addStochasticTooltip(itemStacks, results);

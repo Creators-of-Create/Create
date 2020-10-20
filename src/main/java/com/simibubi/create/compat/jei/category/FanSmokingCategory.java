@@ -8,10 +8,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.SmokingRecipe;
 
-public class SmokingViaFanCategory extends ProcessingViaFanCategory<SmokingRecipe> {
+public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 
-	public SmokingViaFanCategory() {
-		super("smoking_via_fan", doubleItemIcon(AllItems.PROPELLER.get(), Items.BLAZE_POWDER));
+	public FanSmokingCategory() {
+		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.BLAZE_POWDER));
 	}
 
 	@Override
