@@ -62,9 +62,8 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 		World world = getWorld();
 
 		if (needsEntryRefresh) {
-			List<AbstractMinecartEntity> list = CapabilityMinecartController.queuedAdditions.get(world);
-			if (list != null)
-				list.add(cart);
+			CapabilityMinecartController.queuedAdditions.get(world).add(cart);
+			needsEntryRefresh = false;
 		}
 
 		stallData.forEach(opt -> opt.ifPresent(sd -> sd.tick(cart)));

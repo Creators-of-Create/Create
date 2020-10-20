@@ -177,8 +177,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.draw(4, 80);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(Lang.translate(requiredHeat.getTranslationKey()), 9,
-			85, requiredHeat.getColor());
+		Minecraft.getInstance().fontRenderer.drawString(Lang.translate(requiredHeat.getTranslationKey()), 9,
+			86, requiredHeat.getColor());
 	}
 
 }
