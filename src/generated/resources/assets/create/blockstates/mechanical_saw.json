@@ -1,94 +1,48 @@
 {
   "variants": {
-    "axis_along_first=false,facing=down,running=false": {
-      "model": "create:block/mechanical_saw/vertical_inactive",
-      "x": 180
-    },
-    "axis_along_first=true,facing=down,running=false": {
-      "model": "create:block/mechanical_saw/vertical_inactive",
-      "x": 180,
-      "y": 90
-    },
-    "axis_along_first=false,facing=up,running=false": {
-      "model": "create:block/mechanical_saw/vertical_inactive"
-    },
-    "axis_along_first=true,facing=up,running=false": {
-      "model": "create:block/mechanical_saw/vertical_inactive",
-      "y": 90
-    },
-    "axis_along_first=false,facing=north,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 180
-    },
-    "axis_along_first=true,facing=north,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 180
-    },
-    "axis_along_first=false,facing=south,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive"
-    },
-    "axis_along_first=true,facing=south,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive"
-    },
-    "axis_along_first=false,facing=west,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 90
-    },
-    "axis_along_first=true,facing=west,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 90
-    },
-    "axis_along_first=false,facing=east,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 270
-    },
-    "axis_along_first=true,facing=east,running=false": {
-      "model": "create:block/mechanical_saw/horizontal_inactive",
-      "y": 270
-    },
-    "axis_along_first=false,facing=down,running=true": {
+    "axis_along_first=false,facing=down": {
       "model": "create:block/mechanical_saw/vertical",
       "x": 180
     },
-    "axis_along_first=true,facing=down,running=true": {
+    "axis_along_first=true,facing=down": {
       "model": "create:block/mechanical_saw/vertical",
       "x": 180,
       "y": 90
     },
-    "axis_along_first=false,facing=up,running=true": {
+    "axis_along_first=false,facing=up": {
       "model": "create:block/mechanical_saw/vertical"
     },
-    "axis_along_first=true,facing=up,running=true": {
+    "axis_along_first=true,facing=up": {
       "model": "create:block/mechanical_saw/vertical",
       "y": 90
     },
-    "axis_along_first=false,facing=north,running=true": {
+    "axis_along_first=false,facing=north": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 180
     },
-    "axis_along_first=true,facing=north,running=true": {
+    "axis_along_first=true,facing=north": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 180
     },
-    "axis_along_first=false,facing=south,running=true": {
+    "axis_along_first=false,facing=south": {
       "model": "create:block/mechanical_saw/horizontal"
     },
-    "axis_along_first=true,facing=south,running=true": {
+    "axis_along_first=true,facing=south": {
       "model": "create:block/mechanical_saw/horizontal"
     },
-    "axis_along_first=false,facing=west,running=true": {
+    "axis_along_first=false,facing=west": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 90
     },
-    "axis_along_first=true,facing=west,running=true": {
+    "axis_along_first=true,facing=west": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 90
     },
-    "axis_along_first=false,facing=east,running=true": {
+    "axis_along_first=false,facing=east": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 270
     },
-    "axis_along_first=true,facing=east,running=true": {
+    "axis_along_first=true,facing=east": {
       "model": "create:block/mechanical_saw/horizontal",
       "y": 270
     }

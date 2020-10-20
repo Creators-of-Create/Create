@@ -3,7 +3,6 @@
     "textures": {
         "gearbox_top": "create:block/gearbox_top",
         "gearbox": "create:block/gearbox",
-        "stonecutter_saw": "minecraft:block/stonecutter_saw",
         "andesite_casing_short": "create:block/andesite_casing_short",
         "mechanical_saw_top": "create:block/mechanical_saw_top",
 		"particle": "create:block/mechanical_saw_top"
@@ -55,15 +54,6 @@
                 "south": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 10 ] },
                 "west": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 10 ] },
                 "up": { "texture": "#gearbox_top", "uv": [ 0, 14, 16, 16 ], "rotation": 270 }
-            }
-        },
-        {
-            "name": "Saw",
-            "from": [ 0, 11, 8 ], 
-            "to": [ 16, 19, 8 ], 
-            "faces": {
-                "north": { "texture": "#stonecutter_saw", "uv": [ 0, 8, 16, 16 ] },
-                "south": { "texture": "#stonecutter_saw", "uv": [ 0, 8, 16, 16 ] }
             }
         },
         {

@@ -162,6 +162,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 
 public class AllBlocks {
@@ -511,7 +512,7 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
@@ -776,6 +777,7 @@ public class AllBlocks {
 						.addCriterion("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 				})
+				.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
 				.tag(AllBlockTags.SEATS.tag)
 				.item()
 				.tag(AllItemTags.SEATS.tag)
@@ -1033,7 +1035,9 @@ public class AllBlocks {
 		REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
 			.initialProperties(() -> Blocks.IRON_ORE)
 			.transform(oxidizedBlockstate())
+			.tag(Tags.Blocks.ORES)
 			.transform(tagBlockAndItem("ores/copper"))
+			.tag(Tags.Items.ORES)
 			.transform(oxidizedItemModel())
 			.register();
 
@@ -1042,14 +1046,18 @@ public class AllBlocks {
 		.properties(p -> p.harvestLevel(2)
 			.harvestTool(ToolType.PICKAXE)
 			.sound(SoundType.STONE))
+		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
+		.tag(Tags.Items.ORES)
 		.build()
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
 		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.transform(oxidizedItemModel())
 			.transform(oxidizedBlockstate())
 			.register();
@@ -1072,14 +1080,18 @@ public class AllBlocks {
 
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
 
 	public static final BlockEntry<Block> BRASS_BLOCK =
 		REGISTRATE.block("brass_block", p -> new Block(p))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.register();
 

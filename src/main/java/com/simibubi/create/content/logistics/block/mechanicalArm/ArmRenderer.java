@@ -61,7 +61,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer upperBody = AllBlockPartials.ARM_UPPER_BODY.renderOn(blockState).light(light);
 		SuperByteBuffer head = AllBlockPartials.ARM_HEAD.renderOn(blockState).light(light);
 		SuperByteBuffer claw = AllBlockPartials.ARM_CLAW_BASE.renderOn(blockState).light(light);
-		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState).light(light);
+		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState);
 
 		msr.centre();
 		
@@ -101,7 +101,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			ms.push();
 			ms.translate(0, flip * 3 / 16d, -1 / 16d);
 			msr.rotateX(flip * (hasItem ? isBlockItem ? 0 : -35 : 0));
-			clawGrip.renderInto(ms, builder);
+			clawGrip.light(light).renderInto(ms, builder);
 			ms.pop();
 		}
 

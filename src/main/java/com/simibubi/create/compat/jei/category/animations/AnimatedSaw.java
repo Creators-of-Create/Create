@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -21,20 +22,24 @@ public class AnimatedSaw extends AnimatedKinetics {
 		matrixStack.translate(0, 0, 200);
 		matrixStack.translate(29, 17, 0);
 		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-22.5f));
-		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90-225f));
+		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90 - 225f));
 		int scale = 25;
 
 		GuiGameElement.of(shaft(Axis.X))
-				.rotateBlock(-getCurrentAngle(), 0, 0)
-				.scale(scale)
-				.render(matrixStack);
+			.rotateBlock(-getCurrentAngle(), 0, 0)
+			.scale(scale)
+			.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.MECHANICAL_SAW.getDefaultState()
-				.with(SawBlock.FACING, Direction.UP)
-				.with(SawBlock.RUNNING, true))
-				.rotateBlock(0, 0, 0)
-				.scale(scale)
-				.render(matrixStack);
+			.with(SawBlock.FACING, Direction.UP))
+			.rotateBlock(0, 0, 0)
+			.scale(scale)
+			.render(matrixStack);
+
+		GuiGameElement.of(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE)
+			.rotateBlock(0, -90, -90)
+			.scale(scale)
+			.render(matrixStack);
 
 		matrixStack.pop();
 	}

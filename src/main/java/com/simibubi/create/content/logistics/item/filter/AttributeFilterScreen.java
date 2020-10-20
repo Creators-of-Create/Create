@@ -38,12 +38,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private ITextComponent addDESC = Lang.translate(PREFIX + "add_attribute");
 	private ITextComponent addInvertedDESC = Lang.translate(PREFIX + "add_inverted_attribute");
 
-	private ITextComponent whitelistDisN = Lang.translate(PREFIX + "whitelist_disjunctive");
-	private ITextComponent whitelistDisDESC = Lang.translate(PREFIX + "whitelist_disjunctive.description");
-	private ITextComponent whitelistConN = Lang.translate(PREFIX + "whitelist_conjunctive");
-	private ITextComponent whitelistConDESC = Lang.translate(PREFIX + "whitelist_conjunctive.description");
-	private ITextComponent blacklistN = Lang.translate(PREFIX + "blacklist");
-	private ITextComponent blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private ITextComponent allowDisN = Lang.translate(PREFIX + "allow_list_disjunctive");
+	private ITextComponent allowDisDESC = Lang.translate(PREFIX + "allow_list_disjunctive.description");
+	private ITextComponent allowConN = Lang.translate(PREFIX + "allow_list_conjunctive");
+	private ITextComponent allowConDESC = Lang.translate(PREFIX + "allow_list_conjunctive.description");
+	private ITextComponent denyN = Lang.translate(PREFIX + "deny_list");
+	private ITextComponent denyDESC = Lang.translate(PREFIX + "deny_list.description");
 
 	private ITextComponent referenceH = Lang.translate(PREFIX + "add_reference_item");
 	private ITextComponent noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
@@ -66,11 +66,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
-		whitelistDis.setToolTip(whitelistDisN);
+		whitelistDis.setToolTip(allowDisN);
 		whitelistCon = new IconButton(x + 65, y + 59, AllIcons.I_WHITELIST_AND);
-		whitelistCon.setToolTip(whitelistConN);
+		whitelistCon.setToolTip(allowConN);
 		blacklist = new IconButton(x + 83, y + 59, AllIcons.I_WHITELIST_NOT);
-		blacklist.setToolTip(blacklistN);
+		blacklist.setToolTip(denyN);
 
 		whitelistDisIndicator = new Indicator(x + 47, y + 53, StringTextComponent.EMPTY);
 		whitelistConIndicator = new Indicator(x + 65, y + 53, StringTextComponent.EMPTY);
@@ -86,7 +86,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		handleIndicators();
 
-		attributeSelectorLabel = new Label(x + 43, y + 26, StringTextComponent.EMPTY).colored(0xF3EBDE).withShadow();
+		attributeSelectorLabel = new Label(x + 43, y + 26, StringTextComponent.EMPTY).colored(0xF3EBDE)
+			.withShadow();
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
 		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
 		attributeSelector.removeCallback();
@@ -96,9 +97,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		widgets.add(attributeSelectorLabel);
 
 		selectedAttributes.clear();
-		selectedAttributes
-			.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy().formatted(TextFormatting.YELLOW));
-		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ").append(at.toString()).formatted(TextFormatting.GRAY)));
+		selectedAttributes.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy()
+			.formatted(TextFormatting.YELLOW));
+		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ")
+			.append(at.getFirst()
+				.format(at.getSecond()))
+			.formatted(TextFormatting.GRAY)));
 
 	}
 
@@ -108,7 +112,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		if (stack.isEmpty()) {
 			attributeSelector.active = false;
 			attributeSelector.visible = false;
-			attributeSelectorLabel.text = referenceH.copy().formatted(TextFormatting.ITALIC);
+			attributeSelectorLabel.text = referenceH.copy()
+				.formatted(TextFormatting.ITALIC);
 			add.active = false;
 			addInverted.active = false;
 			attributeSelector.calling(s -> {
@@ -119,11 +124,15 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		add.active = true;
 
 		addInverted.active = true;
-		attributeSelector.titled(stack.getDisplayName().copy().append("..."));
+		attributeSelector.titled(stack.getDisplayName()
+			.copy()
+			.append("..."));
 		attributesOfItem.clear();
 		for (ItemAttribute itemAttribute : ItemAttribute.types)
 			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, client.world));
-		List<ITextComponent> options = attributesOfItem.stream().map(a -> a.format(false)).collect(Collectors.toList());
+		List<ITextComponent> options = attributesOfItem.stream()
+			.map(a -> a.format(false))
+			.collect(Collectors.toList());
 		attributeSelector.forOptions(options);
 		attributeSelector.active = true;
 		attributeSelector.visible = true;
@@ -193,7 +202,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected List<IFormattableTextComponent> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC.copy(), whitelistConDESC.copy(), whitelistDisDESC.copy());
+		return Arrays.asList(denyDESC.copy(), allowConDESC.copy(), allowDisDESC.copy());
 	}
 
 	@Override
@@ -242,15 +251,18 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		container.appendSelectedAttribute(itemAttribute, inverted);
 		if (container.selectedAttributes.size() == 1)
-			selectedAttributes.set(0, selectedT.copy().formatted(TextFormatting.YELLOW));
-		selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format(inverted)).formatted(TextFormatting.GRAY));
+			selectedAttributes.set(0, selectedT.copy()
+				.formatted(TextFormatting.YELLOW));
+		selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format(inverted))
+			.formatted(TextFormatting.GRAY));
 		return true;
 	}
 
 	@Override
 	protected void contentsCleared() {
 		selectedAttributes.clear();
-		selectedAttributes.add(noSelectedT.copy().formatted(TextFormatting.YELLOW));
+		selectedAttributes.add(noSelectedT.copy()
+			.formatted(TextFormatting.YELLOW));
 		if (!lastItemScanned.isEmpty()) {
 			add.active = true;
 			addInverted.active = true;

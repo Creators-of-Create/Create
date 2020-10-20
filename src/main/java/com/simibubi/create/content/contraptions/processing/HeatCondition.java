@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 public enum HeatCondition {
 
-	NONE(0xffffff), HEATED(0xFFD528), SUPERHEATED(0xA2DFFF),
+	NONE(0xffffff), HEATED(0xE88300), SUPERHEATED(0x5C93E8),
 
 	;
 	

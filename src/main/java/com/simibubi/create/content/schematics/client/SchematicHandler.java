@@ -220,14 +220,14 @@ public class SchematicHandler {
 	}
 
 	public boolean mouseScrolled(double delta) {
-		if (!active || Minecraft.getInstance().player.isSneaking())
+		if (!active)
 			return false;
 
 		if (selectionScreen.focused) {
 			selectionScreen.cycle((int) delta);
 			return true;
 		}
-		if (AllKeys.ACTIVATE_TOOL.isPressed())
+		if (!AllKeys.ctrlDown())
 			return currentTool.getTool()
 				.handleMouseWheel(delta);
 		return false;

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import static com.simibubi.create.content.contraptions.components.saw.SawBlock.RUNNING;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +62,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private int recipeIndex;
 	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
 	private FilteringBehaviour filtering;
-	private boolean destroyed;
 
 	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
 		super(type);
@@ -80,15 +77,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
 		behaviours.add(new DirectBeltInputBehaviour(this));
-	}
-
-	@Override
-	public void onSpeedChanged(float prevSpeed) {
-		super.onSpeedChanged(prevSpeed);
-		boolean shouldRun = Math.abs(getSpeed()) > 1 / 64f;
-		boolean running = getBlockState().get(RUNNING);
-		if (shouldRun != running && !destroyed)
-			world.setBlockState(pos, getBlockState().with(RUNNING, shouldRun), 2 | 16);
 	}
 
 	@Override
@@ -189,7 +177,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void remove() {
 		invProvider.invalidate();
-		destroyed = true;
 		super.remove();
 	}
 

@@ -92,8 +92,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		if (breakingPos == null)
-			breakingPos = getBreakingPos();
+		
+		breakingPos = getBreakingPos();
+		
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)

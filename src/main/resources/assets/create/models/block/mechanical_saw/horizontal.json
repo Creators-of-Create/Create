@@ -5,7 +5,6 @@
         "slit": "create:block/mechanical_saw_top",
         "gearbox_top": "create:block/gearbox_top",
         "encased_belt": "create:block/encased_belt",
-        "stonecutter_saw": "minecraft:block/stonecutter_saw",
         "gearbox": "create:block/gearbox",
         "andesite_casing_short": "create:block/andesite_casing_short"
     },
@@ -64,15 +63,6 @@
             "to": [ 15, 9, 11.062 ], 
             "faces": {
                 "south": { "texture": "#slit", "uv": [ 1, 7, 15, 9 ] }
-            }
-        },
-        {
-            "name": "Blade",
-            "from": [ 1, 8, 11 ], 
-            "to": [ 15, 8.062, 18 ], 
-            "faces": {
-                "up": { "texture": "#stonecutter_saw", "uv": [ 1, 9, 15, 16 ], "rotation": 180 },
-                "down": { "texture": "#stonecutter_saw", "uv": [ 1, 9, 15, 16 ] }
             }
         },
         {

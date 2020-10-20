@@ -19,10 +19,10 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private ITextComponent whitelistN = Lang.translate(PREFIX + "whitelist");
-	private ITextComponent whitelistDESC = Lang.translate(PREFIX + "whitelist.description");
-	private ITextComponent blacklistN = Lang.translate(PREFIX + "blacklist");
-	private ITextComponent blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private ITextComponent allowN = Lang.translate(PREFIX + "allow_list");
+	private ITextComponent allowDESC = Lang.translate(PREFIX + "allow_list.description");
+	private ITextComponent denyN = Lang.translate(PREFIX + "deny_list");
+	private ITextComponent denyDESC = Lang.translate(PREFIX + "deny_list.description");
 
 	private ITextComponent respectDataN = Lang.translate(PREFIX + "respect_data");
 	private ITextComponent respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
@@ -45,9 +45,9 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		int y = guiTop;
 
 		blacklist = new IconButton(x + 18, y + 73, AllIcons.I_BLACKLIST);
-		blacklist.setToolTip(blacklistN);
+		blacklist.setToolTip(denyN);
 		whitelist = new IconButton(x + 36, y + 73, AllIcons.I_WHITELIST);
-		whitelist.setToolTip(whitelistN);
+		whitelist.setToolTip(allowN);
 		blacklistIndicator = new Indicator(x + 18, y + 67, StringTextComponent.EMPTY);
 		whitelistIndicator = new Indicator(x + 36, y + 67, StringTextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(blacklist, whitelist, blacklistIndicator, whitelistIndicator));
@@ -103,7 +103,7 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	@Override
 	protected List<IFormattableTextComponent> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC.copy(), whitelistDESC.copy(), respectDataDESC.copy(), ignoreDataDESC.copy());
+		return Arrays.asList(denyDESC.copy(), allowDESC.copy(), respectDataDESC.copy(), ignoreDataDESC.copy());
 	}
 
 	@Override

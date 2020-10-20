@@ -1,0 +1,19 @@
+{
+  "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+  "textures": {
+    "stonecutter_saw": "minecraft:block/stonecutter_saw",
+    "stonecutter_saw_reversed" : "create:block/saw_reversed"
+  },
+  "parent": "create:block/block",
+  "elements": [
+    {
+      "name": "Blade",
+      "from": [ 1, 8, 11 ],
+      "to": [ 15, 8.062, 18 ],
+      "faces": {
+        "up": { "texture": "#stonecutter_saw", "uv": [ 1, 9, 15, 16 ], "rotation": 180 },
+        "down": { "texture": "#stonecutter_saw_reversed", "uv": [ 1, 9, 15, 16 ] }
+      }
+    }
+  ]
+}

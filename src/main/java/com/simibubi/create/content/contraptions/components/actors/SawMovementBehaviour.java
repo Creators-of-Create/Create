@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -9,25 +11,43 @@ import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return SawBlock.isHorizontal(context.state);
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(SawBlock.FACING)
+			.getOpposite());
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
 		return Vector3d.of(context.state.get(SawBlock.FACING).getDirectionVec()).scale(.65f);
+	}
+
+	@Override
+	public void visitNewPosition(MovementContext context, BlockPos pos) {
+		super.visitNewPosition(context, pos);
+		Vec3d facingVec = new Vec3d(context.state.get(SawBlock.FACING).getDirectionVec());
+		facingVec = context.rotation.apply(facingVec);
+
+		Direction closestToFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
+		if(closestToFacing.getAxis().isVertical() && context.data.contains("BreakingPos")) {
+			context.data.remove("BreakingPos");
+			context.stall = false;
+		}
 	}
 
 	@Override
@@ -60,6 +80,13 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, remainder);
 		entity.setMotion(context.relativeMotion.scale(distance / 20f));
 		world.addEntity(entity);
+	}
+
+	@Override
+	@OnlyIn(value = Dist.CLIENT)
+	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
+									IRenderTypeBuffer buffer) {
+		SawRenderer.renderInContraption(context, ms, msLocal, buffer);
 	}
 
 	@Override
