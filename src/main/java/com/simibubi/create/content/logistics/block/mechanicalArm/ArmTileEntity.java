@@ -23,8 +23,11 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 
 import javax.annotation.Nullable;
@@ -131,6 +134,12 @@ public class ArmTileEntity extends KineticTileEntity {
 			markDirty();
 			sendData();
 		}
+	}
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return super.getRenderBoundingBox().grow(3);
 	}
 
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {

@@ -59,10 +59,10 @@
 	"block.create.copper_valve_handle.tooltip.condition1": "When Used",
 	"block.create.copper_valve_handle.tooltip.behaviour1": "Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
 	
-	"block.create.white_seat.tooltip": "WHITE SEAT",
-	"block.create.white_seat.tooltip.summary": "Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
-	"block.create.white_seat.tooltip.control1": "Right click on Seat",
-	"block.create.white_seat.tooltip.action1": "Sits the player on the _Seat_. Press L-shift to leave the _Seat_.",
+	"block.create.seat.tooltip": "SEAT",
+	"block.create.seat.tooltip.summary": "Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
+	"block.create.seat.tooltip.control1": "Right click on Seat",
+	"block.create.seat.tooltip.action1": "Sits the player on the _Seat_. Press L-shift to leave the _Seat_.",
 	
 	"block.create.chute.tooltip": "CHUTE",
 	"block.create.chute.tooltip.summary": "Will _Collect_ items and transport them vertically. Can both take and place items into _item_ _containers_.",

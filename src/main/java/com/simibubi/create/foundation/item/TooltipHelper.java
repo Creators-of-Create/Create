@@ -34,7 +34,7 @@ public class TooltipHelper {
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
-	private static final Map<Item, Supplier<? extends IItemProvider>> tooltipReferrals = new HashMap<>();
+	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static String holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
@@ -43,7 +43,13 @@ public class TooltipHelper {
 	}
 
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
-		tooltipReferrals.put(item.asItem(), itemWithTooltip);
+		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
+			.asItem()
+			.getTranslationKey());
+	}
+	
+	public static void referTo(IItemProvider item, String string) {
+		tooltipReferrals.put(item.asItem(), () -> string);
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor) {
@@ -190,11 +196,7 @@ public class TooltipHelper {
 		}
 
 		if (tooltipReferrals.containsKey(item))
-			return tooltipReferrals.get(item)
-				.get()
-				.asItem()
-				.getTranslationKey() + ".tooltip";
-
+			return tooltipReferrals.get(item) + ".tooltip";
 		return item.getTranslationKey(stack) + ".tooltip";
 	}
 

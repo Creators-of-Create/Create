@@ -510,7 +510,7 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
@@ -775,6 +775,7 @@ public class AllBlocks {
 						.addCriterion("has_seat", p.hasItem(AllItemTags.SEATS.tag))
 						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 				})
+				.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
 				.tag(AllBlockTags.SEATS.tag)
 				.item()
 				.tag(AllItemTags.SEATS.tag)

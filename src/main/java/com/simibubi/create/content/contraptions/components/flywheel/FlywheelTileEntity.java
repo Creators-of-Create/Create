@@ -67,7 +67,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		stoppingCooldown = compound.getInt("Cooldown");
 		super.read(compound, clientPacket);
 		if (clientPacket)
-			visualSpeed.withSpeed(1 / 32f).target(getGeneratedSpeed());
+			visualSpeed.withSpeed(1 / 32f)
+				.target(getGeneratedSpeed());
 	}
 
 	@Override
@@ -81,6 +82,14 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			angle %= 360;
 			return;
 		}
+
+		/*
+		 * After getting moved by pistons the generatedSpeed attribute reads 16 but the
+		 * actual speed stays at 0, if it happens update rotation
+		 */
+		if (getGeneratedSpeed() != 0 && getSpeed() == 0)
+			updateGeneratedRotation();
+
 		if (stoppingCooldown == 0)
 			return;
 

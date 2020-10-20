@@ -17,10 +17,10 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private String whitelistN = Lang.translate(PREFIX + "whitelist");
-	private String whitelistDESC = Lang.translate(PREFIX + "whitelist.description");
-	private String blacklistN = Lang.translate(PREFIX + "blacklist");
-	private String blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private String allowN = Lang.translate(PREFIX + "allow_list");
+	private String allowDESC = Lang.translate(PREFIX + "allow_list.description");
+	private String denyN = Lang.translate(PREFIX + "deny_list");
+	private String denyDESC = Lang.translate(PREFIX + "deny_list.description");
 
 	private String respectDataN = Lang.translate(PREFIX + "respect_data");
 	private String respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
@@ -43,9 +43,9 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		int y = guiTop;
 
 		blacklist = new IconButton(x + 18, y + 73, AllIcons.I_BLACKLIST);
-		blacklist.setToolTip(blacklistN);
+		blacklist.setToolTip(denyN);
 		whitelist = new IconButton(x + 36, y + 73, AllIcons.I_WHITELIST);
-		whitelist.setToolTip(whitelistN);
+		whitelist.setToolTip(allowN);
 		blacklistIndicator = new Indicator(x + 18, y + 67, "");
 		whitelistIndicator = new Indicator(x + 36, y + 67, "");
 		widgets.addAll(Arrays.asList(blacklist, whitelist, blacklistIndicator, whitelistIndicator));
@@ -101,7 +101,7 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	@Override
 	protected List<String> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC, whitelistDESC, respectDataDESC, ignoreDataDESC);
+		return Arrays.asList(denyDESC, allowDESC, respectDataDESC, ignoreDataDESC);
 	}
 
 	@Override

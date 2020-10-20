@@ -14,6 +14,8 @@ public class SchematicHotbarSlotOverlay extends AbstractGui {
 		int x = mainWindow.getScaledWidth() / 2 - 88;
 		int y = mainWindow.getScaledHeight() - 19;
 		RenderSystem.enableAlphaTest();
+		RenderSystem.enableDepthTest();
+		RenderSystem.enableBlend();
 		AllGuiTextures.SCHEMATIC_SLOT.draw(this, x + 20 * slot, y);
 		RenderSystem.disableAlphaTest();
 	}

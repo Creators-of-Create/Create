@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 935",
+	"_": "Missing Localizations: 979",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -819,10 +819,10 @@
 	"create.schematicannon.status.schematicNotPlaced": "Esquema não Colocado",
 	"create.schematicannon.status.schematicExpired": "Arquivo de Esquema Expirado",
 
-	"create.gui.filter.blacklist": "UNLOCALIZED: Blacklist",
-	"create.gui.filter.blacklist.description": "UNLOCALIZED: Items pass if they do NOT match any of the above. An empty Blacklist accepts everything.",
-	"create.gui.filter.whitelist": "UNLOCALIZED: Whitelist",
-	"create.gui.filter.whitelist.description": "UNLOCALIZED: Items pass if they match any of the above. An empty Whitelist rejects everything.",
+	"create.gui.filter.deny_list": "UNLOCALIZED: Deny-List",
+	"create.gui.filter.deny_list.description": "UNLOCALIZED: Items pass if they do NOT match any of the above. An empty Deny-List accepts everything.",
+	"create.gui.filter.allow_list": "UNLOCALIZED: Allow-List",
+	"create.gui.filter.allow_list.description": "UNLOCALIZED: Items pass if they match any of the above. An empty Allow-List rejects everything.",
 	"create.gui.filter.respect_data": "UNLOCALIZED: Respect Data",
 	"create.gui.filter.respect_data.description": "UNLOCALIZED: Items only match if their durability, enchantments, and other attributes match as well.",
 	"create.gui.filter.ignore_data": "UNLOCALIZED: Ignore Data",
@@ -865,12 +865,12 @@
 	"create.gui.attribute_filter.selected_attributes": "UNLOCALIZED: Selected attributes:",
 	"create.gui.attribute_filter.add_attribute": "UNLOCALIZED: Add attribute to List",
 	"create.gui.attribute_filter.add_inverted_attribute": "UNLOCALIZED: Add opposite attribute to List",
-	"create.gui.attribute_filter.whitelist_disjunctive": "UNLOCALIZED: Whitelist (Any)",
-	"create.gui.attribute_filter.whitelist_disjunctive.description": "UNLOCALIZED: Items pass if they have any of the selected attributes.",
-	"create.gui.attribute_filter.whitelist_conjunctive": "UNLOCALIZED: Whitelist (All)",
-	"create.gui.attribute_filter.whitelist_conjunctive.description": "UNLOCALIZED: Items pass only if they have ALL of the selected attributes.",
-	"create.gui.attribute_filter.blacklist": "UNLOCALIZED: Blacklist",
-	"create.gui.attribute_filter.blacklist.description": "UNLOCALIZED: Items pass if they do NOT have any of the selected attributes.",
+	"create.gui.attribute_filter.allow_list_disjunctive": "UNLOCALIZED: Allow-List (Any)",
+	"create.gui.attribute_filter.allow_list_disjunctive.description": "UNLOCALIZED: Items pass if they have any of the selected attributes.",
+	"create.gui.attribute_filter.allow_list_conjunctive": "UNLOCALIZED: Allow-List (All)",
+	"create.gui.attribute_filter.allow_list_conjunctive.description": "UNLOCALIZED: Items pass only if they have ALL of the selected attributes.",
+	"create.gui.attribute_filter.deny_list": "UNLOCALIZED: Deny-List",
+	"create.gui.attribute_filter.deny_list.description": "UNLOCALIZED: Items pass if they do NOT have any of the selected attributes.",
 	"create.gui.attribute_filter.add_reference_item": "UNLOCALIZED: Add Reference Item",
 
 	"create.tooltip.holdKey": "Segure [%1$s]",
@@ -955,7 +955,7 @@
 	"block.create.andesite_casing.tooltip": "UNLOCALIZED: ANDESITE CASING",
 	"block.create.andesite_casing.tooltip.summary": "UNLOCALIZED: Simple machine casing with a variety of uses. Safe for decoration.",
 	"block.create.andesite_casing.tooltip.condition1": "UNLOCALIZED: When used on Mechanical Belt",
-	"block.create.andesite_casing.tooltip.behaviour1": "UNLOCALIZED: _Reinforces_ _belts_ with a Brass foundation. Reinforced Belts can support _Belt_ _Tunnels_ and allows _Chutes_ to directly take _items_.",
+	"block.create.andesite_casing.tooltip.behaviour1": "UNLOCALIZED: _Reinforces_ _belts_ with an Andesite foundation. Reinforced Belts can support _Belt_ _Tunnels_ and allows _Chutes_ to directly take _items_.",
 
 	"block.create.andesite_funnel.tooltip": "UNLOCALIZED: ANDESITE FUNNEL",
 	"block.create.andesite_funnel.tooltip.summary": "UNLOCALIZED: Will _Collect_ items and place them into the attached _Item_ _Container_. Can be disabled with a _Redstone_ _Signal_.",
@@ -1002,6 +1002,11 @@
 	"block.create.copper_valve_handle.tooltip.condition1": "UNLOCALIZED: When Used",
 	"block.create.copper_valve_handle.tooltip.behaviour1": "UNLOCALIZED: Provides _Rotational_ _Force_ to an attached contraption. _Sneak_ _to_ _reverse_ the rotation.",
 
+	"block.create.seat.tooltip": "UNLOCALIZED: SEAT",
+	"block.create.seat.tooltip.summary": "UNLOCALIZED: Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
+	"block.create.seat.tooltip.control1": "UNLOCALIZED: Right click on Seat",
+	"block.create.seat.tooltip.action1": "UNLOCALIZED: Sits the player on the _Seat_. Press L-shift to leave the _Seat_.",
+
 	"block.create.chute.tooltip": "UNLOCALIZED: CHUTE",
 	"block.create.chute.tooltip.summary": "UNLOCALIZED: Will _Collect_ items and transport them vertically. Can both take and place items into _item_ _containers_.",
 	"block.create.chute.tooltip.control1": "UNLOCALIZED: When powered by a fan",
@@ -1017,6 +1022,53 @@
 
 	"item.create.empty_blaze_burner.tooltip": "UNLOCALIZED: EMPTY BLAZE BURNER",
 	"item.create.empty_blaze_burner.tooltip.summary": "UNLOCALIZED: A little iron home for your fiery friends. I'm sure you could put them to good use.",
+	"item.create.empty_blaze_burner.tooltip.condition1": "UNLOCALIZED: When used on a _Blaze_ or _Blaze_ _spawner_",
+	"item.create.empty_blaze_burner.tooltip.behaviour1": "UNLOCALIZED: _Captures_ a Blaze in the item",
+
+	"block.create.fluid_pipe.tooltip": "UNLOCALIZED: FLUID PIPE",
+	"block.create.fluid_pipe.tooltip.summary": "UNLOCALIZED: Used for moving _fluids_ around. Needs a _Mechanical_ _Pump_ to get the _fluid_ moving.",
+	"block.create.fluid_pipe.tooltip.condition1": "UNLOCALIZED: Fluid Transfer",
+	"block.create.fluid_pipe.tooltip.behaviour1": "UNLOCALIZED: Can connect to _fluid_ _containers_ such as _Tanks_ or _Basins_. Exposed _pipe_ ends can also drain or place fluid blocks. Be careful of leaks!",
+	"block.create.fluid_pipe.tooltip.control1": "UNLOCALIZED: Right-clicked with Wrench",
+	"block.create.fluid_pipe.tooltip.action1": "UNLOCALIZED: Places a window on the pipe if available",
+
+	"block.create.fluid_tank.tooltip": "UNLOCALIZED: FLUID TANK",
+	"block.create.fluid_tank.tooltip.summary": "UNLOCALIZED: _Stores_ all your favourite _fluids_.",
+	"block.create.fluid_tank.tooltip.control1": "UNLOCALIZED: Right-clicked with Wrench",
+	"block.create.fluid_tank.tooltip.action1": "UNLOCALIZED: Changes the optional window",
+
+	"block.create.fluid_valve.tooltip": "UNLOCALIZED: FLUID VALVE",
+	"block.create.fluid_valve.tooltip.summary": "UNLOCALIZED: Halts the flow of fluid down a pipe.",
+	"block.create.fluid_valve.tooltip.condition1": "UNLOCALIZED: Controllable flow",
+	"block.create.fluid_valve.tooltip.behaviour1": "UNLOCALIZED: Applied _rotational_ _force_ will force the _valve_ to close, ceasing the flow of _fluids_. Reverse the direction of the _rotational_ _force_ to re-open the valve.",
+
+	"block.create.Mechanical_pump.tooltip": "UNLOCALIZED: MECHANICAL PUMP",
+	"block.create.Mechanical_pump.tooltip.summary": "UNLOCALIZED: Takes _rotational_ _force_ and uses it to move _fluid_ along a _pipe_.",
+	"block.create.Mechanical_pump.tooltip.condition1": "UNLOCALIZED: Fluid Flow",
+	"block.create.Mechanical_pump.tooltip.behaviour1": "UNLOCALIZED: Applied _rotational_ _force_ creates pressure that forces _fluid_ through the _pipe_ network. Reverse the direction of the _rotational_ _force_ to switch the direction that the _fluid_ flows.",
+	"block.create.Mechanical_pump.tooltip.control1": "UNLOCALIZED: Right-clicked with Wrench",
+	"block.create.Mechanical_pump.tooltip.action1": "UNLOCALIZED: Reverses the direction of the _pump_, switching the default direction of the flow",
+
+	"block.create.smart_fluid_pipe.tooltip": "UNLOCALIZED: SMART FLUID PIPE",
+	"block.create.smart_fluid_pipe.tooltip.summary": "UNLOCALIZED: A _fluid_ _pipe_ with a filter. Can specify which _fluids_ pass through.",
+	"block.create.smart_fluid_pipe.tooltip.control1": "UNLOCALIZED:  ~ ",
+	"block.create.smart_fluid_pipe.tooltip.action1": "UNLOCALIZED:  ~ ",
+
+	"block.create.spout.tooltip": "UNLOCALIZED: SPOUT",
+	"block.create.spout.tooltip.summary": "UNLOCALIZED: An injector for refilling your _fluid_ _items_",
+	"block.create.spout.tooltip.condition1": "UNLOCALIZED: Fluid Transfer",
+	"block.create.spout.tooltip.behaviour1": "UNLOCALIZED: When a _fluid_ _container_ _item_ such as a _bucket_ or _bottle_ is placed underneath, the spout will attempt to refill it with it's own stored _fluid_.",
+	"block.create.spout.tooltip.condition2": "UNLOCALIZED: Fluid Automation",
+	"block.create.spout.tooltip.behaviour2": "UNLOCALIZED: The spout placed above a _belt_ or _depot_ will react automatically with a _fluid_ _container_ _item_ that passes beneath it.",
+
+	"block.create.mechanical_arm.tooltip": "UNLOCALIZED: MECHANICAL ARM",
+	"block.create.mechanical_arm.tooltip.summary": "UNLOCALIZED: Advanced contraption for re-locating _items_.",
+	"block.create.mechanical_arm.tooltip.condition1": "UNLOCALIZED: Item Transfer",
+	"block.create.mechanical_arm.tooltip.behaviour1": "UNLOCALIZED: Can take or place items into any _accessible_ _inventory_, such as _Belts_, _Depots_, _Funnels_ and _Mechanical_ _Crafters_.",
+	"block.create.mechanical_arm.tooltip.control1": "UNLOCALIZED: While in Hand",
+	"block.create.mechanical_arm.tooltip.action1": "UNLOCALIZED: Right-Click an _accessible_ _item_ _inventory_ to set it as a _source_ for the _Mechanical_ _Arm_. Right-click twice to set it as the _destination_.",
+	"block.create.mechanical_arm.tooltip.control2": "UNLOCALIZED: Scroll with Wrench",
+	"block.create.mechanical_arm.tooltip.action2": "UNLOCALIZED: Sets the ordering behaviour for _items_ output by the _mechanical_ _Arm_.",
 
 	"item.create.wand_of_symmetry.tooltip": "VARINHA DE SIMETRIA",
 	"item.create.wand_of_symmetry.tooltip.summary": "Espelhar perfeitamente a colocação de blocos nos planos configurados.",
@@ -1220,8 +1272,8 @@
 
 	"block.create.blaze_heater.tooltip": "UNLOCALIZED: BLAZE HEATER",
 	"block.create.blaze_heater.tooltip.summary": "UNLOCALIZED: A block to heat a basin when housing a tamed blaze.",
-	"block.create.blaze_heater.tooltip.condition1": "UNLOCALIZED: When using on a blaze or blaze spawner",
-	"block.create.blaze_heater.tooltip.behaviour1": "UNLOCALIZED: _Captures_ a blaze in the item",
+	"block.create.blaze_heater.tooltip.condition1": "UNLOCALIZED: When used on a _Blaze_ or _Blaze_ _spawner_",
+	"block.create.blaze_heater.tooltip.behaviour1": "UNLOCALIZED: _Captures_ a Blaze in the item",
 	"block.create.blaze_heater.tooltip.condition2": "UNLOCALIZED: When placed below a basin",
 	"block.create.blaze_heater.tooltip.behaviour2": "UNLOCALIZED: Provides _heat_ to basin recipes.",
 	"block.create.blaze_heater.tooltip.condition3": "UNLOCALIZED: When fuel is used on the blaze heater",
@@ -1234,8 +1286,8 @@
 	"block.create.mechanical_mixer.tooltip.summary": "UNLOCALIZED: A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap in between).",
 	"block.create.mechanical_mixer.tooltip.condition1": "UNLOCALIZED: When above Basin",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "UNLOCALIZED: Starts to mix items in the basin whenever all necessary ingredients are present.",
-	"block.create.mechanical_mixer.tooltip.condition2": "UNLOCALIZED: When used with Wrench",
-	"block.create.mechanical_mixer.tooltip.behaviour2": "UNLOCALIZED: _Configures_ the minimum amount of _total_ _ingredients_ for applied recipes. Use this option to _rule_ _out_ _unwanted_ _recipes_ with similar but less ingredients.",
+	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
+	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "UNLOCALIZED: MECHANICAL CRAFTER",
 	"block.create.mechanical_crafter.tooltip.summary": "UNLOCALIZED: A kinetic assembler for _automating_ any _shaped_ _crafting_ recipe. Place _multiple_ _in_ _a_ _grid_ corresponding to your recipe, and _arrange_ _their_ _belts_ to create a _flow_ that exits the grid on one of the crafters.",
@@ -1261,7 +1313,7 @@
 	"block.create.portable_storage_interface.tooltip": "UNLOCALIZED: PORTABLE STORAGE INTERFACE",
 	"block.create.portable_storage_interface.tooltip.summary": "UNLOCALIZED: A portable interchange point for _moving_ _items_ to and from a _structure_ moved by a piston, bearing, minecart, or pulley.",
 	"block.create.portable_storage_interface.tooltip.condition1": "UNLOCALIZED: While Moving",
-	"block.create.portable_storage_interface.tooltip.behaviour1": "UNLOCALIZED: Interacts with stationary _transposers_ such that transposers _facing_ _away_ from the interface _pull_ _items_, and transposers targeting the interface will _insert_ _items_ from attached inventory. The contraption will briefly stall as items are exchanged.",
+	"block.create.portable_storage_interface.tooltip.behaviour1": "UNLOCALIZED: Interacts with stationary _portable_ _storage_ _interfaces_ to transfer items to or from the contraption. Direction of transfer is dependent on the blocks attached to the _Interface_. The contraption will briefly stall as items are exchanged.",
 
 	"block.create.rotation_speed_controller.tooltip": "UNLOCALIZED: ROTATION SPEED CONTROLLER",
 	"block.create.rotation_speed_controller.tooltip.summary": "UNLOCALIZED: A _configurable_ _relay_ able to speed up or slow down the target component to any desired speed.",
