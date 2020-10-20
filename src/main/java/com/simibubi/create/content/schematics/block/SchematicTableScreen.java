@@ -1,5 +1,11 @@
 package com.simibubi.create.content.schematics.block;
 
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
+
+import java.nio.file.Paths;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -14,6 +20,7 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -21,13 +28,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-
-import java.nio.file.Paths;
-import java.util.List;
-
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
-
 
 public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
 	implements IHasContainer<SchematicTableContainer> {
@@ -80,12 +80,12 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		}
 
 		confirmButton = new IconButton(mainLeft + 44, mainTop + 56, AllIcons.I_CONFIRM);
-		
+
 		folderButton = new IconButton(mainLeft + 21, mainTop + 21, AllIcons.I_OPEN_FOLDER);
 		folderButton.setToolTip(folder);
 		refreshButton = new IconButton(mainLeft + 207, mainTop + 21, AllIcons.I_REFRESH);
 		refreshButton.setToolTip(refresh);
-		
+
 		widgets.add(confirmButton);
 		widgets.add(folderButton);
 		widgets.add(refreshButton);
@@ -104,10 +104,11 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		textRenderer.draw(matrixStack, playerInventory.getDisplayName(), x - 15 + 7, y + 64 + 26, 0x666666);
 
 		SCHEMATIC_TABLE.draw(matrixStack, this, mainLeft, mainTop);
-		
+
 		if (container.getTileEntity().isUploading)
 			textRenderer.drawWithShadow(matrixStack, uploading, mainLeft + 11, mainTop + 3, 0xffffff);
-		else if (container.getSlot(1).getHasStack())
+		else if (container.getSlot(1)
+			.getHasStack())
 			textRenderer.drawWithShadow(matrixStack, finished, mainLeft + 11, mainTop + 3, 0xffffff);
 		else
 			textRenderer.drawWithShadow(matrixStack, title, mainLeft + 11, mainTop + 3, 0xffffff);
@@ -115,9 +116,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			textRenderer.drawWithShadow(matrixStack, noSchematics, mainLeft + 54, mainTop + 26, 0xd3d3d3);
 
 		GuiGameElement.of(renderedItem)
-				.at(mainLeft + 217, mainTop + 98, -150)
-				.scale(3)
-				.render(matrixStack);
+			.at(mainLeft + 217, mainTop + 98, -150)
+			.scale(3)
+			.render(matrixStack);
 
 		client.getTextureManager()
 			.bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
@@ -125,8 +126,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
 		RenderSystem.disableLighting();
-		drawTexture(matrixStack, mainLeft + 70, mainTop + 58, SCHEMATIC_TABLE_PROGRESS.startX, SCHEMATIC_TABLE_PROGRESS.startY, width,
-			height);
+		drawTexture(matrixStack, mainLeft + 70, mainTop + 58, SCHEMATIC_TABLE_PROGRESS.startX,
+			SCHEMATIC_TABLE_PROGRESS.startY, width, height);
 
 	}
 
@@ -148,7 +149,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 			if (schematicsLabel != null) {
 				schematicsLabel.colored(0xCCDDFF);
-				schematicsLabel.text = new StringTextComponent(container.getTileEntity().uploadingSchematic);
+				String uploadingSchematic = container.getTileEntity().uploadingSchematic;
+				schematicsLabel.text = uploadingSchematic == null ? null : new StringTextComponent(uploadingSchematic);
 			}
 			if (schematicsArea != null)
 				schematicsArea.visible = false;

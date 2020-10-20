@@ -383,11 +383,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(GOLD)));
-			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed", I18n.format(getBlockState().getBlock()
-				.getTranslationKey()));
-			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(componentSpacing.copy().append(hint), GRAY, TextFormatting.WHITE);
+			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed");
+			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add((i == 0 ? StringTextComponent.EMPTY : componentSpacing).copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
 			return true;
 		}
 
@@ -395,9 +394,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.speedRequirement").formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
 				.getTranslationKey()));
-			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(componentSpacing.copy().append(hint), GRAY, TextFormatting.WHITE);
+			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add((i == 0 ? StringTextComponent.EMPTY : componentSpacing).copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
 			return true;
 		}
 

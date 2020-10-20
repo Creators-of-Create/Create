@@ -1,10 +1,14 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import java.util.Objects;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.Create;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -37,6 +41,7 @@ public class Label extends AbstractSimiWidget {
 
 	public Label withSuffix(String s) {
 		suffix = s;
+		Create.logger.info("Suffix is now " + Objects.toString(s));
 		return this;
 	}
 
@@ -51,7 +56,7 @@ public class Label extends AbstractSimiWidget {
 		String trim = "...";
 		int trimWidth = fontRenderer.getStringWidth(trim);
 
-		String raw = newText.getUnformattedComponentText();
+		String raw = newText.getString();
 		StringBuilder builder = new StringBuilder(raw);
 		int startIndex = trimFront ? 0 : raw.length() - 1;
 		int endIndex = !trimFront ? 0 : raw.length() - 1;
@@ -75,10 +80,14 @@ public class Label extends AbstractSimiWidget {
 			return;
 
 		RenderSystem.color4f(1, 1, 1, 1);
+		IFormattableTextComponent copy = text.copy();
+		if (suffix != null && !suffix.isEmpty())
+			copy.append(suffix);
+		
 		if (hasShadow)
-			font.drawWithShadow(matrixStack, text.copy().append(suffix), x, y, color);
+			font.drawWithShadow(matrixStack, copy, x, y, color);
 		else
-			font.draw(matrixStack, text.copy().append(suffix), x, y, color);
+			font.draw(matrixStack, copy, x, y, color);
 	}
 
 }

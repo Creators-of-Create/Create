@@ -21,6 +21,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
+//TODO colors get purged with current approach, proper checklist item with UI is needed
 public class MaterialChecklist {
 
 	public Map<Item, Integer> gathered;
@@ -92,9 +93,9 @@ public class MaterialChecklist {
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
 			String name1 =
-				new TranslationTextComponent(item1.getTranslationKey()).getUnformattedComponentText().toLowerCase(locale);
+				new TranslationTextComponent(item1.getTranslationKey()).getString().toLowerCase(locale);
 			String name2 =
-				new TranslationTextComponent(item2.getTranslationKey()).getUnformattedComponentText().toLowerCase(locale);
+				new TranslationTextComponent(item2.getTranslationKey()).getString().toLowerCase(locale);
 			return name1.compareTo(name2);
 		});
 
@@ -117,7 +118,7 @@ public class MaterialChecklist {
 			}
 
 			itemsWritten++;
-			string.append(unfinishedEntry(new ItemStack(item), amount));
+			string.append(unfinishedEntry(new ItemStack(item), amount).getString());
 		}
 
 		for (Item item : completed) {
@@ -129,7 +130,7 @@ public class MaterialChecklist {
 			}
 
 			itemsWritten++;
-			string.append(gatheredEntry(new ItemStack(item), getRequiredAmount(item)));
+			string.append(gatheredEntry(new ItemStack(item), getRequiredAmount(item)).getString());
 		}
 
 		string.append("\"}");
@@ -154,8 +155,9 @@ public class MaterialChecklist {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
 		TranslationTextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return tc.append(" \\u2714\n x" + amount).formatted(TextFormatting.DARK_GREEN).append(new StringTextComponent(" | "
-			+ stacks + "\\u25A4 +" + remainder + "\n").formatted(TextFormatting.GRAY));
+		return tc.append(" \\u2714\n " + "---");
+		//.formatted(TextFormatting.DARK_GREEN).append(new StringTextComponent(" | "
+			//+ "-" + "\\u25A4 +" + "--" + "\n").formatted(TextFormatting.GRAY));
 		// return TextFormatting.DARK_GREEN + tc.getFormattedText() + " \\u2714\n x" + amount + TextFormatting.GRAY + " | "
 			//	+ stacks + "\\u25A4 +" + remainder + "\n";
 	}
