@@ -32,13 +32,10 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.Pose;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -71,13 +68,6 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		AxisAlignedBB bb = player.getBoundingBox(Pose.CROUCHING).shrink(1.0E-7D);
-//		Stream<VoxelShape> blockCollisions = world.getBlockCollisions(player, bb);
-//		Debug.debugChat(blockCollisions.count() + "");
-//		blockCollisions.forEach(vs -> Debug.debugChat(vs.toString()));
-//		Debug.debugChat("" + blockCollisions.allMatch(VoxelShape::isEmpty));
-
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
 		CreateClient.schematicHandler.tick();

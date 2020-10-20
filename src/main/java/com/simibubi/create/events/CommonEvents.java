@@ -14,10 +14,9 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.ServerTickEvent;
@@ -29,7 +28,6 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
@@ -89,12 +87,9 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void serverAboutToStart(FMLServerAboutToStartEvent event) {
-		IResourceManager manager = event.getServer().getDataPackRegistries().getResourceManager();
-		if (manager instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager) manager).addReloadListener(RecipeFinder.LISTENER);
-            ((IReloadableResourceManager) manager).addReloadListener(PotionMixingRecipeManager.LISTENER);
-        }
+	public static void registerReloadListeners(AddReloadListenerEvent event) {
+		event.addListener(RecipeFinder.LISTENER);
+		event.addListener(PotionMixingRecipeManager.LISTENER);
 	}
 
 	@SubscribeEvent
