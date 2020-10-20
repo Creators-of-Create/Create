@@ -9,6 +9,12 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.content.logistics.item.filter.attribute.*;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicates;
@@ -43,6 +49,15 @@ public interface ItemAttribute {
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
+	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
+	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
+	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
+	static ItemAttribute astralAttunement = register(new AstralSorceryAttunementAttribute("dummy"));
+	static ItemAttribute astralCrystal = register(new AstralSorceryCrystalAttribute("dummy"));
+	static ItemAttribute astralPerkGem = register(new AstralSorceryPerkGemAttribute("dummy"));
+	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
+	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
@@ -106,7 +121,9 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isFood),
+		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
+		RENAMED(ItemStack::hasDisplayName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(Predicates.not(ItemStack::isStackable)),
