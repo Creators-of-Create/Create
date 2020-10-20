@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -217,8 +218,8 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
-			return AllBlocks.MECHANICAL_SAW.has(state) && state.get(SawBlock.RUNNING)
-				&& state.get(SawBlock.FACING) == Direction.UP;
+			return AllBlocks.MECHANICAL_SAW.has(state) && state.get(SawBlock.FACING) == Direction.UP
+				&& ((KineticTileEntity)reader.getTileEntity(pos)).getSpeed() != 0;
 		}
 
 	}

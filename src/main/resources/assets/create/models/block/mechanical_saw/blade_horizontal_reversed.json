@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/mechanical_saw/blade_horizontal_active",
+  "textures": {
+    "stonecutter_saw": "create:block/saw_reversed",
+    "stonecutter_saw": "minecraft:block/stonecutter_saw"
+  }
+}
