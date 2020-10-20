@@ -3153,8 +3153,10 @@ abbe5d7cc9d1705509257888154ed7ca23292586 data/create/tags/items/upright_on_belt.
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/items/valve_handles.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data/forge/tags/blocks/glass/colorless.json
 81ced867d24ec814942909965dd4576eff1db685 data/forge/tags/blocks/glass_panes.json
+4b700ee8aa748c2ec70c29ef1589844879c0deae data/forge/tags/blocks/ores.json
 4a0b13a9835106de9a1dd0a71a02372abb48e7b6 data/forge/tags/blocks/ores/copper.json
 d5ea262a0f5fb210612d22521818e26cf08e591a data/forge/tags/blocks/ores/zinc.json
+508730d3822c54d355329bf6a33d58071653afad data/forge/tags/blocks/storage_blocks.json
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/blocks/storage_blocks/brass.json
 f6c8f34ceb475546dba5cc6ff288863ea795d20b data/forge/tags/blocks/storage_blocks/copper.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/blocks/storage_blocks/zinc.json
@@ -3170,6 +3172,7 @@ bcf15289cbadd429a48bd9accb4d2d5f75353a61 data/forge/tags/items/nuggets.json
 cc82188fe8d986f4457301ed4f75ae833d263601 data/forge/tags/items/nuggets/brass.json
 7affb30e30a252566a77467994b0c99331f1076c data/forge/tags/items/nuggets/copper.json
 0d8cb5092ee6ec01ea09324c80d649ba05549799 data/forge/tags/items/nuggets/zinc.json
+4b700ee8aa748c2ec70c29ef1589844879c0deae data/forge/tags/items/ores.json
 4a0b13a9835106de9a1dd0a71a02372abb48e7b6 data/forge/tags/items/ores/copper.json
 d5ea262a0f5fb210612d22521818e26cf08e591a data/forge/tags/items/ores/zinc.json
 5d5ec04a61ff2b1ad19210e2859a9c96cc246ef8 data/forge/tags/items/plates.json
@@ -3177,6 +3180,7 @@ d5ea262a0f5fb210612d22521818e26cf08e591a data/forge/tags/items/ores/zinc.json
 c3dab5fe379bc1b7b10d4a0ba7009eee1b75a27c data/forge/tags/items/plates/copper.json
 fb9bfb4c84ed9cf2da8c4b2fbc4cd4d9f37d3016 data/forge/tags/items/plates/gold.json
 04d947ed7a5066f3cfe75a8dc564fe2dca8a9c93 data/forge/tags/items/plates/iron.json
+508730d3822c54d355329bf6a33d58071653afad data/forge/tags/items/storage_blocks.json
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/items/storage_blocks/brass.json
 f6c8f34ceb475546dba5cc6ff288863ea795d20b data/forge/tags/items/storage_blocks/copper.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/items/storage_blocks/zinc.json

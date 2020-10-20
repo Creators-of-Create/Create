@@ -161,6 +161,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 
 public class AllBlocks {
@@ -1033,7 +1034,9 @@ public class AllBlocks {
 		REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
 			.initialProperties(() -> Blocks.IRON_ORE)
 			.transform(oxidizedBlockstate())
+			.tag(Tags.Blocks.ORES)
 			.transform(tagBlockAndItem("ores/copper"))
+			.tag(Tags.Items.ORES)
 			.transform(oxidizedItemModel())
 			.register();
 
@@ -1042,14 +1045,18 @@ public class AllBlocks {
 		.properties(p -> p.harvestLevel(2)
 			.harvestTool(ToolType.PICKAXE)
 			.sound(SoundType.STONE))
+		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
+		.tag(Tags.Items.ORES)
 		.build()
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
 		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.transform(oxidizedItemModel())
 			.transform(oxidizedBlockstate())
 			.register();
@@ -1072,14 +1079,18 @@ public class AllBlocks {
 
 	public static final BlockEntry<MetalBlock> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new MetalBlock(p, true))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
 
 	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
 		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.register();
 
