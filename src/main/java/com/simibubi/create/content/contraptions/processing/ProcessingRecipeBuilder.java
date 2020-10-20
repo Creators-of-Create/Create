@@ -155,7 +155,11 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	}
 
 	public ProcessingRecipeBuilder<T> output(Fluid fluid, int amount) {
-		params.fluidResults.add(new FluidStack(fluid, amount));
+		return output(new FluidStack(fluid, amount));
+	}
+	
+	public ProcessingRecipeBuilder<T> output(FluidStack fluidStack) {
+		params.fluidResults.add(fluidStack);
 		return this;
 	}
 

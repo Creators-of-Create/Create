@@ -8,10 +8,10 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
 
-public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCookingRecipe> {
+public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookingRecipe> {
 
-	public BlastingViaFanCategory() {
-		super("blasting_via_fan", doubleItemIcon(AllItems.PROPELLER.get(), Items.LAVA_BUCKET));
+	public FanBlastingCategory() {
+		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.LAVA_BUCKET));
 	}
 
 	@Override
@@ -24,9 +24,9 @@ public class BlastingViaFanCategory extends ProcessingViaFanCategory<AbstractCoo
 		matrixStack.push();
 
 		GuiGameElement.of(Fluids.LAVA)
-				.scale(24)
-				.atLocal(0, 0, 2)
-				.render(matrixStack);
+			.scale(24)
+			.atLocal(0, 0, 2)
+			.render(matrixStack);
 
 		matrixStack.pop();
 	}

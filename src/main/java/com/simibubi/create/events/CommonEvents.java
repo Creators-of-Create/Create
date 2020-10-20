@@ -4,6 +4,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
@@ -45,7 +46,7 @@ public class CommonEvents {
 		Create.lagger.tick();
 		ServerSpeedProvider.serverTick();
 	}
-	
+
 	@SubscribeEvent
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {
 		CapabilityMinecartController.onChunkUnloaded(event);
@@ -76,7 +77,7 @@ public class CommonEvents {
 		World world = event.getWorld();
 		ContraptionHandler.addSpawnedContraptionsToCollisionList(entity, world);
 	}
-	
+
 	@SubscribeEvent
 	public static void onEntityAttackedByPlayer(AttackEntityEvent event) {
 		WrenchItem.wrenchInstaKillsMinecarts(event);
@@ -90,8 +91,10 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void serverAboutToStart(FMLServerAboutToStartEvent event) {
 		IResourceManager manager = event.getServer().getDataPackRegistries().getResourceManager();
-		if (manager instanceof IReloadableResourceManager)
+		if (manager instanceof IReloadableResourceManager) {
 			((IReloadableResourceManager) manager).addReloadListener(RecipeFinder.LISTENER);
+            ((IReloadableResourceManager) manager).addReloadListener(PotionMixingRecipeManager.LISTENER);
+        }
 	}
 
 	@SubscribeEvent
@@ -113,7 +116,7 @@ public class CommonEvents {
 		Create.torquePropagator.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
 	}
-	
+
 	@SubscribeEvent
 	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		CapabilityMinecartController.attach(event);

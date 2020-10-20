@@ -29,8 +29,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.BLOCKZAPPER_UPGR
 public class BlockzapperUpgradeCategory extends CreateRecipeCategory<BlockzapperUpgradeRecipe> {
 
 	public BlockzapperUpgradeCategory() {
-		super("blockzapper_upgrade", itemIcon(AllItems.BLOCKZAPPER.get()),
-				new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
+		super(itemIcon(AllItems.BLOCKZAPPER.get()), new ScreenResourceWrapper(BLOCKZAPPER_UPGRADE_RECIPE));
 	}
 
 	@Override
@@ -57,7 +56,8 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		for (int y = 0; y < shape.getRecipeHeight(); y++) {
 			for (int x = 0; x < shape.getRecipeWidth(); x++) {
 				itemStacks.init(i, true, left + x * 18, top + y * 18);
-				itemStacks.set(i, Arrays.asList(shapedIngredients.get(i).getMatchingStacks()));
+				itemStacks.set(i, Arrays.asList(shapedIngredients.get(i)
+					.getMatchingStacks()));
 				i++;
 			}
 		}
@@ -69,9 +69,9 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		if (mouseX < 91 || mouseX > 91 + 52 || mouseY < 1 || mouseY > 53)
 			return list;
 		list.addAll(recipe.getRecipeOutput()
-				.getTooltip(Minecraft.getInstance().player,
-						Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED
-								: ITooltipFlag.TooltipFlags.NORMAL));
+			.getTooltip(Minecraft.getInstance().player,
+				Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED
+					: ITooltipFlag.TooltipFlags.NORMAL));
 		return list;
 	}
 

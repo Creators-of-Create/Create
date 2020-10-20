@@ -2,11 +2,13 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "fluidTag": "minecraft:water",
+      "fluid": "minecraft:water",
+      "nbt": {},
       "amount": 250
     },
     {
-      "fluidTag": "minecraft:lava",
+      "fluid": "minecraft:lava",
+      "nbt": {},
       "amount": 25
     }
   ],
