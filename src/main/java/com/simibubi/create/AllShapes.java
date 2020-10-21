@@ -36,6 +36,9 @@ public class AllShapes {
 		PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
+		SAIL_FRAME_COLLISION = shape(0, 5, 0, 16, 9, 16).erase(2, 0, 2, 14, 16, 14).forDirectional(),
+		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(),
+		SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),
 		SPEED_CONTROLLER = shape(0, 0, 0, 16, 2, 16).add(1, 1, 1, 15, 15, 15)
 			.erase(0, 8, 5, 16, 16, 11)
 			.add(2, 9, 2, 14, 14, 14)
@@ -130,10 +133,12 @@ public class AllShapes {
 
 	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
 		.add(2, 0, 2, 14, 2, 14)
-		.build(), BASIN_COLLISION_SHAPE =
-			shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
-				.add(2, 0, 2, 14, 2, 14)
+		.build(), BASIN_RAYTRACE_SHAPE =
+			shape(0, 2, 0, 16, 16, 16).add(2, 0, 2, 14, 2, 14)
 				.build(),
+		BASIN_COLLISION_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
+			.add(2, 0, 2, 14, 2, 14)
+			.build(),
 		HEATER_BLOCK_SHAPE = shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
 			.build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),

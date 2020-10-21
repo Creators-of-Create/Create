@@ -53,6 +53,8 @@
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "\u00B0",
 	"create.generic.unit.millibuckets": "%1$smB",
+	"create.generic.clockwise": "Clockwise",
+	"create.generic.counter_clockwise": "Counter-Clockwise",
 
 	"create.action.scroll": "Scroll",
 	"create.action.confirm": "Confirm",
@@ -146,6 +148,12 @@
 	"create.contraptions.cart_movement_mode.rotate": "Always face toward motion",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pause actors while rotating",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
+	
+	"create.contraptions.windmill.rotation_direction": "Rotation Direction",
+	"create.contraptions.clockwork.clock_hands": "Clock Hands",
+	"create.contraptions.clockwork.hour_first": "Hour hand first",
+	"create.contraptions.clockwork.minute_first": "Minute hand first",
+	"create.contraptions.clockwork.hour_first_24": "24-Hour hand first",
 	
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",

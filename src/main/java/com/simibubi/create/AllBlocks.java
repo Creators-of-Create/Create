@@ -48,6 +48,8 @@ import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
@@ -593,16 +595,21 @@ public class AllBlocks {
 					.getName() + "/head"))))
 			.register();
 
+	public static final BlockEntry<WindmillBearingBlock> WINDMILL_BEARING =
+		REGISTRATE.block("windmill_bearing", WindmillBearingBlock::new)
+			.transform(BuilderTransformers.bearing("windmill", "gearbox", true))
+			.transform(StressConfigDefaults.setCapacity(512.0))
+			.register();
+
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
 		REGISTRATE.block("mechanical_bearing", MechanicalBearingBlock::new)
-			.transform(BuilderTransformers.bearing("mechanical", "gearbox"))
-			.transform(StressConfigDefaults.setCapacity(512.0))
+			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.register();
 
 	public static final BlockEntry<ClockworkBearingBlock> CLOCKWORK_BEARING =
 		REGISTRATE.block("clockwork_bearing", ClockworkBearingBlock::new)
-			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox"))
+			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.register();
 
@@ -706,9 +713,7 @@ public class AllBlocks {
 		.onRegister(addMovementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
-		.model((c, p) -> p.blockItem(() -> c.getEntry()
-			.getBlock(), "/horizontal"))
-		.build()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<DeployerBlock> DEPLOYER = REGISTRATE.block("deployer", DeployerBlock::new)
@@ -748,6 +753,7 @@ public class AllBlocks {
 			.register();
 
 	static {
+		// SEATS
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getName();
 			SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
@@ -781,6 +787,46 @@ public class AllBlocks {
 				.item()
 				.tag(AllItemTags.SEATS.tag)
 				.build()
+				.register();
+		}
+	}
+
+	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
+		.initialProperties(SharedProperties::wooden)
+		.properties(Block.Properties::nonOpaque)
+		.blockstate(BlockStateGen.directionalBlockProvider(false))
+		.tag(AllBlockTags.WINDMILL_SAILS.tag)
+		.tag(AllBlockTags.FAN_TRANSPARENT.tag)
+		.simpleItem()
+		.register();
+
+	public static final BlockEntry<?>[] DYED_SAILS = new BlockEntry<?>[DyeColor.values().length];
+
+	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p))
+		.initialProperties(SharedProperties::wooden)
+		.properties(Block.Properties::nonOpaque)
+		.blockstate(BlockStateGen.directionalBlockProvider(false))
+		.tag(AllBlockTags.WINDMILL_SAILS.tag)
+		.simpleItem()
+		.register();
+
+	static {
+		// DYED SAILS
+		for (DyeColor colour : DyeColor.values()) {
+			if (colour == DyeColor.WHITE) {
+				DYED_SAILS[colour.ordinal()] = SAIL;
+				continue;
+			}
+			String colourName = colour.getName();
+			DYED_SAILS[colour.ordinal()] = REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
+				.properties(Block.Properties::nonOpaque)
+				.initialProperties(SharedProperties::wooden)
+				.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
+					.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
+					.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
+				.tag(AllBlockTags.WINDMILL_SAILS.tag)
+				.tag(AllBlockTags.SAILS.tag)
+				.loot((p, b) -> p.registerDropping(b, SAIL.get()))
 				.register();
 		}
 	}

@@ -35,7 +35,7 @@ public class BeltPressingCallbacks {
 			return PASS;
 		if (!pressTe.running)
 			return PASS;
-		if (pressTe.runningTicks != 30)
+		if (pressTe.runningTicks != MechanicalPressTileEntity.CYCLE / 2)
 			return HOLD;
 
 		Optional<PressingRecipe> recipe = pressTe.getRecipe(transported.stack);

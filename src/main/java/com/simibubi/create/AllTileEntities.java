@@ -37,6 +37,7 @@ import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
@@ -278,6 +279,12 @@ public class AllTileEntities {
 		.renderer(() -> MechanicalPistonRenderer::new)
 		.register();
 
+	public static final TileEntityEntry<WindmillBearingTileEntity> WINDMILL_BEARING = Create.registrate()
+		.tileEntity("windmill_bearing", WindmillBearingTileEntity::new)
+		.validBlocks(AllBlocks.WINDMILL_BEARING)
+		.renderer(() -> BearingRenderer::new)
+		.register();
+	
 	public static final TileEntityEntry<MechanicalBearingTileEntity> MECHANICAL_BEARING = Create.registrate()
 		.tileEntity("mechanical_bearing", MechanicalBearingTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_BEARING)

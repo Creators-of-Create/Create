@@ -397,6 +397,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("SCS")
 				.patternLine(" R ")),
 
+		WINDMILL_BEARING = create(AllBlocks.WINDMILL_BEARING).unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('I', I.shaft())
+				.key('B', AllBlocks.TURNTABLE.get())
+				.key('C', I.stone())
+				.patternLine(" B ")
+				.patternLine(" C ")
+				.patternLine(" I ")),
+
 		MECHANICAL_BEARING = create(AllBlocks.MECHANICAL_BEARING).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('I', I.shaft())
 				.key('S', I.andesite())
@@ -526,6 +534,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")
 				.patternLine(" B ")),
+
+		SAIL_FRAME = create(AllBlocks.SAIL_FRAME).returns(8)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('A', I.andesite())
+				.key('S', Tags.Items.RODS_WOODEN)
+				.patternLine("SSS")
+				.patternLine("SAS")
+				.patternLine("SSS")),
+
+		SAIL = create(AllBlocks.SAIL).returns(8)
+			.unlockedBy(AllBlocks.SAIL_FRAME::get)
+			.viaShaped(b -> b.key('F', AllBlocks.SAIL_FRAME.get())
+				.key('W', ItemTags.WOOL)
+				.patternLine("FFF")
+				.patternLine("FWF")
+				.patternLine("FFF")),
 
 		RADIAL_CHASIS = create(AllBlocks.RADIAL_CHASSIS).returns(3)
 			.unlockedBy(I::andesite)

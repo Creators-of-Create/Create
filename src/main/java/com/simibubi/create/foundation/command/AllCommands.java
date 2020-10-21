@@ -17,7 +17,7 @@ public class AllCommands {
 				//Comment out for release
 				.then(ClearBufferCacheCommand.register())
 				.then(ChunkUtilCommand.register())
-		//      .then(KillTPSCommand.register())
+//		      .then(KillTPSCommand.register())
 		);
 	}
 }

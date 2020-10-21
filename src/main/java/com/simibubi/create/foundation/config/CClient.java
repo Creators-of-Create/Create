@@ -13,7 +13,7 @@ public class CClient extends ConfigBase {
 	public ConfigBool rainbowDebug =
 		b(true, "enableRainbowDebug", "Show colourful debug information while the F3-Menu is open.");
 
-	public ConfigInt overlayOffsetX = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX", "Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
+	public ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX", "Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY", "Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
 
 	@Override

@@ -84,7 +84,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return ActionResultType.SUCCESS;
 				if (tryFillItemFromBasin(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
-				return ActionResultType.SUCCESS;
+
+				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
+					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
+					return ActionResultType.SUCCESS;
+				return ActionResultType.PASS;
 			}
 
 			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
@@ -149,18 +153,18 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				continue;
 			if (requiredAmountForItem > fluid.getAmount())
 				continue;
-			
+
 			if (world.isRemote)
 				return true;
 
 			if (player.isCreative())
 				heldItem = heldItem.copy();
 			ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
-			
+
 			FluidStack copy = fluid.copy();
 			copy.setAmount(requiredAmountForItem);
 			tank.drain(copy, FluidAction.EXECUTE);
-			
+
 			if (!player.isCreative())
 				player.inventory.placeItemBackInInventory(world, out);
 			te.notifyUpdate();
@@ -195,6 +199,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		});
 	}
 
+	@Override
+	public VoxelShape getRaytraceShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
+		return AllShapes.BASIN_RAYTRACE_SHAPE;
+	}
+	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.BASIN_BLOCK_SHAPE;

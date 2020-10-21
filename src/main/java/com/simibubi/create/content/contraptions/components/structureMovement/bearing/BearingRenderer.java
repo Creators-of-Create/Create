@@ -27,7 +27,9 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 		IBearingTileEntity bearingTe = (IBearingTileEntity) te;
 		final Direction facing = te.getBlockState()
 			.get(BlockStateProperties.FACING);
-		SuperByteBuffer superBuffer = AllBlockPartials.BEARING_TOP.renderOn(te.getBlockState());
+		AllBlockPartials top =
+			bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+		SuperByteBuffer superBuffer = top.renderOn(te.getBlockState());
 
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);

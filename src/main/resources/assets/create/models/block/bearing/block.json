@@ -3,7 +3,7 @@
         "particle": "#side",
         "gearbox": "#back",
         "bearing_side": "#side",
-		"brass_casing": "create:block/brass_casing"
+		"brass_casing": "#nook"
     },
     "elements": [
 		{

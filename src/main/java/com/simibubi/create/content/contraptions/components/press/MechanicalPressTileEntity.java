@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
@@ -16,6 +17,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -48,6 +50,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public int prevRunningTicks;
 	public int runningTicks;
 	static final int CYCLE = 240;
+	static final int ENTITY_SCAN = 10;
+	int entityScanCooldown;
 
 	public boolean running;
 	public Mode mode;
@@ -56,6 +60,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public MechanicalPressTileEntity(TileEntityType<? extends MechanicalPressTileEntity> type) {
 		super(type);
 		mode = Mode.WORLD;
+		entityScanCooldown = ENTITY_SCAN;
 	}
 
 	@Override
@@ -105,10 +110,11 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public float getRenderedHeadOffset(float partialTicks) {
 		if (!running)
 			return 0;
+		int runningTicks = Math.abs(this.runningTicks);
 		float ticks = MathHelper.lerp(partialTicks, prevRunningTicks, runningTicks);
 		if (runningTicks < (CYCLE * 2) / 3)
-			return (float) MathHelper.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, mode.headOffset);
-		return MathHelper.clamp((CYCLE - ticks) / CYCLE * 3 * mode.headOffset, 0, mode.headOffset);
+			return (float) MathHelper.clamp(Math.pow(ticks / CYCLE * 2, 3), 0, 1) * mode.headOffset;
+		return MathHelper.clamp((CYCLE - ticks) / CYCLE * 3, 0, 1) * mode.headOffset;
 	}
 
 	public void start(Mode mode) {
@@ -131,8 +137,39 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public void tick() {
 		super.tick();
 
-		if (!running || world == null)
+		if (!running || world == null) {
+			if (hasWorld() && !world.isRemote) {
+
+				if (getSpeed() == 0)
+					return;
+				if (entityScanCooldown > 0)
+					entityScanCooldown--;
+				if (entityScanCooldown <= 0) {
+					entityScanCooldown = ENTITY_SCAN;
+					if (TileEntityBehaviour.get(world, pos.down(2), TransportedItemStackHandlerBehaviour.TYPE) != null)
+						return;
+					if (AllBlocks.BASIN.has(world.getBlockState(pos.down(2))))
+						return;
+
+					for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class,
+						new AxisAlignedBB(pos.down()).shrink(.125f))) {
+						ItemStack stack = itemEntity.getItem();
+						Optional<PressingRecipe> recipe = getRecipe(stack);
+						if (!recipe.isPresent())
+							continue;
+						start(Mode.WORLD);
+						return;
+					}
+				}
+
+			}
 			return;
+		}
+
+		if (world.isRemote && runningTicks == -CYCLE / 2) {
+			prevRunningTicks = CYCLE / 2;
+			return;
+		}
 
 		if (runningTicks == CYCLE / 2) {
 			if (inWorld())
@@ -149,8 +186,6 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 		if (!world.isRemote && runningTicks > CYCLE) {
 			finished = true;
-			if (inWorld())
-				finished = world.isBlockPowered(pos);
 			running = false;
 
 			if (onBasin() && matchBasinRecipe(currentRecipe))
@@ -163,8 +198,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 		prevRunningTicks = runningTicks;
 		runningTicks += getRunningTickSpeed();
-		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2)
+		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
 			runningTicks = CYCLE / 2;
+			// Pause the ticks until a packet is received
+			if (world.isRemote)
+				runningTicks = -(CYCLE / 2);
+		}
 	}
 
 	protected void applyCompactingOnBasin() {
