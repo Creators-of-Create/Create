@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " B ",
+    " S ",
     "CCC",
-    "  S"
+    "  A"
   ],
   "key": {
-    "S": {
+    "A": {
       "item": "create:andesite_alloy"
     },
     "C": {
       "tag": "minecraft:planks"
     },
-    "B": {
-      "tag": "forge:ingots/brass"
+    "S": {
+      "item": "create:shaft"
     }
   },
   "result": {

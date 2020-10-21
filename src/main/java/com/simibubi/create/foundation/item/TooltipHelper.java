@@ -196,7 +196,7 @@ public class TooltipHelper {
 		}
 
 		if (tooltipReferrals.containsKey(item))
-			return tooltipReferrals.get(item) + ".tooltip";
+			return tooltipReferrals.get(item).get() + ".tooltip";
 		return item.getTranslationKey(stack) + ".tooltip";
 	}
 

@@ -348,7 +348,7 @@ public class AllBlocks {
 	public static final BlockEntry<HandCrankBlock> HAND_CRANK = REGISTRATE.block("hand_crank", HandCrankBlock::new)
 		.initialProperties(SharedProperties::wooden)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
-		.transform(StressConfigDefaults.setCapacity(32.0))
+		.transform(StressConfigDefaults.setCapacity(8.0))
 		.tag(AllBlockTags.BRITTLE.tag)
 		.item()
 		.transform(customItemModel())

@@ -330,12 +330,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("L L")),
 
 		HAND_CRANK = create(AllBlocks.HAND_CRANK).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.andesite())
+			.viaShaped(b -> b.key('A', I.andesite())
 				.key('C', ItemTags.PLANKS)
-				.key('B', I.brass())
-				.patternLine(" B ")
+				.key('S', I.shaft())
+				.patternLine(" S ")
 				.patternLine("CCC")
-				.patternLine("  S")),
+				.patternLine("  A")),
 
 		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('S', I.andesite())

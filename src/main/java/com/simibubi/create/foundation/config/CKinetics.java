@@ -6,7 +6,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
 	public ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed);
-	public ConfigInt waterWheelSpeed = i(5, 1, "waterWheelSpeed", Comments.rpm, Comments.waterWheelSpeed);
+	public ConfigInt waterWheelBaseSpeed = i(4, 1, "waterWheelBaseSpeed", Comments.rpm, Comments.waterWheelBaseSpeed);
+	public ConfigInt waterWheelFlowSpeed = i(4, 1, "waterWheelFlowSpeed", Comments.rpm, Comments.waterWheelFlowSpeed);
 	public ConfigInt furnaceEngineSpeed = i(16, 1, "furnaceEngineSpeed", Comments.rpm, Comments.furnaceEngineSpeed);
 	public ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
@@ -19,7 +20,7 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt fanPullDistance = i(20, 5, "fanPullDistance", Comments.fanPullDistance);
 	public ConfigInt fanBlockCheckRate = i(30, 10, "fanBlockCheckRate", Comments.fanBlockCheckRate);
 	public ConfigInt fanRotationArgmax = i(256, 64, "fanRotationArgmax", Comments.rpm, Comments.fanRotationArgmax);
-	public ConfigInt generatingFanSpeed = i(16, 0, "generatingFanSpeed", Comments.rpm, Comments.generatingFanSpeed);
+	public ConfigInt generatingFanSpeed = i(4, 0, "generatingFanSpeed", Comments.rpm, Comments.generatingFanSpeed);
 	public ConfigInt inWorldProcessingTime = i(150, 0, "inWorldProcessingTime", Comments.inWorldProcessingTime);
 
 	public ConfigGroup contraptions = group(1, "contraptions", "Moving Contraptions");
@@ -73,7 +74,8 @@ public class CKinetics extends ConfigBase {
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
-		static String waterWheelSpeed = "Rotation speed gained by a water wheel for each side with running water. (halved if not against blades)";
+		static String waterWheelBaseSpeed = "Added rotation speed by a water wheel when at least one flow is present.";
+		static String waterWheelFlowSpeed = "Rotation speed gained by a water wheel for each side with running fluids. (halved if not against blades)";
 		static String furnaceEngineSpeed = "Base rotation speed for the furnace engine generator";
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency = "Game ticks between Kinetic Blocks checking whether their source is still valid.";
