@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " C ",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:shaft"
+    },
+    "B": {
+      "item": "create:turntable"
+    },
+    "C": {
+      "tag": "forge:stone"
+    }
+  },
+  "result": {
+    "item": "create:windmill_bearing"
+  }
+}

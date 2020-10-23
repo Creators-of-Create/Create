@@ -330,12 +330,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("L L")),
 
 		HAND_CRANK = create(AllBlocks.HAND_CRANK).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.andesite())
+			.viaShaped(b -> b.key('A', I.andesite())
 				.key('C', ItemTags.PLANKS)
-				.key('B', I.brass())
-				.patternLine(" B ")
+				.key('S', I.shaft())
+				.patternLine(" S ")
 				.patternLine("CCC")
-				.patternLine("  S")),
+				.patternLine("  A")),
 
 		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('S', I.andesite())
@@ -396,6 +396,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")
 				.patternLine(" R ")),
+
+		WINDMILL_BEARING = create(AllBlocks.WINDMILL_BEARING).unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('I', I.shaft())
+				.key('B', AllBlocks.TURNTABLE.get())
+				.key('C', I.stone())
+				.patternLine(" B ")
+				.patternLine(" C ")
+				.patternLine(" I ")),
 
 		MECHANICAL_BEARING = create(AllBlocks.MECHANICAL_BEARING).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('I', I.shaft())
@@ -526,6 +534,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")
 				.patternLine(" B ")),
+
+		SAIL_FRAME = create(AllBlocks.SAIL_FRAME).returns(8)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('A', I.andesite())
+				.key('S', Tags.Items.RODS_WOODEN)
+				.patternLine("SSS")
+				.patternLine("SAS")
+				.patternLine("SSS")),
+
+		SAIL = create(AllBlocks.SAIL).returns(8)
+			.unlockedBy(AllBlocks.SAIL_FRAME::get)
+			.viaShaped(b -> b.key('F', AllBlocks.SAIL_FRAME.get())
+				.key('W', ItemTags.WOOL)
+				.patternLine("FFF")
+				.patternLine("FWF")
+				.patternLine("FFF")),
 
 		RADIAL_CHASIS = create(AllBlocks.RADIAL_CHASSIS).returns(3)
 			.unlockedBy(I::andesite)

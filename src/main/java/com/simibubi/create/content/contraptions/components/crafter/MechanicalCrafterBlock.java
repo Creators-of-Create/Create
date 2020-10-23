@@ -186,6 +186,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				if (AllItems.CRAFTER_SLOT_COVER.isIn(heldItem)) {
 					if (crafter.covered)
 						return ActionResultType.PASS;
+					if (!crafter.inventory.isEmpty())
+						return ActionResultType.PASS;
 					crafter.covered = true;
 					crafter.markDirty();
 					crafter.sendData();

@@ -1,0 +1,10 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "create:block/bearing/top",
+	"textures": {
+		"bearing_top": "create:block/bearing_top_wooden",
+		"particle": "create:block/windmill_bearing_side",
+		"bearing_side": "create:block/windmill_bearing_side",
+		"brass_casing": "create:block/andesite_casing"
+	}
+}

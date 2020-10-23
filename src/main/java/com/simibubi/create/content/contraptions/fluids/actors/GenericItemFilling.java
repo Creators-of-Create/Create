@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
@@ -43,8 +44,12 @@ public class GenericItemFilling {
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return -1;
-		if (tank instanceof FluidBucketWrapper)
+		if (tank instanceof FluidBucketWrapper) {
+			Item filledBucket = availableFluid.getFluid().getFilledBucket();
+			if (filledBucket == null || filledBucket == Items.AIR)
+				return -1;
 			return 1000;
+		}
 
 		int filled = tank.fill(availableFluid, FluidAction.SIMULATE);
 		return filled == 0 ? -1 : filled;

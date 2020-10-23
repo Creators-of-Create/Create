@@ -123,7 +123,8 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);
 			}
 
-			te.setFlow(f, (float) (flowStrength * AllConfigs.SERVER.kinetics.waterWheelSpeed.get() / 2f));
+			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+			te.setFlow(f, (float) (flowStrength * flowModifier / 2f));
 		});
 	}
 

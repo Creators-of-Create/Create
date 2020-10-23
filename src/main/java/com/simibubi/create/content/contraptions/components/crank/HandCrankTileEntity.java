@@ -68,9 +68,10 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 				updateGeneratedRotation();
 		}
 	}
-
+	
 	@Override
 	protected Block getStressConfigKey() {
 		return AllBlocks.HAND_CRANK.get();
 	}
+
 }

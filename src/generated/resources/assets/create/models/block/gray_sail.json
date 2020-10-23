@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/white_sail",
+  "textures": {
+    "0": "create:block/sail/canvas_gray"
+  }
+}

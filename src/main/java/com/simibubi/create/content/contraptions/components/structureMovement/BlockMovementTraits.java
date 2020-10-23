@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
@@ -176,14 +177,14 @@ public class BlockMovementTraits {
 			return direction == state.get(EngineBlock.HORIZONTAL_FACING).getOpposite();
 		if (block instanceof BellBlock) {
 			BellAttachment attachment = state.get(BlockStateProperties.BELL_ATTACHMENT);
-			if (attachment == BellAttachment.FLOOR) {
+			if (attachment == BellAttachment.FLOOR) 
 				return direction == Direction.DOWN;
-			}
-			if (attachment == BellAttachment.CEILING) {
+			if (attachment == BellAttachment.CEILING) 
 				return direction == Direction.UP;
-			}
 			return direction == state.get(HorizontalBlock.HORIZONTAL_FACING);
 		}
+		if (state.getBlock() instanceof SailBlock)
+			return direction.getAxis() != state.get(SailBlock.FACING).getAxis();
 		return false;
 	}
 
@@ -206,7 +207,9 @@ public class BlockMovementTraits {
 			return facing == Direction.DOWN;
 		if (state.getBlock() instanceof CarpetBlock)
 			return facing == Direction.UP;
+		if (state.getBlock() instanceof SailBlock)
+			return facing.getAxis() == state.get(SailBlock.FACING).getAxis();
 		return isBrittle(state);
 	}
-
+	
 }

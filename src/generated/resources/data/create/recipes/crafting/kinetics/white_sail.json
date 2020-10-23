@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FFF",
+    "FWF",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "create:sail_frame"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result": {
+    "item": "create:white_sail",
+    "count": 8
+  }
+}

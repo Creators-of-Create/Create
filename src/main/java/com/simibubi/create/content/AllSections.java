@@ -16,9 +16,6 @@ public enum AllSections {
 	/** Item transport and other Utility */
 	LOGISTICS(Palette.Yellow),
 
-	/** Helpful gadgets and other shenanigans */
-	CURIOSITIES(Palette.Purple),
-
 	/** Tools for strucuture movement and replication */
 	SCHEMATICS(Palette.Blue),
 
@@ -27,6 +24,9 @@ public enum AllSections {
 
 	/** Base materials, ingredients and tools */
 	MATERIALS(Palette.Green),
+	
+	/** Helpful gadgets and other shenanigans */
+	CURIOSITIES(Palette.Purple),
 
 	/** Fallback section */
 	UNASSIGNED(Palette.Gray)

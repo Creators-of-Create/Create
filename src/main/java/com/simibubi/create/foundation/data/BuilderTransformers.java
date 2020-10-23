@@ -112,6 +112,7 @@ public class BuilderTransformers {
 		String type, ResourceLocation particleTexture) {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::getCutoutMipped)
+			.properties(Block.Properties::nonOpaque)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
 					String id = "block/" + type + "_tunnel";
@@ -151,19 +152,23 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bearing(String prefix,
-		String backTexture) {
+		String backTexture, boolean woodenTop) {
 		ResourceLocation baseBlockModelLocation = Create.asResource("block/bearing/block");
 		ResourceLocation baseItemModelLocation = Create.asResource("block/bearing/item");
-		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side");
+		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top" + (woodenTop ? "_wooden" : ""));
+		ResourceLocation nookTextureLocation = Create.asResource("block/" + (woodenTop ? "andesite" : "brass") + "_casing");
+		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side"); 
 		ResourceLocation backTextureLocation = Create.asResource("block/" + backTexture);
 		return b -> b.initialProperties(SharedProperties::stone)
 			.properties(p -> p.nonOpaque())
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), baseBlockModelLocation)
 				.texture("side", sideTextureLocation)
+				.texture("nook", nookTextureLocation)
 				.texture("back", backTextureLocation)))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), baseItemModelLocation)
+				.texture("top", topTextureLocation)
 				.texture("side", sideTextureLocation)
 				.texture("back", backTextureLocation))
 			.build();

@@ -100,6 +100,10 @@ public class AllIcons {
 		I_PAUSE = next(),
 		I_STOP = next(),
 		I_PLACEMENT_SETTINGS = next(),
+		I_ROTATE_CCW = next(),
+		I_HOUR_HAND_FIRST = next(),
+		I_MINUTE_HAND_FIRST = next(),
+		I_HOUR_HAND_FIRST_24 = next(),
 	
 		I_PATTERN_SOLID = newRow(),
 		I_PATTERN_CHECKERED = next(),
