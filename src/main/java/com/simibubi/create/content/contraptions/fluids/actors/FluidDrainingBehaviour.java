@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.utility.Debug;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
@@ -60,7 +59,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (counterpartActed) {
-			Debug.debugChat("<!> Counterpart acted");
 			counterpartActed = false;
 			softReset(root);
 			return false;
@@ -141,7 +139,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				isValid = checkValid(world, rootPos);
 				reset();
 			} else if (!validationSet.contains(currentPos)) {
-				Debug.debugChat("<!> Drained unreachable fluid - rebuilding");
 				reset();
 			}
 			return true;
@@ -230,7 +227,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	public void rebuildContext(BlockPos root) {
 		reset();
-		Debug.debugChat("Rebuilding!");
 		rootPos = root;
 		affectedArea = new MutableBoundingBox(rootPos, rootPos);
 		if (isValid)
@@ -238,7 +234,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	public void revalidate(BlockPos root) {
-		Debug.debugChat("Revalidating!");
 		validationFrontier.clear();
 		validationVisited.clear();
 		newValidationSet.clear();
@@ -251,7 +246,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			queue.enqueue(new BlockPosEntry(e, d));
 			validationSet.add(e);
 		}, false);
-		Debug.debugChat("<...> Building - queue size " + queue.size());
 
 		World world = getWorld();
 		int maxBlocks = maxBlocks();
@@ -272,29 +266,24 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			queue.clear();
 			queue.enqueue(new BlockPosEntry(firstValid, 0));
 			tileEntity.sendData();
-			Debug.debugChat("<!> Build complete - infinite");
 			return;
 		}
 
 		if (!frontier.isEmpty())
 			return;
 
-		Debug.debugChat("<!> Build complete - queue size " + queue.size());
 		tileEntity.sendData();
 		visited.clear();
 	}
 
 	private void continueValidation() {
 		search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
-		Debug.debugChat("<...> Validating - set size " + newValidationSet.size());
 
 		int maxBlocks = maxBlocks();
 		if (validationVisited.size() > maxBlocks) {
 			if (!infinite) {
-				Debug.debugChat("<!> Validation complete - now infinite");
 				reset();
 			}
-			Debug.debugChat("Validation complete - still infinite");
 			validationFrontier.clear();
 			setLongValidationTimer();
 			return;
@@ -303,12 +292,10 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		if (!validationFrontier.isEmpty())
 			return;
 		if (infinite) {
-			Debug.debugChat("<!> Validation complete - no longer infinite");
 			reset();
 			return;
 		}
 
-		Debug.debugChat("Validation complete - set size " + newValidationSet.size());
 		validationSet = newValidationSet;
 		newValidationSet = new HashSet<>();
 		validationVisited.clear();
@@ -316,7 +303,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	@Override
 	public void reset() {
-		Debug.debugChat("<!> RESET");
 		super.reset();
 
 		fluid = null;

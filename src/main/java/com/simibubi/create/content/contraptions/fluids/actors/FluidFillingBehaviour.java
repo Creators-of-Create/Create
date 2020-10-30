@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
@@ -63,11 +62,9 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 		if (infinityCheckVisited.size() > maxBlocks) {
 			if (!infinite) {
-				Debug.debugChat("<!> Filler Validation complete - now infinite");
 				reset();
 				infinite = true;
 			}
-			Debug.debugChat("Filler Validation complete - still infinite");
 			infinityCheckFrontier.clear();
 			setLongValidationTimer();
 			return;
@@ -76,7 +73,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		if (!infinityCheckFrontier.isEmpty())
 			return;
 		if (infinite) {
-			Debug.debugChat("<!> Filler Validation complete - no longer infinite");
 			reset();
 			return;
 		}
@@ -94,7 +90,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (counterpartActed) {
-			Debug.debugChat("<!> Counterpart acted");
 			counterpartActed = false;
 			softReset(root);
 			return false;
@@ -143,7 +138,6 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				visited.add(currentPos);
 
 			if (visited.size() >= maxBlocks) {
-				Debug.debugChat("<F> Search exceeded - now infinite");
 				infinite = true;
 				visited.clear();
 				queue.clear();
