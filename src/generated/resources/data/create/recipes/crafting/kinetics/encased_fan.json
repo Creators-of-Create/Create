@@ -3,20 +3,17 @@
   "pattern": [
     " S ",
     "RAR",
-    "BPB"
+    " P "
   ],
   "key": {
     "S": {
       "item": "create:shaft"
     },
     "A": {
-      "item": "create:andesite_alloy"
+      "item": "create:andesite_casing"
     },
     "R": {
-      "tag": "minecraft:planks"
-    },
-    "B": {
-      "item": "minecraft:iron_bars"
+      "item": "create:cogwheel"
     },
     "P": {
       "item": "create:propeller"

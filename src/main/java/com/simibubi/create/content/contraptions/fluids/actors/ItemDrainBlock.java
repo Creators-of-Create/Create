@@ -1,22 +1,69 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
-public class ItemDrainBlock extends Block {
+public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
 
 	public ItemDrainBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+		BlockRayTraceResult hit) {
+		ItemStack heldItem = player.getHeldItem(handIn);
+
+		try {
+			ItemDrainTileEntity te = getTileEntity(worldIn, pos);
+			if (!heldItem.isEmpty()) {
+				te.internalTank.allowInsertion();
+				ActionResultType tryExchange = tryExchange(worldIn, player, handIn, heldItem, te);
+				te.internalTank.forbidInsertion();
+				if (tryExchange.isAccepted())
+					return tryExchange;
+			}
+			
+			ItemStack heldItemStack = te.getHeldItemStack();
+			if (!worldIn.isRemote && !heldItemStack.isEmpty()) {
+				player.inventory.placeItemBackInInventory(worldIn, heldItemStack);
+				te.heldItem = null;
+				te.notifyUpdate();
+			}
+			return ActionResultType.SUCCESS;
+		} catch (TileEntityException e) {
+		}
+
+		return ActionResultType.PASS;
+	}
+
+	protected ActionResultType tryExchange(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
+		ItemDrainTileEntity te) {
+		if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
+			return ActionResultType.SUCCESS;
+		if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
+			return ActionResultType.SUCCESS;
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -26,6 +73,30 @@ public class ItemDrainBlock extends Block {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {}
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+			return;
+		withTileEntityDo(worldIn, pos, te -> {
+			ItemStack heldItemStack = te.getHeldItemStack();
+			if (!heldItemStack.isEmpty())
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), heldItemStack);
+		});
+		worldIn.removeTileEntity(pos);
+	}
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.ITEM_DRAIN.create();
+	}
+
+	@Override
+	public Class<ItemDrainTileEntity> getTileEntityClass() {
+		return ItemDrainTileEntity.class;
+	}
 
 }

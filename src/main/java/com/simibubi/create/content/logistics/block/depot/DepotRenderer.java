@@ -48,7 +48,8 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 			if (transported.insertedFrom.getAxis()
 				.isHorizontal()) {
 				Vector3d offsetVec = Vector3d.of(transported.insertedFrom.getOpposite()
-					.getDirectionVec()).scale(.5f - offset);
+					.getDirectionVec())
+					.scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = transported.insertedFrom.rotateY()
 					.getAxis() == Axis.X;
@@ -86,7 +87,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		ms.pop();
 	}
 
-	protected void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack itemStack,
+	public static void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack itemStack,
 		int angle, Random r, Vector3d itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();

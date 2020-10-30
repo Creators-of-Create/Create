@@ -1639,6 +1639,7 @@ c023b9221d7983487d21e5ecc7d92246cfc7e791 data/create/advancements/recipes/create
 9af3d92d11c3f520df3e22f3069042bf34585010 data/create/advancements/recipes/create.base/crafting/kinetics/green_valve_handle_from_other_valve_handle.json
 dbb96a4db4ef8172af73a626bed9727278d804bd data/create/advancements/recipes/create.base/crafting/kinetics/hand_crank.json
 21cd686e1f3a4004d8e9bd3d92675bd61fb2b4db data/create/advancements/recipes/create.base/crafting/kinetics/hose_pulley.json
+58450edb1767e9d56256186acba954ca09481548 data/create/advancements/recipes/create.base/crafting/kinetics/item_drain.json
 a71b626b6ee58a4eabee56f67c48f041a1323506 data/create/advancements/recipes/create.base/crafting/kinetics/large_cogwheel.json
 eb007bb079bbe6b6aaad2ca90f5af84261e3f8ea data/create/advancements/recipes/create.base/crafting/kinetics/light_blue_seat.json
 571da50fbf5f2fcd3363b3dab91e7233e0ebffa0 data/create/advancements/recipes/create.base/crafting/kinetics/light_blue_seat_from_other_seat.json
@@ -2626,7 +2627,7 @@ ad1c3ce1e98b8483512bdd754f2e5930c7b3ae85 data/create/recipes/crafting/kinetics/d
 be86df1c4d7af14bc5dcfe044d07c03b6c6d2a75 data/create/recipes/crafting/kinetics/depot.json
 9c5d30f25a130d591b924c50e5c83e3b787c2758 data/create/recipes/crafting/kinetics/empty_blaze_burner.json
 860f9c4aa677d2354bcf5fe3e6d28cc7cf56dd06 data/create/recipes/crafting/kinetics/encased_belt.json
-e416a453316cc6a2f68795b0ab9c91a842d72510 data/create/recipes/crafting/kinetics/encased_fan.json
+b07496e4ba5bc56a2c5a395b612c68ba21328867 data/create/recipes/crafting/kinetics/encased_fan.json
 0dd0cc11eaa6789fc612af3231ed247893852178 data/create/recipes/crafting/kinetics/filter.json
 30ae02825e54c0cc07be8f4decf9d432e7d61ba2 data/create/recipes/crafting/kinetics/fluid_pipe.json
 86ad4d2820e8e2b01de8d977af7796119dfb7430 data/create/recipes/crafting/kinetics/fluid_tank.json
@@ -2644,6 +2645,7 @@ b7fa20d10c0e0e7270b1c0d6f3881b8e25b39bea data/create/recipes/crafting/kinetics/g
 63edaccace961a65aa7bd406d36894c7ca4816b8 data/create/recipes/crafting/kinetics/green_valve_handle_from_other_valve_handle.json
 9f08bdaeec88e04a43c2dc103869f9648deee079 data/create/recipes/crafting/kinetics/hand_crank.json
 d10639b0c3999481531fe0a9383a1bb4af60225e data/create/recipes/crafting/kinetics/hose_pulley.json
+f4fbb11ef55f3431bd387f3f6f258513bfbc8011 data/create/recipes/crafting/kinetics/item_drain.json
 237541c1c318b8426734c1c43be31fbd01413d39 data/create/recipes/crafting/kinetics/large_cogwheel.json
 a33e3301fc6d3a446e61a1c4b8a93aff079baeba data/create/recipes/crafting/kinetics/light_blue_seat.json
 958bb5d3aeb8d8e5dbf5d97cf5fd9ff5151575dc data/create/recipes/crafting/kinetics/light_blue_seat_from_other_seat.json

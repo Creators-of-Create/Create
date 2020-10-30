@@ -38,7 +38,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 
 public class SpoutTileEntity extends SmartTileEntity {
-	private static final boolean IS_TIC_LOADED = ModList.get().isLoaded("tconstruct");
+	private static final boolean IS_TIC_LOADED = ModList.get()
+		.isLoaded("tconstruct");
 	private static final Class<?> CASTING_FLUID_HANDLER_CLASS;
 	static {
 		Class<?> testClass;
@@ -51,12 +52,12 @@ public class SpoutTileEntity extends SmartTileEntity {
 	}
 
 	public static final int FILLING_TIME = 20;
-	
+
 	protected BeltProcessingBehaviour beltProcessing;
 	protected int processingTicks;
 	protected boolean sendSplash;
 	private boolean shouldAnimate = true;
-	
+
 	SmartFluidTankBehaviour tank;
 
 	public SpoutTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -73,11 +74,11 @@ public class SpoutTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		tank = SmartFluidTankBehaviour.single(this, 1000);
 		behaviours.add(tank);
-		
+
 		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
 			.whileItemHeld(this::whenItemHeld);
 		behaviours.add(beltProcessing);
-		
+
 	}
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
@@ -126,7 +127,8 @@ public class SpoutTileEntity extends SmartTileEntity {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		tank.getPrimaryHandler().setFluid(fluid);
+		tank.getPrimaryHandler()
+			.setFluid(fluid);
 		sendSplash = true;
 		notifyUpdate();
 		return PASS;
@@ -137,7 +139,8 @@ public class SpoutTileEntity extends SmartTileEntity {
 			return;
 		if (world == null)
 			return;
-		IFluidHandler localTank = this.tank.getCapability().orElse(null);
+		IFluidHandler localTank = this.tank.getCapability()
+			.orElse(null);
 		if (localTank == null)
 			return;
 		FluidStack fluid = getCurrentFluidInTank();
@@ -177,20 +180,22 @@ public class SpoutTileEntity extends SmartTileEntity {
 						handler.fill(fillStack, IFluidHandler.FluidAction.EXECUTE);
 					}
 				}
-				tank.getPrimaryHandler().setFluid(fluid);
+				tank.getPrimaryHandler()
+					.setFluid(fluid);
 				this.notifyUpdate();
 			}
 		}
 	}
 
 	private FluidStack getCurrentFluidInTank() {
-		return tank.getPrimaryHandler().getFluid();
+		return tank.getPrimaryHandler()
+			.getFluid();
 	}
 
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		
+
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (sendSplash && clientPacket) {
 			compound.putBoolean("Splash", true);
@@ -205,24 +210,26 @@ public class SpoutTileEntity extends SmartTileEntity {
 		if (!clientPacket)
 			return;
 		if (compound.contains("Splash"))
-			spawnSplash(tank.getPrimaryTank().getRenderedFluid());
+			spawnSplash(tank.getPrimaryTank()
+				.getRenderedFluid());
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
-			return tank.getCapability().cast();
+			return tank.getCapability()
+				.cast();
 		return super.getCapability(cap, side);
 	}
 
-	
 	public void tick() {
 		super.tick();
 		processTicCastBlock();
 		if (processingTicks >= 0)
 			processingTicks--;
 		if (processingTicks >= 8 && world.isRemote && shouldAnimate)
-			spawnProcessingParticles(tank.getPrimaryTank().getRenderedFluid());
+			spawnProcessingParticles(tank.getPrimaryTank()
+				.getRenderedFluid());
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
@@ -255,12 +262,13 @@ public class SpoutTileEntity extends SmartTileEntity {
 			return null;
 		} else {
 			TileEntity te = this.world.getTileEntity(pos);
-			return te != null ? te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).orElse(null) : null;
+			return te != null ? te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction)
+				.orElse(null) : null;
 		}
 	}
 
 	public int getCorrectedProcessingTicks() {
-		if(shouldAnimate)
+		if (shouldAnimate)
 			return processingTicks;
 		return -1;
 	}

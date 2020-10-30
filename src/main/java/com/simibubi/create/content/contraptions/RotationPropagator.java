@@ -9,8 +9,10 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
@@ -123,13 +125,13 @@ public class RotationPropagator {
 	private static float getConveyedSpeed(KineticTileEntity from, KineticTileEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
-		final BlockPos diff = to.getPos()
-			.subtract(from.getPos());
 
 		// Rotation Speed Controller <-> Large Gear
-		if (isLargeCogToSpeedController(stateFrom, stateTo, diff))
+		if (isLargeCogToSpeedController(stateFrom, stateTo, to.getPos()
+			.subtract(from.getPos())))
 			return SpeedControllerTileEntity.getConveyedSpeed(from, to, true);
-		if (isLargeCogToSpeedController(stateTo, stateFrom, diff))
+		if (isLargeCogToSpeedController(stateTo, stateFrom, from.getPos()
+			.subtract(to.getPos())))
 			return SpeedControllerTileEntity.getConveyedSpeed(to, from, false);
 
 		float rotationSpeedModifier = getRotationSpeedModifier(from, to);
@@ -188,7 +190,12 @@ public class RotationPropagator {
 	private static boolean isLargeCogToSpeedController(BlockState from, BlockState to, BlockPos diff) {
 		if (!isLargeCog(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.has(to))
 			return false;
-		if (!diff.equals(BlockPos.ZERO.up()) && !diff.equals(BlockPos.ZERO.down()))
+		if (!diff.equals(BlockPos.ZERO.down()))
+			return false;
+		Axis axis = from.get(CogWheelBlock.AXIS);
+		if (axis.isVertical())
+			return false;
+		if (to.get(SpeedControllerBlock.HORIZONTAL_AXIS) == axis)
 			return false;
 		return true;
 	}
@@ -395,12 +402,12 @@ public class RotationPropagator {
 	public static boolean isConnected(KineticTileEntity from, KineticTileEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
-		final BlockPos diff = to.getPos()
-			.subtract(from.getPos());
 
-		if (isLargeCogToSpeedController(stateFrom, stateTo, diff))
+		if (isLargeCogToSpeedController(stateFrom, stateTo, to.getPos()
+			.subtract(from.getPos())))
 			return true;
-		if (isLargeCogToSpeedController(stateTo, stateFrom, diff))
+		if (isLargeCogToSpeedController(stateTo, stateFrom, from.getPos()
+			.subtract(to.getPos())))
 			return true;
 		return getRotationSpeedModifier(from, to) != 0;
 	}

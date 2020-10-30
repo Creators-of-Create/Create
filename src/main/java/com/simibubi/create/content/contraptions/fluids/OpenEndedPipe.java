@@ -52,7 +52,6 @@ public class OpenEndedPipe {
 			.isReplaceable())
 			return;
 
-		// TODO different pipe end types
 		if (pulling) {
 			if (fluidState.isEmpty() || !fluidState.isSource())
 				return;

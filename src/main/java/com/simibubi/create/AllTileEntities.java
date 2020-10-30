@@ -50,6 +50,8 @@ import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyRenderer;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutRenderer;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
@@ -255,6 +257,12 @@ public class AllTileEntities {
 		.tileEntity("spout", SpoutTileEntity::new)
 		.validBlocks(AllBlocks.SPOUT)
 		.renderer(() -> SpoutRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<ItemDrainTileEntity> ITEM_DRAIN = Create.registrate()
+		.tileEntity("item_drain", ItemDrainTileEntity::new)
+		.validBlocks(AllBlocks.ITEM_DRAIN)
+		.renderer(() -> ItemDrainRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = Create.registrate()
