@@ -8,11 +8,9 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,18 +25,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.fluids.FluidStack;
 
 public class GuiGameElement {
 
@@ -212,36 +206,13 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			for (RenderType type : RenderType.getBlockLayers()) {
-				if (!RenderTypeLookup.canRenderInLayer(blockState.getFluidState(), type))
-					continue;
-
-				RenderSystem.pushMatrix();
-				RenderHelper.disableStandardItemLighting();
-
-				ClientWorld world = Minecraft.getInstance().world;
-				if (renderWorld == null || renderWorld.getWorld() != world)
-					renderWorld = new FluidRenderWorld(world);
-				
-				for (Direction d : Iterate.directions) {
-					vb = buffer.getBuffer(type);
-					if (d.getAxisDirection() == AxisDirection.POSITIVE)
-						continue;
-					
-					RenderSystem.pushMatrix();
-					RenderSystem.translated(.5, .5, .5);
-					RenderSystem.rotatef(AngleHelper.horizontalAngle(d), 0, 1, 0);
-					RenderSystem.rotatef(AngleHelper.verticalAngle(d) - 90, 0, 0, 1);
-					RenderSystem.translated(-.5, -.5, -.5);
-					blockRenderer.renderFluid(new BlockPos(0, 1, 0), renderWorld, vb, blockState.getFluidState());
-					buffer.draw(type);
-					RenderSystem.popMatrix();
-				}
-				
-				RenderHelper.enable();
-				RenderSystem.popMatrix();
-				break;
-			}
+			RenderSystem.pushMatrix();
+			RenderHelper.disableStandardItemLighting();
+			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
+				.getFluid(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xf000f0, true);
+			buffer.draw(RenderType.getTranslucent());
+			RenderHelper.enable();
+			RenderSystem.popMatrix();
 		}
 	}
 
@@ -271,29 +242,12 @@ public class GuiGameElement {
 			transform();
 			RenderSystem.scaled(1, -1, 1);
 			RenderSystem.translated(0, 0, -75);
-			Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(stack, 0, 0);
+			Minecraft.getInstance()
+				.getItemRenderer()
+				.renderItemIntoGUI(stack, 0, 0);
 			cleanUp();
 		}
 
 	}
 
-	private static FluidRenderWorld renderWorld;
-
-	private static class FluidRenderWorld extends WrappedWorld {
-
-		public FluidRenderWorld(World world) {
-			super(world);
-		}
-
-		@Override
-		public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
-			return 15;
-		}
-
-		@Override
-		public BlockState getBlockState(BlockPos pos) {
-			return Blocks.AIR.getDefaultState();
-		}
-
-	}
 }

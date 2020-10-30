@@ -492,6 +492,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("SCS")
 				.patternLine(" I ")),
 
+		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedByTag(I::copper)
+			.viaShaped(b -> b
+				.key('S', I.shaft())
+				.key('P', AllBlocks.FLUID_PIPE.get())
+				.key('B', I.copperCasing())
+				.key('C', Items.DRIED_KELP)
+				.key('I', I.copperSheet())
+				.patternLine(" B ")
+				.patternLine("SCP")
+				.patternLine(" I ")),
+
 		EMPTY_BLAZE_BURNER = create(AllItems.EMPTY_BLAZE_BURNER).unlockedByTag(I::iron)
 			.viaShaped(b -> b.key('A', Blocks.IRON_BARS)
 				.key('I', I.ironSheet())

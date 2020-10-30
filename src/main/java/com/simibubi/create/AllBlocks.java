@@ -65,6 +65,8 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableBl
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeAttachmentModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
@@ -548,15 +550,47 @@ public class AllBlocks {
 		}
 	}
 
-	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
+	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(Block.Properties::nonOpaque)
 		.blockstate(new FluidTankGenerator()::generate)
-		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
+		.onRegister(CreateRegistrate
+			.blockModel(() -> m -> new FluidTankModel(m, AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING)))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item(FluidTankItem::new)
 		.model(AssetLookup.<FluidTankItem>customItemModel("_", "block_single_window"))
 		.build()
+		.register();
+
+	public static final BlockEntry<FluidTankBlock> CREATIVE_FLUID_TANK =
+		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(Block.Properties::nonOpaque)
+			.blockstate(new FluidTankGenerator("creative_")::generate)
+			.onRegister(CreateRegistrate.blockModel(
+				() -> m -> new FluidTankModel(m, AllSpriteShifts.CREATIVE_FLUID_TANK, AllSpriteShifts.CREATIVE_CASING)))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.item(FluidTankItem::new)
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/fluid_tank/block_single_window"))
+				.texture("5", p.modLoc("block/creative_fluid_tank_window_single"))
+				.texture("1", p.modLoc("block/creative_fluid_tank"))
+				.texture("0", p.modLoc("block/creative_casing")))
+			.build()
+			.register();
+
+	public static final BlockEntry<HosePulleyBlock> HOSE_PULLEY = REGISTRATE.block("hose_pulley", HosePulleyBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.horizontalBlockProvider(true))
+		.transform(StressConfigDefaults.setImpact(4.0))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<ItemDrainBlock> ITEM_DRAIN = REGISTRATE.block("item_drain", ItemDrainBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
+		.simpleItem()
 		.register();
 
 	public static final BlockEntry<SpoutBlock> SPOUT = REGISTRATE.block("spout", SpoutBlock::new)

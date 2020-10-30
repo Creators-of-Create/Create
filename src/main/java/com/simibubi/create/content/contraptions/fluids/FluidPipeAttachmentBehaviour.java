@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -24,7 +25,8 @@ public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 			.getAxis() == direction.getAxis())
 			return AttachmentTypes.NONE;
 
-		if (FluidPropagator.hasFluidCapability(facingState, world, offsetPos, direction))
+		if (FluidPropagator.hasFluidCapability(facingState, world, offsetPos, direction)
+			&& !AllBlocks.HOSE_PULLEY.has(facingState))
 			return AttachmentTypes.DRAIN;
 
 		return AttachmentTypes.RIM;

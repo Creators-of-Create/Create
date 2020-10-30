@@ -42,6 +42,9 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		FluidTank tank = te.tankInventory;
 		FluidStack fluidStack = tank.getFluid();
 
+		if (fluidStack.isEmpty())
+			return;
+		
 		boolean top = fluidStack.getFluid()
 			.getAttributes()
 			.isLighterThanAir();

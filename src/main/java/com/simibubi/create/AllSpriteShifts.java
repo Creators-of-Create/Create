@@ -42,7 +42,8 @@ public class AllSpriteShifts {
 		BRASS_CASING = omni("brass_casing"),
 		COPPER_CASING = omni("copper_casing"),
 		SHADOW_STEEL_CASING = omni("shadow_steel_casing"),
-		REFINED_RADIANCE_CASING = omni("refined_radiance_casing");
+		REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
+		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
 	
 	public static final CTSpriteShiftEntry 
 		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
@@ -50,7 +51,8 @@ public class AllSpriteShifts {
 	
 	public static final CTSpriteShiftEntry 
 		BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank");
+		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank"),
+		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
 
 	public static final SpriteShiftEntry 
 		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),

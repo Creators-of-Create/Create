@@ -68,8 +68,18 @@ public class AllBlockPartials {
 		FURNACE_GENERATOR_FRAME = get("furnace_engine/frame"), CUCKOO_MINUTE_HAND = get("cuckoo_clock/minute_hand"),
 		CUCKOO_HOUR_HAND = get("cuckoo_clock/hour_hand"), CUCKOO_LEFT_DOOR = get("cuckoo_clock/left_door"),
 		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), CUCKOO_PIG = get("cuckoo_clock/pig"),
-		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), ROPE_COIL = get("rope_pulley/rope_coil"),
-		ROPE_HALF = get("rope_pulley/rope_half"), ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
+		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), 
+		
+		ROPE_COIL = get("rope_pulley/rope_coil"),
+		ROPE_HALF = get("rope_pulley/rope_half"), 
+		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
+		
+		HOSE_COIL = get("hose_pulley/rope_coil"),
+		HOSE = get("hose_pulley/rope"),
+		HOSE_MAGNET = get("hose_pulley/pulley_magnet"),
+		HOSE_HALF = get("hose_pulley/rope_half"), 
+		HOSE_HALF_MAGNET = get("hose_pulley/rope_half_magnet"),
+		
 		MILLSTONE_COG = get("millstone/inner"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),

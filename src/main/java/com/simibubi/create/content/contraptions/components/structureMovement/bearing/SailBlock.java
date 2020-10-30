@@ -72,8 +72,11 @@ public class SailBlock extends ProperDirectionalBlock {
 			BlockPos offsetPos = pos.offset(offset);
 			if (!world.isRemote && world.getBlockState(offsetPos)
 				.getMaterial()
-				.isReplaceable())
+				.isReplaceable()) {
 				world.setBlockState(offsetPos, blockState);
+				if (!player.isCreative())
+					heldItem.shrink(1);
+			}
 			return ActionResultType.SUCCESS;
 		}
 

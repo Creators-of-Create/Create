@@ -57,7 +57,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 
 	public FluidTankTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
-		tankInventory = new SmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
+		tankInventory = createInventory();
 		fluidCapability = LazyOptional.of(() -> tankInventory);
 		forceFluidLevelUpdate = true;
 		updateConnectivity = false;
@@ -65,6 +65,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		height = 1;
 		width = 1;
 		refreshCapability();
+	}
+
+	protected SmartFluidTank createInventory() {
+		return new SmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
 	}
 
 	protected void updateConnectivity() {
@@ -117,7 +121,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 					BlockPos pos = this.pos.add(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.tankAt(world, pos);
+					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 					if (tankAt == null)
 						continue;
 					if (tankAt.luminosity == actualLuminosity)
@@ -279,12 +283,12 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		
+
 		BlockPos controllerBefore = controller;
 		int prevSize = width;
 		int prevHeight = height;
 		int prevLum = luminosity;
-		
+
 		updateConnectivity = compound.contains("Uninitialized");
 		luminosity = compound.getInt("Luminosity");
 		controller = null;
@@ -305,10 +309,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
 			fluidLevel = new InterpolatedChasingValue().start(getFillState())
 				.withSpeed(1 / 2f);
-		
+
 		if (!clientPacket)
 			return;
-		
+
 		boolean changeOfController =
 			controllerBefore == null ? controller != null : !controllerBefore.equals(controller);
 		if (changeOfController || prevSize != width || prevHeight != height) {
@@ -325,9 +329,9 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		}
 		if (luminosity != prevLum && hasWorld())
 			world.getChunkProvider()
-			.getLightManager()
-			.checkBlock(pos);
-		
+				.getLightManager()
+				.checkBlock(pos);
+
 		if (compound.contains("LazySync"))
 			fluidLevel.withSpeed(compound.contains("LazySync") ? 1 / 8f : 1 / 2f);
 	}
@@ -350,7 +354,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		}
 		compound.putInt("Luminosity", luminosity);
 		super.write(compound, clientPacket);
-		
+
 		if (!clientPacket)
 			return;
 		if (forceFluidLevelUpdate)
@@ -365,7 +369,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if (!fluidCapability.isPresent())
 			refreshCapability();
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) 
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return fluidCapability.cast();
 		return super.getCapability(cap, side);
 	}
