@@ -44,7 +44,7 @@ public class FluidTankItem extends BlockItem {
 
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.tankAt(world, placedOnPos);
+		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
@@ -60,7 +60,7 @@ public class FluidTankItem extends BlockItem {
 			.down()
 			: controllerTE.getPos()
 				.up(controllerTE.height);
-			
+
 		if (startPos.getY() != pos.getY())
 			return;
 
@@ -87,9 +87,11 @@ public class FluidTankItem extends BlockItem {
 				if (FluidTankBlock.isTank(blockState))
 					continue;
 				BlockItemUseContext context = BlockItemUseContext.func_221536_a(ctx, offsetPos, face);
-				player.getPersistentData().putBoolean("SilenceTankSound", true);
+				player.getPersistentData()
+					.putBoolean("SilenceTankSound", true);
 				super.tryPlace(context);
-				player.getPersistentData().remove("SilenceTankSound");
+				player.getPersistentData()
+					.remove("SilenceTankSound");
 			}
 		}
 	}

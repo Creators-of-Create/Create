@@ -7,11 +7,10 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FireBlock;
@@ -22,21 +21,16 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GuiGameElement {
@@ -236,36 +230,13 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			for (RenderType type : RenderType.getBlockLayers()) {
-				if (!RenderTypeLookup.canRenderInLayer(blockState.getFluidState(), type))
-					continue;
-
-				ms.push();
-				RenderHelper.disableStandardItemLighting();
-
-				ClientWorld world = Minecraft.getInstance().world;
-				if (renderWorld == null || renderWorld.getWrappedWorld() != world)
-					renderWorld = new FluidRenderWorld(world);
-
-				for (Direction d : Iterate.directions) {
-					vb = buffer.getBuffer(type);
-					if (d.getAxisDirection() == AxisDirection.POSITIVE)
-						continue;
-
-					ms.push();
-					ms.translate(.5, .5, .5);
-					ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(d)));
-					ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(AngleHelper.verticalAngle(d) - 90));
-					ms.translate(-.5, -.5, -.5);
-					blockRenderer.renderFluid(new BlockPos(0, 1, 0), renderWorld, vb, blockState.getFluidState());
-					buffer.draw(type);
-					ms.pop();
-				}
-
-				RenderHelper.enable();
-				ms.pop();
-				break;
-			}
+			RenderSystem.pushMatrix();
+			RenderHelper.disableStandardItemLighting();
+			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
+				.getFluid(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xf000f0, true);
+			buffer.draw(RenderType.getTranslucent());
+			RenderHelper.enable();
+			RenderSystem.popMatrix();
 		}
 	}
 
@@ -297,6 +268,18 @@ public class GuiGameElement {
 			renderItemIntoGUI(matrixStack, stack);
 			cleanUpMatrix(matrixStack);
 		}
+		/*
+		public void render() {
+			prepare();
+			transform();
+			RenderSystem.scaled(1, -1, 1);
+			RenderSystem.translated(0, 0, -75);
+			Minecraft.getInstance()
+				.getItemRenderer()
+				.renderItemIntoGUI(stack, 0, 0);
+			cleanUp();
+			}
+		 */
 
 		public static void renderItemIntoGUI(MatrixStack matrixStack, ItemStack stack) {
 			ItemRenderer renderer = Minecraft.getInstance()
@@ -340,24 +323,4 @@ public class GuiGameElement {
 
 	}
 
-	private static FluidRenderWorld renderWorld;
-
-	private static class FluidRenderWorld extends WrappedWorld {
-
-		public FluidRenderWorld(World world) {
-			super(world);
-		}
-
-		@Override
-		public int getLightLevel(@Nullable LightType p_226658_1_, @Nullable BlockPos p_226658_2_) {
-			return 15;
-		}
-
-		@Override
-		@Nonnull
-		public BlockState getBlockState(BlockPos pos) {
-			return Blocks.AIR.getDefaultState();
-		}
-
-	}
 }

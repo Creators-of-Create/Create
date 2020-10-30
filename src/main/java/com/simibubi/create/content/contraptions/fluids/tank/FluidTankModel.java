@@ -6,9 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTModel;
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -23,11 +22,9 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class FluidTankModel extends CTModel {
 
 	protected static ModelProperty<CullData> CULL_PROPERTY = new ModelProperty<>();
-	static ConnectedTextureBehaviour CT_BEHAVIOUR =
-		new FluidTankCTBehaviour(AllSpriteShifts.FLUID_TANK, AllSpriteShifts.COPPER_CASING);
 
-	public FluidTankModel(IBakedModel originalModel) {
-		super(originalModel, CT_BEHAVIOUR);
+	public FluidTankModel(IBakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top) {
+		super(originalModel, new FluidTankCTBehaviour(side, top));
 	}
 
 	@Override

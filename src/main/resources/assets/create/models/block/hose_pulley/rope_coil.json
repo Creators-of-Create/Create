@@ -1,0 +1,49 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"5": "create:block/hose_pulley_rope"
+	},
+	"elements": [
+		{
+			"name": "coil",
+			"from": [4, 4, 2],
+			"to": [12, 12, 14],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, -10]},
+			"faces": {
+				"east": {"uv": [2, 1, 14, 9], "texture": "#5"},
+				"west": {"uv": [2, 1, 14, 9], "rotation": 180, "texture": "#5"},
+				"up": {"uv": [2, 1, 14, 9], "rotation": 270, "texture": "#5"},
+				"down": {"uv": [2, 1, 14, 9], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"name": "coil",
+			"from": [3.5, 3.5, 3],
+			"to": [12.5, 12.5, 7],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, -10]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#5"},
+				"east": {"uv": [0, 3, 4, 12], "rotation": 180, "texture": "#5"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#5"},
+				"west": {"uv": [0, 3, 4, 12], "texture": "#5"},
+				"up": {"uv": [0, 3, 4, 12], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 3, 4, 12], "rotation": 270, "texture": "#5"}
+			}
+		},
+		{
+			"name": "coil",
+			"from": [3.5, 3.5, 9],
+			"to": [12.5, 12.5, 13],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, -4]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#5"},
+				"east": {"uv": [0, 3, 4, 12], "rotation": 180, "texture": "#5"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#5"},
+				"west": {"uv": [0, 3, 4, 12], "texture": "#5"},
+				"up": {"uv": [0, 3, 4, 12], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 3, 4, 12], "rotation": 270, "texture": "#5"}
+			}
+		}
+	]
+}
