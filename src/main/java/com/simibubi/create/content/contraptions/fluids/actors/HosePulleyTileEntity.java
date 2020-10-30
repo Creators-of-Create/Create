@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -137,10 +138,10 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		offset.readNBT(compound.getCompound("Offset"), clientPacket);
 		internalTank.readFromNBT(compound.getCompound("Tank"));
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

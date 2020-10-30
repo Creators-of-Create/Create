@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tags.FluidTags;
@@ -25,7 +25,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
@@ -101,11 +101,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	protected void scheduleUpdatesInAffectedArea() {
 		World world = getWorld();
-		affectedArea = new MutableBoundingBox(affectedArea.minX - 1, affectedArea.minY - 1, affectedArea.minZ - 1,
-			affectedArea.maxX + 1, affectedArea.maxY + 1, affectedArea.maxZ + 1);
-		BlockPos.func_229383_a_(affectedArea)
+		BlockPos.getAllInBox(new BlockPos(affectedArea.minX - 1, affectedArea.minY - 1, affectedArea.minZ - 1), new BlockPos(affectedArea.maxX + 1, affectedArea.maxY + 1, affectedArea.maxZ + 1))
 			.forEach(pos -> {
-				IFluidState nextFluidState = world.getFluidState(pos);
+				FluidState nextFluidState = world.getFluidState(pos);
 				if (nextFluidState.isEmpty())
 					return;
 				world.getPendingFluidTicks()
@@ -115,7 +113,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected int comparePositions(BlockPosEntry e1, BlockPosEntry e2) {
-		Vec3d centerOfRoot = VecHelper.getCenterOf(rootPos);
+		Vector3d centerOfRoot = VecHelper.getCenterOf(rootPos);
 		BlockPos pos2 = e2.pos;
 		BlockPos pos1 = e1.pos;
 		if (pos1.getY() != pos2.getY())
@@ -144,7 +142,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				continue;
 			visited.add(currentPos);
 
-			IFluidState fluidState = world.getFluidState(currentPos);
+			FluidState fluidState = world.getFluidState(currentPos);
 			if (fluidState.isEmpty())
 				continue;
 
@@ -166,7 +164,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				if (offsetPos.distanceSq(rootPos) > maxRangeSq)
 					continue;
 
-				IFluidState nextFluidState = world.getFluidState(offsetPos);
+				FluidState nextFluidState = world.getFluidState(offsetPos);
 				if (nextFluidState.isEmpty())
 					continue;
 				Fluid nextFluid = nextFluidState.getFluid();

@@ -84,7 +84,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			BlockState emptied = blockState;
 			Fluid fluid = Fluids.EMPTY;
 
-			if (blockState.has(BlockStateProperties.WATERLOGGED) && blockState.get(BlockStateProperties.WATERLOGGED)) {
+			if (blockState.contains(BlockStateProperties.WATERLOGGED) && blockState.get(BlockStateProperties.WATERLOGGED)) {
 				emptied = blockState.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false));
 				fluid = Fluids.WATER;
 			} else if (blockState.getBlock() instanceof FlowingFluidBlock) {
@@ -192,7 +192,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected FluidBlockType canPullFluidsFrom(BlockState blockState, BlockPos pos) {
-		if (blockState.has(BlockStateProperties.WATERLOGGED) && blockState.get(BlockStateProperties.WATERLOGGED))
+		if (blockState.contains(BlockStateProperties.WATERLOGGED) && blockState.get(BlockStateProperties.WATERLOGGED))
 			return FluidBlockType.SOURCE;
 		if (blockState.getBlock() instanceof FlowingFluidBlock)
 			return blockState.get(FlowingFluidBlock.LEVEL) == 0 ? FluidBlockType.SOURCE : FluidBlockType.FLOWING;

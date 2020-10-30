@@ -97,8 +97,7 @@ public enum AllPackets {
 
 	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
 		channel.send(
-			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getDimension()
-				.getType())),
+			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getRegistryKey())),
 			message);
 	}
 

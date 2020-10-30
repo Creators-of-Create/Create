@@ -15,8 +15,8 @@ import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -113,7 +113,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxBlocks = maxBlocks();
 
 		if (infinite) {
-			IFluidState fluidState = world.getFluidState(rootPos);
+			FluidState fluidState = world.getFluidState(rootPos);
 			boolean equivalentTo = fluidState.getFluid()
 				.isEquivalentTo(fluid);
 			if (!equivalentTo)
@@ -153,7 +153,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 					playEffect(world, currentPos, fluid, false);
 
 					BlockState blockState = world.getBlockState(currentPos);
-					if (blockState.has(BlockStateProperties.WATERLOGGED) && fluid.isEquivalentTo(Fluids.WATER)) {
+					if (blockState.contains(BlockStateProperties.WATERLOGGED) && fluid.isEquivalentTo(Fluids.WATER)) {
 						world.setBlockState(currentPos, blockState.with(BlockStateProperties.WATERLOGGED, true),
 							2 | 16);
 					} else {
@@ -220,9 +220,9 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 	protected SpaceType getAtPos(World world, BlockPos pos, Fluid toFill) {
 		BlockState blockState = world.getBlockState(pos);
-		IFluidState fluidState = blockState.getFluidState();
+		FluidState fluidState = blockState.getFluidState();
 
-		if (blockState.has(BlockStateProperties.WATERLOGGED))
+		if (blockState.contains(BlockStateProperties.WATERLOGGED))
 			return toFill.isEquivalentTo(Fluids.WATER)
 				? blockState.get(BlockStateProperties.WATERLOGGED) ? SpaceType.FILLED : SpaceType.FILLABLE
 				: SpaceType.BLOCKING;
