@@ -147,9 +147,9 @@ public class SpoutTileEntity extends SmartTileEntity {
 	
 	public void tick() {
 		super.tick();
-		if (processingTicks >= 0)
-			processingTicks--;
 		if (processingTicks >= 8 && world.isRemote)
+			if (processingTicks >= 0)
+				processingTicks--;
 			spawnProcessingParticles(tank.getPrimaryTank().getRenderedFluid());
 	}
 

@@ -86,7 +86,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		ms.pop();
 	}
 
-	protected void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack itemStack,
+	public static void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack itemStack,
 		int angle, Random r, Vec3d itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();

@@ -5,7 +5,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.foundation.utility.DyeHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -16,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
@@ -85,10 +88,24 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player,
-		Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult p_225533_6_) {
 		if (player.isSneaking())
 			return ActionResultType.PASS;
+
+		ItemStack heldItem = player.getHeldItem(hand);
+		for (DyeColor color : DyeColor.values()) {
+			if (!heldItem.getItem()
+				.isIn(DyeHelper.getTagOfDye(color)))
+				continue;
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
+
+			BlockState newState = AllBlocks.SEATS[color.ordinal()].getDefaultState();
+			if (newState != state)
+				world.setBlockState(pos, newState);
+			return ActionResultType.SUCCESS;
+		}
 
 		List<SeatEntity> seats = world.getEntitiesWithinAABB(SeatEntity.class, new AxisAlignedBB(pos));
 		if (!seats.isEmpty()) {

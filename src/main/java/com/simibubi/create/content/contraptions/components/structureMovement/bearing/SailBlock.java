@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
@@ -20,6 +22,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -80,6 +83,12 @@ public class SailBlock extends ProperDirectionalBlock {
 			return ActionResultType.SUCCESS;
 		}
 
+		if (heldItem.getItem() instanceof ShearsItem) {
+			if (!world.isRemote)
+				applyDye(state, world, pos, null);
+			return ActionResultType.SUCCESS;
+		}
+
 		if (frame)
 			return ActionResultType.PASS;
 
@@ -95,9 +104,10 @@ public class SailBlock extends ProperDirectionalBlock {
 		return ActionResultType.PASS;
 	}
 
-	protected void applyDye(BlockState state, World world, BlockPos pos, DyeColor color) {
-		BlockState newState = AllBlocks.DYED_SAILS[color.ordinal()].getDefaultState()
-			.with(FACING, state.get(FACING));
+	protected void applyDye(BlockState state, World world, BlockPos pos, @Nullable DyeColor color) {
+		BlockState newState =
+			(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS[color.ordinal()]).getDefaultState()
+				.with(FACING, state.get(FACING));
 
 		// Dye the block itself
 		if (state != newState) {
@@ -142,7 +152,7 @@ public class SailBlock extends ProperDirectionalBlock {
 					continue;
 				BlockState adjacentState = world.getBlockState(offset);
 				Block block = adjacentState.getBlock();
-				if (!(block instanceof SailBlock) || ((SailBlock) block).frame)
+				if (!(block instanceof SailBlock) || ((SailBlock) block).frame && color != null)
 					continue;
 				if (state != adjacentState)
 					world.setBlockState(offset, newState);
@@ -165,13 +175,14 @@ public class SailBlock extends ProperDirectionalBlock {
 			return AllShapes.SAIL_FRAME_COLLISION.get(state.get(FACING));
 		return getShape(state, p_220071_2_, p_220071_3_, p_220071_4_);
 	}
-	
+
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 		PlayerEntity player) {
 		ItemStack pickBlock = super.getPickBlock(state, target, world, pos, player);
 		if (pickBlock.isEmpty())
-			return AllBlocks.SAIL.get().getPickBlock(state, target, world, pos, player);
+			return AllBlocks.SAIL.get()
+				.getPickBlock(state, target, world, pos, player);
 		return pickBlock;
 	}
 

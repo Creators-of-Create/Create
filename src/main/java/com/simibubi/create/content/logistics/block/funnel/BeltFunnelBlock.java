@@ -6,6 +6,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -107,7 +109,7 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 	public static BlockState updateShape(BlockState state, IBlockReader world, BlockPos pos) {
 		state = state.with(SHAPE, Shape.RETRACTED);
 		Direction horizontalFacing = state.get(HORIZONTAL_FACING);
-		
+
 		BlockState below = world.getBlockState(pos.down());
 		if (below.getBlock() instanceof BeltBlock && below.get(BeltBlock.HORIZONTAL_FACING)
 			.getAxis() != horizontalFacing.getAxis())
@@ -127,6 +129,17 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 				.getOpposite())
 			return true;
 		return false;
+	}
+
+	@Override
+	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+		boolean p_196243_5_) {
+		if (p_196243_1_.hasTileEntity()
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !FunnelBlock.isFunnel(p_196243_4_)
+				|| !p_196243_4_.hasTileEntity())) {
+			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
+			p_196243_2_.removeTileEntity(p_196243_3_);
+		}
 	}
 
 	@Override

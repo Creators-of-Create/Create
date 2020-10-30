@@ -370,13 +370,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		ENCASED_FAN = create(AllBlocks.ENCASED_FAN).unlockedByTag(I::ironSheet)
 			.viaShaped(b -> b.key('S', I.shaft())
-				.key('A', I.andesite())
-				.key('R', ItemTags.PLANKS)
-				.key('B', Items.IRON_BARS)
+				.key('A', I.andesiteCasing())
+				.key('R', I.cog())
 				.key('P', AllItems.PROPELLER.get())
 				.patternLine(" S ")
 				.patternLine("RAR")
-				.patternLine("BPB")),
+				.patternLine(" P ")),
 
 		CUCKOO_CLOCK = create(AllBlocks.CUCKOO_CLOCK).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', ItemTags.PLANKS)
@@ -456,6 +455,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('P', Items.DRIED_KELP)
 				.key('S', I.copperNugget())
 				.patternLine("T")
+				.patternLine("P")
+				.patternLine("S")),
+			
+		ITEM_DRAIN = create(AllBlocks.ITEM_DRAIN).unlockedBy(I::copperCasing)
+			.viaShaped(b -> b
+				.key('P', Blocks.IRON_BARS)
+				.key('S', I.copperCasing())
 				.patternLine("P")
 				.patternLine("S")),
 
