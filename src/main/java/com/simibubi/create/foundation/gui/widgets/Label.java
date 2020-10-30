@@ -1,10 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.util.Objects;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.Create;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -41,7 +38,6 @@ public class Label extends AbstractSimiWidget {
 
 	public Label withSuffix(String s) {
 		suffix = s;
-		Create.logger.info("Suffix is now " + Objects.toString(s));
 		return this;
 	}
 

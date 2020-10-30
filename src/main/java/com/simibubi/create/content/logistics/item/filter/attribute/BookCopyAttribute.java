@@ -1,13 +1,13 @@
 package com.simibubi.create.content.logistics.item.filter.attribute;
 
-import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.WrittenBookItem;
-import net.minecraft.nbt.CompoundNBT;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.WrittenBookItem;
+import net.minecraft.nbt.CompoundNBT;
 
 public class BookCopyAttribute implements ItemAttribute {
     int generation;

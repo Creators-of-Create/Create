@@ -1,14 +1,12 @@
 package com.simibubi.create.content.logistics.item.filter.attribute;
 
-import com.google.gson.JsonParseException;
-import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.WrittenBookItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 public class BookAuthorAttribute implements ItemAttribute {
     String author;

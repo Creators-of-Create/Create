@@ -1,5 +1,9 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.NameSpace.FORGE;
+import static com.simibubi.create.AllTags.NameSpace.MOD;
+import static com.simibubi.create.AllTags.NameSpace.TIC;
+
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -22,8 +26,6 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.ModList;
-
-import static com.simibubi.create.AllTags.NameSpace.*;
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()

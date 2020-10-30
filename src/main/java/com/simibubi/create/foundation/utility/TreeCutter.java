@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Predicates;
-
 import com.simibubi.create.AllTags;
+
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

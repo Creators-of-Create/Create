@@ -20,7 +20,7 @@ public class FluidTankItem extends BlockItem {
 	@Override
 	public ActionResultType tryPlace(BlockItemUseContext ctx) {
 		ActionResultType initialResult = super.tryPlace(ctx);
-		if (initialResult != ActionResultType.SUCCESS)
+		if (!initialResult.isAccepted())
 			return initialResult;
 		tryMultiPlace(ctx);
 		return initialResult;

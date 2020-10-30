@@ -47,7 +47,7 @@ public class FluidTankGenerator extends SpecialBlockStateGen {
 		else if (bottom)
 			shapeName = "bottom";
 
-		String modelName = shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.name());
+		String modelName = shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.getString());
 
 		if (!prefix.isEmpty())
 			return prov.models()

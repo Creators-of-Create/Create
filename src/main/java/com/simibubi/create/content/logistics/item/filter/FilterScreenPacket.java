@@ -1,13 +1,14 @@
 package com.simibubi.create.content.logistics.item.filter;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
-
-import java.util.function.Supplier;
 
 public class FilterScreenPacket extends SimplePacketBase {
 

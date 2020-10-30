@@ -1,5 +1,12 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
+import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_CRATE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.ADJUSTABLE_DOUBLE_CRATE;
+import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
@@ -10,16 +17,12 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.simibubi.create.foundation.gui.AllGuiTextures.*;
 
 public class AdjustableCrateScreen extends AbstractSimiContainerScreen<AdjustableCrateContainer> {
 
