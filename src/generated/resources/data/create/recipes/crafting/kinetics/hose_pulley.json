@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "SCP",
+    " I "
+  ],
+  "key": {
+    "S": {
+      "item": "create:shaft"
+    },
+    "P": {
+      "item": "create:fluid_pipe"
+    },
+    "B": {
+      "item": "create:copper_casing"
+    },
+    "C": {
+      "item": "minecraft:dried_kelp"
+    },
+    "I": {
+      "tag": "forge:plates/copper"
+    }
+  },
+  "result": {
+    "item": "create:hose_pulley"
+  }
+}

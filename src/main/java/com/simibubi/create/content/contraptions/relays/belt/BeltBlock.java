@@ -171,7 +171,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		}
 
 		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
-		if (belt == null || belt.getSpeed() == 0)
+		if (belt == null)
 			return;
 		if (entityIn instanceof ItemEntity && entityIn.isAlive()) {
 			if (worldIn.isRemote)

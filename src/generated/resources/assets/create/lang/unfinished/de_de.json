@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1021",
+	"_": "Missing Localizations: 1024",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -61,6 +61,7 @@
 	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.copper_valve_handle": "UNLOCALIZED: Copper Valve Handle",
 	"block.create.creative_crate": "Bauplankanonenmacher",
+	"block.create.creative_fluid_tank": "UNLOCALIZED: Creative Fluid Tank",
 	"block.create.creative_motor": "UNLOCALIZED: Creative Motor",
 	"block.create.crushing_wheel": "Mahlwerkrad",
 	"block.create.crushing_wheel_controller": "UNLOCALIZED: Crushing Wheel Controller",
@@ -179,6 +180,8 @@
 	"block.create.hand_crank": "UNLOCALIZED: Hand Crank",
 	"block.create.horizontal_framed_glass": "UNLOCALIZED: Horizontal Framed Glass",
 	"block.create.horizontal_framed_glass_pane": "UNLOCALIZED: Horizontal Framed Glass Pane",
+	"block.create.hose_pulley": "UNLOCALIZED: Hose Pulley",
+	"block.create.item_drain": "UNLOCALIZED: Item Drain",
 	"block.create.jungle_window": "UNLOCALIZED: Jungle Window",
 	"block.create.jungle_window_pane": "UNLOCALIZED: Jungle Window Pane",
 	"block.create.large_cogwheel": "Großes Zahnrad",

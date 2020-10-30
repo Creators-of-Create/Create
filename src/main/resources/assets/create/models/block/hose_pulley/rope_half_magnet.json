@@ -1,0 +1,101 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"6": "create:block/hose_pulley_magnet",
+		"particle": "create:block/oxidized/copper_block_0"
+	},
+	"elements": [
+		{
+			"name": "rope",
+			"from": [6, 2, 6],
+			"to": [10, 8, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7.75, 13, 8]},
+			"faces": {
+				"north": {"uv": [12, 10, 16, 16], "texture": "#6"},
+				"east": {"uv": [12, 10, 16, 16], "texture": "#6"},
+				"south": {"uv": [12, 10, 16, 16], "texture": "#6"},
+				"west": {"uv": [12, 10, 16, 16], "texture": "#6"},
+				"up": {"uv": [12, 0, 16, 4], "rotation": 90, "texture": "#6"}
+			}
+		},
+		{
+			"name": "drain 1",
+			"from": [4.5, 0, 4.5],
+			"to": [11.5, 2, 11.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6.75, 14, 6]},
+			"faces": {
+				"north": {"uv": [0, 0, 7, 2], "texture": "#6"},
+				"east": {"uv": [0, 0, 7, 2], "texture": "#6"},
+				"south": {"uv": [0, 0, 7, 2], "texture": "#6"},
+				"west": {"uv": [0, 0, 7, 2], "texture": "#6"},
+				"down": {"uv": [0, 2, 7, 9], "texture": "#6"}
+			}
+		},
+		{
+			"name": "drain 2",
+			"from": [4.5, 2, 4.5],
+			"to": [11.5, 3, 11.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6.75, 16, 6]},
+			"faces": {
+				"north": {"uv": [0, 1, 7, 2], "texture": "#6"},
+				"east": {"uv": [0, 1, 7, 2], "texture": "#6"},
+				"south": {"uv": [0, 1, 7, 2], "texture": "#6"},
+				"west": {"uv": [0, 1, 7, 2], "texture": "#6"},
+				"up": {"uv": [0, 2, 7, 9], "rotation": 90, "texture": "#6"},
+				"down": {"uv": [0, 9, 7, 16], "texture": "#6"}
+			}
+		},
+		{
+			"name": "drain 3",
+			"from": [5.5, 2, 5.5],
+			"to": [10.5, 5, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7.75, 16, 7]},
+			"faces": {
+				"north": {"uv": [7, 2, 10, 7], "rotation": 270, "texture": "#6"},
+				"east": {"uv": [7, 2, 10, 7], "rotation": 270, "texture": "#6"},
+				"south": {"uv": [7, 2, 10, 7], "rotation": 270, "texture": "#6"},
+				"west": {"uv": [7, 2, 10, 7], "rotation": 270, "texture": "#6"},
+				"up": {"uv": [1, 3, 6, 8], "rotation": 90, "texture": "#6"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "rope_half_magnet",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

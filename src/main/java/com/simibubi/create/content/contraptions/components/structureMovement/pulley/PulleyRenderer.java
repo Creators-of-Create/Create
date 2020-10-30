@@ -20,6 +20,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 public class PulleyRenderer extends KineticTileEntityRenderer {
 
@@ -38,6 +39,7 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		PulleyTileEntity pulley = (PulleyTileEntity) te;
+		World world = te.getWorld();
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
 
@@ -46,7 +48,8 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer magnet = CreateClient.bufferCache.renderBlock(AllBlocks.PULLEY_MAGNET.getDefaultState());
 		SuperByteBuffer rope = CreateClient.bufferCache.renderBlock(AllBlocks.ROPE.getDefaultState());
 
-		boolean moving = pulley.running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
+		boolean running = pulley.running;
+		boolean moving = running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
 		float offset = pulley.getInterpolatedOffset(moving ? partialTicks : 0.5f);
 		
 		if (pulley.movedContraption != null) {
@@ -56,23 +59,28 @@ public class PulleyRenderer extends KineticTileEntityRenderer {
 			offset = (float) -(entityPos - c.getAnchor().getY() - c.initialOffset);
 		}
 		
+		renderPulleyRope(ms, buffer, world, pos, halfMagnet, halfRope, magnet, rope, running, offset);
+	}
+
+	public static void renderPulleyRope(MatrixStack ms, IRenderTypeBuffer buffer, World world, BlockPos pos,
+		SuperByteBuffer halfMagnet, SuperByteBuffer halfRope, SuperByteBuffer magnet, SuperByteBuffer rope,
+		boolean running, float offset) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		
-		if (pulley.running || pulley.offset == 0)
-			renderAt(te.getWorld(), offset > .25f ? magnet : halfMagnet, offset, pos, ms, vb);
+		if (running || offset == 0)
+			renderAt(world, offset > .25f ? magnet : halfMagnet, offset, pos, ms, vb);
 
 		float f = offset % 1;
 		if (offset > .75f && (f < .25f || f > .75f))
-			renderAt(te.getWorld(), halfRope, f > .75f ? f - 1 : f, pos, ms, vb);
+			renderAt(world, halfRope, f > .75f ? f - 1 : f, pos, ms, vb);
 
-		if (!pulley.running)
+		if (!running)
 			return;
 
 		for (int i = 0; i < offset - 1.25f; i++)
-			renderAt(te.getWorld(), rope, offset - i - 1, pos, ms, vb);
+			renderAt(world, rope, offset - i - 1, pos, ms, vb);
 	}
 
-	public void renderAt(IWorld world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
+	public static void renderAt(IWorld world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
 			MatrixStack ms, IVertexBuilder buffer) {
 		BlockPos actualPos = pulleyPos.down((int) offset);
 		int light = WorldRenderer.getLightmapCoordinates(world, world.getBlockState(actualPos), actualPos);

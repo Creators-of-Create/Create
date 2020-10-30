@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/fluid_tank/block_single_window",
+  "textures": {
+    "5": "create:block/creative_fluid_tank_window_single",
+    "1": "create:block/creative_fluid_tank",
+    "0": "create:block/creative_casing"
+  }
+}

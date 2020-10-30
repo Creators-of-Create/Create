@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,18 +28,20 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return this.getDefaultState()
+			.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()
+				.getOpposite());
 	}
 
 	public Direction getPreferredHorizontalFacing(BlockItemUseContext context) {
 		Direction prefferedSide = null;
-		for (Direction side : Direction.values()) {
-			if (side.getAxis().isVertical())
-				continue;
-			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+		for (Direction side : Iterate.horizontalDirections) {
+			BlockState blockState = context.getWorld()
+				.getBlockState(context.getPos()
+					.offset(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
-						blockState, side.getOpposite()))
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
+					.offset(side), blockState, side.getOpposite()))
 					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 						prefferedSide = null;
 						break;

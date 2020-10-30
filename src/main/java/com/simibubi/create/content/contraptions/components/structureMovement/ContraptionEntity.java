@@ -1046,5 +1046,5 @@ public class ContraptionEntity extends Entity implements IEntityAdditionalSpawnD
 	public boolean isOnePlayerRiding() {
 		return false;
 	}
-
+	
 }

@@ -7,11 +7,11 @@ import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,11 +34,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -80,9 +75,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		try {
 			BasinTileEntity te = getTileEntity(worldIn, pos);
 			if (!heldItem.isEmpty()) {
-				if (tryEmptyItemIntoBasin(worldIn, player, handIn, heldItem, te))
+				if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
-				if (tryFillItemFromBasin(worldIn, player, handIn, heldItem, te))
+				if (FluidHelper.tryFillItemFromTE(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
 
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
@@ -101,77 +96,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		}
 
 		return ActionResultType.SUCCESS;
-	}
-
-	protected boolean tryEmptyItemIntoBasin(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
-		BasinTileEntity te) {
-		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
-			return false;
-
-		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		IFluidHandler tank = capability.orElse(null);
-		FluidStack fluidStack = emptyingResult.getFirst();
-
-		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
-			return false;
-		if (worldIn.isRemote)
-			return true;
-
-		ItemStack copyOfHeld = heldItem.copy();
-		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
-		tank.fill(fluidStack, FluidAction.EXECUTE);
-
-		if (!player.isCreative()) {
-			if (copyOfHeld.isEmpty())
-				player.setHeldItem(handIn, emptyingResult.getSecond());
-			else {
-				player.setHeldItem(handIn, copyOfHeld);
-				player.inventory.placeItemBackInInventory(worldIn, emptyingResult.getSecond());
-			}
-		}
-		return true;
-	}
-
-	protected boolean tryFillItemFromBasin(World world, PlayerEntity player, Hand handIn, ItemStack heldItem,
-		BasinTileEntity te) {
-		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
-			return false;
-
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		IFluidHandler tank = capability.orElse(null);
-
-		if (tank == null)
-			return false;
-
-		for (int i = 0; i < tank.getTanks(); i++) {
-			FluidStack fluid = tank.getFluidInTank(i);
-			if (fluid.isEmpty())
-				continue;
-			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
-			if (requiredAmountForItem == -1)
-				continue;
-			if (requiredAmountForItem > fluid.getAmount())
-				continue;
-
-			if (world.isRemote)
-				return true;
-
-			if (player.isCreative())
-				heldItem = heldItem.copy();
-			ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
-
-			FluidStack copy = fluid.copy();
-			copy.setAmount(requiredAmountForItem);
-			tank.drain(copy, FluidAction.EXECUTE);
-
-			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, out);
-			te.notifyUpdate();
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
@@ -203,7 +127,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	public VoxelShape getRaytraceShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
 		return AllShapes.BASIN_RAYTRACE_SHAPE;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.BASIN_BLOCK_SHAPE;

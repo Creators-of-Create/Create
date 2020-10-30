@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -38,9 +41,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
 
@@ -48,8 +49,19 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
 	public static final EnumProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 
-	public FluidTankBlock(Properties p_i48440_1_) {
+	private boolean creative;
+
+	public static FluidTankBlock regular(Properties p_i48440_1_) {
+		return new FluidTankBlock(p_i48440_1_, false);
+	}
+
+	public static FluidTankBlock creative(Properties p_i48440_1_) {
+		return new FluidTankBlock(p_i48440_1_, true);
+	}
+
+	protected FluidTankBlock(Properties p_i48440_1_, boolean creative) {
 		super(p_i48440_1_);
+		this.creative = creative;
 		setDefaultState(getDefaultState().with(TOP, true)
 			.with(BOTTOM, true)
 			.with(SHAPE, Shape.WINDOW));
@@ -73,7 +85,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.tankAt(world, pos);
+		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 		if (tankAt == null)
 			return 0;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
@@ -92,45 +104,49 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 		ItemStack heldItem = player.getHeldItem(hand);
-
-		ItemStack copy = heldItem.copy();
-		copy.setCount(1);
-		LazyOptional<IFluidHandlerItem> capability =
-			copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-		if (!capability.isPresent())
-			return ActionResultType.PASS;
-
-		if (!player.isCreative()) 
-			return ActionResultType.FAIL;
-		
-		TileEntity te = world.getTileEntity(pos);
-		LazyOptional<IFluidHandler> tankCapability =
-			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, ray.getFace());
-		if (!tankCapability.isPresent())
-			return ActionResultType.PASS;
 		boolean onClient = world.isRemote;
 
-		IFluidHandlerItem fluidItem = capability.orElse(null);
+		if (heldItem.isEmpty())
+			return ActionResultType.PASS;
+		if (!player.isCreative())
+			return ActionResultType.PASS;
+
+		FluidExchange exchange = null;
+		FluidTankTileEntity te = FluidTankConnectivityHandler.anyTankAt(world, pos);
+		if (te == null)
+			return ActionResultType.FAIL;
+
+		LazyOptional<IFluidHandler> tankCapability = te.fluidCapability;
+		if (!tankCapability.isPresent())
+			return ActionResultType.PASS;
 		IFluidHandler fluidTank = tankCapability.orElse(null);
 		FluidStack prevFluidInTank = fluidTank.getFluidInTank(0)
 			.copy();
 
-		FluidExchange exchange = FluidHelper.exchange(fluidTank, fluidItem, FluidExchange.TANK_TO_ITEM, 1000);
+		if (FluidHelper.tryEmptyItemIntoTE(world, player, hand, heldItem, te))
+			exchange = FluidExchange.ITEM_TO_TANK;
+		else if (FluidHelper.tryFillItemFromTE(world, player, hand, heldItem, te))
+			exchange = FluidExchange.TANK_TO_ITEM;
 
-		FluidStack fluidInTank = fluidTank.getFluidInTank(0);
-		if (!player.isCreative() && !onClient) {
-			if (heldItem.getCount() > 1) {
-				heldItem.shrink(1);
-				player.addItemStackToInventory(fluidItem.getContainer());
-			} else {
-				player.setHeldItem(hand, fluidItem.getContainer());
-			}
+		if (exchange == null) {
+			if (EmptyingByBasin.canItemBeEmptied(world, heldItem)
+				|| GenericItemFilling.canItemBeFilled(world, heldItem))
+				return ActionResultType.SUCCESS;
+			return ActionResultType.PASS;
 		}
 
 		SoundEvent soundevent = null;
 		BlockState fluidState = null;
+		FluidStack fluidInTank = tankCapability.map(fh -> fh.getFluidInTank(0))
+			.orElse(FluidStack.EMPTY);
 
 		if (exchange == FluidExchange.ITEM_TO_TANK) {
+			if (creative && !onClient) {
+				FluidStack fluidInItem = EmptyingByBasin.emptyItem(world, heldItem, true).getFirst();
+				if (!fluidInItem.isEmpty() && fluidTank instanceof CreativeSmartFluidTank)
+					((CreativeSmartFluidTank) fluidTank).setContainedFluid(fluidInItem);
+			}
+
 			Fluid fluid = fluidInTank.getFluid();
 			fluidState = fluid.getDefaultState()
 				.getBlockState();
@@ -141,6 +157,10 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 					fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY;
 		}
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
+			if (creative && !onClient)
+				if (fluidTank instanceof CreativeSmartFluidTank)
+					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.EMPTY);
+
 			Fluid fluid = prevFluidInTank.getFluid();
 			fluidState = fluid.getDefaultState()
 				.getBlockState();
@@ -213,7 +233,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.FLUID_TANK.create();
+		return creative ? AllTileEntities.CREATIVE_FLUID_TANK.create() : AllTileEntities.FLUID_TANK.create();
 	}
 
 	@Override
