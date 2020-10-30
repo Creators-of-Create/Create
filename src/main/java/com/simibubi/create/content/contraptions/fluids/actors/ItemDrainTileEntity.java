@@ -10,18 +10,19 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -116,12 +117,15 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 			DirectBeltInputBehaviour directBeltInputBehaviour =
 				TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
 			if (directBeltInputBehaviour == null) {
-				if (!Block.hasSolidSide(world.getBlockState(nextPosition), world, nextPosition, side.getOpposite())) {
+				if (!BlockHelper.hasBlockSolidSide(world.getBlockState(nextPosition), world, nextPosition,
+					side.getOpposite())) {
 					ItemStack ejected = heldItem.stack;
-					Vec3d outPos = VecHelper.getCenterOf(pos)
-						.add(new Vec3d(side.getDirectionVec()).scale(.75));
+					Vector3d outPos = VecHelper.getCenterOf(pos)
+						.add(Vector3d.of(side.getDirectionVec())
+							.scale(.75));
 					float movementSpeed = itemMovementPerTick();
-					Vec3d outMotion = new Vec3d(side.getDirectionVec()).scale(movementSpeed)
+					Vector3d outMotion = Vector3d.of(side.getDirectionVec())
+						.scale(movementSpeed)
 						.add(0, 1 / 8f, 0);
 					outPos.add(outMotion.normalize());
 					ItemEntity entity = new ItemEntity(world, outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
@@ -232,14 +236,14 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		heldItem = null;
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("HeldItem"))
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
-
+	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (side != null && side.getAxis()

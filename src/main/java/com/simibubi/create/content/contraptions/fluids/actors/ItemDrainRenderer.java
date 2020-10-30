@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
@@ -25,7 +24,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEntity> {
@@ -49,7 +49,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			return;
 
 		MatrixStacker msr = MatrixStacker.of(ms);
-		Vec3d itemPosition = VecHelper.getCenterOf(te.getPos());
+		Vector3d itemPosition = VecHelper.getCenterOf(te.getPos());
 
 		Direction insertedFrom = transported.insertedFrom;
 		if (!insertedFrom.getAxis()
@@ -62,8 +62,9 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 		float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 
-		Vec3d offsetVec = new Vec3d(insertedFrom.getOpposite()
-			.getDirectionVec()).scale(.5f - offset);
+		Vector3d offsetVec = Vector3d.of(insertedFrom.getOpposite()
+			.getDirectionVec())
+			.scale(.5f - offset);
 		ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 		boolean alongX = insertedFrom.rotateY()
 			.getAxis() == Axis.X;
@@ -94,9 +95,9 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (renderUpright) {
 			Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
 			if (renderViewEntity != null) {
-				Vec3d positionVec = renderViewEntity.getPositionVec();
-				Vec3d vectorForOffset = itemPosition.add(offsetVec);
-				Vec3d diff = vectorForOffset.subtract(positionVec);
+				Vector3d positionVec = renderViewEntity.getPositionVec();
+				Vector3d vectorForOffset = itemPosition.add(offsetVec);
+				Vector3d diff = vectorForOffset.subtract(positionVec);
 
 				if (insertedFrom.getAxis() != Axis.X)
 					diff = VecHelper.rotate(diff, verticalAngle, Axis.X);
@@ -106,7 +107,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 				float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
 				ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot - Math.PI / 2)));
 			}
-			ms.translate(0, 0, -1/16f);
+			ms.translate(0, 0, -1 / 16f);
 		}
 
 		for (int i = 0; i <= count; i++) {
