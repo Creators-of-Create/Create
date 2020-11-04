@@ -1,13 +1,14 @@
 package com.simibubi.create.content.contraptions.particle;
 
-import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.IParticleData.IDeserializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface ICustomParticle<T extends IParticleData> {
+public interface ICustomParticleData<T extends IParticleData> {
 
 	public IDeserializer<T> getDeserializer();
 	
@@ -16,6 +17,11 @@ public interface ICustomParticle<T extends IParticleData> {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<T> getFactory();
+	public IParticleFactory<T> getFactory();
+	
+	@OnlyIn(Dist.CLIENT)
+	public default void register(ParticleType<T> type, ParticleManager particles) {
+		particles.registerFactory(type, getFactory());
+	}
 	
 }

@@ -14,32 +14,34 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RotationIndicatorParticleData implements IParticleData, ICustomParticle<RotationIndicatorParticleData> {
+public class RotationIndicatorParticleData
+	implements IParticleData, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
 
-	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER = new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
-		public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER =
+		new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
+			public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
 				StringReader reader) throws CommandSyntaxException {
-			reader.expect(' ');
-			int color = reader.readInt();
-			reader.expect(' ');
-			float speed = (float) reader.readDouble();
-			reader.expect(' ');
-			float rad1 = (float) reader.readDouble();
-			reader.expect(' ');
-			float rad2 = (float) reader.readDouble();
-			reader.expect(' ');
-			int lifeSpan = reader.readInt();
-			reader.expect(' ');
-			char axis = reader.read();
-			return new RotationIndicatorParticleData(color, speed, rad1, rad2, lifeSpan, axis);
-		}
+				reader.expect(' ');
+				int color = reader.readInt();
+				reader.expect(' ');
+				float speed = (float) reader.readDouble();
+				reader.expect(' ');
+				float rad1 = (float) reader.readDouble();
+				reader.expect(' ');
+				float rad2 = (float) reader.readDouble();
+				reader.expect(' ');
+				int lifeSpan = reader.readInt();
+				reader.expect(' ');
+				char axis = reader.read();
+				return new RotationIndicatorParticleData(color, speed, rad1, rad2, lifeSpan, axis);
+			}
 
-		public RotationIndicatorParticleData read(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+			public RotationIndicatorParticleData read(ParticleType<RotationIndicatorParticleData> particleTypeIn,
 				PacketBuffer buffer) {
-			return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
+				return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
 					buffer.readFloat(), buffer.readInt(), buffer.readChar());
-		}
-	};
+			}
+		};
 
 	final int color;
 	final float speed;
@@ -49,7 +51,7 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	final char axis;
 
 	public RotationIndicatorParticleData(int color, float speed, float radius1, float radius2, int lifeSpan,
-			char axis) {
+		char axis) {
 		this.color = color;
 		this.speed = speed;
 		this.radius1 = radius1;
@@ -84,7 +86,7 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	@Override
 	public String getParameters() {
 		return String.format(Locale.ROOT, "%s %d %.2f %.2f %.2f %d %c", AllParticleTypes.ROTATION_INDICATOR.parameter(),
-				color, speed, radius1, radius2, lifeSpan, axis);
+			color, speed, radius1, radius2, lifeSpan, axis);
 	}
 
 	@Override
@@ -94,7 +96,7 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<RotationIndicatorParticleData> getFactory() {
+	public IParticleMetaFactory<RotationIndicatorParticleData> getMetaFactory() {
 		return RotationIndicatorParticle.Factory::new;
 	}
 

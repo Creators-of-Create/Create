@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 306",
+	"_": "Missing Localizations: 308",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -230,6 +230,7 @@
 	"block.create.mechanical_press": "Механический пресс",
 	"block.create.mechanical_pump": "UNLOCALIZED: Mechanical Pump",
 	"block.create.mechanical_saw": "Механическая пила",
+	"block.create.metal_bracket": "UNLOCALIZED: Metal Bracket",
 	"block.create.millstone": "Жернов",
 	"block.create.minecart_anchor": "Вагонеточный якорь",
 	"block.create.mossy_andesite": "Замшелый андезит",
@@ -389,6 +390,7 @@
 	"block.create.white_seat": "UNLOCALIZED: White Seat",
 	"block.create.white_valve_handle": "UNLOCALIZED: White Valve Handle",
 	"block.create.windmill_bearing": "UNLOCALIZED: Windmill Bearing",
+	"block.create.wooden_bracket": "UNLOCALIZED: Wooden Bracket",
 	"block.create.yellow_sail": "UNLOCALIZED: Yellow Sail",
 	"block.create.yellow_seat": "UNLOCALIZED: Yellow Seat",
 	"block.create.yellow_valve_handle": "UNLOCALIZED: Yellow Valve Handle",

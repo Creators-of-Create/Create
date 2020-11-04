@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/shaft/ground",
+  "textures": {
+    "bracket": "create:block/bracket_wooden",
+    "plate": "create:block/bracket_plate_wooden"
+  }
+}

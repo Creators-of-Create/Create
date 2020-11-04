@@ -12,16 +12,26 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
@@ -60,7 +70,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
 		int maxBlocks = maxBlocks();
 
-		if (infinityCheckVisited.size() > maxBlocks) {
+		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1) {
 			if (!infinite) {
 				reset();
 				infinite = true;
@@ -111,16 +121,24 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxRange = maxRange();
 		int maxRangeSq = maxRange * maxRange;
 		int maxBlocks = maxBlocks();
+		boolean evaporate = world.dimension.doesWaterVaporize() && fluid.isIn(FluidTags.WATER);
 
-		if (infinite) {
+		if (infinite || evaporate) {
 			IFluidState fluidState = world.getFluidState(rootPos);
 			boolean equivalentTo = fluidState.getFluid()
 				.isEquivalentTo(fluid);
-			if (!equivalentTo)
+			if (!equivalentTo && !evaporate)
 				return false;
 			if (simulate)
 				return true;
-			playEffect(world, BlockPos.ZERO, fluid, false);
+			playEffect(world, null, fluid, false);
+			if (evaporate) {
+				int i = root.getX();
+				int j = root.getY();
+				int k = root.getZ();
+				world.playSound(null, i, j, k, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+					2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+			}
 			return true;
 		}
 
@@ -137,7 +155,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			if (!simulate)
 				visited.add(currentPos);
 
-			if (visited.size() >= maxBlocks) {
+			if (visited.size() >= maxBlocks && maxBlocks != -1) {
 				infinite = true;
 				visited.clear();
 				queue.clear();
@@ -154,9 +172,10 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 					BlockState blockState = world.getBlockState(currentPos);
 					if (blockState.has(BlockStateProperties.WATERLOGGED) && fluid.isEquivalentTo(Fluids.WATER)) {
-						world.setBlockState(currentPos, blockState.with(BlockStateProperties.WATERLOGGED, true),
-							2 | 16);
+						world.setBlockState(currentPos,
+							updatePostWaterlogging(blockState.with(BlockStateProperties.WATERLOGGED, true)), 2 | 16);
 					} else {
+						replaceBlock(world, currentPos, blockState);
 						world.setBlockState(currentPos, fluid.getDefaultState()
 							.getBlockState(), 2 | 16);
 					}
@@ -237,8 +256,36 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				.isEmpty())
 			return toFill.isEquivalentTo(fluidState.getFluid()) ? SpaceType.FILLED : SpaceType.BLOCKING;
 
-		return blockState.getMaterial()
-			.isReplaceable() ? SpaceType.FILLABLE : SpaceType.BLOCKING;
+		return canBeReplacedByFluid(world, pos, blockState) ? SpaceType.FILLABLE : SpaceType.BLOCKING;
+	}
+
+	protected void replaceBlock(World world, BlockPos pos, BlockState state) {
+		TileEntity tileentity = state.getBlock()
+			.hasTileEntity(state) ? world.getTileEntity(pos) : null;
+		Block.spawnDrops(state, world.getWorld(), pos, tileentity);
+	}
+
+	// From FlowingFluidBlock#isBlocked
+	protected boolean canBeReplacedByFluid(IBlockReader world, BlockPos pos, BlockState state) {
+		Block block = state.getBlock();
+		if (!(block instanceof DoorBlock) && !block.isIn(BlockTags.SIGNS) && block != Blocks.LADDER
+			&& block != Blocks.SUGAR_CANE && block != Blocks.BUBBLE_COLUMN) {
+			Material material = state.getMaterial();
+			if (material != Material.PORTAL && material != Material.STRUCTURE_VOID && material != Material.OCEAN_PLANT
+				&& material != Material.SEA_GRASS) {
+				return !material.blocksMovement();
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	protected BlockState updatePostWaterlogging(BlockState state) {
+		if (state.has(BlockStateProperties.LIT))
+			state = state.with(BlockStateProperties.LIT, false);
+		return state;
 	}
 
 	@Override

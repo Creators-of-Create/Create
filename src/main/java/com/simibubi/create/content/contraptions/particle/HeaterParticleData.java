@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class HeaterParticleData implements IParticleData, ICustomParticle<HeaterParticleData> {
+public class HeaterParticleData implements IParticleData, ICustomParticleDataWithSprite<HeaterParticleData> {
 
 	public static final IParticleData.IDeserializer<HeaterParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<HeaterParticleData>() {
@@ -61,7 +61,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticle<Heater
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<HeaterParticleData> getFactory() {
+	public IParticleMetaFactory<HeaterParticleData> getMetaFactory() {
 		return HeaterParticle.Factory::new;
 	}
 

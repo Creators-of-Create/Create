@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
-import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -31,9 +30,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -48,6 +45,10 @@ import net.minecraftforge.fml.DistExecutor;
 public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<FluidPipeBehaviour> TYPE = new BehaviourType<>();
+	public static final int MAX_PARTICLE_RENDER_DISTANCE = 20;
+	public static final int SPLASH_PARTICLE_AMOUNT = 1;
+	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 800f;
+	public static final Random r = new Random();
 
 	// Direction -> (inboundflows{}, outwardflows{})
 	Map<Direction, Couple<PipeFlows>> allFlows;
@@ -228,22 +229,17 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 		contentsChanged();
 	}
 
-	public void spawnParticles() {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::spawnParticlesInner);
-	}
-
 	public void spawnSplashOnRim(Direction face) {
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> spawnSplashOnRimInner(face));
 	}
 
-	public static final int MAX_PARTICLE_RENDER_DISTANCE = 20;
-	public static final int SPLASH_PARTICLE_AMOUNT = 1;
-	public static final float IDLE_PARTICLE_SPAWN_CHANCE = 1 / 800f;
-	public static final Random r = new Random();
+	public void spawnParticles() {
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::spawnParticlesInner);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnParticlesInner() {
-		if (!isRenderEntityWithinDistance())
+		if (!isRenderEntityWithinDistance(tileEntity.getPos()))
 			return;
 		if (fluid.isEmpty())
 			return;
@@ -267,7 +263,7 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnSplashOnRimInner(Direction face) {
-		if (!isRenderEntityWithinDistance())
+		if (!isRenderEntityWithinDistance(tileEntity.getPos()))
 			return;
 		if (fluid.isEmpty())
 			return;
@@ -285,72 +281,36 @@ public abstract class FluidPipeBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
-		IParticleData particle = null;
-		if (FluidHelper.isWater(fluid.getFluid()))
-			particle = ParticleTypes.DRIPPING_WATER;
-		if (FluidHelper.isLava(fluid.getFluid()))
-			particle = ParticleTypes.DRIPPING_LAVA;
-		// TODO: Generic drip particle type for forge fluids
-
-		if (particle == null)
-			return;
-
+		IParticleData particle = FluidFX.getDrippingParticle(fluid);
 		float rimRadius = getRimRadius(state, side);
-		Vec3d directionVec = new Vec3d(side.getDirectionVec());
-
-		for (int i = 0; i < amount; i++) {
-			Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, 1)
-				.normalize();
-			vec = VecHelper.clampComponentWise(vec, rimRadius)
-				.mul(VecHelper.axisAlingedPlaneOf(directionVec))
-				.add(directionVec.scale(.45 + r.nextFloat() / 16f));
-			Vec3d m = vec;
-			vec = vec.add(VecHelper.getCenterOf(pos));
-
-			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
-		}
+		FluidFX.spawnRimParticles(world, pos, side, amount, particle, rimRadius);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnPouringLiquid(World world, BlockState state, FluidStack fluid, Direction side, int amount) {
-		IParticleData particle = new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
-			.getDefaultState()
-			.getBlockState());
+		IParticleData particle = FluidFX.getFluidParticle(fluid);
 		float rimRadius = getRimRadius(state, side);
 		Vec3d directionVec = new Vec3d(side.getDirectionVec());
+		BlockPos pos = tileEntity.getPos();
 
 		Couple<PipeFlows> couple = allFlows.get(side);
 		if (couple == null)
 			return;
+
 		couple.forEachWithContext((flow, inbound) -> {
 			if (flow.progress == null)
 				return;
-			for (int i = 0; i < amount; i++) {
-				Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, rimRadius);
-				vec = vec.mul(VecHelper.axisAlingedPlaneOf(directionVec))
-					.add(directionVec.scale(.5 + r.nextFloat() / 4f));
-				Vec3d m = vec;
-				Vec3d centerOf = VecHelper.getCenterOf(tileEntity.getPos());
-				vec = vec.add(centerOf);
-				if (inbound) {
-					vec = vec.add(m);
-					m = centerOf.add(directionVec.scale(.5))
-						.subtract(vec)
-						.scale(3);
-				}
-				world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
-			}
+			FluidFX.spawnPouringLiquid(world, pos, amount, particle, rimRadius, directionVec, inbound);
 		});
-
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private boolean isRenderEntityWithinDistance() {
+	public static boolean isRenderEntityWithinDistance(BlockPos pos) {
 		Entity renderViewEntity = Minecraft.getInstance()
 			.getRenderViewEntity();
 		if (renderViewEntity == null)
 			return false;
-		Vec3d center = VecHelper.getCenterOf(tileEntity.getPos());
+		Vec3d center = VecHelper.getCenterOf(pos);
 		if (renderViewEntity.getPositionVec()
 			.distanceTo(center) > MAX_PARTICLE_RENDER_DISTANCE)
 			return false;

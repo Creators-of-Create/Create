@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
@@ -35,10 +36,14 @@ public class PipeAttachmentModel extends WrappedBakedModel {
 		PipeModelData data = new PipeModelData();
 		FluidPipeAttachmentBehaviour attachmentBehaviour =
 			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
-		if (attachmentBehaviour != null)
+
+		if (attachmentBehaviour != null) {
 			for (Direction d : Iterate.directions)
 				data.putRim(d, attachmentBehaviour.getAttachment(world, pos, state, d));
+			data.putBracket(attachmentBehaviour.getBracket());
+		}
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
+
 		return new ModelDataMap.Builder().withInitial(PIPE_PROPERTY, data)
 			.build();
 	}
@@ -67,15 +72,29 @@ public class PipeAttachmentModel extends WrappedBakedModel {
 		if (pipeData.isEncased())
 			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data));
+		IBakedModel bracket = pipeData.getBracket();
+		if (bracket != null)
+			quads.addAll(bracket.getQuads(state, side, rand, data));
 	}
 
 	private class PipeModelData {
 		AttachmentTypes[] rims;
 		boolean encased;
+		IBakedModel bracket;
 
 		public PipeModelData() {
 			rims = new AttachmentTypes[6];
 			Arrays.fill(rims, AttachmentTypes.NONE);
+		}
+
+		public void putBracket(BlockState state) {
+			this.bracket = Minecraft.getInstance()
+				.getBlockRendererDispatcher()
+				.getModelForState(state);
+		}
+
+		public IBakedModel getBracket() {
+			return bracket;
 		}
 
 		public void putRim(Direction face, AttachmentTypes rim) {

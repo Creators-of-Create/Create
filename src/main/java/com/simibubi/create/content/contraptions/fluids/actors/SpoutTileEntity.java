@@ -33,11 +33,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 public class SpoutTileEntity extends SmartTileEntity {
 
 	public static final int FILLING_TIME = 20;
-	
+
 	protected BeltProcessingBehaviour beltProcessing;
 	protected int processingTicks;
 	protected boolean sendSplash;
-	
+
 	SmartFluidTankBehaviour tank;
 
 	public SpoutTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -54,11 +54,11 @@ public class SpoutTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		tank = SmartFluidTankBehaviour.single(this, 1000);
 		behaviours.add(tank);
-		
+
 		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
 			.whileItemHeld(this::whenItemHeld);
 		behaviours.add(beltProcessing);
-		
+
 	}
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
@@ -106,20 +106,22 @@ public class SpoutTileEntity extends SmartTileEntity {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		tank.getPrimaryHandler().setFluid(fluid);
+		tank.getPrimaryHandler()
+			.setFluid(fluid);
 		sendSplash = true;
 		notifyUpdate();
 		return PASS;
 	}
 
 	private FluidStack getCurrentFluidInTank() {
-		return tank.getPrimaryHandler().getFluid();
+		return tank.getPrimaryHandler()
+			.getFluid();
 	}
 
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		
+
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (sendSplash && clientPacket) {
 			compound.putBoolean("Splash", true);
@@ -134,23 +136,25 @@ public class SpoutTileEntity extends SmartTileEntity {
 		if (!clientPacket)
 			return;
 		if (compound.contains("Splash"))
-			spawnSplash(tank.getPrimaryTank().getRenderedFluid());
+			spawnSplash(tank.getPrimaryTank()
+				.getRenderedFluid());
 	}
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
-			return tank.getCapability().cast();
+			return tank.getCapability()
+				.cast();
 		return super.getCapability(cap, side);
 	}
 
-	
 	public void tick() {
 		super.tick();
+		if (processingTicks >= 0)
+			processingTicks--;
 		if (processingTicks >= 8 && world.isRemote)
-			if (processingTicks >= 0)
-				processingTicks--;
-			spawnProcessingParticles(tank.getPrimaryTank().getRenderedFluid());
+			spawnProcessingParticles(tank.getPrimaryTank()
+				.getRenderedFluid());
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {

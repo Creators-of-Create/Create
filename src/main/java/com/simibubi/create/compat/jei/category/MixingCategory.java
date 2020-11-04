@@ -14,7 +14,7 @@ public class MixingCategory extends BasinCategory {
 
 	private final AnimatedMixer mixer = new AnimatedMixer();
 	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
-	private MixingType type;
+	MixingType type;
 
 	enum MixingType {
 		AUTO_SHAPELESS, MIXING, AUTO_BREWING;

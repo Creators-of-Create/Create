@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFlowParticleData> {
+public class AirFlowParticleData implements IParticleData, ICustomParticleDataWithSprite<AirFlowParticleData> {
 
 	public static final IParticleData.IDeserializer<AirFlowParticleData> DESERIALIZER = new IParticleData.IDeserializer<AirFlowParticleData>() {
 		public AirFlowParticleData deserialize(ParticleType<AirFlowParticleData> particleTypeIn, StringReader reader)
@@ -75,7 +75,7 @@ public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFl
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<AirFlowParticleData> getFactory() {
+	public IParticleMetaFactory<AirFlowParticleData> getMetaFactory() {
 		return AirFlowParticle.Factory::new;
 	}
 

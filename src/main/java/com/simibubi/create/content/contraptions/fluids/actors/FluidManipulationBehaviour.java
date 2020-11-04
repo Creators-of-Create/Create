@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -76,11 +77,11 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected int maxRange() {
-		return 128;
+		return AllConfigs.SERVER.fluids.hosePulleyRange.get();
 	}
 
 	protected int maxBlocks() {
-		return 10000;
+		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
 	}
 
 	public void reset() {
@@ -137,7 +138,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		int maxRangeSq = maxRange * maxRange;
 		int i;
 
-		for (i = 0; i < searchedPerTick && !frontier.isEmpty() && visited.size() <= maxBlocks; i++) {
+		for (i = 0; i < searchedPerTick && !frontier.isEmpty()
+			&& (visited.size() <= maxBlocks || maxBlocks == -1); i++) {
 			BlockPosEntry entry = frontier.remove(0);
 			BlockPos currentPos = entry.pos;
 			if (visited.contains(currentPos))
@@ -180,7 +182,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected void playEffect(World world, BlockPos pos, Fluid fluid, boolean fillSound) {
-		BlockPos splooshPos = infinite ? tileEntity.getPos() : pos;
+		BlockPos splooshPos = pos == null ? tileEntity.getPos() : pos;
 
 		SoundEvent soundevent = fillSound ? fluid.getAttributes()
 			.getFillSound()

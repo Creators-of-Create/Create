@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 637",
+	"_": "Missing Localizations: 639",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -230,6 +230,7 @@
 	"block.create.mechanical_press": "Pressa Meccanica",
 	"block.create.mechanical_pump": "UNLOCALIZED: Mechanical Pump",
 	"block.create.mechanical_saw": "Sega Meccanica",
+	"block.create.metal_bracket": "UNLOCALIZED: Metal Bracket",
 	"block.create.millstone": "Macina",
 	"block.create.minecart_anchor": "UNLOCALIZED: Minecart Anchor",
 	"block.create.mossy_andesite": "UNLOCALIZED: Mossy Andesite",
@@ -389,6 +390,7 @@
 	"block.create.white_seat": "UNLOCALIZED: White Seat",
 	"block.create.white_valve_handle": "UNLOCALIZED: White Valve Handle",
 	"block.create.windmill_bearing": "UNLOCALIZED: Windmill Bearing",
+	"block.create.wooden_bracket": "UNLOCALIZED: Wooden Bracket",
 	"block.create.yellow_sail": "UNLOCALIZED: Yellow Sail",
 	"block.create.yellow_seat": "UNLOCALIZED: Yellow Seat",
 	"block.create.yellow_valve_handle": "UNLOCALIZED: Yellow Valve Handle",

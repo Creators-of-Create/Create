@@ -110,7 +110,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					.getFluid();
 				emptied = Blocks.AIR.getDefaultState();
 			}
-			
+
 			if (this.fluid == null)
 				this.fluid = fluid;
 
@@ -249,7 +249,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 		World world = getWorld();
 		int maxBlocks = maxBlocks();
-		if (visited.size() > maxBlocks) {
+		if (visited.size() > maxBlocks && maxBlocks != -1) {
 			infinite = true;
 			// Find first block with valid fluid
 			while (true) {
@@ -280,10 +280,9 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
 
 		int maxBlocks = maxBlocks();
-		if (validationVisited.size() > maxBlocks) {
-			if (!infinite) {
+		if (validationVisited.size() > maxBlocks && maxBlocks != -1) {
+			if (!infinite) 
 				reset();
-			}
 			validationFrontier.clear();
 			setLongValidationTimer();
 			return;
