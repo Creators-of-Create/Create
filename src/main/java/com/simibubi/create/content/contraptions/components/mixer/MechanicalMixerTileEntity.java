@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
@@ -12,6 +13,8 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -20,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -87,6 +91,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
 		super.fromTag(state, compound, clientPacket);
+
+		if (clientPacket && hasWorld())
+			getBasin().ifPresent(bte -> bte.setAreFluidsMoving(running && runningTicks <= 20));
 	}
 
 	@Override
@@ -128,7 +135,6 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (runningTicks != 20)
 				runningTicks++;
 		}
-
 	}
 
 	public void renderParticles() {
@@ -136,24 +142,38 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (!basin.isPresent() || world == null)
 			return;
 
-		SmartInventory inputs = basin.get()
-			.getInputInventory();
-		for (int slot = 0; slot < inputs.getSlots(); slot++) {
-			ItemStack stackInSlot = inputs.getStackInSlot(slot);
-			if (stackInSlot.isEmpty())
-				continue;
-
-			ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
-			float angle = world.rand.nextFloat() * 360;
-			Vector3d offset = new Vector3d(0, 0, 0.25f);
-			offset = VecHelper.rotate(offset, angle, Axis.Y);
-			Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
-				.add(0, .25f, 0);
-
-			Vector3d center = offset.add(VecHelper.getCenterOf(pos));
-			target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
-			world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y, target.z);
+		for (SmartInventory inv : basin.get()
+			.getInvs()) {
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
+				spillParticle(data);
+			}
 		}
+
+		for (SmartFluidTankBehaviour behaviour : basin.get()
+			.getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.isEmpty(0))
+					continue;
+				spillParticle(FluidFX.getFluidParticle(tankSegment.getRenderedFluid()));
+			}
+		}
+	}
+
+	protected void spillParticle(IParticleData data) {
+		float angle = world.rand.nextFloat() * 360;
+		Vector3d offset = new Vector3d(0, 0, 0.25f);
+		offset = VecHelper.rotate(offset, angle, Axis.Y);
+		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
+			.add(0, .25f, 0);
+		Vector3d center = offset.add(VecHelper.getCenterOf(pos));
+		target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
+		world.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
 	}
 
 	@Override

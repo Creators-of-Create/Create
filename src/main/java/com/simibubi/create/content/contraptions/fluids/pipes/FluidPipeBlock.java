@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import java.util.Optional;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -8,18 +9,20 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.StateContainer.Builder;
@@ -39,7 +42,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWrenchable {
+public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWrenchableWithBracket {
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -48,6 +51,9 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		if (tryRemoveBracket(context))
+			return ActionResultType.SUCCESS;
+
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
 		Axis axis = getAxis(world, pos, state);
@@ -78,16 +84,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 	@Nullable
 	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
-		if (!FluidPropagator.isStraightPipe(state))
-			return null;
-		Axis axis = null;
-		for (Direction d : Iterate.directions) {
-			if (isOpenAt(state, d)) {
-				axis = d.getAxis();
-				break;
-			}
-		}
-		return axis;
+		return FluidPropagator.getStraightPipeAxis(state);
 	}
 
 	@Override
@@ -105,6 +102,8 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isRemote)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
+		if (state != newState && !isMoving)
+			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeTileEntity(pos);
 	}
@@ -140,24 +139,31 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return state.getBlock() instanceof FluidPipeBlock;
 	}
 
-	public static boolean canConnectTo(IBlockDisplayReader world, BlockPos pos, BlockState neighbour, Direction blockFace) {
-		if (isPipe(neighbour) || FluidPropagator.hasFluidCapability(neighbour, world, pos, blockFace))
+	public static boolean canConnectTo(IBlockDisplayReader world, BlockPos pos, BlockState neighbour,
+		Direction blockFace) {
+		if (FluidPropagator.hasFluidCapability(neighbour, world, pos, blockFace))
 			return true;
 		FluidPipeAttachmentBehaviour attachmentBehaviour =
 			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (isPipe(neighbour))
+			return attachmentBehaviour == null || attachmentBehaviour.getBracket() == Blocks.AIR.getDefaultState()
+				|| FluidPropagator.getStraightPipeAxis(neighbour) == blockFace.getAxis();
 		if (attachmentBehaviour == null)
 			return false;
 		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace);
 	}
 
-	public static boolean shouldDrawRim(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
+	public static boolean shouldDrawRim(IBlockDisplayReader world, BlockPos pos, BlockState state,
+		Direction direction) {
 		BlockPos offsetPos = pos.offset(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
 		if (!isPipe(facingState))
 			return true;
+		if (!canConnectTo(world, offsetPos, facingState, direction))
+			return true;
 		if (!isCornerOrEndPipe(world, pos, state))
 			return false;
-		if (FluidPropagator.isStraightPipe(facingState))
+		if (FluidPropagator.getStraightPipeAxis(facingState) != null)
 			return true;
 		if (!shouldDrawCasing(world, pos, state) && shouldDrawCasing(world, offsetPos, facingState))
 			return true;
@@ -171,7 +177,8 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	public static boolean isCornerOrEndPipe(IBlockDisplayReader world, BlockPos pos, BlockState state) {
-		return isPipe(state) && !FluidPropagator.isStraightPipe(state) && !shouldDrawCasing(world, pos, state);
+		return isPipe(state) && FluidPropagator.getStraightPipeAxis(state) == null
+			&& !shouldDrawCasing(world, pos, state);
 	}
 
 	public static boolean shouldDrawCasing(IBlockDisplayReader world, BlockPos pos, BlockState state) {
@@ -206,20 +213,28 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
 		IWorld world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.get(BlockStateProperties.WATERLOGGED)) {
+		if (state.get(BlockStateProperties.WATERLOGGED))
 			world.getPendingFluidTicks()
 				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
+		if (isOpenAt(state, direction) && neighbourState.contains(BlockStateProperties.WATERLOGGED))
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 		return updateBlockState(state, direction, direction.getOpposite(), world, pos);
 	}
 
 	public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
 		IBlockDisplayReader world, BlockPos pos) {
+
+		FluidPipeAttachmentBehaviour behaviour = TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (behaviour != null && behaviour.getBracket() != Blocks.AIR.getDefaultState())
+			return state;
+
 		// Update sides that are not ignored
 		for (Direction d : Iterate.directions)
-			if (d != ignore)
-				state = state.with(FACING_TO_PROPERTY_MAP.get(d),
-					canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d));
+			if (d != ignore) {
+				boolean shouldConnect = canConnectTo(world, pos.offset(d), world.getBlockState(pos.offset(d)), d);
+				state = state.with(FACING_TO_PROPERTY_MAP.get(d), shouldConnect);
+			}
 
 		// See if it has enough connections
 		Direction connectedDirection = null;
@@ -244,5 +259,17 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	public FluidState getFluidState(BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
 			: Fluids.EMPTY.getDefaultState();
+	}
+
+	@Override
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
+		FluidPipeAttachmentBehaviour behaviour = TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (behaviour == null)
+			return Optional.empty();
+		BlockState bracket = behaviour.getBracket();
+		behaviour.removeBracket();
+		if (bracket == Blocks.AIR.getDefaultState())
+			return Optional.empty();
+		return Optional.of(new ItemStack(bracket.getBlock()));
 	}
 }

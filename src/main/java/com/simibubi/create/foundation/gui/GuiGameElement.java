@@ -12,6 +12,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -205,7 +206,7 @@ public class GuiGameElement {
 			Vector3d rgb = ColorHelper.getRGB(color);
 			blockRenderer.getBlockModelRenderer()
 				.renderModel(ms.peek(), vb, blockState, blockmodel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
-					0xF000F0, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+					0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			buffer.draw();
 		}
 	}
@@ -224,7 +225,7 @@ public class GuiGameElement {
 			if (blockState.getBlock() instanceof FireBlock) {
 				RenderHelper.disableGuiDepthLighting();
 				blockRenderer.renderBlock(blockState, ms, buffer, 0xF000F0, OverlayTexture.DEFAULT_UV,
-					EmptyModelData.INSTANCE);
+					VirtualEmptyModelData.INSTANCE);
 				RenderHelper.enable();
 				buffer.draw();
 				return;

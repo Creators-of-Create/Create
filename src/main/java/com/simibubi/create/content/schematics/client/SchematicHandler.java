@@ -234,7 +234,7 @@ public class SchematicHandler {
 			selectionScreen.cycle((int) delta);
 			return true;
 		}
-		if (!AllKeys.ctrlDown())
+		if (AllKeys.ctrlDown())
 			return currentTool.getTool()
 				.handleMouseWheel(delta);
 		return false;

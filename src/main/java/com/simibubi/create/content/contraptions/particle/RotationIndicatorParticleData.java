@@ -19,62 +19,68 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RotationIndicatorParticleData implements IParticleData, ICustomParticle<RotationIndicatorParticleData> {
+public class RotationIndicatorParticleData
+	implements IParticleData, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
 
 	// TODO 1.16 make this unnecessary
 	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
-        @Override
-        public <T> DataResult<Character> read(final DynamicOps<T> ops, final T input) {
-            return ops
-                .getNumberValue(input)
-                .map(n -> (char) n.shortValue());
-        }
-
-        @Override
-        public <T> T write(final DynamicOps<T> ops, final Character value) {
-            return ops.createShort((short) value.charValue());
-        }
-
-        @Override
-        public String toString() {
-            return "Bool";
-        }
-    };
-
-	public static final Codec<RotationIndicatorParticleData> CODEC = RecordCodecBuilder.create(i -> 
-		i.group(
-			Codec.INT.fieldOf("color").forGetter(p -> p.color),
-			Codec.FLOAT.fieldOf("speed").forGetter(p -> p.speed),
-			Codec.FLOAT.fieldOf("radius1").forGetter(p -> p.radius1),
-			Codec.FLOAT.fieldOf("radius2").forGetter(p -> p.radius2),
-			Codec.INT.fieldOf("lifeSpan").forGetter(p -> p.lifeSpan),
-			CHAR.fieldOf("axis").forGetter(p -> p.axis))
-		.apply(i, RotationIndicatorParticleData::new));
-
-	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER = new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
-		public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
-				StringReader reader) throws CommandSyntaxException {
-			reader.expect(' ');
-			int color = reader.readInt();
-			reader.expect(' ');
-			float speed = (float) reader.readDouble();
-			reader.expect(' ');
-			float rad1 = (float) reader.readDouble();
-			reader.expect(' ');
-			float rad2 = (float) reader.readDouble();
-			reader.expect(' ');
-			int lifeSpan = reader.readInt();
-			reader.expect(' ');
-			char axis = reader.read();
-			return new RotationIndicatorParticleData(color, speed, rad1, rad2, lifeSpan, axis);
+		@Override
+		public <T> DataResult<Character> read(final DynamicOps<T> ops, final T input) {
+			return ops.getNumberValue(input)
+				.map(n -> (char) n.shortValue());
 		}
 
-		public RotationIndicatorParticleData read(ParticleType<RotationIndicatorParticleData> particleTypeIn,
-				PacketBuffer buffer) {
-			return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
-					buffer.readFloat(), buffer.readInt(), buffer.readChar());
+		@Override
+		public <T> T write(final DynamicOps<T> ops, final Character value) {
+			return ops.createShort((short) value.charValue());
+		}
+
+		@Override
+		public String toString() {
+			return "Bool";
 		}
 	};
+
+	public static final Codec<RotationIndicatorParticleData> CODEC = RecordCodecBuilder.create(i -> i
+		.group(Codec.INT.fieldOf("color")
+			.forGetter(p -> p.color),
+			Codec.FLOAT.fieldOf("speed")
+				.forGetter(p -> p.speed),
+			Codec.FLOAT.fieldOf("radius1")
+				.forGetter(p -> p.radius1),
+			Codec.FLOAT.fieldOf("radius2")
+				.forGetter(p -> p.radius2),
+			Codec.INT.fieldOf("lifeSpan")
+				.forGetter(p -> p.lifeSpan),
+			CHAR.fieldOf("axis")
+				.forGetter(p -> p.axis))
+		.apply(i, RotationIndicatorParticleData::new));
+
+	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER =
+		new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
+			public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+				StringReader reader) throws CommandSyntaxException {
+				reader.expect(' ');
+				int color = reader.readInt();
+				reader.expect(' ');
+				float speed = (float) reader.readDouble();
+				reader.expect(' ');
+				float rad1 = (float) reader.readDouble();
+				reader.expect(' ');
+				float rad2 = (float) reader.readDouble();
+				reader.expect(' ');
+				int lifeSpan = reader.readInt();
+				reader.expect(' ');
+				char axis = reader.read();
+				return new RotationIndicatorParticleData(color, speed, rad1, rad2, lifeSpan, axis);
+			}
+
+			public RotationIndicatorParticleData read(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+				PacketBuffer buffer) {
+				return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
+					buffer.readFloat(), buffer.readInt(), buffer.readChar());
+			}
+		};
 
 	final int color;
 	final float speed;
@@ -84,7 +90,7 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	final char axis;
 
 	public RotationIndicatorParticleData(int color, float speed, float radius1, float radius2, int lifeSpan,
-			char axis) {
+		char axis) {
 		this.color = color;
 		this.speed = speed;
 		this.radius1 = radius1;
@@ -119,7 +125,7 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	@Override
 	public String getParameters() {
 		return String.format(Locale.ROOT, "%s %d %.2f %.2f %.2f %d %c", AllParticleTypes.ROTATION_INDICATOR.parameter(),
-				color, speed, radius1, radius2, lifeSpan, axis);
+			color, speed, radius1, radius2, lifeSpan, axis);
 	}
 
 	@Override
@@ -128,13 +134,13 @@ public class RotationIndicatorParticleData implements IParticleData, ICustomPart
 	}
 
 	@Override
-	public Codec<RotationIndicatorParticleData> getCodec() {
+	public Codec<RotationIndicatorParticleData> getCodec(ParticleType<RotationIndicatorParticleData> type) {
 		return CODEC;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<RotationIndicatorParticleData> getFactory() {
+	public IParticleMetaFactory<RotationIndicatorParticleData> getMetaFactory() {
 		return RotationIndicatorParticle.Factory::new;
 	}
 

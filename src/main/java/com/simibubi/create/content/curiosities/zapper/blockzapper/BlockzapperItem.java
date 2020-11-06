@@ -75,20 +75,21 @@ public class BlockzapperItem extends ZapperItem {
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (group == Create.baseCreativeTab) {
-			ItemStack gunWithoutStuff = new ItemStack(this);
-			items.add(gunWithoutStuff);
+		if (group != Create.baseCreativeTab && group != ItemGroup.SEARCH)
+			return;
+		
+		ItemStack gunWithoutStuff = new ItemStack(this);
+		items.add(gunWithoutStuff);
 
-			ItemStack gunWithGoldStuff = new ItemStack(this);
-			for (Components c : Components.values())
-				setTier(c, ComponentTier.Brass, gunWithGoldStuff);
-			items.add(gunWithGoldStuff);
+		ItemStack gunWithGoldStuff = new ItemStack(this);
+		for (Components c : Components.values())
+			setTier(c, ComponentTier.Brass, gunWithGoldStuff);
+		items.add(gunWithGoldStuff);
 
-			ItemStack gunWithPurpurStuff = new ItemStack(this);
-			for (Components c : Components.values())
-				setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
-			items.add(gunWithPurpurStuff);
-		}
+		ItemStack gunWithPurpurStuff = new ItemStack(this);
+		for (Components c : Components.values())
+			setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
+		items.add(gunWithPurpurStuff);
 	}
 
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,

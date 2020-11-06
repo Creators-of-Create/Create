@@ -15,7 +15,7 @@ import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AirParticleData implements IParticleData, ICustomParticle<AirParticleData> {
+public class AirParticleData implements IParticleData, ICustomParticleDataWithSprite<AirParticleData> {
 
 	public static final Codec<AirParticleData> CODEC = RecordCodecBuilder.create(i -> 
 		i.group(
@@ -79,7 +79,7 @@ public class AirParticleData implements IParticleData, ICustomParticle<AirPartic
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<AirParticleData> getFactory() {
+	public IParticleMetaFactory<AirParticleData> getMetaFactory() {
 		return AirParticle.Factory::new;
 	}
 

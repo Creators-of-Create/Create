@@ -8,14 +8,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class CubeParticleData implements IParticleData, ICustomParticle<CubeParticleData> {
+public class CubeParticleData implements IParticleData, ICustomParticleData<CubeParticleData> {
 
 	public static final Codec<CubeParticleData> CODEC = RecordCodecBuilder.create(i -> 
 		i.group(
@@ -67,8 +67,8 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 		this.hot = hot;
 	}
 
-	public static CubeParticleData dummy() {
-		return new CubeParticleData(0, 0, 0, 0, 0, false);
+	public CubeParticleData() {
+		this(0, 0, 0, 0, 0, false);
 	}
 
 	@Override
@@ -83,8 +83,8 @@ public class CubeParticleData implements IParticleData, ICustomParticle<CubePart
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ParticleManager.IParticleMetaFactory<CubeParticleData> getFactory() {
-		return null;
+	public IParticleFactory<CubeParticleData> getFactory() {
+		return new CubeParticle.Factory();
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.block.BlockState;
@@ -10,7 +11,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
-public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
+public class FluidPipeAttachmentBehaviour extends BracketedTileEntityBehaviour {
 
 	public static BehaviourType<FluidPipeAttachmentBehaviour> TYPE = new BehaviourType<>();
 
@@ -36,6 +37,9 @@ public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 		FluidPipeBehaviour fluidPipeBehaviour = tileEntity.getBehaviour(FluidPipeBehaviour.TYPE);
 		if (fluidPipeBehaviour == null)
 			return false;
+//		BlockState bracket = getBracket();
+//		if (bracket != Blocks.AIR.getDefaultState() && bracket.get(BracketBlock.FACING) == direction)
+//			return false;
 		return fluidPipeBehaviour.isConnectedTo(state, direction);
 	}
 
@@ -54,6 +58,16 @@ public class FluidPipeAttachmentBehaviour extends TileEntityBehaviour {
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	@Override
+	public boolean canHaveBracket() {
+		BlockState blockState = tileEntity.getBlockState();
+		if (blockState.getBlock() instanceof PumpBlock)
+			return false;
+		if (blockState.getBlock() instanceof EncasedPipeBlock)
+			return false;
+		return true;
 	}
 
 }

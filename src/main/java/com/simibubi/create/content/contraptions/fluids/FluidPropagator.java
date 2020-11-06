@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
@@ -46,7 +48,7 @@ public class FluidPropagator {
 			return null;
 		if (otherBlock instanceof FlowingFluidBlock)
 			return null;
-		if (!isStraightPipe(state))
+		if (getStraightPipeAxis(state) == null)
 			return null;
 		for (Direction d : Iterate.directions) {
 			if (!pos.offset(d)
@@ -162,12 +164,13 @@ public class FluidPropagator {
 				.isPresent();
 	}
 
-	public static boolean isStraightPipe(BlockState state) {
+	@Nullable
+	public static Axis getStraightPipeAxis(BlockState state) {
 		if (state.getBlock() instanceof AxisPipeBlock)
-			return true;
+			return state.get(AxisPipeBlock.AXIS);
 		if (!FluidPipeBlock.isPipe(state))
-			return false;
-		boolean axisFound = false;
+			return null;
+		Axis axisFound = null;
 		int connections = 0;
 		for (Axis axis : Iterate.axes) {
 			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
@@ -179,12 +182,12 @@ public class FluidPropagator {
 			if (openAt2)
 				connections++;
 			if (openAt1 && openAt2)
-				if (axisFound)
-					return false;
+				if (axisFound != null)
+					return null;
 				else
-					axisFound = true;
+					axisFound = axis;
 		}
-		return axisFound && connections == 2;
+		return connections == 2 ? axisFound : null;
 	}
 
 }

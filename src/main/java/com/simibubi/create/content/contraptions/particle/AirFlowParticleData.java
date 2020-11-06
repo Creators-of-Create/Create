@@ -16,7 +16,7 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFlowParticleData> {
+public class AirFlowParticleData implements IParticleData, ICustomParticleDataWithSprite<AirFlowParticleData> {
 	
 	public static final Codec<AirFlowParticleData> CODEC = RecordCodecBuilder.create(i -> 
 		i.group(
@@ -83,13 +83,13 @@ public class AirFlowParticleData implements IParticleData, ICustomParticle<AirFl
 	}
 	
 	@Override
-	public Codec<AirFlowParticleData> getCodec() {
+	public Codec<AirFlowParticleData> getCodec(ParticleType<AirFlowParticleData> type) {
 		return CODEC;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<AirFlowParticleData> getFactory() {
+	public IParticleMetaFactory<AirFlowParticleData> getMetaFactory() {
 		return AirFlowParticle.Factory::new;
 	}
 

@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -22,14 +24,19 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockDisplayReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.DistExecutor;
 
 public class PumpTileEntity extends KineticTileEntity {
 
@@ -49,7 +56,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		openEnds = Couple.create(HashMap::new);
 		setProvidedFluid(FluidStack.EMPTY);
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
@@ -70,6 +77,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		if (world.isRemote) {
 			if (speed == 0)
 				return;
+			spawnParticles();
 			arrowDirection.chase(speed >= 0 ? 1 : -1, .5f, Chaser.EXP);
 			arrowDirection.tickChaser();
 			return;
@@ -279,6 +287,14 @@ public class PumpTileEntity extends KineticTileEntity {
 		return isFront;
 	}
 
+	@Nullable
+	protected Direction getFront() {
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof PumpBlock))
+			return null;
+		return blockState.get(PumpBlock.FACING);
+	}
+
 	protected void updatePipeNetwork(boolean front) {
 		if (networks != null)
 			networks.get(front)
@@ -299,6 +315,44 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	public boolean isPullingOnSide(boolean front) {
 		return front == reversed;
+	}
+
+	public void spawnParticles() {
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> this::spawnParticlesInner);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void spawnParticlesInner() {
+		if (!FluidPipeBehaviour.isRenderEntityWithinDistance(pos))
+			return;
+		for (boolean front : Iterate.trueAndFalse) {
+			Direction side = getFront();
+			if (side == null)
+				return;
+			if (!front)
+				side = side.getOpposite();
+			if (!FluidPropagator.isOpenEnd(world, pos, side))
+				continue;
+			BlockFace key = new BlockFace(pos, side);
+			Map<BlockFace, OpenEndedPipe> map = openEnds.get(front);
+			if (map.containsKey(key)) {
+				FluidStack fluidStack = map.get(key)
+					.getCapability()
+					.map(fh -> fh.getFluidInTank(0))
+					.orElse(FluidStack.EMPTY);
+				if (!fluidStack.isEmpty())
+					spawnPouringLiquid(fluidStack, side, 1);
+			}
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void spawnPouringLiquid(FluidStack fluid, Direction side, int amount) {
+		IParticleData particle = FluidFX.getFluidParticle(fluid);
+		float rimRadius = 1 / 4f + 1 / 64f;
+		boolean inbound = isPullingOnSide(getFront() == side);
+		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
+		FluidFX.spawnPouringLiquid(world, pos, amount, particle, rimRadius, directionVec, inbound);
 	}
 
 	public Map<BlockFace, OpenEndedPipe> getOpenEnds(Direction side) {

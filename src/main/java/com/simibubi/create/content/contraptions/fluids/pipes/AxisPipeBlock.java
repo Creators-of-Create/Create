@@ -1,15 +1,19 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,7 +32,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable, IAxisPipe {
+public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWithBracket, IAxisPipe {
 
 	public AxisPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -39,6 +43,8 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable, IA
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isRemote)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
+		if (state != newState && !isMoving) 
+			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeTileEntity(pos);
 	}
@@ -98,6 +104,18 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchable, IA
 	@Override
 	public Axis getAxis(BlockState state) {
 		return state.get(AXIS);
+	}
+
+	@Override
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
+		FluidPipeAttachmentBehaviour behaviour = TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		if (behaviour == null)
+			return Optional.empty();
+		BlockState bracket = behaviour.getBracket();
+		behaviour.removeBracket();
+		if (bracket == Blocks.AIR.getDefaultState())
+			return Optional.empty();
+		return Optional.of(new ItemStack(bracket.getBlock()));
 	}
 
 }

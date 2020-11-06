@@ -10,9 +10,11 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -39,24 +41,27 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			try {
-				Actions.valueOf(option).performAction(value);
-			} catch (IllegalArgumentException e) {
-				LogManager.getLogger().warn("Received ConfigureConfigPacket with invalid Option: " + option);
-			}
-		}));
+		ctx.get()
+			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+				try {
+					Actions.valueOf(option)
+						.performAction(value);
+				} catch (IllegalArgumentException e) {
+					LogManager.getLogger()
+						.warn("Received ConfigureConfigPacket with invalid Option: " + option);
+				}
+			}));
 
-		ctx.get().setPacketHandled(true);
+		ctx.get()
+			.setPacketHandled(true);
 	}
 
 	enum Actions {
 		rainbowDebug((value) -> {
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
 		}),
-		overlayScreen((value) -> {
-			overlayScreenAction();
-		}),
+		overlayScreen(Actions::overlayScreenAction),
+		fixLighting(Actions::experimentalLightingAction),
 		overlayReset((value) -> {
 			AllConfigs.CLIENT.overlayOffsetX.set(0);
 			AllConfigs.CLIENT.overlayOffsetY.set(0);
@@ -70,14 +75,19 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 			this.consumer = action;
 		}
 
-		void performAction(String value){
+		void performAction(String value) {
 			consumer.accept(value);
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		private static void overlayScreenAction(){
-			//this doesn't work if i move it into the enum constructor like the other two. if there's a proper way to do this, please let me know
+		private static void overlayScreenAction(String value) {
 			ScreenOpener.open(new GoggleConfigScreen());
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void experimentalLightingAction(String value) {
+			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
+			Minecraft.getInstance().worldRenderer.loadRenderers();
 		}
 	}
 }

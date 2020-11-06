@@ -12,6 +12,8 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -42,6 +44,11 @@ public class FluidHelper {
 
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
+	}
+	
+	public static boolean hasBlockState(Fluid fluid) {
+		BlockState blockState = fluid.getDefaultState().getBlockState();
+		return blockState != null && blockState != Blocks.AIR.getDefaultState();
 	}
 
 	public static Fluid convertToFlowing(Fluid fluid) {

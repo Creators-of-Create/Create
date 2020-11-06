@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -12,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 
-public class Couple<T> extends Pair<T, T> {
+public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
 	private static Couple<Boolean> TRUE_AND_FALSE = Couple.create(true, false);
 
@@ -62,7 +63,8 @@ public class Couple<T> extends Pair<T, T> {
 		setSecond(function.apply(getSecond(), values.getSecond()));
 	}
 
-	public void forEach(Consumer<T> consumer) {
+	@Override
+	public void forEach(Consumer<? super T> consumer) {
 		consumer.accept(getFirst());
 		consumer.accept(getSecond());
 	}
@@ -87,6 +89,38 @@ public class Couple<T> extends Pair<T, T> {
 	public static <S> Couple<S> deserializeEach(ListNBT list, Function<CompoundNBT, S> deserializer) {
 		List<S> readCompoundList = NBTHelper.readCompoundList(list, deserializer);
 		return new Couple<>(readCompoundList.get(0), readCompoundList.get(1));
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new Couplerator<>(this);
+	}
+	
+	private static class Couplerator<T> implements Iterator<T> {
+
+		int state;
+		private Couple<T> couple;
+		
+		public Couplerator(Couple<T> couple) {
+			this.couple = couple;
+			state = 0;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return state != 2;
+		}
+
+		@Override
+		public T next() {
+			state++;
+			if (state == 1)
+				return couple.first;
+			if (state == 2)
+				return couple.second;
+			return null;
+		}
+		
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import net.minecraft.util.math.BlockPos;
@@ -18,11 +19,13 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 	public int fill(FluidStack resource, FluidAction action) {
 		if (!internalTank.isEmpty() && !resource.isFluidEqual(internalTank.getFluid()))
 			return 0;
+		if (resource.isEmpty() || !FluidHelper.hasBlockState(resource.getFluid()))
+			return 0;
 
 		int diff = resource.getAmount();
 		int totalAmountAfterFill = diff + internalTank.getFluidAmount();
 		FluidStack remaining = resource.copy();
-		
+
 		if (predicate.get() && totalAmountAfterFill >= 1000) {
 			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), action.simulate())) {
 				drainer.counterpartActed();
@@ -30,8 +33,8 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 				diff -= 1000;
 			}
 		}
-		
-		if (action.simulate()) 
+
+		if (action.simulate())
 			return diff <= 0 ? resource.getAmount() : internalTank.fill(remaining, action);
 		if (diff <= 0) {
 			internalTank.drain(-diff, FluidAction.EXECUTE);

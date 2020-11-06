@@ -68,6 +68,9 @@ import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlockItem;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketGenerator;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
@@ -90,6 +93,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -206,6 +210,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate(BlockStateGen.axisBlockProvider(false))
+		.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 		.simpleItem()
 		.register();
 
@@ -214,6 +219,7 @@ public class AllBlocks {
 		.transform(StressConfigDefaults.setNoImpact())
 		.properties(p -> p.sound(SoundType.WOOD))
 		.blockstate(BlockStateGen.axisBlockProvider(false))
+		.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 		.item(CogwheelBlockItem::new)
 		.build()
 		.register();
@@ -224,6 +230,7 @@ public class AllBlocks {
 			.properties(p -> p.sound(SoundType.WOOD))
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(BlockStateGen.axisBlockProvider(false))
+			.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 			.item(CogwheelBlockItem::new)
 			.build()
 			.register();
@@ -468,6 +475,18 @@ public class AllBlocks {
 		.blockstate(new GaugeGenerator()::generate)
 		.item()
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
+		.register();
+
+	public static final BlockEntry<BracketBlock> WOODEN_BRACKET = REGISTRATE.block("wooden_bracket", BracketBlock::new)
+		.blockstate(new BracketGenerator("wooden")::generate)
+		.item(BracketBlockItem::new)
+		.transform(BracketGenerator.itemModel("wooden"))
+		.register();
+
+	public static final BlockEntry<BracketBlock> METAL_BRACKET = REGISTRATE.block("metal_bracket", BracketBlock::new)
+		.blockstate(new BracketGenerator("metal")::generate)
+		.item(BracketBlockItem::new)
+		.transform(BracketGenerator.itemModel("metal"))
 		.register();
 
 	// Fluids

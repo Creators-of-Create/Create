@@ -1,11 +1,18 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
+import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -16,22 +23,33 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -45,25 +63,44 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
 
+	private boolean areFluidsMoving;
+	LerpedFloat ingredientRotationSpeed;
+	LerpedFloat ingredientRotation;
+
 	public BasinInventory inputInventory;
 	public SmartFluidTankBehaviour inputTank;
 	protected SmartInventory outputInventory;
 	protected SmartFluidTankBehaviour outputTank;
+	private FilteringBehaviour filtering;
+	private boolean contentsChanged;
+
+	private Couple<SmartInventory> invs;
+	private Couple<SmartFluidTankBehaviour> tanks;
 
 	protected LazyOptional<IItemHandlerModifiable> itemCapability;
 	protected LazyOptional<IFluidHandler> fluidCapability;
 
-	private FilteringBehaviour filtering;
-	private boolean contentsChanged;
+	public static final int OUTPUT_ANIMATION_TIME = 10;
+	List<IntAttached<ItemStack>> visualizedOutputItems;
+	List<IntAttached<FluidStack>> visualizedOutputFluids;
 
 	public BasinTileEntity(TileEntityType<? extends BasinTileEntity> type) {
 		super(type);
 		inputInventory = new BasinInventory(9, this);
 		inputInventory.whenContentsChanged($ -> contentsChanged = true);
 		outputInventory = new BasinInventory(9, this).forbidInsertion();
-
+		areFluidsMoving = false;
 		itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));
 		contentsChanged = true;
+		ingredientRotation = LerpedFloat.angular()
+			.startWithValue(0);
+		ingredientRotationSpeed = LerpedFloat.linear()
+			.startWithValue(0);
+
+		invs = Couple.create(inputInventory, outputInventory);
+		tanks = Couple.create(inputTank, outputTank);
+		visualizedOutputItems = Collections.synchronizedList(new ArrayList<>());
+		visualizedOutputFluids = Collections.synchronizedList(new ArrayList<>());
 	}
 
 	@Override
@@ -79,6 +116,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, 1000, true).forbidInsertion();
 		behaviours.add(inputTank);
 		behaviours.add(outputTank);
+
 		fluidCapability = LazyOptional.of(() -> {
 			LazyOptional<? extends IFluidHandler> inputCap = inputTank.getCapability();
 			LazyOptional<? extends IFluidHandler> outputCap = outputTank.getCapability();
@@ -91,6 +129,15 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		super.fromTag(state, compound, clientPacket);
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+
+		if (!clientPacket)
+			return;
+
+		NBTHelper.iterateCompoundList(compound.getList("VisualizedItems", NBT.TAG_COMPOUND),
+			c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.read(c))));
+		NBTHelper.iterateCompoundList(compound.getList("VisualizedFluids", NBT.TAG_COMPOUND),
+			c -> visualizedOutputFluids
+				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
 	}
 
 	@Override
@@ -98,6 +145,16 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		super.write(compound, clientPacket);
 		compound.put("InputItems", inputInventory.serializeNBT());
 		compound.put("OutputItems", outputInventory.serializeNBT());
+
+		if (!clientPacket)
+			return;
+
+		compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> ia.getValue()
+			.serializeNBT()));
+		compound.put("VisualizedFluids", NBTHelper.writeCompoundList(visualizedOutputFluids, ia -> ia.getValue()
+			.writeToNBT(new CompoundNBT())));
+		visualizedOutputItems.clear();
+		visualizedOutputFluids.clear();
 	}
 
 	public void onEmptied() {
@@ -130,11 +187,26 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
+		if (!world.isRemote)
+			return;
+		TileEntity tileEntity = world.getTileEntity(pos.up(2));
+		if (!(tileEntity instanceof MechanicalMixerTileEntity)) {
+			setAreFluidsMoving(false);
+			return;
+		}
+		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) tileEntity;
+		setAreFluidsMoving(mixer.running && mixer.runningTicks <= 20);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+		if (world.isRemote) {
+			createFluidParticles();
+			tickVisualizedOutputs();
+			ingredientRotationSpeed.tickChaser();
+			ingredientRotation.setValue(ingredientRotation.getValue() + ingredientRotationSpeed.getValue());
+		}
 		if (!contentsChanged)
 			return;
 		contentsChanged = false;
@@ -151,6 +223,32 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 					((BasinTileEntity) te).contentsChanged = true;
 			}
 		}
+	}
+
+	public float getTotalFluidUnits() {
+		int renderedFluids = 0;
+		float totalUnits = 0;
+
+		for (SmartFluidTankBehaviour behaviour : getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.getRenderedFluid()
+					.isEmpty())
+					continue;
+				float units = tankSegment.getTotalUnits(0);
+				if (units < 1)
+					continue;
+				totalUnits += units;
+				renderedFluids++;
+			}
+		}
+
+		if (renderedFluids == 0)
+			return 0;
+		if (totalUnits < 1)
+			return 0;
+		return totalUnits;
 	}
 
 	private Optional<BasinOperatingTileEntity> getOperator() {
@@ -226,6 +324,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 				.isEmpty())
 				return false;
+			else if (!simulate)
+				visualizedOutputItems.add(IntAttached.withZero(itemStack));
 
 		if (targetTank == null)
 			return false;
@@ -233,8 +333,143 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			if (targetTank.fill(fluidStack.copy(), simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE) != fluidStack
 				.getAmount())
 				return false;
+			else if (!simulate)
+				visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
 
 		return true;
+	}
+
+	public void readOnlyItems(CompoundNBT compound) {
+		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+	}
+
+	public static HeatLevel getHeatLevelOf(BlockState state) {
+		if (BlockHelper.hasBlockStateProperty(state, BlazeBurnerBlock.HEAT_LEVEL))
+			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
+		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+	}
+
+	public Couple<SmartFluidTankBehaviour> getTanks() {
+		return tanks;
+	}
+
+	public Couple<SmartInventory> getInvs() {
+		return invs;
+	}
+
+	// client things
+
+	private void tickVisualizedOutputs() {
+		visualizedOutputFluids.forEach(IntAttached::decrement);
+		visualizedOutputItems.forEach(IntAttached::decrement);
+		visualizedOutputFluids.removeIf(IntAttached::isOrBelowZero);
+		visualizedOutputItems.removeIf(IntAttached::isOrBelowZero);
+	}
+
+	private void createFluidParticles() {
+		Random r = world.rand;
+
+		if (!visualizedOutputFluids.isEmpty())
+			createOutputFluidParticles(r);
+
+		if (!areFluidsMoving && r.nextFloat() > 1 / 8f)
+			return;
+
+		int segments = 0;
+		for (SmartFluidTankBehaviour behaviour : getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks())
+				if (!tankSegment.isEmpty(0))
+					segments++;
+		}
+		if (segments < 2)
+			return;
+
+		float totalUnits = getTotalFluidUnits();
+		if (totalUnits == 0)
+			return;
+		float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);
+		float rim = 2 / 16f;
+		float space = 12 / 16f;
+		float surface = pos.getY() + rim + space * fluidLevel + 1 / 32f;
+
+		if (areFluidsMoving) {
+			createMovingFluidParticles(surface, segments);
+			return;
+		}
+
+		for (SmartFluidTankBehaviour behaviour : getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.isEmpty(0))
+					continue;
+				float x = pos.getX() + rim + space * r.nextFloat();
+				float z = pos.getZ() + rim + space * r.nextFloat();
+				world.addOptionalParticle(
+					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()), x,
+					surface, z, 0, 0, 0);
+			}
+		}
+	}
+
+	private void createOutputFluidParticles(Random r) {
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof BasinBlock))
+			return;
+		Direction direction = blockState.get(BasinBlock.FACING);
+		if (direction == Direction.DOWN)
+			return;
+		Vector3d directionVec = Vector3d.of(direction.getDirectionVec());
+		Vector3d outVec = VecHelper.getCenterOf(pos)
+			.add(directionVec.scale(.65)
+				.subtract(0, 1 / 4f, 0));
+		Vector3d outMotion = directionVec.scale(1 / 16f)
+			.add(0, -1 / 16f, 0);
+
+		for (int i = 0; i < 3; i++) {
+			visualizedOutputFluids.forEach(ia -> {
+				FluidStack fluidStack = ia.getValue();
+				IParticleData fluidParticle = FluidFX.getFluidParticle(fluidStack);
+				Vector3d m = VecHelper.offsetRandomly(outMotion, r, 1 / 16f);
+				world.addOptionalParticle(fluidParticle, outVec.x, outVec.y, outVec.z, m.x, m.y, m.z);
+			});
+		}
+	}
+
+	private void createMovingFluidParticles(float surface, int segments) {
+		Vector3d pointer = new Vector3d(1, 0, 0).scale(1 / 16f);
+		float interval = 360f / segments;
+		Vector3d centerOf = VecHelper.getCenterOf(pos);
+		float intervalOffset = (AnimationTickHolder.ticks * 18) % 360;
+
+		int currentSegment = 0;
+		for (SmartFluidTankBehaviour behaviour : getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.isEmpty(0))
+					continue;
+				float angle = interval * (1 + currentSegment) + intervalOffset;
+				Vector3d vec = centerOf.add(VecHelper.rotate(pointer, angle, Axis.Y));
+				world.addOptionalParticle(
+					new FluidParticleData(AllParticleTypes.BASIN_FLUID.get(), tankSegment.getRenderedFluid()),
+					vec.getX(), surface, vec.getZ(), 1, 0, 0);
+				currentSegment++;
+			}
+		}
+	}
+
+	public boolean areFluidsMoving() {
+		return areFluidsMoving;
+	}
+
+	public boolean setAreFluidsMoving(boolean areFluidsMoving) {
+		this.areFluidsMoving = areFluidsMoving;
+		ingredientRotationSpeed.chase(areFluidsMoving ? 20 : 0, .1f, Chaser.EXP);
+		return areFluidsMoving;
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {
@@ -250,16 +485,5 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 				.isHorizontal();
 		}
 
-	}
-
-	public void readOnlyItems(CompoundNBT compound) {
-		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
-	}
-
-	public static HeatLevel getHeatLevelOf(BlockState state) {
-		if (BlockHelper.hasBlockStateProperty(state, BlazeBurnerBlock.HEAT_LEVEL))
-			return state.get(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}
 }

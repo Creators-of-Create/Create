@@ -39,12 +39,11 @@ public class GlassFluidPipeBlock extends AxisPipeBlock {
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		if (tryRemoveBracket(context))
+			return ActionResultType.SUCCESS;
 		BlockState newState = state;
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
-//		if (!state.get(ALT))
-//			newState = state.with(ALT, true);
-//		else
 		newState = toRegularPipe(world, pos, state);
 		world.setBlockState(pos, newState, 3);
 		return ActionResultType.SUCCESS;

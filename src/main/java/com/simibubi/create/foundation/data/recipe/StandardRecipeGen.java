@@ -422,6 +422,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("SCS")
 				.patternLine(" I ")),
 
+		WOODEN_BRACKET = create(AllBlocks.WOODEN_BRACKET).returns(4)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('S', Tags.Items.RODS_WOODEN)
+				.key('P', I.planks())
+				.key('C', I.andesite())
+				.patternLine("SSS")
+				.patternLine("PCP")),
+
+		METAL_BRACKET = create(AllBlocks.METAL_BRACKET).returns(4)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('S', Tags.Items.NUGGETS_IRON)
+				.key('P', I.iron())
+				.key('C', I.andesite())
+				.patternLine("SSS")
+				.patternLine("PCP")),
+
 		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(16)
 			.unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('S', I.copperSheet())
@@ -457,10 +473,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("T")
 				.patternLine("P")
 				.patternLine("S")),
-			
+
 		ITEM_DRAIN = create(AllBlocks.ITEM_DRAIN).unlockedBy(I::copperCasing)
-			.viaShaped(b -> b
-				.key('P', Blocks.IRON_BARS)
+			.viaShaped(b -> b.key('P', Blocks.IRON_BARS)
 				.key('S', I.copperCasing())
 				.patternLine("P")
 				.patternLine("S")),
@@ -499,8 +514,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" I ")),
 
 		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedByTag(I::copper)
-			.viaShaped(b -> b
-				.key('S', I.shaft())
+			.viaShaped(b -> b.key('S', I.shaft())
 				.key('P', AllBlocks.FLUID_PIPE.get())
 				.key('B', I.copperCasing())
 				.key('C', Items.DRIED_KELP)
