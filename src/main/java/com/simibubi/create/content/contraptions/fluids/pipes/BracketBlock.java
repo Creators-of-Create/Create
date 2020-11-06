@@ -29,7 +29,7 @@ public class BracketBlock extends ProperDirectionalBlock {
 		PIPE, COG, SHAFT;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 

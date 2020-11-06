@@ -73,7 +73,7 @@ public class AirParticleData implements IParticleData, ICustomParticleDataWithSp
 	}
 
 	@Override
-	public Codec<AirParticleData> getCodec() {
+	public Codec<AirParticleData> getCodec(ParticleType<AirParticleData> type) {
 		return CODEC;
 	}
 

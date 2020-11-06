@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidStackParticle extends SpriteTexturedParticle {
@@ -19,14 +19,14 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	private final float field_217588_H;
 	private FluidStack fluid;
 
-	public static FluidStackParticle create(ParticleType<FluidParticleData> type, World world, FluidStack fluid, double x,
+	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientWorld world, FluidStack fluid, double x,
 		double y, double z, double vx, double vy, double vz) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
 	}
 
-	public FluidStackParticle(World world, FluidStack fluid, double x, double y, double z, double vx, double vy,
+	public FluidStackParticle(ClientWorld world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, x, y, z, vx, vy, vz);
 		this.fluid = fluid;
@@ -98,7 +98,7 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		if (!onGround && world.rand.nextFloat() < 1 / 8f)
 			return;
 
-		Vec3d rgb = ColorHelper.getRGB(fluid.getFluid()
+		Vector3d rgb = ColorHelper.getRGB(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
 		world.addParticle(ParticleTypes.ENTITY_EFFECT, posX, posY, posZ, rgb.x, rgb.y, rgb.z);

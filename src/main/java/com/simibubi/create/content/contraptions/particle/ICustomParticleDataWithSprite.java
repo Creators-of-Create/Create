@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import com.mojang.serialization.Codec;
+
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
@@ -11,13 +13,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface ICustomParticleDataWithSprite<T extends IParticleData> extends ICustomParticleData<T> {
 
-	public IDeserializer<T> getDeserializer();
+	IDeserializer<T> getDeserializer();
 	
 	public default ParticleType<T> createType() {
-		return new ParticleType<T>(false, getDeserializer());
+		return new ParticleType<T>(false, getDeserializer()) {
+
+			@Override
+			public Codec<T> getCodec() {
+				return ICustomParticleDataWithSprite.this.getCodec(this);
+			}
+		};
 	}
 	
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	default IParticleFactory<T> getFactory() {
 		throw new IllegalAccessError("This particle type uses a metaFactory!");
 	}

@@ -6,22 +6,22 @@ import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BasinFluidParticle extends FluidStackParticle {
 
 	BlockPos basinPos;
-	Vec3d targetPos;
-	Vec3d centerOfBasin;
+	Vector3d targetPos;
+	Vector3d centerOfBasin;
 	float yOffset;
 
-	public BasinFluidParticle(World world, FluidStack fluid, double x, double y, double z, double vx, double vy,
+	public BasinFluidParticle(ClientWorld world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, fluid, x, y, z, vx, vy, vz);
 		particleGravity = 0;
@@ -32,14 +32,14 @@ public class BasinFluidParticle extends FluidStackParticle {
 		posY += yOffset;
 		particleScale = 0;
 		maxAge = 60;
-		Vec3d currentPos = new Vec3d(posX, posY, posZ);
+		Vector3d currentPos = new Vector3d(posX, posY, posZ);
 		basinPos = new BlockPos(currentPos);
 		centerOfBasin = VecHelper.getCenterOf(basinPos);
 
 		if (vx != 0) {
 			maxAge = 20;
-			Vec3d centerOf = VecHelper.getCenterOf(basinPos);
-			Vec3d diff = currentPos.subtract(centerOf)
+			Vector3d centerOf = VecHelper.getCenterOf(basinPos);
+			Vector3d diff = currentPos.subtract(centerOf)
 				.mul(1, 0, 1)
 				.normalize()
 				.scale(.375);
@@ -74,7 +74,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 
 		if (targetPos != null) {
 			float progess = (1f * age) / maxAge;
-			Vec3d currentPos = centerOfBasin.add(targetPos.subtract(centerOfBasin)
+			Vector3d currentPos = centerOfBasin.add(targetPos.subtract(centerOfBasin)
 				.scale(progess));
 			posX = currentPos.x;
 			posZ = currentPos.z;

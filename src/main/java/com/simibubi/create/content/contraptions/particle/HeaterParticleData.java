@@ -69,7 +69,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticleDataWit
 	}
 
 	@Override
-	public Codec<HeaterParticleData> getCodec() {
+	public Codec<HeaterParticleData> getCodec(ParticleType<HeaterParticleData> type) {
 		return CODEC;
 	}
 

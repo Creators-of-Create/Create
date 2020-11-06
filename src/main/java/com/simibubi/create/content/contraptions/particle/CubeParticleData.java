@@ -77,7 +77,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 	}
 
 	@Override
-	public Codec<CubeParticleData> getCodec() {
+	public Codec<CubeParticleData> getCodec(ParticleType<CubeParticleData> type) {
 		return CODEC;
 	}
 
