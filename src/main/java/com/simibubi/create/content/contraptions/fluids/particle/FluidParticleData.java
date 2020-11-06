@@ -30,7 +30,8 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public IParticleFactory<FluidParticleData> getFactory() {
-		return (data, world, x, y, z, vx, vy, vz) -> new FluidStackParticle(world, data.fluid, x, y, z, vx, vy, vz);
+		return (data, world, x, y, z, vx, vy, vz) -> FluidStackParticle.create(data.type, world, data.fluid, x, y, z,
+			vx, vy, vz);
 	}
 
 	@Override

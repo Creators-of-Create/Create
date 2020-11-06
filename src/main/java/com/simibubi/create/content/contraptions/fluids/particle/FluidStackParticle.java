@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.particle;
 
+import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
@@ -7,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -16,6 +18,13 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	private final float field_217587_G;
 	private final float field_217588_H;
 	private FluidStack fluid;
+
+	public static FluidStackParticle create(ParticleType<FluidParticleData> type, World world, FluidStack fluid, double x,
+		double y, double z, double vx, double vy, double vz) {
+		if (type == AllParticleTypes.BASIN_FLUID.get())
+			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
+		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
+	}
 
 	public FluidStackParticle(World world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
@@ -34,14 +43,25 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		this.multiplyColor(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
+		
+		this.motionX = vx;
+		this.motionY = vy;
+		this.motionZ = vz;
 
 		this.particleScale /= 2.0F;
 		this.field_217587_G = this.rand.nextFloat() * 3.0F;
 		this.field_217588_H = this.rand.nextFloat() * 3.0F;
 	}
 
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.TERRAIN_SHEET;
+	@Override
+	protected int getBrightnessForRender(float p_189214_1_) {
+		int brightnessForRender = super.getBrightnessForRender(p_189214_1_);
+		int skyLight = brightnessForRender >> 20;
+		int blockLight = (brightnessForRender >> 4) & 0xf;
+		blockLight = Math.max(blockLight, fluid.getFluid()
+			.getAttributes()
+			.getLuminosity(fluid));
+		return (skyLight << 20) | (blockLight << 4);
 	}
 
 	protected void multiplyColor(int color) {
@@ -69,19 +89,28 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	@Override
 	public void tick() {
 		super.tick();
-		if (!(fluid.getFluid() instanceof PotionFluid))
+		if (!canEvaporate())
 			return;
 		if (onGround)
 			setExpired();
 		if (!isExpired)
 			return;
-		if (!onGround && world.rand.nextFloat() < 1/8f)
+		if (!onGround && world.rand.nextFloat() < 1 / 8f)
 			return;
 
 		Vec3d rgb = ColorHelper.getRGB(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
 		world.addParticle(ParticleTypes.ENTITY_EFFECT, posX, posY, posZ, rgb.x, rgb.y, rgb.z);
+	}
+	
+	protected boolean canEvaporate() {
+		return fluid.getFluid() instanceof PotionFluid;
+	}
+
+	@Override
+	public IParticleRenderType getRenderType() {
+		return IParticleRenderType.TERRAIN_SHEET;
 	}
 
 }

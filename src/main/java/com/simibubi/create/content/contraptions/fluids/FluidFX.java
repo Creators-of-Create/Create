@@ -45,10 +45,6 @@ public class FluidFX {
 	}
 
 	public static IParticleData getFluidParticle(FluidStack fluid) {
-		if (FluidHelper.hasBlockState(fluid.getFluid()))
-			return new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
-				.getDefaultState()
-				.getBlockState());
 		return new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fluid);
 	}
 
@@ -82,17 +78,17 @@ public class FluidFX {
 	public static void spawnPouringLiquid(World world, BlockPos pos, int amount, IParticleData particle,
 		float rimRadius, Vec3d directionVec, boolean inbound) {
 		for (int i = 0; i < amount; i++) {
-			Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, rimRadius);
+			Vec3d vec = VecHelper.offsetRandomly(Vec3d.ZERO, r, rimRadius * .75f);
 			vec = vec.mul(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.5 + r.nextFloat() / 4f));
-			Vec3d m = vec;
+			Vec3d m = vec.scale(1 / 4f);
 			Vec3d centerOf = VecHelper.getCenterOf(pos);
 			vec = vec.add(centerOf);
 			if (inbound) {
 				vec = vec.add(m);
 				m = centerOf.add(directionVec.scale(.5))
 					.subtract(vec)
-					.scale(3);
+					.scale(1 / 16f);
 			}
 			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
 		}

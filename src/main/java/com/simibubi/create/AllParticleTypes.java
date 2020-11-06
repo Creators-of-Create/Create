@@ -30,6 +30,7 @@ public enum AllParticleTypes {
 	HEATER_PARTICLE(HeaterParticleData::new),
 	CUBE(CubeParticleData::new),
 	FLUID_PARTICLE(FluidParticleData::new),
+	BASIN_FLUID(FluidParticleData::new),
 	FLUID_DRIP(FluidParticleData::new)
 
 	;

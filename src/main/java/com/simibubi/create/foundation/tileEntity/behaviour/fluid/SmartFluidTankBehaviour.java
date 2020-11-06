@@ -267,6 +267,16 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 				.isEmpty())
 				renderedFluid = tank.getFluid();
 		}
+		
+		public boolean isEmpty(float partialTicks) {
+			FluidStack renderedFluid = getRenderedFluid();
+			if (renderedFluid.isEmpty())
+				return true;
+			float units = getTotalUnits(partialTicks);
+			if (units < 1)
+				return true;
+			return false;
+		}
 
 	}
 

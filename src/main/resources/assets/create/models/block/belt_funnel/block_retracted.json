@@ -109,22 +109,9 @@
 			}
 		},
 		{
-			"name": "BackBottom",
-			"from": [3.9, -2, 18],
-			"to": [12.1, 2, 26],
-			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, -4, 17]},
-			"faces": {
-				"east": {"uv": [12, 12, 14, 16], "rotation": 270, "texture": "#7"},
-				"south": {"uv": [8, 13, 12, 15], "rotation": 180, "texture": "#7"},
-				"west": {"uv": [12, 12, 14, 16], "rotation": 270, "texture": "#7"},
-				"up": {"uv": [8, 12, 12, 16], "rotation": 180, "texture": "#7"},
-				"down": {"uv": [8, 12, 12, 16], "rotation": 180, "texture": "#7"}
-			}
-		},
-		{
 			"name": "Back",
 			"from": [2.1, -2.1, 14],
-			"to": [13.9, 13.9, 17.9],
+			"to": [13.9, 13.95, 18.1],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8.1, 6]},
 			"faces": {
 				"east": {"uv": [0, 0, 16, 4], "rotation": 90, "texture": "#5"},
@@ -196,8 +183,8 @@
 				{
 					"name": "Base",
 					"origin": [9, -4, 8],
-					"children": [8, 9, 10, 11, 12]
+					"children": [8, 9, 10, 11]
 				}
 			]
-		}, 13]
+		}, 12]
 }
