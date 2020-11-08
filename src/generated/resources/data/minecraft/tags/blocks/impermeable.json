@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "create:tiled_glass",
+    "create:framed_glass",
+    "create:horizontal_framed_glass",
+    "create:vertical_framed_glass",
+    "create:oak_window",
+    "create:spruce_window",
+    "create:birch_window",
+    "create:jungle_window",
+    "create:acacia_window",
+    "create:dark_oak_window",
+    "create:ornate_iron_window"
+  ]
+}

@@ -29,6 +29,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.WoodType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -77,6 +78,7 @@ public class WindowGen {
 			.loot((t, g) -> t.registerSilkTouch(g))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
+			.tag(BlockTags.IMPERMEABLE)
 			.simpleItem()
 			.register();
 	}
@@ -89,7 +91,7 @@ public class WindowGen {
 			.loot((t, g) -> t.registerSilkTouch(g))
 			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
-			.tag(Tags.Blocks.GLASS_COLORLESS)
+			.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 			.item()
 			.tag(Tags.Items.GLASS_COLORLESS)
 			.model((c, p) -> p.cubeColumn(c.getName(), p.modLoc(palettesDir() + c.getName()),
