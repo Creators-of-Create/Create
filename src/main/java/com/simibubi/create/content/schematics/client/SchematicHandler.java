@@ -12,9 +12,9 @@ import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
+import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -272,17 +272,7 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-
-		PlacementSettings settings = transformation.toSettings();
-		CompoundNBT tag = activeSchematicItem.getTag();
-		tag.putBoolean("Deployed", deployed);
-		tag.put("Anchor", NBTUtil.writeBlockPos(transformation.getAnchor()));
-		tag.putString("Rotation", settings.getRotation()
-			.name());
-		tag.putString("Mirror", settings.getMirror()
-			.name());
-
-		AllPackets.channel.sendToServer(new NbtPacket(activeSchematicItem, activeHotbarSlot));
+		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(), transformation.getAnchor(), deployed));
 	}
 
 	public void equip(Tools tool) {
