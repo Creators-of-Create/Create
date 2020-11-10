@@ -32,7 +32,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.fluids.FluidStack;
 
 public class GuiGameElement {
@@ -173,7 +172,8 @@ public class GuiGameElement {
 
 		protected void renderModel(BlockRendererDispatcher blockRenderer, IRenderTypeBuffer.Impl buffer,
 			RenderType renderType, IVertexBuilder vb, MatrixStack ms) {
-			Vec3d rgb = ColorHelper.getRGB(color);
+			int color = Minecraft.getInstance().getBlockColors().getColor(blockState, null, null, 0);
+			Vec3d rgb = ColorHelper.getRGB(color == -1 ? this.color : color);
 			blockRenderer.getBlockModelRenderer()
 				.renderModel(ms.peek(), vb, blockState, blockmodel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
 					0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
