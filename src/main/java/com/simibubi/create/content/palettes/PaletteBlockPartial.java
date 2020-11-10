@@ -181,6 +181,14 @@ public abstract class PaletteBlockPartial<B extends Block> {
 			p.slab(source, result, c.getName(), true);
 		}
 
+		@Override
+		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
+				BlockBuilder<SlabBlock, CreateRegistrate> builder,
+				String variantName, PaletteBlockPatterns pattern) {
+			builder.loot((lt, block) -> lt.registerLootTable(block, lt.droppingSlab(block)));
+			return super.transformBlock(builder, variantName, pattern);
+		}
+
 	}
 
 	private static class Wall extends PaletteBlockPartial<WallBlock> {
