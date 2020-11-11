@@ -94,6 +94,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	public float getAngularSpeed() {
 		float speed = (isWindmill() ? getGeneratedSpeed() : getSpeed()) * 3 / 10f;
+		if (getSpeed() == 0)
+			speed = 0;
 		if (world.isRemote) {
 			speed *= ServerSpeedProvider.get();
 			speed += clientAngleDiff / 3f;

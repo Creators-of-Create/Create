@@ -5,6 +5,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -57,8 +59,16 @@ public class FunnelTileEntity extends SmartTileEntity {
 		if (FunnelBlock.getFunnelFacing(state) == Direction.UP && autoExtractor.hasInventory())
 			return Mode.HOPPER;
 		if (state.getBlock() instanceof BeltFunnelBlock) {
-			boolean pushing = state.get(BeltFunnelBlock.PUSHING);
-			return pushing ? Mode.PUSHING_TO_BELT : Mode.TAKING_FROM_BELT;
+			Shape shape = state.get(BeltFunnelBlock.SHAPE);
+			if (shape == Shape.PULLING)
+				return Mode.TAKING_FROM_BELT;
+			if (shape == Shape.PUSHING)
+				return Mode.PUSHING_TO_BELT;
+
+			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.down());
+			if (belt != null)
+				return belt.getMovementFacing() == state.get(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
+					: Mode.TAKING_FROM_BELT;
 		}
 		return Mode.COLLECT;
 	}
@@ -140,9 +150,7 @@ public class FunnelTileEntity extends SmartTileEntity {
 		if (!inputBehaviour.canInsertFromSide(facing))
 			return;
 
-		int amountToExtract = invManipulation.getAmountFromFilter();
-		if (!filtering.isActive())
-			amountToExtract = 1;
+		int amountToExtract = getAmountToExtract();
 		ItemStack stack = invManipulation.extract(amountToExtract, s -> inputBehaviour.handleInsertion(s, facing, true)
 			.isEmpty());
 		if (stack.isEmpty())
@@ -151,6 +159,15 @@ public class FunnelTileEntity extends SmartTileEntity {
 		onTransfer(stack);
 		inputBehaviour.handleInsertion(stack, facing, false);
 		startCooldown();
+	}
+
+	public int getAmountToExtract() {
+		if (!supportsAmountOnFilter())
+			return -1;
+		int amountToExtract = invManipulation.getAmountFromFilter();
+		if (!filtering.isActive())
+			amountToExtract = 1;
+		return amountToExtract;
 	}
 
 	private int startCooldown() {
@@ -194,12 +211,18 @@ public class FunnelTileEntity extends SmartTileEntity {
 
 	private boolean supportsAmountOnFilter() {
 		BlockState blockState = getBlockState();
-		boolean pushingToBelt = blockState.getBlock() instanceof HorizontalInteractionFunnelBlock
-			&& blockState.get(HorizontalInteractionFunnelBlock.PUSHING);
+		boolean beltFunnelsupportsAmount = false;
+		if (blockState.getBlock() instanceof BeltFunnelBlock) {
+			Shape shape = blockState.get(BeltFunnelBlock.SHAPE);
+			if (shape == Shape.PUSHING)
+				beltFunnelsupportsAmount = true;
+			else
+				beltFunnelsupportsAmount = BeltHelper.getSegmentTE(world, pos.down()) != null;
+		}
 		boolean hopper = FunnelBlock.getFunnelFacing(blockState) == Direction.UP && !world.getBlockState(pos.up())
 			.getMaterial()
 			.isReplaceable();
-		return pushingToBelt || hopper;
+		return beltFunnelsupportsAmount || hopper;
 	}
 
 	private boolean supportsDirectBeltInput(Direction side) {
@@ -236,8 +259,26 @@ public class FunnelTileEntity extends SmartTileEntity {
 	}
 
 	public boolean hasFlap() {
-		return getBlockState().getBlock() instanceof BeltFunnelBlock
-			&& getBlockState().get(BeltFunnelBlock.SHAPE) == Shape.RETRACTED;
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
+			return false;
+		return true;
+	}
+
+	public float getFlapOffset() {
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
+			return 0;
+		switch (blockState.get(BeltFunnelBlock.SHAPE)) {
+		default:
+		case RETRACTED:
+			return 0;
+		case EXTENDED:
+			return 8 / 16f;
+		case PULLING:
+		case PUSHING:
+			return -2 / 16f;
+		}
 	}
 
 	@Override

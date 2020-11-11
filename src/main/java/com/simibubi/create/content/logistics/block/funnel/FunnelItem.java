@@ -1,9 +1,12 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
+import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,8 +40,12 @@ public class FunnelItem extends BlockItem {
 			return state;
 		Direction direction = state.get(FunnelBlock.FACING);
 		if (!direction.getAxis()
-			.isHorizontal())
+			.isHorizontal()) {
+			TileEntity tileEntity = world.getTileEntity(pos.offset(direction.getOpposite()));
+			if (tileEntity instanceof ChuteTileEntity && ((ChuteTileEntity) tileEntity).getItemMotion() > 0)
+				state = state.with(FunnelBlock.FACING, direction.getOpposite());
 			return state;
+		}
 
 		FunnelBlock block = (FunnelBlock) getBlock();
 		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
@@ -46,7 +53,7 @@ public class FunnelItem extends BlockItem {
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, direction);
 		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos))
-			return BeltFunnelBlock.updateShape(equivalentBeltFunnel, world, pos);
+			return equivalentBeltFunnel;
 
 		return state;
 	}

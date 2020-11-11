@@ -292,8 +292,8 @@ public class BeltInventory {
 		BlockPos lastPosition = BeltHelper.getPositionForOffset(belt, lastOffset);
 		BlockPos nextPosition = BeltHelper.getPositionForOffset(belt, beltMovementPositive ? belt.beltLength : -1);
 
-		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))
-			return Ending.FUNNEL;
+//		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))
+//			return Ending.FUNNEL;
 
 		DirectBeltInputBehaviour inputBehaviour =
 			TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
