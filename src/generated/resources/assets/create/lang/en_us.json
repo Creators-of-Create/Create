@@ -709,6 +709,9 @@
 	"create.logistics.fluid_filter": "Fluid Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
+	"create.logistics.filter.apply": "Applied filter to %1$s.",
+	"create.logistics.filter.apply_click_again": "Applied filter to %1$s, click again to copy the amount.",
+	"create.logistics.filter.apply_count": "Applied extraction count to filter.",
 
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
@@ -749,7 +752,7 @@
 	"create.schematicAndQuill.noTarget": "Hold [Ctrl] to select Air blocks.",
 	"create.schematicAndQuill.abort": "Removed selection.",
 	"create.schematicAndQuill.title": "Schematic Name:",
-	"create.schematicAndQuill.convert": "Save and Deploy Immediately",
+	"create.schematicAndQuill.convetr": "Save and Deploy Immediately",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 
@@ -949,6 +952,7 @@
 
 	"create.mechanical_arm.extract_from": "Take items from %1$s",
 	"create.mechanical_arm.deposit_to": "Deposit items to %1$s",
+	"create.mechanical_arm.summary": "Mechanical Arm has %1$s input(s) and %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "%1$s selected interaction point(s) removed due to range limitations.",
 
 	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
@@ -964,6 +968,15 @@
 	"create.tunnel.selection_mode.prefer_nearest": "Prefer Nearest",
 	"create.tunnel.selection_mode.randomize": "Randomize",
 	"create.tunnel.selection_mode.synchronize": "Synchronize Inputs",
+
+	"create.hint.mechanical_arm_no_targets.title": "No Targets",
+	"create.hint.mechanical_arm_no_targets": "It appears this _Mechnanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
+	"create.hint.horizontal_funnel.title": "Horizontal Funnels",
+	"create.hint.horizontal_funnel": "cannot transfer between inventories _directly_. Try running a _Mechanical_ _Belt_ or _Depot_ below your funnel to extract items from Inventories.",
+	"create.hint.upward_funnel.title": "Funnels facing upward",
+	"create.hint.upward_funnel": "can only transfer items inserted by _Arms_, fan-powered _Chutes_, or items _thrown_ at them. Try building some _Chutes_ if you are looking to move your items _vertically_.",
+	"create.hint.empty_bearing.title": "Update Bearing",
+	"create.hint.empty_bearing": "_Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",

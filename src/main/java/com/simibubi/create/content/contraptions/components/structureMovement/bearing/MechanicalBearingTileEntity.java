@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -254,6 +255,29 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	public boolean isRunning() {
 		return running;
+	}
+
+	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (super.addToTooltip(tooltip, isPlayerSneaking))
+			return true;
+		if (isPlayerSneaking)
+			return false;
+		if (isWindmill())
+			return false;
+		if (getSpeed() == 0)
+			return false;
+		if (running)
+			return false;
+		BlockState state = getBlockState();
+		if (!(state.getBlock() instanceof BearingBlock))
+			return false;
+		BlockState attachedState = world.getBlockState(pos.offset(state.get(BearingBlock.FACING)));
+		if (attachedState.getMaterial()
+			.isReplaceable())
+			return false;
+		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
+		return true;
 	}
 
 }
