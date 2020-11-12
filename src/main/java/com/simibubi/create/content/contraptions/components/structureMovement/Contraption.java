@@ -25,7 +25,6 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -394,8 +393,6 @@ public abstract class Contraption {
 
 	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
-		if (AllBlocks.MECHANICAL_SAW.has(blockstate))
-			blockstate = blockstate.with(SawBlock.RUNNING, true);
 		if (blockstate.getBlock() instanceof ChestBlock)
 			blockstate = blockstate.with(ChestBlock.TYPE, ChestType.SINGLE);
 		if (AllBlocks.ADJUSTABLE_CRATE.has(blockstate))
@@ -656,9 +653,6 @@ public abstract class Contraption {
 					for (Direction face : Direction.values())
 						state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
 							targetPos, targetPos.offset(face));
-
-				if (AllBlocks.MECHANICAL_SAW.has(state))
-					state = state.with(SawBlock.RUNNING, false);
 
 				BlockState blockState = world.getBlockState(targetPos);
 				if (blockState.getBlockHardness(world, targetPos) == -1 || (state.getCollisionShape(world, targetPos)

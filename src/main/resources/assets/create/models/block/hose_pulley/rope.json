@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/rope_pulley/rope",
+	"textures": {
+		"5": "create:block/hose_pulley_rope",
+		"particle": "create:block/hose_pulley_rope"
+	}
+}

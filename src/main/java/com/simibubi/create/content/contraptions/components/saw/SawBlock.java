@@ -12,14 +12,11 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -35,13 +32,10 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
-
-	public static final BooleanProperty RUNNING = BooleanProperty.create("running");
 	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").setDamageBypassesArmor();
 
 	public SawBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(RUNNING, false));
 	}
 
 	@Override
@@ -51,12 +45,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		if (facing.getAxis().isVertical())
 			return stateForPlacement;
 		return stateForPlacement.with(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
-	}
-
-	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(RUNNING);
-		super.fillStateContainer(builder);
 	}
 
 	@Override

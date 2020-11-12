@@ -5,7 +5,7 @@
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",
 		"2": "create:block/andesite_casing_short",
-		"4": "create:block/brass_block",
+		"4": "create:block/smooth_dark_log_top",
 		"particle": "create:block/axis"
 	},
 	"elements": [
@@ -27,7 +27,7 @@
 			"from": [5, 5, 11],
 			"to": [11, 11, 14],
 			"faces": {
-				"north": {"uv": [0, 0, 6, 6], "texture": "#4"},
+				"north": {"uv": [5, 5, 11, 11], "texture": "#4"},
 				"east": {"uv": [13, 5, 16, 11], "texture": "#4"},
 				"south": {"uv": [5, 5, 11, 11], "texture": "#4"},
 				"west": {"uv": [0, 5, 3, 11], "texture": "#4"},

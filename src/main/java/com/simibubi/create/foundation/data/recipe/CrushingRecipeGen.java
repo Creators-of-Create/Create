@@ -21,9 +21,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		.output(.25f, Items.BLAZE_POWDER, 3)),
 
 		PRISMARINE_CRYSTALS = create(() -> Items.PRISMARINE_CRYSTALS, b -> b.duration(150)
-			.output(Items.PRISMARINE_SHARD, 2)
-			.output(.75f, Items.QUARTZ, 2)
-			.output(.25f, Items.PRISMARINE_SHARD, 2)
+			.output(1f, Items.QUARTZ, 1)
+			.output(.5f, Items.QUARTZ, 2)
 			.output(.1f, Items.GLOWSTONE_DUST, 2)),
 
 		OBSIDIAN = create(() -> Blocks.OBSIDIAN, b -> b.duration(500)

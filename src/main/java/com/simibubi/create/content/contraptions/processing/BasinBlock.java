@@ -3,14 +3,15 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,12 +33,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -60,6 +57,14 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
 		super.fillStateContainer(p_206840_1_.add(FACING));
 	}
+	
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+		TileEntity tileEntity = world.getTileEntity(pos.up());
+		if (tileEntity instanceof BasinOperatingTileEntity)
+			return false;
+		return true;
+	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -79,7 +84,13 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		try {
 			BasinTileEntity te = getTileEntity(worldIn, pos);
 			if (!heldItem.isEmpty()) {
-				if (tryEmptyItemIntoBasin(worldIn, player, handIn, heldItem, te))
+				if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
+					return ActionResultType.SUCCESS;
+				if (FluidHelper.tryFillItemFromTE(worldIn, player, handIn, heldItem, te))
+					return ActionResultType.SUCCESS;
+
+				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
+					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return ActionResultType.SUCCESS;
 				return ActionResultType.PASS;
 			}
@@ -94,30 +105,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		}
 
 		return ActionResultType.SUCCESS;
-	}
-
-	protected boolean tryEmptyItemIntoBasin(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
-		BasinTileEntity te) {
-		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
-			return false;
-
-		Pair<FluidStack, ItemStack> emptyItem = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		IFluidHandler tank = capability.orElse(null);
-		FluidStack fluidStack = emptyItem.getFirst();
-
-		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
-			return false;
-		if (worldIn.isRemote)
-			return true;
-
-		EmptyingByBasin.emptyItem(worldIn, heldItem, false);
-		tank.fill(fluidStack, FluidAction.EXECUTE);
-		if (heldItem.isEmpty())
-			player.setHeldItem(handIn, emptyItem.getSecond());
-		else
-			player.inventory.placeItemBackInInventory(worldIn, emptyItem.getSecond());
-		return true;
 	}
 
 	@Override
@@ -143,6 +130,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 			itemEntity.setItem(insertItem);
 		});
+	}
+
+	@Override
+	public VoxelShape getRaytraceShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
+		return AllShapes.BASIN_RAYTRACE_SHAPE;
 	}
 
 	@Override

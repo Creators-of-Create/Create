@@ -20,7 +20,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	private AnimatedSaw saw = new AnimatedSaw();
 
 	public SawingCategory() {
-		super("sawing", doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
+		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
 	}
 
 	@Override

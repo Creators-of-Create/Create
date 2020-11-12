@@ -25,6 +25,7 @@ public class AllShapes {
 	public static final VoxelShaper
 
 	CASING_14PX = shape(0, 0, 0, 16, 14, 16).forDirectional(),
+		CASING_13PX = shape(0, 0, 0, 16, 13, 16).forDirectional(),
 		CASING_12PX = shape(0, 0, 0, 16, 12, 16).forDirectional(),
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
@@ -34,8 +35,12 @@ public class AllShapes {
 			.forHorizontal(Direction.SOUTH),
 		PORTABLE_STORAGE_INTERFACE = shape(0, 0, 0, 16, 14, 16).forDirectional(),
 		PULLEY = shape(0, 0, 0, 16, 16, 2).add(1, 1, 2, 15, 15, 14)
+			.add(2, 13, 2, 14, 16, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
+		SAIL_FRAME_COLLISION = shape(0, 5, 0, 16, 9, 16).erase(2, 0, 2, 14, 16, 14)
+			.forDirectional(),
+		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(), SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),
 		SPEED_CONTROLLER = shape(0, 0, 0, 16, 2, 16).add(1, 1, 1, 15, 15, 15)
 			.erase(0, 8, 5, 16, 16, 11)
 			.add(2, 9, 2, 14, 14, 14)
@@ -72,11 +77,26 @@ public class AllShapes {
 			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 13, 16)
 			.forDirectional(UP),
-		BELT_FUNNEL_RETRACTED = shape(2, -5, 14, 12, 14, 18).add(0, -5, 8, 16, 16, 14)
+		BELT_FUNNEL_RETRACTED = shape(2, -2, 14, 14, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = shape(2, -4, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
+		BELT_FUNNEL_EXTENDED = shape(2, -2, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
 			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_PERPENDICULAR = 
+			shape(2, -2, 14, 14, 14, 18)
+			.add(1, 8, 12, 15, 15, 14)
+			.add(0.1, 13, 7, 15.9, 15, 11)
+			.add(0.1, 9, 8, 15.9, 13, 12)
+			.add(0.1, 5, 9, 15.9, 9, 13)
+			.add(0.1, 1, 10, 15.9, 5, 14)
+			.add(0.1, -3, 11, 15.9, 1, 15)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_CONNECTED = 
+			shape(2, -2, 14, 14, 14, 18)
+			.add(0, -5, 5, 16, 16, 11)
+			.add(2, -4, 2, 14, 14, -2)
+			.add(3, -2, 0, 13, 13, 16)
 			.forHorizontal(NORTH),
 		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),
@@ -118,9 +138,6 @@ public class AllShapes {
 		LOGISTICS_TABLE_SLOPE = shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333)
 			.add(0, 14, 6.333, 16, 18, 2)
 			.build(),
-		SCHEMATICS_TABLE_SLOPE = shape(0, 10, 16, 16, 14, 11).add(0, 12, 11, 16, 16, 6)
-			.add(0, 14, 6, 16, 18, 1)
-			.build(),
 		TANK_BOTTOM_LID = shape(0, 0, 0, 16, 4, 16).build(), TANK_TOP_LID = shape(0, 12, 0, 16, 16, 16).build()
 
 	;
@@ -130,10 +147,12 @@ public class AllShapes {
 
 	BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
 		.add(2, 0, 2, 14, 2, 14)
-		.build(), BASIN_COLLISION_SHAPE =
-			shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
-				.add(2, 0, 2, 14, 2, 14)
+		.build(), BASIN_RAYTRACE_SHAPE =
+			shape(0, 2, 0, 16, 16, 16).add(2, 0, 2, 14, 2, 14)
 				.build(),
+		BASIN_COLLISION_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
+			.add(2, 0, 2, 14, 2, 14)
+			.build(),
 		HEATER_BLOCK_SHAPE = shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
 			.build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
@@ -191,7 +210,7 @@ public class AllShapes {
 			.withVerticalShapes(LOGISTICAL_CONTROLLER.get(UP)),
 		LOGISTICS_TABLE = shape(TABLE_POLE_SHAPE).add(LOGISTICS_TABLE_SLOPE)
 			.forHorizontal(SOUTH),
-		SCHEMATICS_TABLE = shape(TABLE_POLE_SHAPE).add(SCHEMATICS_TABLE_SLOPE)
+		SCHEMATICS_TABLE = shape(4, 0, 4, 12, 12, 12).add(0, 11, 2, 16, 14, 14)
 			.forDirectional(SOUTH),
 		CHUTE_SLOPE = shape(ChuteShapes.createSlope()).forHorizontal(SOUTH)
 

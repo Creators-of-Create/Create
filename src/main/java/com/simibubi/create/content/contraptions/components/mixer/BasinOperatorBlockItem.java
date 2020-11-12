@@ -18,11 +18,17 @@ public class BasinOperatorBlockItem extends BlockItem {
 
 	@Override
 	public ActionResultType tryPlace(BlockItemUseContext context) {
-
-		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
-		BlockState placedOnState = context.getWorld().getBlockState(placedOnPos);
-		if (AllBlocks.BASIN.has(placedOnState)) {
-			if (context.getWorld().getBlockState(placedOnPos.up(2)).getMaterial().isReplaceable())
+		BlockPos placedOnPos = context.getPos()
+			.offset(context.getFace()
+				.getOpposite());
+		BlockState placedOnState = context.getWorld()
+			.getBlockState(placedOnPos);
+		if (AllBlocks.BASIN.has(placedOnState) || AllBlocks.BELT.has(placedOnState)
+			|| AllBlocks.DEPOT.has(placedOnState)) {
+			if (context.getWorld()
+				.getBlockState(placedOnPos.up(2))
+				.getMaterial()
+				.isReplaceable())
 				context = BlockItemUseContext.func_221536_a(context, placedOnPos.up(2), Direction.UP);
 			else
 				return ActionResultType.FAIL;

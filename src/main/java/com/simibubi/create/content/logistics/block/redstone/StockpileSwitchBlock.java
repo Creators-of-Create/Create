@@ -79,6 +79,8 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (side == blockState.get(HORIZONTAL_FACING).getOpposite())
+			return 0;
 		try {
 			return getTileEntity(blockAccess, pos).isPowered() ? 15 : 0;
 		} catch (TileEntityException e) {

@@ -6,16 +6,36 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.item.Items;
+import net.minecraft.util.IItemProvider;
+
 public class MixingCategory extends BasinCategory {
 
 	private final AnimatedMixer mixer = new AnimatedMixer();
 	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
+	MixingType type;
 
-	public MixingCategory(boolean isForShapelessCraftingOnly) {
-		super(
-				isForShapelessCraftingOnly ? "shapeless_mixing" : "mixing",
-				doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), AllBlocks.BASIN.get()),
-				emptyBackground(177, 103));
+	enum MixingType {
+		AUTO_SHAPELESS, MIXING, AUTO_BREWING;
+	}
+
+	public static MixingCategory autoShapeless() {
+		return new MixingCategory(MixingType.AUTO_SHAPELESS, Items.CRAFTING_TABLE, 85);
+	}
+
+	public static MixingCategory standard() {
+		return new MixingCategory(MixingType.MIXING, AllBlocks.BASIN.get(), 103);
+	}
+
+	public static MixingCategory autoBrewing() {
+		return new MixingCategory(MixingType.AUTO_BREWING, Blocks.BREWING_STAND, 103);
+	}
+
+	protected MixingCategory(MixingType type, IItemProvider secondaryItem, int height) {
+		super(type != MixingType.AUTO_SHAPELESS, doubleItemIcon(AllBlocks.MECHANICAL_MIXER.get(), secondaryItem),
+			emptyBackground(177, height));
+		this.type = type;
 	}
 
 	@Override
@@ -24,7 +44,7 @@ public class MixingCategory extends BasinCategory {
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-					.draw(getBackground().getWidth() / 2 + 3, 55);
+				.draw(getBackground().getWidth() / 2 + 3, 55);
 		mixer.draw(getBackground().getWidth() / 2 + 3, 34);
 	}
 

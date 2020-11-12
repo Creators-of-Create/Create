@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.LimbSwingUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
+import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
@@ -32,8 +33,12 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public enum AllPackets {
@@ -66,7 +71,8 @@ public enum AllPackets {
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
 	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new),
-	
+	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket::new),
+
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Create.ID, "network");
@@ -80,11 +86,20 @@ public enum AllPackets {
 	}
 
 	public static void registerPackets() {
-		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME).serverAcceptedVersions(s -> true)
-				.clientAcceptedVersions(s -> true).networkProtocolVersion(() -> NETWORK_VERSION).simpleChannel();
+		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
+			.serverAcceptedVersions(s -> true)
+			.clientAcceptedVersions(s -> true)
+			.networkProtocolVersion(() -> NETWORK_VERSION)
+			.simpleChannel();
 		for (AllPackets packet : values())
 			packet.packet.register();
+	}
 
+	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
+		channel.send(
+			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getDimension()
+				.getType())),
+			message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
@@ -102,7 +117,11 @@ public enum AllPackets {
 		}
 
 		private void register() {
-			channel.messageBuilder(type, index++).encoder(encoder).decoder(decoder).consumer(handler).add();
+			channel.messageBuilder(type, index++)
+				.encoder(encoder)
+				.decoder(decoder)
+				.consumer(handler)
+				.add();
 		}
 	}
 

@@ -114,7 +114,7 @@ class FluidNetworkFlow {
 			return;
 		}
 
-		fluidStack = provideFluid;
+		fluidStack = provideFluid.copy();
 
 		// There is currently no unfinished flow being followed
 		if (flowPointers.isEmpty()) {

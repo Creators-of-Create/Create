@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlockPlacementHelper;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -93,6 +94,7 @@ public class ClientEvents {
 		ExtendoGripRenderHandler.tick();
 //		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
+		SailBlockPlacementHelper.tick();
 		CreateClient.outliner.tickOutlines();		
 	}
 	

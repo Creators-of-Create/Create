@@ -1,0 +1,98 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+    "textures": {
+        "particle": "create:block/gearbox_top",
+        "slit": "create:block/mechanical_saw_top",
+        "stonecutter_saw": "create:block/static_saw",
+        "gearbox_top": "create:block/gearbox_top",
+        "encased_belt": "create:block/encased_belt",
+        "gearbox": "create:block/gearbox",
+        "andesite_casing_short": "create:block/andesite_casing_short"
+    },
+	"parent": "create:block/block",
+    "elements": [
+        {
+            "name": "Bottom",
+            "from": [ 0, 0, 0 ], 
+            "to": [ 16, 2, 12 ], 
+            "faces": {
+                "north": { "texture": "#andesite_casing_short", "uv": [ 0, 14, 16, 16 ] },
+                "east": { "texture": "#andesite_casing_short", "uv": [ 4, 14, 16, 16 ] },
+                "south": { "texture": "#encased_belt", "uv": [ 0, 14, 16, 16 ] },
+                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 14, 12, 16 ] },
+                "up": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] },
+                "down": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Top",
+            "from": [ 0, 14, 0 ], 
+            "to": [ 16, 16, 12 ], 
+            "faces": {
+                "north": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 6 ] },
+                "east": { "texture": "#andesite_casing_short", "uv": [ 4, 4, 16, 6 ] },
+                "south": { "texture": "#encased_belt", "uv": [ 0, 0, 16, 2 ] },
+                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 12, 6 ] },
+                "up": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] },
+                "down": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] }
+            }
+        },
+        {
+            "name": "Back",
+            "from": [ 0, 2, 0 ], 
+            "to": [ 2, 14, 2 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
+                "east": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
+                "west": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] }
+            }
+        },
+        {
+            "name": "Inner",
+            "from": [ 0, 2, 2 ], 
+            "to": [ 16, 14, 11 ], 
+            "faces": {
+                "east": { "texture": "#andesite_casing_short", "uv": [ 2, 6, 14, 15 ], "rotation": 90 },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 2, 16, 14 ] },
+                "west": { "texture": "#andesite_casing_short", "uv": [ 2, 6, 14, 15 ], "rotation": 270 }
+            }
+        },
+        {
+            "name": "SawSlit",
+            "from": [ 1, 7, 11.062 ], 
+            "to": [ 15, 9, 11.062 ], 
+            "faces": {
+                "south": { "texture": "#slit", "uv": [ 1, 7, 15, 9 ] }
+            }
+        },
+        {
+            "name": "Blade",
+            "from": [ 1, 8, 11 ],
+            "to": [ 15, 8.062, 18 ],
+            "faces": {
+                "up": { "texture": "#stonecutter_saw", "uv": [ 1, 9, 15, 16 ], "rotation": 180 },
+                "down": { "texture": "#stonecutter_saw", "uv": [ 1, 9, 15, 16 ] }
+            }
+        },
+        {
+            "name": "Back",
+            "from": [ 14, 2, 0 ], 
+            "to": [ 16, 14, 2 ], 
+            "faces": {
+                "north": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
+                "east": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
+                "south": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
+                "west": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] }
+            }
+        },
+        {
+            "name": "Back",
+            "from": [ 2, 2, 1 ], 
+            "to": [ 14, 14, 2 ], 
+            "faces": {
+                "north": { "texture": "#gearbox", "uv": [ 2, 2, 14, 14 ] }
+            }
+        }
+    ]
+}

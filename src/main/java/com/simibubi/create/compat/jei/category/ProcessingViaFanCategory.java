@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
@@ -8,24 +9,33 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 
-	public ProcessingViaFanCategory(String name, IDrawable icon) {
-		super(name, icon, emptyBackground(177, 70));
+	public ProcessingViaFanCategory(IDrawable icon) {
+		super(icon, emptyBackground(177, 70));
 	}
 
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+	}
+
+	public static Supplier<ItemStack> getFan(String name) {
+		return () -> AllBlocks.ENCASED_FAN.asStack()
+			.setDisplayName(new StringTextComponent(TextFormatting.RESET + Lang.translate("recipe." + name + ".fan")));
 	}
 
 	@Override

@@ -1,15 +1,19 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
+import java.util.Optional;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +22,7 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -35,107 +40,135 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class ShaftBlock extends RotatedPillarKineticBlock implements IWaterLoggable {
+public class ShaftBlock extends RotatedPillarKineticBlock implements IWaterLoggable, IWrenchableWithBracket {
 
-    public ShaftBlock(Properties properties) {
-        super(properties);
-        setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
-    }
+	public ShaftBlock(Properties properties) {
+		super(properties);
+		setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+	}
 
-    public static boolean isShaft(BlockState state) {
-        return AllBlocks.SHAFT.has(state);
-    }
+	public static boolean isShaft(BlockState state) {
+		return AllBlocks.SHAFT.has(state);
+	}
+	
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return IWrenchableWithBracket.super.onWrenched(state, context);
+	}
 
-    @Override
-    public PushReaction getPushReaction(BlockState state) {
-        return PushReaction.NORMAL;
-    }
+	@Override
+	public PushReaction getPushReaction(BlockState state) {
+		return PushReaction.NORMAL;
+	}
 
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
-    }
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.SIMPLE_KINETIC.create();
+	}
 
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return AllTileEntities.SIMPLE_KINETIC.create();
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state != newState && !isMoving)
+			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
+		super.onReplaced(state, world, pos, newState, isMoving);
+	}
 
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS));
-    }
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS));
+	}
 
-    @Override
-    public float getParticleTargetRadius() {
-        return .25f;
-    }
+	@Override
+	public float getParticleTargetRadius() {
+		return .25f;
+	}
 
-    @Override
-    public float getParticleInitialRadius() {
-        return 0f;
-    }
+	@Override
+	public float getParticleInitialRadius() {
+		return 0f;
+	}
 
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        super.fillItemGroup(group, items);
-    }
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		super.fillItemGroup(group, items);
+	}
 
-    @Override
-    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
-        if (player.isSneaking() || !player.isAllowEdit())
-            return ActionResultType.PASS;
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult p_225533_6_) {
+		if (player.isSneaking() || !player.isAllowEdit())
+			return ActionResultType.PASS;
 
-        ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getHeldItem(hand);
 
-        for (EncasedShaftBlock.Casing casing : EncasedShaftBlock.Casing.values()) {
-            if (casing.getCasingEntry().isIn(heldItem)) {
-                if (world.isRemote)
-                    return ActionResultType.SUCCESS;
+		for (EncasedShaftBlock.Casing casing : EncasedShaftBlock.Casing.values()) {
+			if (casing.getCasingEntry()
+				.isIn(heldItem)) {
+				if (world.isRemote)
+					return ActionResultType.SUCCESS;
 
-                KineticTileEntity.switchToBlockState(world, pos, AllBlocks.ENCASED_SHAFT.getDefaultState().with(EncasedShaftBlock.CASING, casing).with(AXIS, state.get(AXIS)));
-                return ActionResultType.SUCCESS;
-            }
-        }
+				KineticTileEntity.switchToBlockState(world, pos, AllBlocks.ENCASED_SHAFT.getDefaultState()
+					.with(EncasedShaftBlock.CASING, casing)
+					.with(AXIS, state.get(AXIS)));
+				return ActionResultType.SUCCESS;
+			}
+		}
 
-        return ActionResultType.PASS;
-    }
+		return ActionResultType.PASS;
+	}
 
-    // IRotate:
+	// IRotate:
 
-    @Override
-    public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-        return face.getAxis() == state.get(AXIS);
-    }
+	@Override
+	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+		return face.getAxis() == state.get(AXIS);
+	}
 
-    @Override
-    public Axis getRotationAxis(BlockState state) {
-        return state.get(AXIS);
-    }
+	@Override
+	public Axis getRotationAxis(BlockState state) {
+		return state.get(AXIS);
+	}
 
-    @Override
-    public IFluidState getFluidState(BlockState state) {
-        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
-    }
+	@Override
+	public IFluidState getFluidState(BlockState state) {
+		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
+			: Fluids.EMPTY.getDefaultState();
+	}
 
-    @Override
-    protected void fillStateContainer(Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.WATERLOGGED);
-        super.fillStateContainer(builder);
-    }
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		builder.add(BlockStateProperties.WATERLOGGED);
+		super.fillStateContainer(builder);
+	}
 
-    @Override
-    public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
-                                          IWorld world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.get(BlockStateProperties.WATERLOGGED)) {
-            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-        return state;
-    }
+	@Override
+	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+		if (state.get(BlockStateProperties.WATERLOGGED)) {
+			world.getPendingFluidTicks()
+				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
+		return state;
+	}
 
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-        return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
-    }
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		IFluidState ifluidstate = context.getWorld()
+			.getFluidState(context.getPos());
+		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED,
+			Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+	}
+
+	@Override
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
+		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		if (behaviour == null)
+			return Optional.empty();
+		BlockState bracket = behaviour.getBracket();
+		behaviour.removeBracket();
+		if (bracket == Blocks.AIR.getDefaultState())
+			return Optional.empty();
+		return Optional.of(new ItemStack(bracket.getBlock()));
+	}
 }

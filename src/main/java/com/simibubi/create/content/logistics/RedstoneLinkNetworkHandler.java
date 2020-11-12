@@ -110,6 +110,12 @@ public class RedstoneLinkNetworkHandler {
 				break;
 		}
 
+		// fix one-to-one loading order problem
+		if(actor.isListening()){
+			actor.newPosition = true;
+			actor.updateReceiver(power);
+		}
+
 		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
 			LinkBehaviour other = iterator.next();
 			if (other.tileEntity.isRemoved()) {

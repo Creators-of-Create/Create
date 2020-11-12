@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.SchematicWorld;
@@ -28,6 +29,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
@@ -199,11 +201,16 @@ public class SchematicHandler {
 			return;
 		if (!pressed || button != 1)
 			return;
-		if (Minecraft.getInstance().player.isSneaking())
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player.isSneaking())
 			return;
-
+		if (mc.objectMouseOver instanceof BlockRayTraceResult) {
+			BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) mc.objectMouseOver;
+			if (AllBlocks.SCHEMATICANNON.has(mc.world.getBlockState(blockRayTraceResult.getPos())))
+				return;
+		}
 		currentTool.getTool()
-			.handleRightClick();
+		.handleRightClick();
 	}
 
 	public void onKeyInput(int key, boolean pressed) {
@@ -221,14 +228,14 @@ public class SchematicHandler {
 	}
 
 	public boolean mouseScrolled(double delta) {
-		if (!active || Minecraft.getInstance().player.isSneaking())
+		if (!active)
 			return false;
 
 		if (selectionScreen.focused) {
 			selectionScreen.cycle((int) delta);
 			return true;
 		}
-		if (AllKeys.ACTIVATE_TOOL.isPressed())
+		if (AllKeys.ctrlDown())
 			return currentTool.getTool()
 				.handleMouseWheel(delta);
 		return false;

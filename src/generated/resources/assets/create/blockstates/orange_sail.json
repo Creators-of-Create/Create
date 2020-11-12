@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "create:block/orange_sail",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "create:block/orange_sail"
+    },
+    "facing=north": {
+      "model": "create:block/orange_sail",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "create:block/orange_sail",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:block/orange_sail",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create:block/orange_sail",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

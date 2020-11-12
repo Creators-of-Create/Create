@@ -226,7 +226,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		protected FluidStack renderedFluid;
 
 		public TankSegment(int capacity) {
-			tank = new SmartFluidTank(1000, f -> onFluidStackChanged());
+			tank = new SmartFluidTank(capacity, f -> onFluidStackChanged());
 			fluidLevel = LerpedFloat.linear()
 				.startWithValue(0)
 				.chase(0, .25, Chaser.EXP);
@@ -266,6 +266,16 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			if (!tank.getFluid()
 				.isEmpty())
 				renderedFluid = tank.getFluid();
+		}
+		
+		public boolean isEmpty(float partialTicks) {
+			FluidStack renderedFluid = getRenderedFluid();
+			if (renderedFluid.isEmpty())
+				return true;
+			float units = getTotalUnits(partialTicks);
+			if (units < 1)
+				return true;
+			return false;
 		}
 
 	}

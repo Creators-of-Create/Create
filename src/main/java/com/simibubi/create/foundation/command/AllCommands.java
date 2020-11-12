@@ -12,12 +12,13 @@ public class AllCommands {
 				//general purpose
 				.then(ToggleDebugCommand.register())
 				.then(OverlayConfigCommand.register())
+				.then(FixLightingCommand.register())
 
 				//dev-util
 				//Comment out for release
 				.then(ClearBufferCacheCommand.register())
 				.then(ChunkUtilCommand.register())
-		//      .then(KillTPSCommand.register())
+//		      .then(KillTPSCommand.register())
 		);
 	}
 }

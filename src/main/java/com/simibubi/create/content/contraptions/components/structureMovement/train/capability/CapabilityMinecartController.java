@@ -25,6 +25,7 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -33,6 +34,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 
@@ -44,6 +46,37 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	public static WorldAttached<Set<UUID>> loadedMinecartsWithCoupling;
 	static WorldAttached<List<AbstractMinecartEntity>> queuedAdditions;
 	static WorldAttached<List<UUID>> queuedUnloads;
+
+	/**
+	 * This callback wrapper ensures that the listeners map in the controller
+	 * capability only ever contains one instance
+	 */
+	public static class MinecartRemovalListener implements NonNullConsumer<LazyOptional<MinecartController>> {
+
+		private World world;
+		private AbstractMinecartEntity cart;
+
+		public MinecartRemovalListener(World world, AbstractMinecartEntity cart) {
+			this.world = world;
+			this.cart = cart;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof MinecartRemovalListener;
+		}
+
+		@Override
+		public int hashCode() {
+			return 100;
+		}
+
+		@Override
+		public void accept(LazyOptional<MinecartController> t) {
+			onCartRemoved(world, cart);
+		}
+
+	}
 
 	static {
 		loadedMinecartsByUUID = new WorldAttached<>(HashMap::new);
@@ -66,10 +99,12 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		for (AbstractMinecartEntity cart : queued) {
 			UUID uniqueID = cart.getUniqueID();
 			cartsWithCoupling.remove(uniqueID);
+
 			LazyOptional<MinecartController> capability = cart.getCapability(MINECART_CONTROLLER_CAPABILITY);
 			MinecartController controller = capability.orElse(null);
-			capability.addListener(cap -> onCartRemoved(world, cart));
+			capability.addListener(new MinecartRemovalListener(world, cart));
 			carts.put(uniqueID, controller);
+
 			capability.ifPresent(mc -> {
 				if (mc.isLeadingCoupling())
 					cartsWithCoupling.add(uniqueID);
@@ -128,14 +163,14 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			MinecartController next = CouplingHandler.getNextInCouplingChain(world, controller, forward);
 			if (next == null || next == MinecartController.EMPTY)
 				continue;
-			
+
 			next.removeConnection(!forward);
 			if (controller.hasContraptionCoupling(forward))
 				continue;
 			AbstractMinecartEntity cart = next.cart();
 			if (cart == null)
 				continue;
-			
+
 			Vec3d itemPos = cart.getPositionVec()
 				.add(removedPos)
 				.scale(.5f);
@@ -165,8 +200,13 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		Entity entity = event.getObject();
 		if (!(entity instanceof AbstractMinecartEntity))
 			return;
-		event.addCapability(Create.asResource("minecart_controller"),
-			new CapabilityMinecartController((AbstractMinecartEntity) entity));
+		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecartEntity) entity);
+		ResourceLocation id = Create.asResource("minecart_controller");
+		event.addCapability(id, capability);
+		event.addListener(() -> {
+			if (capability.cap.isPresent())
+				capability.cap.invalidate();
+		});
 		queuedAdditions.get(entity.getEntityWorld())
 			.add((AbstractMinecartEntity) entity);
 	}

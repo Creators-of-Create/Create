@@ -9,7 +9,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 
@@ -17,8 +16,8 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	TEMPCOBBLE = create("temp_cobble", b -> b.require(FluidTags.WATER, 250)
-		.require(FluidTags.LAVA, 25)
+	TEMPCOBBLE = create("temp_cobble", b -> b.require(Fluids.WATER, 250)
+		.require(Fluids.LAVA, 25)
 		.output(Blocks.COBBLESTONE, 1)),
 
 		TEMP_LAVA = create("temp_lava", b -> b.require(Tags.Items.COBBLESTONE)

@@ -7,18 +7,13 @@
   ],
   "results": [
     {
-      "item": "minecraft:prismarine_shard",
-      "count": 2
+      "item": "minecraft:quartz",
+      "count": 1
     },
     {
       "item": "minecraft:quartz",
       "count": 2,
-      "chance": 0.75
-    },
-    {
-      "item": "minecraft:prismarine_shard",
-      "count": 2,
-      "chance": 0.25
+      "chance": 0.5
     },
     {
       "item": "minecraft:glowstone_dust",

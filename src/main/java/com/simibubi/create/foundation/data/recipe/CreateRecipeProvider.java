@@ -13,6 +13,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.item.Item;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
@@ -48,6 +49,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 		static Tag<Item> redstone() {
 			return Tags.Items.DUSTS_REDSTONE;
+		}
+		
+		static Tag<Item> planks() {
+			return ItemTags.PLANKS;
 		}
 
 		static Tag<Item> gold() {

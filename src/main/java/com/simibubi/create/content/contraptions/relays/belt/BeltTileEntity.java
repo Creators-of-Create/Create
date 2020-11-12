@@ -95,8 +95,6 @@ public class BeltTileEntity extends KineticTileEntity {
 			BeltBlock.initBelt(world, pos);
 		if (!AllBlocks.BELT.has(world.getBlockState(pos)))
 			return;
-		if (getSpeed() == 0)
-			return;
 
 		initializeItemHandler();
 
@@ -104,6 +102,9 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (!isController())
 			return;
 		getInventory().tick();
+		
+		if (getSpeed() == 0)
+			return;
 
 		// Move Entities
 		if (passengers == null)

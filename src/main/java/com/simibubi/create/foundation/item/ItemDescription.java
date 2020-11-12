@@ -290,8 +290,9 @@ public class ItemDescription {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {
-			int baseSpeed = AllConfigs.SERVER.kinetics.waterWheelSpeed.get();
-			value = baseSpeed + "-" + (baseSpeed * 3);
+			int baseSpeed = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
+			int speedmod = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+			value = (speedmod + baseSpeed) + "-" + (baseSpeed + (speedmod * 3));
 		}
 
 		else if (block instanceof EncasedFanBlock)

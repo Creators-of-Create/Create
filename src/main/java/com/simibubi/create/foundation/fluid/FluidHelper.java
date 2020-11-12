@@ -7,14 +7,26 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -32,6 +44,11 @@ public class FluidHelper {
 
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
+	}
+	
+	public static boolean hasBlockState(Fluid fluid) {
+		BlockState blockState = fluid.getDefaultState().getBlockState();
+		return blockState != null && blockState != Blocks.AIR.getDefaultState();
 	}
 
 	public static Fluid convertToFlowing(Fluid fluid) {
@@ -74,9 +91,9 @@ public class FluidHelper {
 		int amount = JSONUtils.getInt(json, "amount");
 		FluidStack stack = new FluidStack(fluid, amount);
 
-		if (!json.has("nbt")) 
+		if (!json.has("nbt"))
 			return stack;
-			
+
 		try {
 			JsonElement element = json.get("nbt");
 			stack.setTag(JsonToNBT.getTagFromJson(
@@ -87,6 +104,77 @@ public class FluidHelper {
 		}
 
 		return stack;
+	}
+
+	public static boolean tryEmptyItemIntoTE(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
+		SmartTileEntity te) {
+		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
+			return false;
+
+		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		IFluidHandler tank = capability.orElse(null);
+		FluidStack fluidStack = emptyingResult.getFirst();
+
+		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
+			return false;
+		if (worldIn.isRemote)
+			return true;
+
+		ItemStack copyOfHeld = heldItem.copy();
+		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
+		tank.fill(fluidStack, FluidAction.EXECUTE);
+
+		if (!player.isCreative()) {
+			if (copyOfHeld.isEmpty())
+				player.setHeldItem(handIn, emptyingResult.getSecond());
+			else {
+				player.setHeldItem(handIn, copyOfHeld);
+				player.inventory.placeItemBackInInventory(worldIn, emptyingResult.getSecond());
+			}
+		}
+		return true;
+	}
+
+	public static boolean tryFillItemFromTE(World world, PlayerEntity player, Hand handIn, ItemStack heldItem,
+		SmartTileEntity te) {
+		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
+			return false;
+
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		IFluidHandler tank = capability.orElse(null);
+
+		if (tank == null)
+			return false;
+
+		for (int i = 0; i < tank.getTanks(); i++) {
+			FluidStack fluid = tank.getFluidInTank(i);
+			if (fluid.isEmpty())
+				continue;
+			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
+			if (requiredAmountForItem == -1)
+				continue;
+			if (requiredAmountForItem > fluid.getAmount())
+				continue;
+
+			if (world.isRemote)
+				return true;
+
+			if (player.isCreative())
+				heldItem = heldItem.copy();
+			ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
+
+			FluidStack copy = fluid.copy();
+			copy.setAmount(requiredAmountForItem);
+			tank.drain(copy, FluidAction.EXECUTE);
+
+			if (!player.isCreative())
+				player.inventory.placeItemBackInInventory(world, out);
+			te.notifyUpdate();
+			return true;
+		}
+
+		return false;
 	}
 
 	@Nullable

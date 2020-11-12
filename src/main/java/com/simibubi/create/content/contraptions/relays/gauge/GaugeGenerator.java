@@ -1,53 +1,18 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
-import com.simibubi.create.foundation.data.SpecialBlockStateGen;
+import com.simibubi.create.foundation.data.DirectionalAxisBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraftforge.client.model.generators.ModelFile;
 
-public class GaugeGenerator extends SpecialBlockStateGen {
+public class GaugeGenerator extends DirectionalAxisBlockStateGen {
 
 	@Override
-	protected int getXRotation(BlockState state) {
-		Direction direction = state.get(GaugeBlock.FACING);
-		boolean alongFirst = state.get(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
-
-		if (direction == Direction.DOWN)
-			return 180;
-		if (direction == Direction.UP)
-			return 0;
-		if ((direction.getAxis() == Axis.X) == alongFirst)
-			return 90;
-
-		return 0;
-	}
-
-	@Override
-	protected int getYRotation(BlockState state) {
-		Direction direction = state.get(GaugeBlock.FACING);
-		boolean alongFirst = state.get(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
-
-		if (direction.getAxis()
-			.isVertical())
-			return alongFirst ? 90 : 0;
-
-		return horizontalAngle(direction) + 90;
-	}
-
-	@Override
-	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+	public <T extends Block> String getModelPrefix(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		boolean vertical = state.get(GaugeBlock.FACING)
-			.getAxis()
-			.isVertical();
-		String partial = vertical ? "base" : "base_wall";
-		return prov.models()
-			.getExistingFile(prov.modLoc("block/gauge/" + partial));
+		return "block/gauge/base";
 	}
 
 }

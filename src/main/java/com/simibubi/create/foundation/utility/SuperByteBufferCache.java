@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SuperByteBufferCache {
 
@@ -116,7 +115,7 @@ public class SuperByteBufferCache {
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
-			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 		builder.finishDrawing();
 
 		return new SuperByteBuffer(builder);

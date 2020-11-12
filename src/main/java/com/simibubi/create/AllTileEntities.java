@@ -37,6 +37,7 @@ import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
@@ -47,6 +48,10 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableTi
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutRenderer;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
@@ -55,6 +60,7 @@ import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveTileEntit
 import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinRenderer;
@@ -119,7 +125,6 @@ public class AllTileEntities {
 	public static final TileEntityEntry<SchematicTableTileEntity> SCHEMATIC_TABLE = Create.registrate()
 		.tileEntity("schematic_table", SchematicTableTileEntity::new)
 		.validBlocks(AllBlocks.SCHEMATIC_TABLE)
-		// .renderer(() -> renderer)
 		.register();
 
 	// Kinetics
@@ -201,7 +206,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.MECHANICAL_PUMP)
 		.renderer(() -> PumpRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<SmartFluidPipeTileEntity> SMART_FLUID_PIPE = Create.registrate()
 		.tileEntity("smart_fluid_pipe", SmartFluidPipeTileEntity::new)
 		.validBlocks(AllBlocks.SMART_FLUID_PIPE)
@@ -223,7 +228,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
 		.renderer(() -> TransparentStraightPipeRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<FluidValveTileEntity> FLUID_VALVE = Create.registrate()
 		.tileEntity("fluid_valve", FluidValveTileEntity::new)
 		.validBlocks(AllBlocks.FLUID_VALVE)
@@ -236,10 +241,28 @@ public class AllTileEntities {
 		.renderer(() -> FluidTankRenderer::new)
 		.register();
 
+	public static final TileEntityEntry<CreativeFluidTankTileEntity> CREATIVE_FLUID_TANK = Create.registrate()
+		.tileEntity("creative_fluid_tank", CreativeFluidTankTileEntity::new)
+		.validBlocks(AllBlocks.CREATIVE_FLUID_TANK)
+		.renderer(() -> FluidTankRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<HosePulleyTileEntity> HOSE_PULLEY = Create.registrate()
+		.tileEntity("hose_pulley", HosePulleyTileEntity::new)
+		.validBlocks(AllBlocks.HOSE_PULLEY)
+		.renderer(() -> HosePulleyRenderer::new)
+		.register();
+
 	public static final TileEntityEntry<SpoutTileEntity> SPOUT = Create.registrate()
 		.tileEntity("spout", SpoutTileEntity::new)
 		.validBlocks(AllBlocks.SPOUT)
 		.renderer(() -> SpoutRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<ItemDrainTileEntity> ITEM_DRAIN = Create.registrate()
+		.tileEntity("item_drain", ItemDrainTileEntity::new)
+		.validBlocks(AllBlocks.ITEM_DRAIN)
+		.renderer(() -> ItemDrainRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = Create.registrate()
@@ -276,6 +299,12 @@ public class AllTileEntities {
 		.tileEntity("mechanical_piston", MechanicalPistonTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 		.renderer(() -> MechanicalPistonRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<WindmillBearingTileEntity> WINDMILL_BEARING = Create.registrate()
+		.tileEntity("windmill_bearing", WindmillBearingTileEntity::new)
+		.validBlocks(AllBlocks.WINDMILL_BEARING)
+		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<MechanicalBearingTileEntity> MECHANICAL_BEARING = Create.registrate()

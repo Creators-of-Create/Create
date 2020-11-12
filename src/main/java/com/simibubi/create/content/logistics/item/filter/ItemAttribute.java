@@ -14,6 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.logistics.item.filter.attribute.BookAuthorAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.BookCopyAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.resources.I18n;
@@ -30,6 +39,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -43,6 +53,15 @@ public interface ItemAttribute {
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
+	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
+	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
+	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
+	static ItemAttribute astralAttunement = register(new AstralSorceryAttunementAttribute("dummy"));
+	static ItemAttribute astralCrystal = register(new AstralSorceryCrystalAttribute("dummy"));
+	static ItemAttribute astralPerkGem = register(new AstralSorceryPerkGemAttribute("dummy"));
+	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
+	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 	static ItemAttribute addedBy = register(new AddedBy("dummy"));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
@@ -106,7 +125,9 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isFood),
+		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
+		RENAMED(ItemStack::hasDisplayName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(Predicates.not(ItemStack::isStackable)),

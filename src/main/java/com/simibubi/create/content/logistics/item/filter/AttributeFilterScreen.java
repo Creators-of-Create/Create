@@ -36,12 +36,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private String addDESC = Lang.translate(PREFIX + "add_attribute");
 	private String addInvertedDESC = Lang.translate(PREFIX + "add_inverted_attribute");
 
-	private String whitelistDisN = Lang.translate(PREFIX + "whitelist_disjunctive");
-	private String whitelistDisDESC = Lang.translate(PREFIX + "whitelist_disjunctive.description");
-	private String whitelistConN = Lang.translate(PREFIX + "whitelist_conjunctive");
-	private String whitelistConDESC = Lang.translate(PREFIX + "whitelist_conjunctive.description");
-	private String blacklistN = Lang.translate(PREFIX + "blacklist");
-	private String blacklistDESC = Lang.translate(PREFIX + "blacklist.description");
+	private String allowDisN = Lang.translate(PREFIX + "allow_list_disjunctive");
+	private String allowDisDESC = Lang.translate(PREFIX + "allow_list_disjunctive.description");
+	private String allowConN = Lang.translate(PREFIX + "allow_list_conjunctive");
+	private String allowConDESC = Lang.translate(PREFIX + "allow_list_conjunctive.description");
+	private String denyN = Lang.translate(PREFIX + "deny_list");
+	private String denyDESC = Lang.translate(PREFIX + "deny_list.description");
 
 	private String referenceH = Lang.translate(PREFIX + "add_reference_item");
 	private String noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
@@ -64,11 +64,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
-		whitelistDis.setToolTip(whitelistDisN);
+		whitelistDis.setToolTip(allowDisN);
 		whitelistCon = new IconButton(x + 65, y + 59, AllIcons.I_WHITELIST_AND);
-		whitelistCon.setToolTip(whitelistConN);
+		whitelistCon.setToolTip(allowConN);
 		blacklist = new IconButton(x + 83, y + 59, AllIcons.I_WHITELIST_NOT);
-		blacklist.setToolTip(blacklistN);
+		blacklist.setToolTip(denyN);
 
 		whitelistDisIndicator = new Indicator(x + 47, y + 53, "");
 		whitelistConIndicator = new Indicator(x + 65, y + 53, "");
@@ -195,7 +195,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected List<String> getTooltipDescriptions() {
-		return Arrays.asList(blacklistDESC, whitelistConDESC, whitelistDisDESC);
+		return Arrays.asList(denyDESC, allowConDESC, allowDisDESC);
 	}
 
 	@Override

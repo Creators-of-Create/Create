@@ -101,10 +101,8 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity> {
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) {
+		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock()) 
 			return;
-		}
-
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemHelper.dropContents(worldIn, pos, te.processingOutputBuffer);
 			if (!te.getHeldItemStack()

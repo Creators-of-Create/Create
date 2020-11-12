@@ -1,15 +1,20 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.inventory.IInventory;
@@ -17,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
@@ -24,6 +30,8 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -82,6 +90,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
 		super.read(compound, clientPacket);
+
+		if (clientPacket && hasWorld())
+			getBasin().ifPresent(bte -> bte.setAreFluidsMoving(running && runningTicks <= 20));
 	}
 
 	@Override
@@ -123,7 +134,6 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (runningTicks != 20)
 				runningTicks++;
 		}
-
 	}
 
 	public void renderParticles() {
@@ -131,24 +141,67 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (!basin.isPresent() || world == null)
 			return;
 
-		SmartInventory inputs = basin.get()
-			.getInputInventory();
-		for (int slot = 0; slot < inputs.getSlots(); slot++) {
-			ItemStack stackInSlot = inputs.getStackInSlot(slot);
-			if (stackInSlot.isEmpty())
+		for (SmartInventory inv : basin.get()
+			.getInvs()) {
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
+				spillParticle(data);
+			}
+		}
+
+		for (SmartFluidTankBehaviour behaviour : basin.get()
+			.getTanks()) {
+			if (behaviour == null)
+				continue;
+			for (TankSegment tankSegment : behaviour.getTanks()) {
+				if (tankSegment.isEmpty(0))
+					continue;
+				spillParticle(FluidFX.getFluidParticle(tankSegment.getRenderedFluid()));
+			}
+		}
+	}
+
+	protected void spillParticle(IParticleData data) {
+		float angle = world.rand.nextFloat() * 360;
+		Vec3d offset = new Vec3d(0, 0, 0.25f);
+		offset = VecHelper.rotate(offset, angle, Axis.Y);
+		Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
+			.add(0, .25f, 0);
+		Vec3d center = offset.add(VecHelper.getCenterOf(pos));
+		target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
+		world.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
+	}
+
+	@Override
+	protected List<IRecipe<?>> getMatchingRecipes() {
+		List<IRecipe<?>> matchingRecipes = super.getMatchingRecipes();
+
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.isPresent())
+			return matchingRecipes;
+		IItemHandler availableItems = basin.get()
+			.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			.orElse(null);
+		if (availableItems == null)
+			return matchingRecipes;
+
+		for (int i = 0; i < availableItems.getSlots(); i++) {
+			ItemStack stack = availableItems.getStackInSlot(i);
+			if (stack.isEmpty())
 				continue;
 
-			ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
-			float angle = world.rand.nextFloat() * 360;
-			Vec3d offset = new Vec3d(0, 0, 0.25f);
-			offset = VecHelper.rotate(offset, angle, Axis.Y);
-			Vec3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
-				.add(0, .25f, 0);
-
-			Vec3d center = offset.add(VecHelper.getCenterOf(pos));
-			target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
-			world.addParticle(data, center.x, center.y - 2, center.z, target.x, target.y, target.z);
+			List<MixingRecipe> list = PotionMixingRecipeManager.ALL.get(stack.getItem());
+			if (list == null)
+				continue;
+			for (MixingRecipe mixingRecipe : list)
+				if (matchBasinRecipe(mixingRecipe))
+					matchingRecipes.add(mixingRecipe);
 		}
+
+		return matchingRecipes;
 	}
 
 	@Override
@@ -190,7 +243,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected boolean isRunning() {
 		return running;
 	}
-	
+
 	@Override
 	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
 		return Optional.of(AllTriggers.MIXER_MIX);

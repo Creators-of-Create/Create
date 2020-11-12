@@ -2,37 +2,59 @@ package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
+public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
 
+	private BlockEntry<? extends FunnelBlock> parent;
+
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 
 	public enum Shape implements IStringSerializable {
-		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED), EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED);
+		RETRACTED(AllShapes.BELT_FUNNEL_RETRACTED),
+		EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED),
+		PUSHING(AllShapes.BELT_FUNNEL_PERPENDICULAR),
+		PULLING(AllShapes.BELT_FUNNEL_PERPENDICULAR);
+//		CONNECTED(AllShapes.BELT_FUNNEL_CONNECTED); 
 
 		VoxelShaper shaper;
 
@@ -47,35 +69,31 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 	}
 
 	public BeltFunnelBlock(BlockEntry<? extends FunnelBlock> parent, Properties p_i48377_1_) {
-		super(parent, p_i48377_1_);
-		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
+		super(p_i48377_1_);
+		this.parent = parent;
+		BlockState defaultState = getDefaultState().with(SHAPE, Shape.RETRACTED);
+		if (hasPoweredProperty())
+			defaultState = defaultState.with(POWERED, false);
+		setDefaultState(defaultState);
+	}
+
+	public abstract boolean hasPoweredProperty();
+
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		BlockState state = super.getStateForPlacement(ctx);
-		return getStateForPosition(ctx.getWorld(), ctx.getPos(), state, ctx.getFace());
-	}
-
-	public BlockState getStateForPosition(World world, BlockPos pos, BlockState defaultState, Direction facing) {
-		BlockState state = defaultState.with(HORIZONTAL_FACING, facing);
-		BlockPos posBelow = pos.down();
-		BlockState stateBelow = world.getBlockState(posBelow);
-		if (!AllBlocks.BELT.has(stateBelow))
-			return state;
-		TileEntity teBelow = world.getTileEntity(posBelow);
-		if (teBelow == null || !(teBelow instanceof BeltTileEntity))
-			return state;
-		BeltTileEntity beltTileEntity = (BeltTileEntity) teBelow;
-		if (beltTileEntity.getSpeed() == 0)
-			return state;
-		Direction movementFacing = beltTileEntity.getMovementFacing();
-		return state.with(PUSHING, movementFacing == facing);
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return AllTileEntities.FUNNEL.create();
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		super.fillStateContainer(p_206840_1_.add(SHAPE));
+		if (hasPoweredProperty())
+			p_206840_1_.add(POWERED);
+		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, SHAPE));
 	}
 
 	@Override
@@ -85,12 +103,71 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 	}
 
 	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		BlockState stateForPlacement = super.getStateForPlacement(ctx);
+		BlockPos pos = ctx.getPos();
+		World world = ctx.getWorld();
+		Direction facing = ctx.getFace();
+
+		if (hasPoweredProperty())
+			stateForPlacement = stateForPlacement.with(POWERED, world.isBlockPowered(pos));
+
+		BlockState state = stateForPlacement.with(HORIZONTAL_FACING, facing);
+		return state.with(SHAPE, getShapeForPosition(world, pos, facing));
+	}
+
+	public static Shape getShapeForPosition(IBlockReader world, BlockPos pos, Direction facing) {
+		BlockPos posBelow = pos.down();
+		BlockState stateBelow = world.getBlockState(posBelow);
+		if (!AllBlocks.BELT.has(stateBelow))
+			return Shape.PUSHING;
+		Direction movementFacing = stateBelow.get(BeltBlock.HORIZONTAL_FACING);
+		return movementFacing.getAxis() != facing.getAxis() ? Shape.PUSHING : Shape.RETRACTED;
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() && !FunnelBlock.isFunnel(newState)
+			|| !newState.hasTileEntity())) {
+			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
+			world.removeTileEntity(pos);
+		}
+	}
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
+		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
+		return true;
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+		PlayerEntity player) {
+		return parent.asStack();
+	}
+
+	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
-		if (direction == state.get(HORIZONTAL_FACING))
-			return updateShape(state, world, pos);
-		else
-			return super.updatePostPlacement(state, direction, neighbour, world, pos, p_196271_6_);
+		if (!isOnValidBelt(state, world, pos)) {
+			BlockState parentState = parent.getDefaultState();
+			if (state.has(POWERED) && state.get(POWERED))
+				parentState = parentState.with(POWERED, true);
+			return parentState.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
+		}
+		Shape updatedShape = getShapeForPosition(world, pos, state.get(HORIZONTAL_FACING));
+		Shape currentShape = state.get(SHAPE);
+		if (updatedShape == currentShape)
+			return state;
+
+		// Don't revert wrenched states
+		if (updatedShape == Shape.PUSHING && currentShape == Shape.PULLING)
+			return state;
+		if (updatedShape == Shape.RETRACTED && currentShape == Shape.EXTENDED)
+			return state;
+
+		return state.with(SHAPE, updatedShape);
 	}
 
 	public static boolean isOnValidBelt(BlockState state, IWorldReader world, BlockPos pos) {
@@ -104,34 +181,44 @@ public abstract class BeltFunnelBlock extends HorizontalInteractionFunnelBlock {
 		return true;
 	}
 
-	public static BlockState updateShape(BlockState state, IBlockReader world, BlockPos pos) {
-		state = state.with(SHAPE, Shape.RETRACTED);
-		Direction horizontalFacing = state.get(HORIZONTAL_FACING);
-		
-		BlockState below = world.getBlockState(pos.down());
-		if (below.getBlock() instanceof BeltBlock && below.get(BeltBlock.HORIZONTAL_FACING)
-			.getAxis() != horizontalFacing.getAxis())
-			return state;
-
-		BlockState neighbour = world.getBlockState(pos.offset(horizontalFacing));
-		if (canConnectTo(state, neighbour))
-			return state.with(SHAPE, Shape.EXTENDED);
-		return state;
-	}
-
-	private static boolean canConnectTo(BlockState state, BlockState neighbour) {
-		if (neighbour.getBlock() instanceof BeltTunnelBlock)
-			return true;
-		if (neighbour.getBlock() instanceof BeltFunnelBlock
-			&& neighbour.get(HORIZONTAL_FACING) == state.get(HORIZONTAL_FACING)
-				.getOpposite())
-			return true;
-		return false;
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+		boolean isMoving) {
+		if (!hasPoweredProperty())
+			return;
+		if (worldIn.isRemote)
+			return;
+		boolean previouslyPowered = state.get(POWERED);
+		if (previouslyPowered != worldIn.isBlockPowered(pos))
+			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 	}
 
 	@Override
-	protected boolean canStillInteract(BlockState state, IWorldReader world, BlockPos pos) {
-		return isOnValidBelt(state, world, pos);
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		if (world.isRemote)
+			return ActionResultType.SUCCESS;
+
+		Shape shape = state.get(SHAPE);
+		Shape newShape = shape;
+		if (shape == Shape.PULLING)
+			newShape = Shape.PUSHING;
+		else if (shape == Shape.PUSHING)
+			newShape = Shape.PULLING;
+		else if (shape == Shape.EXTENDED)
+			newShape = Shape.RETRACTED;
+		else if (shape == Shape.RETRACTED) {
+			BlockState belt = world.getBlockState(context.getPos().down());
+			if (belt.getBlock() instanceof BeltBlock && belt.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
+				newShape = Shape.RETRACTED;
+			else
+				newShape = Shape.EXTENDED;
+		}
+
+		if (newShape != shape)
+			world
+				.setBlockState(context.getPos(), state.with(SHAPE, newShape));
+		return ActionResultType.SUCCESS;
 	}
 
 }

@@ -6,9 +6,8 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.DirectionalExtenderScrollOptionSlot;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
@@ -26,19 +25,21 @@ import net.minecraft.util.math.Vec3d;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
-	protected boolean isWindmill;
+	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected ContraptionEntity movedContraption;
 	protected float angle;
 	protected boolean running;
 	protected boolean assembleNextTick;
 	protected float clientAngleDiff;
-	protected ScrollOptionBehaviour<RotationMode> movementMode;
-	protected float lastGeneratedSpeed;
 
 	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
-		isWindmill = false;
 		setLazyTickRate(3);
+	}
+
+	@Override
+	public boolean isWoodenTop() {
+		return false;
 	}
 
 	@Override
@@ -51,39 +52,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	public float calculateAddedStressCapacity() {
-		return isWindmill ? super.calculateAddedStressCapacity() : 0;
-	}
-
-	@Override
-	public float calculateStressApplied() {
-		return isWindmill ? 0 : super.calculateStressApplied();
-	}
-
-	public void neighbourChanged() {
-		if (!hasWorld())
-			return;
-
-		boolean shouldWindmill = world.isBlockPowered(pos);
-		if (shouldWindmill == isWindmill)
-			return;
-
-		isWindmill = shouldWindmill;
-		if (isWindmill && !running)
-			assembleNextTick = true;
-		if (isWindmill && running)
-			updateGeneratedRotation();
-
-		if (!isWindmill && running) {
-			updateGeneratedRotation();
-			if (getSpeed() == 0)
-				assembleNextTick = true;
-		}
-
-		sendData();
-	}
-
-	@Override
 	public void remove() {
 		if (!world.isRemote)
 			disassemble();
@@ -91,21 +59,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	@Override
-	public float getGeneratedSpeed() {
-		if (!running || !isWindmill)
-			return 0;
-		if (movedContraption == null)
-			return lastGeneratedSpeed;
-		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / 8;
-		return MathHelper.clamp(sails, 1, 16);
-	}
-
-	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
-		compound.putBoolean("Windmill", isWindmill);
 		compound.putFloat("Angle", angle);
-		compound.putFloat("LastGenerated", lastGeneratedSpeed);
 		super.write(compound, clientPacket);
 	}
 
@@ -113,11 +69,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
-		isWindmill = compound.getBoolean("Windmill");
 		angle = compound.getFloat("Angle");
-		lastGeneratedSpeed = compound.getFloat("LastGenerated");
 		super.read(compound, clientPacket);
-		
 		if (!clientPacket)
 			return;
 		if (running) {
@@ -141,7 +94,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	public float getAngularSpeed() {
-		float speed = getSpeed() * 3 / 10f;
+		float speed = (isWindmill() ? getGeneratedSpeed() : getSpeed()) * 3 / 10f;
+		if (getSpeed() == 0)
+			speed = 0;
 		if (world.isRemote) {
 			speed *= ServerSpeedProvider.get();
 			speed += clientAngleDiff / 3f;
@@ -149,9 +104,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return speed;
 	}
 
+	protected boolean isWindmill() {
+		return false;
+	}
+
 	public void assemble() {
 		if (!(world.getBlockState(pos)
-			.getBlock() instanceof MechanicalBearingBlock))
+			.getBlock() instanceof BearingBlock))
 			return;
 
 		Direction direction = getBlockState().get(FACING);
@@ -160,7 +119,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		BearingContraption contraption = BearingContraption.assembleBearingAt(world, pos, direction);
 		if (contraption == null)
 			return;
-		if (isWindmill && contraption.getSailBlocks() == 0)
+		if (isWindmill() && contraption.getSailBlocks() == 0)
 			return;
 		if (contraption.blocks.isEmpty())
 			return;
@@ -179,21 +138,17 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		updateGeneratedRotation();
 	}
 
-	@Override
-	public void updateGeneratedRotation() {
-		super.updateGeneratedRotation();
-		lastGeneratedSpeed = getGeneratedSpeed();
-	}
-
 	public void disassemble() {
 		if (!running && movedContraption == null)
 			return;
+		angle = 0;
+		if (isWindmill())
+			applyRotation();
 		if (movedContraption != null)
 			movedContraption.disassemble();
 
 		movedContraption = null;
 		running = false;
-		angle = 0;
 		updateGeneratedRotation();
 		assembleNextTick = false;
 		sendData();
@@ -220,7 +175,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 				}
 				return;
 			} else {
-				if (speed == 0 && !isWindmill)
+				if (speed == 0 && !isWindmill())
 					return;
 				assemble();
 			}
@@ -290,15 +245,6 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return !isRemoved();
 	}
 
-	protected ValueBoxTransform getMovementModeSlot() {
-		return new DirectionalExtenderScrollOptionSlot((state, d) -> {
-			Axis axis = d.getAxis();
-			Axis bearingAxis = state.get(MechanicalBearingBlock.FACING)
-				.getAxis();
-			return bearingAxis != axis;
-		});
-	}
-
 	@Override
 	public void collided() {}
 
@@ -309,6 +255,29 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	public boolean isRunning() {
 		return running;
+	}
+
+	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (super.addToTooltip(tooltip, isPlayerSneaking))
+			return true;
+		if (isPlayerSneaking)
+			return false;
+		if (isWindmill())
+			return false;
+		if (getSpeed() == 0)
+			return false;
+		if (running)
+			return false;
+		BlockState state = getBlockState();
+		if (!(state.getBlock() instanceof BearingBlock))
+			return false;
+		BlockState attachedState = world.getBlockState(pos.offset(state.get(BearingBlock.FACING)));
+		if (attachedState.getMaterial()
+			.isReplaceable())
+			return false;
+		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
+		return true;
 	}
 
 }

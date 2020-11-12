@@ -2,17 +2,16 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
-import com.simibubi.create.content.contraptions.particle.CubeParticle;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
-import com.simibubi.create.content.contraptions.particle.ICustomParticle;
+import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -29,21 +28,18 @@ public enum AllParticleTypes {
 	AIR_FLOW(AirFlowParticleData::new),
 	AIR(AirParticleData::new),
 	HEATER_PARTICLE(HeaterParticleData::new),
-	CUBE(CubeParticleData::dummy, () -> CubeParticle.Factory::new)
+	CUBE(CubeParticleData::new),
+	FLUID_PARTICLE(FluidParticleData::new),
+	BASIN_FLUID(FluidParticleData::new),
+	FLUID_DRIP(FluidParticleData::new)
 
 	;
 
 	private ParticleEntry<?> entry;
 
-	<D extends IParticleData> AllParticleTypes(Supplier<? extends ICustomParticle<D>> typeFactory) {
+	<D extends IParticleData> AllParticleTypes(Supplier<? extends ICustomParticleData<D>> typeFactory) {
 		String asId = Lang.asId(this.name());
 		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
-	}
-
-	<D extends IParticleData> AllParticleTypes(Supplier<? extends ICustomParticle<D>> typeFactory,
-		Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory) {
-		String asId = Lang.asId(this.name());
-		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory, particleMetaFactory);
 	}
 
 	public static void register(RegistryEvent.Register<ParticleType<?>> event) {
@@ -59,7 +55,7 @@ public enum AllParticleTypes {
 	}
 
 	public ParticleType<?> get() {
-		return entry.getType();
+		return entry.getOrCreateType();
 	}
 
 	public String parameter() {
@@ -67,48 +63,32 @@ public enum AllParticleTypes {
 	}
 
 	private class ParticleEntry<D extends IParticleData> {
-		Supplier<? extends ICustomParticle<D>> typeFactory;
-		Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory;
+		Supplier<? extends ICustomParticleData<D>> typeFactory;
 		ParticleType<D> type;
 		ResourceLocation id;
 
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticle<D>> typeFactory,
-			Supplier<Supplier<IParticleFactory<D>>> particleMetaFactory) {
+		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticleData<D>> typeFactory) {
 			this.id = id;
 			this.typeFactory = typeFactory;
-			this.particleMetaFactory = particleMetaFactory;
-		}
-
-		public ParticleEntry(ResourceLocation id, Supplier<? extends ICustomParticle<D>> typeFactory) {
-			this(id, typeFactory, null);
-		}
-
-		ParticleType<?> getType() {
-			makeType();
-			return type;
 		}
 
 		void register(IForgeRegistry<ParticleType<?>> registry) {
-			makeType();
-			registry.register(type);
+			registry.register(getOrCreateType());
 		}
 
-		void makeType() {
-			if (type == null) {
-				type = typeFactory.get()
-					.createType();
-				type.setRegistryName(id);
-			}
+		ParticleType<D> getOrCreateType() {
+			if (type != null)
+				return type;
+			type = typeFactory.get()
+				.createType();
+			type.setRegistryName(id);
+			return type;
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		void registerFactory(ParticleManager particles) {
-			makeType();
-			if (particleMetaFactory == null)
-				particles.registerFactory(type, typeFactory.get()
-					.getFactory());
-			else
-				particles.registerFactory(type, particleMetaFactory.get().get());
+			typeFactory.get()
+				.register(getOrCreateType(), particles);
 		}
 
 	}

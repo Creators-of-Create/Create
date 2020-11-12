@@ -1,5 +1,10 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
@@ -7,6 +12,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedAngle;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
@@ -15,6 +21,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
@@ -23,13 +30,12 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArmTileEntity extends KineticTileEntity {
 
@@ -133,6 +139,12 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return super.getRenderBoundingBox().grow(3);
+	}
+
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {
 		for (ArmInteractionPoint armInteractionPoint : list) {
 			if (!(armInteractionPoint instanceof Jukebox))
@@ -191,7 +203,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected void searchForItem() {
 		if (redstoneLocked)
 			return;
-		
+
 		boolean foundInput = false;
 		// for round robin, we start looking after the last used index, for default we
 		// start at 0;
@@ -245,7 +257,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			ArmInteractionPoint armInteractionPoint = outputs.get(i);
 			if (!armInteractionPoint.isStillValid(world))
 				continue;
-			
+
 			ItemStack remainder = armInteractionPoint.insert(world, held, true);
 			if (remainder.equals(heldItem, false))
 				continue;
@@ -334,7 +346,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 		return stack;
 	}
-	
+
 	public void redstoneUpdate() {
 		if (world.isRemote)
 			return;
@@ -428,6 +440,21 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	public static int getRange() {
 		return AllConfigs.SERVER.logistics.mechanicalArmRange.get();
+	}
+
+	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (super.addToTooltip(tooltip, isPlayerSneaking))
+			return true;
+		if (isPlayerSneaking)
+			return false;
+		if (!inputs.isEmpty())
+			return false;
+		if (!outputs.isEmpty())
+			return false;
+
+		TooltipHelper.addHint(tooltip, "hint.mechanical_arm_no_targets");
+		return true;
 	}
 
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {

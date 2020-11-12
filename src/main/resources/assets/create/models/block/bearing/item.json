@@ -3,7 +3,7 @@
 	"parent": "block/block",
     "textures": {
         "particle": "#side",
-        "bearing_top": "create:block/bearing_top",
+        "bearing_top": "#top",
         "gearbox": "#back",
         "bearing_side": "#side"
     },

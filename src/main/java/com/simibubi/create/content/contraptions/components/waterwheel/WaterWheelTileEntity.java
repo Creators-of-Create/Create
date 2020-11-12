@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -58,6 +59,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		float speed = 0;
 		for (Float f : flows.values())
 			speed += f;
+		if (speed != 0)
+			speed += AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get() * Math.signum(speed);
 		return speed;
 	}
 

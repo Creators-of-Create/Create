@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/bearing/item",
+  "textures": {
+    "top": "create:block/bearing_top_wooden",
+    "side": "create:block/windmill_bearing_side",
+    "back": "create:block/gearbox"
+  }
+}

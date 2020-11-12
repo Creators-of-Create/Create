@@ -50,20 +50,23 @@ public class BeltInventory {
 
 	public void tick() {
 
-		// Reverse item collection if belt just reversed
-		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
-			beltMovementPositive = !beltMovementPositive;
-			Collections.reverse(items);
-			belt.markDirty();
-			belt.sendData();
-		}
-
 		// Added/Removed items from previous cycle
 		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
 			toInsert.forEach(this::insert);
 			toInsert.clear();
 			items.removeAll(toRemove);
 			toRemove.clear();
+			belt.markDirty();
+			belt.sendData();
+		}
+		
+		if (belt.getSpeed() == 0)
+			return;
+		
+		// Reverse item collection if belt just reversed
+		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
+			beltMovementPositive = !beltMovementPositive;
+			Collections.reverse(items);
 			belt.markDirty();
 			belt.sendData();
 		}
@@ -289,8 +292,8 @@ public class BeltInventory {
 		BlockPos lastPosition = BeltHelper.getPositionForOffset(belt, lastOffset);
 		BlockPos nextPosition = BeltHelper.getPositionForOffset(belt, beltMovementPositive ? belt.beltLength : -1);
 
-		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))
-			return Ending.FUNNEL;
+//		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))
+//			return Ending.FUNNEL;
 
 		DirectBeltInputBehaviour inputBehaviour =
 			TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);

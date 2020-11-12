@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.fluid;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -13,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -39,6 +41,15 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		FluidStackIngredient ingredient = new FluidStackIngredient();
 		ingredient.fluid = fluid;
 		ingredient.amountRequired = amount;
+		return ingredient;
+	}
+
+	public static FluidIngredient fromFluidStack(FluidStack fluidStack) {
+		FluidStackIngredient ingredient = new FluidStackIngredient();
+		ingredient.fluid = fluidStack.getFluid();
+		ingredient.amountRequired = fluidStack.getAmount();
+		if (fluidStack.hasTag())
+			ingredient.tagToMatch = fluidStack.getTag();
 		return ingredient;
 	}
 
@@ -135,10 +146,12 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			if (!t.getFluid()
 				.isEquivalentTo(fluid))
 				return false;
-			CompoundNBT tag = t.getTag()
-				.copy();
-			return tag.merge(tagToMatch)
-				.equals(t.getTag());
+			if (tagToMatch.isEmpty())
+				return true;
+			CompoundNBT tag = t.getOrCreateTag();
+			return tag.copy()
+				.merge(tagToMatch)
+				.equals(tag);
 		}
 
 		@Override
@@ -169,7 +182,8 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
-			return ImmutableList.of(new FluidStack(fluid, amountRequired, tagToMatch));
+			return ImmutableList.of(tagToMatch.isEmpty() ? new FluidStack(fluid, amountRequired)
+				: new FluidStack(fluid, amountRequired, tagToMatch));
 		}
 
 	}
@@ -180,20 +194,30 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected boolean testInternal(FluidStack t) {
+			if (tag == null)
+				for (FluidStack accepted : getMatchingFluidStacks())
+					if (accepted.getFluid()
+						.isEquivalentTo(t.getFluid()))
+						return true;
 			return t.getFluid()
 				.isIn(tag);
 		}
 
 		@Override
 		protected void readInternal(PacketBuffer buffer) {
-			ResourceLocation resourcelocation = buffer.readResourceLocation();
-			tag = FluidTags.getContainer()
-				.get(resourcelocation);
+			int size = buffer.readVarInt();
+			matchingFluidStacks = new ArrayList<>(size);
+			for (int i = 0; i < size; i++)
+				matchingFluidStacks.add(buffer.readFluidStack());
 		}
 
 		@Override
 		protected void writeInternal(PacketBuffer buffer) {
-			buffer.writeResourceLocation(tag.getId());
+			// Tag has to be resolved on the server before sending
+			List<FluidStack> matchingFluidStacks = getMatchingFluidStacks();
+			buffer.writeVarInt(matchingFluidStacks.size());
+			matchingFluidStacks.stream()
+				.forEach(buffer::writeFluidStack);
 		}
 
 		@Override
@@ -215,6 +239,12 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		protected List<FluidStack> determineMatchingFluidStacks() {
 			return tag.getAllElements()
 				.stream()
+				.map(f -> {
+					if (f instanceof FlowingFluid)
+						return ((FlowingFluid) f).getStillFluid();
+					return f;
+				})
+				.distinct()
 				.map(f -> new FluidStack(f, amountRequired))
 				.collect(Collectors.toList());
 		}

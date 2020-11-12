@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
@@ -35,7 +36,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -90,7 +90,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				.getBoolean("Blacklist");
 
 			list.add(TextFormatting.GOLD
-				+ (blacklist ? Lang.translate("gui.filter.blacklist") : Lang.translate("gui.filter.whitelist")));
+				+ (blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
@@ -114,10 +114,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
 			list.add(TextFormatting.GOLD + (whitelistMode == WhitelistMode.WHITELIST_CONJ
-				? Lang.translate("gui.attribute_filter.whitelist_conjunctive")
+				? Lang.translate("gui.attribute_filter.allow_list_conjunctive")
 				: whitelistMode == WhitelistMode.WHITELIST_DISJ
-					? Lang.translate("gui.attribute_filter.whitelist_disjunctive")
-					: Lang.translate("gui.attribute_filter.blacklist")));
+					? Lang.translate("gui.attribute_filter.allow_list_disjunctive")
+					: Lang.translate("gui.attribute_filter.deny_list")));
 
 			int count = 0;
 			ListNBT attributes = filter.getOrCreateTag()
@@ -185,7 +185,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	public static boolean test(World world, FluidStack stack, ItemStack filter) {
-		return test(world, stack, filter, false);
+		return test(world, stack, filter, true);
 	}
 
 	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
@@ -264,13 +264,17 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			return false;
 
 		if (!(filter.getItem() instanceof FilterItem)) {
+			if (!EmptyingByBasin.canItemBeEmptied(world, filter))
+				return false;
+			FluidStack fluidInFilter = EmptyingByBasin.emptyItem(world, filter, true)
+				.getFirst();
+			if (fluidInFilter == null)
+				return false;
 			if (!matchNBT)
-				return filter.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-					.filter(ifh -> ifh.getTanks() > 0)
-					.map(ifh -> ifh.getFluidInTank(0)
-						.getFluid() == stack.getFluid())
-					.orElse(false);
-			return stack.isFluidEqual(filter);
+				return fluidInFilter.getFluid()
+					.isEquivalentTo(stack.getFluid());
+			boolean fluidEqual = fluidInFilter.isFluidEqual(stack);
+			return fluidEqual;
 		}
 
 		if (AllItems.FILTER.get() == filter.getItem()) {

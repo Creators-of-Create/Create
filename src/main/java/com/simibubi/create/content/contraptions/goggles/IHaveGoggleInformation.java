@@ -9,7 +9,7 @@ import java.util.List;
 public interface IHaveGoggleInformation {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
-	String spacing = "    ";
+	public static String spacing = "    ";
 
 	/**
 	* this method will be called when looking at a TileEntity that implemented this interface

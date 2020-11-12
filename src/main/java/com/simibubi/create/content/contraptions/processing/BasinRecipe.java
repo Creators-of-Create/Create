@@ -32,8 +32,23 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 	public static boolean match(BasinTileEntity basin, IRecipe<?> recipe) {
 		FilteringBehaviour filter = basin.getFilter();
-		if (filter == null || !filter.test(recipe.getRecipeOutput()))
+		if (filter == null)
 			return false;
+
+		boolean filterTest = filter.test(recipe.getRecipeOutput());
+		if (recipe instanceof BasinRecipe) {
+			BasinRecipe basinRecipe = (BasinRecipe) recipe;
+			if (basinRecipe.getRollableResults()
+				.isEmpty()
+				&& !basinRecipe.getFluidResults()
+					.isEmpty())
+				filterTest = filter.test(basinRecipe.getFluidResults()
+					.get(0));
+		}
+
+		if (!filterTest)
+			return false;
+
 		return apply(basin, recipe, true);
 	}
 
@@ -146,17 +161,11 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		return true;
 	}
 
-	/**
-	 * For JEI purposes only
-	 */
-	public boolean convertedRecipe;
-
-	public static BasinRecipe convert(IRecipe<?> recipe) {
+	public static BasinRecipe convertShapeless(IRecipe<?> recipe) {
 		BasinRecipe basinRecipe =
 			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
 				.withSingleItemOutput(recipe.getRecipeOutput())
 				.build();
-		basinRecipe.convertedRecipe = true;
 		return basinRecipe;
 	}
 

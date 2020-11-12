@@ -330,12 +330,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("L L")),
 
 		HAND_CRANK = create(AllBlocks.HAND_CRANK).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.andesite())
+			.viaShaped(b -> b.key('A', I.andesite())
 				.key('C', ItemTags.PLANKS)
-				.key('B', I.brass())
-				.patternLine(" B ")
+				.key('S', I.shaft())
+				.patternLine(" S ")
 				.patternLine("CCC")
-				.patternLine("  S")),
+				.patternLine("  A")),
 
 		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('S', I.andesite())
@@ -370,13 +370,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		ENCASED_FAN = create(AllBlocks.ENCASED_FAN).unlockedByTag(I::ironSheet)
 			.viaShaped(b -> b.key('S', I.shaft())
-				.key('A', I.andesite())
-				.key('R', ItemTags.PLANKS)
-				.key('B', Items.IRON_BARS)
+				.key('A', I.andesiteCasing())
+				.key('R', I.cog())
 				.key('P', AllItems.PROPELLER.get())
 				.patternLine(" S ")
 				.patternLine("RAR")
-				.patternLine("BPB")),
+				.patternLine(" P ")),
 
 		CUCKOO_CLOCK = create(AllBlocks.CUCKOO_CLOCK).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', ItemTags.PLANKS)
@@ -397,6 +396,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("SCS")
 				.patternLine(" R ")),
 
+		WINDMILL_BEARING = create(AllBlocks.WINDMILL_BEARING).unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('I', I.shaft())
+				.key('B', AllBlocks.TURNTABLE.get())
+				.key('C', I.stone())
+				.patternLine(" B ")
+				.patternLine(" C ")
+				.patternLine(" I ")),
+
 		MECHANICAL_BEARING = create(AllBlocks.MECHANICAL_BEARING).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('I', I.shaft())
 				.key('S', I.andesite())
@@ -414,6 +421,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")
 				.patternLine(" I ")),
+
+		WOODEN_BRACKET = create(AllBlocks.WOODEN_BRACKET).returns(4)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('S', Tags.Items.RODS_WOODEN)
+				.key('P', I.planks())
+				.key('C', I.andesite())
+				.patternLine("SSS")
+				.patternLine("PCP")),
+
+		METAL_BRACKET = create(AllBlocks.METAL_BRACKET).returns(4)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('S', Tags.Items.NUGGETS_IRON)
+				.key('P', I.iron())
+				.key('C', I.andesite())
+				.patternLine("SSS")
+				.patternLine("PCP")),
 
 		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(16)
 			.unlockedByTag(I::copper)
@@ -451,6 +474,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P")
 				.patternLine("S")),
 
+		ITEM_DRAIN = create(AllBlocks.ITEM_DRAIN).unlockedBy(I::copperCasing)
+			.viaShaped(b -> b.key('P', Blocks.IRON_BARS)
+				.key('S', I.copperCasing())
+				.patternLine("P")
+				.patternLine("S")),
+
 		FLUID_TANK = create(AllBlocks.FLUID_TANK).returns(2)
 			.unlockedBy(I::copperCasing)
 			.viaShaped(b -> b.key('B', I.copperCasing())
@@ -482,6 +511,16 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('I', I.ironSheet())
 				.patternLine(" B ")
 				.patternLine("SCS")
+				.patternLine(" I ")),
+
+		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('S', I.shaft())
+				.key('P', AllBlocks.FLUID_PIPE.get())
+				.key('B', I.copperCasing())
+				.key('C', Items.DRIED_KELP)
+				.key('I', I.copperSheet())
+				.patternLine(" B ")
+				.patternLine("SCP")
 				.patternLine(" I ")),
 
 		EMPTY_BLAZE_BURNER = create(AllItems.EMPTY_BLAZE_BURNER).unlockedByTag(I::iron)
@@ -526,6 +565,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")
 				.patternLine(" B ")),
+
+		SAIL_FRAME = create(AllBlocks.SAIL_FRAME).returns(8)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('A', I.andesite())
+				.key('S', Tags.Items.RODS_WOODEN)
+				.patternLine("SSS")
+				.patternLine("SAS")
+				.patternLine("SSS")),
+
+		SAIL = create(AllBlocks.SAIL).returns(8)
+			.unlockedBy(AllBlocks.SAIL_FRAME::get)
+			.viaShaped(b -> b.key('F', AllBlocks.SAIL_FRAME.get())
+				.key('W', ItemTags.WOOL)
+				.patternLine("FFF")
+				.patternLine("FWF")
+				.patternLine("FFF")),
 
 		RADIAL_CHASIS = create(AllBlocks.RADIAL_CHASSIS).returns(3)
 			.unlockedBy(I::andesite)

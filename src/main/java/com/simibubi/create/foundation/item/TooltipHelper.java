@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.item;
 
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
@@ -34,7 +37,7 @@ public class TooltipHelper {
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
-	private static final Map<Item, Supplier<? extends IItemProvider>> tooltipReferrals = new HashMap<>();
+	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static String holdShift(Palette color, boolean highlighted) {
 		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
@@ -42,8 +45,23 @@ public class TooltipHelper {
 			+ Lang.translate("tooltip.holdKey", colorFormat + Lang.translate("tooltip.keyShift") + DARK_GRAY);
 	}
 
+	public static void addHint(List<String> tooltip, String hintKey, Object... messageParams) {
+		String spacing = IHaveGoggleInformation.spacing;
+		tooltip.add(spacing + GOLD + Lang.translate(hintKey + ".title"));
+		String hint = Lang.translate(hintKey);
+		List<String> cutString = TooltipHelper.cutString(spacing + hint, GRAY, TextFormatting.WHITE);
+		for (int i = 0; i < cutString.size(); i++)
+			tooltip.add((i == 0 ? "" : spacing) + cutString.get(i));
+	}
+	
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
-		tooltipReferrals.put(item.asItem(), itemWithTooltip);
+		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
+			.asItem()
+			.getTranslationKey());
+	}
+	
+	public static void referTo(IItemProvider item, String string) {
+		tooltipReferrals.put(item.asItem(), () -> string);
 	}
 
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor) {
@@ -190,11 +208,7 @@ public class TooltipHelper {
 		}
 
 		if (tooltipReferrals.containsKey(item))
-			return tooltipReferrals.get(item)
-				.get()
-				.asItem()
-				.getTranslationKey() + ".tooltip";
-
+			return tooltipReferrals.get(item).get() + ".tooltip";
 		return item.getTranslationKey(stack) + ".tooltip";
 	}
 

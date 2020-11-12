@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,7 +12,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
-public class SpoutBlock extends Block {
+public class SpoutBlock extends Block implements IWrenchable {
 
 	public SpoutBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);

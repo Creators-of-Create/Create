@@ -48,6 +48,8 @@ import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
@@ -63,7 +65,12 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableBl
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeAttachmentModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlockItem;
+import com.simibubi.create.content.contraptions.fluids.pipes.BracketGenerator;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
@@ -86,6 +93,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -161,6 +169,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 
 public class AllBlocks {
@@ -200,6 +209,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate(BlockStateGen.axisBlockProvider(false))
+		.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 		.simpleItem()
 		.register();
 
@@ -208,6 +218,7 @@ public class AllBlocks {
 		.transform(StressConfigDefaults.setNoImpact())
 		.properties(p -> p.sound(SoundType.WOOD))
 		.blockstate(BlockStateGen.axisBlockProvider(false))
+		.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 		.item(CogwheelBlockItem::new)
 		.build()
 		.register();
@@ -218,6 +229,7 @@ public class AllBlocks {
 			.properties(p -> p.sound(SoundType.WOOD))
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(BlockStateGen.axisBlockProvider(false))
+			.onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
 			.item(CogwheelBlockItem::new)
 			.build()
 			.register();
@@ -345,7 +357,7 @@ public class AllBlocks {
 	public static final BlockEntry<HandCrankBlock> HAND_CRANK = REGISTRATE.block("hand_crank", HandCrankBlock::new)
 		.initialProperties(SharedProperties::wooden)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
-		.transform(StressConfigDefaults.setCapacity(32.0))
+		.transform(StressConfigDefaults.setCapacity(8.0))
 		.tag(AllBlockTags.BRITTLE.tag)
 		.item()
 		.transform(customItemModel())
@@ -464,6 +476,18 @@ public class AllBlocks {
 		.transform(ModelGen.customItemModel("gauge", "_", "item"))
 		.register();
 
+	public static final BlockEntry<BracketBlock> WOODEN_BRACKET = REGISTRATE.block("wooden_bracket", BracketBlock::new)
+		.blockstate(new BracketGenerator("wooden")::generate)
+		.item(BracketBlockItem::new)
+		.transform(BracketGenerator.itemModel("wooden"))
+		.register();
+
+	public static final BlockEntry<BracketBlock> METAL_BRACKET = REGISTRATE.block("metal_bracket", BracketBlock::new)
+		.blockstate(new BracketGenerator("metal")::generate)
+		.item(BracketBlockItem::new)
+		.transform(BracketGenerator.itemModel("metal"))
+		.register();
+
 	// Fluids
 
 	public static final BlockEntry<FluidPipeBlock> FLUID_PIPE = REGISTRATE.block("fluid_pipe", FluidPipeBlock::new)
@@ -510,7 +534,7 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<FluidValveBlock> FLUID_VALVE = REGISTRATE.block("fluid_valve", FluidValveBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
@@ -545,22 +569,52 @@ public class AllBlocks {
 		}
 	}
 
-	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
+	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(Block.Properties::nonOpaque)
 		.blockstate(new FluidTankGenerator()::generate)
-		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::new))
+		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item(FluidTankItem::new)
 		.model(AssetLookup.<FluidTankItem>customItemModel("_", "block_single_window"))
 		.build()
 		.register();
 
+	public static final BlockEntry<FluidTankBlock> CREATIVE_FLUID_TANK =
+		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(Block.Properties::nonOpaque)
+			.blockstate(new FluidTankGenerator("creative_")::generate)
+			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::creative))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.item(FluidTankItem::new)
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/fluid_tank/block_single_window"))
+				.texture("5", p.modLoc("block/creative_fluid_tank_window_single"))
+				.texture("1", p.modLoc("block/creative_fluid_tank"))
+				.texture("0", p.modLoc("block/creative_casing")))
+			.build()
+			.register();
+
+	public static final BlockEntry<HosePulleyBlock> HOSE_PULLEY = REGISTRATE.block("hose_pulley", HosePulleyBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(BlockStateGen.horizontalBlockProvider(true))
+		.transform(StressConfigDefaults.setImpact(4.0))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<ItemDrainBlock> ITEM_DRAIN = REGISTRATE.block("item_drain", ItemDrainBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
+		.simpleItem()
+		.register();
+
 	public static final BlockEntry<SpoutBlock> SPOUT = REGISTRATE.block("spout", SpoutBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.item()
+		.item(BasinOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 
@@ -592,16 +646,21 @@ public class AllBlocks {
 					.getName() + "/head"))))
 			.register();
 
+	public static final BlockEntry<WindmillBearingBlock> WINDMILL_BEARING =
+		REGISTRATE.block("windmill_bearing", WindmillBearingBlock::new)
+			.transform(BuilderTransformers.bearing("windmill", "gearbox", true))
+			.transform(StressConfigDefaults.setCapacity(512.0))
+			.register();
+
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
 		REGISTRATE.block("mechanical_bearing", MechanicalBearingBlock::new)
-			.transform(BuilderTransformers.bearing("mechanical", "gearbox"))
-			.transform(StressConfigDefaults.setCapacity(512.0))
+			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.register();
 
 	public static final BlockEntry<ClockworkBearingBlock> CLOCKWORK_BEARING =
 		REGISTRATE.block("clockwork_bearing", ClockworkBearingBlock::new)
-			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox"))
+			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.register();
 
@@ -705,9 +764,7 @@ public class AllBlocks {
 		.onRegister(addMovementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item()
-		.model((c, p) -> p.blockItem(() -> c.getEntry()
-			.getBlock(), "/horizontal"))
-		.build()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<DeployerBlock> DEPLOYER = REGISTRATE.block("deployer", DeployerBlock::new)
@@ -746,39 +803,84 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
+	public static final BlockEntry<?>[] SEATS = new BlockEntry<?>[DyeColor.values().length];
+
 	static {
+		// SEATS
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getName();
 			SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
-			REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
+			SEATS[colour.ordinal()] =
+				REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
+					.initialProperties(SharedProperties::wooden)
+					.onRegister(addMovementBehaviour(movementBehaviour))
+					.blockstate((c, p) -> {
+						p.simpleBlock(c.get(), p.models()
+							.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
+							.texture("1", p.modLoc("block/seat/top_" + colourName))
+							.texture("2", p.modLoc("block/seat/side_" + colourName)));
+					})
+					.recipe((c, p) -> {
+						ShapedRecipeBuilder.shapedRecipe(c.get())
+							.patternLine("#")
+							.patternLine("-")
+							.key('#', DyeHelper.getWoolOfDye(colour))
+							.key('-', ItemTags.WOODEN_SLABS)
+							.addCriterion("has_wool", p.hasItem(ItemTags.WOOL))
+							.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
+						ShapedRecipeBuilder.shapedRecipe(c.get())
+							.patternLine("#")
+							.patternLine("-")
+							.key('#', DyeHelper.getTagOfDye(colour))
+							.key('-', AllItemTags.SEATS.tag)
+							.addCriterion("has_seat", p.hasItem(AllItemTags.SEATS.tag))
+							.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+					})
+					.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
+					.tag(AllBlockTags.SEATS.tag)
+					.item()
+					.tag(AllItemTags.SEATS.tag)
+					.build()
+					.register();
+		}
+	}
+
+	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
+		.initialProperties(SharedProperties::wooden)
+		.properties(Block.Properties::nonOpaque)
+		.blockstate(BlockStateGen.directionalBlockProvider(false))
+		.tag(AllBlockTags.WINDMILL_SAILS.tag)
+		.tag(AllBlockTags.FAN_TRANSPARENT.tag)
+		.simpleItem()
+		.register();
+
+	public static final BlockEntry<?>[] DYED_SAILS = new BlockEntry<?>[DyeColor.values().length];
+
+	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p))
+		.initialProperties(SharedProperties::wooden)
+		.properties(Block.Properties::nonOpaque)
+		.blockstate(BlockStateGen.directionalBlockProvider(false))
+		.tag(AllBlockTags.WINDMILL_SAILS.tag)
+		.simpleItem()
+		.register();
+
+	static {
+		// DYED SAILS
+		for (DyeColor colour : DyeColor.values()) {
+			if (colour == DyeColor.WHITE) {
+				DYED_SAILS[colour.ordinal()] = SAIL;
+				continue;
+			}
+			String colourName = colour.getName();
+			DYED_SAILS[colour.ordinal()] = REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
+				.properties(Block.Properties::nonOpaque)
 				.initialProperties(SharedProperties::wooden)
-				.onRegister(addMovementBehaviour(movementBehaviour))
-				.blockstate((c, p) -> {
-					p.simpleBlock(c.get(), p.models()
-						.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
-						.texture("1", p.modLoc("block/seat/top_" + colourName))
-						.texture("2", p.modLoc("block/seat/side_" + colourName)));
-				})
-				.recipe((c, p) -> {
-					ShapedRecipeBuilder.shapedRecipe(c.get())
-						.patternLine("#")
-						.patternLine("-")
-						.key('#', DyeHelper.getWoolOfDye(colour))
-						.key('-', ItemTags.WOODEN_SLABS)
-						.addCriterion("has_wool", p.hasItem(ItemTags.WOOL))
-						.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
-					ShapedRecipeBuilder.shapedRecipe(c.get())
-						.patternLine("#")
-						.patternLine("-")
-						.key('#', DyeHelper.getTagOfDye(colour))
-						.key('-', AllItemTags.SEATS.tag)
-						.addCriterion("has_seat", p.hasItem(AllItemTags.SEATS.tag))
-						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
-				})
-				.tag(AllBlockTags.SEATS.tag)
-				.item()
-				.tag(AllItemTags.SEATS.tag)
-				.build()
+				.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
+					.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
+					.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
+				.tag(AllBlockTags.WINDMILL_SAILS.tag)
+				.tag(AllBlockTags.SAILS.tag)
+				.loot((p, b) -> p.registerDropping(b, SAIL.get()))
 				.register();
 		}
 	}
@@ -1032,7 +1134,9 @@ public class AllBlocks {
 		REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
 			.initialProperties(() -> Blocks.IRON_ORE)
 			.transform(oxidizedBlockstate())
+			.tag(Tags.Blocks.ORES)
 			.transform(tagBlockAndItem("ores/copper"))
+			.tag(Tags.Items.ORES)
 			.transform(oxidizedItemModel())
 			.register();
 
@@ -1041,14 +1145,18 @@ public class AllBlocks {
 		.properties(p -> p.harvestLevel(2)
 			.harvestTool(ToolType.PICKAXE)
 			.sound(SoundType.STONE))
+		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))
+		.tag(Tags.Items.ORES)
 		.build()
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
 		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/copper"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.transform(oxidizedItemModel())
 			.transform(oxidizedBlockstate())
 			.register();
@@ -1071,14 +1179,18 @@ public class AllBlocks {
 
 	public static final BlockEntry<MetalBlock> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new MetalBlock(p, true))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
+		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.register();
 
 	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
 		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
 			.build()
 			.register();
 
