@@ -164,7 +164,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 			if (direction == Direction.DOWN) {
 				BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
 				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
-					return BeltFunnelBlock.updateShape(equivalentFunnel, world, pos);
+					return equivalentFunnel.with(BeltFunnelBlock.SHAPE, BeltFunnelBlock.getShapeForPosition(world, pos, facing));
 			}
 		}
 		return state;
@@ -177,7 +177,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		Block block = world.getBlockState(pos.offset(state.get(FACING)
 			.getOpposite()))
 			.getBlock();
-		return !(block instanceof FunnelBlock) && !(block instanceof HorizontalInteractionFunnelBlock);
+		return !(block instanceof FunnelBlock) && !(block instanceof BeltFunnelBlock);
 	}
 
 	@Nullable
@@ -205,7 +205,7 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 
 	@Nullable
 	public static boolean isFunnel(BlockState state) {
-		return state.getBlock() instanceof FunnelBlock || state.getBlock() instanceof HorizontalInteractionFunnelBlock;
+		return state.getBlock() instanceof FunnelBlock || state.getBlock() instanceof BeltFunnelBlock;
 	}
 
 	@Override

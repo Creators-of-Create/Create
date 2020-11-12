@@ -18,7 +18,7 @@ public class WrenchItemRenderer extends CustomRenderedItemModelRenderer<WrenchMo
 
 		float worldTime = AnimationTickHolder.getRenderTick();
 		float angle = worldTime * -.5f % 360;
-		float xOffset = -1/32f;
+		float xOffset = -1/16f;
 		ms.translate(-xOffset, 0, 0);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
 		ms.translate(xOffset, 0, 0);

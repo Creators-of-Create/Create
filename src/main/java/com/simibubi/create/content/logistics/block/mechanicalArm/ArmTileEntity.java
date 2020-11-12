@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedAngle;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
@@ -137,7 +138,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			sendData();
 		}
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
@@ -202,7 +203,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected void searchForItem() {
 		if (redstoneLocked)
 			return;
-		
+
 		boolean foundInput = false;
 		// for round robin, we start looking after the last used index, for default we
 		// start at 0;
@@ -256,7 +257,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			ArmInteractionPoint armInteractionPoint = outputs.get(i);
 			if (!armInteractionPoint.isStillValid(world))
 				continue;
-			
+
 			ItemStack remainder = armInteractionPoint.insert(world, held, true);
 			if (remainder.equals(heldItem, false))
 				continue;
@@ -345,7 +346,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 		return stack;
 	}
-	
+
 	public void redstoneUpdate() {
 		if (world.isRemote)
 			return;
@@ -439,6 +440,21 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	public static int getRange() {
 		return AllConfigs.SERVER.logistics.mechanicalArmRange.get();
+	}
+
+	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (super.addToTooltip(tooltip, isPlayerSneaking))
+			return true;
+		if (isPlayerSneaking)
+			return false;
+		if (!inputs.isEmpty())
+			return false;
+		if (!outputs.isEmpty())
+			return false;
+
+		TooltipHelper.addHint(tooltip, "hint.mechanical_arm_no_targets");
+		return true;
 	}
 
 	private class SelectionModeValueBox extends CenteredSideValueBoxTransform {
