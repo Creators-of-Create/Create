@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -19,6 +20,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
@@ -65,12 +67,12 @@ public class InWorldProcessing {
 			IFluidState fluidState = reader.getFluidState(pos);
 			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
-			if (blockState.getBlock() == Blocks.FIRE
-				|| (blockState.getBlock() == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT))
+			Block block = blockState.getBlock();
+			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
+				|| (block == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT))
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
-			if (blockState.getBlock() == Blocks.LAVA
-				|| getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
+			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
 			return null;
 		}

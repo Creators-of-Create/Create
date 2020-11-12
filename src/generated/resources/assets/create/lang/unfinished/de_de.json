@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1038",
+	"_": "Missing Localizations: 1039",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -215,6 +215,7 @@
 	"block.create.limestone_cobblestone_wall": "UNLOCALIZED: Limestone Cobblestone Wall",
 	"block.create.limestone_pillar": "Kalksteinsäule",
 	"block.create.linear_chassis": "Schubgerüst",
+	"block.create.lit_blaze_burner": "UNLOCALIZED: Lit Blaze Burner",
 	"block.create.magenta_sail": "UNLOCALIZED: Magenta Sail",
 	"block.create.magenta_seat": "UNLOCALIZED: Magenta Seat",
 	"block.create.magenta_valve_handle": "UNLOCALIZED: Magenta Valve Handle",

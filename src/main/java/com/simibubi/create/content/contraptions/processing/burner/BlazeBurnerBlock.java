@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.processing.burner;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -17,6 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.FlintAndSteelItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -29,6 +32,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -43,6 +48,8 @@ import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
 import net.minecraft.world.storage.loot.conditions.ILootCondition.IBuilder;
 import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
@@ -61,10 +68,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		super.fillStateContainer(builder);
 		builder.add(HEAT_LEVEL);
 	}
-	
+
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_,
-		boolean p_220082_5_) {
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		if (world.isRemote)
 			return;
 		TileEntity tileEntity = world.getTileEntity(pos.up());
@@ -104,6 +110,19 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		boolean dontConsume = player.isCreative();
 		boolean forceOverflow = !(player instanceof FakePlayer);
 
+		if (!state.hasTileEntity()) {
+			if (heldItem.getItem() instanceof FlintAndSteelItem) {
+				world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F,
+					world.rand.nextFloat() * 0.4F + 0.8F);
+				if (world.isRemote)
+					return ActionResultType.SUCCESS;
+				heldItem.damageItem(1, player, p -> p.sendBreakAnimation(hand));
+				world.setBlockState(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
+				return ActionResultType.SUCCESS;
+			}
+			return ActionResultType.PASS;
+		}
+
 		if (!tryInsert(state, world, pos, dontConsume ? heldItem.copy() : heldItem, forceOverflow, false))
 			return ActionResultType.PASS;
 		return ActionResultType.SUCCESS;
@@ -121,8 +140,11 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 
 		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, simulate))
 			return false;
-		if (!simulate && !world.isRemote)
+		if (!simulate && !world.isRemote) {
+			world.playSound(null, pos, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS,
+				.125f + world.rand.nextFloat() * .125f, .75f - world.rand.nextFloat() * .25f);
 			stack.shrink(1);
+		}
 		return true;
 	}
 
@@ -179,6 +201,18 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		}
 		builder.addLootPool(poolBuilder.rolls(ConstantRange.of(1)));
 		return builder;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (random.nextInt(10) != 0)
+			return;
+		if (!state.get(HEAT_LEVEL)
+			.isAtLeast(HeatLevel.SMOULDERING))
+			return;
+		world.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F),
+			(double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
+			0.5F + random.nextFloat(), random.nextFloat() * 0.7F + 0.6F, false);
 	}
 
 	public enum HeatLevel implements IStringSerializable {
