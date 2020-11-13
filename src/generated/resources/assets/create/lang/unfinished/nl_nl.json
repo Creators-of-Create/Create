@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 980",
+	"_": "Missing Localizations: 982",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -586,6 +586,8 @@
 	"create.recipe.blockzapper_upgrade": "Blokzapper",
 	"create.recipe.sandpaper_polishing": "UNLOCALIZED: Sandpaper Polishing",
 	"create.recipe.mystery_conversion": "UNLOCALIZED: Mysterious Conversion",
+	"create.recipe.spout_filling": "UNLOCALIZED: Filling by Spout",
+	"create.recipe.draining": "UNLOCALIZED: Item Draining",
 	"create.recipe.processing.chance": "%1$s%% Kans",
 	"create.recipe.heat_requirement.none": "UNLOCALIZED: No Heating Required",
 	"create.recipe.heat_requirement.heated": "UNLOCALIZED: Heated",

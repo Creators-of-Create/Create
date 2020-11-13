@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 321",
+	"_": "Missing Localizations: 323",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -586,6 +586,8 @@
 	"create.recipe.blockzapper_upgrade": "Ручная блоковая пушка",
 	"create.recipe.sandpaper_polishing": "Полировка наждачной бумагой",
 	"create.recipe.mystery_conversion": "Хроматический метаморфоз",
+	"create.recipe.spout_filling": "UNLOCALIZED: Filling by Spout",
+	"create.recipe.draining": "UNLOCALIZED: Item Draining",
 	"create.recipe.processing.chance": "%1$s%% шанса",
 	"create.recipe.heat_requirement.none": "UNLOCALIZED: No Heating Required",
 	"create.recipe.heat_requirement.heated": "UNLOCALIZED: Heated",

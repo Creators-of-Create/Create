@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;

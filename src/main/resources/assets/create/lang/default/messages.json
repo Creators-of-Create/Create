@@ -33,6 +33,8 @@
 	"create.recipe.blockzapper_upgrade": "Handheld Blockzapper",
 	"create.recipe.sandpaper_polishing": "Sandpaper Polishing",
 	"create.recipe.mystery_conversion": "Mysterious Conversion",
+	"create.recipe.spout_filling": "Filling by Spout",
+	"create.recipe.draining": "Item Draining",
 
 	"create.recipe.processing.chance": "%1$s%% Chance",	
 	"create.recipe.heat_requirement.none": "No Heating Required",
