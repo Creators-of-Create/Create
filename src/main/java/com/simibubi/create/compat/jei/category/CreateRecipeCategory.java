@@ -106,6 +106,19 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 					TextFormatting.GOLD + Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100)));
 		});
 	}
+	
+	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
+		return stacks.stream()
+			.map(this::withImprovedVisibility)
+			.collect(Collectors.toList());
+	}
+
+	public FluidStack withImprovedVisibility(FluidStack stack) {
+		FluidStack display = stack.copy();
+		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
+		display.setAmount(displayedAmount);
+		return display;
+	}
 
 	protected static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
 		List<FluidStack> outputs) {

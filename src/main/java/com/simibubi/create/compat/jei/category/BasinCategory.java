@@ -139,19 +139,6 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		}
 	}
 
-	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
-		return stacks.stream()
-			.map(this::withImprovedVisibility)
-			.collect(Collectors.toList());
-	}
-
-	public FluidStack withImprovedVisibility(FluidStack stack) {
-		FluidStack display = stack.copy();
-		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
-		display.setAmount(displayedAmount);
-		return display;
-	}
-
 	@Override
 	public void draw(BasinRecipe recipe, double mouseX, double mouseY) {
 		List<Pair<Ingredient, MutableInt>> actualIngredients = ItemHelper.condenseIngredients(recipe.getIngredients());

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.contraptions.fluids.potion;
+package com.simibubi.create.content.contraptions.fluids.recipe;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -34,7 +35,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PotionMixingRecipeManager {
 
 	public static Map<Item, List<MixingRecipe>> ALL = new HashMap<>();
-
+	
 	public static List<MixingRecipe> getAllBrewingRecipes() {
 		List<MixingRecipe> mixingRecipes = new ArrayList<>();
 
