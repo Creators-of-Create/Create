@@ -329,7 +329,7 @@
 	
 	"block.create.blaze_burner.tooltip": "BLAZE BURNER",
 	"block.create.blaze_burner.tooltip.summary": "A block to heat a basin when housing a tamed blaze.",
-	"block.create.blaze_burner.tooltip.condition1": "When used on a _Blaze_ or _Blaze_ _spawner_",
+	"block.create.blaze_burner.tooltip.condition1": "When used on Blaze or Blaze spawner",
 	"block.create.blaze_burner.tooltip.behaviour1": "_Captures_ a Blaze in the item",
 	"block.create.blaze_burner.tooltip.condition2": "When placed below a basin",
 	"block.create.blaze_burner.tooltip.behaviour2": "Provides _heat_ to basin recipes.",
@@ -370,7 +370,7 @@
 	"block.create.portable_storage_interface.tooltip": "PORTABLE STORAGE INTERFACE",
 	"block.create.portable_storage_interface.tooltip.summary": "A portable interchange point for _moving_ _items_ to and from a _structure_ moved by a piston, bearing, minecart, or pulley.",
 	"block.create.portable_storage_interface.tooltip.condition1": "While Moving",
-	"block.create.portable_storage_interface.tooltip.behaviour1": "Interacts with stationary _portable_ _storage_ _interfaces_ to transfer items to or from the contraption. Direction of transfer is dependent on the blocks Inserting into or extracting from the stationary _Interface_. The contraption will briefly stall as items are exchanged.",
+	"block.create.portable_storage_interface.tooltip.behaviour1": "Interacts with stationary _portable_ _storage_ _interfaces_ to transfer items to or from the contraption. Components inserting into or extracting from the _Stationary_ _Interface_ will interact with the inventories on the contraption _directly._ The structure will briefly stall as items are exchanged.",
 	
 	"block.create.rotation_speed_controller.tooltip": "ROTATION SPEED CONTROLLER",
 	"block.create.rotation_speed_controller.tooltip.summary": "A _configurable_ _relay_ able to speed up or slow down the target component to any desired speed.",
