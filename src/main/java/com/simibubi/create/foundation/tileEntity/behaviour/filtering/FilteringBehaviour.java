@@ -19,6 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
@@ -105,7 +106,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		recipeFilter = true;
 		return this;
 	}
-	
+
 	public FilteringBehaviour forFluids() {
 		fluidFilter = true;
 		return this;
@@ -142,9 +143,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public void setFilter(ItemStack stack) {
+		boolean confirm = ItemHandlerHelper.canItemStacksStack(stack, filter);
 		filter = stack.copy();
 		callback.accept(filter);
-		count = (filter.getItem() instanceof FilterItem) ? 0 : Math.min(stack.getCount(), stack.getMaxStackSize());
+		count = !confirm ? 0
+			: (filter.getItem() instanceof FilterItem) ? 0 : Math.min(stack.getCount(), stack.getMaxStackSize());
 		forceClientState = true;
 
 		tileEntity.markDirty();
@@ -177,7 +180,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public boolean test(ItemStack stack) {
 		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
 	}
-	
+
 	public boolean test(FluidStack stack) {
 		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
 	}

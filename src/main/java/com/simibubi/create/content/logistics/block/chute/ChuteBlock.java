@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -150,7 +151,8 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 	@Override
 	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
 		BlockPos neighbourPos, boolean p_220069_6_) {
-		if (pos.down().equals(neighbourPos))
+		if (pos.down()
+			.equals(neighbourPos))
 			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
 	}
 
@@ -211,7 +213,10 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 		if (connections.get(Direction.EAST) && connections.get(Direction.WEST))
 			return state.with(SHAPE, Shape.INTERSECTION);
 		if (amtConnections == 1 && connections.get(facing)
-			&& !(above.getBlock() instanceof ChuteBlock && above.get(FACING) == Direction.DOWN))
+			&& !(above.getBlock() instanceof ChuteBlock && above.get(FACING) == Direction.DOWN)
+			&& !(above.getBlock() instanceof FunnelBlock && FunnelBlock.getFunnelFacing(above)
+				.getAxis()
+				.isVertical()))
 			return state.with(SHAPE, Shape.NORMAL);
 		return state.with(SHAPE, Shape.INTERSECTION);
 	}

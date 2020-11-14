@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -92,14 +93,28 @@ public class ArmInteractionPointHandler {
 		int removed = 0;
 		for (Iterator<ArmInteractionPoint> iterator = currentSelection.iterator(); iterator.hasNext();) {
 			ArmInteractionPoint point = iterator.next();
-			if (point.pos.withinDistance(pos, ArmTileEntity.getRange())) 
+			if (point.pos.withinDistance(pos, ArmTileEntity.getRange()))
 				continue;
 			iterator.remove();
 			removed++;
 		}
 
-		if (removed > 0) 
-			Minecraft.getInstance().player.sendStatusMessage(Lang.translate("mechanical_arm.points_outside_range", removed).formatted(TextFormatting.RED), true);
+		ClientPlayerEntity player = Minecraft.getInstance().player;
+		if (removed > 0) {
+			player.sendStatusMessage(Lang.createTranslationTextComponent("mechanical_arm.points_outside_range", removed)
+				.formatted(TextFormatting.RED), true);
+		} else {
+			int inputs = 0;
+			int outputs = 0;
+			for (ArmInteractionPoint armInteractionPoint : currentSelection) {
+				if (armInteractionPoint.mode == Mode.DEPOSIT)
+					outputs++;
+				else
+					inputs++;
+			}
+			player.sendStatusMessage(Lang.createTranslationTextComponent("mechanical_arm.summary", inputs, outputs)
+				.formatted(TextFormatting.WHITE), true);
+		}
 
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();

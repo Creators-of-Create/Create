@@ -86,6 +86,7 @@ import com.simibubi.create.content.contraptions.processing.BasinGenerator;
 import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
@@ -446,6 +447,17 @@ public class AllBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<LitBlazeBurnerBlock> LIT_BLAZE_BURNER =
+		REGISTRATE.block("lit_blaze_burner", LitBlazeBurnerBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.luminance($ -> 12))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+			.loot((lt, block) -> lt.registerDropping(block, AllItems.EMPTY_BLAZE_BURNER.get()))
+			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), p.models()
+				.getExistingFile(p.modLoc("block/blaze_burner/block_with_fire"))))
+			.register();
+
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
@@ -615,7 +627,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.item()
+		.item(BasinOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 

@@ -77,11 +77,26 @@ public class AllShapes {
 			.add(2, 6, 2, 14, 10, 14)
 			.add(0, 10, 0, 16, 13, 16)
 			.forDirectional(UP),
-		BELT_FUNNEL_RETRACTED = shape(2, -5, 14, 12, 14, 18).add(0, -5, 8, 16, 16, 14)
+		BELT_FUNNEL_RETRACTED = shape(2, -2, 14, 14, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_EXTENDED = shape(2, -4, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
+		BELT_FUNNEL_EXTENDED = shape(2, -2, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
 			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_PERPENDICULAR = 
+			shape(2, -2, 14, 14, 14, 18)
+			.add(1, 8, 12, 15, 15, 14)
+			.add(0.1, 13, 7, 15.9, 15, 11)
+			.add(0.1, 9, 8, 15.9, 13, 12)
+			.add(0.1, 5, 9, 15.9, 9, 13)
+			.add(0.1, 1, 10, 15.9, 5, 14)
+			.add(0.1, -3, 11, 15.9, 1, 15)
+			.forHorizontal(NORTH),
+		BELT_FUNNEL_CONNECTED = 
+			shape(2, -2, 14, 14, 14, 18)
+			.add(0, -5, 5, 16, 16, 11)
+			.add(2, -4, 2, 14, 14, -2)
+			.add(3, -2, 0, 13, 13, 16)
 			.forHorizontal(NORTH),
 		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),

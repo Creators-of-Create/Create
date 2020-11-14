@@ -22,6 +22,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -48,6 +49,11 @@ public class ShaftBlock extends RotatedPillarKineticBlock implements IWaterLogga
 
 	public static boolean isShaft(BlockState state) {
 		return AllBlocks.SHAFT.has(state);
+	}
+	
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		return IWrenchableWithBracket.super.onWrenched(state, context);
 	}
 
 	@Override

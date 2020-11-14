@@ -12,7 +12,7 @@ import net.minecraft.util.text.StringTextComponent;
 public interface IHaveGoggleInformation {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
-	String spacing = "    ";
+	public static String spacing = "    ";
 	ITextComponent componentSpacing = new StringTextComponent(spacing);
 
 	/**

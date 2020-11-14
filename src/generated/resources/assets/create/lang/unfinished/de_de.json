@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1026",
+	"_": "Missing Localizations: 1041",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -215,6 +215,7 @@
 	"block.create.limestone_cobblestone_wall": "UNLOCALIZED: Limestone Cobblestone Wall",
 	"block.create.limestone_pillar": "Kalksteinsäule",
 	"block.create.linear_chassis": "Schubgerüst",
+	"block.create.lit_blaze_burner": "UNLOCALIZED: Lit Blaze Burner",
 	"block.create.magenta_sail": "UNLOCALIZED: Magenta Sail",
 	"block.create.magenta_seat": "UNLOCALIZED: Magenta Seat",
 	"block.create.magenta_valve_handle": "UNLOCALIZED: Magenta Valve Handle",
@@ -585,6 +586,8 @@
 	"create.recipe.blockzapper_upgrade": "Blockpistole",
 	"create.recipe.sandpaper_polishing": "UNLOCALIZED: Sandpaper Polishing",
 	"create.recipe.mystery_conversion": "UNLOCALIZED: Mysterious Conversion",
+	"create.recipe.spout_filling": "UNLOCALIZED: Filling by Spout",
+	"create.recipe.draining": "UNLOCALIZED: Item Draining",
 	"create.recipe.processing.chance": "Chance: %1$s%%",
 	"create.recipe.heat_requirement.none": "UNLOCALIZED: No Heating Required",
 	"create.recipe.heat_requirement.heated": "UNLOCALIZED: Heated",
@@ -710,6 +713,9 @@
 	"create.logistics.fluid_filter": "UNLOCALIZED: Fluid Filter",
 	"create.logistics.firstFrequency": "Freq. #1",
 	"create.logistics.secondFrequency": "Freq. #2",
+	"create.logistics.filter.apply": "UNLOCALIZED: Applied filter to %1$s.",
+	"create.logistics.filter.apply_click_again": "UNLOCALIZED: Applied filter to %1$s, click again to copy the amount.",
+	"create.logistics.filter.apply_count": "UNLOCALIZED: Applied extraction count to filter.",
 
 	"create.gui.goggles.generator_stats": "UNLOCALIZED: Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "UNLOCALIZED: Kinetic Stats:",
@@ -750,7 +756,7 @@
 	"create.schematicAndQuill.noTarget": "Halte [Strg] zur Auswahl von Luft.",
 	"create.schematicAndQuill.abort": "Auswahl zurückgesetzt.",
 	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
-	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convetr": "UNLOCALIZED: Save and Deploy Immediately",
 	"create.schematicAndQuill.fallbackName": "Mein Bauplan",
 	"create.schematicAndQuill.saved": "Gespeichert als %1$s",
 
@@ -950,6 +956,7 @@
 
 	"create.mechanical_arm.extract_from": "UNLOCALIZED: Take items from %1$s",
 	"create.mechanical_arm.deposit_to": "UNLOCALIZED: Deposit items to %1$s",
+	"create.mechanical_arm.summary": "UNLOCALIZED: Mechanical Arm has %1$s input(s) and %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "UNLOCALIZED: %1$s selected interaction point(s) removed due to range limitations.",
 
 	"create.logistics.when_multiple_outputs_available": "UNLOCALIZED: When Multiple Outputs Available",
@@ -965,6 +972,15 @@
 	"create.tunnel.selection_mode.prefer_nearest": "UNLOCALIZED: Prefer Nearest",
 	"create.tunnel.selection_mode.randomize": "UNLOCALIZED: Randomize",
 	"create.tunnel.selection_mode.synchronize": "UNLOCALIZED: Synchronize Inputs",
+
+	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
+	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechnanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
+	"create.hint.horizontal_funnel.title": "UNLOCALIZED: Horizontal Funnels",
+	"create.hint.horizontal_funnel": "UNLOCALIZED: cannot transfer between inventories _directly_. Try running a _Mechanical_ _Belt_ or _Depot_ below your funnel to extract items from Inventories.",
+	"create.hint.upward_funnel.title": "UNLOCALIZED: Funnels facing upward",
+	"create.hint.upward_funnel": "UNLOCALIZED: can only transfer items inserted by _Arms_, fan-powered _Chutes_, or items _thrown_ at them. Try building some _Chutes_ if you are looking to move your items _vertically_.",
+	"create.hint.empty_bearing.title": "UNLOCALIZED: Update Bearing",
+	"create.hint.empty_bearing": "UNLOCALIZED: _Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",

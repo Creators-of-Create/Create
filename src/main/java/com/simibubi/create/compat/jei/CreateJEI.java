@@ -23,6 +23,7 @@ import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.FanBlastingCategory;
 import com.simibubi.create.compat.jei.category.FanSmokingCategory;
 import com.simibubi.create.compat.jei.category.FanWashingCategory;
+import com.simibubi.create.compat.jei.category.ItemDrainCategory;
 import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
 import com.simibubi.create.compat.jei.category.MillingCategory;
 import com.simibubi.create.compat.jei.category.MixingCategory;
@@ -32,8 +33,9 @@ import com.simibubi.create.compat.jei.category.PolishingCategory;
 import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SawingCategory;
+import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
@@ -49,6 +51,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -70,6 +73,7 @@ public class CreateJEI implements IModPlugin {
 		return ID;
 	}
 
+	public IIngredientManager ingredientManager;
 	final List<CreateRecipeCategory<?>> ALL = new ArrayList<>();
 	final CreateRecipeCategory<?>
 
@@ -155,6 +159,18 @@ public class CreateJEI implements IModPlugin {
 			.recipeList(MysteriousItemConversionCategory::getRecipes)
 			.build(),
 
+		spoutFilling =
+			register("spout_filling", SpoutCategory::new).recipeList(() -> SpoutCategory.getRecipes(ingredientManager))
+				.recipes(AllRecipeTypes.FILLING)
+				.catalyst(AllBlocks.SPOUT::get)
+				.build(),
+
+		draining = register("draining", ItemDrainCategory::new)
+			.recipeList(() -> ItemDrainCategory.getRecipes(ingredientManager))
+			.recipes(AllRecipeTypes.EMPTYING)
+			.catalyst(AllBlocks.ITEM_DRAIN::get)
+			.build(),
+
 		autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
 			.recipes(
 				r -> (r.getType() == IRecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.type)
@@ -187,6 +203,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
+		ingredientManager = registration.getIngredientManager();
 		ALL.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
 	}
 
@@ -213,9 +230,10 @@ public class CreateJEI implements IModPlugin {
 		}
 
 		CategoryBuilder<T> catalyst(Supplier<IItemProvider> supplier) {
-			return catalystStack(() -> new ItemStack(supplier.get().asItem()));
+			return catalystStack(() -> new ItemStack(supplier.get()
+				.asItem()));
 		}
-		
+
 		CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
 			category.recipeCatalysts.add(supplier);
 			return this;

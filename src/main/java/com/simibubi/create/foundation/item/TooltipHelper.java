@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.item;
 
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +15,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Lang;
@@ -46,6 +50,15 @@ public class TooltipHelper {
 			.formatted(colorFormat)).formatted(TextFormatting.DARK_GRAY);
 	}
 
+	public static void addHint(List<ITextComponent> tooltip, String hintKey, Object... messageParams) {
+		ITextComponent spacing = IHaveGoggleInformation.componentSpacing;
+		tooltip.add(spacing.copy().append(Lang.translate(hintKey + ".title")).formatted(GOLD));
+		ITextComponent hint = Lang.translate(hintKey);
+		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(spacing.copy().append(hint), GRAY, TextFormatting.WHITE);
+		for (int i = 0; i < cutComponent.size(); i++)
+			tooltip.add((i == 0 ? StringTextComponent.EMPTY : spacing).copy().append(cutComponent.get(i)));
+	}
+	
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
 		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
 			.asItem()

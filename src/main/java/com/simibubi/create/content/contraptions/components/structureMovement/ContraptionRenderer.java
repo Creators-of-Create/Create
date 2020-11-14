@@ -1,15 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 import com.simibubi.create.foundation.utility.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -30,28 +32,40 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class ContraptionRenderer {
 
-	public static final Compartment<Contraption> CONTRAPTION = new Compartment<>();
+	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 	protected static PlacementSimulationWorld renderWorld;
 
 	public static void render(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		renderStructure(world, c, ms, msLocal, buffer);
 		renderTileEntities(world, c, ms, msLocal, buffer);
+		if (buffer instanceof IRenderTypeBuffer.Impl)
+			((IRenderTypeBuffer.Impl) buffer).draw();
+		renderStructure(world, c, ms, msLocal, buffer);
 		renderActors(world, c, ms, msLocal, buffer);
 	}
 
 	protected static void renderStructure(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		IVertexBuilder translucent = buffer.getBuffer(RenderType.getTranslucent());
-		SuperByteBuffer contraptionBuffer = CreateClient.bufferCache.get(CONTRAPTION, c, () -> buildStructureBuffer(c));
-		Matrix4f model = msLocal.peek()
-			.getModel();
-		contraptionBuffer.light(model)
-			.renderInto(ms, translucent);
+		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		List<RenderType> blockLayers = RenderType.getBlockLayers();
+
+		buffer.getBuffer(RenderType.getSolid());
+		for (int i = 0; i < blockLayers.size(); i++) {
+			RenderType layer = blockLayers.get(i);
+			Pair<Contraption, Integer> key = Pair.of(c, i);
+			SuperByteBuffer contraptionBuffer = bufferCache.get(CONTRAPTION, key, () -> buildStructureBuffer(c, layer));
+			if (contraptionBuffer.isEmpty())
+				continue;
+			Matrix4f model = msLocal.peek()
+				.getModel();
+			contraptionBuffer.light(model)
+				.renderInto(ms, buffer.getBuffer(layer));
+		}
 	}
 
 	private static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
@@ -59,10 +73,11 @@ public class ContraptionRenderer {
 		TileEntityRenderHelper.renderTileEntities(world, c.customRenderTEs, ms, msLocal, buffer);
 	}
 
-	private static SuperByteBuffer buildStructureBuffer(Contraption c) {
+	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {
 		if (renderWorld == null || renderWorld.getWrappedWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
+		ForgeHooksClient.setRenderLayer(layer);
 		MatrixStack ms = new MatrixStack();
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
 			.getBlockRendererDispatcher();
@@ -79,7 +94,9 @@ public class ContraptionRenderer {
 
 			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
 				continue;
-
+			if (!RenderTypeLookup.canRenderInLayer(state, layer))
+				continue;
+			
 			IBakedModel originalModel = dispatcher.getModelForState(state);
 			ms.push();
 			ms.translate(info.pos.getX(), info.pos.getY(), info.pos.getZ());

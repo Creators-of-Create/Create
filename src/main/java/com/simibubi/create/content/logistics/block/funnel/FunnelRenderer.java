@@ -42,6 +42,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		msr.centre()
 			.rotateY(horizontalAngle)
 			.unCentre();
+		ms.translate(0, 0, -te.getFlapOffset());
 		
 		for (int segment = 0; segment <= 3; segment++) {
 			ms.push();

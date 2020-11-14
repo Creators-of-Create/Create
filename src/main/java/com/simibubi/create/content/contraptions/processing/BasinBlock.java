@@ -33,6 +33,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -55,6 +56,14 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
 		super.fillStateContainer(p_206840_1_.add(FACING));
+	}
+	
+	@Override
+	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+		TileEntity tileEntity = world.getTileEntity(pos.up());
+		if (tileEntity instanceof BasinOperatingTileEntity)
+			return false;
+		return true;
 	}
 
 	@Override

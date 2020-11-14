@@ -33,20 +33,19 @@ public class BeltFunnelGenerator extends SpecialBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		boolean pushing = state.get(BeltFunnelBlock.PUSHING);
 		boolean powered = state.method_28500(BlockStateProperties.POWERED).orElse(false);
 		String shapeName = state.get(BeltFunnelBlock.SHAPE)
 			.getString();
 		
-		String pushingSuffix = (pushing ? "push" : "pull") ;
 		String poweredSuffix = powered ? "_powered" : "";
-		String name = ctx.getName() + "_" + pushingSuffix + poweredSuffix;
-		String textureName = type + "_funnel_" + pushingSuffix;
+		String name = ctx.getName() + "_" + poweredSuffix;
 		
 		return prov.models()
 			.withExistingParent(name + "_" + shapeName, prov.modLoc("block/belt_funnel/block_" + shapeName))
 			.texture("particle", materialBlockTexture)
-			.texture("2", prov.modLoc("block/" + textureName))
+			.texture("2", prov.modLoc("block/" + type + "_funnel_neutral"))
+			.texture("2_1", prov.modLoc("block/" + type + "_funnel_push"))
+			.texture("2_2", prov.modLoc("block/" + type + "_funnel_pull"))
 			.texture("3", prov.modLoc("block/" + type + "_funnel_back"))
 			.texture("5", prov.modLoc("block/" + type + "_funnel_tall" + poweredSuffix))
 			.texture("6", prov.modLoc("block/" + type + "_funnel" + poweredSuffix))

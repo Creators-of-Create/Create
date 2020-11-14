@@ -14,6 +14,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -412,7 +413,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return false;
 		if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) != side.getOpposite())
 			return false;
-		return !funnelState.get(BeltFunnelBlock.PUSHING);
+		return funnelState.get(BeltFunnelBlock.SHAPE) == Shape.EXTENDED;
 	}
 
 	@Override

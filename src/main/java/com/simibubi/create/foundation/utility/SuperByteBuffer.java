@@ -280,5 +280,9 @@ public class SuperByteBuffer {
 
 		return ((int) sky) << 20 | ((int) block) << 4;
 	}
+	
+	public boolean isEmpty() {
+		return template.limit() == 0;
+	}
 
 }

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "create:blaze_burner",
+    "create:lit_blaze_burner",
     "create:sail_frame",
     "#minecraft:fences",
     "minecraft:iron_bars"

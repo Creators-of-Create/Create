@@ -4,7 +4,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
@@ -90,6 +91,7 @@ public class CommonEvents {
 	public static void registerReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
+		event.addListener(FluidTransferRecipes.LISTENER);
 	}
 
 	@SubscribeEvent
