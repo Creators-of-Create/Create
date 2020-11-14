@@ -562,8 +562,8 @@ public class AllBlocks {
 			.transform(BuilderTransformers.valveHandle(null))
 			.register();
 
-	public static final BlockEntry<?>[] DYED_VALVE_HANDLES = new BlockEntry<?>[DyeColor.values().length];
-
+	public static final BlockEntry<ValveHandleBlock>[] DYED_VALVE_HANDLES = new BlockEntry[DyeColor.values().length];
+	
 	static {
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getName();
