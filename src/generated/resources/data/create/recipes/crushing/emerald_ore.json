@@ -12,12 +12,10 @@
     },
     {
       "item": "minecraft:emerald",
-      "count": 1,
       "chance": 0.25
     },
     {
       "item": "minecraft:cobblestone",
-      "count": 1,
       "chance": 0.125
     }
   ],

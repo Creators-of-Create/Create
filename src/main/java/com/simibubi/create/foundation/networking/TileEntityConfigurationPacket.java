@@ -39,7 +39,7 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 				return;
 			World world = player.world;
 
-			if (world == null || world.getTileEntity(pos) == null)
+			if (world == null || !world.isBlockPresent(pos))
 				return;
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (tileEntity instanceof SyncedTileEntity) {

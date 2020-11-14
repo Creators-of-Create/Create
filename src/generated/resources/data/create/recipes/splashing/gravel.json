@@ -8,12 +8,10 @@
   "results": [
     {
       "item": "minecraft:flint",
-      "count": 1,
       "chance": 0.25
     },
     {
       "item": "minecraft:iron_nugget",
-      "count": 1,
       "chance": 0.125
     }
   ]

@@ -7,12 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:powdered_obsidian",
-      "count": 1
+      "item": "create:powdered_obsidian"
     },
     {
       "item": "minecraft:obsidian",
-      "count": 1,
       "chance": 0.75
     }
   ],

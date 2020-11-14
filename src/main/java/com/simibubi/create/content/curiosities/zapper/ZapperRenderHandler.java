@@ -141,8 +141,6 @@ public class ZapperRenderHandler {
 		ItemStack heldItem = event.getItemStack();
 		if (!(heldItem.getItem() instanceof ZapperItem))
 			return;
-		if (event.isCanceled())
-			return;
 
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;

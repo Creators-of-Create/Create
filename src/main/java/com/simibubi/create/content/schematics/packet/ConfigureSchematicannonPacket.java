@@ -52,7 +52,7 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 			if (player == null)
 				return;
 			World world = player.world;
-			if (world == null)
+			if (world == null || !world.isBlockPresent(pos))
 				return;
 
 			TileEntity tileEntity = world.getTileEntity(pos);

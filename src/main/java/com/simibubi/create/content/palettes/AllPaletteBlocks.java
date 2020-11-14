@@ -29,6 +29,7 @@ import net.minecraft.block.GlassBlock;
 import net.minecraft.block.SandBlock;
 import net.minecraft.block.WoodType;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
@@ -45,7 +46,7 @@ public class AllPaletteBlocks {
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 		.blockstate(palettesCubeAll())
-		.tag(Tags.Blocks.GLASS_COLORLESS)
+		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()
 		.tag(Tags.Items.GLASS_COLORLESS)
 		.build()

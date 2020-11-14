@@ -26,6 +26,7 @@ import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPack
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
+import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
@@ -60,6 +61,7 @@ public enum AllPackets {
 	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
 	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new),
 	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
+	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

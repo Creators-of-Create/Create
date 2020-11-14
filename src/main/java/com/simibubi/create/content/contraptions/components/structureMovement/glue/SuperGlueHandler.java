@@ -47,8 +47,6 @@ public class SuperGlueHandler {
 
 		if (entity == null || world == null || pos == null)
 			return;
-		if (event.isCanceled())
-			return;
 		if (world.isRemote())
 			return;
 
@@ -79,7 +77,7 @@ public class SuperGlueHandler {
 			new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, placer));
 
 		Direction face = ray.getFace();
-		if (ray == null || face == null || ray.getType() == Type.MISS)
+		if (face == null || ray.getType() == Type.MISS)
 			return;
 
 		if (!ray.getPos()
