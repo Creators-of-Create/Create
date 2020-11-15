@@ -7,8 +7,7 @@
   ],
   "results": [
     {
-      "item": "create:crushed_gold_ore",
-      "count": 1
+      "item": "create:crushed_gold_ore"
     },
     {
       "item": "create:crushed_gold_ore",
@@ -17,7 +16,6 @@
     },
     {
       "item": "minecraft:cobblestone",
-      "count": 1,
       "chance": 0.125
     }
   ],

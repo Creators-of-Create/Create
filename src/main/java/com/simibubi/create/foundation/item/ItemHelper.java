@@ -108,7 +108,7 @@ public class ItemHelper {
 							.increment();
 						continue Ingredients;
 					}
-					if (!ItemStack.areItemsEqual(stacks1[i], stacks2[i]))
+					if (!ItemStack.areItemStacksEqual(stacks1[i], stacks2[i]))
 						break;
 				}
 			}

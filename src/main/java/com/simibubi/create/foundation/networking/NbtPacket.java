@@ -2,12 +2,16 @@ package com.simibubi.create.foundation.networking;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
+import com.simibubi.create.content.curiosities.zapper.ZapperItem;
+
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
+@Deprecated
 public class NbtPacket extends SimplePacketBase {
 
 	public ItemStack stack;
@@ -42,7 +46,10 @@ public class NbtPacket extends SimplePacketBase {
 			ServerPlayerEntity player = context.get().getSender();
 			if (player == null)
 				return;
-			
+			if (!(stack.getItem() instanceof SymmetryWandItem || stack.getItem() instanceof ZapperItem)) {
+				return;
+			}
+			stack.removeChildTag("AttributeModifiers");
 			if (slot == -1) {
 				ItemStack heldItem = player.getHeldItem(hand);
 				if (heldItem.getItem() == stack.getItem()) {

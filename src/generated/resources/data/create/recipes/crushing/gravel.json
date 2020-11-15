@@ -7,17 +7,14 @@
   ],
   "results": [
     {
-      "item": "minecraft:sand",
-      "count": 1
+      "item": "minecraft:sand"
     },
     {
       "item": "minecraft:flint",
-      "count": 1,
       "chance": 0.1
     },
     {
       "item": "minecraft:clay_ball",
-      "count": 1,
       "chance": 0.05
     }
   ],

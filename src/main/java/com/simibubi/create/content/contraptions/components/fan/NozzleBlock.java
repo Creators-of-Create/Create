@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -20,6 +20,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public NozzleBlock(Properties p_i48415_1_) {
@@ -67,9 +71,9 @@ public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		Direction towardsFan = state.get(FACING).getOpposite();
-		BlockState fanState = worldIn.getBlockState(pos.offset(towardsFan));
-		return AllBlocks.ENCASED_FAN.has(fanState)
-				&& fanState.get(EncasedFanBlock.FACING) == towardsFan.getOpposite();
+		TileEntity te = worldIn.getTileEntity(pos.offset(towardsFan));
+		return te instanceof IAirCurrentSource
+				&& ((IAirCurrentSource) te).getAirflowOriginSide() == towardsFan.getOpposite();
 	}
 
 }

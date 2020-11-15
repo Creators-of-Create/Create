@@ -12,12 +12,10 @@
     },
     {
       "item": "minecraft:green_dye",
-      "count": 1,
       "chance": 0.5
     },
     {
       "item": "minecraft:wheat_seeds",
-      "count": 1,
       "chance": 0.1
     }
   ],

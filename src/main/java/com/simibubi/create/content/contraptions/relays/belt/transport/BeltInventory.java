@@ -392,7 +392,7 @@ public class BeltInventory {
 		float movementSpeed = Math.max(Math.abs(belt.getBeltMovementSpeed()), 1 / 8f);
 		Vector3d outMotion = Vector3d.of(belt.getBeltChainDirection()).scale(movementSpeed)
 			.add(0, 1 / 8f, 0);
-		outPos.add(outMotion.normalize());
+		outPos = outPos.add(outMotion.normalize().scale(0.001));
 		ItemEntity entity = new ItemEntity(belt.getWorld(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
 		entity.setMotion(outMotion);
 		entity.setDefaultPickupDelay();

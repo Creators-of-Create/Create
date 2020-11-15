@@ -29,7 +29,6 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -296,7 +295,10 @@ public class DeployerHandler {
 			itemUseWorld = new ItemUseWorld(world, face, pos);
 
 		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(itemUseWorld, player, hand);
-		player.setHeldItem(hand, onItemRightClick.getResult());
+		ItemStack resultStack = onItemRightClick.getResult();
+		if (resultStack != stack || resultStack.getCount() != stack.getCount() || resultStack.getUseDuration() > 0 || resultStack.getDamage() != stack.getDamage()) {
+			player.setHeldItem(hand, onItemRightClick.getResult());
+		}
 
 		CompoundNBT tag = stack.getTag();
 		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
@@ -351,7 +353,7 @@ public class DeployerHandler {
 					interactionManager.world.updateComparatorOutputLevel(clickedPos, state.getBlock());
 				}
 
-				CriteriaTriggers.BEE_NEST_DESTROYED.test((ServerPlayerEntity) interactionManager.player,
+				CriteriaTriggers.BEE_NEST_DESTROYED.test(interactionManager.player,
 					state.getBlock(), heldItem, beehivetileentity.getBeeCount());
 			}
 		}

@@ -12,12 +12,10 @@
     },
     {
       "item": "minecraft:magenta_dye",
-      "count": 1,
       "chance": 0.25
     },
     {
       "item": "minecraft:pink_dye",
-      "count": 1,
       "chance": 0.25
     }
   ],

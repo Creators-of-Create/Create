@@ -96,6 +96,12 @@ public class BlockHelper {
 			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
 		if (hasBlockStateProperty(blockState, BlockStateProperties.STAGE_0_1))
 			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
+		if (hasBlockStateProperty(blockState, BlockStateProperties.LEVEL_0_3))
+			return blockState.with(BlockStateProperties.LEVEL_0_3, 0);
+		if (hasBlockStateProperty(blockState, BlockStateProperties.LEVEL_0_8))
+			return blockState.with(BlockStateProperties.LEVEL_0_8, 0);
+		if (hasBlockStateProperty(blockState, BlockStateProperties.EXTENDED))
+			return blockState.with(BlockStateProperties.EXTENDED, false);
 		return blockState;
 	}
 

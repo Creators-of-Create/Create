@@ -25,14 +25,15 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,6 +41,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
+	private static DamageSource lastActiveDamageSource;
 
 	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier = 
 		new LazyValue<Multimap<Attribute, AttributeModifier>>(() -> 
@@ -67,8 +69,6 @@ public class ExtendoGripItem extends Item {
 	@SubscribeEvent
 	public static void holdingExtendoGripIncreasesRange(LivingUpdateEvent event) {
 		if (!(event.getEntity() instanceof PlayerEntity))
-			return;
-		if (event.isCanceled())
 			return;
 
 		PlayerEntity player = (PlayerEntity) event.getEntityLiving();
@@ -151,23 +151,20 @@ public class ExtendoGripItem extends Item {
 	}
 
 	@SubscribeEvent
-	public static void attacksByExtendoGripHaveMoreKnockback(AttackEntityEvent event) {
-		Entity entity = event.getEntity();
+	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
+		// Workaround for removed patch to get the attacking entity. Tbf this is a hack and a half, but it should work.
+		lastActiveDamageSource = event.getSource();
+	}
+
+	@SubscribeEvent
+	public static void attacksByExtendoGripHaveMoreKnockback(LivingKnockBackEvent event) {
+		Entity entity = lastActiveDamageSource.getTrueSource();
 		if (!(entity instanceof PlayerEntity))
 			return;
 		PlayerEntity player = (PlayerEntity) entity;
 		if (!isHoldingExtendoGrip(player))
 			return;
-		Entity target = event.getTarget();
-		if (target instanceof ItemFrameEntity || !target.attackEntityFrom(DamageSource.causePlayerDamage(player), 0))
-			return;
-		int strength = 2;
-		float yaw = entity.rotationYaw * ((float) Math.PI / 180F);
-		if (target instanceof LivingEntity) {
-			((LivingEntity) target).takeKnockback(strength, MathHelper.sin(yaw), -MathHelper.cos(yaw));
-			return;
-		}
-		target.addVelocity(-MathHelper.sin(yaw) * strength, 0.1D, MathHelper.cos(yaw) * strength);
+		event.setStrength(event.getStrength() + 2);
 	}
 
 	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {

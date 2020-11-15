@@ -54,7 +54,9 @@ public class ProcessingOutput {
 		json.addProperty("item", stack.getItem()
 			.getRegistryName()
 			.toString());
-		json.addProperty("count", stack.getCount());
+		if (stack.getCount() != 1) {
+			json.addProperty("count", stack.getCount());
+		}
 		if (stack.hasTag())
 			json.add("nbt", new JsonParser().parse(stack.getTag().toString()));
 		if (chance != 1)
@@ -68,7 +70,7 @@ public class ProcessingOutput {
 
 		JsonObject json = je.getAsJsonObject();
 		String itemId = JSONUtils.getString(json, "item");
-		int count = JSONUtils.getInt(json, "count");
+		int count = JSONUtils.getInt(json, "count", 1);
 		float chance = JSONUtils.hasField(json, "chance") ? JSONUtils.getFloat(json, "chance") : 1;
 		ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
 
