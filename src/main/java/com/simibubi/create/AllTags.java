@@ -3,6 +3,7 @@ package com.simibubi.create;
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
+import static com.simibubi.create.AllTags.NameSpace.MC;
 
 import java.util.function.Function;
 
@@ -108,7 +109,7 @@ public class AllTags {
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SLIMY_LOGS(TIC)
+		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SLIMY_LOGS(TIC), BEACON_BASE_BLOCKS(MC)
 
 		;
 

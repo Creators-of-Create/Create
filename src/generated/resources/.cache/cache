@@ -3351,6 +3351,7 @@ fb9bfb4c84ed9cf2da8c4b2fbc4cd4d9f37d3016 data/forge/tags/items/plates/gold.json
 ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/items/storage_blocks/brass.json
 f6c8f34ceb475546dba5cc6ff288863ea795d20b data/forge/tags/items/storage_blocks/copper.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/items/storage_blocks/zinc.json
+508730d3822c54d355329bf6a33d58071653afad data/minecraft/tags/blocks/beacon_base_blocks.json
 31424fe956db0354a9f24c61baf977a2961c8db6 data/minecraft/tags/blocks/impermeable.json
 9dadc647e17b6262c13b6d8eda9139e30ce7e7d0 data/minecraft/tags/blocks/rails.json
 29e6f7e3d4be9a9b0af1fca5d32fa55e29905ce2 data/minecraft/tags/blocks/slabs.json
