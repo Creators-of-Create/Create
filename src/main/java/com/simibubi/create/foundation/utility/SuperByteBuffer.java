@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -59,9 +60,9 @@ public class SuperByteBuffer {
 
 		template = GLAllocation.createDirectByteBuffer(size);
 		template.order(rendered.order());
-		template.limit(rendered.limit());
+		((Buffer)template).limit(((Buffer)rendered).limit());
 		template.put(rendered);
-		template.rewind();
+		((Buffer)template).rewind();
 
 		transforms = new MatrixStack();
 	}
@@ -78,9 +79,9 @@ public class SuperByteBuffer {
 
 	public void renderInto(MatrixStack input, IVertexBuilder builder) {
 		ByteBuffer buffer = template;
-		if (buffer.limit() == 0)
+		if (((Buffer)buffer).limit() == 0)
 			return;
-		buffer.rewind();
+		((Buffer)buffer).rewind();
 
 		Matrix4f t = input.peek()
 			.getModel()
@@ -207,7 +208,7 @@ public class SuperByteBuffer {
 	}
 
 	protected int vertexCount(ByteBuffer buffer) {
-		return buffer.limit() / formatSize;
+		return ((Buffer)buffer).limit() / formatSize;
 	}
 
 	protected int getBufferPosition(int vertexIndex) {
@@ -282,7 +283,7 @@ public class SuperByteBuffer {
 	}
 	
 	public boolean isEmpty() {
-		return template.limit() == 0;
+		return ((Buffer)template).limit() == 0;
 	}
 
 }
