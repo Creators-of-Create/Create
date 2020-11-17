@@ -49,9 +49,8 @@ public class TooltipHelper {
 		ITextComponent spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.copy().append(Lang.translate(hintKey + ".title")).formatted(GOLD));
 		ITextComponent hint = Lang.translate(hintKey);
-		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(spacing.copy().append(hint), GRAY, TextFormatting.WHITE);
-		for (int i = 0; i < cutComponent.size(); i++)
-			tooltip.add((i == 0 ? StringTextComponent.EMPTY : spacing).copy().append(cutComponent.get(i)));
+		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
+		for (ITextComponent component : cutComponent) tooltip.add(spacing.copy().append(component));
 	}
 	
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
@@ -279,8 +278,7 @@ public class TooltipHelper {
 
 	public static String getUnformattedDeepText(ITextComponent component) {
 		StringBuilder b = new StringBuilder();
-		if (!(component instanceof TranslationTextComponent))
-			b.append(component.getString());
+		b.append(component.getString());
 		component.getSiblings()
 			.forEach(c -> b.append(getUnformattedDeepText(c)));
 		return b.toString();
