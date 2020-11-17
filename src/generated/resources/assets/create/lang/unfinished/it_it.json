@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 654",
+	"_": "Missing Localizations: 655",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -413,6 +413,7 @@
 	"item.create.brass_ingot": "Lingotto di Ottone",
 	"item.create.brass_nugget": "Pepita di Ottone",
 	"item.create.brass_sheet": "Lamiera di Ottone",
+	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chromatic_compound": "Composto Cromatico",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Lingotto di Rame",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 336",
+	"_": "Missing Localizations: 337",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -413,6 +413,7 @@
 	"item.create.brass_ingot": "黄铜锭",
 	"item.create.brass_nugget": "黄铜粒",
 	"item.create.brass_sheet": "黄铜板",
+	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chromatic_compound": "异彩化合物",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "铜锭",

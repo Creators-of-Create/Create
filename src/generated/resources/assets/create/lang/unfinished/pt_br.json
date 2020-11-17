@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1048",
+	"_": "Missing Localizations: 1049",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -413,6 +413,7 @@
 	"item.create.brass_ingot": "UNLOCALIZED: Brass Ingot",
 	"item.create.brass_nugget": "UNLOCALIZED: Brass Nugget",
 	"item.create.brass_sheet": "UNLOCALIZED: Brass Sheet",
+	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "UNLOCALIZED: Copper Ingot",

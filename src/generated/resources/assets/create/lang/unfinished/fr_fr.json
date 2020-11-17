@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 670",
+	"_": "Missing Localizations: 671",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -413,6 +413,7 @@
 	"item.create.brass_ingot": "Lingot de laiton",
 	"item.create.brass_nugget": "Pépite de laiton",
 	"item.create.brass_sheet": "Plaques de laiton",
+	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chromatic_compound": "Composé chromatique",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Lingot de cuivre",

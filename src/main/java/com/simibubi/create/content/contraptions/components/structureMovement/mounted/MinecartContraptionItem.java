@@ -50,6 +50,10 @@ public class MinecartContraptionItem extends Item {
 		return new MinecartContraptionItem(Type.FURNACE, builder);
 	}
 
+	public static MinecartContraptionItem chest(Properties builder) {
+		return new MinecartContraptionItem(Type.CHEST, builder);
+	}
+
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
 		super(builder);
 		this.minecartType = minecartTypeIn;
@@ -199,7 +203,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 		AbstractMinecartEntity cart = (AbstractMinecartEntity) entity;
 		Type type = cart.getMinecartType();
-		if (type != Type.RIDEABLE && type != Type.FURNACE)
+		if (type != Type.RIDEABLE && type != Type.FURNACE && type != Type.CHEST)
 			return;
 		List<Entity> passengers = cart.getPassengers();
 		if (passengers.isEmpty() || !(passengers.get(0) instanceof ContraptionEntity))
@@ -217,8 +221,20 @@ public class MinecartContraptionItem extends Item {
 	}
 
 	public static ItemStack create(Type type, ContraptionEntity entity) {
-		ItemStack stack =
-			(type == Type.RIDEABLE ? AllItems.MINECART_CONTRAPTION : AllItems.FURNACE_MINECART_CONTRAPTION).asStack();
+		ItemStack stack = ItemStack.EMPTY;
+		switch (type) {
+			case RIDEABLE:
+				stack = AllItems.MINECART_CONTRAPTION.asStack();
+				break;
+			case FURNACE:
+				stack = AllItems.FURNACE_MINECART_CONTRAPTION.asStack();
+				break;
+			case CHEST:
+				stack = AllItems.CHEST_MINECART_CONTRAPTION.asStack();
+				break;
+		}
+		if (stack == ItemStack.EMPTY)
+			return stack;
 		CompoundNBT tag = entity.getContraption()
 			.writeNBT();
 		tag.remove("UUID");
@@ -233,5 +249,4 @@ public class MinecartContraptionItem extends Item {
 			.put("Contraption", tag);
 		return stack;
 	}
-
 }
