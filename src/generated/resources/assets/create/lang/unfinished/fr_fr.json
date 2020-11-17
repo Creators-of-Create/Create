@@ -756,7 +756,7 @@
 	"create.schematicAndQuill.noTarget": "Enfoncez [Ctrl] pour sélectionner les blocs d'air.",
 	"create.schematicAndQuill.abort": "Sélection supprimée.",
 	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
-	"create.schematicAndQuill.convetr": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
 	"create.schematicAndQuill.fallbackName": "Mon schéma",
 	"create.schematicAndQuill.saved": "Sauvegardé en tant que %1$s",
 
@@ -974,7 +974,7 @@
 	"create.tunnel.selection_mode.synchronize": "UNLOCALIZED: Synchronize Inputs",
 
 	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
-	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechnanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
+	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "UNLOCALIZED: Horizontal Funnels",
 	"create.hint.horizontal_funnel": "UNLOCALIZED: cannot transfer between inventories _directly_. Try running a _Mechanical_ _Belt_ or _Depot_ below your funnel to extract items from Inventories.",
 	"create.hint.upward_funnel.title": "UNLOCALIZED: Funnels facing upward",
