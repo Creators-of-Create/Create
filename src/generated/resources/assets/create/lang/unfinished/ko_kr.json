@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 654",
+	"_": "Missing Localizations: 655",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -413,6 +413,7 @@
 	"item.create.brass_ingot": "황동 주괴",
 	"item.create.brass_nugget": "황동 조각",
 	"item.create.brass_sheet": "황동 판",
+	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chromatic_compound": "색채 혼합물",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "구리 주괴",
@@ -756,7 +757,7 @@
 	"create.schematicAndQuill.noTarget": "[Ctrl]을 눌러 공기 블럭을 선택하기.",
 	"create.schematicAndQuill.abort": "위치 제거됨.",
 	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
-	"create.schematicAndQuill.convetr": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
 	"create.schematicAndQuill.fallbackName": "내 청사진",
 	"create.schematicAndQuill.saved": "%1$s로 저장됨",
 
@@ -974,7 +975,7 @@
 	"create.tunnel.selection_mode.synchronize": "UNLOCALIZED: Synchronize Inputs",
 
 	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
-	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechnanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
+	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "UNLOCALIZED: Horizontal Funnels",
 	"create.hint.horizontal_funnel": "UNLOCALIZED: cannot transfer between inventories _directly_. Try running a _Mechanical_ _Belt_ or _Depot_ below your funnel to extract items from Inventories.",
 	"create.hint.upward_funnel.title": "UNLOCALIZED: Funnels facing upward",

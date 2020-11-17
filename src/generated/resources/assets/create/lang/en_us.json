@@ -412,6 +412,7 @@
 	"item.create.brass_ingot": "Brass Ingot",
 	"item.create.brass_nugget": "Brass Nugget",
 	"item.create.brass_sheet": "Brass Sheet",
+	"item.create.chest_minecart_contraption": "Chest Minecart Contraption",
 	"item.create.chromatic_compound": "Chromatic Compound",
 	"item.create.cinder_flour": "Cinder Flour",
 	"item.create.copper_ingot": "Copper Ingot",
@@ -755,7 +756,7 @@
 	"create.schematicAndQuill.noTarget": "Hold [Ctrl] to select Air blocks.",
 	"create.schematicAndQuill.abort": "Removed selection.",
 	"create.schematicAndQuill.title": "Schematic Name:",
-	"create.schematicAndQuill.convetr": "Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "Save and Deploy Immediately",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 
@@ -973,7 +974,7 @@
 	"create.tunnel.selection_mode.synchronize": "Synchronize Inputs",
 
 	"create.hint.mechanical_arm_no_targets.title": "No Targets",
-	"create.hint.mechanical_arm_no_targets": "It appears this _Mechnanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
+	"create.hint.mechanical_arm_no_targets": "It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "Horizontal Funnels",
 	"create.hint.horizontal_funnel": "cannot transfer between inventories _directly_. Try running a _Mechanical_ _Belt_ or _Depot_ below your funnel to extract items from Inventories.",
 	"create.hint.upward_funnel.title": "Funnels facing upward",

@@ -168,6 +168,10 @@ public class AllItems {
 		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
 			.register();
 
+	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
+		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
+			.register();
+
 	// Logistics
 
 	static {
