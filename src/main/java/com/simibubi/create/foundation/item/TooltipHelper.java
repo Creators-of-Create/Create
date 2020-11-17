@@ -29,12 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
 import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TextProcessing;
+import net.minecraft.util.text.*;
 
 public class TooltipHelper {
 
@@ -284,11 +279,10 @@ public class TooltipHelper {
 
 	public static String getUnformattedDeepText(ITextComponent component) {
 		StringBuilder b = new StringBuilder();
-		b.append(component.getString());
+		if (!(component instanceof TranslationTextComponent))
+			b.append(component.getString());
 		component.getSiblings()
-			.forEach(c -> {
-				b.append(getUnformattedDeepText(c));
-			});
+			.forEach(c -> b.append(getUnformattedDeepText(c)));
 		return b.toString();
 	}
 
