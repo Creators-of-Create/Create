@@ -279,7 +279,7 @@ public class TooltipHelper {
 
 	public static String getUnformattedDeepText(ITextComponent component) {
 		StringBuilder b = new StringBuilder();
-		if (!(component instanceof TranslationTextComponent))
+		if (!(component instanceof TranslationTextComponent));
 			b.append(component.getString());
 		component.getSiblings()
 			.forEach(c -> b.append(getUnformattedDeepText(c)));
