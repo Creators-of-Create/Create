@@ -85,10 +85,10 @@ public class ClientSchematicLoader {
 		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			ClientPlayerEntity player = Minecraft.getInstance().player;
-			player.sendMessage(new StringTextComponent(
-					Lang.translate("schematics.uploadTooLarge") + " (" + size / 1000 + " KB)."), player.getUniqueID());
-			player.sendMessage(
-					new StringTextComponent(Lang.translate("schematics.maxAllowedSize") + " " + maxSize + " KB"), player.getUniqueID());
+			if (player != null) {
+				player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUniqueID());
+				player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUniqueID());
+			}
 			return false;
 		}
 		return true;
