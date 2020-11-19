@@ -15,16 +15,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
@@ -35,28 +33,36 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
-public class PistonContraption extends Contraption {
-
-	protected AxisAlignedBB pistonExtensionCollisionBox;
+public class PistonContraption extends TranslatingContraption {
 
 	protected int extensionLength;
 	protected int initialExtensionProgress;
 	protected Direction orientation;
+
+	private AxisAlignedBB pistonExtensionCollisionBox;
+	private boolean retract;
 
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.PISTON;
 	}
 
-	public static PistonContraption movePistonAt(World world, BlockPos pos, Direction direction, boolean retract) {
-		PistonContraption construct = new PistonContraption();
-		construct.orientation = direction;
-		if (!construct.collectExtensions(world, pos, direction))
-			return null;
-		if (!construct.searchMovedStructure(world, construct.anchor, retract ? direction.getOpposite() : direction))
-			return null;
-		construct.initActors(world);
-		return construct;
+	public PistonContraption() {}
+
+	public PistonContraption(Direction direction, boolean retract) {
+		orientation = direction;
+		this.retract = retract;
+	}
+
+	@Override
+	public boolean assemble(World world, BlockPos pos) {
+		if (!collectExtensions(world, pos, orientation))
+			return false;
+		if (!searchMovedStructure(world, anchor, retract ? orientation.getOpposite() : orientation))
+			return false;
+		bounds = bounds.union(pistonExtensionCollisionBox);
+		startMoving(world);
+		return true;
 	}
 
 	private boolean collectExtensions(World world, BlockPos pos, Direction direction) {
@@ -123,7 +129,7 @@ public class PistonContraption extends Contraption {
 		for (BlockInfo pole : poles) {
 			BlockPos relPos = pole.pos.offset(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
-			blocks.put(localPos, new BlockInfo(localPos, pole.state, null));
+			getBlocks().put(localPos, new BlockInfo(localPos, pole.state, null));
 			pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
 		}
 
@@ -165,8 +171,8 @@ public class PistonContraption extends Contraption {
 	}
 
 	@Override
-	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
-		super.add(pos.offset(orientation, -initialExtensionProgress), capture);
+	public void addBlock(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
+		super.addBlock(pos.offset(orientation, -initialExtensionProgress), capture);
 	}
 
 	@Override
@@ -205,30 +211,18 @@ public class PistonContraption extends Contraption {
 	@Override
 	public void readNBT(World world, CompoundNBT nbt) {
 		super.readNBT(world, nbt);
-		extensionLength = nbt.getInt("ExtensionLength");
 		initialExtensionProgress = nbt.getInt("InitialLength");
+		extensionLength = nbt.getInt("ExtensionLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));
-		if (nbt.contains("BoundsBack"))
-			pistonExtensionCollisionBox = NBTHelper.readAABB(nbt.getList("BoundsBack", 5));
 	}
 
 	@Override
 	public CompoundNBT writeNBT() {
 		CompoundNBT nbt = super.writeNBT();
-
-		if (pistonExtensionCollisionBox != null) {
-			ListNBT bb = NBTHelper.writeAABB(pistonExtensionCollisionBox);
-			nbt.put("BoundsBack", bb);
-		}
 		nbt.putInt("InitialLength", initialExtensionProgress);
 		nbt.putInt("ExtensionLength", extensionLength);
 		nbt.putInt("Orientation", orientation.getIndex());
-
 		return nbt;
 	}
 
-	@Override
-	public AxisAlignedBB getBoundingBox() {
-		return super.getBoundingBox().union(pistonExtensionCollisionBox);
-	}
 }

@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,16 +30,21 @@ public class AllMovementBehaviours {
 	}
 
 	@Nullable
-	public static MovementBehaviour getMovementBehaviour(ResourceLocation resourceLocation) {
+	public static MovementBehaviour of(ResourceLocation resourceLocation) {
 		return movementBehaviours.getOrDefault(resourceLocation, null);
 	}
 
 	@Nullable
-	public static MovementBehaviour getMovementBehaviour(Block block) {
-		return getMovementBehaviour(block.getRegistryName());
+	public static MovementBehaviour of(Block block) {
+		return of(block.getRegistryName());
+	}
+	
+	@Nullable
+	public static MovementBehaviour of(BlockState state) {
+		return of(state.getBlock());
 	}
 
-	public static boolean hasMovementBehaviour(Block block) {
+	public static boolean contains(Block block) {
 		return movementBehaviours.containsKey(block.getRegistryName());
 	}
 

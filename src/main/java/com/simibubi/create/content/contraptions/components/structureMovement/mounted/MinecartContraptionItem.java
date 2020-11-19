@@ -6,8 +6,9 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.AbstractRailBlock;
@@ -29,7 +30,6 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -158,16 +158,14 @@ public class MinecartContraptionItem extends Item {
 		if (tag.contains("Contraption")) {
 			CompoundNBT contraptionTag = tag.getCompound("Contraption");
 
-			Direction initialOrientation = Direction.SOUTH;
+			Optional<Direction> intialOrientation = Optional.empty();
 			if (contraptionTag.contains("InitialOrientation"))
-				initialOrientation = NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class);
+				intialOrientation =
+					Optional.of(NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class));
 
 			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag);
-			ContraptionEntity contraptionEntity =
-				ContraptionEntity.createMounted(world, mountedContraption, Optional.of(initialOrientation));
-
-			if (newFacing != null)
-				contraptionEntity.reOrientate(newFacing.getAxis() == Axis.X ? newFacing : newFacing.getOpposite());
+			OrientedContraptionEntity contraptionEntity =
+				OrientedContraptionEntity.create(world, mountedContraption, intialOrientation);
 
 			contraptionEntity.startRiding(cart);
 			contraptionEntity.setPosition(cart.getX(), cart.getY(), cart.getZ());
@@ -193,7 +191,7 @@ public class MinecartContraptionItem extends Item {
 		ItemStack wrench = player.getHeldItem(event.getHand());
 		if (!AllItems.WRENCH.isIn(wrench))
 			return;
-		if (entity instanceof ContraptionEntity)
+		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getRidingEntity();
 		if (!(entity instanceof AbstractMinecartEntity))
 			return;
@@ -202,12 +200,12 @@ public class MinecartContraptionItem extends Item {
 		if (type != Type.RIDEABLE && type != Type.FURNACE)
 			return;
 		List<Entity> passengers = cart.getPassengers();
-		if (passengers.isEmpty() || !(passengers.get(0) instanceof ContraptionEntity))
+		if (passengers.isEmpty() || !(passengers.get(0) instanceof OrientedContraptionEntity))
 			return;
-		ContraptionEntity contraption = (ContraptionEntity) passengers.get(0);
+		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
 		if (!event.getWorld().isRemote) {
-			player.inventory.placeItemBackInInventory(event.getWorld(), create(type, contraption));
+			player.inventory.placeItemBackInInventory(event.getWorld(), create(type, contraption, 0));
 			contraption.remove();
 			entity.remove();
 		}
@@ -216,7 +214,8 @@ public class MinecartContraptionItem extends Item {
 		event.setCanceled(true);
 	}
 
-	public static ItemStack create(Type type, ContraptionEntity entity) {
+	public static ItemStack create(Type type, OrientedContraptionEntity entity, int playerRotation) {// TODO remove
+																										// playerRotation
 		ItemStack stack =
 			(type == Type.RIDEABLE ? AllItems.MINECART_CONTRAPTION : AllItems.FURNACE_MINECART_CONTRAPTION).asStack();
 		CompoundNBT tag = entity.getContraption()
@@ -227,7 +226,7 @@ public class MinecartContraptionItem extends Item {
 
 		Optional<Direction> initialOrientation = entity.getInitialOrientation();
 		if (initialOrientation.isPresent())
-			NBTHelper.writeEnum(tag, "InitialOrientation", initialOrientation.orElse(null));
+			NBTHelper.writeEnum(tag, "InitialOrientation", initialOrientation.get());
 
 		stack.getOrCreateTag()
 			.put("Contraption", tag);

@@ -21,8 +21,8 @@ public class ContraptionHandler {
 
 	/* Global map of loaded contraptions */
 
-	public static WorldAttached<List<WeakReference<ContraptionEntity>>> loadedContraptions;
-	static WorldAttached<List<ContraptionEntity>> queuedAdditions;
+	public static WorldAttached<List<WeakReference<AbstractContraptionEntity>>> loadedContraptions;
+	static WorldAttached<List<AbstractContraptionEntity>> queuedAdditions;
 
 	static {
 		loadedContraptions = new WorldAttached<>(ArrayList::new);
@@ -30,16 +30,16 @@ public class ContraptionHandler {
 	}
 
 	public static void tick(World world) {
-		List<WeakReference<ContraptionEntity>> list = loadedContraptions.get(world);
-		List<ContraptionEntity> queued = queuedAdditions.get(world);
+		List<WeakReference<AbstractContraptionEntity>> list = loadedContraptions.get(world);
+		List<AbstractContraptionEntity> queued = queuedAdditions.get(world);
 
-		for (ContraptionEntity contraptionEntity : queued)
+		for (AbstractContraptionEntity contraptionEntity : queued)
 			list.add(new WeakReference<>(contraptionEntity));
 		queued.clear();
 
-		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
-			WeakReference<ContraptionEntity> weakReference = iterator.next();
-			ContraptionEntity contraptionEntity = weakReference.get();
+		for (Iterator<WeakReference<AbstractContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
+			WeakReference<AbstractContraptionEntity> weakReference = iterator.next();
+			AbstractContraptionEntity contraptionEntity = weakReference.get();
 			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
 				iterator.remove();
 				continue;
@@ -49,9 +49,9 @@ public class ContraptionHandler {
 	}
 
 	public static void addSpawnedContraptionsToCollisionList(Entity entity, World world) {
-		if (entity instanceof ContraptionEntity)
+		if (entity instanceof AbstractContraptionEntity)
 			queuedAdditions.get(world)
-				.add((ContraptionEntity) entity);
+				.add((AbstractContraptionEntity) entity);
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, World world) {

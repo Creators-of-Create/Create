@@ -51,7 +51,7 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 			}
 			context.tileData.put(key, itemStackHandler.serializeNBT());
 		});
-		context.contraption.customRenderTEs.stream()
+		context.contraption.renderedTileEntities.stream()
 			.filter(te -> te.getPos()
 				.equals(context.localPos) && te instanceof BasinTileEntity)
 			.forEach(te -> ((BasinTileEntity) te).readOnlyItems(context.tileData));

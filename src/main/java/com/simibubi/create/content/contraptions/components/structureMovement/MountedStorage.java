@@ -20,7 +20,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-//FIXME: More dynamic mounted storage in .4
 public class MountedStorage {
 
 	private static final ItemStackHandler dummyHandler = new ItemStackHandler();

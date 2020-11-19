@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -19,7 +19,8 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected Axis getShaftAxis(KineticTileEntity te) {
-		return te.getBlockState().get(PulleyBlock.HORIZONTAL_AXIS);
+		return te.getBlockState()
+			.get(PulleyBlock.HORIZONTAL_AXIS);
 	}
 
 	@Override
@@ -43,15 +44,14 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 		boolean running = pulley.running;
 		boolean moving = running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
 		float offset = pulley.getInterpolatedOffset(moving ? partialTicks : 0.5f);
-		
+
 		if (pulley.movedContraption != null) {
-			ContraptionEntity e = pulley.movedContraption;
+			AbstractContraptionEntity e = pulley.movedContraption;
 			PulleyContraption c = (PulleyContraption) pulley.movedContraption.getContraption();
 			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.getY());
-			offset = (float) -(entityPos - c.getAnchor()
-				.getY() - c.initialOffset);
+			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
 		}
-		
+
 		return offset;
 	}
 

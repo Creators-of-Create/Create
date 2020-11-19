@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
@@ -46,9 +46,9 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 		context.get()
 			.enqueueWork(() -> {
 				Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityID);
-				if (!(entityByID instanceof ContraptionEntity))
+				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
-				ContraptionEntity contraptionEntity = (ContraptionEntity) entityByID;
+				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 				contraptionEntity.getContraption()
 					.setSeatMapping(mapping);
 			});

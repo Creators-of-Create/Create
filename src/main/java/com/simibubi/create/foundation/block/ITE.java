@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.block;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
@@ -21,6 +22,13 @@ public interface ITE<T extends TileEntity> {
 		try {
 			action.accept(getTileEntity(world, pos));
 		} catch (TileEntityException e) {}
+	}
+	
+	default Optional<T> getTileEntityOptional(IBlockReader world, BlockPos pos) {
+		try {
+			return Optional.of(getTileEntity(world, pos));
+		} catch (TileEntityException e) {}
+		return Optional.empty();
 	}
 
 	@SuppressWarnings("unchecked")

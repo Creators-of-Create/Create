@@ -15,18 +15,14 @@ public class ContraptionStallPacket extends SimplePacketBase {
 	float x;
 	float y;
 	float z;
-	float yaw;
-	float pitch;
-	float roll;
+	float angle;
 
-	public ContraptionStallPacket(int entityID, double posX, double posY, double posZ, float yaw, float pitch, float roll) {
+	public ContraptionStallPacket(int entityID, double posX, double posY, double posZ, float angle) {
 		this.entityID = entityID;
 		this.x = (float) posX;
 		this.y = (float) posY;
 		this.z = (float) posZ;
-		this.yaw = yaw;
-		this.pitch = pitch;
-		this.roll = roll;
+		this.angle = angle;
 	}
 
 	public ContraptionStallPacket(PacketBuffer buffer) {
@@ -34,21 +30,19 @@ public class ContraptionStallPacket extends SimplePacketBase {
 		x = buffer.readFloat();
 		y = buffer.readFloat();
 		z = buffer.readFloat();
-		yaw = buffer.readFloat();
-		pitch = buffer.readFloat();
-		roll = buffer.readFloat();
+		angle = buffer.readFloat();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
 		buffer.writeInt(entityID);
-		writeAll(buffer, x, y, z, yaw, pitch, roll);
+		writeAll(buffer, x, y, z, angle);
 	}
 
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(
-				() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ContraptionEntity.handleStallPacket(this)));
+				() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> AbstractContraptionEntity.handleStallPacket(this)));
 		context.get().setPacketHandled(true);
 	}
 

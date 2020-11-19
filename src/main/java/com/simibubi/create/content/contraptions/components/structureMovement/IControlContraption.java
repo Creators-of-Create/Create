@@ -4,15 +4,21 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.util.math.BlockPos;
+
 public interface IControlContraption {
 
-	public boolean isAttachedTo(ContraptionEntity contraption);
+	public boolean isAttachedTo(AbstractContraptionEntity contraption);
 	
-	public void attach(ContraptionEntity contraption);
+	public void attach(ControlledContraptionEntity contraption);
 
 	public void onStall();
 
 	public boolean isValid();
+	
+	public void collided();
+	
+	public BlockPos getBlockPosition();
 
 	static enum MovementMode implements INamedIconOptions {
 
@@ -69,7 +75,5 @@ public interface IControlContraption {
 		}
 
 	}
-
-	public void collided();
 
 }
