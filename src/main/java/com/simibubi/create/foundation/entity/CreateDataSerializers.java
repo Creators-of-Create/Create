@@ -30,5 +30,7 @@ public class CreateDataSerializers {
 	static {
 		DataSerializers.registerSerializer(OPTIONAL_DIRECTION);
 	}
-	
+
+	public static void register() {}
+
 }
