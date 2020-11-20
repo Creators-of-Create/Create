@@ -42,6 +42,8 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		// rotate against parent
 		float offset = 0;
+		int offsetMultiplier = facing.getAxisDirection().getOffset();
+		
 		AbstractContraptionEntity entity = context.contraption.entity;
 		if (entity instanceof ControlledContraptionEntity) {
 			ControlledContraptionEntity controlledCE = (ControlledContraptionEntity) entity;
@@ -60,7 +62,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 			}
 		}
 		if (offset != 0)
-			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(offset));
+			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(offset * offsetMultiplier));
 
 		// render
 		superBuffer.light(msLocal.peek()

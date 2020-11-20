@@ -260,15 +260,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return true;
 		if (isPlayerSneaking)
 			return false;
-		if (isWindmill())
-			return false;
-		if (getSpeed() == 0)
+		if (!isWindmill() && getSpeed() == 0)
 			return false;
 		if (running)
 			return false;
 		BlockState state = getBlockState();
 		if (!(state.getBlock() instanceof BearingBlock))
 			return false;
+		
 		BlockState attachedState = world.getBlockState(pos.offset(state.get(BearingBlock.FACING)));
 		if (attachedState.getMaterial()
 			.isReplaceable())

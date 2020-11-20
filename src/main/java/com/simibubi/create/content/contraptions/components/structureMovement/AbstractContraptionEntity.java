@@ -78,11 +78,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return true;
 	}
 
-	@Override
-	protected void addPassenger(Entity passenger) {
-		super.addPassenger(passenger);
-	}
-
 	public void addSittingPassenger(Entity passenger, int seatIndex) {
 		passenger.startRiding(this, true);
 		if (world.isRemote)
@@ -91,11 +86,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			.put(passenger.getUniqueID(), seatIndex);
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionSeatMappingPacket(getEntityId(), contraption.getSeatMapping()));
-	}
-
-	@Override
-	public void remove() {
-		super.remove();
 	}
 
 	@Override
