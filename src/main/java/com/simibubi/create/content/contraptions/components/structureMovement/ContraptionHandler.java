@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -21,25 +23,26 @@ public class ContraptionHandler {
 
 	/* Global map of loaded contraptions */
 
-	public static WorldAttached<List<WeakReference<ContraptionEntity>>> loadedContraptions;
-	static WorldAttached<List<ContraptionEntity>> queuedAdditions;
+	public static WorldAttached<Map<Integer, WeakReference<AbstractContraptionEntity>>> loadedContraptions;
+	static WorldAttached<List<AbstractContraptionEntity>> queuedAdditions;
 
 	static {
-		loadedContraptions = new WorldAttached<>(ArrayList::new);
+		loadedContraptions = new WorldAttached<>(HashMap::new);
 		queuedAdditions = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
 	}
 
 	public static void tick(World world) {
-		List<WeakReference<ContraptionEntity>> list = loadedContraptions.get(world);
-		List<ContraptionEntity> queued = queuedAdditions.get(world);
+		Map<Integer, WeakReference<AbstractContraptionEntity>> map = loadedContraptions.get(world);
+		List<AbstractContraptionEntity> queued = queuedAdditions.get(world);
 
-		for (ContraptionEntity contraptionEntity : queued)
-			list.add(new WeakReference<>(contraptionEntity));
+		for (AbstractContraptionEntity contraptionEntity : queued)
+			map.put(contraptionEntity.getEntityId(), new WeakReference<>(contraptionEntity));
 		queued.clear();
 
-		for (Iterator<WeakReference<ContraptionEntity>> iterator = list.iterator(); iterator.hasNext();) {
-			WeakReference<ContraptionEntity> weakReference = iterator.next();
-			ContraptionEntity contraptionEntity = weakReference.get();
+		Collection<WeakReference<AbstractContraptionEntity>> values = map.values();
+		for (Iterator<WeakReference<AbstractContraptionEntity>> iterator = values.iterator(); iterator.hasNext();) {
+			WeakReference<AbstractContraptionEntity> weakReference = iterator.next();
+			AbstractContraptionEntity contraptionEntity = weakReference.get();
 			if (contraptionEntity == null || !contraptionEntity.isAlive()) {
 				iterator.remove();
 				continue;
@@ -49,9 +52,9 @@ public class ContraptionHandler {
 	}
 
 	public static void addSpawnedContraptionsToCollisionList(Entity entity, World world) {
-		if (entity instanceof ContraptionEntity)
+		if (entity instanceof AbstractContraptionEntity)
 			queuedAdditions.get(world)
-				.add((ContraptionEntity) entity);
+				.add((AbstractContraptionEntity) entity);
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, World world) {

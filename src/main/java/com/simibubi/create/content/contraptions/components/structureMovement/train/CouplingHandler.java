@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -38,7 +38,7 @@ public class CouplingHandler {
 		LazyOptional<MinecartController> optional = e.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
 		if (!optional.isPresent())
 			return;
-		if (event.getEntityMounting() instanceof ContraptionEntity)
+		if (event.getEntityMounting() instanceof AbstractContraptionEntity)
 			return;
 		MinecartController controller = optional.orElse(null);
 		if (controller.isCoupledThroughContraption()) {

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -19,6 +20,12 @@ public class MatrixStacker {
 			instance = new MatrixStacker();
 		instance.ms = ms;
 		return instance;
+	}
+
+	public MatrixStacker rotate(double angle, Axis axis) {
+		Vector3f vec =
+			axis == Axis.X ? Vector3f.POSITIVE_X : axis == Axis.Y ? Vector3f.POSITIVE_Y : Vector3f.POSITIVE_Z;
+		return multiply(vec, angle);
 	}
 
 	public MatrixStacker rotateX(double angle) {

@@ -6,9 +6,11 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
+import net.minecraft.client.renderer.FaceDirection;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -17,21 +19,33 @@ public class BearingContraption extends Contraption {
 
 	protected int sailBlocks;
 	protected Direction facing;
+	
+	private boolean isWindmill;
+
+	public BearingContraption() {}
+
+	public BearingContraption(boolean isWindmill, Direction facing) {
+		this.isWindmill = isWindmill;
+		this.facing = facing;
+	}
+
+	@Override
+	public boolean assemble(World world, BlockPos pos) {
+		BlockPos offset = pos.offset(facing);
+		if (!searchMovedStructure(world, offset, null))
+			return false;
+		startMoving(world);
+		expandBoundsAroundAxis(facing.getAxis());
+		if (isWindmill && sailBlocks == 0)
+			return false;
+		if (blocks.isEmpty())
+			return false;
+		return true;
+	}
 
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.BEARING;
-	}
-
-	public static BearingContraption assembleBearingAt(World world, BlockPos pos, Direction direction) {
-		BearingContraption construct = new BearingContraption();
-		construct.facing = direction;
-		BlockPos offset = pos.offset(direction);
-		if (!construct.searchMovedStructure(world, offset, null))
-			return null;
-		construct.initActors(world);
-		construct.expandBoundsAroundAxis(direction.getAxis());
-		return construct;
 	}
 
 	@Override
@@ -40,18 +54,18 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	public void add(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
+	public void addBlock(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
 		BlockPos localPos = pos.subtract(anchor);
-		if (!blocks.containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
+		if (!getBlocks().containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
 			sailBlocks++;
-		super.add(pos, capture);
+		super.addBlock(pos, capture);
 	}
 
 	@Override
 	public CompoundNBT writeNBT() {
 		CompoundNBT tag = super.writeNBT();
 		tag.putInt("Sails", sailBlocks);
-		tag.putInt("facing", facing.getIndex());
+		tag.putInt("Facing", facing.getIndex());
 		return tag;
 	}
 
@@ -68,6 +82,11 @@ public class BearingContraption extends Contraption {
 
 	public Direction getFacing() {
 		return facing;
+	}
+
+	@Override
+	protected boolean canAxisBeStabilized(Axis axis) {
+		return axis == facing.getAxis();
 	}
 
 }

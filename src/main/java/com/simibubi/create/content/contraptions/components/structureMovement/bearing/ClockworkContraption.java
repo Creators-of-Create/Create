@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -38,7 +39,7 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
-			Direction direction) {
+		Direction direction) {
 		int hourArmBlocks = 0;
 
 		ClockworkContraption hourArm = new ClockworkContraption();
@@ -46,11 +47,12 @@ public class ClockworkContraption extends Contraption {
 
 		hourArm.facing = direction;
 		hourArm.handType = HandType.HOUR;
-		if (!hourArm.searchMovedStructure(world, pos, direction))
+		if (!hourArm.assemble(world, pos))
 			return null;
 		for (int i = 0; i < 16; i++) {
 			BlockPos offsetPos = BlockPos.ZERO.offset(direction, i);
-			if (hourArm.blocks.containsKey(offsetPos))
+			if (hourArm.getBlocks()
+				.containsKey(offsetPos))
 				continue;
 			hourArmBlocks = i;
 			break;
@@ -61,20 +63,27 @@ public class ClockworkContraption extends Contraption {
 			minuteArm.facing = direction;
 			minuteArm.handType = HandType.MINUTE;
 			minuteArm.offset = hourArmBlocks;
-			minuteArm.ignoreBlocks(hourArm.blocks.keySet(), hourArm.anchor);
-			if (!minuteArm.searchMovedStructure(world, pos, direction))
+			minuteArm.ignoreBlocks(hourArm.getBlocks()
+				.keySet(), hourArm.anchor);
+			if (!minuteArm.assemble(world, pos))
 				return null;
-			if (minuteArm.blocks.isEmpty())
+			if (minuteArm.getBlocks()
+				.isEmpty())
 				minuteArm = null;
 		}
 
-		hourArm.initActors(world);
+		hourArm.startMoving(world);
 		hourArm.expandBoundsAroundAxis(direction.getAxis());
 		if (minuteArm != null) {
-			minuteArm.initActors(world);
+			minuteArm.startMoving(world);
 			minuteArm.expandBoundsAroundAxis(direction.getAxis());
 		}
 		return Pair.of(hourArm, minuteArm);
+	}
+	
+	@Override
+	public boolean assemble(World world, BlockPos pos) {
+		return searchMovedStructure(world, pos, facing);
 	}
 
 	@Override
@@ -84,7 +93,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	protected boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
-			Set<BlockPos> visited) {
+		Set<BlockPos> visited) {
 		if (ignoreBlocks.contains(pos))
 			return true;
 		return super.moveBlock(world, pos, direction, frontier, visited);
@@ -107,6 +116,11 @@ public class ClockworkContraption extends Contraption {
 		super.readNBT(world, tag);
 	}
 
+	@Override
+	protected boolean canAxisBeStabilized(Axis axis) {
+		return axis == facing.getAxis();
+	}
+	
 	public static enum HandType {
 		HOUR, MINUTE
 	}

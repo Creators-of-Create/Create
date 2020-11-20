@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyContraption;
@@ -16,6 +17,7 @@ public enum AllContraptionTypes {
 	PULLEY(PulleyContraption::new),
 	CLOCKWORK(ClockworkContraption::new),
 	MOUNTED(MountedContraption::new),
+	STABILIZED(StabilizedContraption::new),
 	
 	;
 
@@ -28,10 +30,9 @@ public enum AllContraptionTypes {
 	}
 	
 	public static Contraption fromType(String type) {
-		for (AllContraptionTypes allContraptionTypes : values()) {
+		for (AllContraptionTypes allContraptionTypes : values()) 
 			if (type.equals(allContraptionTypes.id))
 				return allContraptionTypes.factory.get();
-		}
 		return null;
 	}
 

@@ -11,7 +11,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
@@ -131,8 +132,8 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 			List<Entity> passengers = cart().getPassengers();
 			if (!passengers.isEmpty()) {
 				Entity entity = passengers.get(0);
-				if (entity instanceof ContraptionEntity) 
-					((ContraptionEntity) entity).disassemble();
+				if (entity instanceof AbstractContraptionEntity) 
+					((AbstractContraptionEntity) entity).disassemble();
 			}
 		}
 		
@@ -172,9 +173,9 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 					if (passengers.isEmpty())
 						return;
 					Entity entity = passengers.get(0);
-					if (!(entity instanceof ContraptionEntity))
+					if (!(entity instanceof OrientedContraptionEntity))
 						return;
-					ContraptionEntity contraption = (ContraptionEntity) entity;
+					OrientedContraptionEntity contraption = (OrientedContraptionEntity) entity;
 					UUID couplingId = contraption.getCouplingId();
 					if (couplingId == cd.mainCartID) {
 						contraption.setCouplingId(cd.connectedCartID);

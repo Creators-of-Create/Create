@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PulleyContraption extends Contraption {
+public class PulleyContraption extends TranslatingContraption {
 
 	int initialOffset;
 
@@ -16,13 +16,18 @@ public class PulleyContraption extends Contraption {
 		return AllContraptionTypes.PULLEY;
 	}
 
-	public static PulleyContraption assemblePulleyAt(World world, BlockPos pos, int initialOffset) {
-		PulleyContraption construct = new PulleyContraption();
-		construct.initialOffset = initialOffset;
-		if (!construct.searchMovedStructure(world, pos, null))
-			return null;
-		construct.initActors(world);
-		return construct;
+	public PulleyContraption() {}
+
+	public PulleyContraption(int initialOffset) {
+		this.initialOffset = initialOffset;
+	}
+
+	@Override
+	public boolean assemble(World world, BlockPos pos) {
+		if (!searchMovedStructure(world, pos, null))
+			return false;
+		startMoving(world);
+		return true;
 	}
 
 	@Override

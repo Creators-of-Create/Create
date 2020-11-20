@@ -5,7 +5,8 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
@@ -15,18 +16,16 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
-	protected ContraptionEntity movedContraption;
+	protected ControlledContraptionEntity movedContraption;
 	protected float angle;
 	protected boolean running;
 	protected boolean assembleNextTick;
@@ -108,30 +107,28 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return false;
 	}
 
+	@Override
+	public BlockPos getBlockPosition() {
+		return pos;
+	}
+
 	public void assemble() {
 		if (!(world.getBlockState(pos)
 			.getBlock() instanceof BearingBlock))
 			return;
 
 		Direction direction = getBlockState().get(FACING);
+		BearingContraption contraption = new BearingContraption(isWindmill(), direction);
+		if (!contraption.assemble(world, pos))
+			return;
 
-		// Collect Construct
-		BearingContraption contraption = BearingContraption.assembleBearingAt(world, pos, direction);
-		if (contraption == null)
-			return;
-		if (isWindmill() && contraption.getSailBlocks() == 0)
-			return;
-		if (contraption.blocks.isEmpty())
-			return;
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-
-		movedContraption = ContraptionEntity.createStationary(world, contraption)
-			.controlledBy(this);
+		movedContraption = ControlledContraptionEntity.create(world, this, contraption);
 		BlockPos anchor = pos.offset(direction);
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
+		movedContraption.setRotationAxis(direction.getAxis());
 		world.addEntity(movedContraption);
 
-		// Run
 		running = true;
 		angle = 0;
 		sendData();
@@ -166,8 +163,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			if (running) {
 				boolean canDisassemble = movementMode.get() == RotationMode.ROTATE_PLACE
 					|| (isNearInitialAngle() && movementMode.get() == RotationMode.ROTATE_PLACE_RETURNED);
-				if (speed == 0 && (canDisassemble || movedContraption == null
-					|| movedContraption.getContraption().blocks.isEmpty())) {
+				if (speed == 0 && (canDisassemble || movedContraption == null || movedContraption.getContraption()
+					.getBlocks()
+					.isEmpty())) {
 					if (movedContraption != null)
 						movedContraption.getContraption()
 							.stop(world);
@@ -206,18 +204,17 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	}
 
 	protected void applyRotation() {
-		if (movedContraption != null) {
-			Axis axis = getBlockState().get(FACING)
-				.getAxis();
-			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-			Vec3d vec = new Vec3d(1, 1, 1).scale(angle)
-				.mul(new Vec3d(direction.getDirectionVec()));
-			movedContraption.rotateTo(vec.x, vec.y, vec.z);
-		}
+		if (movedContraption == null)
+			return;
+		movedContraption.setAngle(angle);
+		BlockState blockState = getBlockState();
+		if (blockState.has(BlockStateProperties.FACING))
+			movedContraption.setRotationAxis(blockState.get(BlockStateProperties.FACING)
+				.getAxis());
 	}
 
 	@Override
-	public void attach(ContraptionEntity contraption) {
+	public void attach(ControlledContraptionEntity contraption) {
 		BlockState blockState = getBlockState();
 		if (!(contraption.getContraption() instanceof BearingContraption))
 			return;
@@ -249,7 +246,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void collided() {}
 
 	@Override
-	public boolean isAttachedTo(ContraptionEntity contraption) {
+	public boolean isAttachedTo(AbstractContraptionEntity contraption) {
 		return movedContraption == contraption;
 	}
 
@@ -263,15 +260,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			return true;
 		if (isPlayerSneaking)
 			return false;
-		if (isWindmill())
-			return false;
-		if (getSpeed() == 0)
+		if (!isWindmill() && getSpeed() == 0)
 			return false;
 		if (running)
 			return false;
 		BlockState state = getBlockState();
 		if (!(state.getBlock() instanceof BearingBlock))
 			return false;
+		
 		BlockState attachedState = world.getBlockState(pos.offset(state.get(BearingBlock.FACING)));
 		if (attachedState.getMaterial()
 			.isReplaceable())

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.sy
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.Entity;
@@ -20,7 +20,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 	private BlockPos localPos;
 	private Direction face;
 
-	public ContraptionInteractionPacket(ContraptionEntity target, Hand hand, BlockPos localPos, Direction side) {
+	public ContraptionInteractionPacket(AbstractContraptionEntity target, Hand hand, BlockPos localPos, Direction side) {
 		this.interactionHand = hand;
 		this.localPos = localPos;
 		this.target = target.getEntityId();
@@ -53,9 +53,9 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 					return;
 				Entity entityByID = sender.getServerWorld()
 					.getEntityByID(target);
-				if (!(entityByID instanceof ContraptionEntity))
+				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
-				ContraptionEntity contraptionEntity = (ContraptionEntity) entityByID;
+				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 				if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, interactionHand))
 					sender.swingHand(interactionHand, true);
 			});
