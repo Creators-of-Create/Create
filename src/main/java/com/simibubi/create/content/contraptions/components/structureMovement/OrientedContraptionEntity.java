@@ -39,7 +39,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -57,7 +57,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	private static final DataParameter<Optional<Direction>> INITIAL_ORIENTATION =
 		EntityDataManager.createKey(OrientedContraptionEntity.class, CreateDataSerializers.OPTIONAL_DIRECTION);
 
-	protected Vec3d motionBeforeStall;
+	protected Vector3d motionBeforeStall;
 	protected boolean forceAngle;
 	private boolean isSerializingFurnaceCart;
 	private boolean attachedExtraInventories;
@@ -75,7 +75,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	public OrientedContraptionEntity(EntityType<?> type, World world) {
 		super(type, world);
-		motionBeforeStall = Vec3d.ZERO;
+		motionBeforeStall = Vector3d.ZERO;
 		attachedExtraInventories = false;
 		isSerializingFurnaceCart = false;
 		initialYawOffset = -1;
@@ -156,10 +156,10 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		ListNBT vecNBT = compound.getList("CachedMotion", 6);
 		if (!vecNBT.isEmpty()) {
-			motionBeforeStall = new Vec3d(vecNBT.getDouble(0), vecNBT.getDouble(1), vecNBT.getDouble(2));
-			if (!motionBeforeStall.equals(Vec3d.ZERO))
+			motionBeforeStall = new Vector3d(vecNBT.getDouble(0), vecNBT.getDouble(1), vecNBT.getDouble(2));
+			if (!motionBeforeStall.equals(Vector3d.ZERO))
 				targetYaw = prevYaw = yaw += yawFromVector(motionBeforeStall);
-			setMotion(Vec3d.ZERO);
+			setMotion(Vector3d.ZERO);
 		}
 
 		yaw = compound.getFloat("Yaw");
@@ -189,7 +189,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		compound.putFloat("Pitch", pitch);
 
 		if (getCouplingId() != null)
-			compound.put("OnCoupling", NBTUtil.writeUniqueId(getCouplingId()));
+			compound.putUniqueId("OnCoupling", getCouplingId());
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vec3d applyRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d applyRotation(Vector3d localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, getInitialYaw(), Axis.Y);
 		localPos = VecHelper.rotate(localPos, getPitch(partialTicks), Axis.Z);
 		localPos = VecHelper.rotate(localPos, getYaw(partialTicks), Axis.Y);
@@ -218,7 +218,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vec3d reverseRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d reverseRotation(Vector3d localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, -getYaw(partialTicks), Axis.Y);
 		localPos = VecHelper.rotate(localPos, -getPitch(partialTicks), Axis.Z);
 		localPos = VecHelper.rotate(localPos, -getInitialYaw(), Axis.Y);
@@ -280,7 +280,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			}
 			if (wasStalled && !isStalled) {
 				riding.setMotion(motionBeforeStall);
-				motionBeforeStall = Vec3d.ZERO;
+				motionBeforeStall = Vector3d.ZERO;
 			}
 		}
 
@@ -306,10 +306,10 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			if (coupledCarts == null)
 				return false;
 
-			Vec3d positionVec = coupledCarts.getFirst()
+			Vector3d positionVec = coupledCarts.getFirst()
 				.cart()
 				.getPositionVec();
-			Vec3d coupledVec = coupledCarts.getSecond()
+			Vector3d coupledVec = coupledCarts.getSecond()
 				.cart()
 				.getPositionVec();
 
@@ -347,11 +347,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			return false;
 
 		boolean rotating = false;
-		Vec3d movementVector = riding.getMotion();
+		Vector3d movementVector = riding.getMotion();
 
 		if (!(riding instanceof AbstractMinecartEntity))
 			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
-		Vec3d motion = movementVector.normalize();
+		Vector3d motion = movementVector.normalize();
 
 		if (!dataManager.get(INITIAL_ORIENTATION)
 			.isPresent() && !world.isRemote) {
@@ -470,8 +470,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vec3d getAnchorVec() {
-		return new Vec3d(getX() - .5, getY(), getZ() - .5);
+	public Vector3d getAnchorVec() {
+		return new Vector3d(getX() - .5, getY(), getZ() - .5);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +24,7 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 	protected abstract void transform(C contraptionEntity, float partialTicks, MatrixStack[] matrixStacks);
 
 	@Override
-	public boolean shouldRender(C entity, ClippingHelperImpl p_225626_2_, double p_225626_3_, double p_225626_5_,
+	public boolean shouldRender(C entity, ClippingHelper p_225626_2_, double p_225626_3_, double p_225626_5_,
 		double p_225626_7_) {
 		if (!super.shouldRender(entity, p_225626_2_, p_225626_3_, p_225626_5_, p_225626_7_))
 			return false;
@@ -34,7 +34,7 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 			return false;
 		return true;
 	}
-
+	
 	@Override
 	public void render(C entity, float yaw, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffers,
 		int overlay) {

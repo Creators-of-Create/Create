@@ -20,10 +20,10 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.item.HangingEntity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
@@ -35,7 +35,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -90,7 +90,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	protected void removePassenger(Entity passenger) {
-		Vec3d transformedVector = getPassengerPosition(passenger, 1);
+		Vector3d transformedVector = getPassengerPosition(passenger, 1);
 		super.removePassenger(passenger);
 		if (world.isRemote)
 			return;
@@ -107,13 +107,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void updatePassengerPosition(Entity passenger, IMoveCallback callback) {
 		if (!isPassenger(passenger))
 			return;
-		Vec3d transformedVector = getPassengerPosition(passenger, 1);
+		Vector3d transformedVector = getPassengerPosition(passenger, 1);
 		if (transformedVector == null)
 			return;
 		callback.accept(passenger, transformedVector.x, transformedVector.y, transformedVector.z);
 	}
 
-	protected Vec3d getPassengerPosition(Entity passenger, float partialTicks) {
+	protected Vector3d getPassengerPosition(Entity passenger, float partialTicks) {
 		UUID id = passenger.getUniqueID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
@@ -128,8 +128,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
-		Vec3d transformedVector =
-			toGlobalVector(new Vec3d(seat).add(.5, passenger.getYOffset() + ySize - .15f, .5), partialTicks)
+		Vector3d transformedVector =
+			toGlobalVector(Vector3d.of(seat).add(.5, passenger.getYOffset() + ySize - .15f, .5), partialTicks)
 				.add(VecHelper.getCenterOf(BlockPos.ZERO))
 				.subtract(0.5, ySize, 0.5);
 		return transformedVector;
@@ -168,7 +168,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 
 		if (toDismount != null && !world.isRemote) {
-			Vec3d transformedVector = getPassengerPosition(toDismount, 1);
+			Vector3d transformedVector = getPassengerPosition(toDismount, 1);
 			toDismount.stopRiding();
 			if (transformedVector != null)
 				toDismount.setPositionAndUpdate(transformedVector.x, transformedVector.y, transformedVector.z);
@@ -180,8 +180,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return true;
 	}
 
-	public Vec3d toGlobalVector(Vec3d localVec, float partialTicks) {
-		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+	public Vector3d toGlobalVector(Vector3d localVec, float partialTicks) {
+		Vector3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		localVec = localVec.subtract(rotationOffset);
 		localVec = applyRotation(localVec, partialTicks);
 		localVec = localVec.add(rotationOffset)
@@ -189,8 +189,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return localVec;
 	}
 
-	public Vec3d toLocalVector(Vec3d globalVec, float partialTicks) {
-		Vec3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
+	public Vector3d toLocalVector(Vector3d globalVec, float partialTicks) {
+		Vector3d rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		globalVec = globalVec.subtract(getAnchorVec())
 			.subtract(rotationOffset);
 		globalVec = reverseRotation(globalVec, partialTicks);
@@ -218,9 +218,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected abstract void tickContraption();
 
-	public abstract Vec3d applyRotation(Vec3d localPos, float partialTicks);
+	public abstract Vector3d applyRotation(Vector3d localPos, float partialTicks);
 
-	public abstract Vec3d reverseRotation(Vec3d localPos, float partialTicks);
+	public abstract Vector3d reverseRotation(Vector3d localPos, float partialTicks);
 
 	public void tickActors() {
 		boolean stalledPreviously = contraption.stalled;
@@ -233,7 +233,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			BlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
 
-			Vec3d actorPosition = toGlobalVector(VecHelper.getCenterOf(blockInfo.pos)
+			Vector3d actorPosition = toGlobalVector(VecHelper.getCenterOf(blockInfo.pos)
 				.add(actor.getActiveAreaOffset(context)), 1);
 			BlockPos gridPosition = new BlockPos(actorPosition);
 			boolean newPosVisited =
@@ -242,7 +242,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
 
-			Vec3d oldMotion = context.motion;
+			Vector3d oldMotion = context.motion;
 			if (!actor.isActive(context))
 				continue;
 			if (newPosVisited && !context.stall) {
@@ -283,13 +283,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	protected boolean shouldActorTrigger(MovementContext context, BlockInfo blockInfo, MovementBehaviour actor,
-		Vec3d actorPosition, BlockPos gridPosition) {
-		Vec3d previousPosition = context.position;
+		Vector3d actorPosition, BlockPos gridPosition) {
+		Vector3d previousPosition = context.position;
 		if (previousPosition == null)
 			return false;
 
 		context.motion = actorPosition.subtract(previousPosition);
-		Vec3d relativeMotion = context.motion;
+		Vector3d relativeMotion = context.motion;
 		relativeMotion = reverseRotation(relativeMotion, 1);
 		context.relativeMotion = relativeMotion;
 		return !new BlockPos(previousPosition).equals(gridPosition)
@@ -300,7 +300,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		setPosition(getX() + x, getY() + y, getZ() + z);
 	}
 
-	public Vec3d getAnchorVec() {
+	public Vector3d getAnchorVec() {
 		return getPositionVec();
 	}
 
@@ -316,15 +316,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		AxisAlignedBB cbox = contraption.bounds;
 		if (cbox == null)
 			return;
-		Vec3d actualVec = getAnchorVec();
+		Vector3d actualVec = getAnchorVec();
 		setBoundingBox(cbox.offset(actualVec));
 	}
 
-	public static float yawFromVector(Vec3d vec) {
+	public static float yawFromVector(Vector3d vec) {
 		return (float) ((3 * Math.PI / 2 + Math.atan2(vec.z, vec.x)) / Math.PI * 180);
 	}
 
-	public static float pitchFromVector(Vec3d vec) {
+	public static float pitchFromVector(Vector3d vec) {
 		return (float) ((Math.acos(vec.y)) / Math.PI * 180);
 	}
 
@@ -398,11 +398,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		removePassengers();
 
 		for (Entity entity : collidingEntities) {
-			Vec3d positionVec = getPositionVec();
-			Vec3d localVec = entity.getPositionVec()
+			Vector3d positionVec = getPositionVec();
+			Vector3d localVec = entity.getPositionVec()
 				.subtract(positionVec);
 			localVec = reverseRotation(localVec, 1);
-			Vec3d transformed = transform.apply(localVec);
+			Vector3d transformed = transform.apply(localVec);
 			entity.setPositionAndUpdate(transformed.x, transformed.y, transformed.z);
 		}
 	}
@@ -456,7 +456,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	@SuppressWarnings("deprecation")
 	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
-		Vec3d vec = getPositionVec();
+		Vector3d vec = getPositionVec();
 		List<Entity> passengers = getPassengers();
 
 		for (Entity entity : passengers) {
@@ -464,7 +464,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			entity.removed = true;
 
 			// Gather passengers into same chunk when saving
-			Vec3d prevVec = entity.getPositionVec();
+			Vector3d prevVec = entity.getPositionVec();
 			entity.setPos(vec.x, prevVec.y, vec.z);
 
 			// Super requires all passengers to not be removed in order to write them to the
@@ -478,14 +478,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	// Make sure nothing can move contraptions out of the way
-	public void setMotion(Vec3d motionIn) {}
+	public void setMotion(Vector3d motionIn) {}
 
 	@Override
 	public PushReaction getPushReaction() {
 		return PushReaction.IGNORE;
 	}
 
-	public void setContraptionMotion(Vec3d vec) {
+	public void setContraptionMotion(Vector3d vec) {
 		super.setMotion(vec);
 	}
 
@@ -499,16 +499,16 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		return false;
 	}
 
-	public Vec3d getPrevPositionVec() {
-		return prevPosInvalid ? getPositionVec() : new Vec3d(prevPosX, prevPosY, prevPosZ);
+	public Vector3d getPrevPositionVec() {
+		return prevPosInvalid ? getPositionVec() : new Vector3d(prevPosX, prevPosY, prevPosZ);
 	}
 
 	public abstract ContraptionRotationState getRotationState();
 
-	public Vec3d getContactPointMotion(Vec3d globalContactPoint) {
+	public Vector3d getContactPointMotion(Vector3d globalContactPoint) {
 		if (prevPosInvalid)
-			return Vec3d.ZERO;
-		Vec3d contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
+			return Vector3d.ZERO;
+		Vector3d contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
 		return contactPoint.subtract(globalContactPoint)
 			.add(getPositionVec().subtract(getPrevPositionVec()));
 	}
@@ -526,7 +526,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return false;
 		if (e instanceof SeatEntity)
 			return false;
-		if (e instanceof IProjectile)
+		if (e instanceof ProjectileEntity)
 			return false;
 		if (e.getRidingEntity() != null)
 			return false;

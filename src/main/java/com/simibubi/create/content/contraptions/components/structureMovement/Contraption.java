@@ -549,7 +549,7 @@ public abstract class Contraption {
 
 		stabilizedSubContraptions.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND), c -> stabilizedSubContraptions
-			.put(NBTUtil.readUniqueId(c.getCompound("Id")), BlockFace.fromNBT(c.getCompound("Location"))));
+			.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage

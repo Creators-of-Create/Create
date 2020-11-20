@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -90,13 +90,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vec3d applyRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d applyRotation(Vector3d localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, getAngle(partialTicks), rotationAxis);
 		return localPos;
 	}
 
 	@Override
-	public Vec3d reverseRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d reverseRotation(Vector3d localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, -getAngle(partialTicks), rotationAxis);
 		return localPos;
 	}
@@ -143,9 +143,9 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 				setPosition(getX(), getY(), getZ());
 		}
 
-		Vec3d motion = getMotion();
+		Vector3d motion = getMotion();
 		if (motion.length() < 1 / 4098f)
-			setMotion(Vec3d.ZERO);
+			setMotion(Vector3d.ZERO);
 		move(motion.x, motion.y, motion.z);
 		if (ContraptionCollider.collideBlocks(this))
 			getController().collided();
@@ -153,7 +153,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	protected boolean shouldActorTrigger(MovementContext context, BlockInfo blockInfo, MovementBehaviour actor,
-		Vec3d actorPosition, BlockPos gridPosition) {
+		Vector3d actorPosition, BlockPos gridPosition) {
 		if (super.shouldActorTrigger(context, blockInfo, actor, actorPosition, gridPosition))
 			return true;
 
@@ -162,13 +162,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		BearingContraption bc = (BearingContraption) contraption;
 		Direction facing = bc.getFacing();
-		Vec3d activeAreaOffset = actor.getActiveAreaOffset(context);
-		if (!activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(new Vec3d(facing.getDirectionVec())))
-			.equals(Vec3d.ZERO))
+		Vector3d activeAreaOffset = actor.getActiveAreaOffset(context);
+		if (!activeAreaOffset.mul(VecHelper.axisAlingedPlaneOf(Vector3d.of(facing.getDirectionVec())))
+			.equals(Vector3d.ZERO))
 			return false;
 		if (!VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis()))
 			return false;
-		context.motion = new Vec3d(facing.getDirectionVec()).scale(angle - prevAngle);
+		context.motion = Vector3d.of(facing.getDirectionVec()).scale(angle - prevAngle);
 		context.relativeMotion = context.motion;
 		int timer = context.data.getInt("StationaryTimer");
 		if (timer > 0) {
