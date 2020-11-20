@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
+import com.simibubi.create.foundation.entity.CreateDataSerializers;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
@@ -92,6 +93,7 @@ public class Create {
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 
 		AllConfigs.register();
+		CreateDataSerializers.register();
 		random = new Random();
 
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
