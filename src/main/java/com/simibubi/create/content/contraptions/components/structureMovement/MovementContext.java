@@ -30,10 +30,11 @@ public class MovementContext {
 	public Contraption contraption;
 	public Object temporaryData;
 
-	public MovementContext(World world, BlockInfo info) {
+	public MovementContext(World world, BlockInfo info, Contraption contraption) {
 		this.world = world;
 		this.state = info.state;
 		this.tileData = info.nbt;
+		this.contraption = contraption;
 		localPos = info.pos;
 
 		firstMovement = true;
@@ -55,8 +56,8 @@ public class MovementContext {
 		return (((int) (length * modifier + 100 * Math.signum(length))) / 100) * 100;
 	}
 
-	public static MovementContext readNBT(World world, BlockInfo info, CompoundNBT nbt) {
-		MovementContext context = new MovementContext(world, info);
+	public static MovementContext readNBT(World world, BlockInfo info, CompoundNBT nbt, Contraption contraption) {
+		MovementContext context = new MovementContext(world, info, contraption);
 		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));
 		if (nbt.contains("Position"))

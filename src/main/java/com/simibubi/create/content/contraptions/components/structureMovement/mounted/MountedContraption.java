@@ -40,29 +40,36 @@ public class MountedContraption extends Contraption {
 	public AbstractMinecartEntity connectedCart;
 
 	public MountedContraption() {
-		rotationMode = CartMovementMode.ROTATE;
+		this(CartMovementMode.ROTATE);
+	}
+
+	public MountedContraption(CartMovementMode mode) {
+		rotationMode = mode;
 	}
 
 	@Override
 	protected AllContraptionTypes getType() {
 		return AllContraptionTypes.MOUNTED;
 	}
-
-	public static MountedContraption assembleMinecart(World world, BlockPos pos) {
+	
+	@Override
+	public boolean assemble(World world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		if (!BlockHelper.hasBlockStateProperty(state, RAIL_SHAPE))
-			return null;
-
-		MountedContraption contraption = new MountedContraption();
-		if (!contraption.searchMovedStructure(world, pos, null))
-			return null;
-
+			return false;
+		if (!searchMovedStructure(world, pos, null))
+			return false;
+		
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
-		contraption.add(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
+		addBlock(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
 			.with(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
-		return contraption;
+		
+		if (blocks.size() == 1)
+			return false;
+		
+		return true;
 	}
-
+	
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
 		frontier.clear();
@@ -141,7 +148,12 @@ public class MountedContraption extends Contraption {
 	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
 		return AllBlocks.MINECART_ANCHOR.has(state);
 	}
-
+	
+	@Override
+	protected boolean canAxisBeStabilized(Axis axis) {
+		return true;
+	}
+	
 	@Override
 	public void addExtraInventories(Entity cart) {
 		if (!(cart instanceof IInventory))

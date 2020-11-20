@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
@@ -29,7 +29,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
 		return Vector3d.of(context.state.get(DeployerBlock.FACING)
-			.getDirectionVec()).scale(2);
+			.getDirectionVec())
+			.scale(2);
 	}
 
 	@Override
@@ -53,8 +54,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			.getDirectionVec());
 		facingVec = context.rotation.apply(facingVec);
 		Vector3d vec = context.position.subtract(facingVec.scale(2));
-		player.rotationYaw = ContraptionEntity.yawFromVector(facingVec);
-		player.rotationPitch = ContraptionEntity.pitchFromVector(facingVec) - 90;
+		player.rotationYaw = AbstractContraptionEntity.yawFromVector(facingVec);
+		player.rotationPitch = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}

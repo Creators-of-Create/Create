@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
@@ -70,7 +71,7 @@ public class ContraptionRenderer {
 
 	private static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, c.customRenderTEs, ms, msLocal, buffer);
+		TileEntityRenderHelper.renderTileEntities(world, c.renderedTileEntities, ms, msLocal, buffer);
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {
@@ -86,17 +87,16 @@ public class ContraptionRenderer {
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
-		for (BlockInfo info : c.blocks.values())
+		for (BlockInfo info : c.getBlocks().values())
 			renderWorld.setBlockState(info.pos, info.state);
-		for (BlockPos pos : c.renderOrder) {
-			BlockInfo info = c.blocks.get(pos);
+		for (BlockInfo info : c.getBlocks().values()) {
 			BlockState state = info.state;
 
 			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
 				continue;
 			if (!RenderTypeLookup.canRenderInLayer(state, layer))
 				continue;
-			
+
 			IBakedModel originalModel = dispatcher.getModelForState(state);
 			ms.push();
 			ms.translate(info.pos.getX(), info.pos.getY(), info.pos.getZ());
@@ -126,7 +126,7 @@ public class ContraptionRenderer {
 					.translate(blockInfo.pos);
 			}
 
-			MovementBehaviour movementBehaviour = Contraption.getMovement(blockInfo.state);
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 			if (movementBehaviour != null)
 				movementBehaviour.renderInContraption(context, ms, msLocal, buffer);
 

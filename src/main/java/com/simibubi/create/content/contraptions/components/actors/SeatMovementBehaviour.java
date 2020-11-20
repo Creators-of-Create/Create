@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -30,7 +30,8 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-		ContraptionEntity contraptionEntity = context.contraption.entity;
+		
+		AbstractContraptionEntity contraptionEntity = context.contraption.entity;
 		if (contraptionEntity == null)
 			return;
 		int index = context.data.getInt("SeatIndex");

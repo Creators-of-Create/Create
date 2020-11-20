@@ -75,8 +75,8 @@ public class ContraptionHandlerClient {
 				.distanceTo(origin), reach);
 
 		Vector3d target = RaycastHelper.getTraceTarget(player, reach, origin);
-		for (ContraptionEntity contraptionEntity : mc.world.getEntitiesWithinAABB(ContraptionEntity.class,
-			new AxisAlignedBB(origin, target))) {
+		for (AbstractContraptionEntity contraptionEntity : mc.world
+			.getEntitiesWithinAABB(AbstractContraptionEntity.class, new AxisAlignedBB(origin, target))) {
 
 			Vector3d localOrigin = contraptionEntity.toLocalVector(origin, 1);
 			Vector3d localTarget = contraptionEntity.toLocalVector(target, 1);
@@ -84,7 +84,8 @@ public class ContraptionHandlerClient {
 
 			MutableObject<BlockRayTraceResult> mutableResult = new MutableObject<>();
 			PredicateTraceResult predicateResult = RaycastHelper.rayTraceUntil(localOrigin, localTarget, p -> {
-				BlockInfo blockInfo = contraption.blocks.get(p);
+				BlockInfo blockInfo = contraption.getBlocks()
+					.get(p);
 				if (blockInfo == null)
 					return false;
 				BlockState state = blockInfo.state;

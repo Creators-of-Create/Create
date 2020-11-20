@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.DirectionalExtenderScrollOptionSlot;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -50,20 +50,17 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 
 		// Collect Construct
-		PistonContraption contraption = PistonContraption.movePistonAt(world, pos, direction, getMovementSpeed() < 0);
+		PistonContraption contraption = new PistonContraption(direction, getMovementSpeed() < 0);
+		if (!contraption.assemble(world, pos))
+			return;
+
 		Direction positive = Direction.getFacingFromAxis(AxisDirection.POSITIVE, direction.getAxis());
 		Direction movementDirection =
 			getSpeed() > 0 ^ direction.getAxis() != Axis.Z ? positive : positive.getOpposite();
 
-		if (contraption != null) {
-			BlockPos anchor = contraption.getAnchor()
-				.offset(direction, contraption.initialExtensionProgress);
-			if (ContraptionCollider.isCollidingWithWorld(world, contraption, anchor.offset(movementDirection),
-				movementDirection))
-				contraption = null;
-		}
-
-		if (contraption == null)
+		BlockPos anchor = contraption.anchor.offset(direction, contraption.initialExtensionProgress);
+		if (ContraptionCollider.isCollidingWithWorld(world, contraption, anchor.offset(movementDirection),
+			movementDirection))
 			return;
 
 		// Check if not at limit already
@@ -81,8 +78,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 		BlockPos startPos = BlockPos.ZERO.offset(direction, contraption.initialExtensionProgress);
 		contraption.removeBlocksFromWorld(world, startPos);
-		movedContraption = ContraptionEntity.createStationary(getWorld(), contraption)
-			.controlledBy(this);
+		movedContraption = ControlledContraptionEntity.create(getWorld(), this, contraption);
 		applyContraptionPosition();
 		forceMove = true;
 		world.addEntity(movedContraption);
@@ -141,15 +137,16 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected Vector3d toMotionVector(float speed) {
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);
-		return Vector3d.of(pistonDirection.getDirectionVec()).scale(speed);
+		return Vector3d.of(pistonDirection.getDirectionVec())
+			.scale(speed);
 	}
 
 	@Override
 	protected Vector3d toPosition(float offset) {
 		Vector3d position = Vector3d.of(getBlockState().get(BlockStateProperties.FACING)
-			.getDirectionVec()).scale(offset);
-		return position.add(Vector3d.of(movedContraption.getContraption()
-			.getAnchor()));
+			.getDirectionVec())
+			.scale(offset);
+		return position.add(Vector3d.of(movedContraption.getContraption().anchor));
 	}
 
 	@Override

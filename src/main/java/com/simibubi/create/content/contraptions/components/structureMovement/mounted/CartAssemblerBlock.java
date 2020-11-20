@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
@@ -273,13 +273,13 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			.isCoupledThroughContraption())
 			return;
 
-		MountedContraption contraption = MountedContraption.assembleMinecart(world, pos);
-		if (contraption == null)
-			return;
-		if (contraption.blocks.size() == 1)
-			return;
+		CartMovementMode mode =
+			getTileEntityOptional(world, pos).map(te -> CartMovementMode.values()[te.movementMode.value])
+				.orElse(CartMovementMode.ROTATE);
 
-		withTileEntityDo(world, pos, te -> contraption.rotationMode = CartMovementMode.values()[te.movementMode.value]);
+		MountedContraption contraption = new MountedContraption(mode);
+		if (!contraption.assemble(world, pos))
+			return;
 
 		boolean couplingFound = contraption.connectedCart != null;
 		Optional<Direction> initialOrientation = cart.getMotion()
@@ -293,7 +293,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		}
 
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-		contraption.initActors(world);
+		contraption.startMoving(world);
 		contraption.expandBoundsAroundAxis(Axis.Y);
 
 		if (couplingFound) {
@@ -302,7 +302,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			initialOrientation = Optional.of(Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI));
 		}
 
-		ContraptionEntity entity = ContraptionEntity.createMounted(world, contraption, initialOrientation);
+		OrientedContraptionEntity entity = OrientedContraptionEntity.create(world, contraption, initialOrientation);
 		if (couplingFound)
 			entity.setCouplingId(cart.getUniqueID());
 		entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
@@ -323,9 +323,9 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			return;
 		Entity entity = cart.getPassengers()
 			.get(0);
-		if (!(entity instanceof ContraptionEntity))
+		if (!(entity instanceof OrientedContraptionEntity))
 			return;
-		ContraptionEntity contraption = (ContraptionEntity) entity;
+		OrientedContraptionEntity contraption = (OrientedContraptionEntity) entity;
 		UUID couplingId = contraption.getCouplingId();
 
 		if (couplingId == null) {

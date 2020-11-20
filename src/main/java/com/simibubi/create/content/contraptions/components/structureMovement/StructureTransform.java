@@ -41,19 +41,19 @@ public class StructureTransform {
 	Axis rotationAxis;
 	BlockPos offset;
 
-	public StructureTransform(BlockPos offset, Vector3d rotation) {
+	public StructureTransform(BlockPos offset, float xRotation, float yRotation, float zRotation) {
 		this.offset = offset;
-		if (rotation.x != 0) {
+		if (xRotation != 0) {
 			rotationAxis = Axis.X;
-			angle = (int) (Math.round(rotation.x / 90) * 90);
+			angle = (int) (Math.round(xRotation / 90) * 90);
 		}
-		if (rotation.y != 0) {
+		if (yRotation != 0) {
 			rotationAxis = Axis.Y;
-			angle = (int) (Math.round(rotation.y / 90) * 90);
+			angle = (int) (Math.round(yRotation / 90) * 90);
 		}
-		if (rotation.z != 0) {
+		if (zRotation != 0) {
 			rotationAxis = Axis.Z;
-			angle = (int) (Math.round(rotation.z / 90) * 90);
+			angle = (int) (Math.round(zRotation / 90) * 90);
 		}
 
 		angle %= 360;

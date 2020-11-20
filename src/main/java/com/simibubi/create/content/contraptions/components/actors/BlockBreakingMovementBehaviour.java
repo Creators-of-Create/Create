@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -52,12 +52,12 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		Entities: for (Entity entity : world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
 			if (entity instanceof ItemEntity)
 				continue;
-			if (entity instanceof ContraptionEntity)
+			if (entity instanceof AbstractContraptionEntity)
 				continue;
 			if (entity instanceof AbstractMinecartEntity)
 				for (Entity passenger : entity.getRecursivePassengers())
-					if (passenger instanceof ContraptionEntity
-							&& ((ContraptionEntity) passenger).getContraption() == context.contraption)
+					if (passenger instanceof AbstractContraptionEntity
+							&& ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
 						continue Entities;
 
 			if (damageSource != null && !world.isRemote) {

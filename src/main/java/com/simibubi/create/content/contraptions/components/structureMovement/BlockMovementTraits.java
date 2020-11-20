@@ -195,6 +195,8 @@ public class BlockMovementTraits {
 	public static boolean notSupportive(BlockState state, Direction facing) {
 		if (AllBlocks.MECHANICAL_DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
+		if (AllBlocks.MECHANICAL_BEARING.has(state))
+			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.DOWN == facing;
 		if (AllBlocks.MECHANICAL_SAW.has(state))

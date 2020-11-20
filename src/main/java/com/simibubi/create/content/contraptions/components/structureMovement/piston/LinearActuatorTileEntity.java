@@ -3,7 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -14,6 +15,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
@@ -22,7 +24,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	public float offset;
 	public boolean running;
 	public boolean assembleNextTick;
-	public ContraptionEntity movedContraption;
+	public AbstractContraptionEntity movedContraption;
 	protected boolean forceMove;
 	protected ScrollOptionBehaviour<MovementMode> movementMode;
 	protected boolean waitingForSpeedChange;
@@ -268,7 +270,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	@Override
-	public void attach(ContraptionEntity contraption) {
+	public void attach(ControlledContraptionEntity contraption) {
 		this.movedContraption = contraption;
 		if (!world.isRemote) {
 			this.running = true;
@@ -277,8 +279,13 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	@Override
-	public boolean isAttachedTo(ContraptionEntity contraption) {
+	public boolean isAttachedTo(AbstractContraptionEntity contraption) {
 		return movedContraption == contraption;
+	}
+	
+	@Override
+	public BlockPos getBlockPosition() {
+		return pos;
 	}
 
 }

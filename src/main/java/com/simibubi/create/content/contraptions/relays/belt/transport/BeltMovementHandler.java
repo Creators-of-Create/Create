@@ -7,7 +7,7 @@ import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -192,7 +192,7 @@ public class BeltMovementHandler {
 	}
 
 	public static boolean shouldIgnoreBlocking(Entity me, Entity other) {
-		if (other instanceof ContraptionEntity)
+		if (other instanceof AbstractContraptionEntity)
 			return true;
 		if (other instanceof HangingEntity)
 			return true;

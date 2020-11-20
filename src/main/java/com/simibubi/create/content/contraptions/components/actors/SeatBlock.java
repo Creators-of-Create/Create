@@ -16,7 +16,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
@@ -132,8 +131,7 @@ public class SeatBlock extends Block {
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
-		return !(passenger instanceof PlayerEntity)
-			&& (passenger instanceof LivingEntity || passenger instanceof AbstractMinecartEntity);
+		return !(passenger instanceof PlayerEntity) && (passenger instanceof LivingEntity);
 	}
 
 	public static void sitDown(World world, BlockPos pos, Entity entity) {

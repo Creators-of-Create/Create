@@ -46,6 +46,7 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedBearingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
@@ -669,6 +670,7 @@ public class AllBlocks {
 		REGISTRATE.block("mechanical_bearing", MechanicalBearingBlock::new)
 			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
+			.onRegister(addMovementBehaviour(new StabilizedBearingMovementBehaviour()))
 			.register();
 
 	public static final BlockEntry<ClockworkBearingBlock> CLOCKWORK_BEARING =
