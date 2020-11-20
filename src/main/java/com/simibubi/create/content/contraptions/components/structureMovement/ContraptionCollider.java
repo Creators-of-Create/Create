@@ -28,7 +28,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -74,12 +73,21 @@ public class ContraptionCollider {
 		Vec3d centerOfBlock = VecHelper.CENTER_OF_ORIGIN;
 		ContraptionRotationState rotation = null;
 
-		for (Entity entity : world.getEntitiesWithinAABB((EntityType<?>) null, bounds.grow(2)
-			.expand(0, 32, 0), contraptionEntity::canCollideWith)) {
+		// After death, multiple refs to the client player may show up in the area
+		boolean skipClientPlayer = false;
+
+		List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, bounds.grow(2)
+			.expand(0, 32, 0), contraptionEntity::canCollideWith);
+		for (Entity entity : entitiesWithinAABB) {
 
 			PlayerType playerType = getPlayerType(entity);
 			if (playerType == PlayerType.REMOTE)
 				continue;
+			if (playerType == PlayerType.CLIENT)
+				if (skipClientPlayer)
+					continue;
+				else
+					skipClientPlayer = true;
 
 			// Init matrix
 			if (rotation == null)
@@ -130,7 +138,7 @@ public class ContraptionCollider {
 				.forEach(shape -> shape.toBoundingBoxList()
 					.forEach(bbs::add));
 
-			boolean doHorizontalPass = rotation.hasVerticalRotation();
+			boolean doHorizontalPass = !rotation.hasVerticalRotation();
 			for (boolean horizontalPass : Iterate.trueAndFalse) {
 
 				for (AxisAlignedBB bb : bbs) {
