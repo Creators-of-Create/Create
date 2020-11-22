@@ -19,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BellAttachment;
@@ -39,6 +40,13 @@ public class StructureTransform {
 	int angle;
 	Axis rotationAxis;
 	BlockPos offset;
+
+	private StructureTransform(BlockPos offset, int angle, Axis axis, Rotation rotation) {
+		this.offset = offset;
+		this.angle = angle;
+		rotationAxis = axis;
+		this.rotation = rotation;
+	}
 
 	public StructureTransform(BlockPos offset, float xRotation, float yRotation, float zRotation) {
 		this.offset = offset;
@@ -71,14 +79,16 @@ public class StructureTransform {
 
 	public Vec3d apply(Vec3d localVec) {
 		Vec3d vec = localVec;
-		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
+		if (rotationAxis != null)
+			vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
 		vec = vec.add(new Vec3d(offset));
 		return vec;
 	}
-	
+
 	public BlockPos apply(BlockPos localPos) {
 		Vec3d vec = VecHelper.getCenterOf(localPos);
-		vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
+		if (rotationAxis != null)
+			vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
 		localPos = new BlockPos(vec);
 		return localPos.add(offset);
 	}
@@ -202,8 +212,9 @@ public class StructureTransform {
 
 	protected BlockState transformBelt(BlockState state, boolean halfTurn) {
 		Direction initialDirection = state.get(BeltBlock.HORIZONTAL_FACING);
-		boolean diagonal = state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD || state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD;
-		
+		boolean diagonal =
+			state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD || state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD;
+
 		if (!diagonal) {
 			for (int i = 0; i < rotation.ordinal(); i++) {
 				Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
@@ -211,7 +222,7 @@ public class StructureTransform {
 				boolean vertical = slope == BeltSlope.VERTICAL;
 				boolean horizontal = slope == BeltSlope.HORIZONTAL;
 				boolean sideways = slope == BeltSlope.SIDEWAYS;
-				
+
 				Direction newDirection = direction.getOpposite();
 				BeltSlope newSlope = BeltSlope.VERTICAL;
 
@@ -229,15 +240,15 @@ public class StructureTransform {
 
 				if (sideways) {
 					newDirection = direction;
-					if (direction.getAxis() == rotationAxis) 
+					if (direction.getAxis() == rotationAxis)
 						newSlope = BeltSlope.HORIZONTAL;
-					else 
+					else
 						newDirection = direction.rotateYCCW();
 				}
 
 				if (horizontal) {
 					newDirection = direction;
-					if (direction.getAxis() == rotationAxis) 
+					if (direction.getAxis() == rotationAxis)
 						newSlope = BeltSlope.SIDEWAYS;
 				}
 
@@ -254,8 +265,7 @@ public class StructureTransform {
 				boolean downward = slope == BeltSlope.DOWNWARD;
 
 				// Rotate diagonal
-				if (direction.getAxisDirection() == AxisDirection.POSITIVE ^ downward
-					^ direction.getAxis() == Axis.Z) {
+				if (direction.getAxisDirection() == AxisDirection.POSITIVE ^ downward ^ direction.getAxis() == Axis.Z) {
 					state = state.with(BeltBlock.SLOPE, upward ? BeltSlope.DOWNWARD : BeltSlope.UPWARD);
 				} else {
 					state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
@@ -267,10 +277,10 @@ public class StructureTransform {
 			Direction newDirection = direction.getOpposite();
 			BeltSlope slope = state.get(BeltBlock.SLOPE);
 			boolean vertical = slope == BeltSlope.VERTICAL;
-			
+
 			if (diagonal) {
-				state = state.with(BeltBlock.SLOPE,
-					slope == BeltSlope.UPWARD ? BeltSlope.DOWNWARD : slope == BeltSlope.DOWNWARD ? BeltSlope.UPWARD : slope);
+				state = state.with(BeltBlock.SLOPE, slope == BeltSlope.UPWARD ? BeltSlope.DOWNWARD
+					: slope == BeltSlope.DOWNWARD ? BeltSlope.UPWARD : slope);
 			} else if (vertical) {
 				state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
 			}
@@ -315,6 +325,23 @@ public class StructureTransform {
 		}
 
 		return rotated;
+	}
+
+	public static StructureTransform fromBuffer(PacketBuffer buffer) {
+		BlockPos readBlockPos = buffer.readBlockPos();
+		int readAngle = buffer.readInt();
+		int axisIndex = buffer.readVarInt();
+		int rotationIndex = buffer.readVarInt();
+		return new StructureTransform(readBlockPos, readAngle,
+			axisIndex == -1 ? null : Axis.values()[axisIndex],
+			rotationIndex == -1 ? null : Rotation.values()[rotationIndex]);
+	}
+
+	public void writeToBuffer(PacketBuffer buffer) {
+		buffer.writeBlockPos(offset);
+		buffer.writeInt(angle);
+		buffer.writeVarInt(rotationAxis == null ? -1 : rotationAxis.ordinal());
+		buffer.writeVarInt(rotation == null ? -1 : rotation.ordinal());
 	}
 
 }

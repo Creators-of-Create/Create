@@ -1,10 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllMovementBehaviours;
@@ -49,7 +52,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	private static final DataParameter<Boolean> STALLED =
 		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
-	public final List<Entity> collidingEntities = new ArrayList<>();
+	public final Map<Entity, MutableInt> collidingEntities;
 
 	protected Contraption contraption;
 	protected boolean initialized;
@@ -58,6 +61,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
 		super(entityTypeIn, worldIn);
 		prevPosInvalid = true;
+		collidingEntities = new IdentityHashMap<>();
 	}
 
 	protected void setContraption(Contraption contraption) {
@@ -204,6 +208,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			remove();
 			return;
 		}
+
+		for (Iterator<Entry<Entity, MutableInt>> iterator = collidingEntities.entrySet()
+			.iterator(); iterator.hasNext();)
+			if (iterator.next()
+				.getValue()
+				.incrementAndGet() > 3)
+				iterator.remove();
 
 		prevPosX = getX();
 		prevPosY = getY();
@@ -378,8 +389,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		if (contraption == null)
 			return;
+
 		remove();
+
 		StructureTransform transform = makeStructureTransform();
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+			new ContraptionDisassemblyPacket(this.getEntityId(), transform));
+
 		contraption.addBlocksToWorld(world, transform);
 		contraption.addPassengersToWorld(world, transform, getPassengers());
 
@@ -396,14 +412,17 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 
 		removePassengers();
+		moveCollidedEntitiesOnDisassembly(transform);
+	}
 
-		for (Entity entity : collidingEntities) {
-			Vec3d positionVec = getPositionVec();
-			Vec3d localVec = entity.getPositionVec()
-				.subtract(positionVec);
-			localVec = reverseRotation(localVec, 1);
+	private void moveCollidedEntitiesOnDisassembly(StructureTransform transform) {
+		for (Entity entity : collidingEntities.keySet()) {
+			Vec3d localVec = toLocalVector(entity.getPositionVec(), 0);
 			Vec3d transformed = transform.apply(localVec);
-			entity.setPositionAndUpdate(transformed.x, transformed.y, transformed.z);
+			if (world.isRemote)
+				entity.setPosition(transformed.x, transformed.y + 1 / 16f, transformed.z);
+			else
+				entity.setPositionAndUpdate(transformed.x, transformed.y + 1 / 16f, transformed.z);
 		}
 	}
 
@@ -447,6 +466,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
 		ce.handleStallInformation(packet.x, packet.y, packet.z, packet.angle);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
+  		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
+		if (!(entity instanceof AbstractContraptionEntity))
+			return;
+		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
+		ce.moveCollidedEntitiesOnDisassembly(packet.transform);
 	}
 
 	protected abstract float getStalledAngle();

@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
@@ -25,8 +26,8 @@ import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
-import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
+import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
@@ -69,6 +70,7 @@ public enum AllPackets {
 	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new),
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
+	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new),
 	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),

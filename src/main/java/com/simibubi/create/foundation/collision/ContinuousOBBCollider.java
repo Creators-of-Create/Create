@@ -163,12 +163,6 @@ public class ContinuousOBBCollider extends OBBCollider {
 			return true;
 		}
 
-		public Vec3d getAllowedMotion(Vec3d motion) {
-			double length = motion.length();
-			return motion.normalize()
-				.scale(getTimeOfImpact() * length);
-		}
-
 		public Vec3d asSeparationVec(double obbStepHeight) {
 			if (isDiscreteCollision) {
 				if (stepSeparation <= obbStepHeight) 
