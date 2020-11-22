@@ -21,17 +21,10 @@ import net.minecraft.nbt.CompoundNBT;
 public class FilesHelper {
 
 	public static void createFolderIfMissing(String name) {
-		Path path = Paths.get(name);
-		if (path.getParent() != null)
-			createFolderIfMissing(path.getParent()
-				.toString());
-
-		if (!Files.isDirectory(path)) {
-			try {
-				Files.createDirectory(path);
-			} catch (IOException e) {
-				Create.logger.warn("Could not create Folder: " + name);
-			}
+		try {
+			Files.createDirectories(Paths.get(name));
+		} catch (IOException e) {
+			Create.logger.warn("Could not create Folder: {}", name);
 		}
 	}
 

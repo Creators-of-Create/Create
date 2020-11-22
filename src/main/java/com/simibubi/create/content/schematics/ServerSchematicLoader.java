@@ -91,15 +91,21 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleNewUpload(ServerPlayerEntity player, String schematic, long size, BlockPos pos) {
-		String playerPath = getSchematicPath() + "/" + player.getName()
-			.getFormattedText();
-		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+		String playerPath = getSchematicPath() + "/" + player.getGameProfile().getName();
+		String playerSchematicId = player.getGameProfile().getName() + "/" + schematic;
 		FilesHelper.createFolderIfMissing(playerPath);
 
 		// Unsupported Format
 		if (!schematic.endsWith(".nbt")) {
 			Create.logger.warn("Attempted Schematic Upload with non-supported Format: " + playerSchematicId);
+			return;
+		}
+
+		Path schematicPath = Paths.get(getSchematicPath()).toAbsolutePath();
+
+		Path uploadPath = schematicPath.resolve(playerSchematicId).normalize();
+		if (!uploadPath.startsWith(schematicPath)) {
+			Create.logger.warn("Attempted Schematic Upload with directory escape: {}", playerSchematicId);
 			return;
 		}
 
@@ -117,12 +123,13 @@ public class ServerSchematicLoader {
 			if (table == null)
 				return;
 
-			// Delete schematic with same name
-			Files.deleteIfExists(Paths.get(getSchematicPath(), playerSchematicId));
-
 			// Too many Schematics
-			Stream<Path> list = Files.list(Paths.get(playerPath));
-			if (list.count() >= getConfig().maxSchematics.get()) {
+			long count;
+			try (Stream<Path> list = Files.list(Paths.get(playerPath))) {
+				count = list.count();
+			}
+
+			if (count >= getConfig().maxSchematics.get()) {
 				Stream<Path> list2 = Files.list(Paths.get(playerPath));
 				Optional<Path> lastFilePath = list2.filter(f -> !Files.isDirectory(f))
 					.min(Comparator.comparingLong(f -> f.toFile()
@@ -132,11 +139,9 @@ public class ServerSchematicLoader {
 					Files.deleteIfExists(lastFilePath.get());
 				}
 			}
-			list.close();
 
 			// Open Stream
-			OutputStream writer =
-				Files.newOutputStream(Paths.get(getSchematicPath(), playerSchematicId), StandardOpenOption.CREATE_NEW);
+			OutputStream writer = Files.newOutputStream(uploadPath);
 			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, player.getServerWorld(), pos));
 
 			// Notify Tile Entity
@@ -165,8 +170,7 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleWriteRequest(ServerPlayerEntity player, String schematic, byte[] data) {
-		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+		String playerSchematicId = player.getGameProfile().getName() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			SchematicUploadEntry entry = activeUploads.get(playerSchematicId);
@@ -236,8 +240,7 @@ public class ServerSchematicLoader {
 	}
 
 	public void handleFinishedUpload(ServerPlayerEntity player, String schematic) {
-		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+		String playerSchematicId = player.getGameProfile().getName() + "/" + schematic;
 
 		if (activeUploads.containsKey(playerSchematicId)) {
 			try {
@@ -258,8 +261,7 @@ public class ServerSchematicLoader {
 				if (table == null)
 					return;
 				table.finishUpload();
-				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getName()
-					.getFormattedText()));
+				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getGameProfile().getName()));
 
 			} catch (IOException e) {
 				Create.logger.error("Exception Thrown when finishing Upload: " + playerSchematicId);
@@ -270,15 +272,21 @@ public class ServerSchematicLoader {
 
 	public void handleInstantSchematic(ServerPlayerEntity player, String schematic, World world, BlockPos pos,
 		BlockPos bounds) {
-		String playerPath = getSchematicPath() + "/" + player.getName()
-			.getFormattedText();
-		String playerSchematicId = player.getName()
-			.getFormattedText() + "/" + schematic;
+		String playerPath = getSchematicPath() + "/" + player.getGameProfile().getName();
+		String playerSchematicId = player.getGameProfile().getName() + "/" + schematic;
 		FilesHelper.createFolderIfMissing(playerPath);
 
 		// Unsupported Format
 		if (!schematic.endsWith(".nbt")) {
-			Create.logger.warn("Attempted Schematic Upload with non-supported Format: " + playerSchematicId);
+			Create.logger.warn("Attempted Schematic Upload with non-supported Format: {}", playerSchematicId);
+			return;
+		}
+
+		Path schematicPath = Paths.get(getSchematicPath()).toAbsolutePath();
+
+		Path path = schematicPath.resolve(playerSchematicId).normalize();
+		if (!path.startsWith(schematicPath)) {
+			Create.logger.warn("Attempted Schematic Upload with directory escape: {}", playerSchematicId);
 			return;
 		}
 
@@ -287,39 +295,32 @@ public class ServerSchematicLoader {
 			return;
 
 		try {
-			// Delete schematic with same name
-			Path path = Paths.get(getSchematicPath(), playerSchematicId);
-			Files.deleteIfExists(path);
-
 			// Too many Schematics
-			Stream<Path> list = Files.list(Paths.get(playerPath));
-			if (list.count() >= getConfig().maxSchematics.get()) {
+			long count;
+			try (Stream<Path> list = Files.list(Paths.get(playerPath))) {
+				count = list.count();
+			}
+
+			if (count >= getConfig().maxSchematics.get()) {
 				Stream<Path> list2 = Files.list(Paths.get(playerPath));
 				Optional<Path> lastFilePath = list2.filter(f -> !Files.isDirectory(f))
 					.min(Comparator.comparingLong(f -> f.toFile()
 						.lastModified()));
 				list2.close();
-				if (lastFilePath.isPresent()) 
+				if (lastFilePath.isPresent())
 					Files.deleteIfExists(lastFilePath.get());
 			}
-			list.close();
 
 			Template t = new Template();
 			t.takeBlocksFromWorld(world, pos, bounds, true, Blocks.AIR);
 
-			OutputStream outputStream = null;
-			try {
-				outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
+			try (OutputStream outputStream = Files.newOutputStream(path)) {
 				CompoundNBT nbttagcompound = t.writeToNBT(new CompoundNBT());
 				CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
-				player.setHeldItem(Hand.MAIN_HAND, SchematicItem.create(schematic, player.getName()
-					.getFormattedText()));
+				player.setHeldItem(Hand.MAIN_HAND, SchematicItem.create(schematic, player.getGameProfile().getName()));
 
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				if (outputStream != null)
-					IOUtils.closeQuietly(outputStream);
 			}
 		} catch (IOException e) {
 			Create.logger.error("Exception Thrown in direct Schematic Upload: " + playerSchematicId);
