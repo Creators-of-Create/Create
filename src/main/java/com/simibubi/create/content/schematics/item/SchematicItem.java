@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
@@ -94,6 +95,7 @@ public class SchematicItem extends Item {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
+		settings.addProcessor(SchematicProcessor.INSTANCE);
 		return settings;
 	}
 
