@@ -1,12 +1,14 @@
 package com.simibubi.create.content.schematics.item;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -128,8 +131,9 @@ public class SchematicItem extends Item {
 		if (!path.startsWith(dir))
 			return t;
 
-		try (InputStream stream = Files.newInputStream(path, StandardOpenOption.READ)) {
-			CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
+		try (DataInputStream stream = new DataInputStream(new BufferedInputStream(
+				new GZIPInputStream(Files.newInputStream(path, StandardOpenOption.READ))))) {
+			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 			t.read(nbt);
 		} catch (IOException e) {
 			LOGGER.warn("Failed to read schematic", e);
