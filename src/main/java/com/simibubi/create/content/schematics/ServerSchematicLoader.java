@@ -101,10 +101,10 @@ public class ServerSchematicLoader {
 			return;
 		}
 
-		Path schematicPath = Paths.get(getSchematicPath()).toAbsolutePath();
+		Path playerSchematicsPath = Paths.get(getSchematicPath(), player.getGameProfile().getName()).toAbsolutePath();
 
-		Path uploadPath = schematicPath.resolve(playerSchematicId).normalize();
-		if (!uploadPath.startsWith(schematicPath)) {
+		Path uploadPath = playerSchematicsPath.resolve(schematic).normalize();
+		if (!uploadPath.startsWith(playerSchematicsPath)) {
 			Create.logger.warn("Attempted Schematic Upload with directory escape: {}", playerSchematicId);
 			return;
 		}
@@ -122,6 +122,9 @@ public class ServerSchematicLoader {
 			SchematicTableTileEntity table = getTable(player.getEntityWorld(), pos);
 			if (table == null)
 				return;
+
+			// Delete schematic with same name
+			Files.deleteIfExists(uploadPath);
 
 			// Too many Schematics
 			long count;
@@ -295,6 +298,9 @@ public class ServerSchematicLoader {
 			return;
 
 		try {
+			// Delete schematic with same name
+			Files.deleteIfExists(path);
+
 			// Too many Schematics
 			long count;
 			try (Stream<Path> list = Files.list(Paths.get(playerPath))) {
