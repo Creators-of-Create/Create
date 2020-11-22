@@ -93,8 +93,8 @@ public enum AllPackets {
 
 	public static void registerPackets() {
 		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(s -> true)
-			.clientAcceptedVersions(s -> true)
+			.serverAcceptedVersions(NETWORK_VERSION::equals)
+			.clientAcceptedVersions(NETWORK_VERSION::equals)
 			.networkProtocolVersion(() -> NETWORK_VERSION)
 			.simpleChannel();
 		for (AllPackets packet : values())
