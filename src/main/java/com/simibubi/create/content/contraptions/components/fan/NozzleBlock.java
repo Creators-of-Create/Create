@@ -2,9 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class NozzleBlock extends ProperDirectionalBlock implements IWrenchable {
+public class NozzleBlock extends ProperDirectionalBlock {
 
 	public NozzleBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);

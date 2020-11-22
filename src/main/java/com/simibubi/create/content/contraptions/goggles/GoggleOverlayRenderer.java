@@ -1,19 +1,21 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonPolePlacementHelper;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-
+import com.simibubi.create.foundation.utility.Iterate;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -23,6 +25,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation.spacing;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
@@ -41,36 +48,52 @@ public class GoggleOverlayRenderer {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 		BlockPos pos = result.getPos();
-		ItemStack goggles = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		ItemStack headSlot = mc.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		TileEntity te = world.getTileEntity(pos);
 
-		boolean goggleInformation = te instanceof IHaveGoggleInformation;
-		boolean hoveringInformation = te instanceof IHaveHoveringInformation;
+		boolean wearingGoggles = AllItems.GOGGLES.isIn(headSlot);
 
-		if (!goggleInformation && !hoveringInformation)
-			return;
+		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
+		boolean hasHoveringInformation = te instanceof IHaveHoveringInformation;
+
+		boolean goggleAddedInformation = false;
+		boolean hoverAddedInformation = false;
 
 		List<String> tooltip = new ArrayList<>();
 
-		if (goggleInformation && AllItems.GOGGLES.isIn(goggles)) {
+		if (hasGoggleInformation && wearingGoggles) {
 			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
-			if (!gte.addToGoggleTooltip(tooltip, mc.player.isSneaking()))
-				goggleInformation = false;
+			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isSneaking());
 		}
 
-		if (hoveringInformation) {
-			boolean goggleAddedInformation = !tooltip.isEmpty();
-			if (goggleAddedInformation)
+		if (hasHoveringInformation) {
+			if (!tooltip.isEmpty())
 				tooltip.add("");
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
-			if (!hte.addToTooltip(tooltip, mc.player.isSneaking()))
-				hoveringInformation = false;
-			if (goggleAddedInformation && !hoveringInformation)
+			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isSneaking());
+
+			if (goggleAddedInformation && !hoverAddedInformation)
 				tooltip.remove(tooltip.size() - 1);
 		}
 
-		if (!goggleInformation && !hoveringInformation)
+		//break early if goggle or hover returned false when present
+		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation))
 			return;
+
+		//check for piston poles if goggles are worn
+		BlockState state = world.getBlockState(pos);
+		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
+			Direction[] directions = Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING).getAxis());
+			int poles = 1;
+			for (Direction dir : directions)
+				poles += PistonPolePlacementHelper.attachedPoles(world, pos, dir);
+
+			if (!tooltip.isEmpty())
+				tooltip.add("");
+
+			tooltip.add(spacing + "Pole length: " + poles);
+		}
+
 		if (tooltip.isEmpty())
 			return;
 
@@ -87,7 +110,6 @@ public class GoggleOverlayRenderer {
 		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
 		RenderSystem.popMatrix();
 	}
-	
 
 	private static final class TooltipScreen extends Screen {
 		private TooltipScreen(ITextComponent p_i51108_1_) {
