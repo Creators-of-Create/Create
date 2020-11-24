@@ -86,6 +86,7 @@ public class ContraptionRenderer {
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		renderWorld.setTileEntities(c.renderedTileEntities);
 
 		for (BlockInfo info : c.getBlocks().values())
 			renderWorld.setBlockState(info.pos, info.state);

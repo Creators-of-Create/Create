@@ -42,6 +42,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	protected boolean forceFluidLevelUpdate;
 	protected FluidTank tankInventory;
 	protected BlockPos controller;
+	protected BlockPos lastKnownPos;
 	protected boolean updateConnectivity;
 	protected boolean window;
 	protected int luminosity;
@@ -88,6 +89,14 @@ public class FluidTankTileEntity extends SmartTileEntity {
 			if (syncCooldown == 0 && queuedSync)
 				sendData();
 		}
+		
+		if (lastKnownPos == null)
+			lastKnownPos = getPos();
+		else if (!lastKnownPos.equals(pos) && pos != null) {
+			onPositionChanged();
+			return;
+		}
+		
 		if (updateConnectivity)
 			updateConnectivity();
 		if (fluidLevel != null)
@@ -102,6 +111,11 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	public void initialize() {
 		super.initialize();
 		sendData();
+	}
+
+	private void onPositionChanged() {
+		removeController(true);
+		lastKnownPos = pos;
 	}
 
 	protected void onFluidStackChanged(FluidStack newFluidStack) {
@@ -163,11 +177,12 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		forceFluidLevelUpdate = true;
 	}
 
-	public void removeController() {
+	public void removeController(boolean keepFluids) {
 		if (world.isRemote)
 			return;
 		updateConnectivity = true;
-		applyFluidTankSize(1);
+		if (!keepFluids)
+			applyFluidTankSize(1);
 		controller = null;
 		width = 1;
 		height = 1;
@@ -292,7 +307,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		updateConnectivity = compound.contains("Uninitialized");
 		luminosity = compound.getInt("Luminosity");
 		controller = null;
+		lastKnownPos = null;
 
+		if (compound.contains("LastKnownPos"))
+			lastKnownPos = NBTUtil.readBlockPos(compound.getCompound("LastKnownPos"));
 		if (compound.contains("Controller"))
 			controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 
@@ -344,6 +362,8 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (updateConnectivity)
 			compound.putBoolean("Uninitialized", true);
+		if (lastKnownPos != null)
+			compound.put("LastKnownPos", NBTUtil.writeBlockPos(lastKnownPos));
 		if (!isController())
 			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		if (isController()) {

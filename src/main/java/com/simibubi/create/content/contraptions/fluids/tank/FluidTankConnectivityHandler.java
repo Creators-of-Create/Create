@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -25,8 +26,12 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankConnectivityHandler {
 
@@ -147,8 +152,10 @@ public class FluidTankConnectivityHandler {
 		TileEntityType<?> type = te.getType();
 		World world = te.getWorld();
 		BlockPos origin = te.getPos();
-		FluidStack fluid = te.getTankInventory()
-			.getFluid();
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		FluidTank teTank = (FluidTank) capability.orElse(null);
+		FluidStack fluid = capability.map(ifh -> ifh.getFluidInTank(0))
+			.orElse(FluidStack.EMPTY);
 
 		Search:
 
@@ -192,6 +199,8 @@ public class FluidTankConnectivityHandler {
 
 		if (simulate)
 			return amount;
+		
+		boolean opaque = false;
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
@@ -201,10 +210,15 @@ public class FluidTankConnectivityHandler {
 					if (tank == te)
 						continue;
 
-					if (tank.isController()) {
-						te.tankInventory.fill(tank.tankInventory.getFluid(), FluidAction.EXECUTE);
-						tank.tankInventory.setFluid(FluidStack.EMPTY);
+					opaque |= !tank.window;
+					FluidTank tankTank = tank.tankInventory;
+					FluidStack fluidInTank = tankTank.getFluid();
+					if (!fluidInTank.isEmpty()) {
+						if (teTank.isEmpty() && teTank instanceof CreativeSmartFluidTank)
+							((CreativeSmartFluidTank) teTank).setContainedFluid(fluidInTank);
+						teTank.fill(fluidInTank, FluidAction.EXECUTE);
 					}
+					tankTank.setFluid(FluidStack.EMPTY);
 
 					splitTankAndInvalidate(tank, cache, false);
 					tank.setController(origin);
@@ -220,6 +234,8 @@ public class FluidTankConnectivityHandler {
 				}
 			}
 		}
+		
+		te.setWindows(!opaque);
 
 		return amount;
 	}
@@ -243,8 +259,9 @@ public class FluidTankConnectivityHandler {
 		FluidStack toDistribute = te.tankInventory.getFluid()
 			.copy();
 		int maxCapacity = FluidTankTileEntity.getCapacityMultiplier();
-		if (!toDistribute.isEmpty())
+		if (!toDistribute.isEmpty() && !te.isRemoved())
 			toDistribute.shrink(maxCapacity);
+		te.applyFluidTankSize(1);
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
@@ -259,14 +276,19 @@ public class FluidTankConnectivityHandler {
 						continue;
 					FluidTankTileEntity controllerTE = tankAt.getControllerTE();
 					tankAt.window = controllerTE == null || controllerTE.window;
-					tankAt.removeController();
+					tankAt.removeController(true);
 
 					if (!toDistribute.isEmpty() && tankAt != te) {
-						int split = Math.min(maxCapacity, toDistribute.getAmount());
 						FluidStack copy = toDistribute.copy();
-						copy.setAmount(split);
-						toDistribute.shrink(split);
-						tankAt.tankInventory.fill(copy, FluidAction.EXECUTE);
+						FluidTank tankInventory = tankAt.tankInventory;
+						if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank) 
+							((CreativeSmartFluidTank) tankInventory).setContainedFluid(toDistribute);
+						else {
+							int split = Math.min(maxCapacity, toDistribute.getAmount());
+							copy.setAmount(split);
+							toDistribute.shrink(split);
+							tankInventory.fill(copy, FluidAction.EXECUTE);
+						}
 					}
 
 					if (tryReconnect) {
@@ -300,7 +322,7 @@ public class FluidTankConnectivityHandler {
 			return (FluidTankTileEntity) te;
 		return null;
 	}
-	
+
 	@Nullable
 	public static FluidTankTileEntity anyTankAt(IBlockReader world, BlockPos pos) {
 		TileEntity te = world.getTileEntity(pos);

@@ -1,13 +1,20 @@
 package com.simibubi.create.content.contraptions.goggles;
 
+import static com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation.spacing;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonPolePlacementHelper;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,14 +33,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation.spacing;
-
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
-
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
@@ -76,18 +77,26 @@ public class GoggleOverlayRenderer {
 				tooltip.remove(tooltip.size() - 1);
 		}
 
-		//break early if goggle or hover returned false when present
+		// break early if goggle or hover returned false when present
 		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation))
 			return;
 
-		//check for piston poles if goggles are worn
+		// check for piston poles if goggles are worn
 		BlockState state = world.getBlockState(pos);
 		if (wearingGoggles && AllBlocks.PISTON_EXTENSION_POLE.has(state)) {
-			Direction[] directions = Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING).getAxis());
+			Direction[] directions = Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING)
+				.getAxis());
 			int poles = 1;
-			for (Direction dir : directions)
-				poles += PistonPolePlacementHelper.attachedPoles(world, pos, dir);
+			boolean pistonFound = false;
+			for (Direction dir : directions) {
+				int attachedPoles = PistonPolePlacementHelper.attachedPoles(world, pos, dir);
+				poles += attachedPoles;
+				pistonFound |= world.getBlockState(pos.offset(dir, attachedPoles + 1))
+					.getBlock() instanceof MechanicalPistonBlock;
+			}
 
+			if (!pistonFound)
+				return;
 			if (!tooltip.isEmpty())
 				tooltip.add("");
 
@@ -99,15 +108,22 @@ public class GoggleOverlayRenderer {
 
 		RenderSystem.pushMatrix();
 		Screen tooltipScreen = new TooltipScreen(null);
-		tooltipScreen.init(mc, mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
+		tooltipScreen.init(mc, mc.getWindow()
+			.getScaledWidth(),
+			mc.getWindow()
+				.getScaledHeight());
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
 		int posY = tooltipScreen.height / 2 + AllConfigs.CLIENT.overlayOffsetY.get();
-		//tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2, tooltipScreen.height / 2);
+		// tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2,
+		// tooltipScreen.height / 2);
 		tooltipScreen.renderTooltip(tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
-		//GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height / 2 - 16).render();
-		GuiGameElement.of(item).at(posX + 10, posY - 16).render();
+		// GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height
+		// / 2 - 16).render();
+		GuiGameElement.of(item)
+			.at(posX + 10, posY - 16)
+			.render();
 		RenderSystem.popMatrix();
 	}
 

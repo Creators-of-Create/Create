@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +26,23 @@ public class FluidTankItem extends BlockItem {
 			return initialResult;
 		tryMultiPlace(ctx);
 		return initialResult;
+	}
+
+	@Override
+	protected boolean onBlockPlaced(BlockPos p_195943_1_, World p_195943_2_, PlayerEntity p_195943_3_,
+		ItemStack p_195943_4_, BlockState p_195943_5_) {
+		MinecraftServer minecraftserver = p_195943_2_.getServer();
+		if (minecraftserver == null)
+			return false;
+		CompoundNBT nbt = p_195943_4_.getChildTag("BlockEntityTag");
+		if (nbt != null) {
+			nbt.remove("Luminosity");
+			nbt.remove("Size");
+			nbt.remove("Height");
+			nbt.remove("Controller");
+			nbt.remove("LastKnownPos");
+		}
+		return super.onBlockPlaced(p_195943_1_, p_195943_2_, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 
 	private void tryMultiPlace(BlockItemUseContext ctx) {

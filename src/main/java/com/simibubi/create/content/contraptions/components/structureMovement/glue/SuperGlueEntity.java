@@ -176,7 +176,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
-		if (BlockMovementTraits.isBlockAttachedTowards(state, direction))
+		if (BlockMovementTraits.isBlockAttachedTowards(world, pos, state, direction))
 			return true;
 		if (!BlockMovementTraits.movementNecessary(world, pos))
 			return false;

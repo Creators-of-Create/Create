@@ -19,6 +19,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
@@ -45,6 +47,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public class BlockMovementTraits {
@@ -55,9 +58,11 @@ public class BlockMovementTraits {
 			return true;
 		if (state.getBlock() instanceof FenceGateBlock)
 			return true;
-		if (state.getMaterial().isReplaceable())
+		if (state.getMaterial()
+			.isReplaceable())
 			return false;
-		if (state.getCollisionShape(world, pos).isEmpty())
+		if (state.getCollisionShape(world, pos)
+			.isEmpty())
 			return false;
 		return true;
 	}
@@ -104,7 +109,7 @@ public class BlockMovementTraits {
 		Block block = state.getBlock();
 		if (state.has(BlockStateProperties.HANGING))
 			return true;
-		
+
 		if (block instanceof LadderBlock)
 			return true;
 		if (block instanceof TorchBlock)
@@ -129,7 +134,8 @@ public class BlockMovementTraits {
 	/**
 	 * Attached blocks will move if blocks they are attached to are moved
 	 */
-	public static boolean isBlockAttachedTowards(BlockState state, Direction direction) {
+	public static boolean isBlockAttachedTowards(IBlockReader world, BlockPos pos, BlockState state,
+		Direction direction) {
 		Block block = state.getBlock();
 		if (block instanceof LadderBlock)
 			return state.get(LadderBlock.FACING) == direction.getOpposite();
@@ -167,23 +173,30 @@ public class BlockMovementTraits {
 		if (block instanceof AbstractRailBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof AttachedActorBlock)
-			return direction == state.get(HarvesterBlock.HORIZONTAL_FACING).getOpposite();
+			return direction == state.get(HarvesterBlock.HORIZONTAL_FACING)
+				.getOpposite();
 		if (block instanceof HandCrankBlock)
-			return direction == state.get(HandCrankBlock.FACING).getOpposite();
+			return direction == state.get(HandCrankBlock.FACING)
+				.getOpposite();
 		if (block instanceof NozzleBlock)
-			return direction == state.get(NozzleBlock.FACING).getOpposite();
+			return direction == state.get(NozzleBlock.FACING)
+				.getOpposite();
 		if (block instanceof EngineBlock)
-			return direction == state.get(EngineBlock.HORIZONTAL_FACING).getOpposite();
+			return direction == state.get(EngineBlock.HORIZONTAL_FACING)
+				.getOpposite();
 		if (block instanceof BellBlock) {
 			BellAttachment attachment = state.get(BlockStateProperties.BELL_ATTACHMENT);
-			if (attachment == BellAttachment.FLOOR) 
+			if (attachment == BellAttachment.FLOOR)
 				return direction == Direction.DOWN;
-			if (attachment == BellAttachment.CEILING) 
+			if (attachment == BellAttachment.CEILING)
 				return direction == Direction.UP;
 			return direction == state.get(HorizontalBlock.HORIZONTAL_FACING);
 		}
 		if (state.getBlock() instanceof SailBlock)
-			return direction.getAxis() != state.get(SailBlock.FACING).getAxis();
+			return direction.getAxis() != state.get(SailBlock.FACING)
+				.getAxis();
+		if (state.getBlock() instanceof FluidTankBlock)
+			return FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(direction));
 		return false;
 	}
 
@@ -209,8 +222,9 @@ public class BlockMovementTraits {
 		if (state.getBlock() instanceof CarpetBlock)
 			return facing == Direction.UP;
 		if (state.getBlock() instanceof SailBlock)
-			return facing.getAxis() == state.get(SailBlock.FACING).getAxis();
+			return facing.getAxis() == state.get(SailBlock.FACING)
+				.getAxis();
 		return isBrittle(state);
 	}
-	
+
 }

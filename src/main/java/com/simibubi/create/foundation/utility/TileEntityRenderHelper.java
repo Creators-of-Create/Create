@@ -14,20 +14,19 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.crash.ReportedException;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TileEntityRenderHelper {
-	
+
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
 		MatrixStack localTransform, IRenderTypeBuffer buffer) {
 		float pt = Minecraft.getInstance()
 			.getRenderPartialTicks();
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
-		
+
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
 			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
@@ -49,17 +48,18 @@ public class TileEntityRenderHelper {
 					OverlayTexture.DEFAULT_UV);
 				ms.pop();
 
-			} catch (ReportedException e) {
-				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
-					Create.logger.error("TileEntity " + tileEntity.getType()
-						.getRegistryName()
-						.toString() + " didn't want to render while moved.\n", e);
-				} else {
-					Create.logger.error("TileEntity " + tileEntity.getType()
-						.getRegistryName()
-						.toString() + " didn't want to render while moved.\n");
-				}
+			} catch (Exception e) {
 				iterator.remove();
+				
+				String message = "TileEntity " + tileEntity.getType()
+					.getRegistryName()
+					.toString() + " didn't want to render while moved.\n";
+				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
+					Create.logger.error(message, e);
+					continue;
+				}
+				
+				Create.logger.error(message);
 				continue;
 			}
 		}

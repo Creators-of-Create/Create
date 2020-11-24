@@ -39,6 +39,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
@@ -288,7 +289,7 @@ public abstract class Contraption {
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
-				BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite());
+				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
 			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
@@ -461,6 +462,11 @@ public abstract class Contraption {
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
+
+		if (tileentity instanceof FluidTankTileEntity && nbt.contains("Controller"))
+			nbt.put("Controller",
+				NBTUtil.writeBlockPos(toLocalPos(NBTUtil.readBlockPos(nbt.getCompound("Controller")))));
+
 		return nbt;
 	}
 
@@ -733,6 +739,9 @@ public abstract class Contraption {
 						tag.remove("Offset");
 						tag.remove("InitialOffset");
 					}
+
+					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
+						tag.put("LastKnownPos", NBTUtil.writeBlockPos(BlockPos.ZERO.down()));
 
 					tileEntity.read(tag);
 
