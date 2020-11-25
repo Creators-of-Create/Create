@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1042",
+	"_": "Missing Localizations: 1043",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -327,6 +327,7 @@
 	"block.create.polished_weathered_limestone_slab": "Polierte Verwitterte Kalksteinstufe",
 	"block.create.polished_weathered_limestone_stairs": "UNLOCALIZED: Polished Weathered Limestone Stairs",
 	"block.create.polished_weathered_limestone_wall": "UNLOCALIZED: Polished Weathered Limestone Wall",
+	"block.create.portable_fluid_interface": "UNLOCALIZED: Portable Fluid Interface",
 	"block.create.portable_storage_interface": "UNLOCALIZED: Portable Storage Interface",
 	"block.create.powered_latch": "UNLOCALIZED: Powered Latch",
 	"block.create.powered_toggle_latch": "UNLOCALIZED: Powered Toggle Latch",

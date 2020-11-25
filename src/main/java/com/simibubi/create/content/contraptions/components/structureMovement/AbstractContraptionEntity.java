@@ -223,6 +223,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		if (!initialized)
 			contraptionInitialize();
+		contraption.onEntityTick(world);
 		tickContraption();
 		super.tick();
 	}
@@ -352,22 +353,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
-		initialized = compound.getBoolean("Initialized");
-		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"));
-		contraption.entity = this;
-		dataManager.set(STALLED, compound.getBoolean("Stalled"));
-	}
-
-	@Override
-	protected void writeAdditional(CompoundNBT compound) {
-		if (contraption != null)
-			compound.put("Contraption", contraption.writeNBT());
-		compound.putBoolean("Stalled", isStalled());
-		compound.putBoolean("Initialized", initialized);
-	}
-
-	@Override
 	public IPacket<?> createSpawnPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
@@ -375,13 +360,37 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public void writeSpawnData(PacketBuffer buffer) {
 		CompoundNBT compound = new CompoundNBT();
-		writeAdditional(compound);
+		writeAdditional(compound, true);
 		buffer.writeCompoundTag(compound);
+	}
+	
+	@Override
+	protected final void writeAdditional(CompoundNBT compound) {
+		writeAdditional(compound, false);
+	}
+	
+	protected void writeAdditional(CompoundNBT compound, boolean spawnPacket) {
+		if (contraption != null)
+			compound.put("Contraption", contraption.writeNBT(spawnPacket));
+		compound.putBoolean("Stalled", isStalled());
+		compound.putBoolean("Initialized", initialized);
 	}
 
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
-		readAdditional(additionalData.readCompoundTag());
+		readAdditional(additionalData.readCompoundTag(), true);
+	}
+	
+	@Override
+	protected final void readAdditional(CompoundNBT compound) {
+		readAdditional(compound, false);
+	}
+	
+	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
+		initialized = compound.getBoolean("Initialized");
+		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
+		contraption.entity = this;
+		dataManager.set(STALLED, compound.getBoolean("Stalled"));
 	}
 
 	public void disassemble() {

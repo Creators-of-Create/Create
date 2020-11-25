@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.ItemStackHandler;
@@ -51,10 +52,9 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 			}
 			context.tileData.put(key, itemStackHandler.serializeNBT());
 		});
-		context.contraption.renderedTileEntities.stream()
-			.filter(te -> te.getPos()
-				.equals(context.localPos) && te instanceof BasinTileEntity)
-			.forEach(te -> ((BasinTileEntity) te).readOnlyItems(context.tileData));
+		TileEntity tileEntity = context.contraption.renderedTileEntities.get(context.localPos);
+		if (tileEntity instanceof BasinTileEntity)
+			((BasinTileEntity) tileEntity).readOnlyItems(context.tileData);
 		context.temporaryData = false; // did already dump, so can't any more
 	}
 }

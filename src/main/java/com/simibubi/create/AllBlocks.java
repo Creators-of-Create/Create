@@ -630,6 +630,15 @@ public class AllBlocks {
 		.item(BasinOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
+	
+	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_FLUID_INTERFACE =
+		REGISTRATE.block("portable_fluid_interface", PortableStorageInterfaceBlock::forFluids)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.item()
+			.transform(customItemModel())
+			.register();
 
 	// Contraptions
 
@@ -791,7 +800,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
-		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
+		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::forItems)
 			.initialProperties(SharedProperties::stone)
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))

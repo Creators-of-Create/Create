@@ -354,7 +354,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 			fluidLevel.withSpeed(compound.contains("LazySync") ? 1 / 8f : 1 / 2f);
 	}
 
-	protected float getFillState() {
+	public float getFillState() {
 		return (float) tankInventory.getFluidAmount() / tankInventory.getCapacity();
 	}
 
@@ -414,12 +414,20 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		return MAX_SIZE;
 	}
 
-	protected static int getCapacityMultiplier() {
+	public static int getCapacityMultiplier() {
 		return AllConfigs.SERVER.fluids.fluidTankCapacity.get() * 1000;
 	}
 
 	public static int getMaxHeight() {
 		return AllConfigs.SERVER.fluids.fluidTankMaxHeight.get();
+	}
+	
+	public InterpolatedChasingValue getFluidLevel() {
+		return fluidLevel;
+	}
+	
+	public void setFluidLevel(InterpolatedChasingValue fluidLevel) {
+		this.fluidLevel = fluidLevel;
 	}
 
 }

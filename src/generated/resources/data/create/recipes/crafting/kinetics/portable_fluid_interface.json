@@ -6,13 +6,13 @@
   ],
   "key": {
     "I": {
-      "item": "create:brass_casing"
+      "item": "create:copper_casing"
     },
     "B": {
       "item": "create:andesite_funnel"
     }
   },
   "result": {
-    "item": "create:portable_storage_interface"
+    "item": "create:portable_fluid_interface"
   }
 }

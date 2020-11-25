@@ -42,16 +42,16 @@ public class StabilizedContraption extends Contraption {
 	}
 	
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT tag = super.writeNBT();
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
 		tag.putInt("Facing", facing.getIndex());
 		return tag;
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT tag) {
+	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
 		facing = Direction.byIndex(tag.getInt("Facing"));
-		super.readNBT(world, tag);
+		super.readNBT(world, tag, spawnData);
 	}
 	
 	@Override

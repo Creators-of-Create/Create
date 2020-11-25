@@ -12,6 +12,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidTankItem extends BlockItem {
 
@@ -41,6 +42,13 @@ public class FluidTankItem extends BlockItem {
 			nbt.remove("Height");
 			nbt.remove("Controller");
 			nbt.remove("LastKnownPos");
+			if (nbt.contains("TankContent")) {
+				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("TankContent"));
+				if (!fluid.isEmpty()) {
+					fluid.setAmount(Math.min(FluidTankTileEntity.getCapacityMultiplier(), fluid.getAmount()));
+					nbt.put("TankContent", fluid.writeToNBT(new CompoundNBT()));
+				}
+			}
 		}
 		return super.onBlockPlaced(p_195943_1_, p_195943_2_, p_195943_3_, p_195943_4_, p_195943_5_);
 	}

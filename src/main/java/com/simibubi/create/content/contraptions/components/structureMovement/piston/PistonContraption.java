@@ -203,20 +203,20 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT nbt) {
-		super.readNBT(world, nbt);
+	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
+		super.readNBT(world, nbt, spawnData);
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		extensionLength = nbt.getInt("ExtensionLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));
 	}
 
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT nbt = super.writeNBT();
-		nbt.putInt("InitialLength", initialExtensionProgress);
-		nbt.putInt("ExtensionLength", extensionLength);
-		nbt.putInt("Orientation", orientation.getIndex());
-		return nbt;
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
+		tag.putInt("InitialLength", initialExtensionProgress);
+		tag.putInt("ExtensionLength", extensionLength);
+		tag.putInt("Orientation", orientation.getIndex());
+		return tag;
 	}
 
 }
