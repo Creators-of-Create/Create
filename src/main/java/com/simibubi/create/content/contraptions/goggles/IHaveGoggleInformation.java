@@ -13,7 +13,7 @@ public interface IHaveGoggleInformation {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
 	public static String spacing = "    ";
-	ITextComponent componentSpacing = new StringTextComponent(spacing);
+	public static ITextComponent componentSpacing = new StringTextComponent(spacing);
 
 	/**
 	* this method will be called when looking at a TileEntity that implemented this interface

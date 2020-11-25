@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 656",
+	"_": "Missing Localizations: 660",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -63,6 +63,8 @@
 	"block.create.creative_crate": "청사진 대포 지원기",
 	"block.create.creative_fluid_tank": "UNLOCALIZED: Creative Fluid Tank",
 	"block.create.creative_motor": "모터",
+	"block.create.crimson_window": "UNLOCALIZED: Crimson Window",
+	"block.create.crimson_window_pane": "UNLOCALIZED: Crimson Window Pane",
 	"block.create.crushing_wheel": "분쇄 휠",
 	"block.create.crushing_wheel_controller": "UNLOCALIZED: Crushing Wheel Controller",
 	"block.create.cuckoo_clock": "뻐꾸기 시계",
@@ -377,6 +379,8 @@
 	"block.create.turntable": "돌림판",
 	"block.create.vertical_framed_glass": "수직 유리",
 	"block.create.vertical_framed_glass_pane": "수직 유리판",
+	"block.create.warped_window": "UNLOCALIZED: Warped Window",
+	"block.create.warped_window_pane": "UNLOCALIZED: Warped Window Pane",
 	"block.create.water_wheel": "물레방아",
 	"block.create.weathered_limestone": "풍화된 석회암",
 	"block.create.weathered_limestone_bricks": "풍화된 석회암 벽돌",

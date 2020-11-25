@@ -1,0 +1,7 @@
+{
+  "parent": "create:item/pane",
+  "textures": {
+    "pane": "create:block/palettes/warped_window",
+    "edge": "minecraft:block/warped_planks"
+  }
+}

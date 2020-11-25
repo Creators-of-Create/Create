@@ -1,10 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
+import java.util.Arrays;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -13,12 +16,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.Arrays;
 
 public class PistonPolePlacementHelper {
 
@@ -49,29 +50,29 @@ public class PistonPolePlacementHelper {
 		if (hitFace.getAxis() == offset.getFirst().getAxis())
 			return;
 
-		Vec3d hitCenter = VecHelper.getCenterOf(pos).add(new Vec3d(hitFace.getDirectionVec()).scale(0.3));
+		Vector3d hitCenter = VecHelper.getCenterOf(pos).add(Vector3d.of(hitFace.getDirectionVec()).scale(0.3));
 
 		//get the two perpendicular directions to form the arrow
 		Direction[] directions = Arrays.stream(Direction.Axis.values()).filter(axis -> axis != hitFace.getAxis() && axis != offset.getFirst().getAxis()).map(Iterate::directionsInAxis).findFirst().orElse(new Direction[]{});
-		Vec3d startOffset = new Vec3d(offset.getFirst().getDirectionVec());
-		Vec3d start = hitCenter.add(startOffset);
+		Vector3d startOffset = Vector3d.of(offset.getFirst().getDirectionVec());
+		Vector3d start = hitCenter.add(startOffset);
 		for (Direction dir : directions) {
-			Vec3d arrowOffset = new Vec3d(dir.getDirectionVec()).scale(.25);
-			Vec3d target = hitCenter.add(startOffset.scale(0.75)).add(arrowOffset);
+			Vector3d arrowOffset = Vector3d.of(dir.getDirectionVec()).scale(.25);
+			Vector3d target = hitCenter.add(startOffset.scale(0.75)).add(arrowOffset);
 			CreateClient.outliner.showLine("poleHelp" + offset.getFirst() + dir, start, target).lineWidth(1/16f);
 		}
 	}
 
 	// first indicates the direction that the position needs to be offset into
 	// second indicates by how many blocks the position needs to be offset by; is 0 if there was no valid position on either end of the pole
-	public static Pair<Direction, Integer> getPlacementOffset(World world, Direction.Axis poleAxis, BlockPos pos, Vec3d hit) {
+	public static Pair<Direction, Integer> getPlacementOffset(World world, Direction.Axis poleAxis, BlockPos pos, Vector3d hit) {
 		Pair<Direction, Integer> offset = null;
 		double min = Double.MAX_VALUE;
-		Vec3d localPos = hit.subtract(VecHelper.getCenterOf(pos));
+		Vector3d localPos = hit.subtract(VecHelper.getCenterOf(pos));
 
 		//find target direction
 		for (Direction dir : Iterate.directionsInAxis(poleAxis)) {
-			double distance = new Vec3d(dir.getDirectionVec()).distanceTo(localPos);
+			double distance = Vector3d.of(dir.getDirectionVec()).distanceTo(localPos);
 			if (distance > min)
 				continue;
 			min = distance;

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 672",
+	"_": "Missing Localizations: 676",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -63,6 +63,8 @@
 	"block.create.creative_crate": "Créateur de schémacanon",
 	"block.create.creative_fluid_tank": "UNLOCALIZED: Creative Fluid Tank",
 	"block.create.creative_motor": "Moteur",
+	"block.create.crimson_window": "UNLOCALIZED: Crimson Window",
+	"block.create.crimson_window_pane": "UNLOCALIZED: Crimson Window Pane",
 	"block.create.crushing_wheel": "Roue de concassage",
 	"block.create.crushing_wheel_controller": "UNLOCALIZED: Crushing Wheel Controller",
 	"block.create.cuckoo_clock": "Horloge à coucou",
@@ -377,6 +379,8 @@
 	"block.create.turntable": "Plaque tournante",
 	"block.create.vertical_framed_glass": "Fenêtre en verre verticale",
 	"block.create.vertical_framed_glass_pane": "Vitre encadrée verticale",
+	"block.create.warped_window": "UNLOCALIZED: Warped Window",
+	"block.create.warped_window_pane": "UNLOCALIZED: Warped Window Pane",
 	"block.create.water_wheel": "Roue à eau",
 	"block.create.weathered_limestone": "Calcaire patinées",
 	"block.create.weathered_limestone_bricks": "Briques de calcaire patinées",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1050",
+	"_": "Missing Localizations: 1054",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -63,6 +63,8 @@
 	"block.create.creative_crate": "Criativador Esquemaannon",
 	"block.create.creative_fluid_tank": "UNLOCALIZED: Creative Fluid Tank",
 	"block.create.creative_motor": "UNLOCALIZED: Creative Motor",
+	"block.create.crimson_window": "UNLOCALIZED: Crimson Window",
+	"block.create.crimson_window_pane": "UNLOCALIZED: Crimson Window Pane",
 	"block.create.crushing_wheel": "Roda de Moer",
 	"block.create.crushing_wheel_controller": "UNLOCALIZED: Crushing Wheel Controller",
 	"block.create.cuckoo_clock": "UNLOCALIZED: Cuckoo Clock",
@@ -377,6 +379,8 @@
 	"block.create.turntable": "Mesa giratória",
 	"block.create.vertical_framed_glass": "UNLOCALIZED: Vertical Framed Glass",
 	"block.create.vertical_framed_glass_pane": "UNLOCALIZED: Vertical Framed Glass Pane",
+	"block.create.warped_window": "UNLOCALIZED: Warped Window",
+	"block.create.warped_window_pane": "UNLOCALIZED: Warped Window Pane",
 	"block.create.water_wheel": "Roda de Água",
 	"block.create.weathered_limestone": "Calcário Resistido",
 	"block.create.weathered_limestone_bricks": "Tijolos de Calcário Resistido",

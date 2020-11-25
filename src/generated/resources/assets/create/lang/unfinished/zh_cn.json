@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 338",
+	"_": "Missing Localizations: 342",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -63,6 +63,8 @@
 	"block.create.creative_crate": "创造板条箱",
 	"block.create.creative_fluid_tank": "UNLOCALIZED: Creative Fluid Tank",
 	"block.create.creative_motor": "创造马达",
+	"block.create.crimson_window": "UNLOCALIZED: Crimson Window",
+	"block.create.crimson_window_pane": "UNLOCALIZED: Crimson Window Pane",
 	"block.create.crushing_wheel": "粉碎轮",
 	"block.create.crushing_wheel_controller": "粉碎轮控制器",
 	"block.create.cuckoo_clock": "布谷鸟闹钟",
@@ -377,6 +379,8 @@
 	"block.create.turntable": "转盘",
 	"block.create.vertical_framed_glass": "竖直边框玻璃",
 	"block.create.vertical_framed_glass_pane": "竖直边框玻璃板",
+	"block.create.warped_window": "UNLOCALIZED: Warped Window",
+	"block.create.warped_window_pane": "UNLOCALIZED: Warped Window Pane",
 	"block.create.water_wheel": "水车",
 	"block.create.weathered_limestone": "风化石灰岩",
 	"block.create.weathered_limestone_bricks": "风化石灰岩砖",
