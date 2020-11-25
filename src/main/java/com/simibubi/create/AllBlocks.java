@@ -564,7 +564,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<ValveHandleBlock>[] DYED_VALVE_HANDLES = new BlockEntry[DyeColor.values().length];
-	
+
 	static {
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getName();
@@ -630,7 +630,7 @@ public class AllBlocks {
 		.item(BasinOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
-	
+
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_FLUID_INTERFACE =
 		REGISTRATE.block("portable_fluid_interface", PortableStorageInterfaceBlock::forFluids)
 			.initialProperties(SharedProperties::softMetal)
@@ -1211,6 +1211,8 @@ public class AllBlocks {
 	public static final BlockEntry<MetalBlock> BRASS_BLOCK =
 		REGISTRATE.block("brass_block", p -> new MetalBlock(p, true))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
 			.transform(tagBlockAndItem("storage_blocks/brass"))
 			.tag(Tags.Items.STORAGE_BLOCKS)

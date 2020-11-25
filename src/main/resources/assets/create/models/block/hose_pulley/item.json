@@ -7,9 +7,9 @@
 		"4": "create:block/copper_gearbox",
 		"5": "create:block/hose_pulley_rope",
 		"6": "create:block/hose_pulley_magnet",
-		"8": "create:block/oxidized/copper_block_0",
+		"8": "create:block/copper_plating",
 		"9": "create:block/fluid_pipe",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "create:block/copper_plating"
 	},
 	"elements": [
 		{
