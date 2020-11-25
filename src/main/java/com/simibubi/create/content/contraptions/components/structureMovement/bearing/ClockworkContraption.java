@@ -100,8 +100,8 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT tag = super.writeNBT();
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
 		tag.putInt("facing", facing.getIndex());
 		tag.putInt("offset", offset);
 		NBTHelper.writeEnum(tag, "HandType", handType);
@@ -109,11 +109,11 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT tag) {
+	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
 		facing = Direction.byIndex(tag.getInt("Facing"));
 		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
 		offset = tag.getInt("offset");
-		super.readNBT(world, tag);
+		super.readNBT(world, tag, spawnData);
 	}
 
 	@Override

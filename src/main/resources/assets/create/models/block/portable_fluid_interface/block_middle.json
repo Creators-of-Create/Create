@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/portable_storage_interface/block_middle",
+	"textures": {
+		"0": "create:block/portable_fluid_interface"
+	}
+}

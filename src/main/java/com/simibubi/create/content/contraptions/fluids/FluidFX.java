@@ -68,7 +68,7 @@ public class FluidFX {
 			vec = VecHelper.clampComponentWise(vec, rimRadius)
 				.mul(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.45 + r.nextFloat() / 16f));
-			Vector3d m = vec;
+			Vector3d m = vec.scale(.05f);
 			vec = vec.add(VecHelper.getCenterOf(pos));
 
 			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);

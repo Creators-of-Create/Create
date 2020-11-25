@@ -146,8 +146,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	protected void readAdditional(CompoundNBT compound, boolean spawnPacket) {
+		super.readAdditional(compound, spawnPacket);
 
 		if (compound.contains("InitialOrientation"))
 			setInitialOrientation(NBTHelper.readEnum(compound, "InitialOrientation", Direction.class));
@@ -170,8 +170,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	protected void writeAdditional(CompoundNBT compound, boolean spawnPacket) {
+		super.writeAdditional(compound, spawnPacket);
 
 		if (motionBeforeStall != null)
 			compound.put("CachedMotion",

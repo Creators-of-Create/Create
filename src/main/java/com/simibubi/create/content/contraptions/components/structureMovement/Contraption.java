@@ -39,10 +39,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -81,6 +83,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -88,12 +94,14 @@ public abstract class Contraption {
 
 	public AbstractContraptionEntity entity;
 	public CombinedInvWrapper inventory;
+	public CombinedTankWrapper fluidInventory;
 	public AxisAlignedBB bounds;
 	public BlockPos anchor;
 	public boolean stalled;
 
 	protected Map<BlockPos, BlockInfo> blocks;
 	protected Map<BlockPos, MountedStorage> storage;
+	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 	protected List<MutablePair<BlockInfo, MovementContext>> actors;
 	protected Set<Pair<BlockPos, Direction>> superglue;
 	protected List<BlockPos> seats;
@@ -105,7 +113,7 @@ public abstract class Contraption {
 	private List<BlockFace> pendingSubContraptions;
 
 	// Client
-	public List<TileEntity> renderedTileEntities;
+	public Map<BlockPos, TileEntity> renderedTileEntities;
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -114,9 +122,10 @@ public abstract class Contraption {
 		actors = new ArrayList<>();
 		superglue = new HashSet<>();
 		seatMapping = new HashMap<>();
+		fluidStorage = new HashMap<>();
 		glueToRemove = new ArrayList<>();
 		initialPassengers = new HashMap<>();
-		renderedTileEntities = new ArrayList<>();
+		renderedTileEntities = new HashMap<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 	}
@@ -140,10 +149,10 @@ public abstract class Contraption {
 		return true;
 	}
 
-	public static Contraption fromNBT(World world, CompoundNBT nbt) {
+	public static Contraption fromNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		String type = nbt.getString("Type");
 		Contraption contraption = AllContraptionTypes.fromType(type);
-		contraption.readNBT(world, nbt);
+		contraption.readNBT(world, nbt, spawnData);
 		return contraption;
 	}
 
@@ -195,6 +204,13 @@ public abstract class Contraption {
 			.map(MountedStorage::getItemHandler)
 			.collect(Collectors.toList());
 		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+
+		List<IFluidHandler> fluidHandlers = fluidStorage.values()
+			.stream()
+			.map(MountedFluidStorage::getFluidHandler)
+			.collect(Collectors.toList());
+		fluidInventory = new CombinedTankWrapper(
+			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), IFluidHandler[].class));
 	}
 
 	public void onEntityInitialize(World world, AbstractContraptionEntity contraptionEntity) {
@@ -216,6 +232,10 @@ public abstract class Contraption {
 				continue;
 			contraptionEntity.addSittingPassenger(passenger, seatIndex);
 		}
+	}
+
+	public void onEntityTick(World world) {
+		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
 	}
 
 	protected boolean moveBlock(World world, BlockPos pos, Direction forcedDirection, List<BlockPos> frontier,
@@ -289,7 +309,7 @@ public abstract class Contraption {
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
-				BlockMovementTraits.isBlockAttachedTowards(blockState, offset.getOpposite());
+				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
 			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
@@ -449,6 +469,8 @@ public abstract class Contraption {
 		TileEntity te = pair.getValue();
 		if (te != null && MountedStorage.canUseAsStorage(te))
 			storage.put(localPos, new MountedStorage(te));
+		if (te != null && MountedFluidStorage.canUseAsStorage(te))
+			fluidStorage.put(localPos, new MountedFluidStorage(te));
 		if (AllMovementBehaviours.contains(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
 	}
@@ -462,6 +484,11 @@ public abstract class Contraption {
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
+
+		if (tileentity instanceof FluidTankTileEntity && nbt.contains("Controller"))
+			nbt.put("Controller",
+				NBTUtil.writeBlockPos(toLocalPos(NBTUtil.readBlockPos(nbt.getCompound("Controller")))));
+
 		return nbt;
 	}
 
@@ -484,7 +511,7 @@ public abstract class Contraption {
 		return pos.equals(anchor);
 	}
 
-	public void readNBT(World world, CompoundNBT nbt) {
+	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		blocks.clear();
 		renderedTileEntities.clear();
 
@@ -523,7 +550,7 @@ public abstract class Contraption {
 					if (te instanceof KineticTileEntity)
 						((KineticTileEntity) te).setSpeed(0);
 					te.getBlockState();
-					renderedTileEntities.add(te);
+					renderedTileEntities.put(info.pos, te);
 				}
 			});
 
@@ -555,6 +582,24 @@ public abstract class Contraption {
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
 			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
 
+		fluidStorage.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", NBT.TAG_COMPOUND), c -> fluidStorage
+			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
+
+		if (spawnData)
+			fluidStorage.forEach((pos, mfs) -> {
+				TileEntity tileEntity = renderedTileEntities.get(pos);
+				if (!(tileEntity instanceof FluidTankTileEntity))
+					return;
+				FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
+				IFluidTank tankInventory = tank.getTankInventory();
+				if (tankInventory instanceof FluidTank)
+					((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
+				tank.getFluidLevel()
+					.start(tank.getFillState());
+				mfs.assignTileEntity(tank);
+			});
+
 		IItemHandlerModifiable[] handlers = new IItemHandlerModifiable[storage.size()];
 		int index = 0;
 		for (MountedStorage mountedStorage : storage.values())
@@ -568,7 +613,7 @@ public abstract class Contraption {
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
 	}
 
-	public CompoundNBT writeNBT() {
+	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putString("Type", getType().id);
 		ListNBT blocksNBT = new ListNBT();
@@ -601,14 +646,27 @@ public abstract class Contraption {
 		}
 
 		ListNBT storageNBT = new ListNBT();
-		for (BlockPos pos : storage.keySet()) {
+		if (!spawnPacket) {
+			for (BlockPos pos : storage.keySet()) {
+				CompoundNBT c = new CompoundNBT();
+				MountedStorage mountedStorage = storage.get(pos);
+				if (!mountedStorage.isValid())
+					continue;
+				c.put("Pos", NBTUtil.writeBlockPos(pos));
+				c.put("Data", mountedStorage.serialize());
+				storageNBT.add(c);
+			}
+		}
+
+		ListNBT fluidStorageNBT = new ListNBT();
+		for (BlockPos pos : fluidStorage.keySet()) {
 			CompoundNBT c = new CompoundNBT();
-			MountedStorage mountedStorage = storage.get(pos);
+			MountedFluidStorage mountedStorage = fluidStorage.get(pos);
 			if (!mountedStorage.isValid())
 				continue;
 			c.put("Pos", NBTUtil.writeBlockPos(pos));
 			c.put("Data", mountedStorage.serialize());
-			storageNBT.add(c);
+			fluidStorageNBT.add(c);
 		}
 
 		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NBTUtil::writeBlockPos));
@@ -631,6 +689,7 @@ public abstract class Contraption {
 		nbt.put("Actors", actorsNBT);
 		nbt.put("Superglue", superglueNBT);
 		nbt.put("Storage", storageNBT);
+		nbt.put("FluidStorage", fluidStorageNBT);
 		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
 		nbt.putBoolean("Stalled", stalled);
 
@@ -645,6 +704,8 @@ public abstract class Contraption {
 	public void removeBlocksFromWorld(World world, BlockPos offset) {
 		storage.values()
 			.forEach(MountedStorage::removeStorageFromWorld);
+		fluidStorage.values()
+			.forEach(MountedFluidStorage::removeStorageFromWorld);
 		glueToRemove.forEach(SuperGlueEntity::remove);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
@@ -733,10 +794,19 @@ public abstract class Contraption {
 						tag.remove("InitialOffset");
 					}
 
-					tileEntity.fromTag(tileEntity.getBlockState(), tag);
+					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
+						tag.put("LastKnownPos", NBTUtil.writeBlockPos(BlockPos.ZERO.down()));
+
+					tileEntity.fromTag(block.state, tag);
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
+						if (mountedStorage.isValid())
+							mountedStorage.addStorageToWorld(tileEntity);
+					}
+
+					if (fluidStorage.containsKey(block.pos)) {
+						MountedFluidStorage mountedStorage = fluidStorage.get(block.pos);
 						if (mountedStorage.isValid())
 							mountedStorage.addStorageToWorld(tileEntity);
 					}
@@ -856,6 +926,12 @@ public abstract class Contraption {
 
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
 		return actors;
+	}
+
+	public void updateContainedFluid(BlockPos localPos, FluidStack containedFluid) {
+		MountedFluidStorage mountedFluidStorage = fluidStorage.get(localPos);
+		if (mountedFluidStorage != null)
+			mountedFluidStorage.updateFluid(containedFluid);
 	}
 
 }

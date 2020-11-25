@@ -18,7 +18,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 		return new CreativeSmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
 	}
 
-	class CreativeSmartFluidTank extends SmartFluidTank {
+	public static class CreativeSmartFluidTank extends SmartFluidTank {
 
 		public CreativeSmartFluidTank(int capacity, Consumer<FluidStack> updateCallback) {
 			super(capacity, updateCallback);
@@ -33,7 +33,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 			fluid = fluidStack.copy();
 			if (!fluidStack.isEmpty()) 
 				fluid.setAmount(getTankCapacity(0));
-			notifyUpdate();
+			onContentsChanged();
 		}
 
 		@Override

@@ -62,18 +62,18 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT tag = super.writeNBT();
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
 		tag.putInt("Sails", sailBlocks);
 		tag.putInt("Facing", facing.getIndex());
 		return tag;
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT tag) {
+	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
 		sailBlocks = tag.getInt("Sails");
 		facing = Direction.byIndex(tag.getInt("Facing"));
-		super.readNBT(world, tag);
+		super.readNBT(world, tag, spawnData);
 	}
 
 	public int getSailBlocks() {

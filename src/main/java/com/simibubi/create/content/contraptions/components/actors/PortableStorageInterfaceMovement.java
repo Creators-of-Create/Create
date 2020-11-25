@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 import java.util.Optional;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -50,11 +49,12 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 			return false;
 
 		Direction currentFacing = currentFacingIfValid.get();
-		PortableStorageInterfaceTileEntity psi = findStationaryInterface(context.world, pos, currentFacing);
+		PortableStorageInterfaceTileEntity psi =
+			findStationaryInterface(context.world, pos, context.state, currentFacing);
 		if (psi == null)
 			return false;
 
-		if (psi.isTransferring() && !context.world.isRemote)
+		if ((psi.isTransferring() || psi.isPowered()) && !context.world.isRemote)
 			return false;
 		context.data.put(_workingPos_, NBTUtil.writeBlockPos(psi.getPos()));
 		if (!context.world.isRemote) {
@@ -94,7 +94,7 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 			return;
 
 		PortableStorageInterfaceTileEntity stationaryInterface =
-			getStationaryInterfaceAt(context.world, pos, currentFacingIfValid.get());
+			getStationaryInterfaceAt(context.world, pos, context.state, currentFacingIfValid.get());
 		if (stationaryInterface == null || !stationaryInterface.isTransferring()) {
 			reset(context);
 			return;
@@ -112,10 +112,11 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 		context.stall = false;
 	}
 
-	private PortableStorageInterfaceTileEntity findStationaryInterface(World world, BlockPos pos, Direction facing) {
+	private PortableStorageInterfaceTileEntity findStationaryInterface(World world, BlockPos pos, BlockState state,
+		Direction facing) {
 		for (int i = 0; i < 2; i++) {
 			PortableStorageInterfaceTileEntity interfaceAt =
-				getStationaryInterfaceAt(world, pos.offset(facing, i), facing);
+				getStationaryInterfaceAt(world, pos.offset(facing, i), state, facing);
 			if (interfaceAt == null)
 				continue;
 			return interfaceAt;
@@ -123,12 +124,13 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 		return null;
 	}
 
-	private PortableStorageInterfaceTileEntity getStationaryInterfaceAt(World world, BlockPos pos, Direction facing) {
+	private PortableStorageInterfaceTileEntity getStationaryInterfaceAt(World world, BlockPos pos, BlockState state,
+		Direction facing) {
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof PortableStorageInterfaceTileEntity))
 			return null;
 		BlockState blockState = world.getBlockState(pos);
-		if (!AllBlocks.PORTABLE_STORAGE_INTERFACE.has(blockState))
+		if (blockState.getBlock() != state.getBlock())
 			return null;
 		if (blockState.get(PortableStorageInterfaceBlock.FACING) != facing.getOpposite())
 			return null;

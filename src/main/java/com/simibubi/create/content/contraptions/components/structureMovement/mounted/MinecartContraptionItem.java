@@ -167,7 +167,7 @@ public class MinecartContraptionItem extends Item {
 				intialOrientation =
 					Optional.of(NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class));
 
-			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag);
+			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag, false);
 			OrientedContraptionEntity contraptionEntity =
 				OrientedContraptionEntity.create(world, mountedContraption, intialOrientation);
 
@@ -220,7 +220,7 @@ public class MinecartContraptionItem extends Item {
 
 	public static ItemStack create(Type type, OrientedContraptionEntity entity) {
 		ItemStack stack = ItemStack.EMPTY;
-		
+
 		switch (type) {
 		case RIDEABLE:
 			stack = AllItems.MINECART_CONTRAPTION.asStack();
@@ -234,12 +234,12 @@ public class MinecartContraptionItem extends Item {
 		default:
 			break;
 		}
-		
+
 		if (stack.isEmpty())
 			return stack;
 
 		CompoundNBT tag = entity.getContraption()
-			.writeNBT();
+			.writeNBT(false);
 		tag.remove("UUID");
 		tag.remove("Pos");
 		tag.remove("Motion");

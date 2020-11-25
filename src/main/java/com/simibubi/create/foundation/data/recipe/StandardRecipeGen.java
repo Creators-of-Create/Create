@@ -499,7 +499,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" I ")),
 
 		PORTABLE_STORAGE_INTERFACE = create(AllBlocks.PORTABLE_STORAGE_INTERFACE).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('I', AllBlocks.REDSTONE_CONTACT.get())
+			.viaShaped(b -> b.key('I', I.brassCasing())
+				.key('B', AllBlocks.ANDESITE_FUNNEL.get())
+				.patternLine(" B ")
+				.patternLine(" I ")),
+
+		PORTABLE_FLUID_INTERFACE = create(AllBlocks.PORTABLE_FLUID_INTERFACE).unlockedBy(I::copperCasing)
+			.viaShaped(b -> b.key('I', I.copperCasing())
 				.key('B', AllBlocks.ANDESITE_FUNNEL.get())
 				.patternLine(" B ")
 				.patternLine(" I ")),

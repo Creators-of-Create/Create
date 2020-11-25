@@ -28,6 +28,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -41,6 +43,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
@@ -72,8 +75,10 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean p_220082_5_) {
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
 		if (oldState.getBlock() == state.getBlock())
+			return;
+		if (moved)
 			return;
 		withTileEntityDo(world, pos, FluidTankTileEntity::updateConnectivity);
 	}
@@ -116,7 +121,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (te == null)
 			return ActionResultType.FAIL;
 
-		LazyOptional<IFluidHandler> tankCapability = te.fluidCapability;
+		LazyOptional<IFluidHandler> tankCapability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		if (!tankCapability.isPresent())
 			return ActionResultType.PASS;
 		IFluidHandler fluidTank = tankCapability.orElse(null);
@@ -142,7 +147,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 		if (exchange == FluidExchange.ITEM_TO_TANK) {
 			if (creative && !onClient) {
-				FluidStack fluidInItem = EmptyingByBasin.emptyItem(world, heldItem, true).getFirst();
+				FluidStack fluidInItem = EmptyingByBasin.emptyItem(world, heldItem, true)
+					.getFirst();
 				if (!fluidInItem.isEmpty() && fluidTank instanceof CreativeSmartFluidTank)
 					((CreativeSmartFluidTank) fluidTank).setContainedFluid(fluidInItem);
 			}
@@ -239,6 +245,47 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public Class<FluidTankTileEntity> getTileEntityClass() {
 		return FluidTankTileEntity.class;
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirror) {
+		if (mirror == Mirror.NONE)
+			return state;
+		boolean x = mirror == Mirror.FRONT_BACK;
+		switch (state.get(SHAPE)) {
+		case WINDOW_NE:
+			return state.with(SHAPE, x ? Shape.WINDOW_NW : Shape.WINDOW_SE);
+		case WINDOW_NW:
+			return state.with(SHAPE, x ? Shape.WINDOW_NE : Shape.WINDOW_SW);
+		case WINDOW_SE:
+			return state.with(SHAPE, x ? Shape.WINDOW_SW : Shape.WINDOW_NE);
+		case WINDOW_SW:
+			return state.with(SHAPE, x ? Shape.WINDOW_SE : Shape.WINDOW_NW);
+		default:
+			return state;
+		}
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		for (int i = 0; i < rotation.ordinal(); i++)
+			state = rotateOnce(state);
+		return state;
+	}
+
+	private BlockState rotateOnce(BlockState state) {
+		switch (state.get(SHAPE)) {
+		case WINDOW_NE:
+			return state.with(SHAPE, Shape.WINDOW_SE);
+		case WINDOW_NW:
+			return state.with(SHAPE, Shape.WINDOW_NE);
+		case WINDOW_SE:
+			return state.with(SHAPE, Shape.WINDOW_SW);
+		case WINDOW_SW:
+			return state.with(SHAPE, Shape.WINDOW_NW);
+		default:
+			return state;
+		}
 	}
 
 	public enum Shape implements IStringSerializable {

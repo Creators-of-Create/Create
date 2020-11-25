@@ -5,8 +5,9 @@ import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
 import com.simibubi.create.content.contraptions.components.actors.DrillTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterRenderer;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceRenderer;
-import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterRenderer;
@@ -349,12 +350,18 @@ public class AllTileEntities {
 		.renderer(() -> HarvesterRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<PortableStorageInterfaceTileEntity> PORTABLE_STORAGE_INTERFACE =
+	public static final TileEntityEntry<PortableItemInterfaceTileEntity> PORTABLE_STORAGE_INTERFACE =
 		Create.registrate()
-			.tileEntity("portable_storage_interface", PortableStorageInterfaceTileEntity::new)
+			.tileEntity("portable_storage_interface", PortableItemInterfaceTileEntity::new)
 			.validBlocks(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.renderer(() -> PortableStorageInterfaceRenderer::new)
 			.register();
+
+	public static final TileEntityEntry<PortableFluidInterfaceTileEntity> PORTABLE_FLUID_INTERFACE = Create.registrate()
+		.tileEntity("portable_fluid_interface", PortableFluidInterfaceTileEntity::new)
+		.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
+		.renderer(() -> PortableStorageInterfaceRenderer::new)
+		.register();
 
 	public static final TileEntityEntry<FlywheelTileEntity> FLYWHEEL = Create.registrate()
 		.tileEntity("flywheel", FlywheelTileEntity::new)

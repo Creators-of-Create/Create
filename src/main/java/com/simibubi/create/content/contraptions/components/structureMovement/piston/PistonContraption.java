@@ -1,25 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
-import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPiston;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isStickyPiston;
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,6 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
+import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class PistonContraption extends TranslatingContraption {
 
@@ -77,8 +72,7 @@ public class PistonContraption extends TranslatingContraption {
 			return false;
 
 		if (blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			while (isExtensionPole(nextBlock) && nextBlock.get(FACING)
-				.getAxis() == direction.getAxis() || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
+			while (PistonPolePlacementHelper.matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
 
 				actualStart = actualStart.offset(direction);
 				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
@@ -105,7 +99,7 @@ public class PistonContraption extends TranslatingContraption {
 		nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 		int extensionsInBack = 0;
 
-		while (isExtensionPole(nextBlock)) {
+		while (PistonPolePlacementHelper.matchesAxis(nextBlock, direction.getAxis())) {
 			end = end.offset(direction.getOpposite());
 			poles.add(new BlockInfo(end, nextBlock.with(FACING, direction), null));
 			extensionsInBack++;
@@ -209,20 +203,20 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT nbt) {
-		super.readNBT(world, nbt);
+	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
+		super.readNBT(world, nbt, spawnData);
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		extensionLength = nbt.getInt("ExtensionLength");
 		orientation = Direction.byIndex(nbt.getInt("Orientation"));
 	}
 
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT nbt = super.writeNBT();
-		nbt.putInt("InitialLength", initialExtensionProgress);
-		nbt.putInt("ExtensionLength", extensionLength);
-		nbt.putInt("Orientation", orientation.getIndex());
-		return nbt;
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
+		tag.putInt("InitialLength", initialExtensionProgress);
+		tag.putInt("ExtensionLength", extensionLength);
+		tag.putInt("Orientation", orientation.getIndex());
+		return tag;
 	}
 
 }

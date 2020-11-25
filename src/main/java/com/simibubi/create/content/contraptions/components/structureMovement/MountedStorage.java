@@ -31,7 +31,7 @@ public class MountedStorage {
 	public static boolean canUseAsStorage(TileEntity te) {
 		if (te == null)
 			return false;
-		
+
 		if (AllTileEntities.ADJUSTABLE_CRATE.is(te))
 			return true;
 		if (AllTileEntities.CREATIVE_CRATE.is(te))

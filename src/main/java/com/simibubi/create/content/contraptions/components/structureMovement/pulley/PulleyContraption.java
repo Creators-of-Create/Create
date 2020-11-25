@@ -41,16 +41,16 @@ public class PulleyContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public CompoundNBT writeNBT() {
-		CompoundNBT writeNBT = super.writeNBT();
-		writeNBT.putInt("InitialOffset", initialOffset);
-		return writeNBT;
+	public CompoundNBT writeNBT(boolean spawnPacket) {
+		CompoundNBT tag = super.writeNBT(spawnPacket);
+		tag.putInt("InitialOffset", initialOffset);
+		return tag;
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT nbt) {
+	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		initialOffset = nbt.getInt("InitialOffset");
-		super.readNBT(world, nbt);
+		super.readNBT(world, nbt, spawnData);
 	}
 
 }

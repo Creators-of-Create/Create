@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "create:copper_casing"
+    },
+    "B": {
+      "item": "create:andesite_funnel"
+    }
+  },
+  "result": {
+    "item": "create:portable_fluid_interface"
+  }
+}

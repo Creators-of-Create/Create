@@ -2,13 +2,11 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +27,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<RedstoneLinkTileEntity>, IWrenchable {
+public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
@@ -153,7 +151,12 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		if (toggleMode(state, context.getWorld(), context.getPos()) == ActionResultType.SUCCESS)
 			return ActionResultType.SUCCESS;
-		return IWrenchable.super.onWrenched(state, context);
+		return super.onWrenched(state, context);
+	}
+
+	@Override
+	public BlockState getRotatedBlockState(BlockState originalState, Direction _targetedFace) {
+		return originalState;
 	}
 
 	@Override

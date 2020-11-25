@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/spout",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "create:block/copper_plating"
 	},
 	"elements": [
 		{

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -22,8 +23,19 @@ import net.minecraft.world.World;
 public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 	implements ITE<PortableStorageInterfaceTileEntity> {
 
-	public PortableStorageInterfaceBlock(Properties p_i48415_1_) {
+	boolean fluids;
+
+	public static PortableStorageInterfaceBlock forItems(Properties p_i48415_1_) {
+		return new PortableStorageInterfaceBlock(p_i48415_1_, false);
+	}
+
+	public static PortableStorageInterfaceBlock forFluids(Properties p_i48415_1_) {
+		return new PortableStorageInterfaceBlock(p_i48415_1_, true);
+	}
+
+	private PortableStorageInterfaceBlock(Properties p_i48415_1_, boolean fluids) {
 		super(p_i48415_1_);
+		this.fluids = fluids;
 	}
 
 	@Override
@@ -33,7 +45,14 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.PORTABLE_STORAGE_INTERFACE.create();
+		return (fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE : AllTileEntities.PORTABLE_STORAGE_INTERFACE)
+			.create();
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+		boolean p_220069_6_) {
+		withTileEntityDo(world, pos, PortableStorageInterfaceTileEntity::neighbourChanged);
 	}
 
 	@Override
@@ -54,11 +73,8 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		try {
-			return getTileEntity(worldIn, pos).isConnected() ? 15 : 0;
-		} catch (TileEntityException e) {
-		}
-		return 0;
+		return getTileEntityOptional(worldIn, pos).map(te -> te.isConnected() ? 15 : 0)
+			.orElse(0);
 	}
 
 	@Override

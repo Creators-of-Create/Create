@@ -1,0 +1,8 @@
+{
+	"parent": "create:block/portable_storage_interface/block",
+	"textures": {
+		"0": "create:block/portable_fluid_interface",
+		"1": "create:block/copper_casing",
+		"particle": "create:block/copper_casing"
+	}
+}

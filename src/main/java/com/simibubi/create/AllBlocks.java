@@ -46,10 +46,10 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedBearingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedBearingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
@@ -565,7 +565,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<ValveHandleBlock>[] DYED_VALVE_HANDLES = new BlockEntry[DyeColor.values().length];
-	
+
 	static {
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getString();
@@ -631,6 +631,15 @@ public class AllBlocks {
 		.item(BasinOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
+
+	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_FLUID_INTERFACE =
+		REGISTRATE.block("portable_fluid_interface", PortableStorageInterfaceBlock::forFluids)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
+			.item()
+			.transform(customItemModel())
+			.register();
 
 	// Contraptions
 
@@ -792,7 +801,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<PortableStorageInterfaceBlock> PORTABLE_STORAGE_INTERFACE =
-		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::new)
+		REGISTRATE.block("portable_storage_interface", PortableStorageInterfaceBlock::forItems)
 			.initialProperties(SharedProperties::stone)
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(addMovementBehaviour(new PortableStorageInterfaceMovement()))
@@ -1204,6 +1213,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", p -> new Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
+		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+			.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(AllBlockTags.BEACON_BASE_BLOCKS.tag)
 		.transform(tagBlockAndItem("storage_blocks/brass"))

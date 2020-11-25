@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 655",
+	"_": "Missing Localizations: 656",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -327,6 +327,7 @@
 	"block.create.polished_weathered_limestone_slab": "윤나는 풍화된 석회암 반 블록",
 	"block.create.polished_weathered_limestone_stairs": "UNLOCALIZED: Polished Weathered Limestone Stairs",
 	"block.create.polished_weathered_limestone_wall": "UNLOCALIZED: Polished Weathered Limestone Wall",
+	"block.create.portable_fluid_interface": "UNLOCALIZED: Portable Fluid Interface",
 	"block.create.portable_storage_interface": "이동식 저장소 인터페이스",
 	"block.create.powered_latch": "레드스톤 걸쇠",
 	"block.create.powered_toggle_latch": "레드스톤 토글 걸쇠",

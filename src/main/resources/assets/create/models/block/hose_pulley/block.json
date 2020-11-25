@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"textures": {
 		"4": "create:block/copper_gearbox",
-		"8": "create:block/oxidized/copper_block_0",
+		"8": "create:block/copper_plating",
 		"9": "create:block/fluid_pipe",
-		"particle": "create:block/oxidized/copper_block_0"
+		"particle": "create:block/copper_plating"
 	},
 	"elements": [
 		{

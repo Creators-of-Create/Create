@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -33,7 +34,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		render(blockState, progress, te.isConnected(), sbb -> sbb.light(light).renderInto(ms, vb), ms);
+		render(blockState, progress, te.isConnected(), sbb -> sbb.light(light)
+			.renderInto(ms, vb), ms);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
@@ -43,14 +45,14 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 		float renderPartialTicks = Minecraft.getInstance()
 			.getRenderPartialTicks();
-		
+
 		float progress = 0;
 		boolean lit = false;
 		if (te != null) {
 			progress = te.getExtensionDistance(renderPartialTicks);
 			lit = te.isConnected();
 		}
-		
+
 		render(blockState, progress, lit, sbb -> sbb.light(msLocal.peek()
 			.getModel())
 			.renderInto(ms, vb), ms, msLocal);
@@ -77,10 +79,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		for (MatrixStack ms : matrixStacks)
 			ms.push();
 
-		SuperByteBuffer middle = AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE.renderOn(blockState);
-		SuperByteBuffer top = AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP.renderOn(blockState);
-		if (lit)
-			middle = AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED.renderOn(blockState);
+		SuperByteBuffer middle = getMiddleForState(blockState, lit).renderOn(blockState);
+		SuperByteBuffer top = getTopForState(blockState).renderOn(blockState);
 
 		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
 		for (MatrixStack ms : matrixStacks)
@@ -107,6 +107,20 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 
 		for (MatrixStack ms : matrixStacks)
 			ms.pop();
+	}
+
+	static AllBlockPartials getMiddleForState(BlockState state, boolean lit) {
+		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
+			return lit ? AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
+				: AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE;
+		return lit ? AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED
+			: AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE;
+	}
+
+	static AllBlockPartials getTopForState(BlockState state) {
+		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
+			return AllBlockPartials.PORTABLE_FLUID_INTERFACE_TOP;
+		return AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP;
 	}
 
 }
