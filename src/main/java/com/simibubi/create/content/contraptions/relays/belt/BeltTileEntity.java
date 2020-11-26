@@ -401,6 +401,8 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();
+		if (nextInventory == null)
+			return inserted;
 
 		TileEntity teAbove = world.getTileEntity(pos.up());
 		if (teAbove instanceof BrassTunnelTileEntity) {
