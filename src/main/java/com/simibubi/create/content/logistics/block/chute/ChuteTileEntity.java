@@ -134,7 +134,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public void tick() {
 		super.tick();
 
-		canPickUpItems = canDirectlyInsert();
+		if (!world.isRemote)
+			canPickUpItems = canDirectlyInsert();
 
 		float itemMotion = getItemMotion();
 		if (itemMotion != 0 && world != null && world.isRemote)

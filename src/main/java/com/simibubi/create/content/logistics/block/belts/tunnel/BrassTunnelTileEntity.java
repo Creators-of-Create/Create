@@ -132,23 +132,30 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				if (allFull || allEmpty)
 					syncSet.forEach(te -> te.syncedOutputActive = notifySyncedOut);
 			}
-			
+
 			if (validOutputs == null)
 				return;
 			if (stackToDistribute.isEmpty())
 				return;
 
-			for (Pair<BrassTunnelTileEntity, Direction> pair : validOutputs) {
-				BrassTunnelTileEntity tunnel = pair.getKey();
-				Direction output = pair.getValue();
-				if (insertIntoTunnel(tunnel, output, stackToDistribute, true) == null)
-					continue;
-				distributionTargets.add(Pair.of(tunnel.pos, output));
-				int distance = tunnel.pos.getX() + tunnel.pos.getZ() - pos.getX() - pos.getZ();
-				if (distance < 0)
-					distributionDistanceLeft = Math.max(distributionDistanceLeft, -distance);
-				else
-					distributionDistanceRight = Math.max(distributionDistanceRight, distance);
+			for (boolean filterPass : Iterate.trueAndFalse) {
+				for (Pair<BrassTunnelTileEntity, Direction> pair : validOutputs) {
+					BrassTunnelTileEntity tunnel = pair.getKey();
+					Direction output = pair.getValue();
+					if (filterPass && tunnel.flapFilterEmpty(output))
+						continue;
+					if (insertIntoTunnel(tunnel, output, stackToDistribute, true) == null)
+						continue;
+					distributionTargets.add(Pair.of(tunnel.pos, output));
+					int distance = tunnel.pos.getX() + tunnel.pos.getZ() - pos.getX() - pos.getZ();
+					if (distance < 0)
+						distributionDistanceLeft = Math.max(distributionDistanceLeft, -distance);
+					else
+						distributionDistanceRight = Math.max(distributionDistanceRight, distance);
+				}
+
+				if (!distributionTargets.isEmpty() && filterPass)
+					break;
 			}
 
 			if (distributionTargets.isEmpty())
@@ -315,6 +322,21 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return adjacentFilter.test(stack);
 		}
 		return filtering.test(side, stack);
+	}
+
+	public boolean flapFilterEmpty(Direction side) {
+		if (filtering == null)
+			return false;
+		if (filtering.get(side) == null) {
+			FilteringBehaviour adjacentFilter =
+				TileEntityBehaviour.get(world, pos.offset(side), FilteringBehaviour.TYPE);
+			if (adjacentFilter == null)
+				return true;
+			return adjacentFilter.getFilter()
+				.isEmpty();
+		}
+		return filtering.getFilter(side)
+			.isEmpty();
 	}
 
 	@Override
