@@ -219,7 +219,7 @@ public abstract class ArmInteractionPoint {
 		@Override
 		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.MECHANICAL_SAW.has(state) && state.get(SawBlock.FACING) == Direction.UP
-				&& ((KineticTileEntity)reader.getTileEntity(pos)).getSpeed() != 0;
+				&& ((KineticTileEntity) reader.getTileEntity(pos)).getSpeed() != 0;
 		}
 
 	}
@@ -298,7 +298,7 @@ public abstract class ArmInteractionPoint {
 			return state.get(MechanicalCrafterBlock.HORIZONTAL_FACING)
 				.getOpposite();
 		}
-		
+
 		@Override
 		ItemStack extract(World world, int slot, int amount, boolean simulate) {
 			TileEntity te = world.getTileEntity(pos);
@@ -441,12 +441,13 @@ public abstract class ArmInteractionPoint {
 				return stack;
 			if (simulate)
 				inserter.simulate();
-			if (!simulate) {
+			ItemStack insert = inserter.insert(stack);
+			if (!simulate && insert.getCount() != stack.getCount()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
 				if (tileEntity instanceof FunnelTileEntity)
 					((FunnelTileEntity) tileEntity).onTransfer(stack);
 			}
-			return inserter.insert(stack);
+			return insert;
 		}
 
 		@Override

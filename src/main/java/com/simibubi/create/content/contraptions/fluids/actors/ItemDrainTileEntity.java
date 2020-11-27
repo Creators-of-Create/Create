@@ -47,7 +47,8 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new DirectBeltInputBehaviour(this).setInsertionHandler(this::tryInsertingFromSide));
+		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnels()
+			.setInsertionHandler(this::tryInsertingFromSide));
 		behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, 1500)
 			.allowExtraction()
 			.forbidInsertion());
@@ -112,6 +113,18 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 				return;
 
 			Direction side = heldItem.insertedFrom;
+
+			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
+				.tryExportingToBeltFunnel(heldItem.stack, side.getOpposite());
+			if (tryExportingToBeltFunnel.getCount() != heldItem.stack.getCount()) {
+				if (tryExportingToBeltFunnel.isEmpty())
+					heldItem = null;
+				else
+					heldItem.stack = tryExportingToBeltFunnel;
+				notifyUpdate();
+				return;
+			}
+
 			BlockPos nextPosition = pos.offset(side);
 			DirectBeltInputBehaviour directBeltInputBehaviour =
 				TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);

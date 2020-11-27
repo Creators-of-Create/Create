@@ -906,6 +906,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inFurnace(),
 		GRANITE = create(AllPaletteBlocks.GABBRO::get).viaCooking(() -> Blocks.GRANITE)
 			.inFurnace(),
+		NAT_SCORIA = create(AllPaletteBlocks.SCORIA::get).withSuffix("_from_natural")
+			.viaCooking(AllPaletteBlocks.NATURAL_SCORIA::get)
+			.inFurnace(),
 
 		FRAMED_GLASS = recycleGlass(AllPaletteBlocks.FRAMED_GLASS),
 		TILED_GLASS = recycleGlass(AllPaletteBlocks.TILED_GLASS),

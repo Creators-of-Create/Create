@@ -18,8 +18,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
@@ -94,7 +92,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		if (mode == Mode.PAUSED)
 			extractionCooldown = 0;
 		if (mode == Mode.TAKING_FROM_BELT)
-			tickAsPullingBeltFunnel();
+			return;
 
 		if (extractionCooldown > 0) {
 			extractionCooldown--;
@@ -137,17 +135,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		startCooldown();
 	}
 
-	private void tickAsPullingBeltFunnel() {
-		// Belts handle insertion from their side
-		if (AllBlocks.BELT.has(world.getBlockState(pos.down())))
-			return;
-		TransportedItemStackHandlerBehaviour handler =
-			TileEntityBehaviour.get(world, pos.down(), TransportedItemStackHandlerBehaviour.TYPE);
-		if (handler == null)
-			return;
-		handler.handleCenteredProcessingOnAllItems(1 / 32f, this::collectFromHandler);
-	}
-
 	private void activateExtractingBeltFunnel() {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.get(BeltFunnelBlock.HORIZONTAL_FACING);
@@ -181,25 +168,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	private int startCooldown() {
 		return extractionCooldown = AllConfigs.SERVER.logistics.defaultExtractionTimer.get();
-	}
-
-	private TransportedResult collectFromHandler(TransportedItemStack stack) {
-		TransportedResult ignore = TransportedResult.doNothing();
-		ItemStack toInsert = stack.stack.copy();
-		if (!filtering.test(toInsert))
-			return ignore;
-		ItemStack remainder = invManipulation.insert(toInsert);
-		if (remainder.equals(stack.stack, false))
-			return ignore;
-
-		flap(true);
-		onTransfer(toInsert);
-
-		if (remainder.isEmpty())
-			return TransportedResult.removeItem();
-		TransportedItemStack changed = stack.copy();
-		changed.stack = remainder;
-		return TransportedResult.convertTo(changed);
 	}
 
 	@Override

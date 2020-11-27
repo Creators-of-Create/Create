@@ -101,8 +101,8 @@
 		},
 		{
 			"name": "RearBackPlate",
-			"from": [0, -5, 13],
-			"to": [16, -2, 16],
+			"from": [0.05, -5, 13],
+			"to": [15.95, -2, 15.95],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, -8, 8]},
 			"faces": {
 				"north": {"uv": [0, 13, 8, 14.5], "texture": "#7"},

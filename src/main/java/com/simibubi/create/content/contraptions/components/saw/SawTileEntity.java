@@ -61,7 +61,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private int recipeIndex;
 	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
 	private FilteringBehaviour filtering;
-	private boolean destroyed;
 
 	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
 		super(type);
@@ -76,7 +75,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.addBehaviours(behaviours);
 		filtering = new FilteringBehaviour(this, new SawFilterSlot()).forRecipes();
 		behaviours.add(filtering);
-		behaviours.add(new DirectBeltInputBehaviour(this));
+		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnelsWhen(this::canProcess));
 	}
 
 	@Override
@@ -136,6 +135,19 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		inventory.remainingTime = 0;
 
+		for (int slot = 0; slot < inventory.getSlots(); slot++) {
+			ItemStack stack = inventory.getStackInSlot(slot);
+			if (stack.isEmpty())
+				continue;
+			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
+				.tryExportingToBeltFunnel(stack, itemMovementFacing.getOpposite());
+			if (tryExportingToBeltFunnel.getCount() != stack.getCount()) {
+				inventory.setStackInSlot(slot, tryExportingToBeltFunnel);
+				notifyUpdate();
+				return;
+			}
+		}
+
 		BlockPos nextPos = pos.add(itemMovement.x, itemMovement.y, itemMovement.z);
 		DirectBeltInputBehaviour behaviour = TileEntityBehaviour.get(world, nextPos, DirectBeltInputBehaviour.TYPE);
 		if (behaviour != null) {
@@ -182,7 +194,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void remove() {
 		invProvider.invalidate();
-		destroyed = true;
 		super.remove();
 	}
 
