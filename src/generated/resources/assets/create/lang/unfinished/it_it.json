@@ -722,7 +722,6 @@
 	"create.gui.goggles.generator_stats": "Statistiche del Generatore:",
 	"create.gui.goggles.kinetic_stats": "Statistiche Cinetiche:",
 	"create.gui.goggles.at_current_speed": "Alla velocità Attuale",
-	"create.gui.goggles.base_value": "Valore Base",
 	"create.gui.gauge.info_header": "Informazioni sul Calibro:",
 	"create.gui.speedometer.title": "Velocità di Rotazione",
 	"create.gui.stressometer.title": "Stress della Rete",

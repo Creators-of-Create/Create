@@ -722,7 +722,6 @@
 	"create.gui.goggles.generator_stats": "ジェネレータの統計:",
 	"create.gui.goggles.kinetic_stats": "動力の統計:",
 	"create.gui.goggles.at_current_speed": "現在の速度",
-	"create.gui.goggles.base_value": "基本値",
 	"create.gui.gauge.info_header": "計器の情報:",
 	"create.gui.speedometer.title": "回転速度",
 	"create.gui.stressometer.title": "ネットワークの応力",

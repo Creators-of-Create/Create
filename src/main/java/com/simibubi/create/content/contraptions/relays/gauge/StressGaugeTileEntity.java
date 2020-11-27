@@ -68,24 +68,28 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stressometer.title"));
 
 		if (getTheoreticalSpeed() == 0)
-			tooltip.add(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
-					+ Lang.translate("gui.stressometer.no_rotation"));
+			tooltip.add(spacing + TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
+				+ Lang.translate("gui.stressometer.no_rotation"));
 		else {
 			tooltip.add(spacing + StressImpact.getFormattedStressText(stressFraction));
 
 			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stressometer.capacity"));
 
 			double remainingCapacity = capacity - getNetworkStress();
-			double remainingCapacityAtBase = remainingCapacity / Math.abs(getTheoreticalSpeed());
 
-			String capacityString = spacing + StressImpact.of(stressFraction).getRelativeColor() + "%s"
-					+ Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			String su = Lang.translate("generic.unit.stress");
 
-			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacityAtBase),
-					Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(capacityString, IHaveGoggleInformation.format(remainingCapacity),
-					Lang.translate("gui.goggles.at_current_speed")));
-
+			if (remainingCapacity != capacity) {
+				String capacityString = spacing + StressImpact.of(stressFraction)
+					.getRelativeColor() + "%s" + su + TextFormatting.GRAY + " / " + TextFormatting.DARK_GRAY + "%s"
+					+ su;
+				tooltip.add(" " + String.format(capacityString, IHaveGoggleInformation.format(remainingCapacity),
+					IHaveGoggleInformation.format(capacity)));
+			} else {
+				String capacityString = spacing + StressImpact.of(stressFraction)
+					.getRelativeColor() + "%s" + su;
+				tooltip.add(" " + String.format(capacityString, IHaveGoggleInformation.format(remainingCapacity)));
+			}
 		}
 
 		return true;

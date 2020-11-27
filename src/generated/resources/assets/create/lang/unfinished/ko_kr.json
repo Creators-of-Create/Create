@@ -722,7 +722,6 @@
 	"create.gui.goggles.generator_stats": "발전 상태:",
 	"create.gui.goggles.kinetic_stats": "가동 상태:",
 	"create.gui.goggles.at_current_speed": "현재 속도",
-	"create.gui.goggles.base_value": "기본 수치",
 	"create.gui.gauge.info_header": "게이지 정보:",
 	"create.gui.speedometer.title": "회전 속도",
 	"create.gui.stressometer.title": "네트워크 부하",

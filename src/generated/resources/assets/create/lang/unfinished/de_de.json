@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1051",
+	"_": "Missing Localizations: 1050",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -721,8 +721,7 @@
 
 	"create.gui.goggles.generator_stats": "UNLOCALIZED: Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "UNLOCALIZED: Kinetic Stats:",
-	"create.gui.goggles.at_current_speed": "UNLOCALIZED: At current Speed",
-	"create.gui.goggles.base_value": "UNLOCALIZED: Base Value",
+	"create.gui.goggles.at_current_speed": "UNLOCALIZED: at current speed",
 	"create.gui.gauge.info_header": "UNLOCALIZED: Gauge Information:",
 	"create.gui.speedometer.title": "UNLOCALIZED: Rotation Speed",
 	"create.gui.stressometer.title": "UNLOCALIZED: Network Stress",

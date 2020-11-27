@@ -108,7 +108,7 @@ public interface IRotate extends IWrenchable {
 			StressImpact stressLevel = of(stressPercent);
 			TextFormatting color = stressLevel.getRelativeColor();
 
-			String level = color + ItemDescription.makeProgressBar(3, stressLevel.ordinal());
+			String level = color + ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal(), 2));
 			level += Lang.translate("tooltip.stressImpact."+Lang.asId(stressLevel.name()));
 
 			level += String.format(" (%s%%) ", (int) (stressPercent * 100));

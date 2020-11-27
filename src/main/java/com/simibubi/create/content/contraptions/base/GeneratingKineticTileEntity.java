@@ -67,9 +67,10 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			speed = Math.abs(speed);
 			float stressTotal = stressBase * speed;
 
-			String stressString = spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
-			tooltip.add(String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value")));
-			tooltip.add(String.format(stressString, TextFormatting.GRAY, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
+			String stressString =
+				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
+			tooltip.add(" " + String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressTotal),
+				Lang.translate("gui.goggles.at_current_speed")));
 
 			added = true;
 		}

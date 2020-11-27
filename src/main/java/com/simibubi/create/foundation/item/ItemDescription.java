@@ -118,7 +118,6 @@ public class ItemDescription {
 			add(linesOnShift, level);
 		}
 
-		String stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
 			List<String> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = impacts.get(id)
@@ -130,7 +129,7 @@ public class ItemDescription {
 
 			if (hasGlasses)
 				level += " (" + impacts.get(id)
-					.get() + stressUnit + ")";
+					.get() + "x " + rpmUnit + ")";
 
 			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
 			add(linesOnShift, level);
@@ -147,7 +146,7 @@ public class ItemDescription {
 			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
 
 			if (hasGlasses)
-				level += " (" + capacity + stressUnit + ")";
+				level += " (" + capacity + "x " + rpmUnit + ")";
 			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 				level +=
 					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
