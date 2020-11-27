@@ -107,8 +107,17 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			.add(directionVec.scale(.55)
 				.subtract(0, 1 / 2f, 0));
 
+		boolean outToBasin = basin.getWorld()
+			.getBlockState(basin.getPos()
+				.offset(direction))
+			.getBlock() instanceof BasinBlock;
+		
 		for (IntAttached<ItemStack> intAttached : basin.visualizedOutputItems) {
 			float progress = 1 - (intAttached.getFirst() - partialTicks) / BasinTileEntity.OUTPUT_ANIMATION_TIME;
+			
+			if (!outToBasin && progress > .35f)
+				continue;
+			
 			ms.push();
 			MatrixStacker.of(ms)
 				.translate(outVec)

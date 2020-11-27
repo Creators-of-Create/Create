@@ -188,7 +188,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		});
 	}
 
-	class InternalFluidHandler extends CombinedTankWrapper {
+	public class InternalFluidHandler extends CombinedTankWrapper {
 
 		public InternalFluidHandler(IFluidHandler[] handlers, boolean enforceVariety) {
 			super(handlers);
@@ -200,6 +200,10 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		public int fill(FluidStack resource, FluidAction action) {
 			if (!insertionAllowed)
 				return 0;
+			return super.fill(resource, action);
+		}
+		
+		public int forceFill(FluidStack resource, FluidAction action) {
 			return super.fill(resource, action);
 		}
 

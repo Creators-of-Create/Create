@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 655",
+	"_": "Missing Localizations: 663",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -974,6 +974,15 @@
 	"create.tunnel.selection_mode.prefer_nearest": "UNLOCALIZED: Prefer Nearest",
 	"create.tunnel.selection_mode.randomize": "UNLOCALIZED: Randomize",
 	"create.tunnel.selection_mode.synchronize": "UNLOCALIZED: Synchronize Inputs",
+
+	"create.tooltip.chute.header": "UNLOCALIZED: Chute Information",
+	"create.tooltip.chute.items_move_down": "UNLOCALIZED: Items move Downward",
+	"create.tooltip.chute.items_move_up": "UNLOCALIZED: Items move Upward",
+	"create.tooltip.chute.no_fans_attached": "UNLOCALIZED: No attached fans",
+	"create.tooltip.chute.fans_push_up": "UNLOCALIZED: Fans push from Below",
+	"create.tooltip.chute.fans_push_down": "UNLOCALIZED: Fans push from Above",
+	"create.tooltip.chute.fans_pull_up": "UNLOCALIZED: Fans pull from Above",
+	"create.tooltip.chute.fans_pull_down": "UNLOCALIZED: Fans pull from Below",
 
 	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
 	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",

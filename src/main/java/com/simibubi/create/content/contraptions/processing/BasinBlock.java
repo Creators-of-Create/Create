@@ -10,15 +10,14 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.DirectionProperty;
@@ -57,7 +56,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
 		super.fillStateContainer(p_206840_1_.add(FACING));
 	}
-	
+
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
 		TileEntity tileEntity = world.getTileEntity(pos.up());
@@ -73,7 +72,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		return ActionResultType.FAIL;
+		if (!context.getWorld().isRemote)
+			withTileEntityDo(context.getWorld(), context.getPos(), bte -> bte.onWrenched(context.getFace()));
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
@@ -143,11 +144,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		updateDiagonalNeighbours(state, world, pos);
-	}
-
-	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext ctx) {
 		if (ctx.getEntity() instanceof ItemEntity)
 			return AllShapes.BASIN_COLLISION_SHAPE;
@@ -156,7 +152,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		updateDiagonalNeighbours(state, worldIn, pos);
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
@@ -186,35 +181,14 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		return BasinTileEntity.class;
 	}
 
-	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		BlockState state = super.getStateForPlacement(ctx);
-		World world = ctx.getWorld();
-		BlockPos pos = ctx.getPos();
-		return updateDiagonalState(state, world, pos);
-	}
-
-	protected void updateDiagonalNeighbours(BlockState state, World world, BlockPos pos) {
-		for (Direction direction : Iterate.horizontalDirections) {
-			BlockPos toUpdate = pos.up()
-				.offset(direction);
-			BlockState stateToUpdate = world.getBlockState(toUpdate);
-			BlockState updated = updateDiagonalState(stateToUpdate, world, toUpdate);
-			if (stateToUpdate != updated && !world.isRemote)
-				world.setBlockState(toUpdate, updated);
-		}
-	}
-
-	public static BlockState updateDiagonalState(BlockState state, IBlockReader world, BlockPos pos) {
-		if (!(state.getBlock() instanceof BasinBlock))
-			return state;
-		for (Direction direction : Iterate.horizontalDirections) {
-			BlockState diagonaloutputBasin = world.getBlockState(pos.down()
-				.offset(direction));
-			if (diagonaloutputBasin.getBlock() instanceof BasinBlock)
-				return state.with(FACING, direction);
-		}
-		return state.with(FACING, Direction.DOWN);
+	public static boolean canOutputTo(IBlockReader world, BlockPos basinPos, Direction direction) {
+		BlockPos offset = basinPos.down()
+			.offset(direction);
+		DirectBeltInputBehaviour directBeltInputBehaviour =
+			TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
+		if (directBeltInputBehaviour != null)
+			return directBeltInputBehaviour.canInsertFromSide(direction);
+		return false;
 	}
 
 }

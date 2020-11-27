@@ -438,6 +438,15 @@
 	"create.tunnel.selection_mode.randomize": "Randomize",
 	"create.tunnel.selection_mode.synchronize": "Synchronize Inputs",
 
+	"create.tooltip.chute.header": "Chute Information",
+	"create.tooltip.chute.items_move_down": "Items move Downward",
+	"create.tooltip.chute.items_move_up": "Items move Upward",
+	"create.tooltip.chute.no_fans_attached": "No attached fans",
+	"create.tooltip.chute.fans_push_up": "Fans push from Below",
+	"create.tooltip.chute.fans_push_down": "Fans push from Above",
+	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
+	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
+
 	"create.hint.mechanical_arm_no_targets.title": "No Targets",
 	"create.hint.mechanical_arm_no_targets": "It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "Horizontal Funnels",
