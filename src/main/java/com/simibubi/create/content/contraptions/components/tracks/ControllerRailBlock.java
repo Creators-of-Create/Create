@@ -1,14 +1,19 @@
 package com.simibubi.create.content.contraptions.components.tracks;
 
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.VecHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.RailShape;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +28,7 @@ import static net.minecraft.state.properties.RailShape.*;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings("deprecation")
-public class ControllerRailBlock extends AbstractRailBlock {
+public class ControllerRailBlock extends AbstractRailBlock implements IWrenchable {
 	public static final EnumProperty<RailShape> SHAPE = BlockStateProperties.RAIL_SHAPE_STRAIGHT;
 	public static final IntegerProperty POWERED = BlockStateProperties.POWER_0_15;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
@@ -31,6 +36,13 @@ public class ControllerRailBlock extends AbstractRailBlock {
 	public ControllerRailBlock(Properties p_i48444_2_) {
 		super(true, p_i48444_2_);
 		this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, 0).with(BACKWARDS, false).with(SHAPE, NORTH_SOUTH));
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
+		Direction direction = p_196258_1_.getPlacementHorizontalFacing();
+		BlockState base = super.getStateForPlacement(p_196258_1_);
+		return (base == null ? getDefaultState() : base).with(BACKWARDS, direction == Direction.SOUTH || direction == Direction.EAST);
 	}
 
 	@Override
@@ -162,5 +174,29 @@ public class ControllerRailBlock extends AbstractRailBlock {
 		}
 
 		return super.mirror(p_185471_1_, p_185471_2_);
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		BlockPos pos = context.getPos();
+		world.setBlockState(pos, rotate(state, Rotation.CLOCKWISE_90));
+		world.notifyNeighborsOfStateChange(pos.down(), this);
+		if (state.get(SHAPE).isAscending()) {
+			world.notifyNeighborsOfStateChange(pos.up(), this);
+		}
+		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		BlockPos pos = context.getPos();
+		world.setBlockState(pos, rotate(state, Rotation.COUNTERCLOCKWISE_90));
+		world.notifyNeighborsOfStateChange(pos.down(), this);
+		if (state.get(SHAPE).isAscending()) {
+			world.notifyNeighborsOfStateChange(pos.up(), this);
+		}
+		return ActionResultType.SUCCESS;
 	}
 }
