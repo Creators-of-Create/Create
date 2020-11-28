@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 346",
+	"_": "Missing Localizations: 347",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.clutch": "离合器",
 	"block.create.cogwheel": "齿轮",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_block": "铜块",
 	"block.create.copper_casing": "铜机壳",
 	"block.create.copper_ore": "铜矿石",

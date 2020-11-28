@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 333",
+	"_": "Missing Localizations: 334",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.clutch": "Сцепление",
 	"block.create.cogwheel": "Шестерня",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_block": "Медный блок",
 	"block.create.copper_casing": "Медный корпус",
 	"block.create.copper_ore": "Медная руда",

@@ -1,0 +1,724 @@
+{
+  "variants": {
+    "backwards=false,power=0,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_off"
+    },
+    "backwards=true,power=0,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_off",
+      "y": 180
+    },
+    "backwards=false,power=1,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=1,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=2,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=2,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=3,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=3,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=4,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=4,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=5,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=5,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=6,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=6,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=7,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=7,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=8,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=8,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=9,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=9,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=10,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=10,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=11,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=11,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=12,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=12,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=13,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=13,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=14,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog"
+    },
+    "backwards=true,power=14,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=15,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_on"
+    },
+    "backwards=true,power=15,shape=north_south": {
+      "model": "create:block/controller_rail/block_north_south_on",
+      "y": 180
+    },
+    "backwards=false,power=0,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_off",
+      "y": 270
+    },
+    "backwards=true,power=0,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_off",
+      "y": 90
+    },
+    "backwards=false,power=1,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=1,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=2,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=2,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=3,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=3,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=4,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=4,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=5,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=5,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=6,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=6,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=7,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=7,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=8,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=8,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=9,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=9,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=10,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=10,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=11,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=11,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=12,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=12,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=13,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=13,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=14,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 270
+    },
+    "backwards=true,power=14,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=15,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_on",
+      "y": 270
+    },
+    "backwards=true,power=15,shape=east_west": {
+      "model": "create:block/controller_rail/block_north_south_on",
+      "y": 90
+    },
+    "backwards=false,power=0,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_off",
+      "y": 90
+    },
+    "backwards=true,power=0,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_off",
+      "y": 270
+    },
+    "backwards=false,power=1,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=1,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=2,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=2,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=3,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=3,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=4,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=4,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=5,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=5,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=6,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=6,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=7,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=7,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=8,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=8,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=9,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=9,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=10,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=10,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=11,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=11,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=12,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=12,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=13,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=13,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=14,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 90
+    },
+    "backwards=true,power=14,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 270
+    },
+    "backwards=false,power=15,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north_on",
+      "y": 90
+    },
+    "backwards=true,power=15,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_south_on",
+      "y": 270
+    },
+    "backwards=false,power=0,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_off",
+      "y": 270
+    },
+    "backwards=true,power=0,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_off",
+      "y": 90
+    },
+    "backwards=false,power=1,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=1,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=2,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=2,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=3,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=3,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=4,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=4,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=5,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=5,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=6,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=6,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=7,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=7,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=8,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=8,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=9,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=9,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=10,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=10,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=11,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=11,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=12,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=12,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=13,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=13,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=14,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 270
+    },
+    "backwards=true,power=14,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 90
+    },
+    "backwards=false,power=15,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_north_on",
+      "y": 270
+    },
+    "backwards=true,power=15,shape=ascending_west": {
+      "model": "create:block/controller_rail/block_ascending_south_on",
+      "y": 90
+    },
+    "backwards=false,power=0,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_off"
+    },
+    "backwards=true,power=0,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_off",
+      "y": 180
+    },
+    "backwards=false,power=1,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=1,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=2,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=2,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=3,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=3,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=4,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=4,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=5,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=5,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=6,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=6,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=7,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=7,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=8,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=8,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=9,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=9,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=10,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=10,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=11,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=11,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=12,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=12,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=13,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=13,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=14,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_analog"
+    },
+    "backwards=true,power=14,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_analog",
+      "y": 180
+    },
+    "backwards=false,power=15,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_north_on"
+    },
+    "backwards=true,power=15,shape=ascending_north": {
+      "model": "create:block/controller_rail/block_ascending_south_on",
+      "y": 180
+    },
+    "backwards=false,power=0,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_off",
+      "y": 180
+    },
+    "backwards=true,power=0,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_off"
+    },
+    "backwards=false,power=1,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=1,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=2,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=2,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=3,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=3,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=4,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=4,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=5,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=5,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=6,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=6,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=7,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=7,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=8,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=8,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=9,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=9,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=10,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=10,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=11,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=11,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=12,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=12,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=13,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=13,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=14,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_analog",
+      "y": 180
+    },
+    "backwards=true,power=14,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_analog"
+    },
+    "backwards=false,power=15,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_north_on",
+      "y": 180
+    },
+    "backwards=true,power=15,shape=ascending_south": {
+      "model": "create:block/controller_rail/block_ascending_south_on"
+    }
+  }
+}

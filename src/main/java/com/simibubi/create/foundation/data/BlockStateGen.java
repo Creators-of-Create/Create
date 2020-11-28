@@ -9,6 +9,7 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -434,4 +435,47 @@ public class BlockStateGen {
 			.end();
 	}
 
+	public static NonNullBiConsumer<DataGenContext<Block, ControllerRailBlock>, RegistrateBlockstateProvider> controllerRail() {
+		return (c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(state -> {
+				int power = state.get(ControllerRailBlock.POWERED);
+				boolean backwards = state.get(ControllerRailBlock.BACKWARDS);
+				String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
+				RailShape shape = state.get(ControllerRailBlock.SHAPE);
+				String shapeName = shape.isAscending() ? RailShape.ASCENDING_NORTH.getName() : RailShape.NORTH_SOUTH.getName();
+				int rotation = 0;
+
+				switch (shape) {
+					case EAST_WEST:
+						rotation += 270;
+						shapeName = RailShape.NORTH_SOUTH.getName();
+						break;
+					case ASCENDING_EAST:
+						rotation += 90;
+						break;
+					case ASCENDING_SOUTH:
+						rotation += 180;
+						break;
+					case ASCENDING_WEST:
+						rotation += 270;
+						break;
+					default:
+						break;
+				}
+
+				if (backwards) {
+					rotation += 180;
+					shapeName = shape.isAscending() ? RailShape.ASCENDING_SOUTH.getName() : RailShape.NORTH_SOUTH.getName();
+				}
+
+
+				return ConfiguredModel.builder()
+					.modelFile(p.models()
+						.getExistingFile(p.modLoc(
+							"block/" + c.getName() + "/block_" + shapeName + "_" +
+								powerStr)))
+					.rotationY(rotation % 360)
+					.build();
+			});
+	}
 }

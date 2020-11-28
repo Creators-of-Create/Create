@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 664",
+	"_": "Missing Localizations: 665",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.clutch": "클러치",
 	"block.create.cogwheel": "톱나버퀴",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_block": "구리 블럭",
 	"block.create.copper_casing": "구리 케이스",
 	"block.create.copper_ore": "구리 광석",
