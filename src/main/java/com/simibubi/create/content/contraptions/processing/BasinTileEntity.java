@@ -37,6 +37,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -80,6 +82,9 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	protected LazyOptional<IItemHandlerModifiable> itemCapability;
 	protected LazyOptional<IFluidHandler> fluidCapability;
 
+	List<Direction> disabledSpoutputs;
+	Direction preferredSpoutput;
+
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
 	List<IntAttached<FluidStack>> visualizedOutputFluids;
@@ -101,6 +106,8 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		tanks = Couple.create(inputTank, outputTank);
 		visualizedOutputItems = Collections.synchronizedList(new ArrayList<>());
 		visualizedOutputFluids = Collections.synchronizedList(new ArrayList<>());
+		disabledSpoutputs = new ArrayList<>();
+		preferredSpoutput = null;
 	}
 
 	@Override
@@ -130,6 +137,13 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 
+		preferredSpoutput = null;
+		if (compound.contains("PreferredSpoutput"))
+			preferredSpoutput = NBTHelper.readEnum(compound, "PreferredSpoutput", Direction.class);
+		disabledSpoutputs.clear();
+		ListNBT disabledList = compound.getList("DisabledSpoutput", NBT.TAG_STRING);
+		disabledList.forEach(d -> disabledSpoutputs.add(Direction.valueOf(((StringNBT) d).getString())));
+
 		if (!clientPacket)
 			return;
 
@@ -145,6 +159,12 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		super.write(compound, clientPacket);
 		compound.put("InputItems", inputInventory.serializeNBT());
 		compound.put("OutputItems", outputInventory.serializeNBT());
+
+		if (preferredSpoutput != null)
+			NBTHelper.writeEnum(compound, "PreferredSpoutput", preferredSpoutput);
+		ListNBT disabledList = new ListNBT();
+		disabledSpoutputs.forEach(d -> disabledList.add(StringNBT.of(d.name())));
+		compound.put("DisabledSpoutput", disabledList);
 
 		if (!clientPacket)
 			return;
@@ -187,8 +207,10 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
+		updateSpoutput();
 		if (!world.isRemote)
 			return;
+
 		TileEntity tileEntity = world.getTileEntity(pos.up(2));
 		if (!(tileEntity instanceof MechanicalMixerTileEntity)) {
 			setAreFluidsMoving(false);
@@ -196,6 +218,45 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		}
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) tileEntity;
 		setAreFluidsMoving(mixer.running && mixer.runningTicks <= 20);
+	}
+
+	public void onWrenched(Direction face) {
+		BlockState blockState = getBlockState();
+		Direction currentFacing = blockState.get(BasinBlock.FACING);
+
+		disabledSpoutputs.remove(face);
+		if (currentFacing == face) {
+			if (preferredSpoutput == face)
+				preferredSpoutput = null;
+			disabledSpoutputs.add(face);
+		} else
+			preferredSpoutput = face;
+
+		updateSpoutput();
+	}
+
+	private void updateSpoutput() {
+		if (world.isRemote)
+			return;
+
+		BlockState blockState = getBlockState();
+		Direction currentFacing = blockState.get(BasinBlock.FACING);
+
+		if (currentFacing != Direction.DOWN)
+			notifyChangeOfContents();
+
+		Direction newFacing = Direction.DOWN;
+		for (Direction test : Iterate.horizontalDirections) {
+			boolean canOutputTo = BasinBlock.canOutputTo(world, pos, test);
+			if (canOutputTo && !disabledSpoutputs.contains(test))
+				newFacing = test;
+		}
+
+		if (preferredSpoutput != null && BasinBlock.canOutputTo(world, pos, preferredSpoutput))
+			newFacing = preferredSpoutput;
+
+		if (newFacing != currentFacing)
+			world.setBlockState(pos, blockState.with(BasinBlock.FACING, newFacing));
 	}
 
 	@Override
@@ -310,15 +371,15 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			// Output basin, try moving items to it
 			TileEntity te = world.getTileEntity(pos.down()
 				.offset(direction));
-			if (!(te instanceof BasinTileEntity))
+			if (te == null)
 				return false;
-			targetInv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			targetInv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
 				.orElse(null);
-			targetTank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			targetTank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())
 				.orElse(null);
 		}
 
-		if (targetInv == null)
+		if (targetInv == null && !outputItems.isEmpty())
 			return false;
 		for (ItemStack itemStack : outputItems)
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
@@ -327,14 +388,21 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 			else if (!simulate)
 				visualizedOutputItems.add(IntAttached.withZero(itemStack));
 
+		if (outputFluids.isEmpty())
+			return true;
 		if (targetTank == null)
 			return false;
-		for (FluidStack fluidStack : outputFluids)
-			if (targetTank.fill(fluidStack.copy(), simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE) != fluidStack
-				.getAmount())
+
+		for (FluidStack fluidStack : outputFluids) {
+			FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
+			int fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
+				? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), action)
+				: targetTank.fill(fluidStack.copy(), action);
+			if (fill != fluidStack.getAmount())
 				return false;
 			else if (!simulate)
 				visualizedOutputFluids.add(IntAttached.withZero(fluidStack));
+		}
 
 		return true;
 	}

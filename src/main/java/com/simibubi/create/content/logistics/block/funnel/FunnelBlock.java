@@ -126,12 +126,15 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 			return toInsert;
 		if (simulate)
 			inserter.simulate();
-		if (!simulate) {
+		ItemStack insert = inserter.insert(toInsert);
+		
+		if (!simulate && insert.getCount() != toInsert.getCount()) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof FunnelTileEntity)
 				((FunnelTileEntity) tileEntity).onTransfer(toInsert);
 		}
-		return inserter.insert(toInsert);
+		
+		return insert;
 	}
 
 	@Override

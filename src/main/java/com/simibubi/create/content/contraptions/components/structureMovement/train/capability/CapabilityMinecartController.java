@@ -36,6 +36,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 
 public class CapabilityMinecartController implements ICapabilitySerializable<CompoundNBT> {
@@ -200,6 +201,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		Entity entity = event.getObject();
 		if (!(entity instanceof AbstractMinecartEntity))
 			return;
+
 		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecartEntity) entity);
 		ResourceLocation id = Create.asResource("minecart_controller");
 		event.addCapability(id, capability);
@@ -209,6 +211,14 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		});
 		queuedAdditions.get(entity.getEntityWorld())
 			.add((AbstractMinecartEntity) entity);
+	}
+
+	public static void startTracking(PlayerEvent.StartTracking event) {
+		Entity entity = event.getTarget();
+		if (!(entity instanceof AbstractMinecartEntity))
+			return;
+		entity.getCapability(MINECART_CONTROLLER_CAPABILITY)
+			.ifPresent(MinecartController::sendData);
 	}
 
 	public static void register() {

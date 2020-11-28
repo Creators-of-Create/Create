@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.base;
 
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
@@ -13,6 +20,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
@@ -28,12 +36,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
-
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
@@ -409,14 +411,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.kinetic_stats")));
 			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.stressImpact").formatted(TextFormatting.GRAY)));
 
-			float stressTotal = stressAtBase * Math.abs(getSpeed());
+			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressAtBase))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.base_value").formatted(TextFormatting.DARK_GRAY)));
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(stressTotal))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.GRAY)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
-
-
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
 
 			added = true;
 		}

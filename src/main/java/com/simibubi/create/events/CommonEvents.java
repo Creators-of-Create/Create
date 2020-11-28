@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
@@ -25,6 +26,7 @@ import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -117,6 +119,11 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		CapabilityMinecartController.attach(event);
+	}
+	
+	@SubscribeEvent
+	public static void startTracking(PlayerEvent.StartTracking event) {
+		CapabilityMinecartController.startTracking(event);
 	}
 
 }

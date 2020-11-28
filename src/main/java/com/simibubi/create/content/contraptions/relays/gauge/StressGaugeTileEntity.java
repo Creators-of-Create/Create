@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -70,7 +71,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.title").formatted(TextFormatting.GRAY)));
 
 		if (getTheoreticalSpeed() == 0)
-			tooltip.add(new StringTextComponent(ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).formatted(TextFormatting.DARK_GRAY));
+			tooltip.add(new StringTextComponent(spacing + ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).formatted(TextFormatting.DARK_GRAY));
 		//	tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
 		//			+ Lang.translate("gui.stressometer.no_rotation")));
 		else {
@@ -79,15 +80,20 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.capacity").formatted(TextFormatting.GRAY)));
 
 			double remainingCapacity = capacity - getNetworkStress();
-			double remainingCapacityAtBase = remainingCapacity / Math.abs(getTheoreticalSpeed());
 
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(remainingCapacityAtBase))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(StressImpact.of(stressFraction).getRelativeColor()))
-				.append(Lang.translate("gui.goggles.base_value").formatted(TextFormatting.DARK_GRAY)));
-
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(IHaveGoggleInformation.format(remainingCapacity))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(StressImpact.of(stressFraction).getRelativeColor()))
-				.append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
+			ITextComponent su = Lang.translate("generic.unit.stress");
+			IFormattableTextComponent stressTooltip = componentSpacing.copy()
+					.append(new StringTextComponent(" " + IHaveGoggleInformation.format(remainingCapacity))
+							.append(su.copy())
+							.formatted(StressImpact.of(stressFraction).getRelativeColor()));
+			if (remainingCapacity != capacity) {
+				stressTooltip
+						.append(new StringTextComponent(" / ").formatted(TextFormatting.GRAY))
+						.append(new StringTextComponent(IHaveGoggleInformation.format(capacity))
+								.append(su.copy())
+								.formatted(TextFormatting.DARK_GRAY));
+			}
+			tooltip.add(stressTooltip);
 		}
 
 		return true;

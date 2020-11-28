@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "create:natural_scoria"
+  },
+  "result": "create:scoria",
+  "experience": 0.0,
+  "cookingtime": 200
+}

@@ -120,7 +120,6 @@ public class ItemDescription {
 			add(linesOnShift, level);
 		}
 
-		ITextComponent stressUnit = Lang.translate("generic.unit.stress");
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
 			List<ITextComponent> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
 			double impact = impacts.get(id)
@@ -131,7 +130,7 @@ public class ItemDescription {
 			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + impacts.get(id).get()).append(stressUnit).append(")");
+				level.append(" (" + impacts.get(id).get()).append("x " + rpmUnit).append(")");
 
 			add(linesOnShift, Lang.translate("tooltip.stressImpact").formatted(GRAY));
 			add(linesOnShift, level);
@@ -148,7 +147,7 @@ public class ItemDescription {
 			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressCapacityLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + capacity).append(stressUnit).append(")");
+				level.append(" (" + capacity).append("x " + rpmUnit).append(")");
 			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 				level.append(" ").append(Lang.translate("tooltip.capacityProvided.asGenerator").formatted(DARK_GRAY, ITALIC));
 

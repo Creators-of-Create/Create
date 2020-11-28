@@ -143,7 +143,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			.getValue(partialTicks);
 
 		if (!fluidStack.isEmpty() && level != 0) {
-			float yMin = 4f / 16f;
+			float yMin = 5f / 16f;
 			float min = 2f / 16f;
 			float max = min + (12 / 16f);
 			float yOffset = (8 / 16f) * level;

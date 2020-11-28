@@ -67,6 +67,8 @@ public class DepotTileEntity extends SmartTileEntity {
 			return;
 		if (world.isRemote)
 			return;
+		if (handleBeltFunnelOutput())
+			return;
 
 		BeltProcessingBehaviour processingBehaviour =
 			TileEntityBehaviour.get(world, pos.up(2), BeltProcessingBehaviour.TYPE);
@@ -75,8 +77,8 @@ public class DepotTileEntity extends SmartTileEntity {
 		if (!heldItem.locked && BeltProcessingBehaviour.isBlocked(world, pos))
 			return;
 
-		boolean wasLocked = heldItem.locked;
 		ItemStack previousItem = heldItem.stack;
+		boolean wasLocked = heldItem.locked;
 		ProcessingResult result = wasLocked ? processingBehaviour.handleHeldItem(heldItem, transportedHandler)
 			: processingBehaviour.handleReceivedItem(heldItem, transportedHandler);
 		if (result == ProcessingResult.REMOVE) {
@@ -88,6 +90,35 @@ public class DepotTileEntity extends SmartTileEntity {
 		heldItem.locked = result == ProcessingResult.HOLD;
 		if (heldItem.locked != wasLocked || !previousItem.equals(heldItem.stack, false))
 			sendData();
+	}
+
+	private boolean handleBeltFunnelOutput() {
+		for (int slot = 0; slot < processingOutputBuffer.getSlots(); slot++) {
+			ItemStack previousItem = processingOutputBuffer.getStackInSlot(slot);
+			if (previousItem.isEmpty())
+				continue;
+			ItemStack afterInsert =
+				getBehaviour(DirectBeltInputBehaviour.TYPE).tryExportingToBeltFunnel(previousItem, null);
+			if (previousItem.getCount() != afterInsert.getCount()) {
+				processingOutputBuffer.setStackInSlot(slot, afterInsert);
+				notifyUpdate();
+				return true;
+			}
+		}
+
+		ItemStack previousItem = heldItem.stack;
+		ItemStack afterInsert =
+			getBehaviour(DirectBeltInputBehaviour.TYPE).tryExportingToBeltFunnel(previousItem, null);
+		if (previousItem.getCount() != afterInsert.getCount()) {
+			if (afterInsert.isEmpty())
+				heldItem = null;
+			else
+				heldItem.stack = afterInsert;
+			notifyUpdate();
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -116,7 +147,8 @@ public class DepotTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new DirectBeltInputBehaviour(this).setInsertionHandler(this::tryInsertingFromSide));
+		behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnels()
+			.setInsertionHandler(this::tryInsertingFromSide));
 		transportedHandler = new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf);
 		behaviours.add(transportedHandler);

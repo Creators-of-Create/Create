@@ -6,8 +6,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
@@ -132,7 +132,7 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 			world.removeTileEntity(pos);
 		}
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
@@ -171,13 +171,14 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 
 	public static boolean isOnValidBelt(BlockState state, IWorldReader world, BlockPos pos) {
 		BlockState stateBelow = world.getBlockState(pos.down());
-		if (stateBelow.getBlock() instanceof DepotBlock)
-			return true;
-		if (!(stateBelow.getBlock() instanceof BeltBlock))
+		if ((stateBelow.getBlock() instanceof BeltBlock))
+			return BeltBlock.canTransportObjects(stateBelow);
+		DirectBeltInputBehaviour directBeltInputBehaviour =
+			TileEntityBehaviour.get(world, pos.down(), DirectBeltInputBehaviour.TYPE);
+		if (directBeltInputBehaviour == null)
 			return false;
-		if (!BeltBlock.canTransportObjects(stateBelow))
-			return false;
-		return true;
+		return directBeltInputBehaviour.canSupportBeltFunnels();
+
 	}
 
 	@Override
@@ -207,7 +208,8 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		else if (shape == Shape.EXTENDED)
 			newShape = Shape.RETRACTED;
 		else if (shape == Shape.RETRACTED) {
-			BlockState belt = world.getBlockState(context.getPos().down());
+			BlockState belt = world.getBlockState(context.getPos()
+				.down());
 			if (belt.getBlock() instanceof BeltBlock && belt.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 				newShape = Shape.RETRACTED;
 			else
@@ -215,8 +217,7 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		}
 
 		if (newShape != shape)
-			world
-				.setBlockState(context.getPos(), state.with(SHAPE, newShape));
+			world.setBlockState(context.getPos(), state.with(SHAPE, newShape));
 		return ActionResultType.SUCCESS;
 	}
 

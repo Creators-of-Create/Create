@@ -52,8 +52,6 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity{
 
 		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.speedometer.title").formatted(TextFormatting.GRAY)));
 		tooltip.add(componentSpacing.copy().append(SpeedLevel.getFormattedSpeedText(speed, overStressed)));
-		if (overStressed)
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(TextFormatting.DARK_RED)));
 
 		return true;
 	}
