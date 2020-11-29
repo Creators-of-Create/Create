@@ -114,7 +114,7 @@ public class CouplingPhysics {
 
 		float futureStress = (float) (couplingLength - nextPositions.getFirst()
 			.distanceTo(nextPositions.getSecond()));
-		if (MathHelper.epsilonEquals(futureStress, 0))
+		if (MathHelper.epsilonEquals(futureStress, 0D))
 			return;
 
 		for (boolean current : Iterate.trueAndFalse) {
