@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 680",
+	"_": "Missing Localizations: 681",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.clutch": "Embrayage",
 	"block.create.cogwheel": "Roue dentée",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_block": "Bloc de cuivre",
 	"block.create.copper_casing": "Boîtier en cuivre",
 	"block.create.copper_ore": "Minerai de cuivre",

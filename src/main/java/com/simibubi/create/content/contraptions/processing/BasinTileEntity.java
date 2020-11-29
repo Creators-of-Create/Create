@@ -251,7 +251,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 				newFacing = test;
 		}
 
-		if (preferredSpoutput != null && BasinBlock.canOutputTo(world, pos, preferredSpoutput))
+		if (preferredSpoutput != null && BasinBlock.canOutputTo(world, pos, preferredSpoutput)  && preferredSpoutput != Direction.UP)
 			newFacing = preferredSpoutput;
 
 		if (newFacing != currentFacing)
