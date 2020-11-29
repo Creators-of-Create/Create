@@ -438,7 +438,7 @@ public class BlockStateGen {
 	public static NonNullBiConsumer<DataGenContext<Block, ControllerRailBlock>, RegistrateBlockstateProvider> controllerRail() {
 		return (c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> {
-				int power = state.get(ControllerRailBlock.POWERED);
+				int power = state.get(ControllerRailBlock.POWER);
 				boolean backwards = state.get(ControllerRailBlock.BACKWARDS);
 				String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
 				RailShape shape = state.get(ControllerRailBlock.SHAPE);
