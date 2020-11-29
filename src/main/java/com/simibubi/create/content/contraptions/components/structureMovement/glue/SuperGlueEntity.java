@@ -43,6 +43,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -256,26 +257,38 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@OnlyIn(Dist.CLIENT)
 	private void triggerPlaceBlock(PlayerEntity player, Hand hand) {
-		if (player instanceof ClientPlayerEntity && player.world instanceof ClientWorld) {
-			ClientPlayerEntity cPlayer = (ClientPlayerEntity) player;
-			Minecraft mc = Minecraft.getInstance();
-			RayTraceResult ray =
-				cPlayer.pick(mc.playerController.getBlockReachDistance(), mc.getRenderPartialTicks(), false);
-			if (ray instanceof BlockRayTraceResult) {
-				for (Hand handIn : Hand.values()) {
-					ItemStack itemstack = cPlayer.getHeldItem(handIn);
-					int countBefore = itemstack.getCount();
-					ActionResultType actionResultType = mc.playerController.func_217292_a(cPlayer,
-						(ClientWorld) cPlayer.world, handIn, (BlockRayTraceResult) ray);
-					if (actionResultType == ActionResultType.SUCCESS) {
-						cPlayer.swingArm(handIn);
-						if (!itemstack.isEmpty()
-							&& (itemstack.getCount() != countBefore || mc.playerController.isInCreativeMode()))
-							mc.gameRenderer.itemRenderer.resetEquippedProgress(handIn);
-						return;
-					}
-				}
-			}
+		if (!(player instanceof ClientPlayerEntity))
+			return;
+		if (!(player.world instanceof ClientWorld))
+			return;
+
+		ClientPlayerEntity cPlayer = (ClientPlayerEntity) player;
+		Minecraft mc = Minecraft.getInstance();
+		RayTraceResult ray =
+			cPlayer.pick(mc.playerController.getBlockReachDistance(), mc.getRenderPartialTicks(), false);
+
+		if (!(ray instanceof BlockRayTraceResult))
+			return;
+		if (ray.getType() == Type.MISS)
+			return;
+		BlockRayTraceResult blockRay = (BlockRayTraceResult) ray;
+		if (!blockRay.getPos()
+			.offset(blockRay.getFace())
+			.equals(getHangingPosition()))
+			return;
+
+		for (Hand handIn : Hand.values()) {
+			ItemStack itemstack = cPlayer.getHeldItem(handIn);
+			int countBefore = itemstack.getCount();
+			ActionResultType actionResultType =
+				mc.playerController.func_217292_a(cPlayer, (ClientWorld) cPlayer.world, handIn, blockRay);
+			if (actionResultType != ActionResultType.SUCCESS)
+				return;
+
+			cPlayer.swingArm(handIn);
+			if (!itemstack.isEmpty() && (itemstack.getCount() != countBefore || mc.playerController.isInCreativeMode()))
+				mc.gameRenderer.itemRenderer.resetEquippedProgress(handIn);
+			return;
 		}
 	}
 

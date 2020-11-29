@@ -49,6 +49,14 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 		return Couple.create(function.apply(first), function.apply(second));
 	}
 
+	public <S> Couple<S> mapWithContext(BiFunction<T, Boolean, S> function) {
+		return Couple.create(function.apply(first, true), function.apply(second, false));
+	}
+	
+	public <S, R> Couple<S> mapWithParams(BiFunction<T, R, S> function, Couple<R> values) {
+		return Couple.create(function.apply(first, values.first), function.apply(second, values.second));
+	}
+
 	public void replace(Function<T, T> function) {
 		setFirst(function.apply(getFirst()));
 		setSecond(function.apply(getSecond()));
@@ -95,17 +103,17 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	public Iterator<T> iterator() {
 		return new Couplerator<>(this);
 	}
-	
+
 	private static class Couplerator<T> implements Iterator<T> {
 
 		int state;
 		private Couple<T> couple;
-		
+
 		public Couplerator(Couple<T> couple) {
 			this.couple = couple;
 			state = 0;
 		}
-		
+
 		@Override
 		public boolean hasNext() {
 			return state != 2;
@@ -120,7 +128,7 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 				return couple.second;
 			return null;
 		}
-		
+
 	}
 
 }
