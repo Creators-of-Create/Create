@@ -151,7 +151,7 @@ public class AllTags {
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 		
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
-		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL);
+		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
