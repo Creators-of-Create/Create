@@ -131,7 +131,7 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 				return ActionResultType.SUCCESS;
 
 			world.setBlockState(newPos, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()
-				.with(FACING, offset.getFirst()));
+				.with(FACING, state.get(FACING)));
 			if (!player.isCreative())
 				heldItem.shrink(1);
 
@@ -162,4 +162,5 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 		}
 		return state;
 	}
+
 }

@@ -13,6 +13,7 @@
     }
   },
   "result": {
-    "item": "create:chute"
+    "item": "create:chute",
+    "count": 4
   }
 }

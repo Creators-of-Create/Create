@@ -329,6 +329,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("CRC")
 				.patternLine("L L")),
 
+		CONTROLLER_RAIL = create(AllBlocks.CONTROLLER_RAIL).returns(6)
+			.unlockedBy(() -> Items.POWERED_RAIL)
+			.viaShaped(b -> b.key('A', I.gold())
+				.key('E', I.electronTube())
+				.key('S', Tags.Items.RODS_WOODEN)
+				.patternLine("A A")
+				.patternLine("ASA")
+				.patternLine("AEA")),
+
 		HAND_CRANK = create(AllBlocks.HAND_CRANK).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('A', I.andesite())
 				.key('C', ItemTags.PLANKS)
@@ -536,6 +545,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("AA")),
 
 		CHUTE = create(AllBlocks.CHUTE).unlockedBy(I::andesite)
+			.returns(4)
 			.viaShaped(b -> b.key('A', I.ironSheet())
 				.key('I', I.andesite())
 				.patternLine("II")

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 351",
+	"_": "Missing Localizations: 352",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -727,6 +727,7 @@
 	"create.gui.goggles.generator_stats": "产能器状态:",
 	"create.gui.goggles.kinetic_stats": "动能状态:",
 	"create.gui.goggles.at_current_speed": "当前速度应力值",
+	"create.gui.goggles.pole_length": "UNLOCALIZED: Pole Length:",
 	"create.gui.gauge.info_header": "仪表信息:",
 	"create.gui.speedometer.title": "旋转速度",
 	"create.gui.stressometer.title": "网络应力",

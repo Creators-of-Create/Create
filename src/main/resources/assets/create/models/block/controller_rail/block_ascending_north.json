@@ -1,0 +1,36 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "#rail",
+		"rail": "create:block/controller_rail_base",
+		"tint": "create:block/controller_rail_tint"
+	},
+	"elements": [
+		{   "from": [ 0, 9, 0 ],
+			"to": [ 16, 9, 16 ],
+			"rotation": {
+				"origin": [ 8, 9, 8 ],
+				"axis": "x",
+				"angle": 45,
+				"rescale": true
+			},
+			"faces": {
+				"down":  { "uv": [ 0, 16, 16,  0 ], "texture": "#rail" },
+				"up":    { "uv": [ 0,  0, 16, 16 ], "texture": "#rail" }
+			}
+		},
+		{   "from": [ 0, 9, 0 ],
+			"to": [ 16, 9, 16 ],
+			"rotation": {
+				"origin": [ 8, 9, 8 ],
+				"axis": "x",
+				"angle": 45,
+				"rescale": true
+			},
+			"faces": {
+				"down":  { "uv": [ 0, 16, 16,  0 ], "texture": "#tint", "tintindex": 0 },
+				"up":    { "uv": [ 0,  0, 16, 16 ], "texture": "#tint", "tintindex": 0 }
+			}
+		}
+	]
+}

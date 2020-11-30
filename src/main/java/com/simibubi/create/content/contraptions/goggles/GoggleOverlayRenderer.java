@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -100,7 +101,9 @@ public class GoggleOverlayRenderer {
 			if (!tooltip.isEmpty())
 				tooltip.add(StringTextComponent.EMPTY);
 
-			tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(new StringTextComponent("Pole length: " + poles)));
+			tooltip.add(IHaveGoggleInformation.componentSpacing.copy()
+				.append(Lang.translate("gui.goggles.pole_length"))
+				.append(new StringTextComponent(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())

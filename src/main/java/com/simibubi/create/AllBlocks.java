@@ -62,6 +62,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailGenerator;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
@@ -740,12 +741,14 @@ public class AllBlocks {
 	public static final BlockEntry<ControllerRailBlock> CONTROLLER_RAIL =
 		REGISTRATE.block("controller_rail", ControllerRailBlock::new)
 			.initialProperties(() -> Blocks.POWERED_RAIL)
-			.blockstate(BlockStateGen.controllerRail())
+			.blockstate(new ControllerRailGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
+			.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getRedstonePower))
 			.tag(BlockTags.RAILS)
 			.item()
-			.model((c, p) -> p.generated(c, Create.asResource("block/controller_rail_analog")))
-			.build().register();
+			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName() + "_item")))
+			.build()
+			.register();
 
 	public static final BlockEntry<MinecartAnchorBlock> MINECART_ANCHOR =
 		REGISTRATE.block("minecart_anchor", MinecartAnchorBlock::new)

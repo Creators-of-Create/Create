@@ -1,30 +1,31 @@
 package com.simibubi.create;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.biome.BiomeColors;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AllColorHandlers {
 
-	private Map<Block, IBlockVertexColor> coloredVertexBlocks = new HashMap<>();
-	private Map<Block, IBlockColor> coloredBlocks = new HashMap<>();
-	private Map<IItemProvider, IItemColor> coloredItems = new HashMap<>();
+	private final Map<Block, IBlockVertexColor> coloredVertexBlocks = new HashMap<>();
+	private final Map<Block, IBlockColor> coloredBlocks = new HashMap<>();
+	private final Map<IItemProvider, IItemColor> coloredItems = new HashMap<>();
 
 	//
 
@@ -36,6 +37,12 @@ public class AllColorHandlers {
 
 	public static IItemColor getGrassyItem() {
 		return new ItemColor((stack, layer) -> GrassColors.get(0.5D, 1.0D));
+	}
+
+	public static IBlockColor getRedstonePower() {
+		return new BlockColor(
+				(state, world, pos, layer) -> RedstoneWireBlock.colorMultiplier(pos != null && world != null ? state.get(BlockStateProperties.POWER_0_15) : 0)
+		);
 	}
 
 	//
