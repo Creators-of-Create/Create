@@ -112,8 +112,9 @@ public class ArmInteractionPointHandler {
 				else
 					inputs++;
 			}
-			player.sendStatusMessage(Lang.createTranslationTextComponent("mechanical_arm.summary", inputs, outputs)
-				.formatted(TextFormatting.WHITE), true);
+			if (inputs + outputs > 0)
+				player.sendStatusMessage(Lang.createTranslationTextComponent("mechanical_arm.summary", inputs, outputs)
+					.formatted(TextFormatting.WHITE), true);
 		}
 
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));

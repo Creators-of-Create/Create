@@ -44,34 +44,21 @@ public class MinecartSim2020 {
 			map.put(RailShape.NORTH_WEST, Pair.of(north, west));
 			map.put(RailShape.NORTH_EAST, Pair.of(north, east));
 		});
-
-	public static Vector3d predictMotionOf(AbstractMinecartEntity cart) {
-//		if (cart instanceof FurnaceMinecartEntity) {
-//			return cart.getPositionVec()
-//				.subtract(cart.lastTickPosX, cart.lastTickPosY, cart.lastTickPosZ);
-//		}
-		return cart.getMotion().scale(1f);
-//		if (cart instanceof ContainerMinecartEntity) {
-//			ContainerMinecartEntity containerCart = (ContainerMinecartEntity) cart;
-//			float f = 0.98F;
-//			if (containerCart.isEmpty())
-//				return cart.getMotion()
-//					.mul(f, 0.0D, f);
-//			int i = 15 - Container.calcRedstoneFromInventory(containerCart);
-//			f += (float) i * 0.001F;
-//			return cart.getMotion()
-//				.mul(f, 0.0D, f);
-//		}
-//		return cart.getMotion()
-//			.scale(cart.isBeingRidden() ? 0.997D : 0.96D);
+	
+	public static Vector3d predictNextPositionOf(AbstractMinecartEntity cart) {
+		Vector3d position = cart.getPositionVec();
+		Vector3d motion = cart.getMotion();
+		return position.add(motion);
 	}
 
 	public static boolean canAddMotion(AbstractMinecartEntity c) {
 		if (c instanceof FurnaceMinecartEntity)
 			return MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushX, 0)
 				&& MathHelper.epsilonEquals(((FurnaceMinecartEntity) c).pushZ, 0);
-		LazyOptional<MinecartController> capability = c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
-		if (capability.isPresent() && capability.orElse(null).isStalled()) 
+		LazyOptional<MinecartController> capability =
+			c.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+		if (capability.isPresent() && capability.orElse(null)
+			.isStalled())
 			return false;
 		return true;
 	}
@@ -195,21 +182,6 @@ public class MinecartSim2020 {
 		}
 
 		cart.setMotion(previousMotion);
-
-		if (cart instanceof FurnaceMinecartEntity) {
-//			FurnaceMinecartEntity furnaceCart = (FurnaceMinecartEntity) cart;
-//			Vector3d Vector3d = cart.getMotion();
-//			double d2 = horizontalMag(Vector3d);
-//			double d3 = furnaceCart.pushX * furnaceCart.pushX + furnaceCart.pushZ * furnaceCart.pushZ;
-//			if (d3 > 1.0E-4D && d2 > 0.001D) {
-//				double d40 = (double) MathHelper.sqrt(d2);
-//				double d50 = (double) MathHelper.sqrt(d3);
-//				furnaceCart.pushX = Vector3d.x / d40 * d50;
-//				furnaceCart.pushZ = Vector3d.z / d40 * d50;
-//				furnaceCart.setMotion(Vector3d.mul(0.8D, 0.0D, 0.8D)
-//					.add(furnaceCart.pushX, 0.0D, furnaceCart.pushZ));
-//			}
-		}
 	}
 
 	public static Vector3d getRailVec(RailShape shape) {

@@ -188,9 +188,9 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 					}
 				}));
 				mc.couplings = mc.couplings.swap();
+				mc.needsEntryRefresh = true;
 				if (mc == this)
 					continue;
-				mc.needsEntryRefresh = true;
 				mc.sendData();
 			}
 		}
