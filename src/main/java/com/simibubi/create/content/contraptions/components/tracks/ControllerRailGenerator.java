@@ -7,15 +7,15 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.properties.RailShape;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class ControllerRailGenerator extends SpecialBlockStateGen {
 
 	@Override
-	protected IProperty<?>[] getIgnoredProperties() {
-		return new IProperty<?>[] { ControllerRailBlock.POWER };
+	protected Property<?>[] getIgnoredProperties() {
+		return new Property<?>[] { ControllerRailBlock.POWER };
 	}
 
 	@Override

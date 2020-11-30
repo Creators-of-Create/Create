@@ -5,15 +5,15 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class SpecialBlockStateGen {
 
-	protected IProperty<?>[] getIgnoredProperties() {
-		return new IProperty<?>[0];
+	protected Property<?>[] getIgnoredProperties() {
+		return new Property<?>[0];
 	}
 	
 	public final <T extends Block> void generate(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov) {
