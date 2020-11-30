@@ -26,6 +26,7 @@
     "create:redstone_link",
     "#minecraft:doors",
     "minecraft:flower_pot",
-    "minecraft:bell"
+    "minecraft:bell",
+    "minecraft:cocoa"
   ]
 }
