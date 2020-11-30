@@ -16,12 +16,12 @@
       "y": 90
     },
     "backwards=false,shape=ascending_east": {
-      "model": "create:block/controller_rail/block_ascending_north",
-      "y": 90
-    },
-    "backwards=true,shape=ascending_east": {
       "model": "create:block/controller_rail/block_ascending_south",
       "y": 270
+    },
+    "backwards=true,shape=ascending_east": {
+      "model": "create:block/controller_rail/block_ascending_north",
+      "y": 90
     },
     "backwards=false,shape=ascending_west": {
       "model": "create:block/controller_rail/block_ascending_north",
@@ -39,11 +39,11 @@
       "y": 180
     },
     "backwards=false,shape=ascending_south": {
-      "model": "create:block/controller_rail/block_ascending_north",
-      "y": 180
+      "model": "create:block/controller_rail/block_ascending_south"
     },
     "backwards=true,shape=ascending_south": {
-      "model": "create:block/controller_rail/block_ascending_south"
+      "model": "create:block/controller_rail/block_ascending_north",
+      "y": 180
     }
   }
 }

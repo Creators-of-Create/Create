@@ -75,6 +75,11 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.EMERALD, 2)
 			.output(.25f, Items.EMERALD, 1)
 			.output(.125f, Blocks.COBBLESTONE)),
+		
+		DIAMOND_ORE = create(() -> Blocks.DIAMOND_ORE, b -> b.duration(500)
+			.output(Items.DIAMOND, 2)
+			.output(.25f, Items.DIAMOND, 1)
+			.output(.125f, Blocks.COBBLESTONE)),
 
 		NETHER_WART_NO_QUARK = create("nether_wart_block_no_quark", b -> b.duration(150)
 			.require(Blocks.NETHER_WART_BLOCK)
