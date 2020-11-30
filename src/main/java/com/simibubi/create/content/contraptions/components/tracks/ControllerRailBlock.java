@@ -18,8 +18,8 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -42,7 +42,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 		this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0).with(BACKWARDS, false).with(SHAPE, NORTH_SOUTH));
 	}
 
-	private static Vec3i getAccelerationVector(BlockState state) {
+	private static Vector3i getAccelerationVector(BlockState state) {
 		Direction pointingTo = getPointingTowards(state);
 		return (state.get(BACKWARDS) ? pointingTo.getOpposite() : pointingTo).getDirectionVec();
 	}
@@ -62,7 +62,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	}
 
 	private static void decelerateCart(BlockPos pos, AbstractMinecartEntity cart) {
-		Vec3d diff = VecHelper.getCenterOf(pos).subtract(cart.getPositionVec());
+		Vector3d diff = VecHelper.getCenterOf(pos).subtract(cart.getPositionVec());
 		cart.setMotion(diff.x / 16f, 0, diff.z / 16f);
 	}
 
@@ -78,7 +78,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	}
 
 	@Override
-	public IProperty<RailShape> getShapeProperty() {
+	public Property<RailShape> getShapeProperty() {
 		return SHAPE;
 	}
 
@@ -91,7 +91,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	public void onMinecartPass(BlockState state, World world, BlockPos pos, AbstractMinecartEntity cart) {
 		if (world.isRemote)
 			return;
-		Vec3d accelerationVec = new Vec3d(getAccelerationVector(state));
+		Vector3d accelerationVec = Vector3d.of(getAccelerationVector(state));
 		double targetSpeed = cart.getMaxSpeedWithRail() * state.get(POWER) / 15.;
 		if ((cart.getMotion().dotProduct(accelerationVec) >= 0 || cart.getMotion().lengthSquared() < 0.0001) && targetSpeed > 0)
 			cart.setMotion(accelerationVec.scale(targetSpeed));
@@ -268,7 +268,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 		BlockState current = world.getBlockState(from);
 		if (!(current.getBlock() instanceof ControllerRailBlock))
 			return null;
-		Vec3i accelerationVec = getAccelerationVector(current);
+		Vector3i accelerationVec = getAccelerationVector(current);
 		BlockPos baseTestPos = reversed ? from.subtract(accelerationVec) : from.add(accelerationVec);
 		for (BlockPos testPos : new BlockPos[]{baseTestPos, baseTestPos.down(), baseTestPos.up()}) {
 			if (testPos.getY() > from.getY() && !current.get(SHAPE).isAscending())

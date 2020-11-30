@@ -442,13 +442,13 @@ public class BlockStateGen {
 				boolean backwards = state.get(ControllerRailBlock.BACKWARDS);
 				String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
 				RailShape shape = state.get(ControllerRailBlock.SHAPE);
-				String shapeName = shape.isAscending() ? RailShape.ASCENDING_NORTH.getName() : RailShape.NORTH_SOUTH.getName();
+				String shapeName = shape.isAscending() ? RailShape.ASCENDING_NORTH.getString() : RailShape.NORTH_SOUTH.getString();
 				int rotation = 0;
 
 				switch (shape) {
 					case EAST_WEST:
 						rotation += 270;
-						shapeName = RailShape.NORTH_SOUTH.getName();
+						shapeName = RailShape.NORTH_SOUTH.getString();
 						break;
 					case ASCENDING_EAST:
 						rotation += 90;
@@ -465,7 +465,7 @@ public class BlockStateGen {
 
 				if (backwards) {
 					rotation += 180;
-					shapeName = shape.isAscending() ? RailShape.ASCENDING_SOUTH.getName() : RailShape.NORTH_SOUTH.getName();
+					shapeName = shape.isAscending() ? RailShape.ASCENDING_SOUTH.getString() : RailShape.NORTH_SOUTH.getString();
 				}
 
 

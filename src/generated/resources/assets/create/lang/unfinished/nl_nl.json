@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 995",
+	"_": "Missing Localizations: 996",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -54,6 +54,7 @@
 	"block.create.clutch": "Koppeling",
 	"block.create.cogwheel": "Tandwiel",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
+	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_block": "UNLOCALIZED: Copper Block",
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
 	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",
@@ -632,11 +633,11 @@
 	"create.gui.scrollInput.scrollToSelect": "Scroll om te selecteren",
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift om sneller te Scrollen",
 	"create.gui.toolmenu.focusKey": "Hou [%1$s] ingedrukt om te Focusen",
-	"create.gui.toolmenu.cycle": "[SCROLL] om te CycleÃ«n",
+	"create.gui.toolmenu.cycle": "[SCROLL] om te Cycleën",
 	"create.gui.symmetryWand.mirrorType": "Spiegelen",
 	"create.gui.symmetryWand.orientation": "Orientatie",
 
-	"create.symmetry.mirror.plane": "Spiegel Ã©Ã©n keer",
+	"create.symmetry.mirror.plane": "Spiegel één keer",
 	"create.symmetry.mirror.doublePlane": "Rechthoekig",
 	"create.symmetry.mirror.triplePlane": "Achthoekig",
 
@@ -1159,7 +1160,7 @@
 	"item.create.wand_of_symmetry.tooltip.condition1": "Waneer in de Actiebalk",
 	"item.create.wand_of_symmetry.tooltip.behaviour1": "Blijft actief",
 	"item.create.wand_of_symmetry.tooltip.control1": "R-Klik op de Grond",
-	"item.create.wand_of_symmetry.tooltip.action1": "_CreÃ«erd_ of _Beweegt_ de Spiegel",
+	"item.create.wand_of_symmetry.tooltip.action1": "_Creëerd_ of _Beweegt_ de Spiegel",
 	"item.create.wand_of_symmetry.tooltip.control2": "R-Klik in de Lucht",
 	"item.create.wand_of_symmetry.tooltip.action2": "_Verwijderd_ de actieve Spiegel",
 	"item.create.wand_of_symmetry.tooltip.control3": "R-Klik terwijl je Sluipt",
@@ -1234,7 +1235,7 @@
 	"item.create.schematic_and_quill.tooltip.action3": "_Resets_ en verwijderd de selectie.",
 
 	"block.create.schematicannon.tooltip": "BOUWTEKENINGKANNON",
-	"block.create.schematicannon.tooltip.summary": "Schiet blokken om een gepostioneerde _Bouwtekening_ in de Wereld te creÃ«eren. Gebruikt blokken uit naastgelegen inventarissen en _Buskruit_ als brandstof.",
+	"block.create.schematicannon.tooltip.summary": "Schiet blokken om een gepostioneerde _Bouwtekening_ in de Wereld te creëeren. Gebruikt blokken uit naastgelegen inventarissen en _Buskruit_ als brandstof.",
 	"block.create.schematicannon.tooltip.control1": "Wanneer R-Geklikt",
 	"block.create.schematicannon.tooltip.action1": "Opent de _Interface_",
 
@@ -1281,7 +1282,7 @@
 	"item.create.belt_connector.tooltip": "TRANSPORTBAND CONNECTOR",
 	"item.create.belt_connector.tooltip.summary": "Verbind twee _Drijfassen_ met een _Mechanische_ _Transportband._ Verbonden drijfassen zullen dezelfde rotatiesneheid en richting hebben. De Transportband kan ook Entiteiten transporteren",
 	"item.create.belt_connector.tooltip.control1": "R-Klikken op drijfas",
-	"item.create.belt_connector.tooltip.action1": "Selecteer de Drijfas als een katrol van de transportband. Beide geselecteerde drijfassen moeten _verticaal_, _horizontaal_ of _diagonaal_ in _Ã©Ã©n_ _lijn_ staan in de richting van de Transportbanden.",
+	"item.create.belt_connector.tooltip.action1": "Selecteer de Drijfas als een katrol van de transportband. Beide geselecteerde drijfassen moeten _verticaal_, _horizontaal_ of _diagonaal_ in _één_ _lijn_ staan in de richting van de Transportbanden.",
 	"item.create.belt_connector.tooltip.control2": "R-Klikken terwijl je sluipt",
 	"item.create.belt_connector.tooltip.action2": "_Reset_ de eerste geselecteerde positie van de Transportband",
 
@@ -1340,7 +1341,7 @@
 	"block.create.crushing_wheel.tooltip": "VERPULVERAAR",
 	"block.create.crushing_wheel.tooltip.summary": "Grote draaibare wielen die alles _verpulveren_ wat hun tegen houdt.",
 	"block.create.crushing_wheel.tooltip.condition1": "Wanneer aangesloten op een andere Verpulveraar",
-	"block.create.crushing_wheel.tooltip.behaviour1": "CreÃ«ert een verpulverende installatie voor het verwerken van verschillende dingen. De tanden van de wielen moeten met elkaar in redstone_contact staan en beweken met _dezelfde_ _snelheid_ in _tegenovergestelde_ _richting._",
+	"block.create.crushing_wheel.tooltip.behaviour1": "Creëert een verpulverende installatie voor het verwerken van verschillende dingen. De tanden van de wielen moeten met elkaar in redstone_contact staan en beweken met _dezelfde_ _snelheid_ in _tegenovergestelde_ _richting._",
 
 	"block.create.mechanical_press.tooltip": "MECHANISCHE PERS",
 	"block.create.mechanical_press.tooltip.summary": "Een krachtige zuiger voor het samenpersen van objecten onder zich. Heeft een constante _Rotatiekracht_ nodig.",
@@ -1369,7 +1370,7 @@
 	"block.create.mechanical_mixer.tooltip": "MECHANISCHE MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "Een kinetische garde voor het toepassen van vormloze recepten op objecten eronder. Vereist constante _Rotatiekracht_ en een _Bekken_ hieronder geplaatst (met een tussenruimte).",
 	"block.create.mechanical_mixer.tooltip.condition1": "Wanneer boven een Bekken",
-	"block.create.mechanical_mixer.tooltip.behaviour1": "Begint objecten in het bekken te mengen wanneer alle benodigde ingrediÃ«nten aanwezig zijn.",
+	"block.create.mechanical_mixer.tooltip.behaviour1": "Begint objecten in het bekken te mengen wanneer alle benodigde ingrediënten aanwezig zijn.",
 	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
 	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
@@ -1405,12 +1406,12 @@
 	"block.create.rotation_speed_controller.tooltip.behaviour1": "UNLOCALIZED: Relays incoming rotational force to the wheel, trying to _match_ the _speed_ it is configured to target. The _cogwheel_ has to be _attached_ _on_ _top_ of the controller.",
 
 	"block.create.mechanical_piston.tooltip": "MECHANISCHE ZUIGER",
-	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiÃ«ren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
+	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
 	"block.create.mechanical_piston.tooltip.condition1": "Wanneer gedraaid",
 	"block.create.mechanical_piston.tooltip.behaviour1": "Begint de bijgevoegde structuur te verplaatsen. Snelheid en richting correleren met de inkomende rotatiesnelheid.",
 
 	"block.create.sticky_mechanical_piston.tooltip": "MECHANISCHE KLEEFZUIGER",
-	"block.create.sticky_mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Kleefzuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiÃ«ren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
+	"block.create.sticky_mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Kleefzuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpaalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineaar_ _Frame_ om meer dan een enkele rij blokken te verplaatsen.",
 	"block.create.sticky_mechanical_piston.tooltip.condition1": "Wanneer gedraaid",
 	"block.create.sticky_mechanical_piston.tooltip.behaviour1": "Begint de bijgevoegde structuur te verplaatsen. Snelheid en richting correleren met de inkomende rotatiesnelheid.",
 
@@ -1457,7 +1458,7 @@
 	"block.create.linear_chassis.tooltip": "LINEAAR FRAME",
 	"block.create.linear_chassis.tooltip.summary": "A configurable base for Structures moved by a _Mechanische_ _Zuiger._ These Blocks have to form the first Layer of blocks in front of the Zuiger.",
 	"block.create.linear_chassis.tooltip.condition1": "Wanneer bewogen door een Mechanische Zuiger",
-	"block.create.linear_chassis.tooltip.behaviour1": "_Beweegt_ alle _aangesloten_ _Frames_ met dezelfde oriÃ«ntatie, en daaraan bevestigde blokken. Wanneer de Zuiger wordt ingetrokken, worden blokken alleen getrokken als het framevlak _Kleverig_ (zie [Ctrl]).",
+	"block.create.linear_chassis.tooltip.behaviour1": "_Beweegt_ alle _aangesloten_ _Frames_ met dezelfde oriëntatie, en daaraan bevestigde blokken. Wanneer de Zuiger wordt ingetrokken, worden blokken alleen getrokken als het framevlak _Kleverig_ (zie [Ctrl]).",
 	"block.create.linear_chassis.tooltip.condition2": "UNLOCALIZED: With Wrench",
 	"block.create.linear_chassis.tooltip.behaviour2": "UNLOCALIZED: Configure the _range_ for this chassis block. Hold CTRL to modify the range of all attached chassis blocks as well.",
 	"block.create.linear_chassis.tooltip.control1": "Wanneer R-Geklikt met een slijmbal",
@@ -1515,7 +1516,7 @@
 	"block.create.redstone_link.tooltip.condition1": "Wanneer aangestuurd",
 	"block.create.redstone_link.tooltip.behaviour1": "Het ontvangen van verbindingen met dezelfde frequentie levert een Redstone-signaal.",
 	"block.create.redstone_link.tooltip.control1": "Wanneer R-Geklikt met een object",
-	"block.create.redstone_link.tooltip.action1": "Stelt de _Frequentie_ in op dat object. Een totaal van _twee_ _verschillende_ _objecten_ kan in combinatie worden gebruikt voor het definiÃ«ren van een frequentie",
+	"block.create.redstone_link.tooltip.action1": "Stelt de _Frequentie_ in op dat object. Een totaal van _twee_ _verschillende_ _objecten_ kan in combinatie worden gebruikt voor het definiëren van een frequentie",
 	"block.create.redstone_link.tooltip.control2": "Wanneer R-Geklikt terwijl je sluipt",
 	"block.create.redstone_link.tooltip.action2": "Schakelt tussen _ontvanger_ en _zender_modus.",
 
