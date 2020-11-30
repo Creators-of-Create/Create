@@ -34,11 +34,20 @@ import static net.minecraft.state.properties.RailShape.*;
 @SuppressWarnings("deprecation")
 public class ControllerRailBlock extends AbstractRailBlock implements IWrenchable {
 	public static final EnumProperty<RailShape> SHAPE = BlockStateProperties.RAIL_SHAPE_STRAIGHT;
-	public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
+	/*
+	 *   SHAPE | BACKWARDS | FACING
+	 *   N/S     FALSE       North
+	 *   N/S     TRUE        South
+	 *   E/W     FALSE       West
+	 *   E/W     TRUE        East
+	 *   ASC_X   FALSE       X
+	 *   ASC_X   TRUE        X.opposite()
+	 * */
+	public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
 
-	public ControllerRailBlock(Properties p_i48444_2_) {
-		super(true, p_i48444_2_);
+	public ControllerRailBlock(Properties properties) {
+		super(true, properties);
 		this.setDefaultState(this.stateContainer.getBaseState().with(POWER, 0).with(BACKWARDS, false).with(SHAPE, NORTH_SOUTH));
 	}
 

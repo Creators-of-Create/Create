@@ -1,17 +1,6 @@
 
 package com.simibubi.create.foundation.data;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
@@ -19,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -31,7 +21,6 @@ import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -44,6 +33,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class BlockStateGen {
 
@@ -437,10 +431,10 @@ public class BlockStateGen {
 
 	public static NonNullBiConsumer<DataGenContext<Block, ControllerRailBlock>, RegistrateBlockstateProvider> controllerRail() {
 		return (c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(state -> {
-				int power = state.get(ControllerRailBlock.POWER);
+			.forAllStatesExcept(state -> {
+				//int power = state.get(ControllerRailBlock.POWER);
 				boolean backwards = state.get(ControllerRailBlock.BACKWARDS);
-				String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
+				//String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
 				RailShape shape = state.get(ControllerRailBlock.SHAPE);
 				String shapeName = shape.isAscending() ? RailShape.ASCENDING_NORTH.getName() : RailShape.NORTH_SOUTH.getName();
 				int rotation = 0;
@@ -472,10 +466,9 @@ public class BlockStateGen {
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
 						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block_" + shapeName + "_" +
-								powerStr)))
+							"block/" + c.getName() + "/block_" + shapeName)))
 					.rotationY(rotation % 360)
 					.build();
-			});
+			}, ControllerRailBlock.POWER);
 	}
 }

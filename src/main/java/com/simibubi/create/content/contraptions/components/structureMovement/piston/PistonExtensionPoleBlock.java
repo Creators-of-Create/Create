@@ -120,7 +120,7 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
             if (world.isRemote)
                 return ActionResultType.SUCCESS;
 
-            world.setBlockState(newPos, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState().with(FACING, offset.getFirst()));
+            world.setBlockState(newPos, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState().with(FACING, state.get(FACING)));
             if (!player.isCreative())
                 heldItem.shrink(1);
 

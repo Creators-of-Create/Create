@@ -170,7 +170,8 @@
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
-	
+	"create.gui.goggles.pole_length": "Pole Length:",
+
 	"create.gui.gauge.info_header": "Gauge Information:",
 	"create.gui.speedometer.title": "Rotation Speed",
 	"create.gui.stressometer.title": "Network Stress",

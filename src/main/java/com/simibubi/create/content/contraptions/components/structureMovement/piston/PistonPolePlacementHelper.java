@@ -32,7 +32,10 @@ public class PistonPolePlacementHelper {
 
 		BlockRayTraceResult ray = (BlockRayTraceResult) mc.objectMouseOver;
 
-		if (!isHoldingPole(mc.player))
+		if (mc.player != null && !isHoldingPole(mc.player))
+			return;
+
+		if (mc.player.isSneaking())
 			return;
 
 		BlockPos pos = ray.getPos();

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 334",
+	"_": "Missing Localizations: 335",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -723,6 +723,7 @@
 	"create.gui.goggles.generator_stats": "Статистика генератора:",
 	"create.gui.goggles.kinetic_stats": "Кинетическая статистика:",
 	"create.gui.goggles.at_current_speed": "На текущей скорости",
+	"create.gui.goggles.pole_length": "UNLOCALIZED: Pole Length:",
 	"create.gui.gauge.info_header": "Калибровочная информация:",
 	"create.gui.speedometer.title": "Скорость вращения",
 	"create.gui.stressometer.title": "Сетевой момент",
