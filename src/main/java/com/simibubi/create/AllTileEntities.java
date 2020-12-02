@@ -131,7 +131,7 @@ public class AllTileEntities {
 	// Kinetics
 	public static final TileEntityEntry<SimpleKineticTileEntity> SIMPLE_KINETIC = Create.registrate()
 		.tileEntity("simple_kinetic", SimpleKineticTileEntity::new)
-		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL, AllBlocks.ENCASED_SHAFT)
+		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
 		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
 
@@ -149,7 +149,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<EncasedShaftTileEntity> ENCASED_SHAFT = Create.registrate()
 		.tileEntity("encased_shaft", EncasedShaftTileEntity::new)
-		.validBlocks(AllBlocks.ENCASED_SHAFT, AllBlocks.ENCASED_BELT)
+		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_BELT)
 		.renderer(() -> EncasedShaftRenderer::new)
 		.register();
 

@@ -4,13 +4,16 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
@@ -136,6 +139,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
+	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
+		BiConsumer<T, CasingConnectivity> consumer) {
+		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
+	}
+
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
 		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
@@ -174,6 +182,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static <T extends Block> void registerCasingConnectivity(T entry,
+		BiConsumer<T, CasingConnectivity> consumer) {
+		consumer.accept(entry, CreateClient.getCasingConnectivity());
 	}
 
 	@OnlyIn(Dist.CLIENT)

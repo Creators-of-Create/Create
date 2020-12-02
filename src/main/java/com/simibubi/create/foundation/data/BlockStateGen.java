@@ -121,11 +121,17 @@ public class BlockStateGen {
 
 	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		Function<BlockState, ModelFile> modelFunc) {
+		axisBlock(ctx, prov, modelFunc, false);
+	}
+
+	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+		Function<BlockState, ModelFile> modelFunc, boolean uvLock) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
 				Axis axis = state.get(BlockStateProperties.AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
+					.uvLock(uvLock)
 					.rotationX(axis == Axis.Y ? 0 : 90)
 					.rotationY(axis == Axis.X ? 90 : axis == Axis.Z ? 180 : 0)
 					.build();

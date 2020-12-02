@@ -1,7 +1,63 @@
 package com.simibubi.create.foundation.utility;
 
+import static com.simibubi.create.AllBlocks.ADJUSTABLE_CRATE;
+import static com.simibubi.create.AllBlocks.ADJUSTABLE_PULSE_REPEATER;
+import static com.simibubi.create.AllBlocks.ADJUSTABLE_REPEATER;
+import static com.simibubi.create.AllBlocks.ANDESITE_ENCASED_SHAFT;
+import static com.simibubi.create.AllBlocks.BRASS_BELT_FUNNEL;
+import static com.simibubi.create.AllBlocks.BRASS_TUNNEL;
+import static com.simibubi.create.AllBlocks.CONTENT_OBSERVER;
+import static com.simibubi.create.AllBlocks.LINEAR_CHASSIS;
+import static com.simibubi.create.AllBlocks.MECHANICAL_DRILL;
+import static com.simibubi.create.AllBlocks.MECHANICAL_HARVESTER;
+import static com.simibubi.create.AllBlocks.MECHANICAL_PLOUGH;
+import static com.simibubi.create.AllBlocks.MECHANICAL_SAW;
+import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
+import static com.simibubi.create.AllBlocks.POWERED_LATCH;
+import static com.simibubi.create.AllBlocks.POWERED_TOGGLE_LATCH;
+import static com.simibubi.create.AllBlocks.RADIAL_CHASSIS;
+import static com.simibubi.create.AllBlocks.REDSTONE_CONTACT;
+import static com.simibubi.create.AllBlocks.REDSTONE_LINK;
+import static com.simibubi.create.AllBlocks.SECONDARY_LINEAR_CHASSIS;
+import static com.simibubi.create.AllBlocks.SPEEDOMETER;
+import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
+import static com.simibubi.create.AllBlocks.STRESSOMETER;
+import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
+import static com.simibubi.create.AllItems.BLOCKZAPPER;
+import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
+import static com.simibubi.create.AllItems.CRUSHED_COPPER;
+import static com.simibubi.create.AllItems.CRUSHED_GOLD;
+import static com.simibubi.create.AllItems.CRUSHED_IRON;
+import static com.simibubi.create.AllItems.CRUSHED_ZINC;
+import static com.simibubi.create.AllItems.GOLDEN_SHEET;
+import static com.simibubi.create.AllItems.LAPIS_SHEET;
+import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
+import static com.simibubi.create.AllItems.SCHEMATIC;
+import static com.simibubi.create.AllItems.SCHEMATIC_AND_QUILL;
+import static com.simibubi.create.AllItems.WAND_OF_SYMMETRY;
+import static com.simibubi.create.AllItems.WHEAT_FLOUR;
+import static com.simibubi.create.AllItems.WORLDSHAPER;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.BIRCH_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.BIRCH_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.DARK_OAK_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.DARK_OAK_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.JUNGLE_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.JUNGLE_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.OAK_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.OAK_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW_PANE;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDOW;
+import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDOW_PANE;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -12,13 +68,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.simibubi.create.AllBlocks.*;
-import static com.simibubi.create.AllItems.*;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.*;
-
 @Mod.EventBusSubscriber
 @SuppressWarnings("unused")
 public class RemapHelper {
@@ -26,6 +75,7 @@ public class RemapHelper {
 
 	static {
 		reMap.put("toggle_latch", POWERED_TOGGLE_LATCH.getId());
+		reMap.put("encased_shaft", ANDESITE_ENCASED_SHAFT.getId());
 //		reMap.put("linked_extractor", );
 		reMap.put("limestone_stairs", Create.asResource("polished_limestone_stairs"));
 //		reMap.put("window_in_a_block", );
@@ -123,7 +173,7 @@ public class RemapHelper {
 		reMap.put("symmetry_wand", WAND_OF_SYMMETRY.getId());
 		reMap.put("terrain_zapper", WORLDSHAPER.getId());
 //		reMap.put("blazing_sword", );
-		reMap.put("zinc_handle", HAND_CRANK.getId());
+//		reMap.put("zinc_handle", HAND_CRANK.getId());
 //		reMap.put("rose_quartz_axe", );
 //		reMap.put("shadow_steel_pickaxe", );
 		reMap.put("placement_handgun", BLOCKZAPPER.getId());
