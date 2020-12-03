@@ -1,6 +1,10 @@
 package com.simibubi.create.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -29,15 +33,19 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -48,9 +56,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -72,11 +77,11 @@ public class ClientEvents {
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
 		CreateClient.schematicHandler.tick();
-		
+
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
-		
+
 		ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
@@ -96,9 +101,9 @@ public class ClientEvents {
 		ArmInteractionPointHandler.tick();
 		SailBlockPlacementHelper.tick();
 		PistonPolePlacementHelper.tick();
-		CreateClient.outliner.tickOutlines();		
+		CreateClient.outliner.tickOutlines();
 	}
-	
+
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		CreateClient.bufferCache.invalidate();
@@ -112,13 +117,13 @@ public class ClientEvents {
 		ms.push();
 		ms.translate(-view.getX(), -view.getY(), -view.getZ());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
-		
+
 		CouplingRenderer.renderAll(ms, buffer);
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
-		
+
 		ms.pop();
 	}
 
@@ -169,6 +174,46 @@ public class ClientEvents {
 
 	protected static boolean isGameActive() {
 		return !(Minecraft.getInstance().world == null || Minecraft.getInstance().player == null);
+	}
+
+	@SubscribeEvent
+	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
+		ActiveRenderInfo info = event.getInfo();
+		IFluidState fluidState = info.getFluidState();
+		if (fluidState.isEmpty())
+			return;
+		Fluid fluid = fluidState.getFluid();
+
+		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
+			event.setDensity(5f);
+			event.setCanceled(true);
+		}
+
+		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
+			event.setDensity(1.5f);
+			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
+		ActiveRenderInfo info = event.getInfo();
+		IFluidState fluidState = info.getFluidState();
+		if (fluidState.isEmpty())
+			return;
+		Fluid fluid = fluidState.getFluid();
+
+		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
+			event.setRed(98 / 256f);
+			event.setGreen(32 / 256f);
+			event.setBlue(32 / 256f);
+		}
+
+		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
+			event.setRed(234 / 256f);
+			event.setGreen(174 / 256f);
+			event.setBlue(47 / 256f);
+		}
 	}
 
 }

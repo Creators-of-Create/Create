@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 337",
+	"_": "Missing Localizations: 345",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -51,6 +51,7 @@
 	"block.create.chiseled_limestone": "Резной известняк",
 	"block.create.chiseled_scoria": "Резной пепел",
 	"block.create.chiseled_weathered_limestone": "Выветренный резной известняк",
+	"block.create.chocolate": "UNLOCALIZED: Chocolate",
 	"block.create.chute": "UNLOCALIZED: Chute",
 	"block.create.clockwork_bearing": "Часовой механизм",
 	"block.create.clutch": "Сцепление",
@@ -180,6 +181,7 @@
 	"block.create.green_seat": "UNLOCALIZED: Green Seat",
 	"block.create.green_valve_handle": "UNLOCALIZED: Green Valve Handle",
 	"block.create.hand_crank": "Рукоятка",
+	"block.create.honey": "UNLOCALIZED: Honey",
 	"block.create.horizontal_framed_glass": "Горизонтальное обрамлённое стекло",
 	"block.create.horizontal_framed_glass_pane": "Горизонтальная обрамлённая стеклянная панель",
 	"block.create.hose_pulley": "UNLOCALIZED: Hose Pulley",
@@ -406,7 +408,11 @@
 	"entity.create.stationary_contraption": "Стационарная штуковина",
 	"entity.create.super_glue": "Супер клей",
 
-	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
+	"fluid.create.milk": "UNLOCALIZED: Milk",
+	"fluid.create.potion": "UNLOCALIZED: Potion",
+	"fluid.create.tea": "UNLOCALIZED: Builder's Tea",
 
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",
@@ -417,6 +423,7 @@
 	"item.create.brass_nugget": "Кусочек латуни",
 	"item.create.brass_sheet": "Латунный лист",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
+	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Медный слиток",
@@ -440,6 +447,7 @@
 	"item.create.golden_sheet": "Золотой лист",
 	"item.create.handheld_blockzapper": "Ручная блоковая пушка",
 	"item.create.handheld_worldshaper": "Ручной редактор мира",
+	"item.create.honey_bucket": "UNLOCALIZED: Honey Bucket",
 	"item.create.integrated_circuit": "Интегральная схема",
 	"item.create.iron_sheet": "Железный лист",
 	"item.create.lapis_sheet": "Лазуритовый лист",

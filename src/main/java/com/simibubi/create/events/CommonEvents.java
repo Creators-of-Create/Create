@@ -1,5 +1,6 @@
 package com.simibubi.create.events;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
@@ -9,14 +10,20 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
-import com.simibubi.create.foundation.utility.Debug;
+import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -27,6 +34,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,6 +60,28 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {
 		CapabilityMinecartController.onChunkUnloaded(event);
+	}
+
+	@SubscribeEvent
+	public static void whenFluidsMeet(FluidPlaceBlockEvent event) {
+		BlockState blockState = event.getOriginalState();
+		IFluidState fluidState = blockState.getFluidState();
+		BlockPos pos = event.getPos();
+		IWorld world = event.getWorld();
+
+		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getFluid()))
+			return;
+
+		for (Direction direction : Iterate.directions) {
+			IFluidState metFluidState = fluidState.isSource() ? fluidState : world.getFluidState(pos.offset(direction));
+			if (!metFluidState.isTagged(FluidTags.WATER))
+				continue;
+			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
+			if (lavaInteraction == null)
+				continue;
+			event.setNewState(lavaInteraction);
+			break;
+		}
 	}
 
 	@SubscribeEvent
@@ -123,7 +153,7 @@ public class CommonEvents {
 	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		CapabilityMinecartController.attach(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void startTracking(PlayerEvent.StartTracking event) {
 		CapabilityMinecartController.startTracking(event);

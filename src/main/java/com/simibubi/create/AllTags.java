@@ -13,11 +13,13 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagCollection;
@@ -40,6 +42,10 @@ public class AllTags {
 
 	public static Tag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags.getCollection(), name);
+	}
+	
+	public static Tag<Fluid> forgeFluidTag(String name) {
+		return forgeTag(FluidTags.getContainer(), name);
 	}
 
 	public static <T> Tag<T> forgeTag(TagCollection<T> collection, String name) {

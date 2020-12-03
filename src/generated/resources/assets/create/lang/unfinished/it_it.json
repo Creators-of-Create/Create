@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 668",
+	"_": "Missing Localizations: 676",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -51,6 +51,7 @@
 	"block.create.chiseled_limestone": "UNLOCALIZED: Chiseled Limestone",
 	"block.create.chiseled_scoria": "UNLOCALIZED: Chiseled Scoria",
 	"block.create.chiseled_weathered_limestone": "UNLOCALIZED: Chiseled Weathered Limestone",
+	"block.create.chocolate": "UNLOCALIZED: Chocolate",
 	"block.create.chute": "UNLOCALIZED: Chute",
 	"block.create.clockwork_bearing": "Supporto del Orologio",
 	"block.create.clutch": "Frizione",
@@ -180,6 +181,7 @@
 	"block.create.green_seat": "UNLOCALIZED: Green Seat",
 	"block.create.green_valve_handle": "UNLOCALIZED: Green Valve Handle",
 	"block.create.hand_crank": "Manovella",
+	"block.create.honey": "UNLOCALIZED: Honey",
 	"block.create.horizontal_framed_glass": "Finestra Orizzontale Vetro",
 	"block.create.horizontal_framed_glass_pane": "Pannello di Finestra Orizzontale Vetro",
 	"block.create.hose_pulley": "UNLOCALIZED: Hose Pulley",
@@ -406,7 +408,11 @@
 	"entity.create.stationary_contraption": "UNLOCALIZED: Stationary Contraption",
 	"entity.create.super_glue": "UNLOCALIZED: Super Glue",
 
-	"fluid.create.flowing_potion": "UNLOCALIZED: Potion",
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
+	"fluid.create.milk": "UNLOCALIZED: Milk",
+	"fluid.create.potion": "UNLOCALIZED: Potion",
+	"fluid.create.tea": "UNLOCALIZED: Builder's Tea",
 
 	"item.create.andesite_alloy": "Lega di Andesite",
 	"item.create.attribute_filter": "Filtro Attributi",
@@ -417,6 +423,7 @@
 	"item.create.brass_nugget": "Pepita di Ottone",
 	"item.create.brass_sheet": "Lamiera di Ottone",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
+	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "Composto Cromatico",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Lingotto di Rame",
@@ -440,6 +447,7 @@
 	"item.create.golden_sheet": "UNLOCALIZED: Golden Sheet",
 	"item.create.handheld_blockzapper": "Zapper di Blocchi Portatile",
 	"item.create.handheld_worldshaper": "Plasmatore del Mondo Portatile",
+	"item.create.honey_bucket": "UNLOCALIZED: Honey Bucket",
 	"item.create.integrated_circuit": "Circuito Integrato",
 	"item.create.iron_sheet": "Lamiera di Ferro",
 	"item.create.lapis_sheet": "UNLOCALIZED: Lapis Sheet",

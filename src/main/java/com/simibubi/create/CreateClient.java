@@ -73,6 +73,7 @@ public class CreateClient {
 		//AllTileEntities.registerRenderers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
+		AllFluids.assignRenderLayers();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
