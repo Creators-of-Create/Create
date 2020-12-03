@@ -1,0 +1,16 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/copper_casing",
+		"particle": "create:block/copper_casing"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 15],
+			"to": [16, 16, 16],
+			"faces": {
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		}
+	]
+}

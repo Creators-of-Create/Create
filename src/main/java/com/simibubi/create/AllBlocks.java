@@ -519,8 +519,11 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
 		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, state -> p.models()
-				.cubeColumn(c.getName(), p.modLoc("block/copper_casing"), p.modLoc("block/encased_pipe"))))
+			.properties(Block.Properties::nonOpaque)
+			.blockstate(BlockStateGen.encasedPipe())
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
+				(s, f) -> !s.get(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
 			.register();

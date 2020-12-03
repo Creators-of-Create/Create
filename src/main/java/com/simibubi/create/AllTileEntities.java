@@ -219,8 +219,8 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.FLUID_PIPE)
 		.register();
 
-	public static final TileEntityEntry<StraightPipeTileEntity> ENCASED_FLUID_PIPE = Create.registrate()
-		.tileEntity("encased_fluid_pipe", StraightPipeTileEntity::new)
+	public static final TileEntityEntry<FluidPipeTileEntity> ENCASED_FLUID_PIPE = Create.registrate()
+		.tileEntity("encased_fluid_pipe", FluidPipeTileEntity::new)
 		.validBlocks(AllBlocks.ENCASED_FLUID_PIPE)
 		.register();
 

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -33,7 +34,8 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 
 		@Override
 		public boolean isConnectedTo(BlockState state, Direction direction) {
-			return FluidPipeBlock.isPipe(state) && state.get(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(direction));
+			return (FluidPipeBlock.isPipe(state) || state.getBlock() instanceof EncasedPipeBlock)
+				&& state.get(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(direction));
 		}
 
 	}
@@ -47,6 +49,9 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 		@Override
 		public AttachmentTypes getAttachment(ILightReader world, BlockPos pos, BlockState state, Direction direction) {
 			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
+
+			if (attachment == AttachmentTypes.RIM && AllBlocks.ENCASED_FLUID_PIPE.has(state))
+				return AttachmentTypes.RIM;
 
 			BlockPos offsetPos = pos.offset(direction);
 			if (!FluidPipeBlock.isPipe(world.getBlockState(offsetPos))) {

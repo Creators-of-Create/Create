@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -42,7 +43,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock {
 	public ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
 		if (context.getWorld().isRemote)
 			return ActionResultType.SUCCESS;
-
+		context.getWorld().playEvent(2001, context.getPos(), Block.getStateId(state));
 		KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), AllBlocks.SHAFT.getDefaultState().with(AXIS, state.get(AXIS)));
 		return ActionResultType.SUCCESS;
 	}
