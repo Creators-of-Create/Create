@@ -10,14 +10,15 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ILightReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 public class AllFluids {
@@ -39,7 +40,7 @@ public class AllFluids {
 		.register();
 
 	public static RegistryEntry<ForgeFlowingFluid.Flowing> HONEY =
-		REGISTRATE.fluid("honey", new ResourceLocation("block/honey_block_top"), Create.asResource("fluid/honey_flow"))
+		REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
 			.lang(f -> "fluid.create.honey", "Honey")
 			.attributes(b -> b.viscosity(500)
 				.density(1400))
@@ -50,24 +51,23 @@ public class AllFluids {
 			.tag(AllTags.forgeFluidTag("honey"))
 			.register();
 
-	public static RegistryEntry<ForgeFlowingFluid.Flowing> CHOCOLATE = REGISTRATE.standardFluid("chocolate")
-		.lang(f -> "fluid.create.chocolate", "Chocolate")
-		.attributes(b -> b.viscosity(500)
-			.density(1400))
-		.properties(p -> p.levelDecreasePerBlock(2)
-			.tickRate(25)
-			.slopeFindDistance(3)
-			.explosionResistance(100f))
-		.register();
+	public static RegistryEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
+		REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
+			.lang(f -> "fluid.create.chocolate", "Chocolate")
+			.attributes(b -> b.viscosity(500)
+				.density(1400))
+			.properties(p -> p.levelDecreasePerBlock(2)
+				.tickRate(25)
+				.slopeFindDistance(3)
+				.explosionResistance(100f))
+			.register();
 
 	// Load this class
 
 	public static void register() {}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void assignRenderLayers() {
-		makeTranslucent(HONEY);
-	}
+	public static void assignRenderLayers() {}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void makeTranslucent(RegistryEntry<? extends ForgeFlowingFluid> entry) {
@@ -88,6 +88,23 @@ public class AllFluids {
 				: AllPaletteBlocks.SCORIA_VARIANTS.registeredBlocks.get(0)
 					.getDefaultState();
 		return null;
+	}
+
+	/**
+	 * Removing alpha from tint prevents optifine from forcibly applying biome
+	 * colors to modded fluids (Makes translucent fluids disappear)
+	 */
+	private static class NoColorFluidAttributes extends FluidAttributes {
+
+		protected NoColorFluidAttributes(Builder builder, Fluid fluid) {
+			super(builder, fluid);
+		}
+
+		@Override
+		public int getColor(ILightReader world, BlockPos pos) {
+			return 0x00ffffff;
+		}
+
 	}
 
 }
