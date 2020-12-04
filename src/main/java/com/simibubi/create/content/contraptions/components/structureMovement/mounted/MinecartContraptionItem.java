@@ -209,7 +209,7 @@ public class MinecartContraptionItem extends Item {
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
 		if (!event.getWorld().isRemote) {
-			player.inventory.placeItemBackInInventory(event.getWorld(), create(type, contraption));
+			player.inventory.placeItemBackInInventory(event.getWorld(), create(type, contraption).setDisplayName(entity.getCustomName()));
 			contraption.remove();
 			entity.remove();
 		}
