@@ -12,6 +12,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
@@ -41,6 +42,16 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		CRUSHED_BRASS = crushedOre(AllItems.CRUSHED_BRASS, AllItems.BRASS_NUGGET::get),
 		CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD, () -> Items.GOLD_NUGGET),
 		CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON, () -> Items.IRON_NUGGET),
+
+		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
+		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, "platinum", SM),
+		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, "silver", MW, IE, SM),
+		CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, "tin", MEK, MW, SM),
+		CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, "lead", MW, IE, SM),
+		CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
+		CRUSHED_BAUXITE = moddedCrushedOre(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
+		CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, "uranium", IE, SM),
+		CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, "nickel", IE, SM),
 
 		ICE = convert(Blocks.ICE, Blocks.PACKED_ICE), MAGMA_BLOCK = convert(Blocks.MAGMA_BLOCK, Blocks.OBSIDIAN),
 
@@ -73,6 +84,19 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<IItemProvider> nugget) {
 		return create(crushed::get, b -> b.output(nugget.get(), 10)
 			.output(.5f, nugget.get(), 5));
+	}
+
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, String metalName, String... mods) {
+		for (String modId : mods) {
+			String nugget = modId.equals(IE) ? "nugget_" + metalName : metalName + "_nugget";
+			create(modId + "/" + crushed.getId()
+				.getPath(),
+				b -> b.withItemIngredients(Ingredient.fromItems(crushed::get))
+					.output(1, modId, nugget, 10)
+					.output(.5f, modId, nugget, 5)
+					.whenModLoaded(modId));
+		}
+		return null;
 	}
 
 	public WashingRecipeGen(DataGenerator p_i48262_1_) {

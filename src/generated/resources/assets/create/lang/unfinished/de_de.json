@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1062",
+	"_": "Missing Localizations: 1071",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,10 +430,19 @@
 	"item.create.copper_nugget": "UNLOCALIZED: Copper Nugget",
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
 	"item.create.crafter_slot_cover": "UNLOCALIZED: Crafter Slot Cover",
+	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
 	"item.create.crushed_brass": "UNLOCALIZED: Crushed Brass",
 	"item.create.crushed_copper_ore": "UNLOCALIZED: Crushed Copper Ore",
 	"item.create.crushed_gold_ore": "UNLOCALIZED: Crushed Gold Ore",
 	"item.create.crushed_iron_ore": "UNLOCALIZED: Crushed Iron Ore",
+	"item.create.crushed_lead_ore": "UNLOCALIZED: Crushed Lead Ore",
+	"item.create.crushed_nickel_ore": "UNLOCALIZED: Crushed Nickel Ore",
+	"item.create.crushed_osmium_ore": "UNLOCALIZED: Crushed Osmium Ore",
+	"item.create.crushed_platinum_ore": "UNLOCALIZED: Crushed Platinum Ore",
+	"item.create.crushed_quicksilver_ore": "UNLOCALIZED: Crushed Quicksilver Ore",
+	"item.create.crushed_silver_ore": "UNLOCALIZED: Crushed Silver Ore",
+	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
+	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "UNLOCALIZED: Crushed Zinc Ore",
 	"item.create.deforester": "UNLOCALIZED: Deforester",
 	"item.create.dough": "Teig",

@@ -11,6 +11,7 @@ import static com.simibubi.create.content.AllSections.LOGISTICS;
 import static com.simibubi.create.content.AllSections.MATERIALS;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
@@ -43,12 +44,14 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 
 public class AllItems {
 
@@ -70,14 +73,26 @@ public class AllItems {
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag),
-		LAPIS_SHEET = ingredient("lapis_sheet"),
+		LAPIS_SHEET = taggedIngredient("lapis_sheet", forgeItemTag("plates/lapis_lazuli"), PLATES.tag),
 
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
 		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag),
 		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag),
-		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag),
+		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag);
 
+	public static final ItemEntry<TagDependentIngredientItem> 
+		CRUSHED_OSMIUM = compatCrushedOre("osmium"),
+		CRUSHED_PLATINUM = compatCrushedOre("platinum"),
+		CRUSHED_SILVER = compatCrushedOre("silver"),
+		CRUSHED_TIN = compatCrushedOre("tin"),
+		CRUSHED_LEAD = compatCrushedOre("lead"),
+		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"),
+		CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
+		CRUSHED_URANIUM = compatCrushedOre("uranium"),
+		CRUSHED_NICKEL = compatCrushedOre("nickel");
+
+	public static final ItemEntry<Item> 
 		ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
@@ -255,6 +270,14 @@ public class AllItems {
 	private static ItemEntry<Item> taggedIngredient(String name, Tag<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
 			.tag(tags)
+			.register();
+	}
+
+	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(String metalName) {
+		return REGISTRATE
+			.item("crushed_" + metalName + "_ore",
+				props -> new TagDependentIngredientItem(props, new ResourceLocation("forge", "ores/" + metalName)))
+			.tag(AllItemTags.CRUSHED_ORES.tag)
 			.register();
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 345",
+	"_": "Missing Localizations: 354",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,10 +430,19 @@
 	"item.create.copper_nugget": "Кусочек меди",
 	"item.create.copper_sheet": "Медный лист",
 	"item.create.crafter_slot_cover": "Крышка на слот крафтера",
+	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
 	"item.create.crushed_brass": "Дробленая латунь",
 	"item.create.crushed_copper_ore": "Измельчённая медная руда",
 	"item.create.crushed_gold_ore": "Измельчённая золотая руда",
 	"item.create.crushed_iron_ore": "Измельчённая железная руда",
+	"item.create.crushed_lead_ore": "UNLOCALIZED: Crushed Lead Ore",
+	"item.create.crushed_nickel_ore": "UNLOCALIZED: Crushed Nickel Ore",
+	"item.create.crushed_osmium_ore": "UNLOCALIZED: Crushed Osmium Ore",
+	"item.create.crushed_platinum_ore": "UNLOCALIZED: Crushed Platinum Ore",
+	"item.create.crushed_quicksilver_ore": "UNLOCALIZED: Crushed Quicksilver Ore",
+	"item.create.crushed_silver_ore": "UNLOCALIZED: Crushed Silver Ore",
+	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
+	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "Измельчённая цинковая руда",
 	"item.create.deforester": "Уничтожитель леса",
 	"item.create.dough": "Тесто",

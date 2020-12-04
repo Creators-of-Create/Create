@@ -11,6 +11,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.fluid.Fluid;
@@ -149,9 +150,14 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	public ProcessingRecipeBuilder<T> output(ItemStack output) {
 		return output(1, output);
 	}
-	
+
 	public ProcessingRecipeBuilder<T> output(float chance, ItemStack output) {
 		params.results.add(new ProcessingOutput(output, chance));
+		return this;
+	}
+
+	public ProcessingRecipeBuilder<T> output(float chance, String modId, String registryName, int amount) {
+		params.results.add(new ProcessingOutput(Pair.of(new ResourceLocation(modId, registryName), amount), chance));
 		return this;
 	}
 
@@ -159,7 +165,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		fluid = FluidHelper.convertToStill(fluid);
 		return output(new FluidStack(fluid, amount));
 	}
-	
+
 	public ProcessingRecipeBuilder<T> output(FluidStack fluidStack) {
 		params.fluidResults.add(fluidStack);
 		return this;

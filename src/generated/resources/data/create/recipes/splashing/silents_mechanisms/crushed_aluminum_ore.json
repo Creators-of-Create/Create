@@ -1,0 +1,25 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_aluminum_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "silents_mechanisms:aluminum_nugget",
+      "count": 10
+    },
+    {
+      "item": "silents_mechanisms:aluminum_nugget",
+      "count": 5,
+      "chance": 0.5
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "silents_mechanisms",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

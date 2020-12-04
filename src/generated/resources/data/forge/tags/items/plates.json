@@ -4,6 +4,7 @@
     "create:copper_sheet",
     "create:brass_sheet",
     "create:iron_sheet",
-    "create:golden_sheet"
+    "create:golden_sheet",
+    "create:lapis_sheet"
   ]
 }

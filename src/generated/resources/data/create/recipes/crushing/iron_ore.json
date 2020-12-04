@@ -19,5 +19,14 @@
       "chance": 0.125
     }
   ],
-  "processingTime": 400
+  "processingTime": 400,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:ores/iron",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

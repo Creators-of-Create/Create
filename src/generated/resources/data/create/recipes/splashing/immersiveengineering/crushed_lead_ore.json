@@ -1,0 +1,25 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_lead_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "immersiveengineering:nugget_lead",
+      "count": 10
+    },
+    {
+      "item": "immersiveengineering:nugget_lead",
+      "count": 5,
+      "chance": 0.5
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "immersiveengineering",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

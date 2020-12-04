@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 358",
+	"_": "Missing Localizations: 367",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,10 +430,19 @@
 	"item.create.copper_nugget": "铜粒",
 	"item.create.copper_sheet": "铜板",
 	"item.create.crafter_slot_cover": "制造器盖板",
+	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
 	"item.create.crushed_brass": "粉碎黄铜",
 	"item.create.crushed_copper_ore": "粉碎铜矿石",
 	"item.create.crushed_gold_ore": "粉碎金矿石",
 	"item.create.crushed_iron_ore": "粉碎铁矿石",
+	"item.create.crushed_lead_ore": "UNLOCALIZED: Crushed Lead Ore",
+	"item.create.crushed_nickel_ore": "UNLOCALIZED: Crushed Nickel Ore",
+	"item.create.crushed_osmium_ore": "UNLOCALIZED: Crushed Osmium Ore",
+	"item.create.crushed_platinum_ore": "UNLOCALIZED: Crushed Platinum Ore",
+	"item.create.crushed_quicksilver_ore": "UNLOCALIZED: Crushed Quicksilver Ore",
+	"item.create.crushed_silver_ore": "UNLOCALIZED: Crushed Silver Ore",
+	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
+	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "粉碎锌矿石",
 	"item.create.deforester": "树林毁灭者",
 	"item.create.dough": "面团",

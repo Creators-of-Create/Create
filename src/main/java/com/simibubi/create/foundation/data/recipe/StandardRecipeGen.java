@@ -1,10 +1,13 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
@@ -14,6 +17,7 @@ import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.advancements.criterion.ItemPredicate;
@@ -21,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
@@ -33,6 +38,10 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
 
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {
@@ -935,7 +944,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		CRUSHED_GOLD = blastCrushedMetal(() -> Items.GOLD_INGOT, AllItems.CRUSHED_GOLD::get),
 		CRUSHED_COPPER = blastCrushedMetal(AllItems.COPPER_INGOT::get, AllItems.CRUSHED_COPPER::get),
 		CRUSHED_ZINC = blastCrushedMetal(AllItems.ZINC_INGOT::get, AllItems.CRUSHED_ZINC::get),
-		CRUSHED_BRASS = blastCrushedMetal(AllItems.BRASS_INGOT::get, AllItems.CRUSHED_BRASS::get)
+		CRUSHED_BRASS = blastCrushedMetal(AllItems.BRASS_INGOT::get, AllItems.CRUSHED_BRASS::get),
+
+		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
+		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, "platinum", SM),
+		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, IE, SM),
+		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, "tin", MEK, MW, SM),
+		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, "lead", MW, IE, SM),
+		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
+		CRUSHED_BAUXITE = blastModdedCrushedMetal(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
+		CRUSHED_URANIUM = blastModdedCrushedMetal(AllItems.CRUSHED_URANIUM, "uranium", IE, SM),
+		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", IE, SM)
 
 	;
 
@@ -959,6 +978,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
 
+	GeneratedRecipeBuilder create(ResourceLocation result) {
+		return new GeneratedRecipeBuilder(currentFolder, result);
+	}
+
 	GeneratedRecipeBuilder create(ItemProviderEntry<? extends IItemProvider> result) {
 		return create(result::get);
 	}
@@ -969,6 +992,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaCooking(ingredient::get)
 			.rewardXP(.1f)
 			.inBlastFurnace();
+	}
+
+	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, String metalName, String... mods) {
+		for (String modId : mods) {
+			String ingot = modId.equals(IE) ? "ingot_" + metalName : metalName + "_ingot";
+			create(new ResourceLocation(modId, ingot)).withSuffix("_compat_" + modId)
+				.whenModLoaded(modId)
+				.viaCooking(ingredient::get)
+				.rewardXP(.1f)
+				.inBlastFurnace();
+		}
+		return null;
 	}
 
 	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, Tag<Item> ore) {
@@ -1035,14 +1070,27 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		private String path;
 		private String suffix;
 		private Supplier<? extends IItemProvider> result;
+		private ResourceLocation compatDatagenOutput;
+		List<ICondition> recipeConditions;
+
 		private Supplier<ItemPredicate> unlockedBy;
 		private int amount;
 
-		public GeneratedRecipeBuilder(String path, Supplier<? extends IItemProvider> result) {
+		private GeneratedRecipeBuilder(String path) {
 			this.path = path;
+			this.recipeConditions = new ArrayList<>();
 			this.suffix = "";
-			this.result = result;
 			this.amount = 1;
+		}
+
+		public GeneratedRecipeBuilder(String path, Supplier<? extends IItemProvider> result) {
+			this(path);
+			this.result = result;
+		}
+
+		public GeneratedRecipeBuilder(String path, ResourceLocation result) {
+			this(path);
+			this.compatDatagenOutput = result;
 		}
 
 		GeneratedRecipeBuilder returns(int amount) {
@@ -1061,6 +1109,19 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			this.unlockedBy = () -> ItemPredicate.Builder.create()
 				.tag(tag.get())
 				.build();
+			return this;
+		}
+
+		GeneratedRecipeBuilder whenModLoaded(String modid) {
+			return withCondition(new ModLoadedCondition(modid));
+		}
+
+		GeneratedRecipeBuilder whenModMissing(String modid) {
+			return withCondition(new NotCondition(new ModLoadedCondition(modid)));
+		}
+
+		GeneratedRecipeBuilder withCondition(ICondition condition) {
+			recipeConditions.add(condition);
 			return this;
 		}
 
@@ -1088,17 +1149,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		private ResourceLocation createSimpleLocation(String recipeType) {
-			return Create.asResource(recipeType + "/" + result.get()
-				.asItem()
-				.getRegistryName()
-				.getPath() + suffix);
+			return Create.asResource(recipeType + "/" + getRegistryName().getPath() + suffix);
 		}
 
 		private ResourceLocation createLocation(String recipeType) {
-			return Create.asResource(recipeType + "/" + path + "/" + result.get()
+			return Create.asResource(recipeType + "/" + path + "/" + getRegistryName().getPath() + suffix);
+		}
+
+		private ResourceLocation getRegistryName() {
+			return compatDatagenOutput == null ? result.get()
 				.asItem()
-				.getRegistryName()
-				.getPath() + suffix);
+				.getRegistryName() : compatDatagenOutput;
 		}
 
 		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends IItemProvider> item) {
@@ -1169,17 +1230,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			private GeneratedRecipe create(CookingRecipeSerializer<?> serializer,
 				UnaryOperator<CookingRecipeBuilder> builder, float cookingTimeModifier) {
 				return register(consumer -> {
-					CookingRecipeBuilder b = builder.apply(CookingRecipeBuilder.cookingRecipe(ingredient.get(),
-						result.get(), exp, (int) (cookingTime * cookingTimeModifier), serializer));
+					boolean isOtherMod = compatDatagenOutput != null;
+
+					CookingRecipeBuilder b = builder.apply(
+						CookingRecipeBuilder.cookingRecipe(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
+							exp, (int) (cookingTime * cookingTimeModifier), serializer));
 					if (unlockedBy != null)
 						b.addCriterion("has_item", hasItem(unlockedBy.get()));
-					b.build(consumer, createSimpleLocation(serializer.getRegistryName()
+					b.build(result -> {
+						consumer.accept(
+							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
+								: result);
+					}, createSimpleLocation(serializer.getRegistryName()
 						.getPath()));
 				});
 			}
-
 		}
-
 	}
 
 	@Override
@@ -1189,6 +1255,51 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	public StandardRecipeGen(DataGenerator p_i48262_1_) {
 		super(p_i48262_1_);
+	}
+
+	private static class ModdedCookingRecipeResult implements IFinishedRecipe {
+
+		private IFinishedRecipe wrapped;
+		private ResourceLocation outputOverride;
+		private List<ICondition> conditions;
+
+		public ModdedCookingRecipeResult(IFinishedRecipe wrapped, ResourceLocation outputOverride,
+			List<ICondition> conditions) {
+			this.wrapped = wrapped;
+			this.outputOverride = outputOverride;
+			this.conditions = conditions;
+		}
+
+		@Override
+		public ResourceLocation getID() {
+			return wrapped.getID();
+		}
+
+		@Override
+		public IRecipeSerializer<?> getSerializer() {
+			return wrapped.getSerializer();
+		}
+
+		@Override
+		public JsonObject getAdvancementJson() {
+			return wrapped.getAdvancementJson();
+		}
+
+		@Override
+		public ResourceLocation getAdvancementID() {
+			return wrapped.getAdvancementID();
+		}
+
+		@Override
+		public void serialize(JsonObject object) {
+			wrapped.serialize(object);
+			object.addProperty("result", outputOverride.toString());
+
+			JsonArray conds = new JsonArray();
+			conditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			object.add("conditions", conds);
+		}
+
 	}
 
 }
