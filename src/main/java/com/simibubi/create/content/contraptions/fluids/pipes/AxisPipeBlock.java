@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehavi
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,10 +20,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -43,10 +47,24 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isRemote)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state != newState && !isMoving) 
+		if (state != newState && !isMoving)
 			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeTileEntity(pos);
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult hit) {
+		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
+			return ActionResultType.PASS;
+		if (!world.isRemote) {
+			BlockState newState = AllBlocks.ENCASED_FLUID_PIPE.getDefaultState();
+			for (Direction d : Iterate.directionsInAxis(getAxis(state)))
+				newState = newState.with(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
+			world.setBlockState(pos, newState);
+		}
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

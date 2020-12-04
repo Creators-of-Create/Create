@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -46,7 +46,7 @@ public class BracketBlock extends ProperDirectionalBlock {
 	}
 
 	public Optional<BlockState> getSuitableBracket(BlockState blockState, Direction direction) {
-		if (blockState.getBlock() instanceof ShaftBlock)
+		if (blockState.getBlock() instanceof AbstractShaftBlock)
 			return getSuitableBracket(blockState.get(RotatedPillarKineticBlock.AXIS), direction,
 				blockState.getBlock() instanceof CogWheelBlock ? BracketType.COG : BracketType.SHAFT);
 		return getSuitableBracket(FluidPropagator.getStraightPipeAxis(blockState), direction, BracketType.PIPE);

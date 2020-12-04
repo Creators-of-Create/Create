@@ -41,6 +41,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		FluidStackIngredient ingredient = new FluidStackIngredient();
 		ingredient.fluid = fluid;
 		ingredient.amountRequired = amount;
+		ingredient.fixFlowing();
 		return ingredient;
 	}
 
@@ -48,6 +49,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		FluidStackIngredient ingredient = new FluidStackIngredient();
 		ingredient.fluid = fluidStack.getFluid();
 		ingredient.amountRequired = fluidStack.getAmount();
+		ingredient.fixFlowing();
 		if (fluidStack.hasTag())
 			ingredient.tagToMatch = fluidStack.getTag();
 		return ingredient;
@@ -139,6 +141,11 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		public FluidStackIngredient() {
 			tagToMatch = new CompoundNBT();
+		}
+		
+		void fixFlowing() {
+			if (fluid instanceof FlowingFluid)
+				fluid = ((FlowingFluid) fluid).getStillFluid();
 		}
 
 		@Override

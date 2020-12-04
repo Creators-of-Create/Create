@@ -6,7 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
-import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -176,7 +176,7 @@ public abstract class LaunchedItem {
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
 			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();
-			world.setBlockState(target, AllBlocks.SHAFT.getDefaultState().with(ShaftBlock.AXIS, axis));
+			world.setBlockState(target, AllBlocks.SHAFT.getDefaultState().with(AbstractShaftBlock.AXIS, axis));
 			BeltConnectorItem
 					.createBelts(world, target, target.add(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}

@@ -112,7 +112,8 @@ public abstract class Contraption {
 	private List<BlockFace> pendingSubContraptions;
 
 	// Client
-	public Map<BlockPos, TileEntity> renderedTileEntities;
+	public Map<BlockPos, TileEntity> presentTileEntities;
+	public List<TileEntity> renderedTileEntities;
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -124,7 +125,8 @@ public abstract class Contraption {
 		fluidStorage = new HashMap<>();
 		glueToRemove = new ArrayList<>();
 		initialPassengers = new HashMap<>();
-		renderedTileEntities = new HashMap<>();
+		presentTileEntities = new HashMap<>();
+		renderedTileEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 	}
@@ -512,6 +514,7 @@ public abstract class Contraption {
 
 	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		blocks.clear();
+		presentTileEntities.clear();
 		renderedTileEntities.clear();
 
 		nbt.getList("Blocks", 10)
@@ -549,7 +552,8 @@ public abstract class Contraption {
 					if (te instanceof KineticTileEntity)
 						((KineticTileEntity) te).setSpeed(0);
 					te.getBlockState();
-					renderedTileEntities.put(info.pos, te);
+					presentTileEntities.put(info.pos, te);
+					renderedTileEntities.add(te);
 				}
 			});
 
@@ -587,7 +591,7 @@ public abstract class Contraption {
 
 		if (spawnData)
 			fluidStorage.forEach((pos, mfs) -> {
-				TileEntity tileEntity = renderedTileEntities.get(pos);
+				TileEntity tileEntity = presentTileEntities.get(pos);
 				if (!(tileEntity instanceof FluidTankTileEntity))
 					return;
 				FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;

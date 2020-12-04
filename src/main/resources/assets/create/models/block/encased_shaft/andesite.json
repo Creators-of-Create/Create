@@ -1,6 +1,0 @@
-{
-	"parent": "create:block/encased_shaft/base",
-	"textures": {
-		"casing": "create:block/andesite_casing"
-	}
-}

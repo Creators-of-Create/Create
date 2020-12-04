@@ -73,12 +73,9 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		BlockRayTraceResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
 			return ActionResultType.PASS;
-		Axis axis = getAxis(world, pos, state);
-		if (axis == null)
-			return ActionResultType.PASS;
 		if (!world.isRemote)
-			world.setBlockState(pos, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()
-				.with(EncasedPipeBlock.AXIS, axis));
+			world.setBlockState(pos,
+				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -149,7 +146,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 				|| FluidPropagator.getStraightPipeAxis(neighbour) == blockFace.getAxis();
 		if (attachmentBehaviour == null)
 			return false;
-		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace);
+		return attachmentBehaviour.isPipeConnectedTowards(neighbour, blockFace.getOpposite());
 	}
 
 	public static boolean shouldDrawRim(ILightReader world, BlockPos pos, BlockState state, Direction direction) {

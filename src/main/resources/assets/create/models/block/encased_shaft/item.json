@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/andesite_casing",
-		"1": "create:block/gearbox",
-		"particle": "create:block/axis",
+		"0": "#casing",
+		"1": "#opening",
+		"particle": "#casing",
 		"1_0": "create:block/axis",
 		"1_1": "create:block/axis_top"
 	},

@@ -250,6 +250,8 @@ public class StructureTransform {
 					newDirection = direction;
 					if (direction.getAxis() == rotationAxis)
 						newSlope = BeltSlope.SIDEWAYS;
+					else if (direction.getAxis() != Axis.Z)
+						newDirection = direction.getOpposite();
 				}
 
 				state = state.with(BeltBlock.HORIZONTAL_FACING, newDirection);
@@ -332,8 +334,7 @@ public class StructureTransform {
 		int readAngle = buffer.readInt();
 		int axisIndex = buffer.readVarInt();
 		int rotationIndex = buffer.readVarInt();
-		return new StructureTransform(readBlockPos, readAngle,
-			axisIndex == -1 ? null : Axis.values()[axisIndex],
+		return new StructureTransform(readBlockPos, readAngle, axisIndex == -1 ? null : Axis.values()[axisIndex],
 			rotationIndex == -1 ? null : Rotation.values()[rotationIndex]);
 	}
 

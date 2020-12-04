@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -135,7 +136,7 @@ public class BeltConnectorItem extends BlockItem {
 			boolean pulley = ShaftBlock.isShaft(shaftState);
 			if (part == BeltPart.MIDDLE && pulley)
 				part = BeltPart.PULLEY;
-			if (pulley && shaftState.get(ShaftBlock.AXIS) == Axis.Y)
+			if (pulley && shaftState.get(AbstractShaftBlock.AXIS) == Axis.Y)
 				slope = BeltSlope.SIDEWAYS;
 			world.setBlockState(pos, beltBlock.with(BeltBlock.SLOPE, slope)
 				.with(BeltBlock.PART, part)
@@ -237,7 +238,7 @@ public class BeltConnectorItem extends BlockItem {
 		for (BlockPos currentPos = first.add(step); !currentPos.equals(second) && limit-- > 0; currentPos =
 			currentPos.add(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
-			if (ShaftBlock.isShaft(blockState) && blockState.get(ShaftBlock.AXIS) == shaftAxis)
+			if (ShaftBlock.isShaft(blockState) && blockState.get(AbstractShaftBlock.AXIS) == shaftAxis)
 				continue;
 			if (!blockState.getMaterial()
 				.isReplaceable())

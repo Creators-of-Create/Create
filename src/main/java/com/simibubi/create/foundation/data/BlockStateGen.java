@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
@@ -121,11 +122,17 @@ public class BlockStateGen {
 
 	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		Function<BlockState, ModelFile> modelFunc) {
+		axisBlock(ctx, prov, modelFunc, false);
+	}
+
+	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+		Function<BlockState, ModelFile> modelFunc, boolean uvLock) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
 				Axis axis = state.get(BlockStateProperties.AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
+					.uvLock(uvLock)
 					.rotationX(axis == Axis.Y ? 0 : 90)
 					.rotationY(axis == Axis.X ? 90 : axis == Axis.Z ? 180 : 0)
 					.build();
@@ -331,6 +338,26 @@ public class BlockStateGen {
 					}
 				}
 			}
+		};
+	}
+
+	public static <P extends EncasedPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> encasedPipe() {
+		return (c, p) -> {
+			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
+			ModelFile flat = AssetLookup.partialBaseModel(c, p, "flat");
+			MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
+			for (boolean flatPass : Iterate.trueAndFalse)
+				for (Direction d : Iterate.directions) {
+					int verticalAngle = d == Direction.UP ? 90 : d == Direction.DOWN ? -90 : 0;
+					builder.part()
+						.modelFile(flatPass ? flat : open)
+						.rotationX(verticalAngle)
+						.rotationY((int) (d.getHorizontalAngle() + (d.getAxis()
+							.isVertical() ? 90 : 0)) % 360)
+						.addModel()
+						.condition(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), !flatPass)
+						.end();
+				}
 		};
 	}
 
