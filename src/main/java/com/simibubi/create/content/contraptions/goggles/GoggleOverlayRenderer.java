@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -31,11 +32,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation.spacing;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
@@ -105,7 +101,9 @@ public class GoggleOverlayRenderer {
 			if (!tooltip.isEmpty())
 				tooltip.add(StringTextComponent.EMPTY);
 
-			tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(Lang.translate("gui.goggles.pole_length")).append(" " + poles));
+			tooltip.add(IHaveGoggleInformation.componentSpacing.copy()
+				.append(Lang.translate("gui.goggles.pole_length"))
+				.append(new StringTextComponent(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())
