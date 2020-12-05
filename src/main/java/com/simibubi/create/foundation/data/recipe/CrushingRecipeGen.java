@@ -11,6 +11,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
 public class CrushingRecipeGen extends ProcessingRecipeGen {
 
@@ -51,6 +53,16 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		IRON_ORE = metalOre("iron", AllItems.CRUSHED_IRON, 400),
 		GOLD_ORE = metalOre("gold", AllItems.CRUSHED_GOLD, 300),
 
+		OSMIUM_ORE = metalOre("osmium", AllItems.CRUSHED_OSMIUM, 400),
+		PLATINUM_ORE = metalOre("platinum", AllItems.CRUSHED_PLATINUM, 300),
+		SILVER_ORE = metalOre("silver", AllItems.CRUSHED_SILVER, 300),
+		TIN_ORE = metalOre("tin", AllItems.CRUSHED_TIN, 350),
+		QUICKSILVER_ORE = metalOre("quicksilver", AllItems.CRUSHED_QUICKSILVER, 300),
+		LEAD_ORE = metalOre("lead", AllItems.CRUSHED_LEAD, 400),
+		ALUMINUM_ORE = metalOre("aluminum", AllItems.CRUSHED_BAUXITE, 300),
+		URANIUM_ORE = metalOre("uranium", AllItems.CRUSHED_URANIUM, 400),
+		NICKEL_ORE = metalOre("nickel", AllItems.CRUSHED_NICKEL, 350),
+
 		NETHER_QUARTZ_ORE = create(() -> Blocks.NETHER_QUARTZ_ORE, b -> b.duration(350)
 			.output(Items.QUARTZ, 2)
 			.output(.5f, Items.QUARTZ, 4)
@@ -74,6 +86,11 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		EMERALD_ORE = create(() -> Blocks.EMERALD_ORE, b -> b.duration(500)
 			.output(Items.EMERALD, 2)
 			.output(.25f, Items.EMERALD, 1)
+			.output(.125f, Blocks.COBBLESTONE)),
+
+		DIAMOND_ORE = create(() -> Blocks.DIAMOND_ORE, b -> b.duration(500)
+			.output(Items.DIAMOND, 2)
+			.output(.25f, Items.DIAMOND, 1)
 			.output(.125f, Blocks.COBBLESTONE)),
 
 		NETHER_WART_NO_QUARK = create("nether_wart_block_no_quark", b -> b.duration(150)
@@ -132,8 +149,9 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	protected GeneratedRecipe metalOre(String name, ItemEntry<Item> crushed, int duration) {
+	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
+			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
 			.require(AllTags.forgeItemTag("ores/" + name))
 			.output(crushed.get())
 			.output(.3f, crushed.get(), 2)

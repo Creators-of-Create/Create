@@ -71,7 +71,7 @@ public class ContraptionRenderer {
 
 	private static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, c.renderedTileEntities.values(), ms, msLocal, buffer);
+		TileEntityRenderHelper.renderTileEntities(world, c.renderedTileEntities, ms, msLocal, buffer);
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {
@@ -86,7 +86,7 @@ public class ContraptionRenderer {
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		renderWorld.setTileEntities(c.renderedTileEntities.values());
+		renderWorld.setTileEntities(c.presentTileEntities.values());
 
 		for (BlockInfo info : c.getBlocks()
 			.values())

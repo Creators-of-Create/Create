@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
@@ -23,6 +24,19 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		TEMP_LAVA = create("temp_lava", b -> b.require(Tags.Items.COBBLESTONE)
 			.output(Fluids.LAVA, 25)
 			.requiresHeat(HeatCondition.SUPERHEATED)),
+
+		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
+			.require(AllTags.forgeFluidTag("milk"), 250)
+			.require(ItemTags.LEAVES)
+			.output(AllFluids.TEA.get(), 500)
+			.requiresHeat(HeatCondition.HEATED)),
+		
+		CHOCOLATE = create("chocolate", b -> b
+			.require(AllTags.forgeFluidTag("milk"), 250)
+			.require(Items.SUGAR)
+			.require(Items.COCOA_BEANS)
+			.output(AllFluids.CHOCOLATE.get(), 250)
+			.requiresHeat(HeatCondition.HEATED)),
 
 		BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
 			.require(I.zinc())

@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -47,6 +48,7 @@ public class CreateClient {
 	private static CustomItemModels customItemModels;
 	private static CustomRenderedItems customRenderedItems;
 	private static AllColorHandlers colorHandlers;
+	private static CasingConnectivity casingConnectivity;
 
 	public static void addClientListeners(IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
@@ -71,6 +73,7 @@ public class CreateClient {
 		//AllTileEntities.registerRenderers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
+		AllFluids.assignRenderLayers();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
@@ -161,6 +164,12 @@ public class CreateClient {
 		if (colorHandlers == null)
 			colorHandlers = new AllColorHandlers();
 		return colorHandlers;
+	}
+	
+	public static CasingConnectivity getCasingConnectivity() {
+		if (casingConnectivity == null)
+			casingConnectivity = new CasingConnectivity();
+		return casingConnectivity;
 	}
 
 }

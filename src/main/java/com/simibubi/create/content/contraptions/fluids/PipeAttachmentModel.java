@@ -8,7 +8,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.foundation.block.render.WrappedBakedModel;
+import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -21,9 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public class PipeAttachmentModel extends WrappedBakedModel {
+public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	private static ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
 
@@ -32,7 +33,7 @@ public class PipeAttachmentModel extends WrappedBakedModel {
 	}
 
 	@Override
-	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		PipeModelData data = new PipeModelData();
 		FluidPipeAttachmentBehaviour attachmentBehaviour =
 			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
@@ -44,8 +45,7 @@ public class PipeAttachmentModel extends WrappedBakedModel {
 		}
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
 
-		return new ModelDataMap.Builder().withInitial(PIPE_PROPERTY, data)
-			.build();
+		return builder.withInitial(PIPE_PROPERTY, data);
 	}
 
 	@Override

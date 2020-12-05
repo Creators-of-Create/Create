@@ -5,21 +5,26 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.Property;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class SpecialBlockStateGen {
 
+	protected Property<?>[] getIgnoredProperties() {
+		return new Property<?>[0];
+	}
+	
 	public final <T extends Block> void generate(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov) {
 		prov.getVariantBuilder(ctx.getEntry())
-			.forAllStates(state -> {
+			.forAllStatesExcept(state -> {
 				return ConfiguredModel.builder()
 					.modelFile(getModel(ctx, prov, state))
 					.rotationX((getXRotation(state) + 360) % 360)
 					.rotationY((getYRotation(state) + 360) % 360)
 					.build();
-			});
+			}, getIgnoredProperties());
 	}
 
 	protected int horizontalAngle(Direction direction) {

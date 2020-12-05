@@ -19,5 +19,14 @@
       "chance": 0.125
     }
   ],
-  "processingTime": 350
+  "processingTime": 350,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:ores/copper",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

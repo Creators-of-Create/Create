@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
+import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
@@ -22,6 +25,7 @@ import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -130,10 +134,31 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
 	}
 
+	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
+		return entry(name,
+			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
+				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
+	}
+
+	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {
+		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"));
+	}
+
+	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name,
+		NonNullBiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory) {
+		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"),
+			attributesFactory);
+	}
+
 	/* Util */
 
 	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(ConnectedTextureBehaviour behavior) {
 		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
+	}
+
+	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
+		BiConsumer<T, CasingConnectivity> consumer) {
+		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
@@ -174,6 +199,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
 			.register(entry.delegate, model -> new CTModel(model, behavior));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static <T extends Block> void registerCasingConnectivity(T entry,
+		BiConsumer<T, CasingConnectivity> consumer) {
+		consumer.accept(entry, CreateClient.getCasingConnectivity());
 	}
 
 	@OnlyIn(Dist.CLIENT)

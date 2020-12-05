@@ -26,6 +26,10 @@ public class FluidPipeAttachmentBehaviour extends BracketedTileEntityBehaviour {
 			.getAxis() == direction.getAxis())
 			return AttachmentTypes.NONE;
 
+		if (AllBlocks.ENCASED_FLUID_PIPE.has(facingState)
+			&& facingState.get(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(direction.getOpposite())))
+			return AttachmentTypes.NONE;
+
 		if (FluidPropagator.hasFluidCapability(facingState, world, offsetPos, direction)
 			&& !AllBlocks.HOSE_PULLEY.has(facingState))
 			return AttachmentTypes.DRAIN;

@@ -62,6 +62,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailGenerator;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
@@ -104,6 +105,7 @@ import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyB
 import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltGenerator;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
@@ -238,22 +240,24 @@ public class AllBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<EncasedShaftBlock> ENCASED_SHAFT =
-		REGISTRATE.block("encased_shaft", EncasedShaftBlock::new)
-			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
-			.transform(StressConfigDefaults.setNoImpact())
-			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
-				.getExistingFile(p.modLoc("block/encased_shaft/" + blockState.get(EncasedShaftBlock.CASING)
-					.getString()))))
-			.loot((p, b) -> p.registerDropping(b, SHAFT.get()))
+	public static final BlockEntry<EncasedShaftBlock> ANDESITE_ENCASED_SHAFT =
+		REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::andesite)
+			.transform(BuilderTransformers.encasedShaft("andesite", AllSpriteShifts.ANDESITE_CASING))
+			.register();
+
+	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
+		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::brass)
+			.transform(BuilderTransformers.encasedShaft("brass", AllSpriteShifts.BRASS_CASING))
 			.register();
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(AbstractBlock.Properties::nonOpaque)
 		.transform(StressConfigDefaults.setNoImpact())
-		.blockstate(BlockStateGen.axisBlockProvider(true))
+		.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.ANDESITE_CASING)))
+		.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.ANDESITE_CASING,
+			(s, f) -> f.getAxis() == s.get(GearboxBlock.AXIS))))
+		.blockstate((c, p) -> axisBlock(c, p, $ -> AssetLookup.partialBaseModel(c, p), true))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -516,8 +520,11 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
 		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, state -> p.models()
-				.cubeColumn(c.getName(), p.modLoc("block/copper_casing"), p.modLoc("block/encased_pipe"))))
+			.properties(Block.Properties::nonOpaque)
+			.blockstate(BlockStateGen.encasedPipe())
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
+				(s, f) -> !s.get(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
 			.register();
@@ -740,12 +747,14 @@ public class AllBlocks {
 	public static final BlockEntry<ControllerRailBlock> CONTROLLER_RAIL =
 		REGISTRATE.block("controller_rail", ControllerRailBlock::new)
 			.initialProperties(() -> Blocks.POWERED_RAIL)
-			.blockstate(BlockStateGen.controllerRail())
+			.blockstate(new ControllerRailGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
+			.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getRedstonePower))
 			.tag(BlockTags.RAILS)
 			.item()
-			.model((c, p) -> p.generated(c, Create.asResource("block/controller_rail_analog")))
-			.build().register();
+			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName() + "_item")))
+			.build()
+			.register();
 
 	public static final BlockEntry<MinecartAnchorBlock> MINECART_ANCHOR =
 		REGISTRATE.block("minecart_anchor", MinecartAnchorBlock::new)

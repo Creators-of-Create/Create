@@ -1,23 +1,30 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.item.Items;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 	/*
-	 * potion/bottles are handled internally now. keeping this builder for reference
+	 * potion/water bottles are handled internally
 	 */
 	
-//	GeneratedRecipe
-//
-//	WATER_BOTTLE = create("water_bottle", b -> b
-//		.require(NBTIngredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER)))
-//		.output(Fluids.WATER, 250)
-//		.output(Items.GLASS_BOTTLE))
-//
-//	;
+	GeneratedRecipe
+
+	HONEY_BOTTLE = create("honey_bottle", b -> b
+		.require(Items.HONEY_BOTTLE)
+		.output(AllFluids.HONEY.get(), 250)
+		.output(Items.GLASS_BOTTLE)),
+	
+	MILK_BUCKET = create("milk_bucket", b -> b
+		.require(Items.MILK_BUCKET)
+		.output(AllFluids.MILK.get(), 1000)
+		.output(Items.BUCKET))
+
+	;
 
 	public EmptyingRecipeGen(DataGenerator p_i48262_1_) {
 		super(p_i48262_1_);

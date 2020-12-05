@@ -16,13 +16,11 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
-import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public class CTModel extends BakedModelWrapper<IBakedModel> {
+public class CTModel extends BakedModelWrapperWithData {
 
 	protected static ModelProperty<CTData> CT_PROPERTY = new ModelProperty<>();
 	private ConnectedTextureBehaviour behaviour;
@@ -43,19 +41,15 @@ public class CTModel extends BakedModelWrapper<IBakedModel> {
 			return indices[face.getIndex()];
 		}
 	}
-
+	
 	public CTModel(IBakedModel originalModel, ConnectedTextureBehaviour behaviour) {
 		super(originalModel);
 		this.behaviour = behaviour;
 	}
 
 	@Override
-	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
-		return getCTDataMapBuilder(world, pos, state).build();
-	}
-
-	protected Builder getCTDataMapBuilder(IBlockDisplayReader world, BlockPos pos, BlockState state) {
-		return new ModelDataMap.Builder().withInitial(CT_PROPERTY, createCTData(world, pos, state));
+	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
+		return builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
 	protected CTData createCTData(IBlockDisplayReader world, BlockPos pos, BlockState state) {

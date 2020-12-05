@@ -10,5 +10,14 @@
       "item": "create:crushed_zinc_ore"
     }
   ],
-  "processingTime": 350
+  "processingTime": 350,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:ores/zinc",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

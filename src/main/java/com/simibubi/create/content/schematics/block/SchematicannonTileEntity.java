@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.content.schematics.MaterialChecklist;
@@ -492,7 +492,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (!isLastSegment)
 			blockState = (blockState.get(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.getDefaultState()
 				: AllBlocks.SHAFT.getDefaultState()
-					.with(ShaftBlock.AXIS, facing.rotateY()
+					.with(AbstractShaftBlock.AXIS, facing.rotateY()
 						.getAxis());
 		return blockState;
 	}

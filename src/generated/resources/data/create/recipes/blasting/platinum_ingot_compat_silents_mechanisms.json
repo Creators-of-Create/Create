@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "create:crushed_platinum_ore"
+  },
+  "result": "silents_mechanisms:platinum_ingot",
+  "experience": 0.1,
+  "cookingtime": 100,
+  "conditions": [
+    {
+      "modid": "silents_mechanisms",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

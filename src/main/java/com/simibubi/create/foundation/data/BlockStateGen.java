@@ -9,7 +9,6 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -20,6 +19,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.palettes.PavedBlock;
@@ -122,11 +122,17 @@ public class BlockStateGen {
 
 	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		Function<BlockState, ModelFile> modelFunc) {
+		axisBlock(ctx, prov, modelFunc, false);
+	}
+
+	public static <T extends Block> void axisBlock(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
+		Function<BlockState, ModelFile> modelFunc, boolean uvLock) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
 				Axis axis = state.get(BlockStateProperties.AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
+					.uvLock(uvLock)
 					.rotationX(axis == Axis.Y ? 0 : 90)
 					.rotationY(axis == Axis.X ? 90 : axis == Axis.Z ? 180 : 0)
 					.build();
@@ -335,6 +341,26 @@ public class BlockStateGen {
 		};
 	}
 
+	public static <P extends EncasedPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> encasedPipe() {
+		return (c, p) -> {
+			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
+			ModelFile flat = AssetLookup.partialBaseModel(c, p, "flat");
+			MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
+			for (boolean flatPass : Iterate.trueAndFalse)
+				for (Direction d : Iterate.directions) {
+					int verticalAngle = d == Direction.UP ? 90 : d == Direction.DOWN ? -90 : 0;
+					builder.part()
+						.modelFile(flatPass ? flat : open)
+						.rotationX(verticalAngle)
+						.rotationY((int) (d.getHorizontalAngle() + (d.getAxis()
+							.isVertical() ? 90 : 0)) % 360)
+						.addModel()
+						.condition(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), !flatPass)
+						.end();
+				}
+		};
+	}
+
 	public static <P extends FluidPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> pipe() {
 		return (c, p) -> {
 			String path = "block/" + c.getName();
@@ -433,49 +459,5 @@ public class BlockStateGen {
 			.condition(propertyMap.get(Pointing.RIGHT.getCombinedDirection(positiveAxis)), right)
 			.condition(propertyMap.get(Pointing.DOWN.getCombinedDirection(positiveAxis)), down)
 			.end();
-	}
-
-	public static NonNullBiConsumer<DataGenContext<Block, ControllerRailBlock>, RegistrateBlockstateProvider> controllerRail() {
-		return (c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(state -> {
-				int power = state.get(ControllerRailBlock.POWER);
-				boolean backwards = state.get(ControllerRailBlock.BACKWARDS);
-				String powerStr = power == 0 ? "off" : (power == 15 ? "on" : "analog");
-				RailShape shape = state.get(ControllerRailBlock.SHAPE);
-				String shapeName = shape.isAscending() ? RailShape.ASCENDING_NORTH.getString() : RailShape.NORTH_SOUTH.getString();
-				int rotation = 0;
-
-				switch (shape) {
-					case EAST_WEST:
-						rotation += 270;
-						shapeName = RailShape.NORTH_SOUTH.getString();
-						break;
-					case ASCENDING_EAST:
-						rotation += 90;
-						break;
-					case ASCENDING_SOUTH:
-						rotation += 180;
-						break;
-					case ASCENDING_WEST:
-						rotation += 270;
-						break;
-					default:
-						break;
-				}
-
-				if (backwards) {
-					rotation += 180;
-					shapeName = shape.isAscending() ? RailShape.ASCENDING_SOUTH.getString() : RailShape.NORTH_SOUTH.getString();
-				}
-
-
-				return ConfiguredModel.builder()
-					.modelFile(p.models()
-						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block_" + shapeName + "_" +
-								powerStr)))
-					.rotationY(rotation % 360)
-					.build();
-			});
 	}
 }

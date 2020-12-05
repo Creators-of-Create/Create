@@ -18,12 +18,14 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.ModList;
@@ -45,6 +47,10 @@ public class AllTags {
 
 	public static ITag.INamedTag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags::makeWrapperTag, name);
+	}
+	
+	public static ITag.INamedTag<Fluid> forgeFluidTag(String name) {
+		return forgeTag(FluidTags::makeWrapperTag, name);
 	}
 
 	public static <T> ITag.INamedTag<T> forgeTag(Function<String, ITag.INamedTag<T>> wrapperFactory, String name) {
@@ -161,7 +167,7 @@ public class AllTags {
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 		
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
-		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL);
+		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);

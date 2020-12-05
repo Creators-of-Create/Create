@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
@@ -24,8 +25,16 @@ public class ProcessingOutput {
 	private final ItemStack stack;
 	private final float chance;
 
+	private Pair<ResourceLocation, Integer> compatDatagenOutput;
+
 	public ProcessingOutput(ItemStack stack, float chance) {
 		this.stack = stack;
+		this.chance = chance;
+	}
+
+	public ProcessingOutput(Pair<ResourceLocation, Integer> item, float chance) {
+		this.stack = ItemStack.EMPTY;
+		this.compatDatagenOutput = item;
 		this.chance = chance;
 	}
 
@@ -51,14 +60,15 @@ public class ProcessingOutput {
 
 	public JsonElement serialize() {
 		JsonObject json = new JsonObject();
-		json.addProperty("item", stack.getItem()
-			.getRegistryName()
-			.toString());
-		if (stack.getCount() != 1) {
-			json.addProperty("count", stack.getCount());
-		}
+		ResourceLocation resourceLocation = compatDatagenOutput == null ? stack.getItem()
+			.getRegistryName() : compatDatagenOutput.getFirst();
+		json.addProperty("item", resourceLocation.toString());
+		int count = compatDatagenOutput == null ? stack.getCount() : compatDatagenOutput.getSecond();
+		if (count != 1)
+			json.addProperty("count", count);
 		if (stack.hasTag())
-			json.add("nbt", new JsonParser().parse(stack.getTag().toString()));
+			json.add("nbt", new JsonParser().parse(stack.getTag()
+				.toString()));
 		if (chance != 1)
 			json.addProperty("chance", chance);
 		return json;

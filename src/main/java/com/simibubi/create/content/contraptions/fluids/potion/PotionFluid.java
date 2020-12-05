@@ -4,13 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.EffectInstance;
@@ -20,10 +16,9 @@ import net.minecraft.potion.Potions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PotionFluid extends ForgeFlowingFluid {
+public class PotionFluid extends VirtualFluid {
 
 	public enum BottleType {
 		REGULAR, SPLASH, LINGERING;
@@ -39,36 +34,6 @@ public class PotionFluid extends ForgeFlowingFluid {
 		addPotionToFluidStack(fluidStack, potion);
 		appendEffects(fluidStack, customEffects);
 		return fluidStack;
-	}
-
-	@Override
-	public Fluid getStillFluid() {
-		return this;
-	}
-
-	@Override
-	public Fluid getFlowingFluid() {
-		return this;
-	}
-
-	@Override
-	public Item getFilledBucket() {
-		return Items.AIR;
-	}
-
-	@Override
-	protected BlockState getBlockState(FluidState state) {
-		return Blocks.AIR.getDefaultState();
-	}
-
-	@Override
-	public boolean isSource(FluidState p_207193_1_) {
-		return false;
-	}
-
-	@Override
-	public int getLevel(FluidState p_207192_1_) {
-		return 0;
 	}
 
 	public static class PotionFluidAttributes extends FluidAttributes {

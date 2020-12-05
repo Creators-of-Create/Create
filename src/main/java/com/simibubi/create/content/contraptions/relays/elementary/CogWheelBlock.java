@@ -23,7 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class CogWheelBlock extends ShaftBlock {
+public class CogWheelBlock extends AbstractShaftBlock {
 
     boolean isLarge;
 

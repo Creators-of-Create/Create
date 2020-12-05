@@ -19,5 +19,14 @@
       "chance": 0.125
     }
   ],
-  "processingTime": 300
+  "processingTime": 300,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:ores/gold",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

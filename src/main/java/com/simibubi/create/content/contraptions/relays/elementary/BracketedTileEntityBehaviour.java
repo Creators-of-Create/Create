@@ -67,7 +67,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	
 	public boolean canHaveBracket() {
 		BlockState blockState = tileEntity.getBlockState();
-		if (blockState.getBlock() instanceof ShaftBlock)
+		if (blockState.getBlock() instanceof AbstractShaftBlock)
 			return true;
 		return false;
 	}

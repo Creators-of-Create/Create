@@ -18,6 +18,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 public class FluidTankModel extends CTModel {
@@ -35,14 +36,13 @@ public class FluidTankModel extends CTModel {
 	private FluidTankModel(IBakedModel originalModel, CTSpriteShiftEntry side, CTSpriteShiftEntry top) {
 		super(originalModel, new FluidTankCTBehaviour(side, top));
 	}
-
+	
 	@Override
-	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
 			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(d)));
-		return getCTDataMapBuilder(world, pos, state).withInitial(CULL_PROPERTY, cullData)
-			.build();
+		return super.gatherModelData(builder, world, pos, state).withInitial(CULL_PROPERTY, cullData);
 	}
 
 	@Override

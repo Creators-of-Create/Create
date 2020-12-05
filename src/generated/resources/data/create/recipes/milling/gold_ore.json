@@ -10,5 +10,14 @@
       "item": "create:crushed_gold_ore"
     }
   ],
-  "processingTime": 300
+  "processingTime": 300,
+  "conditions": [
+    {
+      "value": {
+        "tag": "forge:ores/gold",
+        "type": "forge:tag_empty"
+      },
+      "type": "forge:not"
+    }
+  ]
 }

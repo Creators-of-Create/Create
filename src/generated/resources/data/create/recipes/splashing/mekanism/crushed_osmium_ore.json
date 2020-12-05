@@ -1,0 +1,25 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_osmium_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "mekanism:osmium_nugget",
+      "count": 10
+    },
+    {
+      "item": "mekanism:osmium_nugget",
+      "count": 5,
+      "chance": 0.5
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "mekanism",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

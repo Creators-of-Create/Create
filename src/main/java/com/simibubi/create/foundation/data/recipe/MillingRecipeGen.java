@@ -11,6 +11,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
 public class MillingRecipeGen extends ProcessingRecipeGen {
 
@@ -44,6 +46,16 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		ZINC_ORE = metalOre("zinc", AllItems.CRUSHED_ZINC, 350),
 		IRON_ORE = metalOre("iron", AllItems.CRUSHED_IRON, 400),
 		GOLD_ORE = metalOre("gold", AllItems.CRUSHED_GOLD, 300),
+
+		OSMIUM_ORE = metalOre("osmium", AllItems.CRUSHED_OSMIUM, 400),
+		PLATINUM_ORE = metalOre("platinum", AllItems.CRUSHED_PLATINUM, 300),
+		SILVER_ORE = metalOre("silver", AllItems.CRUSHED_SILVER, 300),
+		TIN_ORE = metalOre("tin", AllItems.CRUSHED_TIN, 350),
+		QUICKSILVER_ORE = metalOre("quicksilver", AllItems.CRUSHED_QUICKSILVER, 300),
+		LEAD_ORE = metalOre("lead", AllItems.CRUSHED_LEAD, 400),
+		ALUMINUM_ORE = metalOre("aluminum", AllItems.CRUSHED_BAUXITE, 300),
+		URANIUM_ORE = metalOre("uranium", AllItems.CRUSHED_URANIUM, 400),
+		NICKEL_ORE = metalOre("nickel", AllItems.CRUSHED_NICKEL, 350),
 
 		WHEAT = create(() -> Items.WHEAT, b -> b.duration(150)
 			.output(AllItems.WHEAT_FLOUR.get())
@@ -147,11 +159,11 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		POPPY = create(() -> Blocks.POPPY, b -> b.duration(50)
 			.output(Items.RED_DYE, 2)
 			.output(.05f, Items.GREEN_DYE)),
-		
+
 		DANDELION = create(() -> Blocks.DANDELION, b -> b.duration(50)
 			.output(Items.YELLOW_DYE, 2)
 			.output(.05f, Items.YELLOW_DYE)),
-		
+
 		CORNFLOWER = create(() -> Blocks.CORNFLOWER, b -> b.duration(50)
 			.output(Items.BLUE_DYE, 2)),
 
@@ -182,8 +194,9 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	protected GeneratedRecipe metalOre(String name, ItemEntry<Item> crushed, int duration) {
+	protected GeneratedRecipe metalOre(String name, ItemEntry<? extends Item> crushed, int duration) {
 		return create(name + "_ore", b -> b.duration(duration)
+			.withCondition(new NotCondition(new TagEmptyCondition("forge", "ores/" + name)))
 			.require(AllTags.forgeItemTag("ores/" + name))
 			.output(crushed.get()));
 	}

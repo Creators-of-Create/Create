@@ -33,18 +33,19 @@ public abstract class ConnectedTextureBehaviour {
 	public boolean buildContextForOccludedDirections() {
 		return false;
 	}
-	
+
 	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
+		return !isBeingBlocked(state, reader, pos, otherPos, face) && state.getBlock() == other.getBlock();
+	}
 
+	protected boolean isBeingBlocked(BlockState state, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
+		Direction face) {
 		BlockPos blockingPos = otherPos.offset(face);
-		if ((face.getAxis()
+		return face.getAxis()
 			.getCoordinate(pos.getX(), pos.getY(), pos.getZ()) == face.getAxis()
-				.getCoordinate(otherPos.getX(), otherPos.getY(), otherPos.getZ()))
-			&& connectsTo(state, reader.getBlockState(blockingPos), reader, pos, blockingPos, face))
-			return false;
-
-		return state.getBlock() == other.getBlock();
+				.getCoordinate(otherPos.getX(), otherPos.getY(), otherPos.getZ())
+			&& connectsTo(state, reader.getBlockState(blockingPos), reader, pos, blockingPos, face);
 	}
 
 	public CTContext buildContext(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {

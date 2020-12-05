@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
+import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
@@ -22,7 +26,6 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
-import com.simibubi.create.foundation.block.connected.StandardCTBehaviour;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -53,6 +56,22 @@ public class BuilderTransformers {
 			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
 	}
 
+	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
+		CTSpriteShiftEntry casingShift) {
+		return builder -> builder.initialProperties(SharedProperties::stone)
+			.properties(Block.Properties::nonOpaque)
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
+			.onRegister(CreateRegistrate.casingConnectivity(
+				(block, cc) -> cc.make(block, casingShift, (s, f) -> f.getAxis() != s.get(EncasedShaftBlock.AXIS))))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
+			.transform(StressConfigDefaults.setNoImpact())
+			.loot((p, b) -> p.registerDropping(b, AllBlocks.SHAFT.get()))
+			.item()
+			.model(AssetLookup.customItemModel("encased_shaft", "item_" + casing))
+			.build();
+	}
+
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(
 		@Nullable DyeColor color) {
 		return b -> b.initialProperties(SharedProperties::softMetal)
@@ -74,9 +93,10 @@ public class BuilderTransformers {
 
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
 		CTSpriteShiftEntry ct) {
-		return b -> b.onRegister(connectedTextures(new StandardCTBehaviour(ct)))
-			.initialProperties(SharedProperties::stone)
+		return b -> b.initialProperties(SharedProperties::stone)
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
+			.onRegister(connectedTextures(new EncasedCTBehaviour(ct)))
+			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct)))
 			.simpleItem();
 	}
 
@@ -156,8 +176,9 @@ public class BuilderTransformers {
 		ResourceLocation baseBlockModelLocation = Create.asResource("block/bearing/block");
 		ResourceLocation baseItemModelLocation = Create.asResource("block/bearing/item");
 		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top" + (woodenTop ? "_wooden" : ""));
-		ResourceLocation nookTextureLocation = Create.asResource("block/" + (woodenTop ? "andesite" : "brass") + "_casing");
-		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side"); 
+		ResourceLocation nookTextureLocation =
+			Create.asResource("block/" + (woodenTop ? "andesite" : "brass") + "_casing");
+		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side");
 		ResourceLocation backTextureLocation = Create.asResource("block/" + backTexture);
 		return b -> b.initialProperties(SharedProperties::stone)
 			.properties(p -> p.nonOpaque())

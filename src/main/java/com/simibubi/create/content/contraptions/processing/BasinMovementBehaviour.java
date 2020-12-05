@@ -52,7 +52,7 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 			}
 			context.tileData.put(key, itemStackHandler.serializeNBT());
 		});
-		TileEntity tileEntity = context.contraption.renderedTileEntities.get(context.localPos);
+		TileEntity tileEntity = context.contraption.presentTileEntities.get(context.localPos);
 		if (tileEntity instanceof BasinTileEntity)
 			((BasinTileEntity) tileEntity).readOnlyItems(context.tileData);
 		context.temporaryData = false; // did already dump, so can't any more

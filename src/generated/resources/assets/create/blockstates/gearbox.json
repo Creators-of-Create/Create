@@ -3,15 +3,18 @@
     "axis=x": {
       "model": "create:block/gearbox/block",
       "x": 90,
-      "y": 90
+      "y": 90,
+      "uvlock": true
     },
     "axis=y": {
-      "model": "create:block/gearbox/block"
+      "model": "create:block/gearbox/block",
+      "uvlock": true
     },
     "axis=z": {
       "model": "create:block/gearbox/block",
       "x": 90,
-      "y": 180
+      "y": 180,
+      "uvlock": true
     }
   }
 }

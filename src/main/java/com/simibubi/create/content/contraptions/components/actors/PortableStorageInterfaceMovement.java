@@ -142,7 +142,7 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 			.getDirectionVec());
 		directionVec = context.rotation.apply(directionVec);
 		Direction facingFromVector = Direction.getFacingFromVector(directionVec.x, directionVec.y, directionVec.z);
-		if (directionVec.distanceTo(Vector3d.of(facingFromVector.getDirectionVec())) > 1 / 8f)
+		if (directionVec.distanceTo(Vector3d.of(facingFromVector.getDirectionVec())) > 1 / 2f)
 			return Optional.empty();
 		return Optional.of(facingFromVector);
 	}

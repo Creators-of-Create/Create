@@ -38,4 +38,8 @@ public class Iterate {
 	public static List<BlockPos> hereAndBelow(BlockPos pos) {
 		return Arrays.asList(pos, pos.down());
 	}
+	
+	public static List<BlockPos> hereBelowAndAbove(BlockPos pos) {
+		return Arrays.asList(pos, pos.down(), pos.up());
+	}
 }
