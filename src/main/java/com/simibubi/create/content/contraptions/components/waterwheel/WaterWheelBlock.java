@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,6 +27,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+
+import static net.minecraft.block.BubbleColumnBlock.DRAG;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -90,11 +93,14 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			return;
 
 		FluidState fluid = world.getFluidState(pos.offset(f));
+		BlockState adjacentBlock = world.getBlockState(pos.offset(f));
 		Direction wf = state.get(HORIZONTAL_FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
 
-		Vector3d vec = fluid.getFlow(world, pos.offset(f));
+		Vector3d vec = (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock() && f.getAxis().isHorizontal()) ?
+				new Vector3d(0.0, adjacentBlock.get(DRAG) ? -1.0 : 1.0, 0.0) :
+				fluid.getFlow(world, pos.offset(f));
 		vec = vec.scale(f.getAxisDirection()
 			.getOffset());
 		vec = new Vector3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
