@@ -93,14 +93,21 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			return;
 
 		FluidState fluid = world.getFluidState(pos.offset(f));
-		BlockState adjacentBlock = world.getBlockState(pos.offset(f));
 		Direction wf = state.get(HORIZONTAL_FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
 
-		Vector3d vec = (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock() && f.getAxis().isHorizontal()) ?
-				new Vector3d(0.0, adjacentBlock.get(DRAG) ? -1.0 : 1.0, 0.0) :
-				fluid.getFlow(world, pos.offset(f));
+		Vector3d vec;
+		if (f.getAxis().isHorizontal()) {
+			BlockState adjacentBlock = world.getBlockState(pos.offset(f));
+			if (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock()) {
+				vec = new Vector3d(0.0, adjacentBlock.get(DRAG) ? -1.0 : 1.0, 0.0);
+			} else {
+				vec = fluid.getFlow(world, pos.offset(f));
+			}
+		} else {
+			vec = fluid.getFlow(world, pos.offset(f));
+		}
 		vec = vec.scale(f.getAxisDirection()
 			.getOffset());
 		vec = new Vector3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
