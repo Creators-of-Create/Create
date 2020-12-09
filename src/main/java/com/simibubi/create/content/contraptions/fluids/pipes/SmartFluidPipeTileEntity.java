@@ -3,9 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeAttachmentBehaviour;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -34,7 +33,6 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new SmartPipeBehaviour(this));
-		behaviours.add(new StraightPipeAttachmentBehaviour(this));
 		behaviours.add(filter = new FilteringBehaviour(this, new SmartPipeFilterSlot()).forFluids()
 			.withCallback(this::onFilterChanged));
 	}
@@ -45,21 +43,21 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 		FluidPropagator.propagateChangedPipe(world, pos, getBlockState());
 	}
 
-	class SmartPipeBehaviour extends FluidPipeBehaviour {
+	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {
 
 		public SmartPipeBehaviour(SmartTileEntity te) {
 			super(te);
 		}
 
 		@Override
-		public boolean canTransferToward(FluidStack fluid, BlockState state, Direction direction, boolean inbound) {
+		public boolean canPullFluidFrom(FluidStack fluid, BlockState state, Direction direction) {
 			if (fluid.isEmpty() || filter != null && filter.test(fluid))
-				return super.canTransferToward(fluid, state, direction, inbound);
+				return super.canPullFluidFrom(fluid, state, direction);
 			return false;
 		}
 
 		@Override
-		public boolean isConnectedTo(BlockState state, Direction direction) {
+		public boolean canHaveFlowToward(BlockState state, Direction direction) {
 			return state.getBlock() instanceof SmartFluidPipeBlock
 				&& SmartFluidPipeBlock.getPipeAxis(state) == direction.getAxis();
 		}

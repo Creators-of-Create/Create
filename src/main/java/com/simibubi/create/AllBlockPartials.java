@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour.AttachmentTypes;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;

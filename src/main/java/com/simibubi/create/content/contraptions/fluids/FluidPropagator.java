@@ -7,16 +7,14 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.mutable.MutableObject;
-
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,7 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -34,6 +31,94 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class FluidPropagator {
+
+	public static void propagateChangedPipe(IWorld world, BlockPos pipePos, BlockState pipeState) {
+		List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();
+		Set<BlockPos> visited = new HashSet<>();
+		Set<Pair<PumpTileEntity, Direction>> discoveredPumps = new HashSet<>();
+
+		frontier.add(Pair.of(0, pipePos));
+
+		// Visit all connected pumps to update their network
+		while (!frontier.isEmpty()) {
+			Pair<Integer, BlockPos> pair = frontier.remove(0);
+			BlockPos currentPos = pair.getSecond();
+			if (visited.contains(currentPos))
+				continue;
+			visited.add(currentPos);
+			BlockState currentState = currentPos.equals(pipePos) ? pipeState : world.getBlockState(currentPos);
+			FluidTransportBehaviour pipe = getPipe(world, currentPos);
+			if (pipe == null)
+				continue;
+			pipe.wipePressure();
+
+			for (Direction direction : getPipeConnections(currentState, pipe)) {
+				BlockPos target = currentPos.offset(direction);
+				if (!world.isAreaLoaded(target, 0))
+					continue;
+
+				TileEntity tileEntity = world.getTileEntity(target);
+				BlockState targetState = world.getBlockState(target);
+				if (tileEntity instanceof PumpTileEntity) {
+					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.get(PumpBlock.FACING)
+						.getAxis() != direction.getAxis())
+						continue;
+					discoveredPumps.add(Pair.of((PumpTileEntity) tileEntity, direction.getOpposite()));
+					continue;
+				}
+				if (visited.contains(target))
+					continue;
+				FluidTransportBehaviour targetPipe = getPipe(world, target);
+				if (targetPipe == null)
+					continue;
+				Integer distance = pair.getFirst();
+				if (distance >= getPumpRange() && !targetPipe.hasAnyPressure())
+					continue;
+				if (targetPipe.canHaveFlowToward(targetState, direction.getOpposite()))
+					frontier.add(Pair.of(distance + 1, target));
+			}
+		}
+
+		discoveredPumps.forEach(pair -> pair.getFirst()
+			.updatePipesOnSide(pair.getSecond()));
+	}
+
+	public static void resetAffectedFluidNetworks(World world, BlockPos start, Direction side) {
+		List<BlockPos> frontier = new ArrayList<>();
+		Set<BlockPos> visited = new HashSet<>();
+		frontier.add(start);
+
+		while (!frontier.isEmpty()) {
+			BlockPos pos = frontier.remove(0);
+			if (visited.contains(pos))
+				continue;
+			visited.add(pos);
+			FluidTransportBehaviour pipe = getPipe(world, pos);
+			if (pipe == null)
+				continue;
+
+			for (Direction d : Iterate.directions) {
+				if (pos.equals(start) && d != side)
+					continue;
+				BlockPos target = pos.offset(d);
+				if (visited.contains(target))
+					continue;
+
+				PipeConnection connection = pipe.getConnection(d);
+				if (connection == null)
+					continue;
+				if (!connection.hasFlow())
+					continue;
+
+				Flow flow = connection.flow.get();
+				if (!flow.inbound)
+					continue;
+
+				connection.resetNetwork();
+				frontier.add(target);
+			}
+		}
+	}
 
 	public static Direction validateNeighbourChange(BlockState state, World world, BlockPos pos, Block otherBlock,
 		BlockPos neighborPos, boolean isMoving) {
@@ -58,15 +143,15 @@ public class FluidPropagator {
 		return null;
 	}
 
-	public static FluidPipeBehaviour getPipe(IBlockReader reader, BlockPos pos) {
-		return TileEntityBehaviour.get(reader, pos, FluidPipeBehaviour.TYPE);
+	public static FluidTransportBehaviour getPipe(IBlockReader reader, BlockPos pos) {
+		return TileEntityBehaviour.get(reader, pos, FluidTransportBehaviour.TYPE);
 	}
 
 	public static boolean isOpenEnd(IBlockReader reader, BlockPos pos, Direction side) {
 		BlockPos connectedPos = pos.offset(side);
 		BlockState connectedState = reader.getBlockState(connectedPos);
-		FluidPipeBehaviour pipe = FluidPropagator.getPipe(reader, connectedPos);
-		if (pipe != null && pipe.isConnectedTo(connectedState, side.getOpposite()))
+		FluidTransportBehaviour pipe = FluidPropagator.getPipe(reader, connectedPos);
+		if (pipe != null && pipe.canHaveFlowToward(connectedState, side.getOpposite()))
 			return false;
 		if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
@@ -80,52 +165,10 @@ public class FluidPropagator {
 		return true;
 	}
 
-	public static void propagateChangedPipe(IWorld world, BlockPos pipePos, BlockState pipeState) {
-		List<BlockPos> frontier = new ArrayList<>();
-		Set<BlockPos> visited = new HashSet<>();
-
-		frontier.add(pipePos);
-
-		// Visit all connected pumps to update their network
-		while (!frontier.isEmpty()) {
-			BlockPos currentPos = frontier.remove(0);
-			if (visited.contains(currentPos))
-				continue;
-			visited.add(currentPos);
-			BlockState currentState = currentPos.equals(pipePos) ? pipeState : world.getBlockState(currentPos);
-			FluidPipeBehaviour pipe = getPipe(world, currentPos);
-			if (pipe == null)
-				continue;
-			for (Direction direction : getPipeConnections(currentState, pipe)) {
-				BlockPos target = currentPos.offset(direction);
-				if (!world.isAreaLoaded(target, 0))
-					continue;
-
-				TileEntity tileEntity = world.getTileEntity(target);
-				BlockState targetState = world.getBlockState(target);
-				if (tileEntity instanceof PumpTileEntity) {
-					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.get(PumpBlock.FACING)
-						.getAxis() != direction.getAxis())
-						continue;
-					PumpTileEntity pump = (PumpTileEntity) tileEntity;
-					pump.updatePipesOnSide(direction.getOpposite());
-					continue;
-				}
-				if (visited.contains(target))
-					continue;
-				FluidPipeBehaviour targetPipe = getPipe(world, target);
-				if (targetPipe == null)
-					continue;
-				if (targetPipe.isConnectedTo(targetState, direction.getOpposite()))
-					frontier.add(target);
-			}
-		}
-	}
-
-	public static List<Direction> getPipeConnections(BlockState state, FluidPipeBehaviour pipe) {
+	public static List<Direction> getPipeConnections(BlockState state, FluidTransportBehaviour pipe) {
 		List<Direction> list = new ArrayList<>();
 		for (Direction d : Iterate.directions)
-			if (pipe.isConnectedTo(state, d))
+			if (pipe.canHaveFlowToward(state, d))
 				list.add(d);
 		return list;
 	}
@@ -134,37 +177,38 @@ public class FluidPropagator {
 		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
 	}
 
-	@Deprecated // Remove after pipes are fixed; comment out for production
-	public static OutlineParams showBlockFace(BlockFace face) {
-		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
+//	static AxisAlignedBB smallCenter = new AxisAlignedBB(BlockPos.ZERO).shrink(.25);
+//	
+//	@Deprecated 
+//	public static OutlineParams showBlockFace(BlockFace face) {
+//		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
 //		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 //			Vec3d directionVec = new Vec3d(face.getFace()
 //				.getDirectionVec());
 //			Vec3d scaleVec = directionVec.scale(-.25f * face.getFace()
 //				.getAxisDirection()
 //				.getOffset());
-//			directionVec = directionVec.scale(.5f);
+//			directionVec = directionVec.scale(.45f);
 //			params.setValue(CreateClient.outliner.showAABB(face,
 //				FluidPropagator.smallCenter.offset(directionVec.add(new Vec3d(face.getPos())))
 //					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
 //					.grow(1 / 16f)));
 //		});
-		return params.getValue();
-	}
+//		return params.getValue()
+//			.lineWidth(1 / 16f);
+//	}
 
-	static AxisAlignedBB smallCenter = new AxisAlignedBB(BlockPos.ZERO).shrink(.25);
-
-	public static boolean hasFluidCapability(BlockState state, IBlockReader world, BlockPos pos, Direction blockFace) {
-		if (!state.hasTileEntity())
-			return false;
+	public static boolean hasFluidCapability(IBlockReader world, BlockPos pos, Direction side) {
 		TileEntity tileEntity = world.getTileEntity(pos);
-		return tileEntity != null
-			&& tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, blockFace.getOpposite())
-				.isPresent();
+		return tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+			.isPresent();
 	}
 
 	@Nullable
 	public static Axis getStraightPipeAxis(BlockState state) {
+		if (state.getBlock() instanceof PumpBlock)
+			return state.get(PumpBlock.FACING)
+				.getAxis();
 		if (state.getBlock() instanceof AxisPipeBlock)
 			return state.get(AxisPipeBlock.AXIS);
 		if (!FluidPipeBlock.isPipe(state))

@@ -1,359 +1,263 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.Nullable;
+
+import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidNetwork {
 
-	BlockFace pumpLocation;
-	Map<BlockPos, Pair<Integer, Map<Direction, Boolean>>> pipeGraph;
-	List<FluidNetworkFlow> flows;
-	Set<FluidNetworkEndpoint> targets;
-	Set<BlockFace> rangeEndpoints;
-	Map<BlockFace, FluidStack> previousFlow;
+	private static int CYCLES_PER_TICK = 16;
+	
+	World world;
+	BlockFace start;
 
-	boolean connectToPumps;
-	int waitForUnloadedNetwork;
+	Supplier<LazyOptional<IFluidHandler>> sourceSupplier;
+	LazyOptional<IFluidHandler> source;
+	int transferSpeed;
 
-	public FluidNetwork() {
-		pipeGraph = new HashMap<>();
-		flows = new ArrayList<>();
-		targets = new HashSet<>();
-		rangeEndpoints = new HashSet<>();
-		previousFlow = new HashMap<>();
+	int pauseBeforePropagation;
+	List<BlockFace> queued;
+	Set<Pair<BlockFace, PipeConnection>> frontier;
+	Set<BlockPos> visited;
+	List<Pair<BlockFace, LazyOptional<IFluidHandler>>> targets;
+	Map<BlockPos, WeakReference<FluidTransportBehaviour>> cache;
+
+	public FluidNetwork(World world, BlockFace location, Supplier<LazyOptional<IFluidHandler>> sourceSupplier) {
+		this.world = world;
+		this.start = location;
+		this.sourceSupplier = sourceSupplier;
+		this.source = LazyOptional.empty();
+		this.frontier = new HashSet<>();
+		this.visited = new HashSet<>();
+		this.targets = new ArrayList<>();
+		this.cache = new HashMap<>();
+		this.queued = new ArrayList<>();
+		reset();
 	}
 
-	public boolean hasEndpoints() {
-		for (FluidNetworkFlow pipeFlow : flows)
-			if (pipeFlow.hasValidTargets())
-				return true;
-		return false;
-	}
-
-	public Collection<FluidNetworkEndpoint> getEndpoints(boolean pulling) {
-		if (!pulling) {
-			for (FluidNetworkFlow pipeFlow : flows)
-				return pipeFlow.outputEndpoints;
-			return Collections.emptySet();
-		}
-
-		List<FluidNetworkEndpoint> list = new ArrayList<>();
-		for (FluidNetworkFlow pipeFlow : flows) {
-			if (!pipeFlow.hasValidTargets())
-				continue;
-			list.add(pipeFlow.source);
-		}
-		return list;
-	}
-
-	public void tick(IWorld world, PumpTileEntity pumpTE) {
-		if (connectToPumps) {
-			connectToOtherFNs(world, pumpTE);
-			connectToPumps = false;
-		}
-	}
-
-	public void tickFlows(IWorld world, PumpTileEntity pumpTE, boolean pulling, float speed) {
-		if (connectToPumps)
+	public void tick() {
+		if (pauseBeforePropagation > 0) {
+			pauseBeforePropagation--;
 			return;
-		initFlows(pumpTE, pulling);
-		previousFlow.clear();
-		flows.forEach(ep -> ep.tick(world, speed));
-	}
+		}
+		
+		for (int cycle = 0; cycle < CYCLES_PER_TICK; cycle++) {
+			boolean shouldContinue = false;
+			for (Iterator<BlockFace> iterator = queued.iterator(); iterator.hasNext();) {
+				BlockFace blockFace = iterator.next();
+				if (!isPresent(blockFace))
+					continue;
+				PipeConnection pipeConnection = get(blockFace);
+				if (pipeConnection != null) {
+					if (blockFace.equals(start))
+						transferSpeed = (int) Math.max(1, pipeConnection.pressure.get(true) / 2f);
+					frontier.add(Pair.of(blockFace, pipeConnection));
+				}
+				iterator.remove();
+			}
+			
+//			drawDebugOutlines();
+			
+			for (Iterator<Pair<BlockFace, PipeConnection>> iterator = frontier.iterator(); iterator.hasNext();) {
+				Pair<BlockFace, PipeConnection> pair = iterator.next();
+				BlockFace blockFace = pair.getFirst();
+				PipeConnection pipeConnection = pair.getSecond();
+				
+				if (!pipeConnection.hasFlow())
+					continue;
+				Flow flow = pipeConnection.flow.get();
+				if (!flow.inbound) {
+					if (pipeConnection.comparePressure() >= 0)
+						iterator.remove();
+					continue;
+				}
+				if (!flow.complete)
+					continue;
+				
+				boolean canRemove = true;
+				for (Direction side : Iterate.directions) {
+					if (side == blockFace.getFace())
+						continue;
+					BlockFace adjacentLocation = new BlockFace(blockFace.getPos(), side);
+					PipeConnection adjacent = get(adjacentLocation);
+					if (adjacent == null)
+						continue;
+					if (!adjacent.hasFlow()) {
+						// Branch could potentially still appear
+						if (adjacent.hasPressure() && adjacent.pressure.getSecond() > 0)
+							canRemove = false;
+						continue;
+					}
+					Flow outFlow = adjacent.flow.get();
+					if (outFlow.inbound) {
+						if (adjacent.comparePressure() > 0)
+							canRemove = false;
+						continue;
+					}
+					if (!outFlow.complete) {
+						canRemove = false;
+						continue;
+					}
+					
+					if (adjacent.source.isPresent() && adjacent.source.get()
+						.isEndpoint()) {
+						targets.add(Pair.of(adjacentLocation, adjacent.source.get()
+							.provideHandler()));
+						continue;
+					}
+					
+					if (visited.add(adjacentLocation.getConnectedPos())) {
+						queued.add(adjacentLocation.getOpposite());
+						shouldContinue = true;
+					}
+				}
+				if (canRemove)
+					iterator.remove();
+			}
+			if (!shouldContinue)
+				break;
+		}
+		
+//		drawDebugOutlines();
 
-	private void initFlows(PumpTileEntity pumpTE, boolean pulling) {
+		if (!source.isPresent())
+			source = sourceSupplier.get();
+		if (!source.isPresent())
+			return;
 		if (targets.isEmpty())
 			return;
-		if (!flows.isEmpty())
-			return;
-		World world = pumpTE.getWorld();
-		if (pulling) {
-			targets.forEach(ne -> flows.add(new FluidNetworkFlow(this, ne, world, pulling)));
-		} else {
-			PumpEndpoint pumpEndpoint = new PumpEndpoint(pumpLocation.getOpposite(), pumpTE);
-			flows.add(new FluidNetworkFlow(this, pumpEndpoint, world, pulling));
-		}
-	}
-
-	public void connectToOtherFNs(IWorld world, PumpTileEntity pump) {
-		List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();
-		Set<BlockPos> visited = new HashSet<>();
-		int maxDistance = FluidPropagator.getPumpRange() * 2;
-		frontier.add(Pair.of(-1, pumpLocation.getPos()));
-
-		while (!frontier.isEmpty()) {
-			Pair<Integer, BlockPos> entry = frontier.remove(0);
-			int distance = entry.getFirst();
-			BlockPos currentPos = entry.getSecond();
-
-			if (!world.isAreaLoaded(currentPos, 0))
+		for (Pair<BlockFace, LazyOptional<IFluidHandler>> pair : targets) {
+			if (pair.getSecond()
+				.isPresent())
 				continue;
-			if (visited.contains(currentPos))
+			PipeConnection pipeConnection = get(pair.getFirst());
+			if (pipeConnection == null)
 				continue;
-			visited.add(currentPos);
-
-			List<Direction> connections;
-			if (currentPos.equals(pumpLocation.getPos())) {
-				connections = ImmutableList.of(pumpLocation.getFace());
-			} else {
-				BlockState currentState = world.getBlockState(currentPos);
-				FluidPipeBehaviour pipe = FluidPropagator.getPipe(world, currentPos);
-				if (pipe == null)
-					continue;
-				connections = FluidPropagator.getPipeConnections(currentState, pipe);
-			}
-
-			for (Direction face : connections) {
-				BlockFace blockFace = new BlockFace(currentPos, face);
-				BlockPos connectedPos = blockFace.getConnectedPos();
-				BlockState connectedState = world.getBlockState(connectedPos);
-
-				if (connectedPos.equals(pumpLocation.getPos()))
-					continue;
-				if (!world.isAreaLoaded(connectedPos, 0))
-					continue;
-				if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
-					.getAxis() == face.getAxis()) {
-					TileEntity tileEntity = world.getTileEntity(connectedPos);
-					if (tileEntity instanceof PumpTileEntity) {
-						PumpTileEntity otherPump = (PumpTileEntity) tileEntity;
-						if (otherPump.networks == null)
-							continue;
-
-						otherPump.networks.forEach(fn -> {
-							int nearest = Integer.MAX_VALUE;
-							BlockFace argNearest = null;
-							for (BlockFace pumpEndpoint : fn.rangeEndpoints) {
-								if (pumpEndpoint.isEquivalent(pumpLocation)) {
-									argNearest = pumpEndpoint;
-									break;
-								}
-								Pair<Integer, Map<Direction, Boolean>> pair =
-									pipeGraph.get(pumpEndpoint.getConnectedPos());
-								if (pair == null)
-									continue;
-								Integer distanceFromPump = pair.getFirst();
-								Map<Direction, Boolean> pipeConnections = pair.getSecond();
-
-								if (!pipeConnections.containsKey(pumpEndpoint.getOppositeFace()))
-									continue;
-								if (nearest <= distanceFromPump)
-									continue;
-								nearest = distanceFromPump;
-								argNearest = pumpEndpoint;
-
-							}
-							if (argNearest != null) {
-								InterPumpEndpoint endpoint = new InterPumpEndpoint(world, argNearest.getOpposite(),
-									pump, otherPump, pumpLocation, fn.pumpLocation);
-								targets.add(endpoint);
-								fn.targets.add(endpoint.opposite(world));
-							}
-						});
-
-					}
-					continue;
-				}
-				if (visited.contains(connectedPos))
-					continue;
-				if (distance > maxDistance)
-					continue;
-				FluidPipeBehaviour targetPipe = FluidPropagator.getPipe(world, connectedPos);
-				if (targetPipe == null)
-					continue;
-				if (targetPipe.isConnectedTo(connectedState, face.getOpposite()))
-					frontier.add(Pair.of(distance + 1, connectedPos));
-			}
-		}
-
-	}
-
-	public void assemble(IWorld world, PumpTileEntity pumpTE, BlockFace pumpLocation) {
-		Map<BlockFace, OpenEndedPipe> openEnds = pumpTE.getOpenEnds(pumpLocation.getFace());
-		openEnds.values()
-			.forEach(OpenEndedPipe::markStale);
-
-		this.pumpLocation = pumpLocation;
-		if (!collectEndpoint(world, pumpLocation, openEnds, 0)) {
-
-			List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();
-			Set<BlockPos> visited = new HashSet<>();
-			int maxDistance = FluidPropagator.getPumpRange();
-			frontier.add(Pair.of(0, pumpLocation.getConnectedPos()));
-
-			while (!frontier.isEmpty()) {
-				Pair<Integer, BlockPos> entry = frontier.remove(0);
-				int distance = entry.getFirst();
-				BlockPos currentPos = entry.getSecond();
-
-				if (!world.isAreaLoaded(currentPos, 0))
-					continue;
-				if (visited.contains(currentPos))
-					continue;
-				visited.add(currentPos);
-				BlockState currentState = world.getBlockState(currentPos);
-				FluidPipeBehaviour pipe = FluidPropagator.getPipe(world, currentPos);
-				if (pipe == null)
-					continue;
-
-				for (Direction face : FluidPropagator.getPipeConnections(currentState, pipe)) {
-					if (!pipe.canTransferToward(FluidStack.EMPTY, world.getBlockState(currentPos), face, false))
-						continue;
-
-					BlockFace blockFace = new BlockFace(currentPos, face);
-					BlockPos connectedPos = blockFace.getConnectedPos();
-
-					if (connectedPos.equals(pumpLocation.getPos())) {
-						addEntry(blockFace.getPos(), blockFace.getFace(), true, distance);
-						continue;
-					}
-					if (!world.isAreaLoaded(connectedPos, 0))
-						continue;
-					if (collectEndpoint(world, blockFace, openEnds, distance))
-						continue;
-					FluidPipeBehaviour pipeBehaviour = FluidPropagator.getPipe(world, connectedPos);
-					if (pipeBehaviour == null)
-						continue;
-					if (visited.contains(connectedPos))
-						continue;
-					if (distance + 1 >= maxDistance) {
-						rangeEndpoints.add(blockFace);
-						addEntry(currentPos, face, false, distance);
-						FluidPropagator.showBlockFace(blockFace)
-							.lineWidth(1 / 8f)
-							.colored(0xff0000);
-						continue;
-					}
-
-					addConnection(connectedPos, currentPos, face.getOpposite(), distance);
-					frontier.add(Pair.of(distance + 1, connectedPos));
-				}
-			}
-		}
-
-		Set<BlockFace> staleEnds = new HashSet<>();
-		openEnds.entrySet()
-			.forEach(e -> {
-				if (e.getValue()
-					.isStale())
-					staleEnds.add(e.getKey());
+			pipeConnection.source.ifPresent(fs -> {
+				if (fs.isEndpoint())
+					pair.setSecond(fs.provideHandler());
 			});
-		staleEnds.forEach(openEnds::remove);
-
-		connectToPumps = true;
-	}
-
-	private FluidNetworkEndpoint reuseOrCreateOpenEnd(IWorld world, Map<BlockFace, OpenEndedPipe> openEnds,
-		BlockFace toCreate) {
-		OpenEndedPipe openEndedPipe = null;
-		if (openEnds.containsKey(toCreate)) {
-			openEndedPipe = openEnds.get(toCreate);
-			openEndedPipe.unmarkStale();
-		} else {
-			openEndedPipe = new OpenEndedPipe(toCreate);
-			openEnds.put(toCreate, openEndedPipe);
 		}
-		return new FluidNetworkEndpoint(world, toCreate, openEndedPipe.getCapability());
 
-	}
+		int flowSpeed = transferSpeed;
+		for (boolean simulate : Iterate.trueAndFalse) {
+			FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
 
-	private boolean collectEndpoint(IWorld world, BlockFace blockFace, Map<BlockFace, OpenEndedPipe> openEnds,
-		int distance) {
-		BlockPos connectedPos = blockFace.getConnectedPos();
-		BlockState connectedState = world.getBlockState(connectedPos);
+			IFluidHandler handler = source.orElse(null);
+			if (handler == null)
+				return;
+			FluidStack transfer = handler.drain(flowSpeed, action);
+			if (transfer.isEmpty())
+				return;
 
-		// other pipe, no endpoint
-		FluidPipeBehaviour pipe = FluidPropagator.getPipe(world, connectedPos);
-		if (pipe != null && pipe.isConnectedTo(connectedState, blockFace.getOppositeFace()))
-			return false;
-		TileEntity tileEntity = world.getTileEntity(connectedPos);
+			List<Pair<BlockFace, LazyOptional<IFluidHandler>>> availableOutputs = new ArrayList<>(targets);
+			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
+				int dividedTransfer = transfer.getAmount() / availableOutputs.size();
+				int remainder = transfer.getAmount() % availableOutputs.size();
 
-		// fluid handler endpoint
-		Direction face = blockFace.getFace();
-		if (tileEntity != null) {
-			LazyOptional<IFluidHandler> capability =
-				tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
-			if (capability.isPresent()) {
-				targets.add(new FluidNetworkEndpoint(world, blockFace, capability));
-				addEntry(blockFace.getPos(), face, false, distance);
-				FluidPropagator.showBlockFace(blockFace)
-					.colored(0x00b7c2)
-					.lineWidth(1 / 8f);
-				return true;
+				for (Iterator<Pair<BlockFace, LazyOptional<IFluidHandler>>> iterator =
+					availableOutputs.iterator(); iterator.hasNext();) {
+					Pair<BlockFace, LazyOptional<IFluidHandler>> pair = iterator.next();
+					int toTransfer = dividedTransfer;
+					if (remainder > 0) {
+						toTransfer++;
+						remainder--;
+					}
+
+					if (transfer.isEmpty())
+						break;
+					IFluidHandler targetHandler = pair.getSecond()
+						.orElse(null);
+					if (targetHandler == null) {
+						iterator.remove();
+						continue;
+					}
+
+					FluidStack divided = transfer.copy();
+					divided.setAmount(toTransfer);
+					int fill = targetHandler.fill(divided, action);
+					transfer.setAmount(transfer.getAmount() - fill);
+					if (fill < toTransfer)
+						iterator.remove();
+				}
+
 			}
+
+			flowSpeed -= transfer.getAmount();
+			transfer = FluidStack.EMPTY;
 		}
-
-		// open endpoint
-		if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
-			.getAxis() == face.getAxis()) {
-			rangeEndpoints.add(blockFace);
-			addEntry(blockFace.getPos(), face, false, distance);
-			return true;
-		}
-		if (!FluidPropagator.isOpenEnd(world, blockFace.getPos(), face))
-			return false;
-
-		targets.add(reuseOrCreateOpenEnd(world, openEnds, blockFace));
-		addEntry(blockFace.getPos(), face, false, distance);
-		FluidPropagator.showBlockFace(blockFace)
-			.colored(0xb700c2)
-			.lineWidth(1 / 8f);
-		return true;
 	}
 
-	private void addConnection(BlockPos from, BlockPos to, Direction direction, int distance) {
-		addEntry(from, direction, true, distance);
-		addEntry(to, direction.getOpposite(), false, distance + 1);
-	}
+//	private void drawDebugOutlines() {
+//		FluidPropagator.showBlockFace(start)
+//			.lineWidth(1 / 8f)
+//			.colored(0xff0000);
+//		for (Pair<BlockFace, LazyOptional<IFluidHandler>> pair : targets)
+//			FluidPropagator.showBlockFace(pair.getFirst())
+//				.lineWidth(1 / 8f)
+//				.colored(0x00ff00);
+//		for (Pair<BlockFace, PipeConnection> pair : frontier)
+//			FluidPropagator.showBlockFace(pair.getFirst())
+//				.lineWidth(1 / 4f)
+//				.colored(0xfaaa33);
+//	}
 
-	private void addEntry(BlockPos pos, Direction direction, boolean outbound, int distance) {
-		if (!pipeGraph.containsKey(pos))
-			pipeGraph.put(pos, Pair.of(distance, new HashMap<>()));
-		pipeGraph.get(pos)
-			.getSecond()
-			.put(direction, outbound);
-	}
-
-	public void reAssemble(IWorld world, PumpTileEntity pumpTE, BlockFace pumpLocation) {
-		rangeEndpoints.clear();
+	public void reset() {
+		frontier.clear();
+		visited.clear();
 		targets.clear();
-		pipeGraph.clear();
-		assemble(world, pumpTE, pumpLocation);
+		queued.clear();
+		queued.add(start);
+		pauseBeforePropagation = 2;
 	}
 
-	public void remove(IWorld world) {
-		clearFlows(world, false);
+	@Nullable
+	private PipeConnection get(BlockFace location) {
+		BlockPos pos = location.getPos();
+		FluidTransportBehaviour fluidTransfer = getFluidTransfer(pos);
+		if (fluidTransfer == null)
+			return null;
+		return fluidTransfer.getConnection(location.getFace());
 	}
 
-	public void clearFlows(IWorld world, boolean saveState) {
-		for (FluidNetworkFlow networkFlow : flows) {
-			if (!networkFlow.getFluidStack()
-				.isEmpty())
-				networkFlow.addToSkippedConnections(world);
-			networkFlow.resetFlow(world);
+	private boolean isPresent(BlockFace location) {
+		return world.isAreaLoaded(location.getPos(), 0);
+	}
+
+	@Nullable
+	private FluidTransportBehaviour getFluidTransfer(BlockPos pos) {
+		WeakReference<FluidTransportBehaviour> weakReference = cache.get(pos);
+		FluidTransportBehaviour behaviour = weakReference != null ? weakReference.get() : null;
+		if (behaviour != null && behaviour.tileEntity.isRemoved())
+			behaviour = null;
+		if (behaviour == null) {
+			behaviour = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+			if (behaviour != null)
+				cache.put(pos, new WeakReference<>(behaviour));
 		}
-		flows.clear();
+		return behaviour;
 	}
 
 }

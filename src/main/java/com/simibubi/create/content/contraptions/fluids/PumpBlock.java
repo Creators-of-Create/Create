@@ -1,15 +1,12 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.Map;
+import java.util.Random;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,8 +27,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.world.server.ServerWorld;
 
 public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable {
 
@@ -67,26 +65,8 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 		if (!(tileEntity instanceof PumpTileEntity))
 			return state;
 		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-		if (pump.networks == null)
-			return state;
-
-		FluidNetwork apn1 = pump.networks.get(true);
-		FluidNetwork apn2 = pump.networks.get(false);
-
-		// Collect pipes that can be skipped
-		apn1.clearFlows(world, true);
-		apn2.clearFlows(world, true);
-
-		// Swap skipsets as the networks change sides
-		Map<BlockFace, FluidStack> skippedConnections = apn1.previousFlow;
-		apn1.previousFlow = apn2.previousFlow;
-		apn2.previousFlow = skippedConnections;
-
-		// Init networks next tick
-		pump.networksToUpdate.forEach(MutableBoolean::setTrue);
-		pump.networks.swap();
+		pump.sidesToUpdate.forEach(MutableBoolean::setTrue);
 		pump.reversed = !pump.reversed;
-
 		return state;
 	}
 
@@ -111,22 +91,29 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
 		DebugPacketSender.func_218806_a(world, pos);
-		if (world.isRemote)
+		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
+		if (d == null)
 			return;
-		if (otherBlock instanceof FluidPipeBlock)
+		if (!isOpenAt(state, d))
 			return;
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if (!(tileEntity instanceof PumpTileEntity))
-			return;
-		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-		Direction facing = state.get(FACING);
-		for (boolean front : Iterate.trueAndFalse) {
-			Direction side = front ? facing : facing.getOpposite();
-			if (!pos.offset(side)
-				.equals(neighborPos))
-				continue;
-			pump.updatePipesOnSide(side);
-		}
+		world.getPendingBlockTicks()
+			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+//		if (world.isRemote)
+//			return;
+//		if (otherBlock instanceof FluidPipeBlock)
+//			return;
+//		TileEntity tileEntity = world.getTileEntity(pos);
+//		if (!(tileEntity instanceof PumpTileEntity))
+//			return;
+//		PumpTileEntity pump = (PumpTileEntity) tileEntity;
+//		Direction facing = state.get(FACING);
+//		for (boolean front : Iterate.trueAndFalse) {
+//			Direction side = front ? facing : facing.getOpposite();
+//			if (!pos.offset(side)
+//				.equals(neighborPos))
+//				continue;
+//			pump.updatePipesOnSide(side);
+//		}
 	}
 
 	@Override
@@ -163,4 +150,32 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 		return state.getBlock() instanceof PumpBlock;
 	}
 
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isRemote)
+			return;
+		if (state != oldState)
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+	}
+
+	public static boolean isOpenAt(BlockState state, Direction d) {
+		return d.getAxis() == state.get(FACING)
+			.getAxis();
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+		FluidPropagator.propagateChangedPipe(world, pos, state);
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
+		if (blockTypeChanged && !world.isRemote)
+			FluidPropagator.propagateChangedPipe(world, pos, state);
+		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+			world.removeTileEntity(pos);
+	}
+	
 }
