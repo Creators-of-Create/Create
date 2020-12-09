@@ -53,9 +53,14 @@ public class PistonContraption extends TranslatingContraption {
 	public boolean assemble(World world, BlockPos pos) {
 		if (!collectExtensions(world, pos, orientation))
 			return false;
+		int count = blocks.size();
 		if (!searchMovedStructure(world, anchor, retract ? orientation.getOpposite() : orientation))
 			return false;
-		bounds = bounds.union(pistonExtensionCollisionBox);
+		if (blocks.size() == count) { // no new blocks added
+			bounds = pistonExtensionCollisionBox;
+		} else {
+			bounds = bounds.union(pistonExtensionCollisionBox);
+		}
 		startMoving(world);
 		return true;
 	}
@@ -112,8 +117,10 @@ public class PistonContraption extends TranslatingContraption {
 		anchor = pos.offset(direction, initialExtensionProgress + 1);
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
-		pistonExtensionCollisionBox = new AxisAlignedBB(end.offset(direction, -extensionsInFront)
-			.subtract(anchor));
+		pistonExtensionCollisionBox = new AxisAlignedBB(
+				BlockPos.ZERO.offset(direction, -1),
+				BlockPos.ZERO.offset(direction, -extensionLength - 1)).expand(1,
+						1, 1);
 
 		if (extensionLength == 0)
 			return false;
@@ -124,7 +131,7 @@ public class PistonContraption extends TranslatingContraption {
 			BlockPos relPos = pole.pos.offset(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
 			getBlocks().put(localPos, new BlockInfo(localPos, pole.state, null));
-			pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
+			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
 		}
 
 		return true;
