@@ -10,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -37,6 +38,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
@@ -129,13 +131,22 @@ public class DeployerTileEntity extends KineticTileEntity {
 				return;
 			}
 
-			if (!filtering.test(stack)) {
-				if (!stack.isEmpty()) {
-					overflowItems.add(stack);
-					player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
-					sendData();
-					return;
+			boolean changed = false;
+			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				if (overflowItems.size() > 10)
+					break;
+				ItemStack item = player.inventory.getStackInSlot(i);
+				if (item.isEmpty())
+					continue;
+				if (item != stack || !filtering.test(item)) {
+					overflowItems.add(item);
+					player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+					changed = true;
 				}
+			}
+
+			if (changed) {
+				sendData();
 				timer = getTimerSpeed() * 10;
 				return;
 			}
@@ -152,7 +163,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 			if (redstoneLocked)
 				return;
-			
+
 			state = State.EXPANDING;
 			Vec3d movementVector = getMovementVector();
 			Vec3d rayOrigin = VecHelper.getCenterOf(pos)
@@ -265,7 +276,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
 		redstoneLocked = compound.getBoolean("Powered");
-		
+
 		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
@@ -288,7 +299,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		compound.putBoolean("Powered", redstoneLocked);
-		
+
 		if (player != null) {
 			compound.put("HeldItem", player.getHeldItemMainhand()
 				.serializeNBT());
@@ -326,7 +337,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		redstoneLocked = blockPowered;
 		sendData();
 	}
-	
+
 	@Override
 	public boolean hasFastRenderer() {
 		return false;
@@ -357,10 +368,21 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && invHandler != null) {
+		if (isItemHandlerCap(cap) && invHandler != null) 
 			return invHandler.cast();
-		}
 		return super.getCapability(cap, side);
+	}
+	
+	@Override
+	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (super.addToTooltip(tooltip, isPlayerSneaking))
+			return true;
+		if (getSpeed() == 0)
+			return false;
+		if (overflowItems.isEmpty())
+			return false;
+		TooltipHelper.addHint(tooltip, "hint.full_deployer");
+		return true;
 	}
 
 }
