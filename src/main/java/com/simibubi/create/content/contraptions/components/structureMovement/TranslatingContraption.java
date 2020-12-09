@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public abstract class TranslatingContraption extends Contraption {
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
 		if (getBlocks() == null)
-			return null;
+			return Collections.EMPTY_SET;
 		if (cachedColliders == null || cachedColliderDirection != movementDirection) {
 			cachedColliders = new HashSet<>();
 			cachedColliderDirection = movementDirection;
