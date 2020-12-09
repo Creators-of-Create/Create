@@ -117,6 +117,11 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	public static boolean isOpenAt(BlockState state, Direction d) {
 		return d.getAxis() == getPipeAxis(state);
 	}
+	
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+		FluidPropagator.propagateChangedPipe(world, pos, state);
+	}
 
 	protected static Axis getPipeAxis(BlockState state) {
 		return state.get(FACE) == AttachFace.WALL ? Axis.Y
@@ -132,11 +137,6 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.SMART_FLUID_PIPE.create();
-	}
-
-	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
-		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	@Override

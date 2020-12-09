@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1075",
+	"_": "Missing Localizations: 1077",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1015,6 +1015,8 @@
 	"create.hint.upward_funnel": "UNLOCALIZED: can only transfer items inserted by _Arms_, fan-powered _Chutes_, or items _thrown_ at them. Try building some _Chutes_ if you are looking to move your items _vertically_.",
 	"create.hint.empty_bearing.title": "UNLOCALIZED: Update Bearing",
 	"create.hint.empty_bearing": "UNLOCALIZED: _Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
+	"create.hint.full_deployer.title": "UNLOCALIZED: Deployer Item Overflow",
+	"create.hint.full_deployer": "UNLOCALIZED: It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
 
 	"create.gui.config.overlay1": "UNLOCALIZED: Hi :)",
 	"create.gui.config.overlay2": "UNLOCALIZED: This is a sample overlay",

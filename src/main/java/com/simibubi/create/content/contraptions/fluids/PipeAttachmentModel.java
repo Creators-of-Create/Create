@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour.AttachmentTypes;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -35,16 +36,16 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	@Override
 	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		PipeModelData data = new PipeModelData();
-		FluidPipeAttachmentBehaviour attachmentBehaviour =
-			TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 
-		if (attachmentBehaviour != null) {
+		if (transport != null)
 			for (Direction d : Iterate.directions)
-				data.putRim(d, attachmentBehaviour.getAttachment(world, pos, state, d));
-			data.putBracket(attachmentBehaviour.getBracket());
-		}
-		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
+				data.putRim(d, transport.getRenderedRimAttachment(world, pos, state, d));
+		if (bracket != null)
+			data.putBracket(bracket.getBracket());
 
+		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
 		return builder.withInitial(PIPE_PROPERTY, data);
 	}
 

@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -22,43 +22,40 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new StandardPipeBehaviour(this));
-		behaviours.add(new StandardPipeAttachmentBehaviour(this));
+		behaviours.add(new StandardPipeFluidTransportBehaviour(this));
+		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket));
 	}
 
-	class StandardPipeBehaviour extends FluidPipeBehaviour {
+	private boolean canHaveBracket(BlockState state) {
+		return !(state.getBlock() instanceof EncasedPipeBlock);
+	}
 
-		public StandardPipeBehaviour(SmartTileEntity te) {
+	class StandardPipeFluidTransportBehaviour extends FluidTransportBehaviour {
+
+		public StandardPipeFluidTransportBehaviour(SmartTileEntity te) {
 			super(te);
 		}
 
 		@Override
-		public boolean isConnectedTo(BlockState state, Direction direction) {
+		public boolean canHaveFlowToward(BlockState state, Direction direction) {
 			return (FluidPipeBlock.isPipe(state) || state.getBlock() instanceof EncasedPipeBlock)
 				&& state.get(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(direction));
 		}
 
-	}
-
-	class StandardPipeAttachmentBehaviour extends FluidPipeAttachmentBehaviour {
-
-		public StandardPipeAttachmentBehaviour(SmartTileEntity te) {
-			super(te);
-		}
-
 		@Override
-		public AttachmentTypes getAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state, Direction direction) {
-			AttachmentTypes attachment = super.getAttachment(world, pos, state, direction);
+		public AttachmentTypes getRenderedRimAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state,
+			Direction direction) {
+			AttachmentTypes attachment = super.getRenderedRimAttachment(world, pos, state, direction);
 
 			if (attachment == AttachmentTypes.RIM && AllBlocks.ENCASED_FLUID_PIPE.has(state))
 				return AttachmentTypes.RIM;
 
 			BlockPos offsetPos = pos.offset(direction);
 			if (!FluidPipeBlock.isPipe(world.getBlockState(offsetPos))) {
-				FluidPipeAttachmentBehaviour attachmentBehaviour =
-					TileEntityBehaviour.get(world, offsetPos, FluidPipeAttachmentBehaviour.TYPE);
-				if (attachmentBehaviour != null && attachmentBehaviour
-					.isPipeConnectedTowards(world.getBlockState(offsetPos), direction.getOpposite()))
+				FluidTransportBehaviour pipeBehaviour =
+					TileEntityBehaviour.get(world, offsetPos, FluidTransportBehaviour.TYPE);
+				if (pipeBehaviour != null
+					&& pipeBehaviour.canHaveFlowToward(world.getBlockState(offsetPos), direction.getOpposite()))
 					return AttachmentTypes.NONE;
 			}
 

@@ -3,11 +3,9 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
-import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeAttachmentBehaviour;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 
@@ -79,24 +77,23 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new ValvePipeBehaviour(this));
-		behaviours.add(new StraightPipeAttachmentBehaviour(this));
 	}
 
-	class ValvePipeBehaviour extends FluidPipeBehaviour {
+	class ValvePipeBehaviour extends StraightPipeFluidTransportBehaviour {
 
 		public ValvePipeBehaviour(SmartTileEntity te) {
 			super(te);
 		}
 
 		@Override
-		public boolean isConnectedTo(BlockState state, Direction direction) {
+		public boolean canHaveFlowToward(BlockState state, Direction direction) {
 			return FluidValveBlock.getPipeAxis(state) == direction.getAxis();
 		}
 
 		@Override
-		public boolean canTransferToward(FluidStack fluid, BlockState state, Direction direction, boolean inbound) {
-			if (BlockHelper.hasBlockStateProperty(state, FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
-				return super.canTransferToward(fluid, state, direction, inbound);
+		public boolean canPullFluidFrom(FluidStack fluid, BlockState state, Direction direction) {
+			if (state.contains(FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
+				return super.canPullFluidFrom(fluid, state, direction);
 			return false;
 		}
 

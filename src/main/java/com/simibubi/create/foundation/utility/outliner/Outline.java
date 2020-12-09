@@ -48,6 +48,10 @@ public abstract class Outline {
 	}
 
 	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vector3d start, Vector3d end) {
+		float lineWidth = params.getLineWidth();
+		if (lineWidth == 0)
+			return;
+		
 		IVertexBuilder builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
 		Vector3d diff = end.subtract(start);
@@ -58,7 +62,6 @@ public abstract class Outline {
 			diff = diff.scale(-1);
 		}
 
-		float lineWidth = params.getLineWidth();
 		Vector3d extension = diff.normalize()
 			.scale(lineWidth / 2);
 		Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);

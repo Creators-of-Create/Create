@@ -742,7 +742,6 @@ public abstract class Contraption {
 	}
 
 	public void addBlocksToWorld(World world, StructureTransform transform) {
-		stop(world);
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (BlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementTraits.isBrittle(block.state))

@@ -50,6 +50,14 @@ public class FluidHelper {
 		BlockState blockState = fluid.getDefaultState().getBlockState();
 		return blockState != null && blockState != Blocks.AIR.getDefaultState();
 	}
+	
+	public static FluidStack copyStackWithAmount(FluidStack fs, int amount) {
+		if (fs.isEmpty())
+			return FluidStack.EMPTY;
+		FluidStack copy = fs.copy();
+		copy.setAmount(amount);
+		return copy;
+	}
 
 	public static Fluid convertToFlowing(Fluid fluid) {
 		if (fluid == Fluids.WATER)

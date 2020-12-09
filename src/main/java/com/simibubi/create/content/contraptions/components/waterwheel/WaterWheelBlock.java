@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -84,18 +86,25 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 		updateWheelSpeed(worldIn, pos);
 	}
 
-	private void updateFlowAt(BlockState state, IWorld world, BlockPos pos, Direction f) {
-		if (f.getAxis() == state.get(HORIZONTAL_FACING)
+	private void updateFlowAt(BlockState state, IWorld world, BlockPos pos, Direction side) {
+		if (side.getAxis() == state.get(HORIZONTAL_FACING)
 			.getAxis())
 			return;
 
-		FluidState fluid = world.getFluidState(pos.offset(f));
+		FluidState fluid = world.getFluidState(pos.offset(side));
 		Direction wf = state.get(HORIZONTAL_FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
 
-		Vector3d vec = fluid.getFlow(world, pos.offset(f));
-		vec = vec.scale(f.getAxisDirection()
+		Vector3d vec = fluid.getFlow(world, pos.offset(side));
+		if (side.getAxis()
+			.isHorizontal()) {
+			BlockState adjacentBlock = world.getBlockState(pos.offset(side));
+			if (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock())
+				vec = new Vector3d(0, adjacentBlock.get(BubbleColumnBlock.DRAG) ? -1 : 1, 0);
+		}
+
+		vec = vec.scale(side.getAxisDirection()
 			.getOffset());
 		vec = new Vector3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
 		Vector3d flow = vec;
@@ -104,16 +113,16 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			double flowStrength = 0;
 
 			if (wf.getAxis() == Axis.Z) {
-				if (f.getAxis() == Axis.Y)
+				if (side.getAxis() == Axis.Y)
 					flowStrength = flow.x > 0 ^ !clockwise ? -flow.x * clockwiseMultiplier : -flow.x;
-				if (f.getAxis() == Axis.X)
+				if (side.getAxis() == Axis.X)
 					flowStrength = flow.y < 0 ^ !clockwise ? flow.y * clockwiseMultiplier : flow.y;
 			}
 
 			if (wf.getAxis() == Axis.X) {
-				if (f.getAxis() == Axis.Y)
+				if (side.getAxis() == Axis.Y)
 					flowStrength = flow.z < 0 ^ !clockwise ? flow.z * clockwiseMultiplier : flow.z;
-				if (f.getAxis() == Axis.Z)
+				if (side.getAxis() == Axis.Z)
 					flowStrength = flow.y > 0 ^ !clockwise ? -flow.y * clockwiseMultiplier : -flow.y;
 			}
 
@@ -124,7 +133,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 			}
 
 			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
-			te.setFlow(f, (float) (flowStrength * flowModifier / 2f));
+			te.setFlow(side, (float) (flowStrength * flowModifier / 2f));
 		});
 	}
 

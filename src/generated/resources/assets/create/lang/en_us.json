@@ -1014,6 +1014,8 @@
 	"create.hint.upward_funnel": "can only transfer items inserted by _Arms_, fan-powered _Chutes_, or items _thrown_ at them. Try building some _Chutes_ if you are looking to move your items _vertically_.",
 	"create.hint.empty_bearing.title": "Update Bearing",
 	"create.hint.empty_bearing": "_Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
+	"create.hint.full_deployer.title": "Deployer Item Overflow",
+	"create.hint.full_deployer": "It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
 
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",

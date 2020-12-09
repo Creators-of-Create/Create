@@ -1,12 +1,16 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import java.util.Random;
+
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +21,9 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.TickPriority;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
@@ -73,6 +80,51 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	@Override
 	public Axis getAxis(BlockState state) {
 		return getPipeAxis(state);
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
+		if (blockTypeChanged && !world.isRemote)
+			FluidPropagator.propagateChangedPipe(world, pos, state);
+		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+			world.removeTileEntity(pos);
+	}
+
+	@Override
+	public boolean isValidPosition(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+		return true;
+	}
+
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isRemote)
+			return;
+		if (state != oldState)
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+		boolean isMoving) {
+		DebugPacketSender.func_218806_a(world, pos);
+		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
+		if (d == null)
+			return;
+		if (!isOpenAt(state, d))
+			return;
+		world.getPendingBlockTicks()
+			.scheduleTick(pos, this, 1, TickPriority.HIGH);
+	}
+
+	public static boolean isOpenAt(BlockState state, Direction d) {
+		return d.getAxis() == getPipeAxis(state);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 }

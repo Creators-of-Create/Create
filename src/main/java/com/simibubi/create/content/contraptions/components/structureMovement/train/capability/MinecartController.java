@@ -20,10 +20,16 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.MinecartEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -79,8 +85,45 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 				internalStall.booleanValue() || otherCart == null || !otherCart.isPresent() || otherCart.isStalled(false));
 
 		}));
-		if (!world.isRemote)
+		if (!world.isRemote) {
 			setStalled(internalStall.booleanValue(), true);
+			disassemble(cart);
+		}
+	}
+
+	private void disassemble(AbstractMinecartEntity cart) {
+		if (cart instanceof MinecartEntity) {
+			return;
+		}
+		List<Entity> passengers = cart.getPassengers();
+		if (passengers.isEmpty() || !(passengers.get(0) instanceof AbstractContraptionEntity)) {
+			return;
+		}
+		World world = cart.world;
+		int i = MathHelper.floor(cart.getX());
+		int j = MathHelper.floor(cart.getY());
+		int k = MathHelper.floor(cart.getZ());
+		if (world.getBlockState(new BlockPos(i, j - 1, k))
+				.isIn(BlockTags.RAILS)) {
+			--j;
+		}
+		BlockPos blockpos = new BlockPos(i, j, k);
+		BlockState blockstate = world.getBlockState(blockpos);
+		if (cart.canUseRail() && blockstate.isIn(BlockTags.RAILS)
+				&& blockstate.getBlock() instanceof PoweredRailBlock
+				&& ((PoweredRailBlock) blockstate.getBlock())
+						.isActivatorRail()) {
+			if (cart.isBeingRidden()) {
+				cart.removePassengers();
+			}
+
+			if (cart.getRollingAmplitude() == 0) {
+				cart.setRollingDirection(-cart.getRollingDirection());
+				cart.setRollingAmplitude(10);
+				cart.setDamage(50.0F);
+				cart.velocityChanged = true;
+			}
+		}
 	}
 
 	public boolean isFullyCoupled() {
