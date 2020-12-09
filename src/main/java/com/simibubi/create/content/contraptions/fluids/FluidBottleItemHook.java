@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids;
 import com.simibubi.create.Create;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.GlassBottleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,7 +42,7 @@ public class FluidBottleItemHook extends Item {
 		if (!world.isBlockModifiable(player, blockpos))
 			return;
 
-		IFluidState fluidState = world.getFluidState(blockpos);
+		FluidState fluidState = world.getFluidState(blockpos);
 		if (fluidState.isTagged(FluidTags.WATER) && fluidState.getFluid()
 			.getRegistryName()
 			.getNamespace()

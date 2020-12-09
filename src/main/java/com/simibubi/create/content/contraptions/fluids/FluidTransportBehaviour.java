@@ -18,7 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -139,7 +139,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		if (interfaces == null)
 			interfaces = new IdentityHashMap<>();
 		for (Direction face : Iterate.directions)
-			if (nbt.contains(face.getName()))
+			if (nbt.contains(face.getName2()))
 				interfaces.computeIfAbsent(face, d -> new PipeConnection(d));
 
 		// Invalid data (missing/outdated). Defer init to runtime
@@ -227,7 +227,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 				interfaces.put(d, new PipeConnection(d));
 	}
 
-	public AttachmentTypes getRenderedRimAttachment(ILightReader world, BlockPos pos, BlockState state,
+	public AttachmentTypes getRenderedRimAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state,
 		Direction direction) {
 		if (!canHaveFlowToward(state, direction))
 			return AttachmentTypes.NONE;

@@ -20,7 +20,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -206,7 +206,7 @@ public class PipeConnection {
 
 	public void serializeNBT(CompoundNBT tag, boolean clientPacket) {
 		CompoundNBT connectionData = new CompoundNBT();
-		tag.put(side.getName(), connectionData);
+		tag.put(side.getName2(), connectionData);
 
 		if (hasPressure()) {
 			ListNBT pressureData = new ListNBT();
@@ -235,7 +235,7 @@ public class PipeConnection {
 	}
 
 	public void deserializeNBT(CompoundNBT tag, boolean clientPacket) {
-		CompoundNBT connectionData = tag.getCompound(side.getName());
+		CompoundNBT connectionData = tag.getCompound(side.getName2());
 
 		if (connectionData.contains("Pressure")) {
 			ListNBT pressureData = connectionData.getList("Pressure", NBT.TAG_FLOAT);
@@ -391,7 +391,7 @@ public class PipeConnection {
 	@OnlyIn(Dist.CLIENT)
 	private void spawnPouringLiquid(World world, BlockPos pos, FluidStack fluid, int amount) {
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
-		Vec3d directionVec = new Vec3d(side.getDirectionVec());
+		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
 		if (!hasFlow())
 			return;
 		Flow flow = this.flow.get();
@@ -404,7 +404,7 @@ public class PipeConnection {
 			.getRenderViewEntity();
 		if (renderViewEntity == null)
 			return false;
-		Vec3d center = VecHelper.getCenterOf(pos);
+		Vector3d center = VecHelper.getCenterOf(pos);
 		if (renderViewEntity.getPositionVec()
 			.distanceTo(center) > MAX_PARTICLE_RENDER_DISTANCE)
 			return false;
