@@ -435,6 +435,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public void remove(boolean keepData) {
+		if (!world.isRemote && !removed && contraption != null) {
+			contraption.stop(world);
+		}
+		super.remove(keepData);
+	}
+
 	protected abstract StructureTransform makeStructureTransform();
 
 	@Override
