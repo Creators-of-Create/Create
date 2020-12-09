@@ -78,8 +78,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 				else
 					sendData();
 				return;
+			} else {
+				if (getSpeed() != 0)
+					assemble();
 			}
-			assemble();
 			return;
 		}
 
