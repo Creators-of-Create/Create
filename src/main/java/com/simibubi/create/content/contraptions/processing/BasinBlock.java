@@ -182,6 +182,12 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	public static boolean canOutputTo(IBlockReader world, BlockPos basinPos, Direction direction) {
+		BlockPos neighbour = basinPos.offset(direction);
+		if (!world.getBlockState(neighbour)
+			.getCollisionShape(world, neighbour)
+			.isEmpty())
+			return false;
+
 		BlockPos offset = basinPos.down()
 			.offset(direction);
 		DirectBeltInputBehaviour directBeltInputBehaviour =

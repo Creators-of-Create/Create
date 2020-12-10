@@ -6,8 +6,8 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeAttachmentBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -22,9 +22,9 @@ import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -126,7 +126,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 
 	@Override
 	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
-		FluidPipeAttachmentBehaviour behaviour = TileEntityBehaviour.get(world, pos, FluidPipeAttachmentBehaviour.TYPE);
+		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
 		BlockState bracket = behaviour.getBracket();

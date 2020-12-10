@@ -3,8 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.fluids.FluidPipeBehaviour;
-import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeAttachmentBehaviour;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
@@ -24,7 +23,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	public FluidValveTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		pointer = LerpedFloat.linear()
-			.startWithValue(0).chase(0, 0, Chaser.LINEAR);
+			.startWithValue(0)
+			.chase(0, 0, Chaser.LINEAR);
 	}
 
 	@Override
@@ -34,20 +34,20 @@ public class FluidValveTileEntity extends KineticTileEntity {
 		pointer.chase(speed > 0 ? 1 : 0, getChaseSpeed(), Chaser.LINEAR);
 		sendData();
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
 		pointer.tickChaser();
-		
+
 		if (world.isRemote)
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof FluidValveBlock))
 			return;
 		boolean stateOpen = blockState.get(FluidValveBlock.ENABLED);
-		
+
 		if (stateOpen && pointer.getValue() == 0) {
 			switchToBlockState(world, pos, blockState.with(FluidValveBlock.ENABLED, false));
 			return;
@@ -77,27 +77,26 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new ValvePipeBehaviour(this));
-		behaviours.add(new StraightPipeAttachmentBehaviour(this));
 	}
 
-	class ValvePipeBehaviour extends FluidPipeBehaviour {
+	class ValvePipeBehaviour extends StraightPipeFluidTransportBehaviour {
 
 		public ValvePipeBehaviour(SmartTileEntity te) {
 			super(te);
 		}
 
 		@Override
-		public boolean isConnectedTo(BlockState state, Direction direction) {
+		public boolean canHaveFlowToward(BlockState state, Direction direction) {
 			return FluidValveBlock.getPipeAxis(state) == direction.getAxis();
 		}
 
 		@Override
-		public boolean canTransferToward(FluidStack fluid, BlockState state, Direction direction, boolean inbound) {
+		public boolean canPullFluidFrom(FluidStack fluid, BlockState state, Direction direction) {
 			if (state.has(FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
-				return super.canTransferToward(fluid, state, direction, inbound);
+				return super.canPullFluidFrom(fluid, state, direction);
 			return false;
 		}
-		
+
 	}
 
 }
