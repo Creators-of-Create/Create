@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -122,14 +123,15 @@ public class BlockzapperItem extends ZapperItem {
 			if (!player.isCreative() && replace)
 				dropBlocks(world, player, stack, face, placed);
 
+			BlockState state = selectedState;
 			for (Direction updateDirection : Iterate.directions)
-				selectedState = selectedState.updatePostPlacement(updateDirection,
+				state = state.updatePostPlacement(updateDirection,
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
 			world.setBlockState(placed, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
-			world.setBlockState(placed, selectedState);
+			world.setBlockState(placed, state);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
 				blocksnapshot.restore(true, false);
 				return false;
@@ -137,7 +139,7 @@ public class BlockzapperItem extends ZapperItem {
 
 			if (player instanceof ServerPlayerEntity && world instanceof ServerWorld) {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-				CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placed, new ItemStack(selectedState.getBlock()));
+				CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placed, new ItemStack(state.getBlock()));
 
 				boolean fullyUpgraded = true;
 				for (Components c : Components.values()) {
@@ -149,6 +151,9 @@ public class BlockzapperItem extends ZapperItem {
 				if (fullyUpgraded)
 					AllTriggers.UPGRADED_ZAPPER.trigger(serverPlayer);
 			}
+		}
+		for (BlockPos placed : selectedBlocks) {
+			world.neighborChanged(placed, selectedState.getBlock(), placed);
 		}
 
 		return true;
