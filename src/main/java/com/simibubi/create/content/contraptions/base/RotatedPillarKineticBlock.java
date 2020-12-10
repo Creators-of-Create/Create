@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -40,7 +42,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
 	public static Axis getPreferredAxis(BlockItemUseContext context) {
 		Axis prefferedAxis = null;
-		for (Direction side : Direction.values()) {
+		for (Direction side : Iterate.directions) {
 			BlockState blockState = context.getWorld()
 				.getBlockState(context.getPos()
 					.offset(side));

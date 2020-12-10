@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -32,7 +33,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		Vec3d pivot = VecHelper.voxelSpace(0, 10, 1f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
-		for (Direction direction : Direction.values()) {
+		for (Direction direction : Iterate.directions) {
 			if (!te.flaps.containsKey(direction))
 				continue;
 

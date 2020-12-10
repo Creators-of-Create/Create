@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.BulkScrollValueBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -122,7 +123,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 		}
 
 		// Collect group of connected linear chassis
-		for (Direction offset : Direction.values()) {
+		for (Direction offset : Iterate.directions) {
 			if (offset.getAxis() == axis)
 				continue;
 			BlockPos current = pos.offset(offset);
@@ -187,7 +188,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
 		int chassisRange = visualize ? range.scrollableValue : getRange();
 
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 			if (facing.getAxis() == axis)
 				continue;
 			if (!state.get(block.getGlueableSide(state, facing)))
@@ -215,7 +216,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 				if (!searchPos.equals(pos))
 					positions.add(searchPos);
 
-				for (Direction offset : Direction.values()) {
+				for (Direction offset : Iterate.directions) {
 					if (offset.getAxis() == axis)
 						continue;
 					if (searchPos.equals(pos) && offset != facing)

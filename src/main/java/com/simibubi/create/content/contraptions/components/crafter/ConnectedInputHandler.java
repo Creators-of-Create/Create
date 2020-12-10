@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -74,7 +75,7 @@ public class ConnectedInputHandler {
 			positions.remove(pos);
 			while (!frontier.isEmpty()) {
 				BlockPos current = frontier.remove(0);
-				for (Direction direction : Direction.values()) {
+				for (Direction direction : Iterate.directions) {
 					BlockPos next = current.offset(direction);
 					if (!positions.remove(next))
 						continue;

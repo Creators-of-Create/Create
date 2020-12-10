@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.BlockRenderType;
@@ -42,7 +43,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		for (Direction direction : Direction.values()) {
+		for (Direction direction : Iterate.directions) {
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!AllBlocks.WATER_WHEEL.has(neighbourState))
@@ -75,7 +76,7 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 	}
 
 	public void updateAllSides(BlockState state, World worldIn, BlockPos pos) {
-		for (Direction d : Direction.values())
+		for (Direction d : Iterate.directions)
 			updateFlowAt(state, worldIn, pos, d);
 		updateWheelSpeed(worldIn, pos);
 	}

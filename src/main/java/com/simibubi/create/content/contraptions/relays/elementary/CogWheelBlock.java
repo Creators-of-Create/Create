@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -55,7 +56,7 @@ public class CogWheelBlock extends AbstractShaftBlock {
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        for (Direction facing : Direction.values()) {
+        for (Direction facing : Iterate.directions) {
             if (facing.getAxis() == state.get(AXIS))
                 continue;
 

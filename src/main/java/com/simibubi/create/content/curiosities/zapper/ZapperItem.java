@@ -137,11 +137,11 @@ public abstract class ZapperItem extends Item {
 		player.setActiveHand(hand);
 
 		// Check if can be used
-		String msg = validateUsage(item);
+		ITextComponent msg = validateUsage(item);
 		if (msg != null) {
 			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
 				1f, 0.5f);
-			player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + msg), true);
+			player.sendStatusMessage(msg.applyTextStyle(TextFormatting.RED), true);
 			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
 		}
 
@@ -192,10 +192,10 @@ public abstract class ZapperItem extends Item {
 		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
 	}
 
-	public String validateUsage(ItemStack item) {
+	public ITextComponent validateUsage(ItemStack item) {
 		CompoundNBT tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
-			return Lang.translate("blockzapper.leftClickToSet");
+			return Lang.createTranslationTextComponent("blockzapper.leftClickToSet");
 		return null;
 	}
 

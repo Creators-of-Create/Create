@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.block.Block;
@@ -64,7 +65,7 @@ public class EdgeInteractionHandler {
 		if (Block.hasSolidSide(world.getBlockState(pos.offset(face)), world, pos.offset(face), face.getOpposite()))
 			return sides;
 
-		for (Direction direction : Direction.values()) {
+		for (Direction direction : Iterate.directions) {
 			if (direction.getAxis() == face.getAxis())
 				continue;
 			BlockPos neighbourPos = pos.offset(direction);

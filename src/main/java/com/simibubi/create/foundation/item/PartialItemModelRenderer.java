@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.renderState.RenderTypes;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -81,7 +82,7 @@ public class PartialItemModelRenderer {
 		Random random = new Random();
 		IModelData data = EmptyModelData.INSTANCE;
 
-		for (Direction direction : Direction.values()) {
+		for (Direction direction : Iterate.directions) {
 			random.setSeed(42L);
 			ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads((BlockState) null, direction, random, data), stack,
 				light, overlay);

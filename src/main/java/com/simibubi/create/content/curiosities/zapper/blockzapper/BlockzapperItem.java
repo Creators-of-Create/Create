@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -47,6 +48,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.event.ForgeEventFactory;
 
 public class BlockzapperItem extends ZapperItem {
@@ -92,6 +94,7 @@ public class BlockzapperItem extends ZapperItem {
 		items.add(gunWithPurpurStuff);
 	}
 
+	@Override
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,
 		BlockRayTraceResult raytrace) {
 		CompoundNBT nbt = stack.getOrCreateTag();
@@ -119,13 +122,13 @@ public class BlockzapperItem extends ZapperItem {
 			if (!player.isCreative() && replace)
 				dropBlocks(world, player, stack, face, placed);
 
-			for (Direction updateDirection : Direction.values())
+			for (Direction updateDirection : Iterate.directions)
 				selectedState = selectedState.updatePostPlacement(updateDirection,
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
-			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
+			world.setBlockState(placed, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
 			world.setBlockState(placed, selectedState);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
 				blocksnapshot.restore(true, false);

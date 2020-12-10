@@ -16,6 +16,7 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.block.BlockState;
@@ -109,7 +110,7 @@ public class RecipeGridHandler {
 
 		Direction blockFacing = blockState.get(HORIZONTAL_FACING);
 		Direction blockPointing = MechanicalCrafterBlock.getTargetDirection(blockState);
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 			if (blockFacing.getAxis() == facing.getAxis())
 				continue;
 			if (blockPointing == facing)
