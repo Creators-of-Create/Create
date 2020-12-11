@@ -21,6 +21,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class MaterialChecklist {
+	
+	public static final int MAX_ENTRIES_PER_PAGE = 5;
 
 	public Map<Item, Integer> gathered;
 	public Map<Item, Integer> required;
@@ -108,7 +110,7 @@ public class MaterialChecklist {
 				continue;
 			}
 
-			if (itemsWritten == 6) {
+			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
 				string.append("\"}");
 				pages.add(StringNBT.of(string.toString()));
@@ -120,7 +122,7 @@ public class MaterialChecklist {
 		}
 
 		for (Item item : completed) {
-			if (itemsWritten == 6) {
+			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
 				string.append("\"}");
 				pages.add(StringNBT.of(string.toString()));
