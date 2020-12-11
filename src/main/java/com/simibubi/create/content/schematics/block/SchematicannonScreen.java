@@ -273,10 +273,11 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (te.missingItem != null) {
 			stringWidth += 15;
 			matrixStack.push();
-			matrixStack.translate(guiLeft + 150, guiTop + 46, 0);
-			GuiGameElement.GuiItemRenderBuilder.renderItemIntoGUI(matrixStack, te.missingItem);
+			GuiGameElement.of(te.missingItem)
+				.at(guiLeft + 150, guiTop + 62, 100)
+				.scale(1)
+				.render(matrixStack);
 			matrixStack.pop();
-			// itemRenderer.renderItemIntoGUI(te.missingItem, guiLeft + 150, guiTop + 46);
 		}
 
 		textRenderer.drawWithShadow(matrixStack, msg, guiLeft + 20 + 102 - stringWidth / 2, guiTop + 50, 0xCCDDFF);

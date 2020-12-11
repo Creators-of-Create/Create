@@ -40,7 +40,7 @@ public abstract class TranslatingContraption extends Contraption {
 	}
 
 	@Override
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+	public void removeBlocksFromWorld(World world, BlockPos offset) {
 		int count = blocks.size();
 		super.removeBlocksFromWorld(world, offset);
 		if (count != blocks.size()) {

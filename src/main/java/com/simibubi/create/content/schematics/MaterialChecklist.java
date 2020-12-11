@@ -157,7 +157,7 @@ public class MaterialChecklist {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
 		TranslationTextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return tc.append(" \\u2714\n " + "---");
+		return tc.append(" \\u2714\n");
 		//.formatted(TextFormatting.DARK_GREEN).append(new StringTextComponent(" | "
 			//+ "-" + "\\u25A4 +" + "--" + "\n").formatted(TextFormatting.GRAY));
 		// return TextFormatting.DARK_GREEN + tc.getFormattedText() + " \\u2714\n x" + amount + TextFormatting.GRAY + " | "
