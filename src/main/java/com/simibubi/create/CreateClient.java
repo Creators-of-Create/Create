@@ -42,7 +42,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static Outliner outliner;
+	public static final Outliner outliner = new Outliner();
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
@@ -62,7 +62,6 @@ public class CreateClient {
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
-		outliner = new Outliner();
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);

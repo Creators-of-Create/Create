@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -62,7 +64,7 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 		if (context.getPlayer() == null || !context.getPlayer()
 			.isSneaking()) {
-			for (Direction d : Direction.values()) {
+			for (Direction d : Iterate.directions) {
 				BlockState state = world.getBlockState(pos.offset(d));
 				if (state.getBlock() == this && !state.get(DOUBLE))
 					return getDefaultState().with(FACING, d)

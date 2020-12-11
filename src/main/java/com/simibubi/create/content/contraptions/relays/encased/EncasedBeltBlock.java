@@ -4,6 +4,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
@@ -62,7 +63,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 			axis = placedAxis;
 
 		BlockState state = getDefaultState().with(AXIS, axis);
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 			if (facing.getAxis() == axis)
 				continue;
 			BlockPos pos = context.getPos();
@@ -130,7 +131,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 			.updateNeighbors(context.getWorld(), context.getPos(), 1);
 		Axis axis = newState.get(AXIS);
 		newState = getDefaultState().with(AXIS, axis);
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 			if (facing.getAxis() == axis)
 				continue;
 			BlockPos pos = context.getPos();

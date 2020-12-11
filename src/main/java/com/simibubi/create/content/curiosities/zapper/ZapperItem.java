@@ -35,7 +35,6 @@ import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -60,8 +59,10 @@ public abstract class ZapperItem extends Item {
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getTranslationKey();
-			ItemDescription.add(tooltip, Lang.translate("blockzapper.usingBlock",
-				new TranslationTextComponent(usedblock).formatted(TextFormatting.GRAY)).formatted(TextFormatting.DARK_GRAY));
+			ItemDescription.add(tooltip,
+				Lang.translate("blockzapper.usingBlock",
+					new TranslationTextComponent(usedblock).formatted(TextFormatting.GRAY))
+					.formatted(TextFormatting.DARK_GRAY));
 		}
 	}
 
@@ -138,7 +139,7 @@ public abstract class ZapperItem extends Item {
 
 		// Check if can be used
 		ITextComponent msg = validateUsage(item);
-		if (msg != StringTextComponent.EMPTY) {
+		if (msg != null) {
 			world.playSound(player, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
 				1f, 0.5f);
 			player.sendStatusMessage(msg.copy().formatted(TextFormatting.RED), true);
@@ -195,8 +196,8 @@ public abstract class ZapperItem extends Item {
 	public ITextComponent validateUsage(ItemStack item) {
 		CompoundNBT tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
-			return Lang.translate("blockzapper.leftClickToSet");
-		return StringTextComponent.EMPTY;
+			return Lang.createTranslationTextComponent("blockzapper.leftClickToSet");
+		return null;
 	}
 
 	protected abstract boolean activate(World world, PlayerEntity player, ItemStack item, BlockState stateToUse,

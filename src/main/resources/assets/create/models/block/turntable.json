@@ -7,7 +7,7 @@
 		"2": "block/stripped_spruce_log_top",
 		"3": "create:block/axis_top",
 		"5": "create:block/gearbox_top",
-		"6": "create:block/encased_belt",
+		"6": "create:block/encased_chain_drive",
 		"particle": "block/stripped_spruce_log"
 	},
 	"elements": [

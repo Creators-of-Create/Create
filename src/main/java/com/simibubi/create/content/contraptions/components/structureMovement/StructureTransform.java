@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.DirectionHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BellBlock;
@@ -311,13 +312,13 @@ public class StructureTransform {
 		BlockState rotated = state.with(AXIS, transformAxis(state.get(AXIS)));
 		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
 
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = block.getGlueableSide(rotated, face);
 			if (glueableSide != null)
 				rotated = rotated.with(glueableSide, false);
 		}
 
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = block.getGlueableSide(state, face);
 			if (glueableSide == null || !state.get(glueableSide))
 				continue;

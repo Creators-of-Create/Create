@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -54,7 +55,7 @@ public class CTModel extends BakedModelWrapperWithData {
 
 	protected CTData createCTData(IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			if (!Block.shouldSideBeRendered(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);

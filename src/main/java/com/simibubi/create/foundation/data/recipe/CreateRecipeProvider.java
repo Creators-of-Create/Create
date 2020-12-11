@@ -20,7 +20,7 @@ import net.minecraftforge.common.Tags;
 
 public abstract class CreateRecipeProvider extends RecipeProvider {
 
-	public final String MEK = "mekanism", MW = "mysticalworld", SM = "silents_mechanisms", IE = "immersiveengineering";
+	public final String MEK = "mekanism", TH = "thermal", MW = "mysticalworld", SM = "silents_mechanisms", IE = "immersiveengineering";
 	
 	final List<GeneratedRecipe> all = new ArrayList<>();
 

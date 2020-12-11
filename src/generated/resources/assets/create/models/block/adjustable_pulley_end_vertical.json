@@ -1,6 +1,0 @@
-{
-  "parent": "create:block/encased_belt/end_vertical",
-  "textures": {
-    "side": "create:block/adjustable_pulley"
-  }
-}

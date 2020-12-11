@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -41,10 +42,7 @@ public class VerticalGearboxItem extends BlockItem {
 	@Override
 	protected boolean onBlockPlaced(BlockPos pos, World world, PlayerEntity player, ItemStack stack, BlockState state) {
 		Axis prefferedAxis = null;
-		for (Direction side : Direction.values()) {
-			if (side.getAxis()
-					.isVertical())
-				continue;
+		for (Direction side : Iterate.horizontalDirections) {
 			BlockState blockState = world.getBlockState(pos.offset(side));
 			if (blockState.getBlock() instanceof IRotate) {
 				if (((IRotate) blockState.getBlock()).hasShaftTowards(world, pos.offset(side), blockState,

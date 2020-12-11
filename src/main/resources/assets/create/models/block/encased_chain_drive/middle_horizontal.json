@@ -1,0 +1,46 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"side": "create:block/encased_chain_drive",
+		"1": "create:block/encased_chain_drive_middle",
+		"particle": "#side"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [14, 16, 16, 0], "rotation": 90, "texture": "#side"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 16, 2, 0], "rotation": 270, "texture": "#side"},
+				"west": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#side"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#side"}
+			}
+		},
+		{
+			"name": "Core",
+			"from": [1, 2, 0],
+			"to": [15, 14, 16],
+			"faces": {
+				"east": {"uv": [0, 2, 16, 14], "texture": "#1"},
+				"west": {"uv": [0, 2, 16, 14], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [14, 16, 16, 0], "rotation": 90, "texture": "#side"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#1"},
+				"south": {"uv": [14, 16, 16, 0], "rotation": 270, "texture": "#side"},
+				"west": {"uv": [0, 14, 16, 16], "rotation": 180, "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#side"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#side"}
+			}
+		}
+	]
+}

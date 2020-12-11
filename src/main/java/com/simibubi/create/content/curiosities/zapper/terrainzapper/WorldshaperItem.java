@@ -47,7 +47,7 @@ public class WorldshaperItem extends ZapperItem {
 	public ITextComponent validateUsage(ItemStack item) {
 		if (!item.getOrCreateTag()
 			.contains("BrushParams"))
-			return Lang.translate("terrainzapper.shiftRightClickToSet");
+			return Lang.createTranslationTextComponent("terrainzapper.shiftRightClickToSet");
 		return super.validateUsage(item);
 	}
 

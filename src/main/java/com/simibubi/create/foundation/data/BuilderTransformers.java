@@ -167,6 +167,7 @@ public class BuilderTransformers {
 			.blockstate(new MechanicalPistonGenerator(type)::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
+			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.mechanical_piston"))
 			.item()
 			.transform(ModelGen.customItemModel("mechanical_piston", type.getString(), "item"));
 	}

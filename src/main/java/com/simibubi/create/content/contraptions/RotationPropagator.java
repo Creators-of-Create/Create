@@ -18,6 +18,7 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -431,7 +432,7 @@ public class RotationPropagator {
 			.isAreaLoaded(te.getPos(), 1))
 			return neighbours;
 
-		for (Direction facing : Direction.values())
+		for (Direction facing : Iterate.directions)
 			neighbours.add(te.getPos()
 				.offset(facing));
 

@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
 import net.minecraft.block.Block;
@@ -69,13 +70,14 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
-@SuppressWarnings("unused")
 public class RemapHelper {
 	private static final Map<String, ResourceLocation> reMap = new HashMap<>();
 
 	static {
 		reMap.put("toggle_latch", POWERED_TOGGLE_LATCH.getId());
 		reMap.put("encased_shaft", ANDESITE_ENCASED_SHAFT.getId());
+		reMap.put("encased_belt", AllBlocks.ENCASED_CHAIN_DRIVE.getId());
+		reMap.put("adjustable_pulley", AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT.getId());
 //		reMap.put("linked_extractor", );
 		reMap.put("limestone_stairs", Create.asResource("polished_limestone_stairs"));
 //		reMap.put("window_in_a_block", );

@@ -5,7 +5,7 @@
 		"4": "create:block/brass_gearbox",
 		"5": "create:block/brass_casing_side",
 		"6": "create:block/brass_casing",
-		"8": "create:block/encased_belt_middle",
+		"8": "create:block/encased_chain_drive_middle",
 		"9": "create:block/brass_block",
 		"particle": "create:block/brass_casing"
 	},

@@ -81,8 +81,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 				world.setBlockState(offset, Blocks.AIR.getDefaultState(), 66);
 			}
 
-			if (contraption != null && !contraption.getBlocks()
-				.isEmpty()) {
+			if (!contraption.getBlocks().isEmpty()) {
 				contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 				movedContraption = ControlledContraptionEntity.create(world, this, contraption);
 				movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());

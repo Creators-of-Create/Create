@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.crafter.ConnectedInpu
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -109,7 +110,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				crafter.ejectWholeGrid();
 			}
 
-			for (Direction direction : Direction.values()) {
+			for (Direction direction : Iterate.directions) {
 				if (direction.getAxis() == state.get(HORIZONTAL_FACING)
 					.getAxis())
 					continue;

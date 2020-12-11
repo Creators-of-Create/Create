@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -38,9 +40,7 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 
 	public static Axis getPreferredHorizontalAxis(BlockItemUseContext context) {
 		Direction prefferedSide = null;
-		for (Direction side : Direction.values()) {
-			if (side.getAxis().isVertical())
-				continue;
+		for (Direction side : Iterate.horizontalDirections) {
 			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
 			if (blockState.getBlock() instanceof IRotate) {
 				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),

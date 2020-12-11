@@ -4,7 +4,7 @@
         "particle": "create:block/gearbox_top",
         "slit": "create:block/mechanical_saw_top",
         "gearbox_top": "create:block/gearbox_top",
-        "encased_belt": "create:block/encased_belt",
+        "encased_belt": "create:block/encased_chain_drive",
         "gearbox": "create:block/gearbox",
         "andesite_casing_short": "create:block/andesite_casing_short"
     },

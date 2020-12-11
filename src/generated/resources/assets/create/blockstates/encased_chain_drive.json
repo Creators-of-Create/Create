@@ -1,0 +1,97 @@
+{
+  "variants": {
+    "axis=x,axis_along_first=false,part=start": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "x": 180
+    },
+    "axis=y,axis_along_first=false,part=start": {
+      "model": "create:block/encased_chain_drive/end_vertical"
+    },
+    "axis=z,axis_along_first=false,part=start": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "x": 270,
+      "y": 90
+    },
+    "axis=x,axis_along_first=true,part=start": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "x": 270
+    },
+    "axis=y,axis_along_first=true,part=start": {
+      "model": "create:block/encased_chain_drive/end_vertical",
+      "y": 270
+    },
+    "axis=z,axis_along_first=true,part=start": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "y": 90
+    },
+    "axis=x,axis_along_first=false,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_horizontal"
+    },
+    "axis=y,axis_along_first=false,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_vertical"
+    },
+    "axis=z,axis_along_first=false,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,axis_along_first=true,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_horizontal",
+      "x": 90
+    },
+    "axis=y,axis_along_first=true,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_vertical",
+      "y": 90
+    },
+    "axis=z,axis_along_first=true,part=middle": {
+      "model": "create:block/encased_chain_drive/middle_horizontal",
+      "y": 90
+    },
+    "axis=x,axis_along_first=false,part=end": {
+      "model": "create:block/encased_chain_drive/end_horizontal"
+    },
+    "axis=y,axis_along_first=false,part=end": {
+      "model": "create:block/encased_chain_drive/end_vertical",
+      "y": 180
+    },
+    "axis=z,axis_along_first=false,part=end": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=x,axis_along_first=true,part=end": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "x": 90
+    },
+    "axis=y,axis_along_first=true,part=end": {
+      "model": "create:block/encased_chain_drive/end_vertical",
+      "y": 90
+    },
+    "axis=z,axis_along_first=true,part=end": {
+      "model": "create:block/encased_chain_drive/end_horizontal",
+      "y": 270
+    },
+    "axis=x,axis_along_first=false,part=none": {
+      "model": "create:block/encased_chain_drive/single",
+      "y": 90
+    },
+    "axis=y,axis_along_first=false,part=none": {
+      "model": "create:block/encased_chain_drive/single",
+      "x": 90
+    },
+    "axis=z,axis_along_first=false,part=none": {
+      "model": "create:block/encased_chain_drive/single"
+    },
+    "axis=x,axis_along_first=true,part=none": {
+      "model": "create:block/encased_chain_drive/single",
+      "y": 90
+    },
+    "axis=y,axis_along_first=true,part=none": {
+      "model": "create:block/encased_chain_drive/single",
+      "x": 90
+    },
+    "axis=z,axis_along_first=true,part=none": {
+      "model": "create:block/encased_chain_drive/single"
+    }
+  }
+}

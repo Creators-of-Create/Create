@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
@@ -56,7 +57,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return ActionResultType.PASS;
 
 		if (isSlimeBall && state.get(affectedSide)) {
-			for (Direction face : Direction.values()) {
+			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
 				if (glueableSide != null && !state.get(glueableSide)) {
 					if (worldIn.isRemote) {
@@ -95,13 +96,13 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return state;
 
 		BlockState rotated = super.rotate(state, rotation);
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);
 			if (glueableSide != null)
 				rotated = rotated.with(glueableSide, false);
 		}
 
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(state, face);
 			if (glueableSide == null || !state.get(glueableSide))
 				continue;
@@ -120,13 +121,13 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return state;
 
 		BlockState mirrored = state;
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(mirrored, face);
 			if (glueableSide != null)
 				mirrored = mirrored.with(glueableSide, false);
 		}
 
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(state, face);
 			if (glueableSide == null || !state.get(glueableSide))
 				continue;

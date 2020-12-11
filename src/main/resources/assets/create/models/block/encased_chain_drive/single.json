@@ -1,0 +1,68 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"side": "create:block/encased_chain_drive",
+		"1": "create:block/gearbox",
+		"particle": "#side"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#1"},
+				"east": {"uv": [14, 0, 16, 16], "rotation": 90, "texture": "#side"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 16], "rotation": 270, "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#side"}
+			}
+		},
+		{
+			"name": "Core",
+			"from": [2, 2, 1],
+			"to": [14, 14, 15],
+			"faces": {
+				"north": {"uv": [2, 2, 14, 14], "texture": "#1"},
+				"south": {"uv": [2, 2, 14, 14], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#1"},
+				"west": {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#side"}
+			}
+		},
+		{
+			"name": "SIde",
+			"from": [0, 2, 0],
+			"to": [2, 14, 16],
+			"faces": {
+				"north": {"uv": [14, 2, 16, 14], "texture": "#1"},
+				"east": {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side"},
+				"south": {"uv": [0, 2, 2, 14], "texture": "#1"},
+				"west": {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [14, 2, 0],
+			"to": [16, 14, 16],
+			"faces": {
+				"north": {"uv": [0, 2, 2, 14], "texture": "#1"},
+				"east": {"uv": [2, 0, 14, 16], "rotation": 90, "texture": "#side"},
+				"south": {"uv": [14, 2, 16, 14], "texture": "#1"},
+				"west": {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side"}
+			}
+		}
+	]
+}

@@ -322,9 +322,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("DDD")
 				.patternLine("DDD")),
 
-		ADJUSTABLE_PULLEY = create(AllBlocks.ADJUSTABLE_PULLEY).unlockedBy(I::brassCasing)
+		ADJUSTABLE_PULLEY = create(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.key('A', I.electronTube())
-				.key('B', AllBlocks.ENCASED_BELT.get())
+				.key('B', AllBlocks.ENCASED_CHAIN_DRIVE.get())
 				.key('C', AllBlocks.LARGE_COGWHEEL.get())
 				.patternLine("A")
 				.patternLine("B")
@@ -650,7 +650,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("CBC")
 				.patternLine(" C ")),
 
-		ENCASED_BELT = create(AllBlocks.ENCASED_BELT).returns(4)
+		ENCASED_BELT = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(4)
 			.unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('C', I.andesiteCasing())
 				.key('B', Items.DRIED_KELP)
@@ -948,13 +948,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
 		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, "platinum", SM),
-		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, IE, SM),
-		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, "tin", MEK, MW, SM),
-		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, "lead", MW, IE, SM),
+		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, TH, IE, SM),
+		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, "tin", MEK, TH, MW, SM),
+		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, "lead", MW, TH, IE, SM),
 		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
 		CRUSHED_BAUXITE = blastModdedCrushedMetal(AllItems.CRUSHED_BAUXITE, "aluminum", IE, SM),
 		CRUSHED_URANIUM = blastModdedCrushedMetal(AllItems.CRUSHED_URANIUM, "uranium", IE, SM),
-		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", IE, SM)
+		CRUSHED_NICKEL = blastModdedCrushedMetal(AllItems.CRUSHED_NICKEL, "nickel", TH, IE, SM)
 
 	;
 

@@ -149,13 +149,13 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<EncasedShaftTileEntity> ENCASED_SHAFT = Create.registrate()
 		.tileEntity("encased_shaft", EncasedShaftTileEntity::new)
-		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_BELT)
+		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE)
 		.renderer(() -> EncasedShaftRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<AdjustablePulleyTileEntity> ADJUSTABLE_PULLEY = Create.registrate()
 		.tileEntity("adjustable_pulley", AdjustablePulleyTileEntity::new)
-		.validBlocks(AllBlocks.ADJUSTABLE_PULLEY)
+		.validBlocks(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 		.renderer(() -> EncasedShaftRenderer::new)
 		.register();
 

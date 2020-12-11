@@ -280,8 +280,8 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<EncasedBeltBlock> ENCASED_BELT =
-		REGISTRATE.block("encased_belt", EncasedBeltBlock::new)
+	public static final BlockEntry<EncasedBeltBlock> ENCASED_CHAIN_DRIVE =
+		REGISTRATE.block("encased_chain_drive", EncasedBeltBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
@@ -291,19 +291,19 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_PULLEY =
-		REGISTRATE.block("adjustable_pulley", AdjustablePulleyBlock::new)
+	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_CHAIN_GEARSHIFT =
+		REGISTRATE.block("adjustable_chain_gearshift", AdjustablePulleyBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> {
 				String powered = state.get(AdjustablePulleyBlock.POWERED) ? "_powered" : "";
 				return p.models()
-					.withExistingParent(c.getName() + "_" + suffix + powered, p.modLoc("block/encased_belt/" + suffix))
+					.withExistingParent(c.getName() + "_" + suffix + powered, p.modLoc("block/encased_chain_drive/" + suffix))
 					.texture("side", p.modLoc("block/" + c.getName() + powered));
 			}).generate(c, p))
 			.item()
-			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_belt/item"))
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_chain_drive/item"))
 				.texture("side", p.modLoc("block/" + c.getName())))
 			.build()
 			.register();

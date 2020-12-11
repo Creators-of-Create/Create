@@ -7,6 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -127,9 +128,7 @@ public class CrushingWheelControllerBlock extends Block
 				return;
 			}
 
-			for (Direction d : Direction.values()) {
-				if (d.getAxis().isVertical())
-					continue;
+			for (Direction d : Iterate.horizontalDirections) {
 				BlockState neighbour = world.getBlockState(pos.offset(d));
 				if (!AllBlocks.CRUSHING_WHEEL.has(neighbour))
 					continue;

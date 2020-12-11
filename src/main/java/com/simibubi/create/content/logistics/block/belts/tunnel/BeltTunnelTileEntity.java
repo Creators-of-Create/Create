@@ -109,10 +109,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	public void updateTunnelConnections() {
 		flaps.clear();
 		BlockState tunnelState = getBlockState();
-		for (Direction direction : Direction.values()) {
-			if (direction.getAxis()
-				.isVertical())
-				continue;
+		for (Direction direction : Iterate.horizontalDirections) {
 			BlockState blockState = world.getBlockState(pos.offset(direction));
 			if (blockState.getBlock() instanceof BeltTunnelBlock)
 				continue;

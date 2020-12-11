@@ -30,7 +30,7 @@ public class ValueBox extends ChasingAABBOutline {
 
 	protected int passiveColor;
 	protected int highlightColor;
-	protected boolean isPassive;
+	public boolean isPassive;
 
 	protected BlockPos pos;
 	protected ValueBoxTransform transform;

@@ -21,7 +21,11 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class Outliner {
 
-	Map<Object, OutlineEntry> outlines;
+	final Map<Object, OutlineEntry> outlines;
+
+	public Map<Object, OutlineEntry> getOutlines() {
+		return Collections.unmodifiableMap(outlines);
+	}
 
 	// Facade
 
@@ -136,7 +140,7 @@ public class Outliner {
 			if (entry.ticksTillRemoval < 0) {
 
 				int prevTicks = entry.ticksTillRemoval + 1;
-				float fadeticks = (float) OutlineEntry.fadeTicks;
+				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
 				float alpha = MathHelper.lerp(Minecraft.getInstance()
@@ -150,7 +154,7 @@ public class Outliner {
 		});
 	}
 
-	private class OutlineEntry {
+	public static class OutlineEntry {
 
 		static final int fadeTicks = 8;
 		private Outline outline;
