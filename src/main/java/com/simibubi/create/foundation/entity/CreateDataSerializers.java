@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.entity;
 
 import java.util.Optional;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
@@ -19,7 +21,7 @@ public class CreateDataSerializers {
 
 			public Optional<Direction> read(PacketBuffer buffer) {
 				int i = buffer.readVarInt();
-				return i == 0 ? Optional.empty() : Optional.of(Direction.values()[i - 1]);
+				return i == 0 ? Optional.empty() : Optional.of(Iterate.directions[i - 1]);
 			}
 
 			public Optional<Direction> copyValue(Optional<Direction> opt) {

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,7 +28,7 @@ public abstract class DirectionalKineticBlock extends KineticBlock {
 
 	public Direction getPreferredFacing(BlockItemUseContext context) {
 		Direction prefferedSide = null;
-		for (Direction side : Direction.values()) {
+		for (Direction side : Iterate.directions) {
 			BlockState blockState = context.getWorld()
 				.getBlockState(context.getPos()
 					.offset(side));

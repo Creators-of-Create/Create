@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -207,7 +208,7 @@ public class SymmetryWandItem extends Item {
 
 			if (world.canPlace(block, position, ISelectionContext.forEntity(player))) {
 				BlockState blockState = blockSet.get(position);
-				for (Direction face : Direction.values())
+				for (Direction face : Iterate.directions)
 					blockState = blockState.updatePostPlacement(face, world.getBlockState(position.offset(face)), world,
 						position, position.offset(face));
 

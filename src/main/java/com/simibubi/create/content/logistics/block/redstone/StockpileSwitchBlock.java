@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -115,11 +116,7 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 		BlockState state = getDefaultState();
 
 		Direction preferredFacing = null;
-		for (Direction face : Direction.values()) {
-			if (face.getAxis()
-				.isVertical())
-				continue;
-
+		for (Direction face : Iterate.horizontalDirections) {
 			TileEntity te = context.getWorld()
 				.getTileEntity(context.getPos()
 					.offset(face));

@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -143,7 +144,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public void findInventories() {
 		hasCreativeCrate = false;
 		attachedInventories.clear();
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 
 			if (!world.isBlockPresent(pos.offset(facing)))
 				continue;

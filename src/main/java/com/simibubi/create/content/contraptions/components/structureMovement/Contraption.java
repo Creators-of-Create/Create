@@ -296,7 +296,7 @@ public abstract class Contraption {
 
 		// Slime blocks and super glue drag adjacent blocks if possible
 		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
-		for (Direction offset : Direction.values()) {
+		for (Direction offset : Iterate.directions) {
 			BlockPos offsetPos = pos.offset(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
@@ -755,7 +755,7 @@ public abstract class Contraption {
 					continue;
 
 				if (nonBrittles)
-					for (Direction face : Direction.values())
+					for (Direction face : Iterate.directions)
 						state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
 							targetPos, targetPos.offset(face));
 

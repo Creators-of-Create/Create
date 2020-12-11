@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -143,7 +144,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			return;
 		int color = gaugeTE.color;
 
-		for (Direction face : Direction.values()) {
+		for (Direction face : Iterate.directions) {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 

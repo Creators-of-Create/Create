@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
@@ -29,7 +30,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	public void fixControllers() {
-		for (Direction d : Direction.values())
+		for (Direction d : Iterate.directions)
 			((CrushingWheelBlock) getBlockState().getBlock()).updateControllers(getBlockState(), getWorld(), getPos(),
 					d);
 	}

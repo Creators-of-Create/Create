@@ -36,7 +36,7 @@ public class VoxelShaper {
 	}
 
 	public static VoxelShaper forDirectional(VoxelShape shape, Direction facing){
-		return forDirectionsWithRotation(shape, facing, Arrays.asList(Direction.values()), new DefaultRotationValues());
+		return forDirectionsWithRotation(shape, facing, Arrays.asList(Iterate.directions), new DefaultRotationValues());
 	}
 
 	public static VoxelShaper forAxis(VoxelShape shape, Axis along){
