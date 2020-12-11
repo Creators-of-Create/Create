@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "#signs",
+    "create:linear_chassis",
+    "create:secondary_linear_chassis",
+    "create:radial_chassis",
+    "create:redstone_link",
+    "create:windmill_bearing",
+    "create:mechanical_bearing",
+    "create:clockwork_bearing",
+    "create:mechanical_piston",
+    "create:sticky_mechanical_piston",
+    "create:rope_pulley",
+    "create:cart_assembler",
+    "create:sequenced_gearshift",
+    "create:creative_motor",
+    "create:creative_fluid_tank",
+    "create:creative_crate",
+    "create:adjustable_repeater",
+    "create:adjustable_pulse_repeater",
+    "create:analog_lever",
+    "create:brass_funnel",
+    "create:brass_belt_funnel",
+    "create:andesite_funnel",
+    "create:andesite_belt_funnel"
+  ],
+  "optional": [
+  ]
+}

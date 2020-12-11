@@ -3,9 +3,12 @@ package com.simibubi.create.content.schematics.block;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -458,9 +461,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			if (te instanceof BeltTileEntity && AllBlocks.BELT.has(blockState))
 				launchBelt(target, blockState, ((BeltTileEntity) te).beltLength);
 			else
-				launchBlock(target, icon, blockState);
-		} else
-			launchBlock(target, icon, blockState);
+				launchBlock(target, icon, blockState, null);
+		} else {
+			CompoundNBT data = null;
+			if (AllBlockTags.SAFE_NBT.matches(blockState)) {
+				TileEntity tile = blockReader.getTileEntity(target);
+				if (tile != null && !tile.onlyOpsCanSetNbt()) {
+					data = tile.write(new CompoundNBT());
+				}
+			}
+			launchBlock(target, icon, blockState, data);
+		}
 
 		printerCooldown = config().schematicannonDelay.get();
 		fuelLevel -= getFuelUsageRate();
@@ -692,7 +703,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (world == null)
 			return false;
 		BlockState toReplace = world.getBlockState(pos);
-		boolean placingAir = state.getBlock() == Blocks.AIR;
+		boolean placingAir = state.getBlock().isAir(state, world, pos);
 
 		BlockState toReplaceOther = null;
 		if (state.has(BlockStateProperties.BED_PART) && state.has(BlockStateProperties.HORIZONTAL_FACING) && state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
@@ -828,10 +839,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		playFiringSound();
 	}
 
-	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state) {
-		if (state.getBlock() != Blocks.AIR)
+	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundNBT data) {
+		if (state.getBlock().isAir(state, world, target))
 			blocksPlaced++;
-		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getPos(), target, stack, state));
+		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getPos(), target, stack, state, data));
 		playFiringSound();
 	}
 
