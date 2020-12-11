@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.palettes.MetalBlock;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -54,7 +55,7 @@ public class OxidizingBlock extends MetalBlock {
 			int currentState = state.get(OXIDIZATION);
 			boolean canIncrease = false;
 			LinkedList<Integer> neighbors = new LinkedList<>();
-			for (Direction facing : Direction.values()) {
+			for (Direction facing : Iterate.directions) {
 				BlockPos neighbourPos = pos.offset(facing);
 				if (!worldIn.isAreaLoaded(neighbourPos, 0))
 					continue;

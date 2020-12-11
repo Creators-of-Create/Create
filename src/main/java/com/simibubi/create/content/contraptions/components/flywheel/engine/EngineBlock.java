@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -75,9 +76,7 @@ public abstract class EngineBlock extends HorizontalBlock implements IWrenchable
 		BlockPos baseBlockPos = getBaseBlockPos(state, pos);
 		if (!isValidBaseBlock(world.getBlockState(baseBlockPos), world, pos))
 			return false;
-		for (Direction otherFacing : Direction.values()) {
-			if (otherFacing.getAxis().isVertical())
-				continue;
+		for (Direction otherFacing : Iterate.horizontalDirections) {
 			if (otherFacing == facing)
 				continue;
 			BlockPos otherPos = baseBlockPos.offset(otherFacing);

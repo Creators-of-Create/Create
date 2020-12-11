@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
@@ -46,7 +47,7 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 				.renderOn(gaugeState);
 		SuperByteBuffer dialBuffer = AllBlockPartials.GAUGE_DIAL.renderOn(gaugeState);
 
-		for (Direction facing : Direction.values()) {
+		for (Direction facing : Iterate.directions) {
 			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(te.getWorld(), te.getPos(), gaugeState,
 				facing))
 				continue;

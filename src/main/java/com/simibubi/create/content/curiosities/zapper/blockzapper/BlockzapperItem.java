@@ -15,12 +15,14 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -47,6 +49,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.event.ForgeEventFactory;
 
 public class BlockzapperItem extends ZapperItem {
@@ -92,6 +95,7 @@ public class BlockzapperItem extends ZapperItem {
 		items.add(gunWithPurpurStuff);
 	}
 
+	@Override
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,
 		BlockRayTraceResult raytrace) {
 		CompoundNBT nbt = stack.getOrCreateTag();
@@ -119,14 +123,15 @@ public class BlockzapperItem extends ZapperItem {
 			if (!player.isCreative() && replace)
 				dropBlocks(world, player, stack, face, placed);
 
-			for (Direction updateDirection : Direction.values())
-				selectedState = selectedState.updatePostPlacement(updateDirection,
+			BlockState state = selectedState;
+			for (Direction updateDirection : Iterate.directions)
+				state = state.updatePostPlacement(updateDirection,
 					world.getBlockState(placed.offset(updateDirection)), world, placed, placed.offset(updateDirection));
 
 			BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, placed);
 			IFluidState ifluidstate = world.getFluidState(placed);
-			world.setBlockState(placed, ifluidstate.getBlockState(), 18);
-			world.setBlockState(placed, selectedState);
+			world.setBlockState(placed, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
+			world.setBlockState(placed, state);
 			if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
 				blocksnapshot.restore(true, false);
 				return false;
@@ -134,7 +139,7 @@ public class BlockzapperItem extends ZapperItem {
 
 			if (player instanceof ServerPlayerEntity && world instanceof ServerWorld) {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-				CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placed, new ItemStack(selectedState.getBlock()));
+				CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, placed, new ItemStack(state.getBlock()));
 
 				boolean fullyUpgraded = true;
 				for (Components c : Components.values()) {
@@ -146,6 +151,9 @@ public class BlockzapperItem extends ZapperItem {
 				if (fullyUpgraded)
 					AllTriggers.UPGRADED_ZAPPER.trigger(serverPlayer);
 			}
+		}
+		for (BlockPos placed : selectedBlocks) {
+			world.neighborChanged(placed, selectedState.getBlock(), placed);
 		}
 
 		return true;

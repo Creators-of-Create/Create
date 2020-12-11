@@ -6,6 +6,7 @@ import java.util.Map;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -19,7 +20,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	public WaterWheelTileEntity(TileEntityType<? extends WaterWheelTileEntity> type) {
 		super(type);
 		flows = new HashMap<>();
-		for (Direction d : Direction.values())
+		for (Direction d : Iterate.directions)
 			setFlow(d, 0);
 		setLazyTickRate(20);
 	}
@@ -28,7 +29,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
 		if (compound.contains("Flows")) {
-			for (Direction d : Direction.values())
+			for (Direction d : Iterate.directions)
 				setFlow(d, compound.getCompound("Flows")
 					.getFloat(d.getName()));
 		}
@@ -42,7 +43,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		CompoundNBT flows = new CompoundNBT();
-		for (Direction d : Direction.values())
+		for (Direction d : Iterate.directions)
 			flows.putFloat(d.getName(), this.flows.get(d));
 		compound.put("Flows", flows);
 

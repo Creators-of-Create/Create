@@ -3,13 +3,18 @@ package com.simibubi.create.content.contraptions.goggles;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonPolePlacementHelper;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.outliner.Outline;
+import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,11 +35,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation.spacing;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
+
+	private static final Map<Object, OutlineEntry> outlines = CreateClient.outliner.getOutlines();
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
@@ -44,6 +52,15 @@ public class GoggleOverlayRenderer {
 		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return;
+
+		for (OutlineEntry entry : outlines.values()) {
+			if (!entry.isAlive())
+				continue;
+			Outline outline = entry.getOutline();
+			if (outline instanceof ValueBox && !((ValueBox) outline).isPassive) {
+				return;
+			}
+		}
 
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();

@@ -7,6 +7,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -52,9 +53,8 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 
-		for (Direction d : Direction.values()) {
-			if (d.getAxis() == state.get(AXIS) || d.getAxis()
-				.isVertical())
+		for (Direction d : Iterate.horizontalDirections) {
+			if (d.getAxis() == state.get(AXIS))
 				continue;
 			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.offset(d))))
 				worldIn.setBlockState(pos.offset(d), Blocks.AIR.getDefaultState());
@@ -153,7 +153,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		for (Direction direction : Direction.values()) {
+		for (Direction direction : Iterate.directions) {
 			BlockPos neighbourPos = pos.offset(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			Axis stateAxis = state.get(AXIS);
