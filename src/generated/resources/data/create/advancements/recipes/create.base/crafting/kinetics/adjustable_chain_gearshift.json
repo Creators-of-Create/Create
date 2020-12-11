@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/adjustable_pulley"
+      "create:crafting/kinetics/adjustable_chain_gearshift"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/adjustable_pulley"
+        "recipe": "create:crafting/kinetics/adjustable_chain_gearshift"
       }
     }
   },

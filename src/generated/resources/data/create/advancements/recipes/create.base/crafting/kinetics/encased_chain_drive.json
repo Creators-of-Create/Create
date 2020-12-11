@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/encased_belt"
+      "create:crafting/kinetics/encased_chain_drive"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/encased_belt"
+        "recipe": "create:crafting/kinetics/encased_chain_drive"
       }
     }
   },

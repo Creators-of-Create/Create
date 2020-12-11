@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:encased_belt"
+          "name": "create:adjustable_chain_gearshift"
         }
       ],
       "conditions": [

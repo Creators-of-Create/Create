@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:adjustable_pulley"
+          "name": "create:encased_chain_drive"
         }
       ],
       "conditions": [

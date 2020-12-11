@@ -10,13 +10,13 @@
       "item": "create:electron_tube"
     },
     "B": {
-      "item": "create:encased_belt"
+      "item": "create:encased_chain_drive"
     },
     "C": {
       "item": "create:large_cogwheel"
     }
   },
   "result": {
-    "item": "create:adjustable_pulley"
+    "item": "create:adjustable_chain_gearshift"
   }
 }

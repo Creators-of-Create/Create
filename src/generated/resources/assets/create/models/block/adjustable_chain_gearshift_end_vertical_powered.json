@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/encased_chain_drive/end_vertical",
+  "textures": {
+    "side": "create:block/adjustable_chain_gearshift_powered"
+  }
+}
