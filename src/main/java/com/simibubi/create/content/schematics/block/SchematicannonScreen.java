@@ -327,15 +327,15 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		if (hoveredSlot != null && !hoveredSlot.getHasStack()) {
-			if (hoveredSlot.getSlotIndex() == 0)
+			if (hoveredSlot.slotNumber == 0)
 				renderTooltip(
 					TooltipHelper.cutString(Lang.translate(_slotSchematic), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
-			if (hoveredSlot.getSlotIndex() == 2)
+			if (hoveredSlot.slotNumber == 2)
 				renderTooltip(
 					TooltipHelper.cutString(Lang.translate(_slotListPrinter), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
-			if (hoveredSlot.getSlotIndex() == 4)
+			if (hoveredSlot.slotNumber == 4)
 				renderTooltip(
 					TooltipHelper.cutString(Lang.translate(_slotGunpowder), TextFormatting.GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
