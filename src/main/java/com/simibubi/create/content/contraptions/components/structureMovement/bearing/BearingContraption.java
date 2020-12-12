@@ -6,7 +6,6 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
-import net.minecraft.client.renderer.FaceDirection;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
