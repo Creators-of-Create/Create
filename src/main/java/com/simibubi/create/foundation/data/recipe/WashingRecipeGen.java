@@ -1,5 +1,11 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
+import static com.simibubi.create.foundation.data.recipe.Mods.MW;
+import static com.simibubi.create.foundation.data.recipe.Mods.SM;
+import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
@@ -15,6 +21,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class WashingRecipeGen extends ProcessingRecipeGen {
@@ -86,15 +93,15 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 			.output(.5f, nugget.get(), 5));
 	}
 
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, String metalName, String... mods) {
-		for (String modId : mods) {
-			String nugget = modId.equals(IE) ? "nugget_" + metalName : metalName + "_nugget";
-			create(modId + "/" + crushed.getId()
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, String metalName, Mods... mods) {
+		for (Mods mod : mods) {
+			ResourceLocation nugget = mod.nuggetOf(metalName);
+			create(mod.getId() + "/" + crushed.getId()
 				.getPath(),
 				b -> b.withItemIngredients(Ingredient.fromItems(crushed::get))
-					.output(1, modId, nugget, 10)
-					.output(.5f, modId, nugget, 5)
-					.whenModLoaded(modId));
+					.output(1, nugget, 10)
+					.output(.5f, nugget, 5)
+					.whenModLoaded(mod.getId()));
 		}
 		return null;
 	}

@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "create:crushed_tin_ore"
   },
-  "result": "mekanism:tin_ingot",
+  "result": "mekanism:ingot_tin",
   "experience": 0.1,
   "cookingtime": 100,
   "conditions": [

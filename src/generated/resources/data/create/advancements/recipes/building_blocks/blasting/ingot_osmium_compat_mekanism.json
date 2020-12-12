@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:smelting/tin_ingot_compat_mekanism"
+      "create:blasting/ingot_osmium_compat_mekanism"
     ]
   },
   "criteria": {
@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:crushed_tin_ore"
+            "item": "create:crushed_osmium_ore"
           }
         ]
       }
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:smelting/tin_ingot_compat_mekanism"
+        "recipe": "create:blasting/ingot_osmium_compat_mekanism"
       }
     }
   },

@@ -593,7 +593,6 @@ public class AllBlocks {
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 		.initialProperties(SharedProperties::softMetal)
-		.tag(AllBlockTags.SAFE_NBT.tag)
 		.properties(Block.Properties::nonOpaque)
 		.blockstate(new FluidTankGenerator()::generate)
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
