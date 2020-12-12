@@ -84,7 +84,7 @@ public class CouplingPhysics {
 			else {
 				cart.move(MoverType.SELF, correction);
 				cart.setMotion(cart.getMotion()
-					.scale(0.5f));
+					.scale(0.95f));
 			}
 			firstLoop = false;
 		}

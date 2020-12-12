@@ -1,0 +1,25 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_uranium_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "mekanism:nugget_uranium",
+      "count": 10
+    },
+    {
+      "item": "mekanism:nugget_uranium",
+      "count": 5,
+      "chance": 0.5
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "mekanism",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
