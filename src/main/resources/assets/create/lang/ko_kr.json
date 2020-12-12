@@ -386,10 +386,10 @@
 	"block.create.flywheel": "플라이휠",
 	"block.create.furnace_engine": "화로 엔진",
 	"block.create.cogwheel": "톱니바퀴",
-	"block.create.encased_belt": "케이스를 씌운 벨트",
+	"block.create.encased_chain_drive": "케이스를 씌운 축",
 	"block.create.encased_shaft": "케이스를 씌운 축",
 	"block.create.belt": "컨베이어 벨트",
-	"block.create.adjustable_pulley": "벨트 변속기",
+	"block.create.adjustable_chain_gearshift": "벨트 변속기",
 	"block.create.gearbox": "기어박스",
 	"block.create.gearshift": "기어쉬프트",
 	"block.create.hand_crank": "핸드 크랭크",
@@ -1110,6 +1110,18 @@
 	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
 	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
 	"item.create.example_item.tooltip.action1": "These controls are displayed.",
+
+	"block.create.andesite_encased_shaft.tooltip": "안산암 케이스 축",
+	"block.create.andesite_encased_shaft.tooltip.summary": "_크리에이티브_ _전용_ 아이템입니다. 축에 _안산암 케이스_를 씌운 것입니다. 케이스는 소모되지 않습니다.",
+
+	"block.create.brass_encased_shaft.tooltip": "황동 케이스 축",
+	"block.create.brass_encased_shaft.tooltip.summary": "_크리에이티브_ _전용_ 아이템입니다. 축에 _황동 케이스_를 씌운 것입니다. 케이스는 소모되지 않습니다.",
+
+	"block.create.wooden_bracket.tooltip": "나무 지지대",
+	"block.create.wooden_bracket.tooltip.summary": "나무를 이용해 _축, 톱니바퀴, 파이프_를 꾸며보세요.",
+
+	"block.create.metal_bracket.tooltip": "금속 지지대",
+	"block.create.metal_bracket.tooltip.summary": "금속을 이용해 _축, 톱니바퀴, 파이프_를 꾸며보세요.",
 
 	"block.create.andesite_casing.tooltip": "안산암 케이스",
 	"block.create.andesite_casing.tooltip.summary": "다양한 용도로 쓰일 수 있는 단순한 기계 케이스입니다. 장식용으로 써도 무방합니다.",
