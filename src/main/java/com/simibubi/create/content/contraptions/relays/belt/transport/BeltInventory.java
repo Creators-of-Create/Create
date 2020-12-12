@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;

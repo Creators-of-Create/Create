@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -26,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.Constants;
 
 public abstract class LaunchedItem {
 
@@ -90,18 +92,27 @@ public abstract class LaunchedItem {
 
 	public static class ForBlockState extends LaunchedItem {
 		public BlockState state;
+		public CompoundNBT data;
 
 		ForBlockState() {}
 
-		public ForBlockState(BlockPos start, BlockPos target, ItemStack stack, BlockState state) {
+		public ForBlockState(BlockPos start, BlockPos target, ItemStack stack, BlockState state, CompoundNBT data) {
 			super(start, target, stack);
 			this.state = state;
+			this.data = data;
 		}
 
 		@Override
 		public CompoundNBT serializeNBT() {
 			CompoundNBT serializeNBT = super.serializeNBT();
 			serializeNBT.put("BlockState", NBTUtil.writeBlockState(state));
+			if (data != null) {
+				data.remove("x");
+				data.remove("y");
+				data.remove("z");
+				data.remove("id");
+				serializeNBT.put("Data", data);
+			}
 			return serializeNBT;
 		}
 
@@ -109,6 +120,9 @@ public abstract class LaunchedItem {
 		void readNBT(CompoundNBT nbt) {
 			super.readNBT(nbt);
 			state = NBTUtil.readBlockState(nbt.getCompound("BlockState"));
+			if (nbt.contains("Data", Constants.NBT.TAG_COMPOUND)) {
+				data = nbt.getCompound("Data");
+			}
 		}
 
 		@Override
@@ -141,6 +155,15 @@ public abstract class LaunchedItem {
 				return;
 			}
 			world.setBlockState(target, state, 18);
+			if (data != null) {
+				TileEntity tile = world.getTileEntity(target);
+				if (tile != null) {
+					data.putInt("x", target.getX());
+					data.putInt("y", target.getY());
+					data.putInt("z", target.getZ());
+					tile.read(data);
+				}
+			}
 			state.getBlock().onBlockPlacedBy(world, target, state, null, stack);
 		}
 
@@ -165,7 +188,7 @@ public abstract class LaunchedItem {
 		}
 
 		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, int length) {
-			super(start, target, stack, state);
+			super(start, target, stack, state, null);
 			this.length = length;
 		}
 

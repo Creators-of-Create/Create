@@ -4,11 +4,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -34,7 +36,7 @@ public enum TerrainTools {
 		return this != Clear && this != Flatten;
 	}
 
-	public void run(World world, List<BlockPos> targetPositions, Direction facing, @Nullable BlockState paintedState) {
+	public void run(World world, List<BlockPos> targetPositions, Direction facing, @Nullable BlockState paintedState, @Nullable CompoundNBT data) {
 		switch (this) {
 		case Clear:
 			targetPositions.forEach(p -> world.setBlockState(p, Blocks.AIR.getDefaultState()));
@@ -45,6 +47,7 @@ public enum TerrainTools {
 				if (!isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
+				ZapperItem.setTileData(world, p, data);
 			});
 			break;
 		case Flatten:
@@ -64,11 +67,13 @@ public enum TerrainTools {
 				if (!isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
+				ZapperItem.setTileData(world, p, data);
 			});
 			break;
 		case Place:
 			targetPositions.forEach(p -> {
 				world.setBlockState(p, paintedState);
+				ZapperItem.setTileData(world, p, data);
 			});
 			break;
 		case Replace:
@@ -77,6 +82,7 @@ public enum TerrainTools {
 				if (isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
+				ZapperItem.setTileData(world, p, data);
 			});
 			break;
 		}

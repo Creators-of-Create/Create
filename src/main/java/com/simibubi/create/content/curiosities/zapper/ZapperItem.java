@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -23,6 +24,7 @@ import net.minecraft.item.Rarity;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -35,12 +37,12 @@ import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -149,6 +151,10 @@ public abstract class ZapperItem extends Item {
 		if (nbt.contains("BlockUsed"))
 			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
 		stateToUse = BlockHelper.setZeroAge(stateToUse);
+		CompoundNBT data = null;
+		if (AllBlockTags.SAFE_NBT.matches(stateToUse) && nbt.contains("BlockData", NBT.TAG_COMPOUND)) {
+			data = nbt.getCompound("BlockData");
+		}
 
 		// Raytrace - Find the target
 		Vec3d start = player.getPositionVec()
@@ -181,7 +187,7 @@ public abstract class ZapperItem extends Item {
 		}
 
 		// Server side
-		if (activate(world, player, item, stateToUse, raytrace)) {
+		if (activate(world, player, item, stateToUse, raytrace, data)) {
 			applyCooldown(player, item, gunInOtherHand);
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player),
 				new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, false));
@@ -200,7 +206,7 @@ public abstract class ZapperItem extends Item {
 	}
 
 	protected abstract boolean activate(World world, PlayerEntity player, ItemStack item, BlockState stateToUse,
-		BlockRayTraceResult raytrace);
+		BlockRayTraceResult raytrace, CompoundNBT data);
 
 	@OnlyIn(Dist.CLIENT)
 	protected abstract void openHandgunGUI(ItemStack item, boolean b);
@@ -232,6 +238,18 @@ public abstract class ZapperItem extends Item {
 	@Override
 	public UseAction getUseAction(ItemStack stack) {
 		return UseAction.NONE;
+	}
+
+	public static void setTileData(World world, BlockPos pos, CompoundNBT data) {
+		if (data != null) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (tile != null && !tile.onlyOpsCanSetNbt()) {
+				data.putInt("x", pos.getX());
+				data.putInt("y", pos.getY());
+				data.putInt("z", pos.getZ());
+				tile.read(data);
+			}
+		}
 	}
 
 }
