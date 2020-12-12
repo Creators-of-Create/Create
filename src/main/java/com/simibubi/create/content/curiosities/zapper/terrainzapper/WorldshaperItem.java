@@ -60,7 +60,7 @@ public class WorldshaperItem extends ZapperItem {
 
 	@Override
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState stateToUse,
-		BlockRayTraceResult raytrace) {
+		BlockRayTraceResult raytrace, CompoundNBT data) {
 
 		BlockPos targetPos = raytrace.getPos();
 		List<BlockPos> affectedPositions = new ArrayList<>();
@@ -77,7 +77,7 @@ public class WorldshaperItem extends ZapperItem {
 		for (BlockPos blockPos : brush.getIncludedPositions())
 			affectedPositions.add(targetPos.add(blockPos));
 		PlacementPatterns.applyPattern(affectedPositions, stack);
-		tool.run(world, affectedPositions, raytrace.getFace(), stateToUse);
+		tool.run(world, affectedPositions, raytrace.getFace(), stateToUse, data);
 
 		return true;
 	}
