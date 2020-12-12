@@ -163,7 +163,5 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE);
-
-		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 	}
 }
