@@ -321,6 +321,7 @@ public class AllBlocks {
 	public static final BlockEntry<CreativeMotorBlock> CREATIVE_MOTOR =
 		REGISTRATE.block("creative_motor", CreativeMotorBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(StressConfigDefaults.setCapacity(16384.0))
 			.item()
@@ -605,6 +606,7 @@ public class AllBlocks {
 	public static final BlockEntry<FluidTankBlock> CREATIVE_FLUID_TANK =
 		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.properties(Block.Properties::nonOpaque)
 			.blockstate(new FluidTankGenerator("creative_")::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::creative))
@@ -654,11 +656,13 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPistonBlock> MECHANICAL_PISTON =
 		REGISTRATE.block("mechanical_piston", MechanicalPistonBlock::normal)
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.DEFAULT))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
 	public static final BlockEntry<MechanicalPistonBlock> STICKY_MECHANICAL_PISTON =
 		REGISTRATE.block("sticky_mechanical_piston", MechanicalPistonBlock::sticky)
 			.transform(BuilderTransformers.mechanicalPiston(PistonType.STICKY))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
 	public static final BlockEntry<PistonExtensionPoleBlock> PISTON_EXTENSION_POLE =
@@ -671,6 +675,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
 		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
 				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
@@ -681,12 +686,14 @@ public class AllBlocks {
 		REGISTRATE.block("windmill_bearing", WindmillBearingBlock::new)
 			.transform(BuilderTransformers.bearing("windmill", "gearbox", true))
 			.transform(StressConfigDefaults.setCapacity(512.0))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
 	public static final BlockEntry<MechanicalBearingBlock> MECHANICAL_BEARING =
 		REGISTRATE.block("mechanical_bearing", MechanicalBearingBlock::new)
 			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(new StabilizedBearingMovementBehaviour()))
 			.register();
 
@@ -694,10 +701,12 @@ public class AllBlocks {
 		REGISTRATE.block("clockwork_bearing", ClockworkBearingBlock::new)
 			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox", false))
 			.transform(StressConfigDefaults.setImpact(4.0))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
 	public static final BlockEntry<PulleyBlock> ROPE_PULLEY = REGISTRATE.block("rope_pulley", PulleyBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.tag(AllBlockTags.SAFE_NBT.tag)
 		.blockstate(BlockStateGen.horizontalAxisBlockProvider(true))
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.item()
@@ -726,7 +735,7 @@ public class AllBlocks {
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.cartAssembler())
 			.addLayer(() -> RenderType::getCutoutMipped)
-			.tag(BlockTags.RAILS)
+			.tag(BlockTags.RAILS, AllBlockTags.SAFE_NBT.tag)
 			.item(CartAssemblerBlockItem::new)
 			.transform(customItemModel())
 			.register();
@@ -766,6 +775,7 @@ public class AllBlocks {
 	public static final BlockEntry<LinearChassisBlock> LINEAR_CHASSIS =
 		REGISTRATE.block("linear_chassis", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.linearChassis())
 			.onRegister(connectedTextures(new ChassisCTBehaviour()))
 			.lang("Linear Chassis")
@@ -775,6 +785,7 @@ public class AllBlocks {
 	public static final BlockEntry<LinearChassisBlock> SECONDARY_LINEAR_CHASSIS =
 		REGISTRATE.block("secondary_linear_chassis", LinearChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.linearChassis())
 			.onRegister(connectedTextures(new ChassisCTBehaviour()))
 			.simpleItem()
@@ -783,6 +794,7 @@ public class AllBlocks {
 	public static final BlockEntry<RadialChassisBlock> RADIAL_CHASSIS =
 		REGISTRATE.block("radial_chassis", RadialChassisBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.radialChassis())
 			.item()
 			.model((c, p) -> {
@@ -969,6 +981,7 @@ public class AllBlocks {
 	public static final BlockEntry<SequencedGearshiftBlock> SEQUENCED_GEARSHIFT =
 		REGISTRATE.block("sequenced_gearshift", SequencedGearshiftBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(new SequencedGearshiftGenerator()::generate)
@@ -998,6 +1011,7 @@ public class AllBlocks {
 	public static final BlockEntry<SpeedControllerBlock> ROTATION_SPEED_CONTROLLER =
 		REGISTRATE.block("rotation_speed_controller", SpeedControllerBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(true))
 			.item()
@@ -1025,6 +1039,7 @@ public class AllBlocks {
 	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =
 		REGISTRATE.block("andesite_funnel", AndesiteFunnelBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.andesite()))
 			.transform(BuilderTransformers.funnel("andesite", Create.asResource("block/andesite_casing")))
 			.register();
@@ -1032,6 +1047,7 @@ public class AllBlocks {
 	public static final BlockEntry<AndesiteBeltFunnelBlock> ANDESITE_BELT_FUNNEL =
 		REGISTRATE.block("andesite_belt_funnel", AndesiteBeltFunnelBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new BeltFunnelGenerator("andesite", new ResourceLocation("block/polished_andesite"))::generate)
 			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
 			.register();
@@ -1039,6 +1055,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
 		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.brass()))
 			.transform(BuilderTransformers.funnel("brass", Create.asResource("block/brass_casing")))
 			.register();
@@ -1046,6 +1063,7 @@ public class AllBlocks {
 	public static final BlockEntry<BrassBeltFunnelBlock> BRASS_BELT_FUNNEL =
 		REGISTRATE.block("brass_belt_funnel", BrassBeltFunnelBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new BeltFunnelGenerator("brass", Create.asResource("block/brass_block"))::generate)
 			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
 			.register();
@@ -1094,6 +1112,7 @@ public class AllBlocks {
 	public static final BlockEntry<CreativeCrateBlock> CREATIVE_CRATE =
 		REGISTRATE.block("creative_crate", CreativeCrateBlock::new)
 			.transform(BuilderTransformers.crate("creative"))
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
 	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
@@ -1108,7 +1127,7 @@ public class AllBlocks {
 	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
 		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
 			.initialProperties(SharedProperties::wooden)
-			.tag(AllBlockTags.BRITTLE.tag)
+			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new RedstoneLinkGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()
@@ -1118,6 +1137,7 @@ public class AllBlocks {
 	public static final BlockEntry<AnalogLeverBlock> ANALOG_LEVER =
 		REGISTRATE.block("analog_lever", AnalogLeverBlock::new)
 			.initialProperties(() -> Blocks.LEVER)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.item()
 			.transform(customItemModel())
@@ -1135,6 +1155,7 @@ public class AllBlocks {
 	public static final BlockEntry<AdjustableRepeaterBlock> ADJUSTABLE_REPEATER =
 		REGISTRATE.block("adjustable_repeater", AdjustableRepeaterBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new AdjustableRepeaterGenerator()::generate)
 			.item()
 			.model(AbstractDiodeGenerator.diodeItemModel(true))
@@ -1144,6 +1165,7 @@ public class AllBlocks {
 	public static final BlockEntry<AdjustableRepeaterBlock> ADJUSTABLE_PULSE_REPEATER =
 		REGISTRATE.block("adjustable_pulse_repeater", AdjustableRepeaterBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
+			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new AdjustableRepeaterGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item()

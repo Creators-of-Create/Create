@@ -96,7 +96,7 @@ public class BlockzapperItem extends ZapperItem {
 
 	@Override
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState selectedState,
-		BlockRayTraceResult raytrace) {
+		BlockRayTraceResult raytrace, CompoundNBT data) {
 		CompoundNBT nbt = stack.getOrCreateTag();
 		boolean replace = nbt.contains("Replace") && nbt.getBoolean("Replace");
 
@@ -135,6 +135,7 @@ public class BlockzapperItem extends ZapperItem {
 				blocksnapshot.restore(true, false);
 				return false;
 			}
+			setTileData(world, placed, data);
 
 			if (player instanceof ServerPlayerEntity && world instanceof ServerWorld) {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;

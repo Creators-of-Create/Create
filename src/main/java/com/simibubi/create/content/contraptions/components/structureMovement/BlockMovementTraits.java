@@ -75,7 +75,7 @@ public class BlockMovementTraits {
 			return true;
 		if (blockState.getBlockHardness(world, pos) == -1)
 			return false;
-		if (AllBlockTags.NON_MOVABLE.tag.contains(block))
+		if (AllBlockTags.NON_MOVABLE.matches(blockState))
 			return false;
 
 		// Move controllers only when they aren't moving

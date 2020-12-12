@@ -64,6 +64,7 @@ public enum AllPackets {
 	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new),
 	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
 	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new),
+	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket::new),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),

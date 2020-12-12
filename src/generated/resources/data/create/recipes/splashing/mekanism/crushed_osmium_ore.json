@@ -7,11 +7,11 @@
   ],
   "results": [
     {
-      "item": "mekanism:osmium_nugget",
+      "item": "mekanism:nugget_osmium",
       "count": 10
     },
     {
-      "item": "mekanism:osmium_nugget",
+      "item": "mekanism:nugget_osmium",
       "count": 5,
       "chance": 0.5
     }

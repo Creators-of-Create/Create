@@ -3,8 +3,6 @@ package com.simibubi.create.content.contraptions.fluids.recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
-
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

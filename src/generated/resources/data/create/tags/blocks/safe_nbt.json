@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "create:creative_motor",
+    "create:creative_fluid_tank",
+    "create:mechanical_piston",
+    "create:sticky_mechanical_piston",
+    "create:mechanical_piston_head",
+    "create:windmill_bearing",
+    "create:mechanical_bearing",
+    "create:clockwork_bearing",
+    "create:rope_pulley",
+    "create:cart_assembler",
+    "create:linear_chassis",
+    "create:secondary_linear_chassis",
+    "create:radial_chassis",
+    "create:sequenced_gearshift",
+    "create:rotation_speed_controller",
+    "create:andesite_funnel",
+    "create:andesite_belt_funnel",
+    "create:brass_funnel",
+    "create:brass_belt_funnel",
+    "create:creative_crate",
+    "create:redstone_link",
+    "create:analog_lever",
+    "create:adjustable_repeater",
+    "create:adjustable_pulse_repeater"
+  ]
+}

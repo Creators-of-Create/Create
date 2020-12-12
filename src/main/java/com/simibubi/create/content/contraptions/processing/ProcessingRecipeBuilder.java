@@ -156,8 +156,8 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
-	public ProcessingRecipeBuilder<T> output(float chance, String modId, String registryName, int amount) {
-		params.results.add(new ProcessingOutput(Pair.of(new ResourceLocation(modId, registryName), amount), chance));
+	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {
+		params.results.add(new ProcessingOutput(Pair.of(registryName, amount), chance));
 		return this;
 	}
 

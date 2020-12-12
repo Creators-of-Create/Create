@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
@@ -26,6 +27,8 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionP
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -53,6 +56,7 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -213,6 +217,14 @@ public class ClientEvents {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);
+		}
+	}
+
+	@SubscribeEvent
+	public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+		ItemStack stack = event.getItemStack();
+		if (stack.getItem() instanceof ZapperItem) {
+			AllPackets.channel.sendToServer(new LeftClickPacket());
 		}
 	}
 

@@ -7,11 +7,11 @@
   ],
   "results": [
     {
-      "item": "mekanism:tin_nugget",
+      "item": "mekanism:nugget_tin",
       "count": 10
     },
     {
-      "item": "mekanism:tin_nugget",
+      "item": "mekanism:nugget_tin",
       "count": 5,
       "chance": 0.5
     }

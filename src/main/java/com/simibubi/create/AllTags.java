@@ -1,9 +1,9 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.AllTags.NameSpace.FORGE;
+import static com.simibubi.create.AllTags.NameSpace.MC;
 import static com.simibubi.create.AllTags.NameSpace.MOD;
 import static com.simibubi.create.AllTags.NameSpace.TIC;
-import static com.simibubi.create.AllTags.NameSpace.MC;
 
 import java.util.function.Function;
 
@@ -24,8 +24,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.ModList;
@@ -115,7 +115,7 @@ public class AllTags {
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SLIMY_LOGS(TIC), BEACON_BASE_BLOCKS(MC)
+		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SAFE_NBT, SLIMY_LOGS(TIC), BEACON_BASE_BLOCKS(MC)
 
 		;
 

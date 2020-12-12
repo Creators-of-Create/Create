@@ -1,5 +1,11 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
+import static com.simibubi.create.foundation.data.recipe.Mods.MW;
+import static com.simibubi.create.foundation.data.recipe.Mods.SM;
+import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -994,10 +1000,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inBlastFurnace();
 	}
 
-	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, String metalName, String... mods) {
-		for (String modId : mods) {
-			String ingot = modId.equals(IE) ? "ingot_" + metalName : metalName + "_ingot";
-			create(new ResourceLocation(modId, ingot)).withSuffix("_compat_" + modId)
+	GeneratedRecipe blastModdedCrushedMetal(ItemEntry<? extends Item> ingredient, String metalName, Mods... mods) {
+		for (Mods mod : mods) {
+			ResourceLocation ingot = mod.ingotOf(metalName);
+			String modId = mod.getId();
+			create(ingot).withSuffix("_compat_" + modId)
 				.whenModLoaded(modId)
 				.viaCooking(ingredient::get)
 				.rewardXP(.1f)

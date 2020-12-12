@@ -1,9 +1,8 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
-
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
@@ -35,8 +34,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	public boolean newPosition;
 	private Mode mode;
-	private Supplier<Integer> transmission;
-	private Consumer<Integer> signalCallback;
+	private IntSupplier transmission;
+	private IntConsumer signalCallback;
 
 	protected LinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(te);
@@ -49,7 +48,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public static LinkBehaviour receiver(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
-		Consumer<Integer> signalCallback) {
+		IntConsumer signalCallback) {
 		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.signalCallback = signalCallback;
 		behaviour.mode = Mode.RECEIVE;
@@ -57,7 +56,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public static LinkBehaviour transmitter(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots,
-		Supplier<Integer> transmission) {
+		IntSupplier transmission) {
 		LinkBehaviour behaviour = new LinkBehaviour(te, slots);
 		behaviour.transmission = transmission;
 		behaviour.mode = Mode.TRANSMIT;
@@ -81,7 +80,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public int getTransmittedStrength() {
-		return mode == Mode.TRANSMIT ? transmission.get() : 0;
+		return mode == Mode.TRANSMIT ? transmission.getAsInt() : 0;
 	}
 
 	public void updateReceiver(int networkPower) {
