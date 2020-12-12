@@ -242,14 +242,14 @@ public abstract class ZapperItem extends Item {
 		return UseAction.NONE;
 	}
 
-	public static void setTileData(World world, BlockPos pos, CompoundNBT data) {
+	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data) {
 		if (data != null) {
 			TileEntity tile = world.getTileEntity(pos);
 			if (tile != null && !tile.onlyOpsCanSetNbt()) {
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
-				tile.read(data);
+				tile.fromTag(state, data);
 			}
 		}
 	}

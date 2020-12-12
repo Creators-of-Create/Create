@@ -47,7 +47,7 @@ public enum TerrainTools {
 				if (!isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
-				ZapperItem.setTileData(world, p, data);
+				ZapperItem.setTileData(world, p, paintedState, data);
 			});
 			break;
 		case Flatten:
@@ -67,13 +67,13 @@ public enum TerrainTools {
 				if (!isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
-				ZapperItem.setTileData(world, p, data);
+				ZapperItem.setTileData(world, p, paintedState, data);
 			});
 			break;
 		case Place:
 			targetPositions.forEach(p -> {
 				world.setBlockState(p, paintedState);
-				ZapperItem.setTileData(world, p, data);
+				ZapperItem.setTileData(world, p, paintedState, data);
 			});
 			break;
 		case Replace:
@@ -82,7 +82,7 @@ public enum TerrainTools {
 				if (isReplaceable(toReplace))
 					return;
 				world.setBlockState(p, paintedState);
-				ZapperItem.setTileData(world, p, data);
+				ZapperItem.setTileData(world, p, paintedState, data);
 			});
 			break;
 		}

@@ -162,7 +162,7 @@ public abstract class LaunchedItem {
 					data.putInt("x", target.getX());
 					data.putInt("y", target.getY());
 					data.putInt("z", target.getZ());
-					tile.read(data);
+					tile.fromTag(state, data);
 				}
 			}
 			state.getBlock().onBlockPlacedBy(world, target, state, null, stack);
