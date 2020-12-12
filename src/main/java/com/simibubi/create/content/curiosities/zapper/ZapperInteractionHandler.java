@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.BlockState;
@@ -17,7 +15,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.StairsShape;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,30 +22,21 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber
 public class ZapperInteractionHandler {
 
 	@SubscribeEvent
-	public static void leftClickingTheZapperSelectsANewBlock(PlayerInteractEvent.LeftClickEmpty event) {
-		ItemStack heldItem = event.getPlayer()
-			.getHeldItemMainhand();
-		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer()))
-			AllPackets.channel.sendToServer(new NbtPacket(heldItem, Hand.MAIN_HAND));
-	}
-
-	@SubscribeEvent
 	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
-		ItemStack heldItem = event.getPlayer()
-			.getHeldItemMainhand();
+		if (event.getWorld().isRemote)
+			return;
+		ItemStack heldItem = event.getPlayer().getHeldItemMainhand();
 		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
 			event.setCancellationResult(ActionResultType.FAIL);
 			event.setCanceled(true);
-			AllPackets.channel.sendToServer(new NbtPacket(heldItem, Hand.MAIN_HAND));
 		}
 	}
 
@@ -111,7 +99,7 @@ public class ZapperInteractionHandler {
 			tag.remove("BlockData");
 		else
 			tag.put("BlockData", data);
-		player.world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
+		player.world.playSound(null, player.getPosition(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
 			SoundCategory.BLOCKS, 0.5f, 0.8f);
 
 		return true;

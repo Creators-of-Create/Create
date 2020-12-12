@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
+import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
+import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -19,7 +21,9 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
@@ -157,6 +161,13 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void startTracking(PlayerEvent.StartTracking event) {
 		CapabilityMinecartController.startTracking(event);
+	}
+
+	public static void leftClickEmpty(ServerPlayerEntity player) {
+		ItemStack stack = player.getHeldItemMainhand();
+		if (stack.getItem() instanceof ZapperItem) {
+			ZapperInteractionHandler.trySelect(stack, player);
+		}
 	}
 
 }
