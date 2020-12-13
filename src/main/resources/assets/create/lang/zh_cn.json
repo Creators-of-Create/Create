@@ -743,7 +743,9 @@
 	"create.schematicannon.status.schematicInvalid": "蓝图无效",
 	"create.schematicannon.status.schematicNotPlaced": "蓝图未部署",
 	"create.schematicannon.status.schematicExpired": "蓝图文件已过期",
-	
+
+	"create.materialChecklist": "材料清单",
+
 	"create.gui.filter.deny_list": "黑名单",
 	"create.gui.filter.deny_list.description": "只通过不在黑名单中的物品，如果黑名单为空，所有物品都可以通过",
 	"create.gui.filter.allow_list": "白名单",

@@ -314,7 +314,10 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic Not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
-	
+
+	"create.materialChecklist": "Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
+
 	"create.gui.filter.deny_list": "Deny-List",
 	"create.gui.filter.deny_list.description": "Items pass if they do NOT match any of the above. An empty Deny-List accepts everything.",
 	"create.gui.filter.allow_list": "Allow-List",

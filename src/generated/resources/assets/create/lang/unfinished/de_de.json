@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1128",
+	"_": "Missing Localizations: 1130",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -875,6 +875,9 @@
 	"create.schematicannon.status.schematicInvalid": "Bauplan ungültig",
 	"create.schematicannon.status.schematicNotPlaced": "Bauplan nicht positioniert",
 	"create.schematicannon.status.schematicExpired": "Bauplandatei abgelaufen",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "UNLOCALIZED: Deny-List",
 	"create.gui.filter.deny_list.description": "UNLOCALIZED: Items pass if they do NOT match any of the above. An empty Deny-List accepts everything.",
