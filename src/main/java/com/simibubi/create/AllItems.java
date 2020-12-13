@@ -44,6 +44,7 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -81,19 +82,13 @@ public class AllItems {
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag),
 		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag);
 
-	public static final ItemEntry<TagDependentIngredientItem> 
-		CRUSHED_OSMIUM = compatCrushedOre("osmium"),
-		CRUSHED_PLATINUM = compatCrushedOre("platinum"),
-		CRUSHED_SILVER = compatCrushedOre("silver"),
-		CRUSHED_TIN = compatCrushedOre("tin"),
-		CRUSHED_LEAD = compatCrushedOre("lead"),
-		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"),
-		CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
-		CRUSHED_URANIUM = compatCrushedOre("uranium"),
-		CRUSHED_NICKEL = compatCrushedOre("nickel");
+	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre("osmium"),
+		CRUSHED_PLATINUM = compatCrushedOre("platinum"), CRUSHED_SILVER = compatCrushedOre("silver"),
+		CRUSHED_TIN = compatCrushedOre("tin"), CRUSHED_LEAD = compatCrushedOre("lead"),
+		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"), CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
+		CRUSHED_URANIUM = compatCrushedOre("uranium"), CRUSHED_NICKEL = compatCrushedOre("nickel");
 
-	public static final ItemEntry<Item> 
-		ANDESITE_ALLOY = ingredient("andesite_alloy"),
+	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
 		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), CREATE_INGOTS.tag),
 		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag),
@@ -104,7 +99,13 @@ public class AllItems {
 		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover");
 
+	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
+		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
+			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+			.register();
+
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
+		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 		.register();
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
@@ -263,6 +264,11 @@ public class AllItems {
 
 	private static ItemEntry<Item> ingredient(String name) {
 		return REGISTRATE.item(name, Item::new)
+			.register();
+	}
+
+	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+		return REGISTRATE.item(name, HiddenIngredientItem::new)
 			.register();
 	}
 

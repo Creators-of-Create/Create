@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 440",
+	"_": "Missing Localizations: 443",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -422,6 +422,7 @@
 	"item.create.attribute_filter": "Фильтр атрибутов",
 	"item.create.belt_connector": "Механический ремень",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
+	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
 	"item.create.brass_hand": "Латунная рука",
 	"item.create.brass_ingot": "Латунный слиток",
 	"item.create.brass_nugget": "Кусочек латуни",
@@ -879,6 +880,9 @@
 	"create.schematicannon.status.schematicInvalid": "Неверная схема",
 	"create.schematicannon.status.schematicNotPlaced": "Схема не загружена",
 	"create.schematicannon.status.schematicExpired": "Срок действия файла схемы истек",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "Чёрный список",
 	"create.gui.filter.deny_list.description": "Предметы проходят, если они не соответствуют ни одному из вышеперечисленных. Пустой черный список принимает все.",

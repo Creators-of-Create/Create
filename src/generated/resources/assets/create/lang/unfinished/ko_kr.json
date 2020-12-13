@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 767",
+	"_": "Missing Localizations: 770",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -422,6 +422,7 @@
 	"item.create.attribute_filter": "속성 필터 틀",
 	"item.create.belt_connector": "기계식 벨트",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
+	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
 	"item.create.brass_hand": "황동 손",
 	"item.create.brass_ingot": "황동 주괴",
 	"item.create.brass_nugget": "황동 조각",
@@ -879,6 +880,9 @@
 	"create.schematicannon.status.schematicInvalid": "청사진 없음",
 	"create.schematicannon.status.schematicNotPlaced": "청사진이 전개되지 않음",
 	"create.schematicannon.status.schematicExpired": "청사진 파일이 제거됨",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "블랙리스트",
 	"create.gui.filter.deny_list.description": "위 목록에 맞지않는 아이템이면 통과합니다. 빈 블랙리스트는 모두 통과시킵니다.",

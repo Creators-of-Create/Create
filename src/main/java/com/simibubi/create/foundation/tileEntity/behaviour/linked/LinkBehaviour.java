@@ -39,8 +39,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 
 	protected LinkBehaviour(SmartTileEntity te, Pair<ValueBoxTransform, ValueBoxTransform> slots) {
 		super(te);
-		frequencyFirst = new Frequency(ItemStack.EMPTY);
-		frequencyLast = new Frequency(ItemStack.EMPTY);
+		frequencyFirst = Frequency.EMPTY;
+		frequencyLast = Frequency.EMPTY;
 		firstSlot = slots.getLeft();
 		secondSlot = slots.getRight();
 		textShift = Vector3d.ZERO;
@@ -133,8 +133,8 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		newPosition = positionInTag != positionKey;
 
 		super.read(nbt, clientPacket);
-		frequencyFirst = new Frequency(ItemStack.read(nbt.getCompound("FrequencyFirst")));
-		frequencyLast = new Frequency(ItemStack.read(nbt.getCompound("FrequencyLast")));
+		frequencyFirst = Frequency.of(ItemStack.read(nbt.getCompound("FrequencyFirst")));
+		frequencyLast = Frequency.of(ItemStack.read(nbt.getCompound("FrequencyLast")));
 	}
 
 	public void setFrequency(boolean first, ItemStack stack) {
@@ -148,9 +148,9 @@ public class LinkBehaviour extends TileEntityBehaviour {
 			getHandler().removeFromNetwork(this);
 
 		if (first)
-			frequencyFirst = new Frequency(stack);
+			frequencyFirst = Frequency.of(stack);
 		else
-			frequencyLast = new Frequency(stack);
+			frequencyLast = Frequency.of(stack);
 
 		if (!changed)
 			return;

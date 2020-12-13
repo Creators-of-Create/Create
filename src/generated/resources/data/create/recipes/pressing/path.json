@@ -1,0 +1,21 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:grass_block"
+      },
+      {
+        "item": "minecraft:dirt"
+      },
+      {
+        "item": "minecraft:podzol"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "minecraft:grass_path"
+    }
+  ]
+}

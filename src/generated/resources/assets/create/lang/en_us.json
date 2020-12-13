@@ -421,6 +421,7 @@
 	"item.create.attribute_filter": "Attribute Filter",
 	"item.create.belt_connector": "Mechanical Belt",
 	"item.create.blaze_cake": "Blaze Cake",
+	"item.create.blaze_cake_base": "Blaze Cake Base",
 	"item.create.brass_hand": "Brass Hand",
 	"item.create.brass_ingot": "Brass Ingot",
 	"item.create.brass_nugget": "Brass Nugget",
@@ -878,6 +879,9 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic Not Deployed",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
+
+	"create.materialChecklist": "Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "Deny-List",
 	"create.gui.filter.deny_list.description": "Items pass if they do NOT match any of the above. An empty Deny-List accepts everything.",

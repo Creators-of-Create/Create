@@ -656,13 +656,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("CBC")
 				.patternLine(" C ")),
 
-		ENCASED_BELT = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(4)
+		ENCASED_CHAIN_DRIVE = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(4)
 			.unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('C', I.andesiteCasing())
-				.key('B', Items.DRIED_KELP)
-				.patternLine(" C ")
-				.patternLine("CBC")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.key('S', I.shaft())
+				.key('B', Tags.Items.NUGGETS_IRON)
+				.key('C', I.andesiteCasing())
+				.patternLine(" B ")
+				.patternLine("SCS")
+				.patternLine(" B ")),
 
 		SPEEDOMETER = create(AllBlocks.SPEEDOMETER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('C', Items.COMPASS)

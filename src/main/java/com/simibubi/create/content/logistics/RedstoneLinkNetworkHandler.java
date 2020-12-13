@@ -1,8 +1,9 @@
 package com.simibubi.create.content.logistics;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,14 +22,24 @@ import net.minecraft.world.World;
 
 public class RedstoneLinkNetworkHandler {
 
-	static Map<IWorld, Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>>> connections = new HashMap<>();
+	static final Map<IWorld, Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>>> connections = new IdentityHashMap<>();
 
 	public static class Frequency {
+		public static final Frequency EMPTY = new Frequency(ItemStack.EMPTY);
+		private static final Map<Item, Frequency> simpleFrequencies = new IdentityHashMap<>();
 		private ItemStack stack;
 		private Item item;
 		private int color;
 
-		public Frequency(ItemStack stack) {
+		public static Frequency of(ItemStack stack) {
+			if (stack.isEmpty())
+				return EMPTY;
+			if (!stack.hasTag())
+				return simpleFrequencies.computeIfAbsent(stack.getItem(), $ -> new Frequency(stack));
+			return new Frequency(stack);
+		}
+
+		private Frequency(ItemStack stack) {
 			this.stack = stack;
 			item = stack.getItem();
 			CompoundNBT displayTag = stack.getChildTag("display");
@@ -36,7 +47,7 @@ public class RedstoneLinkNetworkHandler {
 		}
 
 		public ItemStack getStack() {
-			return stack.copy();
+			return stack;
 		}
 
 		@Override
@@ -46,6 +57,8 @@ public class RedstoneLinkNetworkHandler {
 
 		@Override
 		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
 			return obj instanceof Frequency ? ((Frequency) obj).item == item && ((Frequency) obj).color == color
 					: false;
 		}
@@ -66,7 +79,7 @@ public class RedstoneLinkNetworkHandler {
 		Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksInWorld = networksIn(actor.getWorld());
 		Pair<Frequency, Frequency> key = actor.getNetworkKey();
 		if (!networksInWorld.containsKey(key))
-			networksInWorld.put(key, new HashSet<>());
+			networksInWorld.put(key, new LinkedHashSet<>());
 		return networksInWorld.get(key);
 	}
 
@@ -106,31 +119,26 @@ public class RedstoneLinkNetworkHandler {
 			}
 			if (!withinRange(actor, other))
 				continue;
-			power = Math.max(other.getTransmittedStrength(), power);
-			if (power == 15)
-				break;
+
+			if (power < 15)
+				power = Math.max(other.getTransmittedStrength(), power);
 		}
 
 		// fix one-to-one loading order problem
-		if(actor.isListening()){
+		if (actor.isListening()) {
 			actor.newPosition = true;
 			actor.updateReceiver(power);
 		}
 
-		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
-			LinkBehaviour other = iterator.next();
-			if (other.tileEntity.isRemoved()) {
-				iterator.remove();
-				continue;
-			}
-			if (!withinRange(actor, other))
-				continue;
-			if (other.isListening())
+		for (LinkBehaviour other : network) {
+			if (other != actor && other.isListening() && withinRange(actor, other))
 				other.updateReceiver(power);
 		}
 	}
 
 	public static boolean withinRange(LinkBehaviour from, LinkBehaviour to) {
+		if (from == to)
+			return true;
 		return from.getPos().withinDistance(to.getPos(), AllConfigs.SERVER.logistics.linkRange.get());
 	}
 

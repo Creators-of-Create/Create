@@ -8,7 +8,7 @@
   "results": [
     {
       "fluid": "minecraft:lava",
-      "amount": 25
+      "amount": 50
     }
   ],
   "heatRequirement": "superheated"

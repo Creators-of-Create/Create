@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Lists;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -39,6 +41,11 @@ public class PotionFluidHandler {
 		if (!simulate)
 			stack.shrink(1);
 		return Pair.of(fluid, new ItemStack(Items.GLASS_BOTTLE));
+	}
+
+	public static FluidIngredient potionIngredient(Potion potion, int amount) {
+		return FluidIngredient.fromFluidStack(FluidHelper.copyStackWithAmount(PotionFluidHandler
+			.getFluidFromPotionItem(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), potion)), amount));
 	}
 
 	public static FluidStack getFluidFromPotionItem(ItemStack stack) {

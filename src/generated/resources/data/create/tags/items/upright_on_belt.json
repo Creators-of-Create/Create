@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "create:blaze_cake_base",
+    "create:blaze_cake",
     "minecraft:glass_bottle",
     "minecraft:potion",
     "minecraft:splash_potion",

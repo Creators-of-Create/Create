@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 766",
+	"_": "Missing Localizations: 769",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -422,6 +422,7 @@
 	"item.create.attribute_filter": "属性フィルター",
 	"item.create.belt_connector": "メカニカルベルト",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
+	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
 	"item.create.brass_hand": "手",
 	"item.create.brass_ingot": "真鍮インゴット",
 	"item.create.brass_nugget": "真鍮ナゲット",
@@ -879,6 +880,9 @@
 	"create.schematicannon.status.schematicInvalid": "概略図が無効です",
 	"create.schematicannon.status.schematicNotPlaced": "配置されていない概略図です",
 	"create.schematicannon.status.schematicExpired": "概略図ファイルが期限切れです",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "ブラックリスト",
 	"create.gui.filter.deny_list.description": "上記のいずれにも一致しない場合、アイテムは通り抜けます。 空のブラックリストはすべてを受け入れます。",

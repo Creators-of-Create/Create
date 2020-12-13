@@ -159,11 +159,10 @@ public class CreateJEI implements IModPlugin {
 			.recipeList(MysteriousItemConversionCategory::getRecipes)
 			.build(),
 
-		spoutFilling =
-			register("spout_filling", SpoutCategory::new).recipeList(() -> SpoutCategory.getRecipes(ingredientManager))
-				.recipes(AllRecipeTypes.FILLING)
-				.catalyst(AllBlocks.SPOUT::get)
-				.build(),
+		spoutFilling = register("spout_filling", SpoutCategory::new).recipes(AllRecipeTypes.FILLING)
+			.recipeList(() -> SpoutCategory.getRecipes(ingredientManager))
+			.catalyst(AllBlocks.SPOUT::get)
+			.build(),
 
 		draining = register("draining", ItemDrainCategory::new)
 			.recipeList(() -> ItemDrainCategory.getRecipes(ingredientManager))

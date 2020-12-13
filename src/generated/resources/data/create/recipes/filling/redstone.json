@@ -1,0 +1,21 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "create:cinder_flour"
+    },
+    {
+      "fluid": "create:potion",
+      "nbt": {
+        "Bottle": "REGULAR",
+        "Potion": "minecraft:strength"
+      },
+      "amount": 25
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:redstone"
+    }
+  ]
+}
