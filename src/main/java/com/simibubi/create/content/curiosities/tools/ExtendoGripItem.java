@@ -158,6 +158,8 @@ public class ExtendoGripItem extends Item {
 
 	@SubscribeEvent
 	public static void attacksByExtendoGripHaveMoreKnockback(LivingKnockBackEvent event) {
+		if (lastActiveDamageSource == null)
+			return;
 		Entity entity = lastActiveDamageSource.getTrueSource();
 		if (!(entity instanceof PlayerEntity))
 			return;
