@@ -17,12 +17,8 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	TEMPCOBBLE = create("temp_cobble", b -> b.require(Fluids.WATER, 250)
-		.require(Fluids.LAVA, 25)
-		.output(Blocks.COBBLESTONE, 1)),
-
-		TEMP_LAVA = create("temp_lava", b -> b.require(Tags.Items.COBBLESTONE)
-			.output(Fluids.LAVA, 25)
+		TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
+			.output(Fluids.LAVA, 50)
 			.requiresHeat(HeatCondition.SUPERHEATED)),
 
 		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
@@ -30,9 +26,8 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 			.require(ItemTags.LEAVES)
 			.output(AllFluids.TEA.get(), 500)
 			.requiresHeat(HeatCondition.HEATED)),
-		
-		CHOCOLATE = create("chocolate", b -> b
-			.require(AllTags.forgeFluidTag("milk"), 250)
+
+		CHOCOLATE = create("chocolate", b -> b.require(AllTags.forgeFluidTag("milk"), 250)
 			.require(Items.SUGAR)
 			.require(Items.COCOA_BEANS)
 			.output(AllFluids.CHOCOLATE.get(), 250)
@@ -46,12 +41,6 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		CRUSHED_BRASS = create("crushed_brass", b -> b.require(AllItems.CRUSHED_COPPER.get())
 			.require(AllItems.CRUSHED_ZINC.get())
 			.output(AllItems.CRUSHED_BRASS.get(), 2)
-			.requiresHeat(HeatCondition.HEATED)),
-
-		GUNPOWDER = create("gunpowder", b -> b.require(ItemTags.COALS)
-			.require(AllItems.CRUSHED_ZINC.get())
-			.require(Items.GUNPOWDER)
-			.output(Items.GUNPOWDER, 2)
 			.requiresHeat(HeatCondition.HEATED)),
 
 		CHROMATIC_COMPOUND = create("chromatic_compound", b -> b.require(Tags.Items.DUSTS_GLOWSTONE)

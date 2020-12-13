@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.google.common.collect.Sets;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,7 +23,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class MaterialChecklist {
-	
+
 	public static final int MAX_ENTRIES_PER_PAGE = 5;
 
 	public Object2IntMap<Item> gathered = new Object2IntArrayMap<>();
@@ -78,17 +79,17 @@ public class MaterialChecklist {
 
 		if (blocksNotLoaded) {
 			textComponent = new StringTextComponent("\n" + TextFormatting.RED);
-			textComponent = textComponent
-					.appendSibling(Lang.createTranslationTextComponent(
-							"materialChecklist.blocksNotLoaded"));
-			pages.add(StringNBT
-					.of(ITextComponent.Serializer.toJson(textComponent)));
+			textComponent =
+				textComponent.appendSibling(Lang.createTranslationTextComponent("materialChecklist.blocksNotLoaded"));
+			pages.add(StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
 		}
 
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
-			String name1 = item1.getRegistryName().getPath();
-			String name2 = item2.getRegistryName().getPath();
+			String name1 = item1.getRegistryName()
+				.getPath();
+			String name2 = item2.getRegistryName()
+				.getPath();
 			return name1.compareTo(name2);
 		});
 
@@ -106,40 +107,39 @@ public class MaterialChecklist {
 
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				pages.add(StringNBT
-						.of(ITextComponent.Serializer.toJson(textComponent)));
+				textComponent =
+					textComponent.appendSibling(new StringTextComponent("\n >>>").applyTextStyle(TextFormatting.BLUE));
+				pages.add(StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
 				textComponent = new StringTextComponent("");
 			}
 
 			itemsWritten++;
-			textComponent
-					.appendSibling(entry(new ItemStack(item), amount, true));
+			textComponent.appendSibling(entry(new ItemStack(item), amount, true));
 		}
 
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				pages.add(StringNBT
-						.of(ITextComponent.Serializer.toJson(textComponent)));
+				textComponent =
+					textComponent.appendSibling(new StringTextComponent("\n >>>").applyTextStyle(TextFormatting.DARK_GREEN));
+				pages.add(StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
 				textComponent = new StringTextComponent("");
 			}
 
 			itemsWritten++;
-			textComponent.appendSibling(
-					entry(new ItemStack(item), getRequiredAmount(item), false));
+			textComponent.appendSibling(entry(new ItemStack(item), getRequiredAmount(item), false));
 		}
 
-		pages.add(
-				StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
+		pages.add(StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
 
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");
 		tag.putString("title", TextFormatting.BLUE + "Material Checklist");
 		textComponent = Lang.createTranslationTextComponent("materialChecklist")
-				.setStyle(new Style().setColor(TextFormatting.BLUE)
-						.setItalic(Boolean.FALSE));
-		book.getOrCreateChildTag("display").putString("Name",
-				ITextComponent.Serializer.toJson(textComponent));
+			.setStyle(new Style().setColor(TextFormatting.BLUE)
+				.setItalic(Boolean.FALSE));
+		book.getOrCreateChildTag("display")
+			.putString("Name", ITextComponent.Serializer.toJson(textComponent));
 		book.setTag(tag);
 
 		return book;
@@ -155,14 +155,12 @@ public class MaterialChecklist {
 	private ITextComponent entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		ITextComponent tc = new TranslationTextComponent(
-				item.getTranslationKey());
+		ITextComponent tc = new TranslationTextComponent(item.getTranslationKey());
 		if (!unfinished)
 			tc.appendText(" \u2714");
-		tc.applyTextStyle(
-				unfinished ? TextFormatting.BLUE : TextFormatting.DARK_GREEN);
-		return tc.appendText("\n" + TextFormatting.BLACK + " x" + amount
-				+ TextFormatting.GRAY + " | " + stacks + "\u25A4 +" + remainder + "\n");
+		tc.applyTextStyle(unfinished ? TextFormatting.BLUE : TextFormatting.DARK_GREEN);
+		return tc.appendText("\n" + TextFormatting.BLACK + " x" + amount + TextFormatting.GRAY + " | " + stacks
+			+ "\u25A4 +" + remainder + "\n");
 	}
 
 }

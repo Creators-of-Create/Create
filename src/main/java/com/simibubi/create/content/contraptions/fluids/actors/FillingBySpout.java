@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -27,9 +26,9 @@ public class FillingBySpout {
 
 	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
 		wrapper.setInventorySlotContents(0, stack);
-		Optional<IRecipe<RecipeWrapper>> recipe = AllRecipeTypes.FILLING.find(wrapper, world);
-		if (recipe.isPresent()) {
-			FillingRecipe fillingRecipe = (FillingRecipe) recipe.get();
+		for (IRecipe<RecipeWrapper> recipe : world.getRecipeManager()
+			.getRecipes(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
+			FillingRecipe fillingRecipe = (FillingRecipe) recipe;
 			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
 			if (requiredFluid.test(availableFluid))
 				return requiredFluid.getRequiredAmount();
@@ -42,9 +41,9 @@ public class FillingBySpout {
 		toFill.setAmount(requiredAmount);
 
 		wrapper.setInventorySlotContents(0, stack);
-		Optional<IRecipe<RecipeWrapper>> recipe = AllRecipeTypes.FILLING.find(wrapper, world);
-		if (recipe.isPresent()) {
-			FillingRecipe fillingRecipe = (FillingRecipe) recipe.get();
+		for (IRecipe<RecipeWrapper> recipe : world.getRecipeManager()
+			.getRecipes(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
+			FillingRecipe fillingRecipe = (FillingRecipe) recipe;
 			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
 			if (requiredFluid.test(toFill)) {
 				List<ItemStack> results = fillingRecipe.rollResults();

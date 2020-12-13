@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1137",
+	"_": "Missing Localizations: 1138",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -418,6 +418,7 @@
 	"item.create.attribute_filter": "UNLOCALIZED: Attribute Filter",
 	"item.create.belt_connector": "Esteira Mecânica",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
+	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
 	"item.create.brass_hand": "UNLOCALIZED: Brass Hand",
 	"item.create.brass_ingot": "UNLOCALIZED: Brass Ingot",
 	"item.create.brass_nugget": "UNLOCALIZED: Brass Nugget",

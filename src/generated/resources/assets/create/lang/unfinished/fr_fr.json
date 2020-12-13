@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 781",
+	"_": "Missing Localizations: 782",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -418,6 +418,7 @@
 	"item.create.attribute_filter": "Filtre d'attribut",
 	"item.create.belt_connector": "Tapis roulant",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
+	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
 	"item.create.brass_hand": "Main",
 	"item.create.brass_ingot": "Lingot de laiton",
 	"item.create.brass_nugget": "Pépite de laiton",
