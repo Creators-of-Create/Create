@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 779",
+	"_": "Missing Localizations: 781",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -875,6 +875,9 @@
 	"create.schematicannon.status.schematicInvalid": "Schéma non valide",
 	"create.schematicannon.status.schematicNotPlaced": "Schéma non déployé",
 	"create.schematicannon.status.schematicExpired": "Fichier de schéma arrivé à expiration",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "Liste noire",
 	"create.gui.filter.deny_list.description": "Les articles réussissent s'ils ne correspondent à AUCUN des éléments ci-dessus. Une liste noire vide accepte tout.",

@@ -162,8 +162,8 @@ public class LangMerger implements IDataProvider {
 		if (key.endsWith(".tooltip"))
 			return true;
 
-		key = new String(key).replaceFirst("\\.", "");
-		previousKey = new String(previousKey).replaceFirst("\\.", "");
+		key = key.replaceFirst("\\.", "");
+		previousKey = previousKey.replaceFirst("\\.", "");
 
 		String[] split = key.split("\\.");
 		String[] split2 = previousKey.split("\\.");
@@ -243,7 +243,7 @@ public class LangMerger implements IDataProvider {
 	}
 
 	private class LangEntry {
-		static final String ENTRY_FORMAT = "\t\"%s\": \"%s\",\n";
+		static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
 
 		private String key;
 		private String value;
@@ -255,7 +255,7 @@ public class LangMerger implements IDataProvider {
 
 		@Override
 		public String toString() {
-			return String.format(ENTRY_FORMAT, key, value);
+			return String.format(ENTRY_FORMAT, key, GSON.toJson(value, String.class));
 		}
 
 	}

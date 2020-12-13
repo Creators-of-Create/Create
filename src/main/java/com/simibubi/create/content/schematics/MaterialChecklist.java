@@ -2,14 +2,13 @@ package com.simibubi.create.content.schematics;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import com.google.common.collect.Sets;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
+import com.simibubi.create.foundation.utility.Lang;
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,6 +16,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -24,16 +25,10 @@ public class MaterialChecklist {
 	
 	public static final int MAX_ENTRIES_PER_PAGE = 5;
 
-	public Map<Item, Integer> gathered;
-	public Map<Item, Integer> required;
-	public Map<Item, Integer> damageRequired;
+	public Object2IntMap<Item> gathered = new Object2IntArrayMap<>();
+	public Object2IntMap<Item> required = new Object2IntArrayMap<>();
+	public Object2IntMap<Item> damageRequired = new Object2IntArrayMap<>();
 	public boolean blocksNotLoaded;
-
-	public MaterialChecklist() {
-		required = new HashMap<>();
-		damageRequired = new HashMap<>();
-		gathered = new HashMap<>();
-	}
 
 	public void warnBlockNotLoaded() {
 		blocksNotLoaded = true;
@@ -53,12 +48,12 @@ public class MaterialChecklist {
 		}
 	}
 
-	private void putOrIncrement(Map<Item, Integer> map, ItemStack stack) {
+	private void putOrIncrement(Object2IntMap<Item> map, ItemStack stack) {
 		Item item = stack.getItem();
 		if (item == Items.AIR)
 			return;
 		if (map.containsKey(item))
-			map.put(item, map.get(item) + stack.getCount());
+			map.put(item, map.getInt(item) + stack.getCount());
 		else
 			map.put(item, stack.getCount());
 	}
@@ -67,7 +62,7 @@ public class MaterialChecklist {
 		Item item = stack.getItem();
 		if (required.containsKey(item) || damageRequired.containsKey(item))
 			if (gathered.containsKey(item))
-				gathered.put(item, gathered.get(item) + stack.getCount());
+				gathered.put(item, gathered.getInt(item) + stack.getCount());
 			else
 				gathered.put(item, stack.getCount());
 	}
@@ -79,31 +74,30 @@ public class MaterialChecklist {
 		ListNBT pages = new ListNBT();
 
 		int itemsWritten = 0;
-		StringBuilder string = new StringBuilder("{\"text\":\"");
+		ITextComponent textComponent;
 
 		if (blocksNotLoaded) {
-			string.append("\n" + TextFormatting.RED + "* Disclaimer *\n\n");
-			string.append("Material List may be inaccurate due to relevant chunks not being loaded.");
-			string.append("\"}");
-			pages.add(StringNBT.of(string.toString()));
-			string = new StringBuilder("{\"text\":\"");
+			textComponent = new StringTextComponent("\n" + TextFormatting.RED);
+			textComponent = textComponent
+					.appendSibling(Lang.createTranslationTextComponent(
+							"materialChecklist.blocksNotLoaded"));
+			pages.add(StringNBT
+					.of(ITextComponent.Serializer.toJson(textComponent)));
 		}
 
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
-			Locale locale = Locale.ENGLISH;
-			String name1 =
-				new TranslationTextComponent(((Item) item1).getTranslationKey()).getFormattedText().toLowerCase(locale);
-			String name2 =
-				new TranslationTextComponent(((Item) item2).getTranslationKey()).getFormattedText().toLowerCase(locale);
+			String name1 = item1.getRegistryName().getPath();
+			String name2 = item2.getRegistryName().getPath();
 			return name1.compareTo(name2);
 		});
 
+		textComponent = new StringTextComponent("");
 		List<Item> completed = new ArrayList<>();
 		for (Item item : keys) {
 			int amount = getRequiredAmount(item);
 			if (gathered.containsKey(item))
-				amount -= gathered.get(item);
+				amount -= gathered.getInt(item);
 
 			if (amount <= 0) {
 				completed.add(item);
@@ -112,59 +106,63 @@ public class MaterialChecklist {
 
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				string.append("\"}");
-				pages.add(StringNBT.of(string.toString()));
-				string = new StringBuilder("{\"text\":\"");
+				pages.add(StringNBT
+						.of(ITextComponent.Serializer.toJson(textComponent)));
+				textComponent = new StringTextComponent("");
 			}
 
 			itemsWritten++;
-			string.append(unfinishedEntry(new ItemStack(item), amount));
+			textComponent
+					.appendSibling(entry(new ItemStack(item), amount, true));
 		}
 
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				string.append("\"}");
-				pages.add(StringNBT.of(string.toString()));
-				string = new StringBuilder("{\"text\":\"");
+				pages.add(StringNBT
+						.of(ITextComponent.Serializer.toJson(textComponent)));
+				textComponent = new StringTextComponent("");
 			}
 
 			itemsWritten++;
-			string.append(gatheredEntry(new ItemStack(item), getRequiredAmount(item)));
+			textComponent.appendSibling(
+					entry(new ItemStack(item), getRequiredAmount(item), false));
 		}
 
-		string.append("\"}");
-		pages.add(StringNBT.of(string.toString()));
+		pages.add(
+				StringNBT.of(ITextComponent.Serializer.toJson(textComponent)));
 
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");
 		tag.putString("title", TextFormatting.BLUE + "Material Checklist");
+		textComponent = Lang.createTranslationTextComponent("materialChecklist")
+				.setStyle(new Style().setColor(TextFormatting.BLUE)
+						.setItalic(Boolean.FALSE));
+		book.getOrCreateChildTag("display").putString("Name",
+				ITextComponent.Serializer.toJson(textComponent));
 		book.setTag(tag);
 
 		return book;
 	}
 
-	public Integer getRequiredAmount(Item item) {
+	public int getRequiredAmount(Item item) {
 		int amount = required.getOrDefault(item, 0);
 		if (damageRequired.containsKey(item))
-			amount += Math.ceil(damageRequired.get(item) / (float) new ItemStack(item).getMaxDamage());
+			amount += Math.ceil(damageRequired.getInt(item) / (float) new ItemStack(item).getMaxDamage());
 		return amount;
 	}
 
-	private String gatheredEntry(ItemStack item, int amount) {
+	private ITextComponent entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		ITextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return TextFormatting.DARK_GREEN + tc.getFormattedText() + " \\u2714\n x" + amount + TextFormatting.GRAY + " | "
-				+ stacks + "\\u25A4 +" + remainder + "\n";
-	}
-
-	private String unfinishedEntry(ItemStack item, int amount) {
-		int stacks = amount / 64;
-		int remainder = amount % 64;
-		ITextComponent tc = new TranslationTextComponent(item.getTranslationKey());
-		return TextFormatting.BLUE + tc.getFormattedText() + "\n x" + amount + TextFormatting.GRAY + " | " + stacks
-				+ "\\u25A4 +" + remainder + "\n";
+		ITextComponent tc = new TranslationTextComponent(
+				item.getTranslationKey());
+		if (!unfinished)
+			tc.appendText(" \u2714");
+		tc.applyTextStyle(
+				unfinished ? TextFormatting.BLUE : TextFormatting.DARK_GREEN);
+		return tc.appendText("\n" + TextFormatting.BLACK + " x" + amount
+				+ TextFormatting.GRAY + " | " + stacks + "\u25A4 +" + remainder + "\n");
 	}
 
 }

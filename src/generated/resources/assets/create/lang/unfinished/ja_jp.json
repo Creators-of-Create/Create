@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 762",
+	"_": "Missing Localizations: 764",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -875,6 +875,9 @@
 	"create.schematicannon.status.schematicInvalid": "概略図が無効です",
 	"create.schematicannon.status.schematicNotPlaced": "配置されていない概略図です",
 	"create.schematicannon.status.schematicExpired": "概略図ファイルが期限切れです",
+
+	"create.materialChecklist": "UNLOCALIZED: Material Checklist",
+	"create.materialChecklist.blocksNotLoaded": "UNLOCALIZED: * Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
 
 	"create.gui.filter.deny_list": "ブラックリスト",
 	"create.gui.filter.deny_list.description": "上記のいずれにも一致しない場合、アイテムは通り抜けます。 空のブラックリストはすべてを受け入れます。",
