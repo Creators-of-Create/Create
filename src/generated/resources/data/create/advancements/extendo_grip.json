@@ -1,5 +1,5 @@
 {
-  "parent": "create:brass",
+  "parent": "create:crafter",
   "display": {
     "icon": {
       "item": "create:extendo_grip"

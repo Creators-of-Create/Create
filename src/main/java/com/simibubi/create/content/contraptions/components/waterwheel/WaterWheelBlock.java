@@ -3,11 +3,13 @@ package com.simibubi.create.content.contraptions.components.waterwheel;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -17,7 +19,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -129,8 +130,10 @@ public class WaterWheelBlock extends HorizontalKineticBlock implements ITE<Water
 
 			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isRemote()) {
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.WATER_WHEEL, world, pos, 5);
-				if (fluid.getFluid() == Fluids.FLOWING_LAVA || fluid.getFluid() == Fluids.LAVA)
+				if (FluidHelper.isLava(fluid.getFluid()))
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);
+				if (fluid.getFluid().isEquivalentTo(AllFluids.CHOCOLATE.get()))
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHOCOLATE_WHEEL, world, pos, 5);
 			}
 
 			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();

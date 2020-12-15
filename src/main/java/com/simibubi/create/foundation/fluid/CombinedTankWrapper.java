@@ -108,7 +108,8 @@ public class CombinedTankWrapper implements IFluidHandler {
 			resource.shrink(amount);
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
-				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(), drained.getTag());
+				drained = new FluidStack(drainedFromCurrent.getFluid(), amount + drained.getAmount(),
+					drainedFromCurrent.getTag());
 			if (resource.isEmpty())
 				break;
 		}

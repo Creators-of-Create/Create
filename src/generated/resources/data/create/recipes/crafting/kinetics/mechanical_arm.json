@@ -1,11 +1,9 @@
 {
-  "type": "create:mechanical_crafting",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "LLA",
-    "L  ",
-    "LL ",
-    " I ",
-    "RCR"
+    "LR ",
+    "ICI"
   ],
   "key": {
     "L": {
@@ -15,7 +13,7 @@
       "item": "create:cogwheel"
     },
     "I": {
-      "item": "create:integrated_circuit"
+      "item": "create:electron_tube"
     },
     "A": {
       "item": "create:andesite_alloy"

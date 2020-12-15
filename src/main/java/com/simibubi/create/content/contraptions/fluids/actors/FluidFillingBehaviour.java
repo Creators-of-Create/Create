@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -222,7 +223,9 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 					queue.enqueue(new BlockPosEntry(offsetPos, entry.distance + 1));
 			}
 		}
-
+		
+		if (!simulate && success) 
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getPos(), 8);
 		return success;
 	}
 

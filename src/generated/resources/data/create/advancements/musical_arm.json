@@ -17,16 +17,6 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:placed_block",
-      "conditions": {
-        "block": "create:mechanical_arm"
-      }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {}
-    },
-    "2": {
       "trigger": "create:musical_arm",
       "conditions": {}
     }
@@ -34,12 +24,6 @@
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
-    ],
-    [
-      "2"
     ]
   ]
 }

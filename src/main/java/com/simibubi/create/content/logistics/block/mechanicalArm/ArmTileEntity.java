@@ -367,6 +367,8 @@ public class ArmTileEntity extends KineticTileEntity {
 			return;
 		inputs.clear();
 		outputs.clear();
+		
+		boolean hasBlazeBurner = false;
 		for (INBT inbt : interactionPointTag) {
 			ArmInteractionPoint point = ArmInteractionPoint.deserialize(world, (CompoundNBT) inbt);
 			if (point == null)
@@ -375,7 +377,16 @@ public class ArmTileEntity extends KineticTileEntity {
 				outputs.add(point);
 			if (point.mode == Mode.TAKE)
 				inputs.add(point);
+			hasBlazeBurner |= point instanceof ArmInteractionPoint.BlazeBurner;
 		}
+		
+		if (!world.isRemote) {
+			if (outputs.size() >= 10)
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.ARM_MANY_TARGETS, world, pos, 5);
+			if (hasBlazeBurner)
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.ARM_BLAZE_BURNER, world, pos, 5);
+		}
+		
 		updateInteractionPoints = false;
 		sendData();
 		markDirty();

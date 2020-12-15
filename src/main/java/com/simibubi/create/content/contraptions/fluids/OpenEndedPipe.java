@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -83,6 +84,8 @@ public class OpenEndedPipe extends FlowSource {
 
 		if (simulate)
 			return stack;
+		
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
 
 		if (waterlog) {
 			world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, false), 3);
@@ -137,6 +140,8 @@ public class OpenEndedPipe extends FlowSource {
 				2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 			return true;
 		}
+		
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
 
 		if (waterlog) {
 			world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, true), 3);

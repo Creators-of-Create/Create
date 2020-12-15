@@ -138,8 +138,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean overStressed = maxStress < currentStress && StressImpact.isEnabled();
 
 		if (overStressed != this.overStressed) {
-			if (speed != 0 && overStressed)
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, world, pos, 8);
 			float prevSpeed = getSpeed();
 			this.overStressed = overStressed;
 			onSpeedChanged(prevSpeed);
@@ -444,6 +442,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	public static float convertToDirection(float axisSpeed, Direction d) {
 		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
+	}
+
+	public boolean isOverStressed() {
+		return overStressed;
 	}
 
 }

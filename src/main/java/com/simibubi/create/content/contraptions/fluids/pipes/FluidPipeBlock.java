@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -74,6 +75,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		BlockRayTraceResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
 			return ActionResultType.PASS;
+		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
 		if (!world.isRemote)
 			world.setBlockState(pos,
 				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));

@@ -34,6 +34,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IItemProvider;
@@ -123,29 +124,42 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			return ActionResultType.PASS;
 		}
 
-		if (!tryInsert(state, world, pos, dontConsume ? heldItem.copy() : heldItem, forceOverflow, false))
-			return ActionResultType.PASS;
-		return ActionResultType.SUCCESS;
+		ActionResult<ItemStack> res = tryInsert(state, world, pos, dontConsume ? heldItem.copy() : heldItem, forceOverflow, false);
+		ItemStack leftover = res.getResult();
+		if (!world.isRemote && !dontConsume && !leftover.isEmpty()) {
+			if (heldItem.isEmpty()) {
+				player.setHeldItem(hand, leftover);
+			} else if (!player.inventory.addItemStackToInventory(leftover)) {
+				player.dropItem(leftover, false);
+			}
+		}
+
+		return res.getType() == ActionResultType.SUCCESS ? res.getType() : ActionResultType.PASS;
 	}
 
-	public static boolean tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean forceOverflow,
+	public static ActionResult<ItemStack> tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean forceOverflow,
 		boolean simulate) {
 		if (!state.hasTileEntity())
-			return false;
+			return ActionResult.fail(ItemStack.EMPTY);
 
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof BlazeBurnerTileEntity))
-			return false;
+			return ActionResult.fail(ItemStack.EMPTY);
 		BlazeBurnerTileEntity burnerTE = (BlazeBurnerTileEntity) te;
 
 		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, simulate))
-			return false;
+			return ActionResult.fail(ItemStack.EMPTY);
+		
+		ItemStack container = stack.getContainerItem();
 		if (!simulate && !world.isRemote) {
 			world.playSound(null, pos, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS,
 				.125f + world.rand.nextFloat() * .125f, .75f - world.rand.nextFloat() * .25f);
 			stack.shrink(1);
 		}
-		return true;
+		if (!container.isEmpty()) {
+			return ActionResult.success(container);
+		}
+		return ActionResult.success(ItemStack.EMPTY);
 	}
 
 	@Override

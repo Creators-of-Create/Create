@@ -34,7 +34,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(Items.REDSTONE)),
 
-		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.FIRE_RESISTANCE, 25))
+		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, 25))
 			.require(AllItems.CINDER_FLOUR.get())
 			.output(Items.GLOWSTONE_DUST)),
 

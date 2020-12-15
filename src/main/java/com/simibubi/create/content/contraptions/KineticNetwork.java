@@ -5,11 +5,14 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 
 public class KineticNetwork {
 
 	public Long id;
 	public boolean initialized;
+	public boolean containsFlywheel;
 	public Map<KineticTileEntity, Float> sources;
 	public Map<KineticTileEntity, Float> members;
 
@@ -22,6 +25,7 @@ public class KineticNetwork {
 	public KineticNetwork() {
 		sources = new HashMap<>();
 		members = new HashMap<>();
+		containsFlywheel = false;
 	}
 
 	public void initFromTE(float maxStress, float currentStress, int members) {
@@ -40,6 +44,7 @@ public class KineticNetwork {
 			unloadedCapacity -= lastCapacity * getStressMultiplierForSpeed(te.getGeneratedSpeed());
 			float addedStressCapacity = te.calculateAddedStressCapacity();
 			sources.put(te, addedStressCapacity);
+			containsFlywheel |= te instanceof FlywheelTileEntity;
 		}
 
 		unloadedStress -= lastStress * getStressMultiplierForSpeed(te.getTheoreticalSpeed());
@@ -61,7 +66,7 @@ public class KineticNetwork {
 		if (te.isSource())
 			sources.put(te, te.calculateAddedStressCapacity());
 		members.put(te, te.calculateStressApplied());
-		te.updateFromNetwork(currentCapacity, currentStress, getSize());
+		updateFromNetwork(te);
 		te.networkDirty = true;
 	}
 
@@ -84,16 +89,30 @@ public class KineticNetwork {
 		te.updateFromNetwork(0, 0, 0);
 
 		if (members.isEmpty()) {
-			TorquePropagator.networks.get(te.getWorld()).remove(this.id);
+			TorquePropagator.networks.get(te.getWorld())
+				.remove(this.id);
 			return;
 		}
 
-		members.keySet().stream().findFirst().map(member -> member.networkDirty = true);
+		members.keySet()
+			.stream()
+			.findFirst()
+			.map(member -> member.networkDirty = true);
 	}
 
 	public void sync() {
 		for (KineticTileEntity te : members.keySet())
-			te.updateFromNetwork(currentCapacity, currentStress, getSize());
+			updateFromNetwork(te);
+	}
+
+	private void updateFromNetwork(KineticTileEntity te) {
+		boolean wasOverStressed = te.isOverStressed();
+		te.updateFromNetwork(currentCapacity, currentStress, getSize());
+		if (!wasOverStressed && te.isOverStressed() && te.getTheoreticalSpeed() != 0) {
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, te.getWorld(), te.getPos(), 4);
+			if (containsFlywheel)
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESS_FLYWHEEL, te.getWorld(), te.getPos(), 4);
+		}
 	}
 
 	public void updateCapacity() {
@@ -124,12 +143,16 @@ public class KineticNetwork {
 
 	public float calculateCapacity() {
 		float presentCapacity = 0;
-		for (Iterator<KineticTileEntity> iterator = sources.keySet().iterator(); iterator.hasNext();) {
+		containsFlywheel = false;
+		for (Iterator<KineticTileEntity> iterator = sources.keySet()
+			.iterator(); iterator.hasNext();) {
 			KineticTileEntity te = iterator.next();
-			if (te.getWorld().getTileEntity(te.getPos()) != te) {
+			if (te.getWorld()
+				.getTileEntity(te.getPos()) != te) {
 				iterator.remove();
 				continue;
 			}
+			containsFlywheel |= te instanceof FlywheelTileEntity;
 			presentCapacity += getActualCapacityOf(te);
 		}
 		float newMaxStress = presentCapacity + unloadedCapacity;
@@ -138,9 +161,11 @@ public class KineticNetwork {
 
 	public float calculateStress() {
 		float presentStress = 0;
-		for (Iterator<KineticTileEntity> iterator = members.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator<KineticTileEntity> iterator = members.keySet()
+			.iterator(); iterator.hasNext();) {
 			KineticTileEntity te = iterator.next();
-			if (te.getWorld().getTileEntity(te.getPos()) != te) {
+			if (te.getWorld()
+				.getTileEntity(te.getPos()) != te) {
 				iterator.remove();
 				continue;
 			}

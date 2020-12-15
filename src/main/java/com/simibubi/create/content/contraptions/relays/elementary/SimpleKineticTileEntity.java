@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.tileentity.TileEntityType;
@@ -16,7 +17,9 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractShaftBlock));
+		behaviours.add(
+			new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractShaftBlock).withTrigger(
+				state -> state.getBlock() instanceof ShaftBlock ? AllTriggers.BRACKET_SHAFT : AllTriggers.BRACKET_COG));
 		super.addBehaviours(behaviours);
 	}
 

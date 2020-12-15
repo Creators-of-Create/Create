@@ -8,7 +8,7 @@
       "fluid": "create:potion",
       "nbt": {
         "Bottle": "REGULAR",
-        "Potion": "minecraft:fire_resistance"
+        "Potion": "minecraft:night_vision"
       },
       "amount": 25
     }

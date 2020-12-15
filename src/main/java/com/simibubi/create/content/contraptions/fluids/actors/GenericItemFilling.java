@@ -1,8 +1,10 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,7 +21,7 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 public class GenericItemFilling {
 
 	public static boolean canItemBeFilled(World world, ItemStack stack) {
-		if (stack.getItem() == Items.GLASS_BOTTLE) 
+		if (stack.getItem() == Items.GLASS_BOTTLE)
 			return true;
 
 		LazyOptional<IFluidHandlerItem> capability =
@@ -34,9 +36,9 @@ public class GenericItemFilling {
 		}
 		return false;
 	}
-	
+
 	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
-		if (stack.getItem() == Items.GLASS_BOTTLE) 
+		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
 			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
 
 		LazyOptional<IFluidHandlerItem> capability =
@@ -45,7 +47,8 @@ public class GenericItemFilling {
 		if (tank == null)
 			return -1;
 		if (tank instanceof FluidBucketWrapper) {
-			Item filledBucket = availableFluid.getFluid().getFilledBucket();
+			Item filledBucket = availableFluid.getFluid()
+				.getFilledBucket();
 			if (filledBucket == null || filledBucket == Items.AIR)
 				return -1;
 			return 1000;
@@ -54,13 +57,20 @@ public class GenericItemFilling {
 		int filled = tank.fill(availableFluid, FluidAction.SIMULATE);
 		return filled == 0 ? -1 : filled;
 	}
-	
+
+	private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
+		return availableFluid.getFluid()
+			.isEquivalentTo(Fluids.WATER)
+			|| availableFluid.getFluid()
+				.isEquivalentTo(AllFluids.POTION.get());
+	}
+
 	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
 		FluidStack toFill = availableFluid.copy();
 		toFill.setAmount(requiredAmount);
 		availableFluid.shrink(requiredAmount);
-		
-		if (stack.getItem() == Items.GLASS_BOTTLE) {
+
+		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid)) {
 			ItemStack fillBottle = ItemStack.EMPTY;
 			if (FluidHelper.isWater(toFill.getFluid()))
 				fillBottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
@@ -83,5 +93,5 @@ public class GenericItemFilling {
 		stack.shrink(1);
 		return container;
 	}
-	
+
 }

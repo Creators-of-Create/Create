@@ -1,5 +1,5 @@
 {
-  "parent": "create:crushing_wheel",
+  "parent": "create:blaze_cake",
   "display": {
     "icon": {
       "item": "create:chromatic_compound"

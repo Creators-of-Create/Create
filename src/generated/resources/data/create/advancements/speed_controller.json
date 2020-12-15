@@ -1,0 +1,31 @@
+{
+  "parent": "create:integrated_circuit",
+  "display": {
+    "icon": {
+      "item": "create:rotation_speed_controller"
+    },
+    "title": {
+      "translate": "advancement.create.speed_controller"
+    },
+    "description": {
+      "translate": "advancement.create.speed_controller.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:rotation_speed_controller"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

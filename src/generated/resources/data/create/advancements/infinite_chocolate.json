@@ -1,0 +1,28 @@
+{
+  "parent": "create:hose_pulley",
+  "display": {
+    "icon": {
+      "item": "create:chocolate_bucket"
+    },
+    "title": {
+      "translate": "advancement.create.infinite_chocolate"
+    },
+    "description": {
+      "translate": "advancement.create.infinite_chocolate.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:infinite_chocolate"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

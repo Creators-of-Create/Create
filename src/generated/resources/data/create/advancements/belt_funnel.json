@@ -1,0 +1,28 @@
+{
+  "parent": "create:belt",
+  "display": {
+    "icon": {
+      "item": "create:andesite_funnel"
+    },
+    "title": {
+      "translate": "advancement.create.belt_funnel"
+    },
+    "description": {
+      "translate": "advancement.create.belt_funnel.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:belt_funnel"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

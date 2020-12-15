@@ -49,6 +49,10 @@ public class BracketBlockItem extends BlockItem {
 
 		BlockState bracket = behaviour.getBracket();
 		behaviour.applyBracket(suitableBracket.get());
+		
+		if (!world.isRemote && player != null)
+			behaviour.triggerAdvancements(world, player, state);
+		
 		if (player == null || !player.isCreative()) {
 			context.getItem()
 				.shrink(1);

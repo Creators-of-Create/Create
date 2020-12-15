@@ -24,7 +24,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.ROTATION_SPEED_CONTROLLER.create();
 	}
-
+	
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState above = context.getWorld().getBlockState(context.getPos().up());
