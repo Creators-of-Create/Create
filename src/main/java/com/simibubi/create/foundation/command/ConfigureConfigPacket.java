@@ -57,35 +57,42 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	enum Actions {
-		rainbowDebug((value) -> {
-			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-		}),
-		overlayScreen(Actions::overlayScreenAction),
-		fixLighting(Actions::experimentalLightingAction),
-		overlayReset((value) -> {
-			AllConfigs.CLIENT.overlayOffsetX.set(0);
-			AllConfigs.CLIENT.overlayOffsetY.set(0);
-		}),
+		rainbowDebug(() -> Actions::rainbowDebug),
+		overlayScreen(() -> Actions::overlayScreen),
+		fixLighting(() -> Actions::experimentalLighting),
+		overlayReset(() -> Actions::overlayReset),
 
 		;
 
-		private final Consumer<String> consumer;
+		private final Supplier<Consumer<String>> consumer;
 
-		Actions(Consumer<String> action) {
+		Actions(Supplier<Consumer<String>> action) {
 			this.consumer = action;
 		}
 
 		void performAction(String value) {
-			consumer.accept(value);
+			consumer.get()
+				.accept(value);
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		private static void overlayScreenAction(String value) {
+		private static void rainbowDebug(String value) {
+			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
+		}
+		
+		@OnlyIn(Dist.CLIENT)
+		private static void overlayReset(String value) {
+			AllConfigs.CLIENT.overlayOffsetX.set(0);
+			AllConfigs.CLIENT.overlayOffsetY.set(0);
+		}
+		
+		@OnlyIn(Dist.CLIENT)
+		private static void overlayScreen(String value) {
 			ScreenOpener.open(new GoggleConfigScreen());
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		private static void experimentalLightingAction(String value) {
+		private static void experimentalLighting(String value) {
 			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 			Minecraft.getInstance().worldRenderer.loadRenderers();
 		}
