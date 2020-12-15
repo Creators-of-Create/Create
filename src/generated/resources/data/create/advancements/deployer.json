@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancement.create.deployer.desc"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -21,20 +21,11 @@
       "conditions": {
         "block": "create:deployer"
       }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:deployer"
-      }
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

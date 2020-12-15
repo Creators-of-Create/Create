@@ -21,20 +21,11 @@
       "conditions": {
         "block": "create:mechanical_crafter"
       }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:mechanical_crafter"
-      }
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "parent": "create:copper_casing",
+  "display": {
+    "icon": {
+      "item": "create:fluid_pipe"
+    },
+    "title": {
+      "translate": "advancement.create.glass_pipe"
+    },
+    "description": {
+      "translate": "advancement.create.glass_pipe.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:glass_pipe"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

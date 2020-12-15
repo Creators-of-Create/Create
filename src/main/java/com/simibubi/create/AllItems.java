@@ -50,6 +50,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.Properties;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -167,11 +168,13 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
+		.properties(p -> p.maxStackSize(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
+		.properties(p -> p.maxStackSize(1))
 		.model(AssetLookup.existingItemModel())
 		.lang("Engineer's Goggles")
 		.register();

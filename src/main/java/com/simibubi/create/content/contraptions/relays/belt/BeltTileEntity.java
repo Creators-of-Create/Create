@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.DyeColor;
@@ -76,7 +77,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		casing = CasingType.NONE;
 		color = -1;
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
@@ -102,7 +103,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (!isController())
 			return;
 		getInventory().tick();
-		
+
 		if (getSpeed() == 0)
 			return;
 
@@ -378,6 +379,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	public void setCasingType(CasingType type) {
 		if (casing == type)
 			return;
+		if (casing != CasingType.NONE)
+			world.playEvent(2001, pos,
+				Block.getStateId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
+					: AllBlocks.BRASS_CASING.getDefaultState()));
 		casing = type;
 		boolean shouldBlockHaveCasing = type != CasingType.NONE;
 		BlockState blockState = getBlockState();

@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Couple;
@@ -200,8 +202,11 @@ public class PipeConnection {
 
 		float flowSpeed = 1 / 32f + MathHelper.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f;
 		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
-		if (flow.progress.getValue() >= 1)
+		if (flow.progress.getValue() >= 1) {
 			flow.complete = true;
+			if (flow.inbound && AllBlocks.GLASS_FLUID_PIPE.has(world.getBlockState(pos)))
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.GLASS_PIPE, world, pos, 5);
+		}
 	}
 
 	public void serializeNBT(CompoundNBT tag, boolean clientPacket) {

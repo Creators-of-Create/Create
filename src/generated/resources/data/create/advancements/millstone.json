@@ -21,20 +21,11 @@
       "conditions": {
         "block": "create:millstone"
       }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:millstone"
-      }
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

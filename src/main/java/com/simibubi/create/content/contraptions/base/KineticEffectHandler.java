@@ -34,7 +34,7 @@ public class KineticEffectHandler {
 		if (world.isRemote) {
 			if (overStressedTime > 0)
 				if (--overStressedTime == 0)
-					if (kte.overStressed) {
+					if (kte.isOverStressed()) {
 						overStressedEffect = 1;
 						spawnEffect(ParticleTypes.SMOKE, 0.2f, 5);
 					} else {

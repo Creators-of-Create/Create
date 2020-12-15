@@ -1,17 +1,17 @@
 {
-  "parent": "create:shadow_steel",
+  "parent": "create:mixer",
   "display": {
     "icon": {
-      "item": "minecraft:oak_sapling"
+      "item": "create:blaze_burner"
     },
     "title": {
-      "translate": "advancement.create.eob"
+      "translate": "advancement.create.blaze_burner"
     },
     "description": {
-      "translate": "advancement.create.eob.desc"
+      "translate": "advancement.create.blaze_burner.desc"
     },
-    "frame": "challenge",
-    "show_toast": false,
+    "frame": "task",
+    "show_toast": true,
     "announce_to_chat": false,
     "hidden": false
   },
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:shadow_steel"
+            "item": "create:blaze_burner"
           }
         ]
       }

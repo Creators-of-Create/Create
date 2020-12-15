@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -23,7 +24,8 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new StandardPipeFluidTransportBehaviour(this));
-		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket));
+		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket)
+			.withTrigger(state -> AllTriggers.BRACKET_PIPE));
 	}
 
 	private boolean canHaveBracket(BlockState state) {

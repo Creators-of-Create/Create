@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,7 +59,8 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
-
+			
+			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
 			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.getDefaultState()
 				.with(AXIS, state.get(AXIS)));
 			return ActionResultType.SUCCESS;

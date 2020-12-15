@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
@@ -70,6 +71,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 			connection = ConnectionState.LEFT;
 
 		world.setBlockState(pos, state.with(CONNECTION, connection), 18);
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.FLYWHEEL, world, pos, 4);
 	}
 
 	@Override

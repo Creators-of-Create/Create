@@ -21,20 +21,11 @@
       "conditions": {
         "block": "create:speedometer"
       }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "block": "create:speedometer"
-      }
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

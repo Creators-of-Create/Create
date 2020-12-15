@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption.HandType;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
@@ -108,8 +109,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		BlockState blockState = getBlockState();
 		Axis axis = Axis.X;
 		if (blockState.has(BlockStateProperties.FACING))
-			axis = blockState.get(BlockStateProperties.FACING).getAxis();
-			
+			axis = blockState.get(BlockStateProperties.FACING)
+				.getAxis();
+
 		if (hourHand != null) {
 			hourHand.setAngle(hourAngle);
 			hourHand.setRotationAxis(axis);
@@ -215,6 +217,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		hourHand.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		hourHand.setRotationAxis(direction.getAxis());
 		world.addEntity(hourHand);
+
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.CLOCKWORK_BEARING, world, pos, 5);
 
 		if (contraption.getRight() != null) {
 			anchor = pos.offset(direction, contraption.getRight().offset + 1);

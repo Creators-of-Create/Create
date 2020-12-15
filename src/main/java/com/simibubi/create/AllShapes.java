@@ -44,7 +44,6 @@ public class AllShapes {
 		SPEED_CONTROLLER = shape(0, 0, 0, 16, 2, 16).add(1, 1, 1, 15, 15, 15)
 			.erase(0, 8, 5, 16, 16, 11)
 			.add(2, 9, 2, 14, 14, 14)
-			.erase(6, 11, 0, 10, 16, 16)
 			.forHorizontalAxis(),
 		HARVESTER_BASE = shape(0, 2, 0, 16, 14, 3).forDirectional(SOUTH),
 		NOZZLE = shape(2, 0, 2, 14, 14, 14).add(1, 13, 1, 15, 15, 15)

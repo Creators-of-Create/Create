@@ -10,6 +10,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.content.logistics.InWorldProcessing.Type;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -22,6 +23,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -112,8 +114,11 @@ public class AirCurrent {
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
-			if (processingType == null)
+			if (processingType == null) {
+				if (entity instanceof ServerPlayerEntity)
+					AllTriggers.triggerFor(AllTriggers.FAN, (PlayerEntity) entity);
 				continue;
+			}
 
 			if (entity instanceof ItemEntity) {
 				InWorldProcessing.spawnParticlesForProcessing(world, entity.getPositionVec(), processingType);
@@ -124,28 +129,34 @@ public class AirCurrent {
 					InWorldProcessing.applyProcessing(itemEntity, processingType);
 				continue;
 			}
-			
+
 			if (world.isRemote)
 				continue;
-			
+
 			switch (processingType) {
 			case BLASTING:
 				if (!entity.isImmuneToFire()) {
 					entity.setFire(10);
 					entity.attackEntityFrom(damageSourceLava, 4);
 				}
+				if (entity instanceof ServerPlayerEntity)
+					AllTriggers.triggerFor(AllTriggers.FAN_LAVA, (PlayerEntity) entity);
 				break;
 			case SMOKING:
 				if (!entity.isImmuneToFire()) {
 					entity.setFire(2);
 					entity.attackEntityFrom(damageSourceFire, 2);
 				}
+				if (entity instanceof ServerPlayerEntity)
+					AllTriggers.triggerFor(AllTriggers.FAN_SMOKE, (PlayerEntity) entity);
 				break;
 			case SPLASHING:
 				if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM
 					|| entity.getType() == EntityType.BLAZE) {
 					entity.attackEntityFrom(DamageSource.DROWN, 2);
 				}
+				if (entity instanceof ServerPlayerEntity)
+					AllTriggers.triggerFor(AllTriggers.FAN_WATER, (PlayerEntity) entity);
 				if (!entity.isBurning())
 					break;
 				entity.extinguish();

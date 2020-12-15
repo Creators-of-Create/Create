@@ -7,6 +7,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
@@ -122,6 +123,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!contraption.assemble(world, pos))
 			return;
 
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, world, pos, 5);
+		if (contraption.getSailBlocks() >= 16 * 8)
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.MAXED_WINDMILL, world, pos, 5);
+		
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption = ControlledContraptionEntity.create(world, this, contraption);
 		BlockPos anchor = pos.offset(direction);

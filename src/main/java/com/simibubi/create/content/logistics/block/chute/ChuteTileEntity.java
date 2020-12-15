@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -228,6 +229,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				(float) (itemEntity.getBoundingBox()
 					.getCenter().y - pos.getY()));
 			itemEntity.remove();
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.UPWARD_CHUTE, world, pos, 5);
 			break;
 		}
 	}

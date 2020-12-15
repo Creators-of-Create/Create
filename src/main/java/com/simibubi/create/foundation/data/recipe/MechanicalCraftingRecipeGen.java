@@ -63,24 +63,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.key('C', I.brassCasing())
 				.patternLine(" BBB")
 				.patternLine("CB B")
-				.patternLine(" BBB")),
-
-		NIXIE_TUBE = create(AllBlocks.NIXIE_TUBE::get).returns(1)
-			.recipe(b -> b.key('E', I.electronTube())
-				.key('B', I.brassCasing())
-				.patternLine("EBE")),
-
-		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).returns(1)
-			.recipe(b -> b.key('L', I.brassSheet())
-				.key('R', I.cog())
-				.key('I', I.circuit())
-				.key('A', I.andesite())
-				.key('C', I.brassCasing())
-				.patternLine("LLA")
-				.patternLine("L  ")
-				.patternLine("LL ")
-				.patternLine(" I ")
-				.patternLine("RCR"))
+				.patternLine(" BBB"))
 
 	;
 

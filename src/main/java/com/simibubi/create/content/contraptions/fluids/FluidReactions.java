@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
@@ -20,6 +21,8 @@ public class FluidReactions {
 		Fluid f1 = fluid.getFluid();
 		Fluid f2 = fluid2.getFluid();
 		BlockHelper.destroyBlock(world, pos, 1);
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_COLLISION, world, pos, 5);
+
 		if (f1 == Fluids.WATER && f2 == Fluids.LAVA || f2 == Fluids.WATER && f1 == Fluids.LAVA)
 			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
 		else if (f1 == Fluids.LAVA && FluidHelper.hasBlockState(f2)) {

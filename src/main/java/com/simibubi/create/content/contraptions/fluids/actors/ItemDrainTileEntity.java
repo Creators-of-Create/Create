@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -155,6 +156,8 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 			ItemStack returned = directBeltInputBehaviour.handleInsertion(heldItem.copy(), side, false);
 
 			if (returned.isEmpty()) {
+				if (world.getTileEntity(nextPosition) instanceof ItemDrainTileEntity)
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHAINED_ITEM_DRAIN, world, pos, 5);
 				heldItem = null;
 				notifyUpdate();
 				return;
@@ -205,6 +208,7 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 		}
 
 		emptyItem = EmptyingByBasin.emptyItem(world, heldItem.stack.copy(), false);
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.ITEM_DRAIN, world, pos, 5);
 
 		// Process finished
 		ItemStack out = emptyItem.getSecond();

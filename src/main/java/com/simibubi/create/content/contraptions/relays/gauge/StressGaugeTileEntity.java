@@ -23,7 +23,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;
-		else if (overStressed)
+		else if (isOverStressed())
 			dialTarget = 1.125f;
 		else if (maxStress == 0)
 			dialTarget = 0;
