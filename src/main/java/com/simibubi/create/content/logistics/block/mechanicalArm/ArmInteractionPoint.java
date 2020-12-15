@@ -36,6 +36,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.JukeboxTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -277,8 +279,12 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		ItemStack insert(World world, ItemStack stack, boolean simulate) {
-			boolean success = BlazeBurnerBlock.tryInsert(state, world, pos, stack.copy(), false, simulate);
-			return success ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1) : stack;
+			ItemStack input = stack.copy();
+			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, true).getResult().isEmpty()) {
+				return stack;
+			}
+			ActionResult<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, simulate);
+			return res.getType() == ActionResultType.SUCCESS ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1) : stack;
 		}
 
 		@Override
