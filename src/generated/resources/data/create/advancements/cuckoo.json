@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:cuckoo"
+      "trigger": "create:cuckoo",
+      "conditions": {}
     }
   },
   "requirements": [

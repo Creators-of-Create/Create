@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:chained_item_drain"
+      "trigger": "create:chained_item_drain",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:chocolate_wheel"
+      "trigger": "create:chocolate_wheel",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:glass_pipe"
+      "trigger": "create:glass_pipe",
+      "conditions": {}
     }
   },
   "requirements": [

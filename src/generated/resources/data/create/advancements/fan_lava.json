@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan_lava"
+      "trigger": "create:fan_lava",
+      "conditions": {}
     }
   },
   "requirements": [

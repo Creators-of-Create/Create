@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:spout_potion"
+      "trigger": "create:spout_potion",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -17,13 +17,16 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:casing_shaft"
+      "trigger": "create:casing_shaft",
+      "conditions": {}
     },
     "1": {
-      "trigger": "create:casing_belt"
+      "trigger": "create:casing_belt",
+      "conditions": {}
     },
     "2": {
-      "trigger": "create:casing_pipe"
+      "trigger": "create:casing_pipe",
+      "conditions": {}
     }
   },
   "requirements": [

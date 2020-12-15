@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:clockwork_bearing"
+      "trigger": "create:clockwork_bearing",
+      "conditions": {}
     }
   },
   "requirements": [

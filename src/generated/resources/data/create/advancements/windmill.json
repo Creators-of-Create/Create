@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:windmill"
+      "trigger": "create:windmill",
+      "conditions": {}
     }
   },
   "requirements": [

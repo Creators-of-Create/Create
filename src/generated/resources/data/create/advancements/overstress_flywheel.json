@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:overstress_flywheel"
+      "trigger": "create:overstress_flywheel",
+      "conditions": {}
     }
   },
   "requirements": [

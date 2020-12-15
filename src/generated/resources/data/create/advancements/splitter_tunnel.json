@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:connect_tunnel"
+      "trigger": "create:connect_tunnel",
+      "conditions": {}
     }
   },
   "requirements": [

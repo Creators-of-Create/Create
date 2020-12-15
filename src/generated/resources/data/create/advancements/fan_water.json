@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan_water"
+      "trigger": "create:fan_water",
+      "conditions": {}
     }
   },
   "requirements": [

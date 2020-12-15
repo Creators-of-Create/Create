@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:belt_funnel_kiss"
+      "trigger": "create:belt_funnel_kiss",
+      "conditions": {}
     }
   },
   "requirements": [

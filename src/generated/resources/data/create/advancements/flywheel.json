@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:flywheel"
+      "trigger": "create:flywheel",
+      "conditions": {}
     }
   },
   "requirements": [

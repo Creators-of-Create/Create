@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan_smoke"
+      "trigger": "create:fan_smoke",
+      "conditions": {}
     }
   },
   "requirements": [

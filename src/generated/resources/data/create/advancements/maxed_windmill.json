@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:maxed_windmill"
+      "trigger": "create:maxed_windmill",
+      "conditions": {}
     }
   },
   "requirements": [

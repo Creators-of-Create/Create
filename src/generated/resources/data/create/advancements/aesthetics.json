@@ -17,13 +17,16 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:bracket_shaft"
+      "trigger": "create:bracket_shaft",
+      "conditions": {}
     },
     "1": {
-      "trigger": "create:bracket_cog"
+      "trigger": "create:bracket_cog",
+      "conditions": {}
     },
     "2": {
-      "trigger": "create:bracket_pipe"
+      "trigger": "create:bracket_pipe",
+      "conditions": {}
     }
   },
   "requirements": [

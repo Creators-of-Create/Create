@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan"
+      "trigger": "create:fan",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:place_tunnel"
+      "trigger": "create:place_tunnel",
+      "conditions": {}
     }
   },
   "requirements": [

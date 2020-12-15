@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:pipe_spill"
+      "trigger": "create:pipe_spill",
+      "conditions": {}
     }
   },
   "requirements": [

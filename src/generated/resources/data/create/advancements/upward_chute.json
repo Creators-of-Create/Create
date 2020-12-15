@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:upward_chute"
+      "trigger": "create:upward_chute",
+      "conditions": {}
     }
   },
   "requirements": [

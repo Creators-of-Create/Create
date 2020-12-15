@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:arm_blaze_burner"
+      "trigger": "create:arm_blaze_burner",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:hose_pulley"
+      "trigger": "create:hose_pulley",
+      "conditions": {}
     }
   },
   "requirements": [

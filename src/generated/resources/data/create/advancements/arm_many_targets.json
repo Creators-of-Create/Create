@@ -17,7 +17,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:arm_many_targets"
+      "trigger": "create:arm_many_targets",
+      "conditions": {}
     }
   },
   "requirements": [
