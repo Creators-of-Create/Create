@@ -83,6 +83,12 @@ public class ContraptionCollider {
 			PlayerType playerType = getPlayerType(entity);
 			if (playerType == PlayerType.REMOTE)
 				continue;
+
+			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayerEntity) {
+				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
+				continue;
+			}
+
 			if (playerType == PlayerType.CLIENT)
 				if (skipClientPlayer)
 					continue;
@@ -193,7 +199,7 @@ public class ContraptionCollider {
 			totalResponse = VecHelper.rotate(totalResponse, yawOffset, Axis.Y);
 			rotationMatrix.transpose();
 
-			if (temporalCollision && playerType != PlayerType.SERVER) {
+			if (temporalCollision) {
 				double idealVerticalMotion = motionResponse.y;
 				if (idealVerticalMotion != entityMotion.y) {
 					entity.setMotion(entityMotion.mul(1, 0, 1)
@@ -223,11 +229,6 @@ public class ContraptionCollider {
 			if (!hardCollision && surfaceCollision.isFalse())
 				continue;
 
-			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayerEntity) {
-				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
-				continue;
-			}
-
 			Vec3d allowedMovement = getAllowedMovement(totalResponse, entity);
 			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
@@ -242,12 +243,10 @@ public class ContraptionCollider {
 				contraptionEntity.collidingEntities.put(entity, new MutableInt(0));
 				if (entity instanceof ItemEntity)
 					entityMotion = entityMotion.mul(.5f, 1, .5f);
-				if (playerType != PlayerType.SERVER) {
-					contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
-					allowedMovement = getAllowedMovement(contactPointMotion, entity);
-					entity.setPosition(entityPosition.x + allowedMovement.x,
-						entityPosition.y, entityPosition.z + allowedMovement.z);
-				}
+				contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
+				allowedMovement = getAllowedMovement(contactPointMotion, entity);
+				entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y,
+					entityPosition.z + allowedMovement.z);
 			}
 
 			entity.setMotion(entityMotion);
@@ -260,8 +259,7 @@ public class ContraptionCollider {
 			float limbSwing = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			AllPackets.channel
-				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 		}
 
 	}

@@ -37,7 +37,7 @@ public class ArmPlacementPacket extends SimplePacketBase {
 		CompoundNBT nbt = new CompoundNBT();
 		ListNBT pointsNBT = new ListNBT();
 		points.stream()
-			.map(ArmInteractionPoint::serialize)
+			.map(aip -> aip.serialize(pos))
 			.forEach(pointsNBT::add);
 		nbt.put("Points", pointsNBT);
 		buffer.writeCompoundTag(nbt);

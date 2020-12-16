@@ -177,16 +177,16 @@ public abstract class ArmInteractionPoint {
 		return point;
 	}
 
-	CompoundNBT serialize() {
+	CompoundNBT serialize(BlockPos anchor) {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.put("Pos", NBTUtil.writeBlockPos(pos));
+		nbt.put("Pos", NBTUtil.writeBlockPos(pos.subtract(anchor)));
 		NBTHelper.writeEnum(nbt, "Mode", mode);
 		return nbt;
 	}
 
-	static ArmInteractionPoint deserialize(IBlockReader world, CompoundNBT nbt) {
+	static ArmInteractionPoint deserialize(IBlockReader world, BlockPos anchor, CompoundNBT nbt) {
 		BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("Pos"));
-		ArmInteractionPoint interactionPoint = createAt(world, pos);
+		ArmInteractionPoint interactionPoint = createAt(world, pos.add(anchor));
 		if (interactionPoint == null)
 			return null;
 		interactionPoint.mode = NBTHelper.readEnum(nbt, "Mode", Mode.class);
