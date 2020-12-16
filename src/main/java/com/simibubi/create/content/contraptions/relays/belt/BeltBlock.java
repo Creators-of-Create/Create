@@ -437,9 +437,15 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return;
 		if (isMoving)
 			return;
-		TileEntity belt = world.getTileEntity(pos);
-		if (belt instanceof BeltTileEntity)
-			belt.remove();
+
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof BeltTileEntity) {
+			BeltTileEntity beltTileEntity = (BeltTileEntity) te;
+			if (beltTileEntity.isController())
+				beltTileEntity.getInventory()
+					.ejectAll();
+			world.removeTileEntity(pos);
+		}
 
 		// Destroy chain
 		for (boolean forward : Iterate.trueAndFalse) {
@@ -453,13 +459,13 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			boolean hasPulley = false;
 			TileEntity tileEntity = world.getTileEntity(currentPos);
 			if (tileEntity instanceof BeltTileEntity) {
-				BeltTileEntity te = (BeltTileEntity) tileEntity;
-				if (te.isController())
-					te.getInventory()
+				BeltTileEntity belt = (BeltTileEntity) tileEntity;
+				if (belt.isController())
+					belt.getInventory()
 						.ejectAll();
 
-				te.remove();
-				hasPulley = te.hasPulley();
+				belt.remove();
+				hasPulley = belt.hasPulley();
 			}
 
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()

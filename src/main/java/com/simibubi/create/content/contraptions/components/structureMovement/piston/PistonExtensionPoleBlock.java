@@ -9,8 +9,11 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.foundation.utility.Pair;
-
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -35,12 +38,18 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import java.util.function.Predicate;
+
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
+
 public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, IWaterLoggable {
-	public PistonExtensionPoleBlock(Properties properties) {
-		super(properties);
-		setDefaultState(getDefaultState().with(FACING, Direction.UP)
-			.with(BlockStateProperties.WATERLOGGED, false));
-	}
+
+    private static final int placementHelperId = PlacementHelpers.register(PlacementHelper.get());
+
+    public PistonExtensionPoleBlock(Properties properties) {
+        super(properties);
+        setDefaultState(getDefaultState().with(FACING, Direction.UP).with(BlockStateProperties.WATERLOGGED, false));
+    }
 
 	@Override
 	public PushReaction getPushReaction(BlockState state) {
@@ -112,27 +121,24 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 		BlockRayTraceResult ray) {
 		ItemStack heldItem = player.getHeldItem(hand);
 
-		if (AllBlocks.PISTON_EXTENSION_POLE.isIn(heldItem) && !player.isSneaking()) {
-			Pair<Direction, Integer> offset = PistonPolePlacementHelper.getPlacementOffset(world, state.get(FACING)
-				.getAxis(), pos, ray.getHitVec());
+        if (AllBlocks.PISTON_EXTENSION_POLE.isIn(heldItem) && !player.isSneaking()) {
+            IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+            PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
 
-			if (offset == null || offset.getSecond() == 0)
-				return ActionResultType.PASS;
+            if (!offset.isSuccessful())
+                return ActionResultType.PASS;
 
-			BlockPos newPos = pos.offset(offset.getFirst(), offset.getSecond());
+            BlockPos newPos = new BlockPos(offset.getPos());
 
-			if (!world.getBlockState(newPos)
-				.getMaterial()
-				.isReplaceable())
+			if (!world.getBlockState(newPos).getMaterial().isReplaceable())
 				return ActionResultType.PASS;
 
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 
-			world.setBlockState(newPos, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()
-				.with(FACING, state.get(FACING)));
-			if (!player.isCreative())
-				heldItem.shrink(1);
+            world.setBlockState(newPos, offset.getTransform().apply(AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()));
+            if (!player.isCreative())
+                heldItem.shrink(1);
 
 			return ActionResultType.SUCCESS;
 		}
@@ -152,13 +158,34 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 		super.fillStateContainer(builder);
 	}
 
-	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.get(BlockStateProperties.WATERLOGGED)) {
-			world.getPendingFluidTicks()
-				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
-		return state;
-	}
+    @Override
+    public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState, IWorld world, BlockPos pos, BlockPos neighbourPos) {
+        if (state.get(BlockStateProperties.WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return state;
+    }
+
+    @MethodsReturnNonnullByDefault
+    public static class PlacementHelper extends PoleHelper<Direction> {
+
+        private static final PlacementHelper instance = new PlacementHelper();
+
+        public static PlacementHelper get() {
+            return instance;
+        }
+
+        private PlacementHelper(){
+            super(
+                    AllBlocks.PISTON_EXTENSION_POLE::has,
+                    state -> state.get(FACING).getAxis(),
+                    FACING
+            );
+        }
+
+        @Override
+        public Predicate<ItemStack> getItemPredicate() {
+            return AllBlocks.PISTON_EXTENSION_POLE::isIn;
+        }
+    }
 }

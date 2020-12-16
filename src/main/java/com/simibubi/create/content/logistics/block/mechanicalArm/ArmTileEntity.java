@@ -367,10 +367,10 @@ public class ArmTileEntity extends KineticTileEntity {
 			return;
 		inputs.clear();
 		outputs.clear();
-		
+
 		boolean hasBlazeBurner = false;
 		for (INBT inbt : interactionPointTag) {
-			ArmInteractionPoint point = ArmInteractionPoint.deserialize(world, (CompoundNBT) inbt);
+			ArmInteractionPoint point = ArmInteractionPoint.deserialize(world, pos, (CompoundNBT) inbt);
 			if (point == null)
 				continue;
 			if (point.mode == Mode.DEPOSIT)
@@ -379,14 +379,14 @@ public class ArmTileEntity extends KineticTileEntity {
 				inputs.add(point);
 			hasBlazeBurner |= point instanceof ArmInteractionPoint.BlazeBurner;
 		}
-		
+
 		if (!world.isRemote) {
 			if (outputs.size() >= 10)
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.ARM_MANY_TARGETS, world, pos, 5);
 			if (hasBlazeBurner)
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.ARM_BLAZE_BURNER, world, pos, 5);
 		}
-		
+
 		updateInteractionPoints = false;
 		sendData();
 		markDirty();
@@ -402,10 +402,10 @@ public class ArmTileEntity extends KineticTileEntity {
 		} else {
 			ListNBT pointsNBT = new ListNBT();
 			inputs.stream()
-				.map(ArmInteractionPoint::serialize)
+				.map(aip -> aip.serialize(pos))
 				.forEach(pointsNBT::add);
 			outputs.stream()
-				.map(ArmInteractionPoint::serialize)
+				.map(aip -> aip.serialize(pos))
 				.forEach(pointsNBT::add);
 			compound.put("InteractionPoints", pointsNBT);
 		}

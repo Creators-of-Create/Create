@@ -5,6 +5,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 public class Iterate {
@@ -15,6 +16,7 @@ public class Iterate {
 	public static final Direction[] directions = Direction.values();
 	public static final Direction[] horizontalDirections = getHorizontals();
 	public static final Axis[] axes = Axis.values();
+	public static final EnumSet<Direction.Axis> axisSet = EnumSet.allOf(Direction.Axis.class);
 
 	private static Direction[] getHorizontals() {
 		Direction[] directions = new Direction[4];
