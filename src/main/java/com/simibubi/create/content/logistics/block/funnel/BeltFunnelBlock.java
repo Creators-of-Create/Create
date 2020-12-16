@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -106,7 +107,10 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		BlockState stateForPlacement = super.getStateForPlacement(ctx);
 		BlockPos pos = ctx.getPos();
 		World world = ctx.getWorld();
-		Direction facing = ctx.getFace();
+		Direction facing = ctx.getPlayer() == null || ctx.getPlayer()
+			.isSneaking() ? ctx.getFace()
+				: ctx.getNearestLookingDirection()
+					.getOpposite();
 
 		if (hasPoweredProperty())
 			stateForPlacement = stateForPlacement.with(POWERED, world.isBlockPowered(pos));
@@ -216,8 +220,19 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 				newShape = Shape.EXTENDED;
 		}
 
-		if (newShape != shape)
-			world.setBlockState(context.getPos(), state.with(SHAPE, newShape));
+		if (newShape == shape)
+			return ActionResultType.SUCCESS;
+
+		world.setBlockState(context.getPos(), state.with(SHAPE, newShape));
+
+		if (newShape == Shape.EXTENDED) {
+			Direction facing = state.get(HORIZONTAL_FACING);
+			BlockState opposite = world.getBlockState(context.getPos()
+				.offset(facing));
+			if (opposite.getBlock() instanceof BeltFunnelBlock && opposite.get(SHAPE) == Shape.EXTENDED
+				&& opposite.get(HORIZONTAL_FACING) == facing.getOpposite())
+				AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL_KISS, context.getPlayer());
+		}
 		return ActionResultType.SUCCESS;
 	}
 

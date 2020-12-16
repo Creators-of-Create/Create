@@ -41,7 +41,7 @@ import net.minecraft.world.World;
 public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<FunnelTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	
+
 	public FunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 		setDefaultState(getDefaultState().with(POWERED, false));
@@ -49,9 +49,13 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getFace();
-		return getDefaultState().with(FACING, facing).with(POWERED, context.getWorld()
-			.isBlockPowered(context.getPos()));
+		Direction facing = context.getPlayer() == null || context.getPlayer()
+			.isSneaking() ? context.getFace()
+				: context.getNearestLookingDirection()
+					.getOpposite();
+		return getDefaultState().with(FACING, facing)
+			.with(POWERED, context.getWorld()
+				.isBlockPowered(context.getPos()));
 	}
 
 	@Override
@@ -68,14 +72,14 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		if (previouslyPowered != worldIn.isBlockPowered(pos))
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 	}
-	
+
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
 
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean shouldntInsertItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem) || !canInsertIntoFunnel(state);
-		
+
 		if (hit.getFace() == getFunnelFacing(state) && !shouldntInsertItem) {
 			if (!worldIn.isRemote)
 				withTileEntityDo(worldIn, pos, te -> {
@@ -127,13 +131,13 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 		if (simulate)
 			inserter.simulate();
 		ItemStack insert = inserter.insert(toInsert);
-		
+
 		if (!simulate && insert.getCount() != toInsert.getCount()) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof FunnelTileEntity)
 				((FunnelTileEntity) tileEntity).onTransfer(toInsert);
 		}
-		
+
 		return insert;
 	}
 
@@ -168,7 +172,8 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 			if (direction == Direction.DOWN) {
 				BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
 				if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
-					return equivalentFunnel.with(BeltFunnelBlock.SHAPE, BeltFunnelBlock.getShapeForPosition(world, pos, facing));
+					return equivalentFunnel.with(BeltFunnelBlock.SHAPE,
+						BeltFunnelBlock.getShapeForPosition(world, pos, facing));
 			}
 		}
 		return state;

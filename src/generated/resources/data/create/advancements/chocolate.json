@@ -1,18 +1,18 @@
 {
-  "parent": "create:copper_casing",
+  "parent": "create:spout",
   "display": {
     "icon": {
-      "item": "minecraft:oak_sapling"
+      "item": "create:chocolate_bucket"
     },
     "title": {
-      "translate": "advancement.create.eob"
+      "translate": "advancement.create.chocolate"
     },
     "description": {
-      "translate": "advancement.create.eob.desc"
+      "translate": "advancement.create.chocolate.desc"
     },
-    "frame": "challenge",
-    "show_toast": false,
-    "announce_to_chat": false,
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
     "hidden": false
   },
   "criteria": {
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:copper_casing"
+            "item": "create:chocolate_bucket"
           }
         ]
       }

@@ -140,8 +140,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		SAND = create(() -> Blocks.SAND, b -> b.duration(150)
 			.output(AllPaletteBlocks.LIMESAND.get())
-			.output(.5f, AllPaletteBlocks.LIMESAND.get())
-			.output(.05f, Items.BONE_MEAL)),
+			.output(.1f, Items.BONE_MEAL)),
 
 		NETHERRACK = create(() -> Blocks.NETHERRACK, b -> b.duration(250)
 			.output(AllItems.CINDER_FLOUR.get())

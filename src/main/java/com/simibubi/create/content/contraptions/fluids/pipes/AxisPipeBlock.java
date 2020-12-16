@@ -9,6 +9,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -64,6 +65,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 				newState = newState.with(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
 			world.setBlockState(pos, newState);
 		}
+		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
 		return ActionResultType.SUCCESS;
 	}
 

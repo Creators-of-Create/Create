@@ -1,0 +1,29 @@
+{
+  "parent": "create:pipe_spill",
+  "display": {
+    "icon": {
+      "item": "create:hose_pulley"
+    },
+    "title": {
+      "translate": "advancement.create.hose_pulley"
+    },
+    "description": {
+      "translate": "advancement.create.hose_pulley.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:hose_pulley",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

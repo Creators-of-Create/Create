@@ -21,18 +21,11 @@
       "conditions": {
         "block": "create:stressometer"
       }
-    },
-    "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {}
     }
   },
   "requirements": [
     [
       "0"
-    ],
-    [
-      "1"
     ]
   ]
 }

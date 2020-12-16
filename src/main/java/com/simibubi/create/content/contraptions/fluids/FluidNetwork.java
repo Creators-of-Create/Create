@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -29,7 +30,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 public class FluidNetwork {
 
 	private static int CYCLES_PER_TICK = 16;
-	
+
 	World world;
 	BlockFace start;
 
@@ -41,6 +42,7 @@ public class FluidNetwork {
 	List<BlockFace> queued;
 	Set<Pair<BlockFace, PipeConnection>> frontier;
 	Set<BlockPos> visited;
+	FluidStack fluid;
 	List<Pair<BlockFace, LazyOptional<IFluidHandler>>> targets;
 	Map<BlockPos, WeakReference<FluidTransportBehaviour>> cache;
 
@@ -49,6 +51,7 @@ public class FluidNetwork {
 		this.start = location;
 		this.sourceSupplier = sourceSupplier;
 		this.source = LazyOptional.empty();
+		this.fluid = FluidStack.EMPTY;
 		this.frontier = new HashSet<>();
 		this.visited = new HashSet<>();
 		this.targets = new ArrayList<>();
@@ -62,7 +65,7 @@ public class FluidNetwork {
 			pauseBeforePropagation--;
 			return;
 		}
-		
+
 		for (int cycle = 0; cycle < CYCLES_PER_TICK; cycle++) {
 			boolean shouldContinue = false;
 			for (Iterator<BlockFace> iterator = queued.iterator(); iterator.hasNext();) {
@@ -77,17 +80,22 @@ public class FluidNetwork {
 				}
 				iterator.remove();
 			}
-			
+
 //			drawDebugOutlines();
-			
+
 			for (Iterator<Pair<BlockFace, PipeConnection>> iterator = frontier.iterator(); iterator.hasNext();) {
 				Pair<BlockFace, PipeConnection> pair = iterator.next();
 				BlockFace blockFace = pair.getFirst();
 				PipeConnection pipeConnection = pair.getSecond();
-				
+
 				if (!pipeConnection.hasFlow())
 					continue;
+				
 				Flow flow = pipeConnection.flow.get();
+				if (!fluid.isEmpty() && !flow.fluid.isFluidEqual(fluid)) {
+					iterator.remove();
+					continue;
+				}
 				if (!flow.inbound) {
 					if (pipeConnection.comparePressure() >= 0)
 						iterator.remove();
@@ -96,6 +104,9 @@ public class FluidNetwork {
 				if (!flow.complete)
 					continue;
 				
+				if (fluid.isEmpty())
+					fluid = flow.fluid;
+
 				boolean canRemove = true;
 				for (Direction side : Iterate.directions) {
 					if (side == blockFace.getFace())
@@ -120,14 +131,14 @@ public class FluidNetwork {
 						canRemove = false;
 						continue;
 					}
-					
+
 					if (adjacent.source.isPresent() && adjacent.source.get()
 						.isEndpoint()) {
 						targets.add(Pair.of(adjacentLocation, adjacent.source.get()
 							.provideHandler()));
 						continue;
 					}
-					
+
 					if (visited.add(adjacentLocation.getConnectedPos())) {
 						queued.add(adjacentLocation.getOpposite());
 						shouldContinue = true;
@@ -139,7 +150,7 @@ public class FluidNetwork {
 			if (!shouldContinue)
 				break;
 		}
-		
+
 //		drawDebugOutlines();
 
 		if (!source.isPresent())
@@ -168,7 +179,18 @@ public class FluidNetwork {
 			IFluidHandler handler = source.orElse(null);
 			if (handler == null)
 				return;
-			FluidStack transfer = handler.drain(flowSpeed, action);
+			
+			FluidStack transfer = FluidStack.EMPTY;
+			for (int i = 0; i < handler.getTanks(); i++) {
+				FluidStack contained = handler.getFluidInTank(i);
+				if (contained.isEmpty())
+					continue;
+				if (!contained.isFluidEqual(fluid))
+					continue;
+				FluidStack toExtract = FluidHelper.copyStackWithAmount(contained, flowSpeed);
+				transfer = handler.drain(toExtract, action);
+			}
+			
 			if (transfer.isEmpty())
 				return;
 
@@ -229,6 +251,7 @@ public class FluidNetwork {
 		visited.clear();
 		targets.clear();
 		queued.clear();
+		fluid = FluidStack.EMPTY;
 		queued.add(start);
 		pauseBeforePropagation = 2;
 	}

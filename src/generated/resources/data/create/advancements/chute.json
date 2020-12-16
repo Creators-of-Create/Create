@@ -1,0 +1,31 @@
+{
+  "parent": "create:belt",
+  "display": {
+    "icon": {
+      "item": "create:chute"
+    },
+    "title": {
+      "translate": "advancement.create.chute"
+    },
+    "description": {
+      "translate": "advancement.create.chute.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "create:chute"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

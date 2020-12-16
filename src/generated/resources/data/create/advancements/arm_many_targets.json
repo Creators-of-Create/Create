@@ -1,0 +1,29 @@
+{
+  "parent": "create:mechanical_arm",
+  "display": {
+    "icon": {
+      "item": "create:brass_funnel"
+    },
+    "title": {
+      "translate": "advancement.create.arm_many_targets"
+    },
+    "description": {
+      "translate": "advancement.create.arm_many_targets.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:arm_many_targets",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

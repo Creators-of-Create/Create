@@ -10,12 +10,8 @@
       "item": "create:limesand"
     },
     {
-      "item": "create:limesand",
-      "chance": 0.5
-    },
-    {
       "item": "minecraft:bone_meal",
-      "chance": 0.05
+      "chance": 0.1
     }
   ],
   "processingTime": 150

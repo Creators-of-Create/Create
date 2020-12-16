@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
@@ -127,9 +130,17 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				return true;
 
 			playEffect(world, currentPos, fluid, true);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getPos(), 8);
 
-			if (infinite)
+			if (infinite) {
+				if (FluidHelper.isLava(fluid))
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_LAVA, world, tileEntity.getPos(), 8);
+				if (FluidHelper.isWater(fluid))
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_WATER, world, tileEntity.getPos(), 8);
+				if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get()))
+					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_CHOCOLATE, world, tileEntity.getPos(), 8);
 				return true;
+			}
 
 			world.setBlockState(currentPos, emptied, 2 | 16);
 			affectedArea.expandTo(new MutableBoundingBox(currentPos, currentPos));
@@ -281,7 +292,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 		int maxBlocks = maxBlocks();
 		if (validationVisited.size() > maxBlocks && maxBlocks != -1) {
-			if (!infinite) 
+			if (!infinite)
 				reset();
 			validationFrontier.clear();
 			setLongValidationTimer();

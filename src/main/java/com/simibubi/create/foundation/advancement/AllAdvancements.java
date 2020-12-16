@@ -13,6 +13,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
@@ -29,7 +30,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
@@ -59,6 +59,20 @@ public class AllAdvancements implements IDataProvider {
 
 		kineticsBranch(t, andesite_alloy);
 
+		Advancement aesthetics =
+			advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL).withParent(andesite_alloy)
+				.withCriterion("0", AllTriggers.BRACKET_SHAFT.instance())
+				.withCriterion("1", AllTriggers.BRACKET_COG.instance())
+				.withCriterion("2", AllTriggers.BRACKET_PIPE.instance())
+				.register(t, id + ":aesthetics");
+
+		Advancement reinforced =
+			advancement("reinforced", AllBlocks.ANDESITE_ENCASED_SHAFT.get(), TaskType.NORMAL).withParent(aesthetics)
+				.withCriterion("0", AllTriggers.CASING_SHAFT.instance())
+				.withCriterion("1", AllTriggers.CASING_BELT.instance())
+				.withCriterion("2", AllTriggers.CASING_PIPE.instance())
+				.register(t, id + ":reinforced");
+
 		Advancement water_wheel =
 			advancement("water_wheel", AllBlocks.WATER_WHEEL.get(), TaskType.NORMAL).withParent(andesite_alloy)
 				.withCriterion("0", placeBlock(AllBlocks.WATER_WHEEL.get()))
@@ -69,16 +83,34 @@ public class AllAdvancements implements IDataProvider {
 			.withCriterion("0", AllTriggers.LAVA_WHEEL.instance())
 			.register(t, id + ":lava_wheel");
 
+		Advancement chocolate_wheel = advancement("chocolate_wheel", AllFluids.CHOCOLATE.get()
+			.getFilledBucket(), TaskType.SECRET).withParent(water_wheel)
+				.withCriterion("0", AllTriggers.CHOCOLATE_WHEEL.instance())
+				.register(t, id + ":chocolate_wheel");
+
 		Advancement millstone =
 			kinecticAdvancement("millstone", AllBlocks.MILLSTONE.get(), TaskType.NORMAL).withParent(andesite_alloy)
 				.register(t, id + ":millstone");
+
+		Advancement cuckoo =
+			advancement("cuckoo", AllBlocks.CUCKOO_CLOCK.get(), TaskType.NORMAL).withParent(andesite_alloy)
+				.withCriterion("0", AllTriggers.CUCKOO.instance())
+				.register(t, id + ":cuckoo");
+
+		Advancement windmill =
+			advancement("windmill", AllBlocks.WINDMILL_BEARING.get(), TaskType.NORMAL).withParent(andesite_alloy)
+				.withCriterion("0", AllTriggers.WINDMILL.instance())
+				.register(t, id + ":windmill");
+
+		Advancement maxed_windmill =
+			advancement("maxed_windmill", AllBlocks.WINDMILL_BEARING.get(), TaskType.GOAL).withParent(windmill)
+				.withCriterion("0", AllTriggers.MAXED_WINDMILL.instance())
+				.register(t, id + ":maxed_windmill");
 
 		Advancement andesite_casing =
 			advancement("andesite_casing", AllBlocks.ANDESITE_CASING.get(), TaskType.GOAL).withParent(andesite_alloy)
 				.withCriterion("0", itemGathered(AllBlocks.ANDESITE_CASING.get()))
 				.register(t, id + ":andesite_casing");
-
-		andesiteExpertLane(t, andesite_casing);
 
 		Advancement drill = kinecticAdvancement("mechanical_drill", AllBlocks.MECHANICAL_DRILL.get(), TaskType.NORMAL)
 			.withParent(andesite_casing)
@@ -88,6 +120,22 @@ public class AllAdvancements implements IDataProvider {
 			advancement("press", AllBlocks.MECHANICAL_PRESS.get(), TaskType.MILESTONE).withParent(andesite_casing)
 				.withCriterion("0", AllTriggers.BONK.instance())
 				.register(t, id + ":press");
+
+		Advancement fan = advancement("fan", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).withParent(press)
+			.withCriterion("0", AllTriggers.FAN.instance())
+			.register(t, id + ":fan");
+
+		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).withParent(fan)
+			.withCriterion("0", AllTriggers.FAN_LAVA.instance())
+			.register(t, id + ":fan_lava");
+
+		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).withParent(fan)
+			.withCriterion("0", AllTriggers.FAN_SMOKE.instance())
+			.register(t, id + ":fan_smoke");
+
+		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(fan)
+			.withCriterion("0", AllTriggers.FAN_WATER.instance())
+			.register(t, id + ":fan_water");
 
 		Advancement rose_quartz =
 			itemAdvancement("polished_rose_quartz", AllItems.POLISHED_ROSE_QUARTZ, TaskType.NORMAL)
@@ -119,7 +167,11 @@ public class AllAdvancements implements IDataProvider {
 			.withParent(basin)
 			.register(t, id + ":compact");
 
-		Advancement brass = itemAdvancement("brass", AllItems.BRASS_INGOT, TaskType.NORMAL).withParent(mixer)
+		Advancement blaze_burner =
+			itemAdvancement("blaze_burner", AllBlocks.BLAZE_BURNER, TaskType.NORMAL).withParent(mixer)
+				.register(t, id + ":blaze_burner");
+
+		Advancement brass = itemAdvancement("brass", AllItems.BRASS_INGOT, TaskType.NORMAL).withParent(blaze_burner)
 			.register(t, id + ":brass");
 
 		brassAge(t, brass);
@@ -136,6 +188,34 @@ public class AllAdvancements implements IDataProvider {
 		Advancement belt = advancement("belt", AllItems.BELT_CONNECTOR.get(), TaskType.NORMAL).withParent(its_alive)
 			.withCriterion("0", AllTriggers.CONNECT_BELT.instance())
 			.register(t, id + ":belt");
+
+		Advancement tunnel = advancement("tunnel", AllBlocks.ANDESITE_TUNNEL.get(), TaskType.NORMAL).withParent(belt)
+			.withCriterion("0", AllTriggers.PLACE_TUNNEL.instance())
+			.register(t, id + ":tunnel");
+
+		Advancement splitter_tunnel =
+			advancement("splitter_tunnel", AllBlocks.BRASS_TUNNEL.get(), TaskType.MILESTONE).withParent(tunnel)
+				.withCriterion("0", AllTriggers.CONNECT_TUNNEL.instance())
+				.register(t, id + ":splitter_tunnel");
+
+		Advancement chute = advancement("chute", AllBlocks.CHUTE.get(), TaskType.NORMAL).withParent(belt)
+			.withCriterion("0", placeBlock(AllBlocks.CHUTE.get()))
+			.register(t, id + ":chute");
+
+		Advancement upward_chute =
+			advancement("upward_chute", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).withParent(chute)
+				.withCriterion("0", AllTriggers.UPWARD_CHUTE.instance())
+				.register(t, id + ":upward_chute");
+
+		Advancement belt_funnel =
+			advancement("belt_funnel", AllBlocks.ANDESITE_FUNNEL.get(), TaskType.NORMAL).withParent(belt)
+				.withCriterion("0", AllTriggers.BELT_FUNNEL.instance())
+				.register(t, id + ":belt_funnel");
+
+		Advancement belt_funnel_kiss =
+			advancement("belt_funnel_kiss", AllBlocks.BRASS_FUNNEL.get(), TaskType.SECRET).withParent(belt_funnel)
+				.withCriterion("0", AllTriggers.BELT_FUNNEL_KISS.instance())
+				.register(t, id + ":belt_funnel_kiss");
 
 		Advancement wrench = itemAdvancement("wrench", AllItems.WRENCH, TaskType.NORMAL).withParent(its_alive)
 			.register(t, id + ":wrench");
@@ -170,9 +250,61 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", itemGathered(AllBlocks.COPPER_CASING.get()))
 				.register(t, id + ":copper_casing");
 
-		Advancement copper_end = deadEnd().withParent(copper_casing)
-			.withCriterion("0", itemGathered(AllBlocks.COPPER_CASING.get()))
-			.register(t, id + ":copper_end");
+		Advancement item_drain =
+			advancement("item_drain", AllBlocks.ITEM_DRAIN.get(), TaskType.NORMAL).withParent(copper_casing)
+				.withCriterion("0", AllTriggers.ITEM_DRAIN.instance())
+				.register(t, id + ":item_drain");
+
+		Advancement chained_item_drain =
+			advancement("chained_item_drain", AllBlocks.ITEM_DRAIN.get(), TaskType.SECRET).withParent(item_drain)
+				.withCriterion("0", AllTriggers.CHAINED_ITEM_DRAIN.instance())
+				.register(t, id + ":chained_item_drain");
+
+		Advancement spout = advancement("spout", AllBlocks.SPOUT.get(), TaskType.NORMAL).withParent(copper_casing)
+			.withCriterion("0", AllTriggers.SPOUT.instance())
+			.register(t, id + ":spout");
+
+		Advancement spout_potion = advancement("spout_potion", Items.POTION, TaskType.GOAL).withParent(spout)
+			.withCriterion("0", AllTriggers.SPOUT_POTION.instance())
+			.register(t, id + ":spout_potion");
+
+		Advancement chocolate = itemAdvancement("chocolate", () -> AllFluids.CHOCOLATE.get()
+			.getFilledBucket(), TaskType.GOAL).withParent(spout)
+				.register(t, id + ":chocolate");
+
+		Advancement glass_pipe =
+			advancement("glass_pipe", AllBlocks.FLUID_PIPE.get(), TaskType.NORMAL).withParent(copper_casing)
+				.withCriterion("0", AllTriggers.GLASS_PIPE.instance())
+				.register(t, id + ":glass_pipe");
+
+		Advancement pipe_collision =
+			advancement("pipe_collision", AllBlocks.FLUID_VALVE.get(), TaskType.NORMAL).withParent(glass_pipe)
+				.withCriterion("0", AllTriggers.PIPE_COLLISION.instance())
+				.register(t, id + ":pipe_collision");
+
+		Advancement pipe_spill = advancement("pipe_spill", Items.BUCKET, TaskType.NORMAL).withParent(glass_pipe)
+			.withCriterion("0", AllTriggers.PIPE_SPILL.instance())
+			.register(t, id + ":pipe_spill");
+
+		Advancement hose_pulley =
+			advancement("hose_pulley", AllBlocks.HOSE_PULLEY.get(), TaskType.NORMAL).withParent(pipe_spill)
+				.withCriterion("0", AllTriggers.HOSE_PULLEY.instance())
+				.register(t, id + ":hose_pulley");
+
+		Advancement infinite_water =
+			advancement("infinite_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(hose_pulley)
+				.withCriterion("0", AllTriggers.INFINITE_WATER.instance())
+				.register(t, id + ":infinite_water");
+
+		Advancement infinite_lava =
+			advancement("infinite_lava", Items.LAVA_BUCKET, TaskType.GOAL).withParent(hose_pulley)
+				.withCriterion("0", AllTriggers.INFINITE_LAVA.instance())
+				.register(t, id + ":infinite_lava");
+
+		Advancement infinite_chocolate = advancement("infinite_chocolate", AllFluids.CHOCOLATE.get()
+			.getFilledBucket(), TaskType.CHALLENGE).withParent(hose_pulley)
+				.withCriterion("0", AllTriggers.INFINITE_CHOCOLATE.instance())
+				.register(t, id + ":infinite_chocolate");
 	}
 
 	void brassAge(Consumer<Advancement> t, Advancement root) {
@@ -183,12 +315,45 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", itemGathered(AllBlocks.BRASS_CASING.get()))
 				.register(t, id + ":brass_casing");
 
+		Advancement nixie_tube =
+			advancement("nixie_tube", AllBlocks.NIXIE_TUBE.get(), TaskType.NORMAL).withParent(brass_casing)
+				.withCriterion("0", placeBlock(AllBlocks.NIXIE_TUBE.get()))
+				.register(t, id + ":nixie_tube");
+
 		Advancement crafter = kinecticAdvancement("crafter", AllBlocks.MECHANICAL_CRAFTER.get(), TaskType.MILESTONE)
 			.withParent(brass_casing)
 			.register(t, id + ":crafter");
 
+		Advancement flywheel = advancement("flywheel", AllBlocks.FLYWHEEL.get(), TaskType.NORMAL).withParent(crafter)
+			.withCriterion("0", AllTriggers.FLYWHEEL.instance())
+			.register(t, id + ":flywheel");
+
+		Advancement overstress_flywheel =
+			advancement("overstress_flywheel", AllBlocks.FURNACE_ENGINE.get(), TaskType.CHALLENGE).withParent(flywheel)
+				.withCriterion("0", AllTriggers.OVERSTRESS_FLYWHEEL.instance())
+				.register(t, id + ":overstress_flywheel");
+
+		Advancement integrated_circuit =
+			itemAdvancement("integrated_circuit", AllItems.INTEGRATED_CIRCUIT, TaskType.NORMAL).withParent(crafter)
+				.register(t, id + ":integrated_circuit");
+
+		Advancement integrated_circuit_eob = deadEnd().withParent(integrated_circuit)
+			.withCriterion("0", itemGathered(AllItems.INTEGRATED_CIRCUIT.get()))
+			.register(t, id + ":integrated_circuit_eob");
+
+		Advancement speed_controller =
+			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
+				.withParent(integrated_circuit)
+				.register(t, id + ":speed_controller");
+
+		Advancement clockwork_bearing =
+			advancement("clockwork_bearing", AllBlocks.CLOCKWORK_BEARING.get(), TaskType.NORMAL)
+				.withParent(brass_casing)
+				.withCriterion("0", AllTriggers.CLOCKWORK_BEARING.instance())
+				.register(t, id + ":clockwork_bearing");
+
 		Advancement extendo_grip =
-			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(root)
+			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(crafter)
 				.withCriterion("0", AllTriggers.EXTENDO.instance())
 				.register(t, id + ":extendo_grip");
 
@@ -197,22 +362,28 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
 				.register(t, id + ":dual_extendo_grip");
 
-		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.GOAL)
-			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_ARM.get()))
-			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_ARM.get()))
-			.withCriterion("2", AllTriggers.MECHANICAL_ARM.instance())
+		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.MILESTONE)
+			.withCriterion("0", AllTriggers.MECHANICAL_ARM.instance())
 			.withParent(brass_casing)
 			.register(t, id + ":mechanical_arm");
-		
+
 		Advancement musical_arm = advancement("musical_arm", Items.MUSIC_DISC_13, TaskType.MILESTONE)
-			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_ARM.get()))
-			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_ARM.get()))
-			.withCriterion("2", AllTriggers.MUSICAL_ARM.instance())
+			.withCriterion("0", AllTriggers.MUSICAL_ARM.instance())
 			.withParent(mechanical_arm)
 			.register(t, id + ":musical_arm");
 
+		Advancement arm_many_targets = advancement("arm_many_targets", AllBlocks.BRASS_FUNNEL.get(), TaskType.MILESTONE)
+			.withCriterion("0", AllTriggers.ARM_MANY_TARGETS.instance())
+			.withParent(mechanical_arm)
+			.register(t, id + ":arm_many_targets");
+
+		Advancement arm_blaze_burner = advancement("arm_blaze_burner", AllBlocks.BLAZE_BURNER.get(), TaskType.NORMAL)
+			.withCriterion("0", AllTriggers.ARM_BLAZE_BURNER.instance())
+			.withParent(mechanical_arm)
+			.register(t, id + ":arm_blaze_burner");
+
 		Advancement deployer =
-			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.GOAL).withParent(brass_casing)
+			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).withParent(brass_casing)
 				.register(t, id + ":deployer");
 
 		Advancement fist_bump = advancement("fist_bump", AllBlocks.DEPLOYER.get(), TaskType.SECRET).withParent(deployer)
@@ -224,9 +395,12 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", itemGathered(AllBlocks.CRUSHING_WHEEL.get()))
 				.register(t, id + ":crushing_wheel");
 
+		Advancement blaze_cake =
+			itemAdvancement("blaze_cake", AllItems.BLAZE_CAKE, TaskType.NORMAL).withParent(crushing_wheel)
+				.register(t, id + ":blaze_cake");
+
 		Advancement chromatic_compound =
-			itemAdvancement("chromatic_compound", AllItems.CHROMATIC_COMPOUND, TaskType.NORMAL)
-				.withParent(crushing_wheel)
+			itemAdvancement("chromatic_compound", AllItems.CHROMATIC_COMPOUND, TaskType.NORMAL).withParent(blaze_cake)
 				.register(t, id + ":chromatic_compound");
 
 		Advancement shadow_steel =
@@ -236,6 +410,17 @@ public class AllAdvancements implements IDataProvider {
 		Advancement refined_radiance =
 			itemAdvancement("refined_radiance", AllItems.REFINED_RADIANCE, TaskType.GOAL).withParent(chromatic_compound)
 				.register(t, id + ":refined_radiance");
+
+		Advancement chromatic_age = advancement("chromatic_age", AllBlocks.REFINED_RADIANCE_CASING.get(), TaskType.GOAL)
+			.withParent(chromatic_compound)
+			.withCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
+			.withCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
+			.register(t, id + "chromatic_age");
+
+		Advancement chromatic_eob = deadEnd().withParent(chromatic_age)
+			.withCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
+			.withCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
+			.register(t, id + ":chromatic_eob");
 
 		Advancement deforester =
 			itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)
@@ -257,13 +442,6 @@ public class AllAdvancements implements IDataProvider {
 			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)
 				.register(t, id + ":wand_of_symmetry");
 
-		Advancement shadow_end = deadEnd().withParent(shadow_steel)
-			.withCriterion("0", itemGathered(AllItems.SHADOW_STEEL.get()))
-			.register(t, id + ":shadow_end");
-	}
-
-	private void andesiteExpertLane(Consumer<Advancement> t, Advancement root) {
-		String id = Create.ID;
 	}
 
 	// Datagen
@@ -348,8 +526,8 @@ public class AllAdvancements implements IDataProvider {
 	}
 
 	public Builder kinecticAdvancement(String name, Block block, TaskType type) {
-		return advancement(name, block, type).withCriterion("0", placeBlock(block))
-			.withCriterion("1", isPowered(block));
+		return advancement(name, block, type).withCriterion("0", placeBlock(block));
+//			.withCriterion("1", isPowered(block)); Duplicate toast
 	}
 
 	public Builder advancement(String name, IItemProvider icon, TaskType type) {
@@ -367,7 +545,7 @@ public class AllAdvancements implements IDataProvider {
 				type.hide);
 	}
 
-	public Builder itemAdvancement(String name, Supplier<? extends Item> item, TaskType type) {
+	public Builder itemAdvancement(String name, Supplier<? extends IItemProvider> item, TaskType type) {
 		return advancement(name, item.get(), type).withCriterion("0", itemGathered(item.get()));
 	}
 

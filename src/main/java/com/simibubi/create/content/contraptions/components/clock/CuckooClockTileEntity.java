@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.utility.AngleHelper.getShortestAngl
 import static com.simibubi.create.foundation.utility.AngleHelper.rad;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -149,6 +150,10 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		animationProgress.lastValue = 0;
 		animationProgress.value = 0;
 		sendAnimationUpdate = true;
+		
+		if (animation == Animation.CREEPER)
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.CUCKOO, world, pos, 10);
+		
 		sendData();
 	}
 

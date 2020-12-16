@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -267,6 +268,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
+			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.BRASS));
 			return ActionResultType.SUCCESS;
 		}
@@ -274,6 +276,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
+			AllTriggers.triggerFor(AllTriggers.CASING_BELT, player);
 			withTileEntityDo(world, pos, te -> te.setCasingType(CasingType.ANDESITE));
 			return ActionResultType.SUCCESS;
 		}

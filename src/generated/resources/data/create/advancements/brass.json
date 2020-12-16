@@ -1,5 +1,5 @@
 {
-  "parent": "create:mixer",
+  "parent": "create:blaze_burner",
   "display": {
     "icon": {
       "item": "create:brass_ingot"

@@ -21,6 +21,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -462,7 +463,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("SSS")
 				.patternLine("PCP")),
 
-		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(16)
+		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(8)
 			.unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('S', I.copperSheet())
 				.key('C', I.copper())
@@ -572,6 +573,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("A")
 				.patternLine("I")),
 
+		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)
+			.returns(1)
+			.viaShaped(b -> b.key('L', I.brassSheet())
+				.key('R', I.cog())
+				.key('I', I.electronTube())
+				.key('A', I.andesite())
+				.key('C', I.brassCasing())
+				.patternLine("LLA")
+				.patternLine("LR ")
+				.patternLine("ICI")),
+
 		MECHANICAL_MIXER = create(AllBlocks.MECHANICAL_MIXER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', I.cog())
 				.key('B', I.andesite())
@@ -656,7 +668,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("CBC")
 				.patternLine(" C ")),
 
-		ENCASED_CHAIN_DRIVE = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(4)
+		ENCASED_CHAIN_DRIVE = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(2)
 			.unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('S', I.shaft())
 				.key('B', Tags.Items.NUGGETS_IRON)
@@ -680,6 +692,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('S', I.shaft())
 				.patternLine(" B ")
 				.patternLine("SCS")),
+
+		NIXIE_TUBE = create(AllBlocks.NIXIE_TUBE).unlockedBy(I::brassCasing)
+			.viaShaped(b -> b.key('E', I.electronTube())
+				.key('B', I.brassCasing())
+				.patternLine("EBE")),
 
 		MECHANICAL_SAW = create(AllBlocks.MECHANICAL_SAW).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('C', I.andesiteCasing())
