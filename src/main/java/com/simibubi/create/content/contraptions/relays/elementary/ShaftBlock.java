@@ -5,11 +5,18 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -18,7 +25,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import java.util.function.Predicate;
+
 public class ShaftBlock extends AbstractShaftBlock {
+
+	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public ShaftBlock(Properties properties) {
 		super(properties);
@@ -45,7 +56,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult p_225533_6_) {
+		BlockRayTraceResult ray) {
 		if (player.isSneaking() || !player.isAllowEdit())
 			return ActionResultType.PASS;
 
@@ -66,6 +77,52 @@ public class ShaftBlock extends AbstractShaftBlock {
 			return ActionResultType.SUCCESS;
 		}
 
+		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
+		if (helper.getItemPredicate().test(heldItem)) {
+			PlacementOffset offset = helper.getOffset(world, state, pos, ray);
+
+			if (!offset.isSuccessful())
+				return ActionResultType.PASS;
+
+			BlockPos newPos = new BlockPos(offset.getPos());
+
+			if (!world.getBlockState(newPos).getMaterial().isReplaceable())
+				return ActionResultType.PASS;
+
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
+
+			Block block = ((BlockItem) heldItem.getItem()).getBlock();
+			world.setBlockState(newPos, offset.getTransform().apply(block.getDefaultState()));
+			if (!player.isCreative())
+				heldItem.shrink(1);
+
+			return ActionResultType.SUCCESS;
+		}
+
 		return ActionResultType.PASS;
+	}
+
+	@MethodsReturnNonnullByDefault
+	private static class PlacementHelper extends PoleHelper<Direction.Axis> {
+		//used for extending a shaft in its axis, like the piston poles. works with shafts and cogs
+
+		private PlacementHelper(){
+			super(
+					state -> state.getBlock() instanceof AbstractShaftBlock,
+					state -> state.get(AXIS),
+					AXIS
+			);
+		}
+
+		@Override
+		public Predicate<ItemStack> getItemPredicate() {
+			return i -> i.getItem() instanceof BlockItem && ((BlockItem) i.getItem()).getBlock() instanceof AbstractShaftBlock;
+		}
+
+		@Override
+		public Predicate<BlockState> getStatePredicate() {
+			return AllBlocks.SHAFT::has;
+		}
 	}
 }

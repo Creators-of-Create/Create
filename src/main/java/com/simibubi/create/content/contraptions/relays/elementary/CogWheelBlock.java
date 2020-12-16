@@ -5,7 +5,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
@@ -69,9 +68,7 @@ public class CogWheelBlock extends AbstractShaftBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockPos placedOnPos = context.getPos()
-                .offset(context.getFace()
-                        .getOpposite());
+        BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
         World world = context.getWorld();
         BlockState placedAgainst = world.getBlockState(placedOnPos);
         Block block = placedAgainst.getBlock();
@@ -80,7 +77,8 @@ public class CogWheelBlock extends AbstractShaftBlock {
                 .down());
         IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLarge) {
-            return this.getDefaultState().with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER))
+            return this.getDefaultState()
+                    .with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER)
                     .with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
         }
 
@@ -89,10 +87,11 @@ public class CogWheelBlock extends AbstractShaftBlock {
             Axis preferredAxis = getPreferredAxis(context);
             if (preferredAxis != null)
                 return this.getDefaultState()
-                        .with(AXIS, preferredAxis).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+                        .with(AXIS, preferredAxis)
+                        .with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
             return this.getDefaultState()
-                    .with(AXIS, context.getFace()
-                            .getAxis()).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+                    .with(AXIS, context.getFace().getAxis())
+                    .with(BlockStateProperties.WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
         }
 
         return getDefaultState().with(AXIS, ((IRotate) block).getRotationAxis(placedAgainst));

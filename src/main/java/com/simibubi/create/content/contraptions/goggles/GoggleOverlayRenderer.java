@@ -6,7 +6,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonPolePlacementHelper;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
@@ -14,7 +13,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.Outline;
 import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -106,7 +104,7 @@ public class GoggleOverlayRenderer {
 			int poles = 1;
 			boolean pistonFound = false;
 			for (Direction dir : directions) {
-				int attachedPoles = PistonPolePlacementHelper.attachedPoles(world, pos, dir);
+				int attachedPoles = PistonExtensionPoleBlock.PlacementHelper.get().attachedPoles(world, pos, dir);
 				poles += attachedPoles;
 				pistonFound |= world.getBlockState(pos.offset(dir, attachedPoles + 1))
 					.getBlock() instanceof MechanicalPistonBlock;

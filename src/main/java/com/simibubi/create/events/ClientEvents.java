@@ -1,17 +1,12 @@
 package com.simibubi.create.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlockPlacementHelper;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonPolePlacementHelper;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
@@ -36,7 +31,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -60,6 +55,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -103,8 +101,7 @@ public class ClientEvents {
 		ExtendoGripRenderHandler.tick();
 //		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
-		SailBlockPlacementHelper.tick();
-		PistonPolePlacementHelper.tick();
+		PlacementHelpers.tick();
 		CreateClient.outliner.tickOutlines();
 	}
 
@@ -137,8 +134,8 @@ public class ClientEvents {
 			return;
 
 		onRenderHotbar(new MatrixStack(), Minecraft.getInstance()
-			.getBufferBuilders()
-			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
+				.getBufferBuilders()
+				.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
 	}
 
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -154,7 +151,7 @@ public class ClientEvents {
 
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem()
-			.getTranslationKey(stack);
+				.getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
 			return;
 
@@ -163,7 +160,7 @@ public class ClientEvents {
 			List<ITextComponent> toolTip = new ArrayList<>();
 			toolTip.add(itemTooltip.remove(0));
 			TooltipHelper.getTooltip(stack)
-				.addInformation(toolTip);
+					.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
 

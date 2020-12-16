@@ -5,7 +5,11 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
@@ -30,9 +34,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import java.util.function.Predicate;
+
 import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 
 public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, IWaterLoggable {
+
+    private static final int placementHelperId = PlacementHelpers.register(PlacementHelper.get());
 
     public PistonExtensionPoleBlock(Properties properties) {
         super(properties);
@@ -107,12 +115,13 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
         ItemStack heldItem = player.getHeldItem(hand);
 
         if (AllBlocks.PISTON_EXTENSION_POLE.isIn(heldItem) && !player.isSneaking()) {
-            Pair<Direction, Integer> offset = PistonPolePlacementHelper.getPlacementOffset(world, state.get(FACING).getAxis(), pos, ray.getHitVec());
+            IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+            PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
 
-            if (offset == null || offset.getSecond() == 0)
+            if (!offset.isSuccessful())
                 return ActionResultType.PASS;
 
-            BlockPos newPos = pos.offset(offset.getFirst(), offset.getSecond());
+            BlockPos newPos = new BlockPos(offset.getPos());
 
             if (!world.getBlockState(newPos).getMaterial().isReplaceable())
                 return ActionResultType.PASS;
@@ -120,7 +129,7 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
             if (world.isRemote)
                 return ActionResultType.SUCCESS;
 
-            world.setBlockState(newPos, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState().with(FACING, state.get(FACING)));
+            world.setBlockState(newPos, offset.getTransform().apply(AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()));
             if (!player.isCreative())
                 heldItem.shrink(1);
 
@@ -148,5 +157,28 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
             world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return state;
+    }
+
+    @MethodsReturnNonnullByDefault
+    public static class PlacementHelper extends PoleHelper<Direction> {
+
+        private static final PlacementHelper instance = new PlacementHelper();
+
+        public static PlacementHelper get() {
+            return instance;
+        }
+
+        private PlacementHelper(){
+            super(
+                    AllBlocks.PISTON_EXTENSION_POLE::has,
+                    state -> state.get(FACING).getAxis(),
+                    FACING
+            );
+        }
+
+        @Override
+        public Predicate<ItemStack> getItemPredicate() {
+            return AllBlocks.PISTON_EXTENSION_POLE::isIn;
+        }
     }
 }

@@ -77,7 +77,7 @@ public class PistonContraption extends TranslatingContraption {
 			return false;
 
 		if (blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			while (PistonPolePlacementHelper.matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
+			while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
 
 				actualStart = actualStart.offset(direction);
 				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
@@ -104,7 +104,7 @@ public class PistonContraption extends TranslatingContraption {
 		nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 		int extensionsInBack = 0;
 
-		while (PistonPolePlacementHelper.matchesAxis(nextBlock, direction.getAxis())) {
+		while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis())) {
 			end = end.offset(direction.getOpposite());
 			poles.add(new BlockInfo(end, nextBlock.with(FACING, direction), null));
 			extensionsInBack++;
