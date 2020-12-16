@@ -81,6 +81,17 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (state.get(PART).equals(BeltPart.START)) {
+			BeltTileEntity belt = BeltHelper.getControllerTE(world, pos);
+			if (belt != null && belt.inventory != null) {
+				belt.inventory.ejectAll();
+			}
+		}
+		super.onBlockHarvested(world, pos, state, player);
+	}
+
+	@Override
 	public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
 		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
 	}
