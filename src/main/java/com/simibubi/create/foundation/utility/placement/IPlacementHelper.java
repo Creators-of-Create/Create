@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
@@ -45,18 +45,18 @@ public interface IPlacementHelper {
 		IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()), ray.getFace());
 	}
 
-	static void renderArrow(Vec3d center, Vec3d target, Direction arrowPlane) {
+	static void renderArrow(Vector3d center, Vector3d target, Direction arrowPlane) {
 		renderArrow(center, target, arrowPlane, 1D);
 	}
-	static void renderArrow(Vec3d center, Vec3d target, Direction arrowPlane, double distanceFromCenter) {
-		Vec3d direction = target.subtract(center).normalize();
-		Vec3d facing = new Vec3d(arrowPlane.getDirectionVec());
-		Vec3d start = center.add(direction);
-		Vec3d offset = direction.scale(distanceFromCenter-1);
-		Vec3d offsetA = direction.crossProduct(facing).normalize().scale(.25);
-		Vec3d offsetB = facing.crossProduct(direction).normalize().scale(.25);
-		Vec3d endA = center.add(direction.scale(.75)).add(offsetA);
-		Vec3d endB = center.add(direction.scale(.75)).add(offsetB);
+	static void renderArrow(Vector3d center, Vector3d target, Direction arrowPlane, double distanceFromCenter) {
+		Vector3d direction = target.subtract(center).normalize();
+		Vector3d facing = Vector3d.of(arrowPlane.getDirectionVec());
+		Vector3d start = center.add(direction);
+		Vector3d offset = direction.scale(distanceFromCenter-1);
+		Vector3d offsetA = direction.crossProduct(facing).normalize().scale(.25);
+		Vector3d offsetB = facing.crossProduct(direction).normalize().scale(.25);
+		Vector3d endA = center.add(direction.scale(.75)).add(offsetA);
+		Vector3d endB = center.add(direction.scale(.75)).add(offsetB);
 		CreateClient.outliner.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1/16f);
 		CreateClient.outliner.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1/16f);
 	}
@@ -79,31 +79,31 @@ public interface IPlacementHelper {
 		}
 	}*/
 
-	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vec3d hit, Direction.Axis axis) {
+	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vector3d hit, Direction.Axis axis) {
 		return orderedByDistance(pos, hit, dir -> dir.getAxis() == axis);
 	}
 
-	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vec3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
+	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vector3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
 		return orderedByDistance(pos, hit, ((Predicate<Direction>) dir -> dir.getAxis() == axis).and(includeDirection));
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3d hit, Direction.Axis axis) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis axis) {
 		return orderedByDistance(pos, hit, dir -> dir.getAxis() != axis);
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
 		return orderedByDistance(pos, hit, ((Predicate<Direction>) dir -> dir.getAxis() != axis).and(includeDirection));
 	}
 
-	static List<Direction> orderedByDistance(BlockPos pos, Vec3d hit) {
+	static List<Direction> orderedByDistance(BlockPos pos, Vector3d hit) {
 		return orderedByDistance(pos, hit, _$ -> true);
 	}
 
-	static List<Direction> orderedByDistance(BlockPos pos, Vec3d hit, Predicate<Direction> includeDirection) {
-		Vec3d centerToHit = hit.subtract(VecHelper.getCenterOf(pos));
+	static List<Direction> orderedByDistance(BlockPos pos, Vector3d hit, Predicate<Direction> includeDirection) {
+		Vector3d centerToHit = hit.subtract(VecHelper.getCenterOf(pos));
 		return Arrays.stream(Iterate.directions)
 				.filter(includeDirection)
-				.map(dir -> Pair.of(dir, new Vec3d(dir.getDirectionVec()).distanceTo(centerToHit)))
+				.map(dir -> Pair.of(dir, Vector3d.of(dir.getDirectionVec()).distanceTo(centerToHit)))
 				.sorted(Comparator.comparingDouble(Pair::getSecond))
 				.map(Pair::getFirst)
 				.collect(Collectors.toList());

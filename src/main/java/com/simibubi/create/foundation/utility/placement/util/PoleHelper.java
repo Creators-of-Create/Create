@@ -5,11 +5,11 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.function.Predicate;
 public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementHelper {
 
 	protected final Predicate<BlockState> statePredicate;
-	protected final IProperty<T> property;
+	protected final Property<T> property;
 	protected final Function<BlockState, Direction.Axis> axisFunction;
 
-	public PoleHelper(Predicate<BlockState> statePredicate, Function<BlockState, Direction.Axis> axisFunction, IProperty<T> property) {
+	public PoleHelper(Predicate<BlockState> statePredicate, Function<BlockState, Direction.Axis> axisFunction, Property<T> property) {
 		this.statePredicate = statePredicate;
 		this.axisFunction = axisFunction;
 		this.property = property;
@@ -71,7 +71,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 
 	@Override
 	public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-		Vec3d centerOffset = new Vec3d(ray.getFace().getDirectionVec()).scale(.3);
+		Vector3d centerOffset = Vector3d.of(ray.getFace().getDirectionVec()).scale(.3);
 		IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos).add(centerOffset), VecHelper.getCenterOf(offset.getPos()).add(centerOffset), ray.getFace(), 0.75D);
 	}
 }
