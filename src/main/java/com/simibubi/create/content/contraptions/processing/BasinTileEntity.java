@@ -39,7 +39,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -62,7 +61,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class BasinTileEntity extends SmartTileEntity implements ITickableTileEntity {
+public class BasinTileEntity extends SmartTileEntity {
 
 	private boolean areFluidsMoving;
 	LerpedFloat ingredientRotationSpeed;
@@ -285,7 +284,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		}
 	}
 
-	public float getTotalFluidUnits() {
+	public float getTotalFluidUnits(float partialTicks) {
 		int renderedFluids = 0;
 		float totalUnits = 0;
 
@@ -296,7 +295,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 				if (tankSegment.getRenderedFluid()
 					.isEmpty())
 					continue;
-				float units = tankSegment.getTotalUnits(0);
+				float units = tankSegment.getTotalUnits(partialTicks);
 				if (units < 1)
 					continue;
 				totalUnits += units;
@@ -454,7 +453,7 @@ public class BasinTileEntity extends SmartTileEntity implements ITickableTileEnt
 		if (segments < 2)
 			return;
 
-		float totalUnits = getTotalFluidUnits();
+		float totalUnits = getTotalFluidUnits(0);
 		if (totalUnits == 0)
 			return;
 		float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);

@@ -141,7 +141,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		SmartFluidTankBehaviour inputFluids = basin.getBehaviour(SmartFluidTankBehaviour.INPUT);
 		SmartFluidTankBehaviour outputFluids = basin.getBehaviour(SmartFluidTankBehaviour.OUTPUT);
 		SmartFluidTankBehaviour[] tanks = { inputFluids, outputFluids };
-		float totalUnits = basin.getTotalFluidUnits();
+		float totalUnits = basin.getTotalFluidUnits(partialTicks);
 		if (totalUnits < 1)
 			return 0;
 

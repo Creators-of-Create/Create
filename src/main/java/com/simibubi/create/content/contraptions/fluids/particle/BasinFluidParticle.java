@@ -63,7 +63,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 
 			TileEntity tileEntity = world.getTileEntity(basinPos);
 			if (tileEntity instanceof BasinTileEntity) {
-				float totalUnits = ((BasinTileEntity) tileEntity).getTotalFluidUnits();
+				float totalUnits = ((BasinTileEntity) tileEntity).getTotalFluidUnits(0);
 				if (totalUnits < 1)
 					totalUnits = 0;
 				float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);
