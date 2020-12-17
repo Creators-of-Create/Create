@@ -23,6 +23,8 @@ public class GenericItemFilling {
 	public static boolean canItemBeFilled(World world, ItemStack stack) {
 		if (stack.getItem() == Items.GLASS_BOTTLE)
 			return true;
+		if (stack.getItem() == Items.MILK_BUCKET)
+			return false;
 
 		LazyOptional<IFluidHandlerItem> capability =
 			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
@@ -40,6 +42,8 @@ public class GenericItemFilling {
 	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
 		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
 			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
+		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
+			return 1000;
 
 		LazyOptional<IFluidHandlerItem> capability =
 			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
@@ -50,6 +54,9 @@ public class GenericItemFilling {
 			Item filledBucket = availableFluid.getFluid()
 				.getFilledBucket();
 			if (filledBucket == null || filledBucket == Items.AIR)
+				return -1;
+			if (!((FluidBucketWrapper) tank).getFluid()
+				.isEmpty())
 				return -1;
 			return 1000;
 		}
@@ -63,6 +70,11 @@ public class GenericItemFilling {
 			.isEquivalentTo(Fluids.WATER)
 			|| availableFluid.getFluid()
 				.isEquivalentTo(AllFluids.POTION.get());
+	}
+
+	private static boolean canFillBucketInternally(FluidStack availableFluid) {
+		return availableFluid.getFluid()
+			.isEquivalentTo(AllFluids.MILK.get().getFlowingFluid());
 	}
 
 	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
@@ -79,7 +91,13 @@ public class GenericItemFilling {
 			stack.shrink(1);
 			return fillBottle;
 		}
-
+		
+		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(toFill)) {
+			ItemStack filledBucket = new ItemStack(Items.MILK_BUCKET);
+			stack.shrink(1);
+			return filledBucket;
+		}
+		
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
