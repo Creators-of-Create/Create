@@ -130,7 +130,7 @@ public class ItemDescription {
 			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + impacts.get(id).get()).append("x " + rpmUnit).append(")");
+				level.append(" (" + impacts.get(id).get()).append("x ").append(rpmUnit).append(")");
 
 			add(linesOnShift, Lang.translate("tooltip.stressImpact").formatted(GRAY));
 			add(linesOnShift, level);
@@ -147,7 +147,7 @@ public class ItemDescription {
 			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressCapacityLevels.get(index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + capacity).append("x " + rpmUnit).append(")");
+				level.append(" (" + capacity).append("x ").append(rpmUnit).append(")");
 			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 				level.append(" ").append(Lang.translate("tooltip.capacityProvided.asGenerator").formatted(DARK_GRAY, ITALIC));
 
