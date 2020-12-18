@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorIt
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.contraptions.wrench.WrenchModel;
+import com.simibubi.create.content.curiosities.BuildersTeaItem;
 import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
 import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
 import com.simibubi.create.content.curiosities.CombustibleItem;
@@ -49,8 +50,8 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
-import net.minecraft.item.Item.Properties;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -107,6 +108,19 @@ public class AllItems {
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.register();
+
+	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(5)
+			.saturation(0.6F)
+			.build()))
+		.lang("Bar of Chocolate")
+		.register();
+
+	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
+		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.properties(p -> p.maxStackSize(16))
+		.lang("Builder's Tea")
 		.register();
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =

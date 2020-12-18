@@ -628,6 +628,9 @@
 	"item.create.super_glue.tooltip.condition2": "When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "_Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
 
+	"item.create.builders_tea.tooltip": "BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
+	
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",
 	

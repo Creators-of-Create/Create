@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 858",
+	"_": "Missing Localizations: 862",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 
 	"item.create.andesite_alloy": "Alliage d'andésite",
 	"item.create.attribute_filter": "Filtre d'attribut",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
 	"item.create.belt_connector": "Tapis roulant",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -423,6 +424,7 @@
 	"item.create.brass_ingot": "Lingot de laiton",
 	"item.create.brass_nugget": "Pépite de laiton",
 	"item.create.brass_sheet": "Plaques de laiton",
+	"item.create.builders_tea": "UNLOCALIZED: Builder's Tea",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "Composé chromatique",
@@ -1752,6 +1754,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "UNLOCALIZED: Makes the _clicked_ _face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged_ _along_ when moved by _mechanical_ _pistons_, _bearings_ and other controllers.",
 	"item.create.super_glue.tooltip.condition2": "UNLOCALIZED: When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "UNLOCALIZED: _Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
+
+	"item.create.builders_tea.tooltip": "UNLOCALIZED: BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "UNLOCALIZED: The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
 	"item.create.refined_radiance.tooltip": "ÉCLAT RAFFINÉ",
 	"item.create.refined_radiance.tooltip.summary": "Un matériau chromatique forgé à partir de _lumière_ _absorbée_.",

@@ -52,6 +52,7 @@ public class FillingBySpout {
 				return results.isEmpty() ? ItemStack.EMPTY : results.get(0);
 			}
 		}
+		
 		return GenericItemFilling.fillItem(world, requiredAmount, stack, availableFluid);
 	}
 

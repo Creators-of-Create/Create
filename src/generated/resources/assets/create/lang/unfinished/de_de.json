@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1207",
+	"_": "Missing Localizations: 1211",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 
 	"item.create.andesite_alloy": "UNLOCALIZED: Andesite Alloy",
 	"item.create.attribute_filter": "UNLOCALIZED: Attribute Filter",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
 	"item.create.belt_connector": "Mechanischer Riemen",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -423,6 +424,7 @@
 	"item.create.brass_ingot": "UNLOCALIZED: Brass Ingot",
 	"item.create.brass_nugget": "UNLOCALIZED: Brass Nugget",
 	"item.create.brass_sheet": "UNLOCALIZED: Brass Sheet",
+	"item.create.builders_tea": "UNLOCALIZED: Builder's Tea",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
@@ -1752,6 +1754,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "UNLOCALIZED: Makes the _clicked_ _face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged_ _along_ when moved by _mechanical_ _pistons_, _bearings_ and other controllers.",
 	"item.create.super_glue.tooltip.condition2": "UNLOCALIZED: When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "UNLOCALIZED: _Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
+
+	"item.create.builders_tea.tooltip": "UNLOCALIZED: BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "UNLOCALIZED: The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
 	"item.create.refined_radiance.tooltip": "UNLOCALIZED: REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "UNLOCALIZED: A Chromatic material forged from _absorbed_ _light_.",

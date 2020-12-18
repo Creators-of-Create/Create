@@ -82,7 +82,7 @@ public class GenericItemFilling {
 		toFill.setAmount(requiredAmount);
 		availableFluid.shrink(requiredAmount);
 
-		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid)) {
+		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
 			ItemStack fillBottle = ItemStack.EMPTY;
 			if (FluidHelper.isWater(toFill.getFluid()))
 				fillBottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
