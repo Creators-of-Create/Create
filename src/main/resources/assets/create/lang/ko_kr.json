@@ -558,6 +558,8 @@
 	"fluid.create.milk": "우유",
 	"fluid.create.potion": "포션",
 	"fluid.create.tea": "건축가의 차",
+	"item.create.builders_tea": "건축가의 차",
+	"item.create.bar_of_chocolate": "초콜릿 바",
 	"item.create.chocolate_bucket": "초콜릿 양동이",
 	"item.create.honey_bucket": "꿀 양동이",
 	"_": "->------------------------]  Advancements  [------------------------<-",
@@ -1812,6 +1814,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "선택한 블럭의 면을 _끈끈하게_ 만듭니다. 끈끈한 면에 붙은 다른 블럭은 기계식 피스톤, 베어링 등에 _같이_ _움직이게_ 됩니다.",
 	"item.create.super_glue.tooltip.condition2": "다른 손에 들고 있을 때",
 	"item.create.super_glue.tooltip.behaviour2": "블럭을 설치할 때 그것이 _설치된_ _곳_에 _자동으로_ 풀칠합니다.",
+	
+	"item.create.builders_tea.tooltip": "BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "하루를 시작하기에 좋은 음료입니다. _배부르며 새로운 영감_을 줍니다.",
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "_흡수된_ _빛_으로 제련된 색채 혼합물입니다.",
