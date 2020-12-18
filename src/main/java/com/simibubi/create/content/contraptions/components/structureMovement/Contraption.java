@@ -607,7 +607,14 @@ public abstract class Contraption {
 		int index = 0;
 		for (MountedStorage mountedStorage : storage.values())
 			handlers[index++] = mountedStorage.getItemHandler();
+		
+		IFluidHandler[] fluidHandlers = new IFluidHandler[fluidStorage.size()];
+		index = 0;
+		for (MountedFluidStorage mountedStorage : fluidStorage.values())
+			fluidHandlers[index++] = mountedStorage.getFluidHandler();
+		
 		inventory = new CombinedInvWrapper(handlers);
+		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 
 		if (nbt.contains("BoundsFront"))
 			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));

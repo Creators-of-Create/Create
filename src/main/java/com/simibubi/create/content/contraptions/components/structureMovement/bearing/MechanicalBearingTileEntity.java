@@ -123,7 +123,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		if (!contraption.assemble(world, pos))
 			return;
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, world, pos, 5);
+		if (isWindmill())
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, world, pos, 5);
 		if (contraption.getSailBlocks() >= 16 * 8)
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.MAXED_WINDMILL, world, pos, 5);
 		

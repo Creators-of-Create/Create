@@ -103,7 +103,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		if (blockTypeChanged && !world.isRemote)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state != newState && !isMoving)
-			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
+			removeBracket(world, pos, true).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeTileEntity(pos);
 	}
@@ -260,13 +260,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext) {
 		BracketedTileEntityBehaviour behaviour =
 			BracketedTileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
 		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket();
+		behaviour.removeBracket(inOnReplacedContext);
 		if (bracket == Blocks.AIR.getDefaultState())
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
