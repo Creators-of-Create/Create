@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 846",
+	"_": "Missing Localizations: 850",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -420,7 +420,7 @@
 
 	"item.create.andesite_alloy": "안산암 합금",
 	"item.create.attribute_filter": "속성 필터 틀",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "기계식 벨트",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",

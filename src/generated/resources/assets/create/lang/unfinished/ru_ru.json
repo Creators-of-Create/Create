@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 521",
+	"_": "Missing Localizations: 525",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -420,7 +420,7 @@
 
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "Механический ремень",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
