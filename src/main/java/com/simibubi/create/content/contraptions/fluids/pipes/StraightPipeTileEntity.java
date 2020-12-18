@@ -32,10 +32,10 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 		public StraightPipeFluidTransportBehaviour(SmartTileEntity te) {
 			super(te);
 		}
-		
+
 		@Override
 		public boolean canHaveFlowToward(BlockState state, Direction direction) {
-			return state.get(AxisPipeBlock.AXIS) == direction.getAxis();
+			return state.has(AxisPipeBlock.AXIS) && state.get(AxisPipeBlock.AXIS) == direction.getAxis();
 		}
 
 		@Override
