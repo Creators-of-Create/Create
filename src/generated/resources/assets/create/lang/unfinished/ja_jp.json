@@ -420,6 +420,7 @@
 
 	"item.create.andesite_alloy": "安山岩合金",
 	"item.create.attribute_filter": "属性フィルター",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
 	"item.create.belt_connector": "メカニカルベルト",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -427,6 +428,7 @@
 	"item.create.brass_ingot": "真鍮インゴット",
 	"item.create.brass_nugget": "真鍮ナゲット",
 	"item.create.brass_sheet": "真鍮シート",
+	"item.create.builders_tea": "UNLOCALIZED: Builder's Tea",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "色彩の化合物",
@@ -1756,6 +1758,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "UNLOCALIZED: Makes the _clicked_ _face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged_ _along_ when moved by _mechanical_ _pistons_, _bearings_ and other controllers.",
 	"item.create.super_glue.tooltip.condition2": "UNLOCALIZED: When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "UNLOCALIZED: _Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
+
+	"item.create.builders_tea.tooltip": "UNLOCALIZED: BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "UNLOCALIZED: The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
 	"item.create.refined_radiance.tooltip": "洗練された放射",
 	"item.create.refined_radiance.tooltip.summary": "_吸収された光_から鍛造されたクロマチックマテリアル。",

@@ -55,7 +55,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock imple
 	@SuppressWarnings("deprecation")
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state != newState && !isMoving)
-			removeBracket(world, pos).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
+			removeBracket(world, pos, true).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 	
@@ -102,12 +102,12 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock imple
 	}
 
 	@Override
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos) {
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext) {
 		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
 		BlockState bracket = behaviour.getBracket();
-		behaviour.removeBracket();
+		behaviour.removeBracket(inOnReplacedContext);
 		if (bracket == Blocks.AIR.getDefaultState())
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));

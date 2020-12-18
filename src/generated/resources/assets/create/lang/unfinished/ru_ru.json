@@ -420,6 +420,7 @@
 
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
 	"item.create.belt_connector": "Механический ремень",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -427,6 +428,7 @@
 	"item.create.brass_ingot": "Латунный слиток",
 	"item.create.brass_nugget": "Кусочек латуни",
 	"item.create.brass_sheet": "Латунный лист",
+	"item.create.builders_tea": "UNLOCALIZED: Builder's Tea",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
 	"item.create.chromatic_compound": "Хроматический компаунд",
@@ -1756,6 +1758,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "Делает лицевую сторону _липкой_. Блоки, прикреплённые к липким граням, будут _перемещаться_ при помощи _механических поршней_, _радиальных_ _шасси_ и других контроллеров.",
 	"item.create.super_glue.tooltip.condition2": "Кода в другой руке",
 	"item.create.super_glue.tooltip.behaviour2": "Автоматически _прикрепляет_ _блоки_, расположенные от основной руки, к той _стороне_, _против_ _которой_ они были.",
+
+	"item.create.builders_tea.tooltip": "UNLOCALIZED: BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "UNLOCALIZED: The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "Хроматический материал, _добытый_ _из_ _поглощенного_ _света_.",

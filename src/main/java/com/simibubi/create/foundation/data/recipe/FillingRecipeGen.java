@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
@@ -17,6 +18,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllTags.forgeFluidTag("honey"), 250)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
+
+		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), 250)
+			.require(Items.GLASS_BOTTLE)
+			.output(AllItems.BUILDERS_TEA.get())),
 
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, 250)
 			.require(AllItems.BLAZE_CAKE_BASE.get())

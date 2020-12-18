@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 public interface IWrenchableWithBracket extends IWrenchable {
 
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos);
+	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext);
 
 	@Override
 	default ActionResultType onWrenched(BlockState state, ItemUseContext context) {
@@ -31,7 +31,7 @@ public interface IWrenchableWithBracket extends IWrenchable {
 	default boolean tryRemoveBracket(ItemUseContext context) {
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
-		Optional<ItemStack> bracket = removeBracket(world, pos);
+		Optional<ItemStack> bracket = removeBracket(world, pos, false);
 		BlockState blockState = world.getBlockState(pos);
 		if (bracket.isPresent()) {
 			PlayerEntity player = context.getPlayer();

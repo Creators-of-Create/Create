@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -23,9 +24,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -242,10 +241,8 @@ public class SpoutTileEntity extends SmartTileEntity {
 	protected void spawnProcessingParticles(FluidStack fluid) {
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 8 / 16f, 0);
-		IParticleData particle = new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
-			.getDefaultState()
-			.getBlockState());
-		world.addOptionalParticle(particle, vec.x, vec.y, vec.z, 0, -.5f, 0);
+		IParticleData particle = FluidFX.getFluidParticle(fluid);
+		world.addOptionalParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
 	}
 
 	protected static int SPLASH_PARTICLE_COUNT = 20;
@@ -253,11 +250,9 @@ public class SpoutTileEntity extends SmartTileEntity {
 	protected void spawnSplash(FluidStack fluid) {
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
-		IParticleData particle = new BlockParticleData(ParticleTypes.BLOCK, fluid.getFluid()
-			.getDefaultState()
-			.getBlockState());
+		IParticleData particle = FluidFX.getFluidParticle(fluid);
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 0.25f);
+			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 0.125f);
 			m = new Vector3d(m.x, Math.abs(m.y), m.z);
 			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}

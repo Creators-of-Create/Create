@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -19,6 +20,9 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 		.require(Fluids.LAVA, 100)
 		.require(Items.RED_SAND)
 		.output(Blocks.GRANITE, 1)),
+
+		CHOCOLATE = create("chocolate", b -> b.require(AllFluids.CHOCOLATE.get(), 250)
+			.output(AllItems.BAR_OF_CHOCOLATE.get(), 1)),
 
 		DIORITE = create("diorite_from_flint", b -> b.require(Items.FLINT)
 			.require(Items.FLINT)

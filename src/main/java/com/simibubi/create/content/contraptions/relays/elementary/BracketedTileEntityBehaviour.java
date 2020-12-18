@@ -62,13 +62,16 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		AllTriggers.triggerFor(trigger.apply(state), player);
 	}
 
-	public void removeBracket() {
+	public void removeBracket(boolean inOnReplacedContext) {
 		World world = getWorld();
 		if (!world.isRemote)
 			world.playEvent(2001, getPos(), Block.getStateId(getBracket()));
 		this.bracket = Optional.empty();
 		reRender = true;
-		tileEntity.notifyUpdate();
+		if (inOnReplacedContext)
+			tileEntity.sendData();
+		else
+			tileEntity.notifyUpdate();
 	}
 
 	public boolean isBacketPresent() {

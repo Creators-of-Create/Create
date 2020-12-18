@@ -419,6 +419,7 @@
 
 	"item.create.andesite_alloy": "Andesite Alloy",
 	"item.create.attribute_filter": "Attribute Filter",
+	"item.create.bar_of_chocolate": "Bar Of Chocolate",
 	"item.create.belt_connector": "Mechanical Belt",
 	"item.create.blaze_cake": "Blaze Cake",
 	"item.create.blaze_cake_base": "Blaze Cake Base",
@@ -426,6 +427,7 @@
 	"item.create.brass_ingot": "Brass Ingot",
 	"item.create.brass_nugget": "Brass Nugget",
 	"item.create.brass_sheet": "Brass Sheet",
+	"item.create.builders_tea": "Builder's Tea",
 	"item.create.chest_minecart_contraption": "Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "Chocolate Bucket",
 	"item.create.chromatic_compound": "Chromatic Compound",
@@ -1755,6 +1757,9 @@
 	"item.create.super_glue.tooltip.behaviour1": "Makes the _clicked_ _face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged_ _along_ when moved by _mechanical_ _pistons_, _bearings_ and other controllers.",
 	"item.create.super_glue.tooltip.condition2": "When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "_Automatically_ _attaches_ blocks placed from the main hand to the _side_ they were _placed_ _against._",
+
+	"item.create.builders_tea.tooltip": "BUILDERS TEA",
+	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed_ _light_.",
