@@ -907,6 +907,7 @@
 	"create.gui.stressometer.no_rotation": "회전없음",
 	"create.gui.contraptions.not_fast_enough": "이 %1$s은(는) 작동하기에 _회전 속도_가 _부족합니다_",
 	"create.gui.contraptions.network_overstressed": "_과부하!_ _높은 피로도_ _용량_을 가진 발전기를 추가로 설치하거나 _장치 속도_를 _늦추세요_.",
+	"create.gui.goggles.contraptions.unmovable_block": "움직일 수 없는 블럭: (%d, %d, %d)의 \"%s\"",
 	"create.gui.adjustable_crate.title": "가변 창고 ",
 	"create.gui.adjustable_crate.storageSpace": "저장 공간",
 	"create.gui.stockpile_switch.title": "수량 스위치",
