@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -34,7 +35,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DepotBlock extends Block implements ITE<DepotTileEntity> {
+public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchable {
 
 	public DepotBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
