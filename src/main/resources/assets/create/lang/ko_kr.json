@@ -1,7 +1,5 @@
+{
 	"_": "->------------------------]  Game Elements  [------------------------<-",
-
-
-// Stone Blocks 
 
 	"block.create.andesite_bricks": "안산안 벽돌",
 	"block.create.layered_andesite": "층이 있는 안산암",
@@ -288,8 +286,6 @@
 	"block.create.weathered_limestone_cobblestone_stairs": "풍화된 석회암 조약돌 계단",
 	"block.create.weathered_limestone_cobblestone_wall": "풍화된 석회암 조약돌 담장",
 
-
-// Glass Blocks
 	"block.create.tiled_glass": "타일 유리",
 	"block.create.framed_glass": "큰 유리",
 	"block.create.vertical_framed_glass": "수직 유리",
@@ -315,7 +311,6 @@
 	"block.create.acacia_window_pane": "아카시아나무 유리판 ",
 	"block.create.ornate_iron_window_pane": "장식된 철 유리판",
 
-// Seat Blocks
 	"block.create.black_seat": "검은색 좌석",
 	"block.create.blue_seat": "파란색 좌석",
 	"block.create.brown_seat": "갈색 좌석",
@@ -333,7 +328,6 @@
 	"block.create.yellow_seat": "노란색 좌석",
 	"block.create.purple_seat": "보라색 좌석",
 
-// Valve Handles	
 	"block.create.copper_valve_handle": "구리 밸브 손잡이",
 	"block.create.black_valve_handle": "검은색 밸브 손잡이",
 	"block.create.blue_valve_handle": "파란색 밸브 손잡이",
@@ -351,7 +345,7 @@
 	"block.create.white_valve_handle": "하얀색 밸브 손잡이",
 	"block.create.yellow_valve_handle": "노란색 밸브 손잡이",
 	"block.create.purple_valve_handle": "보라색 밸브 손잡이",
-//Fluid 
+
 	"block.create.encased_fluid_pipe": "구리 케이스를 씌운 파이프",
 	"block.create.fluid_pipe": "액체 파이프",
 	"block.create.fluid_tank": "액체 탱크",
@@ -361,7 +355,6 @@
 	"block.create.smart_fluid_pipe": "스마트 액체 파이프",
 	"block.create.creative_fluid_tank": "크리에이티브 탱크",
 
-//Sail
 	"block.create.sail_frame": "풍차 날개 프레임",
 	"block.create.black_sail": "검은색 날개",
 	"block.create.blue_sail": "파란색 날개",
@@ -380,7 +373,6 @@
 	"block.create.white_sail": "하얀색 날개",
 	"block.create.yellow_sail": "노란색 날개",
 
-//cogwheel
 	"block.create.creative_motor": "크리에이티브 모터",
 	"block.create.encased_fan": "선풍기",
 	"block.create.flywheel": "플라이휠",
@@ -403,7 +395,7 @@
 	"item.create.vertical_gearbox": "수직 기어박스",
 	"block.create.clutch": "클러치",
 	"block.create.windmill_bearing": "풍차 베어링",
-//contraption
+
 	"block.create.cart_assembler": "카트 조립기",
 	"block.create.linear_chassis": "어두운 직선 섀시",
 	"block.create.mechanical_arm": "기계 팔",
@@ -471,8 +463,6 @@
 	"block.create.andesite_encased_shaft": "안산암 케이스를 씌운 축",
 	"block.create.brass_encased_shaft": "황동 케이스를 씌운 축",
 
-
-//redstone
 	"block.create.powered_latch": "레드스톤 걸쇠",
 	"block.create.powered_toggle_latch": "레드스톤 토글 걸쇠",
 	"block.create.pulse_repeater": "펄스 리피터",
@@ -484,8 +474,6 @@
 	"block.create.stockpile_switch": "수량 스위치",
 	"block.create.controller_rail": "방향 레일",
 
-
-//tool
 	"block.create.creative_crate": "크리에이티브 창고",
 	"item.create.deforester": "산림파괴자",
 	"item.create.extendo_grip": "외장형 연장 팔",
@@ -562,6 +550,7 @@
 	"item.create.bar_of_chocolate": "초콜릿 바",
 	"item.create.chocolate_bucket": "초콜릿 양동이",
 	"item.create.honey_bucket": "꿀 양동이",
+	
 	"_": "->------------------------]  Advancements  [------------------------<-",
 
 	"advancement.create.root": "Create모드에 어서오세요",
