@@ -46,6 +46,10 @@ public class CouplingRenderer {
 
 	public static void renderCoupling(MatrixStack ms, IRenderTypeBuffer buffer, Couple<AbstractMinecartEntity> carts) {
 		ClientWorld world = Minecraft.getInstance().world;
+		
+		if (carts.getFirst() == null || carts.getSecond() == null)
+			return;
+		
 		Couple<Integer> lightValues =
 			carts.map(c -> WorldRenderer.getLightmapCoordinates(world, new BlockPos(c.getBoundingBox()
 				.getCenter())));

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 850",
+	"_": "Missing Localizations: 848",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1511,8 +1511,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "아래있는 아이템을 조합할 혼합기입니다. _지속적인_ _회전력_과 한 칸 아래에 _대야_가 필요합니다.",
 	"block.create.mechanical_mixer.tooltip.condition1": "대야 위에 있을 때",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "모든 필요한 아이템이 준비될 때마다 대야 안의 아이템을 섞기 시작합니다.",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "MECHANICAL CRAFTER",
 	"block.create.mechanical_crafter.tooltip.summary": "모든 조합법을 _자동화_할 장치입니다. 조합법대로 여러개를 _격자_로 설치하고, 화살표를 돌려 _한_ _곳으로_ _모이게_ 설정해야합니다.",

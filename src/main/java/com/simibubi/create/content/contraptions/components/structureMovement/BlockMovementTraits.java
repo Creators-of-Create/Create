@@ -33,6 +33,7 @@ import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.block.GrindstoneBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.LadderBlock;
@@ -99,6 +100,8 @@ public class BlockMovementTraits {
 
 		if (AllBlocks.BELT.has(blockState))
 			return true;
+		if (blockState.getBlock() instanceof GrindstoneBlock)
+			return true;
 		return blockState.getPushReaction() != PushReaction.BLOCK;
 	}
 
@@ -117,7 +120,7 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof AbstractPressurePlateBlock)
 			return true;
-		if (block instanceof HorizontalFaceBlock)
+		if (block instanceof HorizontalFaceBlock && !(block instanceof GrindstoneBlock))
 			return true;
 		if (block instanceof CartAssemblerBlock)
 			return false;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -128,16 +129,16 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				.squareDistanceTo(centerOfRoot));
 	}
 
-	protected void search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
+	protected Fluid search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
 		BiConsumer<BlockPos, Integer> add, boolean searchDownward) {
 		World world = getWorld();
 		int maxBlocks = maxBlocks();
-		int maxRange = maxRange();
+		int maxRange = canDrainInfinitely(fluid) ? maxRange() : maxRange() / 2;
 		int maxRangeSq = maxRange * maxRange;
 		int i;
 
 		for (i = 0; i < searchedPerTick && !frontier.isEmpty()
-			&& (visited.size() <= maxBlocks || maxBlocks == -1); i++) {
+			&& (visited.size() <= maxBlocks || !canDrainInfinitely(fluid)); i++) {
 			BlockPosEntry entry = frontier.remove(0);
 			BlockPos currentPos = entry.pos;
 			if (visited.contains(currentPos))
@@ -177,6 +178,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				frontier.add(new BlockPosEntry(offsetPos, entry.distance + 1));
 			}
 		}
+		
+		return fluid;
 	}
 
 	protected void playEffect(World world, BlockPos pos, Fluid fluid, boolean fillSound) {
@@ -194,6 +197,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		world.playSound(null, splooshPos, soundevent, SoundCategory.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerWorld)
 			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, new FluidStack(fluid, 1)));
+	}
+	
+	protected boolean canDrainInfinitely(Fluid fluid) {
+		return maxBlocks() != -1 && !AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
 	}
 
 	@Override

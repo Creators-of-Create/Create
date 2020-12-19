@@ -113,6 +113,30 @@ public class AllTags {
 				.addTag(tag));
 		}
 	}
+	
+	public static enum AllFluidTags {
+		NO_INFINITE_DRAINING
+		
+		;
+		public Tag<Fluid> tag;
+		
+		private AllFluidTags() {
+			this(MOD, "");
+		}
+
+		private AllFluidTags(NameSpace namespace) {
+			this(namespace, "");
+		}
+
+		private AllFluidTags(NameSpace namespace, String path) {
+			tag = new FluidTags.Wrapper(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+		}
+		
+		public boolean matches(Fluid fluid) {
+			return fluid != null && fluid.isIn(tag);
+		}
+	}
 
 	public static enum AllBlockTags {
 		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SAFE_NBT, SLIMY_LOGS(TIC), BEACON_BASE_BLOCKS(MC)

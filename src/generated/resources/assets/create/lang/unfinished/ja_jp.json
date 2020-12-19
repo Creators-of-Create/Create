@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 849",
+	"_": "Missing Localizations: 847",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1511,8 +1511,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "その下のアイテムに形状のない製作レシピを適用するための動力ミキサー。 一定の_回転力_と下に配置された_鉢_が必要です（間にギャップがあります）。",
 	"block.create.mechanical_mixer.tooltip.condition1": "鉢の上にあるとき",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "必要なすべての成分が存在するときはいつでも、鉢のアイテムの混合を開始します。",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "メカニカルクラフト",
 	"block.create.mechanical_crafter.tooltip.summary": "_あらゆる形状の製作レシピ_を自動化するための動的アセンブラー。 _レシピに対応するグリッドに複数を配置_し、_フェアベルトを配置して_、いずれかのクラフターのグリッドから出る_流れ_を作成します。",

@@ -191,6 +191,12 @@ public class FluidNetwork {
 				transfer = handler.drain(toExtract, action);
 			}
 			
+			if (transfer.isEmpty()) {
+				FluidStack genericExtract = handler.drain(flowSpeed, action);
+				if (!genericExtract.isEmpty() && genericExtract.isFluidEqual(fluid))
+					transfer = genericExtract;
+			}
+				
 			if (transfer.isEmpty())
 				return;
 

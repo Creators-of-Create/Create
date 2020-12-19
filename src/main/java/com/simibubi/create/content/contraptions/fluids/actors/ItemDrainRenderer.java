@@ -146,7 +146,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			float yMin = 5f / 16f;
 			float min = 2f / 16f;
 			float max = min + (12 / 16f);
-			float yOffset = (8 / 16f) * level;
+			float yOffset = (7 / 16f) * level;
 			ms.push();
 			ms.translate(0, yOffset, 0);
 			FluidRenderer.renderTiledFluidBB(fluidStack, min, yMin - yOffset, min, max, yMin, max, buffer, ms, light,

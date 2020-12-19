@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 533",
+	"_": "Missing Localizations: 531",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1511,8 +1511,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "一种能够动态进行搅拌的机器,需要恒定且够快的速度，并且下方需要放置_工作盆_(中间需要一格高)",
 	"block.create.mechanical_mixer.tooltip.condition1": "当位于工作盆上方",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "只要_工作盆_中有必要的物品,就会将物品进行搅拌",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "MECHANICAL CRAFTER",
 	"block.create.mechanical_crafter.tooltip.summary": "一种依靠_动能_的_自动_合成台。根据想要合成物品的_合成表_来摆放_相应数量_的机械制造机，并且用扳手调整物品在制造机里的_传动方向_以让他们合在一起后被输出",
