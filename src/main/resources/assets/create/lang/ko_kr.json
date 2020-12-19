@@ -4,7 +4,7 @@
 // Stone Blocks 
 
 	"block.create.andesite_bricks": "안산안 벽돌",
-	"block.create.layered_andesite": "층이있는 안산암",
+	"block.create.layered_andesite": "층이 있는 안산암",
 	"block.create.andesite_bricks": "안산암 벽돌",
 	"block.create.andesite_bricks_slab": "안산암 벽돌 반 블록",
 	"block.create.andesite_bricks_stairs": "안산암 벽돌 계단",
@@ -18,7 +18,7 @@
 	"block.create.fancy_andesite_bricks_slab": "장식된 안산암 벽돌 반 블록",
 	"block.create.fancy_andesite_bricks_stairs": "장식된 안산암 벽돌 계단",
 	"block.create.fancy_andesite_bricks_wall": "장식된 안산암 벽돌 담장",
-	"block.create.mossy_andesite": "이끼낀 안산암",
+	"block.create.mossy_andesite": "이끼 낀 안산암",
 	"block.create.overgrown_andesite": "이끼로 뒤덮힌 안산암",
 	"block.create.paved_andesite": "포장된 안산암",
 	"block.create.paved_andesite_slab": "포장된 안산암 반 블록",
@@ -105,7 +105,7 @@
 	"block.create.polished_dolomite_wall": "윤나는 백운암 담장",
 	"block.create.chiseled_dolomite": "조각된 백운암",
 	"block.create.mossy_dolomite": "이끼낀 백운암",
-   	 "block.create.overgrown_dolomite": "이끼로 뒤덮힌 백운암",
+   	"block.create.overgrown_dolomite": "이끼로 뒤덮힌 백운암",
 	"block.create.dolomite_pillar": "백운암 기둥",
 	
 	"block.create.gabbro": "반려암",
@@ -611,7 +611,7 @@
 	"advancement.create.reinforced.desc": "축, 파이프, 벨트에 적절한 케이스를 씌우세요.",
    	"advancement.create.water_wheel": "수력 동력화",
 	"advancement.create.water_wheel.desc": "물레방아를 설치하고 회전하게 만드세요!",
-	"advancement.create.chocolate_wheel": "초콜릿방아r",
+	"advancement.create.chocolate_wheel": "초콜릿방아",
 	"advancement.create.chocolate_wheel.desc": "녹은 초콜릿으로 물레방아를 돌리세요.",
 	"advancement.create.lava_wheel": "불레방아",
 	"advancement.create.lava_wheel.desc": "이건 일어나지 않았어야 하는데...",
@@ -1107,7 +1107,7 @@
 	"create.tooltip.capacityProvided.low": "적음",
 	"create.tooltip.capacityProvided.medium": "보통",
 	"create.tooltip.capacityProvided.high": "큼",
-	"create.tooltip.capacityProvided.asGenerator": "(발전기로써)",
+	"create.tooltip.capacityProvided.asGenerator": "",
 	"create.tooltip.generationSpeed": "%1$s %2$s만큼 발전함",
 	"create.tooltip.analogStrength": "레드스톤 출력: %1$s/15",
 
@@ -1315,7 +1315,7 @@
 	"block.create.mechanical_arm.tooltip": "MECHANICAL ARM",
 	"block.create.mechanical_arm.tooltip.summary": "_아이템_ 재배치를 위한 _고급_ _장치_입니다.",
 	"block.create.mechanical_arm.tooltip.condition1": "아이템 이동",
-	"block.create.mechanical_arm.tooltip.behaviour1": "_벨트_, _아이템 거치대_, _깔기_, _기계_ _조합기_와 같은 접근가능한 인벤토리에서 아이템을 _가져오거나_ _놓을_ 수 있습니다., such as _Belts_, _Depots_, _Funnels_ and _Mechanical_ _Crafters_.",
+	"block.create.mechanical_arm.tooltip.behaviour1": "_벨트_, _아이템 거치대_, _깔때기_, _기계_ _조합기_와 같은 접근가능한 인벤토리에서 아이템을 _가져오거나_ _놓을_ 수 있습니다.",
 	"block.create.mechanical_arm.tooltip.control1": "손에 있을 때",
 	"block.create.mechanical_arm.tooltip.action1": "_접근가능한_ _인벤토리_에 우클릭해서 기계 팔이 아이템을 _가져갈_ _곳_을 설정합니다. 한번 더 우클릭하여 아이템을 _놓을_ _곳_을 설정합니다.",
 	"block.create.mechanical_arm.tooltip.control2": "렌치를 들고 스크롤",
@@ -1468,14 +1468,10 @@
 	"block.create.encased_chain_drive.tooltip.condition1": "연결되었을 때",
 	"block.create.encased_chain_drive.tooltip.behaviour1": "연결된 블럭들은 이 축과 같은 회전속도와 방얗을 가집니다.",
 
-	"block.create.adjustable_pulley.tooltip": "ANALOG BELT PULLEY",
-	"block.create.adjustable_pulley.tooltip.summary": "케이스를 씌운 벨트와 같은 역할을 가집니다. 또한 입/출력 부분에 설치하고 레드스톤 신호 세기에 따라 _회전_ _속도_를 _조정_할 수 있습니다.",
-	"block.create.adjustable_pulley.tooltip.condition1": "레드스톤 신호 설정",
-	"block.create.adjustable_pulley.tooltip.behaviour1": "_입력_ 부분에 설치하면 출력 회전 속도를 _낮추고_ (최대 0.5배), _출력_ 부분에 설치하면 출력 회전 속도를 _증가시킵니다_ (최대 2배).",
 	"block.create.adjustable_chain_gearshift.tooltip": "ADJUSTABLE CHAIN GEARSHIFT",
-	"block.create.adjustable_chain_gearshift.tooltip.summary": "UNLOCALIZED: _Relays_ _Rotation_ in a straight line and to adjacent _Encased_ _Chain_ _Drives_. _Analog_ _redstone_ provided to this block will control which size of drive wheel is engaged with attached chain drives.",
-	"block.create.adjustable_chain_gearshift.tooltip.condition1": "UNLOCALIZED: Redstone Control",
-	"block.create.adjustable_chain_gearshift.tooltip.behaviour1": "UNLOCALIZED: _Without_ a signal, adjacent chain drives will relay the _same_ _speed._ With a _full_ _strength_ signal, adjacent chain drives will relay exactly _twice_ _its_ _speed._ Anything inbetween will give results between 1-2x its speed.",
+	"block.create.adjustable_chain_gearshift.tooltip.summary": "케이스를 씌운 벨트와 같은 역할을 가집니다. 또한 레드스톤 신호 세기에 따라 _회전_ _속도_를 _조정_할 수 있습니다.",
+	"block.create.adjustable_chain_gearshift.tooltip.condition1": "레드스톤 신호 설정",
+	"block.create.adjustable_chain_gearshift.tooltip.behaviour1": "신호가 없다면, 인접한 벨트의 회전속도는 그대로 유지 됩니다. 최대 신호라면, 회전 속도가 정확히 2배가 됩니다. 중간 신호는 회전 속도를 1~2배 증가시킬 것입니다.",
 
 	"item.create.belt_connector.tooltip": "BELT CONNECTOR",
 	"item.create.belt_connector.tooltip.summary": "두 개 이상의 _축_을 벨트로 연결할 수 있습니다. 연결된 축들은 _모두_ _같은_ _속도_와 _방향_을 가집니다. 벨트는 _아이템_이나 _엔티티_를 _옮길_ _수_ _있습니다_.",
@@ -1594,16 +1590,16 @@
 	"block.create.flywheel.tooltip.behaviour1": "엔진의 힘에 따라 연결된 장치에 _회전력_을 제공합니다.",
 
 	"block.create.portable_storage_interface.tooltip": "PORTABLE STORAGE INTERFACE",
-	"block.create.portable_storage_interface.tooltip.summary": "움직이는 피스톤, 베어링, 수레, 밧줄 도르래에서 _아이템을_ _교환하는 장치입니다. 두 인터페이스는 _서로 마주보고_ _1-2블럭_ 떨어져있어야 합니다.",
+	"block.create.portable_storage_interface.tooltip.summary": "움직이는 피스톤, 베어링, 수레, 밧줄 도르래에서 _아이템을_ _교환하는_ 장치입니다. 두 인터페이스는 _서로 마주보고_ _1-2블럭_ 떨어져있어야 합니다.",
 	"block.create.portable_storage_interface.tooltip.condition1": "움직일 때",
-	"block.create.portable_storage_interface.tooltip.behaviour1": "_고정된 인터페이스_와 아이템을 주고 받습니다. 고정된 인터페이스에 아이템을 수송하는 것은 움직이는 장치와 직접 수송하는 것과 같습니다. 아이템이 이동하는 동안 움직이는 장치는 _멈춥니다_.",
+	"block.create.portable_storage_interface.tooltip.behaviour1": "_고정된 인터페이스_와 아이템을 주고 받습니다. 고정된 인터페이스에 아이템을 수송하는 것은 _움직이는 장치와 직접 수송하는 것_과 같습니다. 아이템이 이동하는 동안 움직이는 장치는 _멈춥니다_.",
 	"block.create.portable_storage_interface.tooltip.condition2": "레드스톤 신호를 받을 때",
 	"block.create.portable_storage_interface.tooltip.behaviour2": "활성화된 연결을 _해제_합니다.",
 
 	"block.create.portable_fluid_interface.tooltip": "PORTABLE FLUID INTERFACE",
 	"block.create.portable_fluid_interface.tooltip.summary": "움직이는 피스톤, 베어링, 수레, 밧줄 도르래에서 _액체를_ _교환하는_ 휴대용 장치입니다. 두 인터페이스는 _서로 마주보고_ _1-2블럭_ 떨어져있어야 합니다.",
 	"block.create.portable_fluid_interface.tooltip.condition1": "움직일 때",
-	"block.create.portable_fluid_interface.tooltip.behaviour1": "_고정된 인터페이스_와 액체를 주고 받습니다. 고정된 인터페이스에 액체를 수송하는 것은 움직이는 장치에 직접 수송하는 것과 같습니다. 액체가 이동하는 동안 움직이는 장치는 _멈춥니다_",
+	"block.create.portable_fluid_interface.tooltip.behaviour1": "_고정된 인터페이스_와 액체를 주고 받습니다. 고정된 인터페이스에 액체를 수송하는 것은 _움직이는 장치에 직접 수송하는 것_과 같습니다. 액체가 이동하는 동안 움직이는 장치는 _멈춥니다_",
 	"block.create.portable_fluid_interface.tooltip.condition2": "레드스톤 신호를 받을 때",
 	"block.create.portable_fluid_interface.tooltip.behaviour2": "활성화된 연결을 _해제_합니다.",
 
@@ -1653,9 +1649,11 @@
 	"block.create.sequenced_gearshift.tooltip.behaviour2": "설정 창을 엽니다.",
 
 	"block.create.cart_assembler.tooltip": "CART ASSEMBLER",
-	"block.create.cart_assembler.tooltip.summary": "레일 위에 설치되었을 때, 지나가는 _광산_ _수레_에 연결된 구조물을 _설치/해체_합니다.",
+	"block.create.cart_assembler.tooltip.summary": "레일 위에 설치되었을 때, 지나가는 _광산_ _수레_에 연결된 구조물을 _설치/해체_합니다. [Ctrl]키를 눌러 레일 종류에 따른 작동 방법을 알아보세요.",
+	"block.create.cart_assembler.tooltip.condition1": "단일 수레 장치",
+	"block.create.cart_assembler.tooltip.behaviour1": "_한 조립기_만 있다면, 구조물은 _한 수레에만_ 연결됩니다. _렌치_를 이용해 _특정 회전 동작_을 설정하세요.",
 	"block.create.cart_assembler.tooltip.condition2": "기차 장치",
-	"block.create.cart_assembler.tooltip.behaviour2": "구조물로 연결된 두 카트 조립기는 모두 수레를 가지고 있을 때 _구조물로 두 수레를 연결_합니다. 구조물은 _광산 수레 커플링_과 유사하게 기능합니다.",
+	"block.create.cart_assembler.tooltip.behaviour2": "_구조물로 연결된_ 두 카트 조립기는 _모두_ 수레를 가지고 있을 때 _구조물로 두 수레를 연결_합니다. 구조물은 _광산 수레 커플링_과 유사하게 기능합니다.",
 	"block.create.cart_assembler.tooltip.control1": "레일 위에 설치되었을 때",
 	"block.create.cart_assembler.tooltip.action1": "신호를 받았을 때 _조립_하고, 아니라면 _해체_합니다.",
 	"block.create.cart_assembler.tooltip.control2": "전동 레일 위에 설치되었을 때",
@@ -1675,7 +1673,7 @@
 	"block.create.linear_chassis.tooltip.condition1": "움직일 때",
 	"block.create.linear_chassis.tooltip.behaviour1": "섀시의 _기둥_ _방향_으로 붙어있는 모든 블럭들을 같은 방향으로 옮깁니다. 블럭들은 섀시가 끈끈할 때만 당겨집니다 ([Ctrl]를 누르세요).",
 	"block.create.linear_chassis.tooltip.condition2": "렌치로 조정할 때",
-	"block.create.linear_chassis.tooltip.behaviour2": "대상 섀시의 사거리를 조정합니다. 또는 CTRL을 눌러 인접한 모든 섀시의 사거리를 조정합니다.",
+	"block.create.linear_chassis.tooltip.behaviour2": "대상 섀시의 _사거리_를 조정합니다. 또는 CTRL을 눌러 인접한 모든 섀시의 사거리를 조정합니다.",
 	"block.create.linear_chassis.tooltip.control1": "슬라임 볼로 우클릭",
 	"block.create.linear_chassis.tooltip.action1": "대상 면을 끈끈하게 만듭니다. 당겨질 때, 섀시는 연결된 _모든_ _블럭_을 움직이는 방향에 상관없이 당깁니다.",
 
@@ -1687,7 +1685,7 @@
 	"block.create.radial_chassis.tooltip.condition1": "움직일 때",
 	"block.create.radial_chassis.tooltip.behaviour1": "섀시의 _원_ _방향_으로 붙어있는 모든 블럭들을 같은 방향으로 옮깁니다. 블럭들이 섀시가 끈끈한 면에 붙어있을 때만 움직입니다 ([Ctrl]를 누르세요).",
 	"block.create.radial_chassis.tooltip.condition2": "렌치로 조정할 때",
-	"block.create.radial_chassis.tooltip.behaviour2": "대상 섀시의 사거리를 조정합니다. 또는 CTRL을 눌러 인접한 모든 섀시의 사거리를 조정합니다.",
+	"block.create.radial_chassis.tooltip.behaviour2": "대상 섀시의 _사거리_를 조정합니다. 또는 CTRL을 눌러 인접한 모든 섀시의 사거리를 조정합니다.",
 	"block.create.radial_chassis.tooltip.control1": "슬라임 볼로 우클릭",
 	"block.create.radial_chassis.tooltip.action1": "대상 면을 끈끈하게 만듭니다. 당겨질 때, 끈끈한 면에 붙은 _모든_ _블럭_을 움직이게 합니다",
 
@@ -1791,7 +1789,7 @@
 	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "_광산 수레_의 _이동속도_를 _세밀하게_ _조정_할 수 있는 _양방향_ _전동 레일_입니다.",
 	"block.create.controller_rail.tooltip.condition1": "레드스톤 신호를 받을 때",
-	"block.create.controller_rail.tooltip.behaviour1": "신호 세기에 따라 지나가는 수레를 가속,감속합니다. 레드스톤 신호는 다른 방향 레일에도 전달됩니다. 두 방향레일에 다른 세기를 전달하면 중간 레일들은 두 세기 사이의 신호를 받습니다.",
+	"block.create.controller_rail.tooltip.behaviour1": "_신호 세기에 따라_ 지나가는 수레를 _가속, 감속_합니다. 레드스톤 신호는 다른 방향 레일에도 전달됩니다. 두 방향레일에 다른 세기를 전달하면 중간 레일들은 두 세기 사이의 신호를 받습니다.",
 
 	"block.create.speedometer.tooltip": "SPEEDOMETER",
 	"block.create.speedometer.tooltip.summary": "연결된 장치의 _회전_ _속도_를 _계측_하고 _나타냅니다_. 레드스톤 비교기와 호환됩니다.",
@@ -1845,5 +1843,4 @@
 	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
 
 	"_": "Thank you for translating Create!"
-
 }
