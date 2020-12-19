@@ -66,7 +66,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 			return ActionResultType.PASS;
 		if (!world.isRemote)
 			world.setBlockState(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
-				.with(GlassFluidPipeBlock.AXIS, axis));
+				.with(GlassFluidPipeBlock.AXIS, axis).with(BlockStateProperties.WATERLOGGED, state.get(BlockStateProperties.WATERLOGGED)));
 		return ActionResultType.SUCCESS;
 	}
 
