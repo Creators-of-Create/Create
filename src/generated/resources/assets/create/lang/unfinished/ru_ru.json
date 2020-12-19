@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 521",
+	"_": "Missing Localizations: 519",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,7 +416,7 @@
 
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "Механический ремень",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -1507,8 +1507,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "Кинетический венчик, используемый для смешивания предметов, находящихся под ним. Требуется _постоянная_ _вращательная_ _сила_ и _чаша_, расположенная внизу (с промежутком между ними).",
 	"block.create.mechanical_mixer.tooltip.condition1": "Когда над чашей",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Начинает смешивать предметы в бассейне, когда присутствуют все необходимые ингредиенты.",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "MECHANICAL CRAFTER",
 	"block.create.mechanical_crafter.tooltip.summary": "_Кинетический_ _сборщик_ для автоматизации любого рецепта крафта. _Поместите_ _ингредиенты_ в сетку, _соответственно_ _нужному_ _рецепту_, и расположите их так, чтобы _создать_ _поток_, который _кончается_ на одном из крафтеров.",

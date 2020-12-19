@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1218",
+	"_": "Missing Localizations: 1216",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,7 +416,7 @@
 
 	"item.create.andesite_alloy": "UNLOCALIZED: Andesite Alloy",
 	"item.create.attribute_filter": "UNLOCALIZED: Attribute Filter",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "Esteira Mecânica",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -1506,9 +1506,7 @@
 	"block.create.mechanical_mixer.tooltip": "UNLOCALIZED: MECHANICAL MIXER",
 	"block.create.mechanical_mixer.tooltip.summary": "UNLOCALIZED: A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational_ _Force_ and a _Basin_ placed below (with a gap in between).",
 	"block.create.mechanical_mixer.tooltip.condition1": "UNLOCALIZED: When above Basin",
-	"block.create.mechanical_mixer.tooltip.behaviour1": "UNLOCALIZED: Starts to mix items in the basin whenever all necessary ingredients are present.",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
+	"block.create.mechanical_mixer.tooltip.behaviour1": "UNLOCALIZED: Starts to mix items in the basin whenever all necessary ingredients are present. To prevent unwanted recipes, use the filter slot on the basin or cut the rotational force until all desired ingredients have been added.",
 
 	"block.create.mechanical_crafter.tooltip": "UNLOCALIZED: MECHANICAL CRAFTER",
 	"block.create.mechanical_crafter.tooltip.summary": "UNLOCALIZED: A kinetic assembler for _automating_ any _shaped_ _crafting_ recipe. Place _multiple_ _in_ _a_ _grid_ corresponding to your recipe, and _arrange_ _their_ _belts_ to create a _flow_ that exits the grid on one of the crafters.",

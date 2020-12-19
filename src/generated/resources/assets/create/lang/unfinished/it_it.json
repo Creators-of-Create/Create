@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 846",
+	"_": "Missing Localizations: 844",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,7 +416,7 @@
 
 	"item.create.andesite_alloy": "Lega di Andesite",
 	"item.create.attribute_filter": "Filtro Attributi",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "Nastro Meccanico",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -1507,8 +1507,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "Una frusta cinetica per applicare qualsiasi ricetta di creazione informe agli oggetti sottostanti. Richiede una _Forza_ _di_ _Rotazione_ costante e una _Bacinella_ posizionata sotto (con uno spazio in mezzo).",
 	"block.create.mechanical_mixer.tooltip.condition1": "Quando sopra a una Bacinella",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Inizia a mescolare gli oggetti nella bacinella ogni volta che sono presenti tutti gli ingredienti necessari.",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "COSTRUTTORE MECCANICO",
 	"block.create.mechanical_crafter.tooltip.summary": "Un assemblatore cinetico per _automatizzare_ qualsiasi ricetta di _creazione_ _modellata_. Posiziona i _multipli_ _in_ _una_ _griglia_ corrispondente alla tua ricetta, e _disponi_ _i_ _loro_ _nastri_ per creare un _flusso_ che esce dalla griglia su uno degli costruttori.",

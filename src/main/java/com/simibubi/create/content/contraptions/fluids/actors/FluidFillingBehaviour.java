@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -177,7 +178,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 							updatePostWaterlogging(blockState.with(BlockStateProperties.WATERLOGGED, true)), 2 | 16);
 					} else {
 						replaceBlock(world, currentPos, blockState);
-						world.setBlockState(currentPos, fluid.getDefaultState()
+						world.setBlockState(currentPos, FluidHelper.convertToStill(fluid)
+							.getDefaultState()
 							.getBlockState(), 2 | 16);
 					}
 
@@ -222,8 +224,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 					queue.enqueue(new BlockPosEntry(offsetPos, entry.distance + 1));
 			}
 		}
-		
-		if (!simulate && success) 
+
+		if (!simulate && success)
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getPos(), 8);
 		return success;
 	}

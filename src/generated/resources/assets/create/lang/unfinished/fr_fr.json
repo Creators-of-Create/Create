@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 862",
+	"_": "Missing Localizations: 860",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,7 +416,7 @@
 
 	"item.create.andesite_alloy": "Alliage d'andésite",
 	"item.create.attribute_filter": "Filtre d'attribut",
-	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar Of Chocolate",
+	"item.create.bar_of_chocolate": "UNLOCALIZED: Bar of Chocolate",
 	"item.create.belt_connector": "Tapis roulant",
 	"item.create.blaze_cake": "UNLOCALIZED: Blaze Cake",
 	"item.create.blaze_cake_base": "UNLOCALIZED: Blaze Cake Base",
@@ -1507,8 +1507,6 @@
 	"block.create.mechanical_mixer.tooltip.summary": "Un fouet cinétique pour appliquer toutes les recettes d'artisanat informes aux objets en dessous. Nécessite une _force_ _de_ _rotation_ constant et un _bassin_ placé en dessous (avec un espace entre les deux).",
 	"block.create.mechanical_mixer.tooltip.condition1": "Lorsqu'au-dessus d'un bassin",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Commence à mélanger les objets dans le bassin lorsque tous les ingrédients nécessaires sont présents.",
-	"block.create.mechanical_mixer.tooltip.control1": "UNLOCALIZED: When powered by redstone",
-	"block.create.mechanical_mixer.tooltip.action1": "UNLOCALIZED: Stalls the Mixer, perfect for crafting that recipe for the very first time!",
 
 	"block.create.mechanical_crafter.tooltip": "ÉTABLI MÉCANIQUE",
 	"block.create.mechanical_crafter.tooltip.summary": "Un assembleur cinétique pour _automatiser_ n'importe quelle recette _en_ _forme_. Placez-en _plusieurs_ _dans_ _une_ _grille_ correspondant à votre recette, et _arrangez_ _leurs_ _tapis_ _roulant_ pour créer un _flux_ qui sort de la grille sur l'un des établis.",
