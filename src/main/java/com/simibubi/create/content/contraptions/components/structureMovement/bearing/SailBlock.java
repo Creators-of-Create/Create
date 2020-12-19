@@ -68,20 +68,21 @@ public class SailBlock extends ProperDirectionalBlock {
 			IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 			PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
 
-			if (!offset.isSuccessful())
+			if (!offset.isReplaceable(world))
 				return ActionResultType.PASS;
 
-			BlockState blockState = ((BlockItem) heldItem.getItem()).getBlock()
+			offset.placeInWorld(world, ((BlockItem) heldItem.getItem()).getBlock().getDefaultState(), player, heldItem);
+
+			/*BlockState blockState = ((BlockItem) heldItem.getItem()).getBlock()
 					.getDefaultState()
 					.with(FACING, state.get(FACING));
 			BlockPos offsetPos = new BlockPos(offset.getPos());
-			if (!world.isRemote && world.getBlockState(offsetPos)
-					.getMaterial()
-					.isReplaceable()) {
+			if (!world.isRemote && world.getBlockState(offsetPos).getMaterial().isReplaceable()) {
 				world.setBlockState(offsetPos, blockState);
 				if (!player.isCreative())
 					heldItem.shrink(1);
-			}
+			}*/
+
 			return ActionResultType.SUCCESS;
 		}
 
@@ -227,7 +228,7 @@ public class SailBlock extends ProperDirectionalBlock {
 			if (directions.isEmpty())
 				return PlacementOffset.fail();
 			else {
-				return PlacementOffset.success(pos.offset(directions.get(0)));
+				return PlacementOffset.success(pos.offset(directions.get(0)), s -> s.with(FACING, state.get(FACING)));
 			}
 		}
 

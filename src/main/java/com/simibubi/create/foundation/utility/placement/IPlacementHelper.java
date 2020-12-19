@@ -95,6 +95,14 @@ public interface IPlacementHelper {
 		return orderedByDistance(pos, hit, ((Predicate<Direction>) dir -> dir.getAxis() != axis).and(includeDirection));
 	}
 
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis first, Direction.Axis second) {
+		return orderedByDistanceExceptAxis(pos, hit, first, d -> d.getAxis() != second);
+	}
+
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis first, Direction.Axis second, Predicate<Direction> includeDirection) {
+		return orderedByDistanceExceptAxis(pos, hit, first, ((Predicate<Direction>) d -> d.getAxis() != second).and(includeDirection));
+	}
+
 	static List<Direction> orderedByDistance(BlockPos pos, Vector3d hit) {
 		return orderedByDistance(pos, hit, _$ -> true);
 	}
@@ -107,5 +115,13 @@ public interface IPlacementHelper {
 				.sorted(Comparator.comparingDouble(Pair::getSecond))
 				.map(Pair::getFirst)
 				.collect(Collectors.toList());
+	}
+
+	default boolean matchesItem(ItemStack item) {
+		return getItemPredicate().test(item);
+	}
+
+	default boolean matchesState(BlockState state) {
+		return getStatePredicate().test(state);
 	}
 }

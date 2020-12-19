@@ -40,8 +40,6 @@ import net.minecraft.world.World;
 
 import java.util.function.Predicate;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
-
 public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, IWaterLoggable {
 
     private static final int placementHelperId = PlacementHelpers.register(PlacementHelper.get());
@@ -125,11 +123,12 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
             IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
             PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
 
-            if (!offset.isSuccessful())
+            if (!offset.isReplaceable(world))
                 return ActionResultType.PASS;
 
-            BlockPos newPos = new BlockPos(offset.getPos());
+            offset.placeInWorld(world, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState(), player, heldItem);
 
+            /*BlockPos newPos = new BlockPos(offset.getPos());
 			if (!world.getBlockState(newPos).getMaterial().isReplaceable())
 				return ActionResultType.PASS;
 
@@ -138,7 +137,7 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 
             world.setBlockState(newPos, offset.getTransform().apply(AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()));
             if (!player.isCreative())
-                heldItem.shrink(1);
+                heldItem.shrink(1);*/
 
 			return ActionResultType.SUCCESS;
 		}

@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -81,13 +80,12 @@ public class ShaftBlock extends AbstractShaftBlock {
 		if (helper.getItemPredicate().test(heldItem)) {
 			PlacementOffset offset = helper.getOffset(world, state, pos, ray);
 
-			if (!offset.isSuccessful())
+			if (!offset.isReplaceable(world))
 				return ActionResultType.PASS;
 
-			BlockPos newPos = new BlockPos(offset.getPos());
+			offset.placeInWorld(world, (BlockItem) heldItem.getItem(), player, heldItem);
 
-			if (!world.getBlockState(newPos).getMaterial().isReplaceable())
-				return ActionResultType.PASS;
+			/*BlockPos newPos = new BlockPos(offset.getPos());
 
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
@@ -95,7 +93,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 			Block block = ((BlockItem) heldItem.getItem()).getBlock();
 			world.setBlockState(newPos, offset.getTransform().apply(block.getDefaultState()));
 			if (!player.isCreative())
-				heldItem.shrink(1);
+				heldItem.shrink(1);*/
 
 			return ActionResultType.SUCCESS;
 		}
