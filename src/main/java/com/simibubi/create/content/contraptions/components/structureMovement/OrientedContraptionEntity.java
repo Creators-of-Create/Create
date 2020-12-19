@@ -30,7 +30,6 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -165,8 +164,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		yaw = compound.getFloat("Yaw");
 		pitch = compound.getFloat("Pitch");
 
-		setCouplingId(
-			compound.contains("OnCoupling") ? NBTUtil.readUniqueId(compound.getCompound("OnCoupling")) : null);
+		setCouplingId(compound.contains("OnCoupling") ? compound.getUniqueId("OnCoupling") : null);
 	}
 
 	@Override

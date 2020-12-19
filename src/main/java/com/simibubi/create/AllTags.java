@@ -129,12 +129,15 @@ public class AllTags {
 		}
 
 		private AllFluidTags(NameSpace namespace, String path) {
-			tag = FluidTags.makeWrapperTag(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
+			tag = FluidTags.createOptional(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
 		
 		public boolean matches(Fluid fluid) {
 			return fluid != null && fluid.isIn(tag);
+		}
+		
+		static void loadClass() {
 		}
 	}
 
@@ -197,5 +200,7 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE);
+		
+		AllFluidTags.loadClass();
 	}
 }
