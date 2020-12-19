@@ -1,13 +1,15 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllTileEntities;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -18,8 +20,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @MethodsReturnNonnullByDefault
@@ -62,7 +62,7 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		IFluidState ifluidstate = context.getWorld()
+		FluidState ifluidstate = context.getWorld()
 			.getFluidState(context.getPos());
 		BlockState state = super.getStateForPlacement(context);
 		return state == null ? null : state.with(BlockStateProperties.WATERLOGGED,
@@ -70,7 +70,7 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 	}
 
 	@Override
-	public IFluidState getFluidState(BlockState state) {
+	public FluidState getFluidState(BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
 			: Fluids.EMPTY.getDefaultState();
 	}

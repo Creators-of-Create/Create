@@ -118,7 +118,7 @@ public class AllTags {
 		NO_INFINITE_DRAINING
 		
 		;
-		public Tag<Fluid> tag;
+		public ITag.INamedTag<Fluid> tag;
 		
 		private AllFluidTags() {
 			this(MOD, "");
@@ -129,8 +129,8 @@ public class AllTags {
 		}
 
 		private AllFluidTags(NameSpace namespace, String path) {
-			tag = new FluidTags.Wrapper(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+			tag = FluidTags.makeWrapperTag(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
 		}
 		
 		public boolean matches(Fluid fluid) {
