@@ -236,7 +236,7 @@ public class DeployerHandler {
 
 		// Right click
 		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
-		Event.Result useBlock = DENY;
+		Event.Result useBlock = DEFAULT;
 		Event.Result useItem = DEFAULT;
 		if (!clickedState.getRenderShape(world, clickedPos)
 			.isEmpty()) {
