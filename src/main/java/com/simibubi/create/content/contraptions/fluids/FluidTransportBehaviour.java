@@ -58,6 +58,9 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		World world = getWorld();
 		BlockPos pos = getPos();
 		boolean onClient = world.isRemote;
+		
+		if (interfaces == null)
+			return;
 		Collection<PipeConnection> connections = interfaces.values();
 
 		// Do not provide a lone pipe connection with its own flow input

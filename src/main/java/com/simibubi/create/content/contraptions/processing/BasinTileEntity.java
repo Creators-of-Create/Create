@@ -118,7 +118,9 @@ public class BasinTileEntity extends SmartTileEntity {
 
 		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, 1000, true)
 			.whenFluidUpdates(() -> contentsChanged = true);
-		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, 1000, true).forbidInsertion();
+		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 2, 1000, true)
+			.whenFluidUpdates(() -> contentsChanged = true)
+			.forbidInsertion();
 		behaviours.add(inputTank);
 		behaviours.add(outputTank);
 
@@ -250,7 +252,8 @@ public class BasinTileEntity extends SmartTileEntity {
 				newFacing = test;
 		}
 
-		if (preferredSpoutput != null && BasinBlock.canOutputTo(world, pos, preferredSpoutput)  && preferredSpoutput != Direction.UP)
+		if (preferredSpoutput != null && BasinBlock.canOutputTo(world, pos, preferredSpoutput)
+			&& preferredSpoutput != Direction.UP)
 			newFacing = preferredSpoutput;
 
 		if (newFacing != currentFacing)
