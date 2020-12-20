@@ -229,6 +229,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				if (remainder == null || !remainder.isEmpty()) {
 					if (force)
 						return;
+					toDistribute = remainder;
 					continue;
 				}
 
