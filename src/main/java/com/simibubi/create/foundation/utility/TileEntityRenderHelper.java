@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import java.util.Iterator;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -27,13 +25,12 @@ public class TileEntityRenderHelper {
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
 
-		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
-			TileEntity tileEntity = iterator.next();
-			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
-			if (renderer == null) {
-				iterator.remove();
+		for (TileEntity tileEntity : customRenderTEs) {
+			if (tileEntity == null)
 				continue;
-			}
+			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
+			if (renderer == null)
+				continue;
 
 			try {
 				BlockPos pos = tileEntity.getPos();
@@ -49,8 +46,6 @@ public class TileEntityRenderHelper {
 				ms.pop();
 
 			} catch (Exception e) {
-				iterator.remove();
-				
 				String message = "TileEntity " + tileEntity.getType()
 					.getRegistryName()
 					.toString() + " didn't want to render while moved.\n";
