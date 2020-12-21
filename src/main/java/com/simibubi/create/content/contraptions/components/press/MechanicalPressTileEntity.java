@@ -171,7 +171,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			return;
 		}
 
-		if (runningTicks == CYCLE / 2) {
+		if (runningTicks == CYCLE / 2 && getSpeed() != 0) {
 			if (inWorld())
 				applyPressingInWorld();
 			if (onBasin())
