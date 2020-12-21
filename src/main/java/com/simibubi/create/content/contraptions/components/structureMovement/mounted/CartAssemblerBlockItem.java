@@ -56,7 +56,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 			.with(CartAssemblerBlock.RAIL_SHAPE, shape);
 		CartAssembleRailType newType = null;
 		for (CartAssembleRailType type : CartAssembleRailType.values())
-			if (block == type.railBlock)
+			if (type.matches.test(state))
 				newType = type;
 		if (newType == null)
 			return false;

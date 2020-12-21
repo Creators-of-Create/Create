@@ -55,7 +55,7 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 			.with(SHAPE, NORTH_SOUTH));
 	}
 
-	private static Vec3i getAccelerationVector(BlockState state) {
+	public static Vec3i getAccelerationVector(BlockState state) {
 		Direction pointingTo = getPointingTowards(state);
 		return (isStateBackwards(state) ? pointingTo.getOpposite() : pointingTo).getDirectionVec();
 	}
