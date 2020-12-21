@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.Block;
@@ -86,12 +87,16 @@ public class SchematicWorld extends WrappedWorld {
 
 		BlockState blockState = getBlockState(pos);
 		if (blockState.hasTileEntity()) {
-			TileEntity tileEntity = blockState.createTileEntity(this);
-			if (tileEntity != null) {
-				tileEntity.setLocation(this, pos);
-				tileEntities.put(pos, tileEntity);
+			try {
+				TileEntity tileEntity = blockState.createTileEntity(this);
+				if (tileEntity != null) {
+					tileEntity.setLocation(this, pos);
+					tileEntities.put(pos, tileEntity);
+				}
+				return tileEntity;
+			} catch (Exception e) {
+				Create.logger.debug("Could not create TE of block " + blockState + ": " + e);
 			}
-			return tileEntity;
 		}
 		return null;
 	}
