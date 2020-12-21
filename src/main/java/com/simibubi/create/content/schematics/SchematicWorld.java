@@ -36,6 +36,7 @@ public class SchematicWorld extends WrappedWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
+	private List<TileEntity> renderedTileEntities;
 	private List<Entity> entities;
 	private MutableBoundingBox bounds;
 	public BlockPos anchor;
@@ -52,6 +53,7 @@ public class SchematicWorld extends WrappedWorld {
 		this.bounds = new MutableBoundingBox();
 		this.anchor = anchor;
 		this.entities = new ArrayList<>();
+		this.renderedTileEntities = new ArrayList<>();
 	}
 
 	public Set<BlockPos> getAllPositions() {
@@ -92,6 +94,7 @@ public class SchematicWorld extends WrappedWorld {
 				if (tileEntity != null) {
 					tileEntity.setLocation(this, pos);
 					tileEntities.put(pos, tileEntity);
+					renderedTileEntities.add(tileEntity);
 				}
 				return tileEntity;
 			} catch (Exception e) {
@@ -193,8 +196,8 @@ public class SchematicWorld extends WrappedWorld {
 		return bounds;
 	}
 
-	public Iterable<TileEntity> getTileEntities() {
-		return tileEntities.values();
+	public Iterable<TileEntity> getRenderedTileEntities() {
+		return renderedTileEntities;
 	}
 
 }

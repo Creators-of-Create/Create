@@ -77,7 +77,7 @@ public class SchematicRenderer {
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
-		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getTileEntities(), ms, new MatrixStack(),
+		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, new MatrixStack(),
 			buffer);
 	}
 
