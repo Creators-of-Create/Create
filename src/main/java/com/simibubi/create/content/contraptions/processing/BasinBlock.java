@@ -158,6 +158,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemHelper.dropContents(worldIn, pos, te.inputInventory);
 			ItemHelper.dropContents(worldIn, pos, te.outputInventory);
+			te.spoutputBuffer.forEach(is -> Block.spawnAsEntity(worldIn, pos, is));
 		});
 		worldIn.removeTileEntity(pos);
 	}

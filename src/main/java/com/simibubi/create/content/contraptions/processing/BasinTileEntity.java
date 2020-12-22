@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -33,6 +34,7 @@ import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -82,6 +84,7 @@ public class BasinTileEntity extends SmartTileEntity {
 
 	List<Direction> disabledSpoutputs;
 	Direction preferredSpoutput;
+	protected List<ItemStack> spoutputBuffer;
 
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
@@ -106,6 +109,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		visualizedOutputFluids = Collections.synchronizedList(new ArrayList<>());
 		disabledSpoutputs = new ArrayList<>();
 		preferredSpoutput = null;
+		spoutputBuffer = new ArrayList<>();
 	}
 
 	@Override
@@ -143,6 +147,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		disabledSpoutputs.clear();
 		ListNBT disabledList = compound.getList("DisabledSpoutput", NBT.TAG_STRING);
 		disabledList.forEach(d -> disabledSpoutputs.add(Direction.valueOf(((StringNBT) d).getString())));
+		spoutputBuffer = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 
 		if (!clientPacket)
 			return;
@@ -165,6 +170,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		ListNBT disabledList = new ListNBT();
 		disabledSpoutputs.forEach(d -> disabledList.add(StringNBT.of(d.name())));
 		compound.put("DisabledSpoutput", disabledList);
+		compound.put("Overflow", NBTHelper.writeItemList(spoutputBuffer));
 
 		if (!clientPacket)
 			return;
@@ -269,6 +275,10 @@ public class BasinTileEntity extends SmartTileEntity {
 			ingredientRotationSpeed.tickChaser();
 			ingredientRotation.setValue(ingredientRotation.getValue() + ingredientRotationSpeed.getValue());
 		}
+
+		if (!spoutputBuffer.isEmpty() && !world.isRemote)
+			tryClearingSpoutputOverflow();
+
 		if (!contentsChanged)
 			return;
 		contentsChanged = false;
@@ -284,6 +294,46 @@ public class BasinTileEntity extends SmartTileEntity {
 				if (te instanceof BasinTileEntity)
 					((BasinTileEntity) te).contentsChanged = true;
 			}
+		}
+	}
+
+	private void tryClearingSpoutputOverflow() {
+		BlockState blockState = getBlockState();
+		if (!(blockState.getBlock() instanceof BasinBlock))
+			return;
+		Direction direction = blockState.get(BasinBlock.FACING);
+		TileEntity te = world.getTileEntity(pos.down()
+			.offset(direction));
+		IItemHandler targetInv = te == null ? null
+			: te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
+				.orElse(null);
+		boolean update = false;
+		
+		for (Iterator<ItemStack> iterator = spoutputBuffer.iterator(); iterator.hasNext();) {
+			ItemStack itemStack = iterator.next();
+
+			if (direction == Direction.DOWN) {
+				Block.spawnAsEntity(world, pos, itemStack);
+				iterator.remove();
+				update = true;
+				continue;
+			}
+
+			if (targetInv == null)
+				return;
+			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack, true)
+				.isEmpty())
+				continue;
+
+			update = true;
+			ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
+			iterator.remove();
+			visualizedOutputItems.add(IntAttached.withZero(itemStack));
+		}
+		
+		if (update) {
+			notifyChangeOfContents();
+			sendData();
 		}
 	}
 
@@ -370,6 +420,8 @@ public class BasinTileEntity extends SmartTileEntity {
 
 		} else {
 			// Output basin, try moving items to it
+			if (!spoutputBuffer.isEmpty())
+				return false;
 			TileEntity te = world.getTileEntity(pos.down()
 				.offset(direction));
 			if (te == null)
@@ -382,12 +434,14 @@ public class BasinTileEntity extends SmartTileEntity {
 
 		if (targetInv == null && !outputItems.isEmpty())
 			return false;
-		for (ItemStack itemStack : outputItems)
-			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
-				.isEmpty())
-				return false;
-			else if (!simulate)
-				visualizedOutputItems.add(IntAttached.withZero(itemStack));
+		for (ItemStack itemStack : outputItems) {
+			if (simulate) {
+				if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
+					.isEmpty())
+					return false;
+			} else
+				spoutputBuffer.add(itemStack.copy());
+		}
 
 		if (outputFluids.isEmpty())
 			return true;
