@@ -1,18 +1,18 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
-
 import com.tterrag.registrate.util.entry.BlockEntry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
-
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public enum CartAssembleRailType implements IStringSerializable {
 	
@@ -21,9 +21,9 @@ public enum CartAssembleRailType implements IStringSerializable {
 	DETECTOR_RAIL(Blocks.DETECTOR_RAIL),
 	ACTIVATOR_RAIL(Blocks.ACTIVATOR_RAIL),
 	CONTROLLER_RAIL(AllBlocks.CONTROLLER_RAIL, blockState -> AllBlocks.CONTROLLER_RAIL.has(blockState)
-		&& blockState.has(ControllerRailBlock.BACKWARDS) && !blockState.get(ControllerRailBlock.BACKWARDS)),
+		&& blockState.contains(ControllerRailBlock.BACKWARDS) && !blockState.get(ControllerRailBlock.BACKWARDS)),
 	CONTROLLER_RAIL_BACKWARDS(AllBlocks.CONTROLLER_RAIL, blockState -> AllBlocks.CONTROLLER_RAIL.has(blockState)
-		&& blockState.has(ControllerRailBlock.BACKWARDS) && blockState.get(ControllerRailBlock.BACKWARDS))
+		&& blockState.contains(ControllerRailBlock.BACKWARDS) && blockState.get(ControllerRailBlock.BACKWARDS))
 	
 	;
 
