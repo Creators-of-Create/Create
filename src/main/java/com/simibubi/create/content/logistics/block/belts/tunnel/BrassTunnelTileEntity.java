@@ -205,7 +205,10 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			indexStart = 0;
 
 		ItemStack toDistribute = null;
+		int leftovers = 0;
+
 		for (boolean simulate : Iterate.trueAndFalse) {
+			leftovers = 0;
 			int index = indexStart;
 			int stackSize = stackToDistribute.getCount();
 			int splitStackSize = stackSize / amountTargets;
@@ -226,12 +229,13 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				ItemStack toOutput = ItemHandlerHelper.copyStackWithSize(toDistribute, count);
 				ItemStack remainder = insertIntoTunnel(tunnel, side, toOutput, simulate);
 
-				if (remainder == null || !remainder.isEmpty()) {
+				if (remainder == null || remainder.getCount() == count) {
 					if (force)
 						return;
 					continue;
 				}
 
+				leftovers += remainder.getCount();
 				toDistribute.shrink(count);
 				if (toDistribute.isEmpty())
 					break;
@@ -241,7 +245,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			}
 		}
 
-		stackToDistribute = toDistribute.copy();
+		stackToDistribute = ItemHandlerHelper.copyStackWithSize(stackToDistribute, toDistribute.getCount() + leftovers);
 		previousOutputIndex++;
 		previousOutputIndex %= amountTargets;
 		notifyUpdate();

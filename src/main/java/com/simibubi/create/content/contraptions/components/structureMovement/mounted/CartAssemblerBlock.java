@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -51,6 +52,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -60,6 +62,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -88,13 +91,17 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	private static Item getRailItem(BlockState state) {
-		return state.get(RAIL_TYPE).railItem;
+		return state.get(RAIL_TYPE).getItem();
 	}
 
 	public static BlockState getRailBlock(BlockState state) {
-		AbstractRailBlock railBlock = (AbstractRailBlock) state.get(RAIL_TYPE).railBlock;
-		return railBlock.getDefaultState()
+		AbstractRailBlock railBlock = (AbstractRailBlock) state.get(RAIL_TYPE).getBlock();
+		BlockState railState = railBlock.getDefaultState()
 			.with(railBlock.getShapeProperty(), state.get(RAIL_SHAPE));
+		if (railState.contains(ControllerRailBlock.BACKWARDS)) {
+			railState = railState.with(ControllerRailBlock.BACKWARDS, state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS);
+		}
+		return railState;
 	}
 
 	@Override
@@ -188,6 +195,11 @@ public class CartAssemblerBlock extends AbstractRailBlock
 				float speed = getRailMaxSpeed(state, world, pos, cart);
 				cart.setMotion(facing.getXOffset() * speed, facing.getYOffset() * speed, facing.getZOffset() * speed);
 			}
+			if (action == CartAssemblerAction.ASSEMBLE_ACCELERATE_DIRECTIONAL) {
+				Vector3i accelerationVector = ControllerRailBlock.getAccelerationVector(AllBlocks.CONTROLLER_RAIL.getDefaultState().with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE)).with(ControllerRailBlock.BACKWARDS, state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS));
+				float speed = getRailMaxSpeed(state, world, pos, cart);
+				cart.setMotion(Vector3d.of(accelerationVector).scale(speed));
+			}
 			if (action == CartAssemblerAction.DISASSEMBLE_BRAKE) {
 				Vector3d diff = VecHelper.getCenterOf(pos)
 					.subtract(cart.getPositionVec());
@@ -198,10 +210,10 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	public enum CartAssemblerAction {
-		ASSEMBLE, DISASSEMBLE, ASSEMBLE_ACCELERATE, DISASSEMBLE_BRAKE, PASS;
+		ASSEMBLE, DISASSEMBLE, ASSEMBLE_ACCELERATE, DISASSEMBLE_BRAKE, ASSEMBLE_ACCELERATE_DIRECTIONAL, PASS;
 
 		public boolean shouldAssemble() {
-			return this == ASSEMBLE || this == ASSEMBLE_ACCELERATE;
+			return this == ASSEMBLE || this == ASSEMBLE_ACCELERATE || this == ASSEMBLE_ACCELERATE_DIRECTIONAL;
 		}
 
 		public boolean shouldDisassemble() {
@@ -226,6 +238,9 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			return cart.getPassengers()
 				.isEmpty() ? CartAssemblerAction.ASSEMBLE_ACCELERATE : CartAssemblerAction.DISASSEMBLE;
 
+		if (type == CartAssembleRailType.CONTROLLER_RAIL || type == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS)
+			return powered ? CartAssemblerAction.ASSEMBLE_ACCELERATE_DIRECTIONAL : CartAssemblerAction.DISASSEMBLE_BRAKE;
+
 		return CartAssemblerAction.PASS;
 	}
 
@@ -245,7 +260,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 			CartAssembleRailType newType = null;
 			for (CartAssembleRailType type : CartAssembleRailType.values())
-				if (heldItem == type.railItem)
+				if (heldItem == type.getItem())
 					newType = type;
 			if (newType == null)
 				return ActionResultType.PASS;
@@ -498,5 +513,23 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			@Nonnull BlockPos p_220053_3_, @Nonnull ISelectionContext p_220053_4_) {
 			return VoxelShapes.empty();
 		}
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		World world = context.getWorld();
+		if (world.isRemote)
+			return ActionResultType.SUCCESS;
+		BlockPos pos = context.getPos();
+		BlockState newState = state.with(RAIL_SHAPE, state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
+		if (state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL || state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS) {
+			newState = newState.with(RAIL_TYPE, AllBlocks.CONTROLLER_RAIL.get().rotate(AllBlocks.CONTROLLER_RAIL.getDefaultState()
+				.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE)).with(ControllerRailBlock.BACKWARDS,
+					state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS), Rotation.CLOCKWISE_90)
+				.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS : CartAssembleRailType.CONTROLLER_RAIL);
+		}
+			context.getWorld().setBlockState(pos, newState, 3);
+			world.notifyNeighborsOfStateChange(pos.down(), this);
+		return ActionResultType.SUCCESS;
 	}
 }

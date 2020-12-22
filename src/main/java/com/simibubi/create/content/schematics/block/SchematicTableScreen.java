@@ -126,9 +126,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
 		RenderSystem.disableLighting();
-		drawTexture(matrixStack, mainLeft + 70, mainTop + 58, SCHEMATIC_TABLE_PROGRESS.startX,
+		drawTexture(matrixStack, mainLeft + 70, mainTop + 57, SCHEMATIC_TABLE_PROGRESS.startX,
 			SCHEMATIC_TABLE_PROGRESS.startY, width, height);
-
 	}
 
 	@Override

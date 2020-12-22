@@ -64,6 +64,7 @@ import net.minecraft.block.SlimeBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -86,6 +87,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -608,12 +610,12 @@ public abstract class Contraption {
 		int index = 0;
 		for (MountedStorage mountedStorage : storage.values())
 			handlers[index++] = mountedStorage.getItemHandler();
-		
+
 		IFluidHandler[] fluidHandlers = new IFluidHandler[fluidStorage.size()];
 		index = 0;
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
-		
+
 		inventory = new CombinedInvWrapper(handlers);
 		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 
@@ -823,6 +825,11 @@ public abstract class Contraption {
 				}
 			}
 		}
+
+		for (int i = 0; i < inventory.getSlots(); i++)
+			inventory.setStackInSlot(i, ItemStack.EMPTY);
+		for (int i = 0; i < fluidInventory.getTanks(); i++)
+			fluidInventory.drain(fluidInventory.getFluidInTank(i), FluidAction.EXECUTE);
 
 		for (Pair<BlockPos, Direction> pair : superglue) {
 			BlockPos targetPos = transform.apply(pair.getKey());

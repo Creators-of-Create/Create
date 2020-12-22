@@ -77,6 +77,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 								ItemStack container = fhi.getContainer();
 								if (container.isItemEqual(copy))
 									return;
+								if (container.isEmpty())
+									return;
 
 								Ingredient bucket = Ingredient.fromStacks(stack);
 								ResourceLocation itemName = stack.getItem()

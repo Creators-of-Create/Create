@@ -761,7 +761,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getRedstonePower))
 			.tag(BlockTags.RAILS)
 			.item()
-			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName() + "_item")))
+			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName())))
 			.build()
 			.register();
 

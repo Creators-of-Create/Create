@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -39,6 +40,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 	private Map<BlockPos, BlockState> blocks;
 	private Map<BlockPos, TileEntity> tileEntities;
+	private List<TileEntity> renderedTileEntities;
 	private List<Entity> entities;
 	private MutableBoundingBox bounds;
 	public BlockPos anchor;
@@ -55,6 +57,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		this.bounds = new MutableBoundingBox();
 		this.anchor = anchor;
 		this.entities = new ArrayList<>();
+		this.renderedTileEntities = new ArrayList<>();
 	}
 
 	public Set<BlockPos> getAllPositions() {
@@ -90,12 +93,17 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 		BlockState blockState = getBlockState(pos);
 		if (blockState.hasTileEntity()) {
-			TileEntity tileEntity = blockState.createTileEntity(this);
-			if (tileEntity != null) {
-				tileEntity.setLocation(this, pos);
-				tileEntities.put(pos, tileEntity);
+			try {
+				TileEntity tileEntity = blockState.createTileEntity(this);
+				if (tileEntity != null) {
+					tileEntity.setLocation(this, pos);
+					tileEntities.put(pos, tileEntity);
+					renderedTileEntities.add(tileEntity);
+				}
+				return tileEntity;
+			} catch (Exception e) {
+				Create.logger.debug("Could not create TE of block " + blockState + ": " + e);
 			}
-			return tileEntity;
 		}
 		return null;
 	}
@@ -192,8 +200,8 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		return bounds;
 	}
 
-	public Iterable<TileEntity> getTileEntities() {
-		return tileEntities.values();
+	public Iterable<TileEntity> getRenderedTileEntities() {
+		return renderedTileEntities;
 	}
 
 	@Override
