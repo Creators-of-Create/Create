@@ -284,7 +284,16 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expand(width - 1, height - 1, width - 1);
+		if (isController())
+			return super.getRenderBoundingBox().expand(width - 1, height - 1, width - 1);
+		return super.getRenderBoundingBox();
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		int dist = 64 + getMaxHeight() * 2;
+		return dist * dist;
 	}
 
 	@Nullable
