@@ -7,7 +7,6 @@ import java.util.Set;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 
@@ -40,7 +39,7 @@ public abstract class TranslatingContraption extends Contraption {
 	}
 
 	@Override
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+	public void removeBlocksFromWorld(World world, BlockPos offset) {
 		int count = blocks.size();
 		super.removeBlocksFromWorld(world, offset);
 		if (count != blocks.size()) {
