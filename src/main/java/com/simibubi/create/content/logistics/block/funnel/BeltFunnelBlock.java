@@ -6,6 +6,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -43,7 +45,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrenchable {
+public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrenchable, ISpecialBlockItemRequirement {
 
 	private BlockEntry<? extends FunnelBlock> parent;
 
@@ -235,6 +237,11 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 				AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL_KISS, context.getPlayer());
 		}
 		return ActionResultType.SUCCESS;
+	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		return ItemRequirement.of(parent.getDefaultState());
 	}
 
 }

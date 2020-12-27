@@ -62,9 +62,9 @@ public class SuperByteBuffer {
 
 		template = GLAllocation.createDirectByteBuffer(size);
 		template.order(rendered.order());
-		((Buffer)template).limit(((Buffer)rendered).limit());
+		((Buffer) template).limit(((Buffer) rendered).limit());
 		template.put(rendered);
-		((Buffer)template).rewind();
+		((Buffer) template).rewind();
 
 		transforms = new MatrixStack();
 	}
@@ -81,11 +81,14 @@ public class SuperByteBuffer {
 
 	private static final Long2DoubleMap skyLightCache = new Long2DoubleOpenHashMap();
 	private static final Long2DoubleMap blockLightCache = new Long2DoubleOpenHashMap();
+	Vector4f pos = new Vector4f();
+	Vector4f lightPos = new Vector4f();
+
 	public void renderInto(MatrixStack input, IVertexBuilder builder) {
 		ByteBuffer buffer = template;
-		if (((Buffer)buffer).limit() == 0)
+		if (((Buffer) buffer).limit() == 0)
 			return;
-		((Buffer)buffer).rewind();
+		((Buffer) buffer).rewind();
 
 		Matrix4f t = input.peek()
 			.getModel()
@@ -94,24 +97,25 @@ public class SuperByteBuffer {
 			.getModel();
 		t.multiply(localTransforms);
 
-		skyLightCache.clear();
-		blockLightCache.clear();
-		for (int i = 0; i < vertexCount(buffer); i++) {
+		if (shouldLight && lightTransform != null) {
+			skyLightCache.clear();
+			blockLightCache.clear();
+		}
+
+		float f = .5f;
+		int vertexCount = vertexCount(buffer);
+		for (int i = 0; i < vertexCount; i++) {
 			float x = getX(buffer, i);
 			float y = getY(buffer, i);
 			float z = getZ(buffer, i);
-
-			Vector4f pos = new Vector4f(x, y, z, 1F);
-			Vector4f lightPos = new Vector4f(x, y, z, 1F);
-			pos.transform(t);
-			lightPos.transform(localTransforms);
-
-			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
-
 			byte r = getR(buffer, i);
 			byte g = getG(buffer, i);
 			byte b = getB(buffer, i);
 			byte a = getA(buffer, i);
+
+			pos.set(x, y, z, 1F);
+			pos.transform(t);
+			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
 			if (shouldColor) {
 				float lum = (r < 0 ? 255 + r : r) / 256f;
@@ -134,6 +138,8 @@ public class SuperByteBuffer {
 			if (shouldLight) {
 				int light = packedLightCoords;
 				if (lightTransform != null) {
+					lightPos.set(((x - f) * 15 / 16f) + f, (y - f) * 15 / 16f + f, (z - f) * 15 / 16f + f, 1F);
+					lightPos.transform(localTransforms);
 					lightPos.transform(lightTransform);
 					light = getLight(Minecraft.getInstance().world, lightPos);
 				}
@@ -214,7 +220,7 @@ public class SuperByteBuffer {
 	}
 
 	protected int vertexCount(ByteBuffer buffer) {
-		return ((Buffer)buffer).limit() / formatSize;
+		return ((Buffer) buffer).limit() / formatSize;
 	}
 
 	protected int getBufferPosition(int vertexIndex) {
@@ -277,21 +283,22 @@ public class SuperByteBuffer {
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		double sky = 0, block = 0;
 		float offset = 1 / 8f;
-		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset) {
-			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset) {
-				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
-					pos.setPos(lightPos.getX() + xOffset, lightPos.getY() + yOffset, lightPos.getZ() + zOffset);
-					sky += skyLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.SKY, pos) / 8.0);
-					block += blockLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.BLOCK, pos) / 8.0);
-				}
-			}
-		}
+//		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset) {
+//			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset) {
+//				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
+//					pos.setPos(lightPos.getX() + xOffset, lightPos.getY() + yOffset, lightPos.getZ() + zOffset);
+		pos.setPos(lightPos.getX() + 0, lightPos.getY() + 0, lightPos.getZ() + 0);
+		sky += skyLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.SKY, pos));
+		block += blockLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.BLOCK, pos));
+//				}
+//			}
+//		}
 
 		return ((int) sky) << 20 | ((int) block) << 4;
 	}
-	
+
 	public boolean isEmpty() {
-		return ((Buffer)template).limit() == 0;
+		return ((Buffer) template).limit() == 0;
 	}
 
 }

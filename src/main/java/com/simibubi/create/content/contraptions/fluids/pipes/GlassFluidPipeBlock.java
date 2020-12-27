@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -24,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable {
+public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty ALT = BooleanProperty.create("alt");
 
@@ -73,5 +76,10 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 	public IFluidState getFluidState(BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
 			: Fluids.EMPTY.getDefaultState();
+	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState());
 	}
 }

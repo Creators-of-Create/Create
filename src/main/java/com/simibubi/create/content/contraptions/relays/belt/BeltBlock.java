@@ -31,7 +31,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -63,7 +62,6 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -211,22 +209,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return ActionResultType.PASS;
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
-		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
-
-		if (isDye) {
-			if (world.isRemote)
-				return ActionResultType.SUCCESS;
-			withTileEntityDo(world, pos, te -> {
-				DyeColor dyeColor = DyeColor.getColor(heldItem);
-				if (dyeColor == null)
-					return;
-				te.applyColor(dyeColor);
-			});
-			if (!player.isCreative())
-				heldItem.shrink(1);
-			return ActionResultType.SUCCESS;
-		}
 
 		BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos);
 		if (belt == null)
