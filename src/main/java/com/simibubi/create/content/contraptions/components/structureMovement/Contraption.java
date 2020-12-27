@@ -59,7 +59,6 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.block.SlimeBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
@@ -297,14 +296,14 @@ public abstract class Contraption {
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
 
 		// Slime blocks and super glue drag adjacent blocks if possible
-		boolean isSlimeBlock = state.getBlock() instanceof SlimeBlock;
+		boolean isStickyBlock = state.isStickyBlock();
 		for (Direction offset : Iterate.directions) {
 			BlockPos offsetPos = pos.offset(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
 			if (!movementAllowed(world, offsetPos)) {
-				if (offset == forcedDirection && isSlimeBlock)
+				if (offset == forcedDirection && isStickyBlock)
 					return false;
 				continue;
 			}
@@ -315,7 +314,7 @@ public abstract class Contraption {
 				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
-			if (!wasVisited && ((isSlimeBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
+			if (!wasVisited && ((isStickyBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -713,7 +712,7 @@ public abstract class Contraption {
 		return nbt;
 	}
 
-	public void removeBlocksFromWorld(IWorld world, BlockPos offset) {
+	public void removeBlocksFromWorld(World world, BlockPos offset) {
 		storage.values()
 			.forEach(MountedStorage::removeStorageFromWorld);
 		fluidStorage.values()
@@ -727,8 +726,7 @@ public abstract class Contraption {
 				if (brittles != BlockMovementTraits.isBrittle(block.state))
 					continue;
 
-				BlockPos add = block.pos.add(anchor)
-					.add(offset);
+				BlockPos add = block.pos.add(anchor).add(offset);
 				if (customBlockRemoval(world, add, block.state))
 					continue;
 				BlockState oldState = world.getBlockState(add);
@@ -737,9 +735,7 @@ public abstract class Contraption {
 					iterator.remove();
 				world.getWorld()
 					.removeTileEntity(add);
-				int flags = 67;
-				if (blockIn instanceof DoorBlock)
-					flags = flags | 32 | 16;
+				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS;
 				if (blockIn instanceof IWaterLoggable && oldState.has(BlockStateProperties.WATERLOGGED)
 					&& oldState.get(BlockStateProperties.WATERLOGGED)
 						.booleanValue()) {
@@ -748,6 +744,10 @@ public abstract class Contraption {
 				}
 				world.setBlockState(add, Blocks.AIR.getDefaultState(), flags);
 			}
+		}
+		for (BlockInfo block : blocks.values()) {
+			BlockPos add = block.pos.add(anchor).add(offset);
+			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(), BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
 		}
 	}
 

@@ -68,4 +68,9 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		ms.pop();
 	}
 
+	@Override
+	public boolean isGlobalRenderer(FluidTankTileEntity te) {
+		return te.isController();
+	}
+
 }
