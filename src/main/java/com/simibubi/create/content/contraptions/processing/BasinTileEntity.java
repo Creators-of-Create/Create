@@ -435,7 +435,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		if (targetInv == null && !outputItems.isEmpty())
 			return false;
 		for (ItemStack itemStack : outputItems) {
-			if (simulate) {
+			if (simulate || direction == Direction.DOWN) {
 				if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 					.isEmpty())
 					return false;

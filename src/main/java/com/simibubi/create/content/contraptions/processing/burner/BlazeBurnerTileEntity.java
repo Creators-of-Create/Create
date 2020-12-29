@@ -120,6 +120,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			return false;
 		if (newFuel.ordinal() < activeFuel.ordinal())
 			return false;
+		if (activeFuel == FuelType.SPECIAL && remainingBurnTime > 20)
+			return false;
 
 		if (newFuel == activeFuel) {
 			if (remainingBurnTime + newBurnTime > maxHeatCapacity && !forceOverflow)

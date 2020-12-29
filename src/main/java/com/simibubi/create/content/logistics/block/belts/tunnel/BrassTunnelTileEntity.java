@@ -414,6 +414,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		for (Direction direction : Iterate.horizontalDirections) {
 			if (direction == movementFacing && below.getSpeed() == 0)
 				continue;
+			if (direction == movementFacing.getOpposite())
+				continue;
 			if (tunnelTE.flaps.containsKey(direction) || tunnelTE.hasValidOutputFunnel(direction)) {
 				BlockPos offset = tunnelTE.pos.down()
 					.offset(direction);
