@@ -20,7 +20,7 @@ import net.minecraft.item.Items;
 public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
 	public FanWashingCategory() {
-		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
+		super(185, doubleItemIcon(AllItems.PROPELLER.get(), Items.WATER_BUCKET));
 	}
 
 	@Override
@@ -37,18 +37,19 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, SplashingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 20, 47);
+		itemStacks.init(0, true, 12, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
 				.get(0)
 				.getMatchingStacks()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		boolean single = results.size() == 1;
+		boolean excessive = results.size() > 9;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
-			int xOffset = outputIndex % 2 == 0 ? 0 : 19;
-			int yOffset = (outputIndex / 2) * -19;
+			int xOffset = (outputIndex % 3) * 19;
+			int yOffset = (outputIndex / 3) * -19;
 
-			itemStacks.init(outputIndex + 1, false, single ? 139 : 133 + xOffset, 47 + yOffset);
+			itemStacks.init(outputIndex + 1, false, single ? 126 : 121 + xOffset, 47 + yOffset + (excessive ? 8 : 0));
 			itemStacks.set(outputIndex + 1, results.get(outputIndex)
 					.getStack());
 		}
@@ -61,21 +62,26 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 		int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 
-		AllGuiTextures.JEI_SLOT.draw(20, 47);
-		AllGuiTextures.JEI_SHADOW.draw(47, 29);
-		AllGuiTextures.JEI_SHADOW.draw(66, 39);
-		AllGuiTextures.JEI_LONG_ARROW.draw(53, 51);
+		AllGuiTextures.JEI_SLOT.draw(12, 47);
+		AllGuiTextures.JEI_SHADOW.draw(39, 29);
+		AllGuiTextures.JEI_SHADOW.draw(54, 39);
+		AllGuiTextures.JEI_LONG_ARROW.draw(42, 51);
 
 		if (size == 1) {
-			getRenderedSlot(recipe, 0).draw(139, 47);
+			getRenderedSlot(recipe, 0).draw(126, 47);
 			return;
 		}
 
 		for (int i = 0; i < size; i++) {
-			int xOffset = i % 2 == 0 ? 0 : 19;
-			int yOffset = (i / 2) * -19;
-			getRenderedSlot(recipe, i).draw(133 + xOffset, 47 + yOffset);
+			int xOffset = (i % 3) * 19;
+			int yOffset = (i / 3) * -19 + (size > 9 ? 8 : 0);
+			getRenderedSlot(recipe, i).draw(121 + xOffset, 47 + yOffset);
 		}
+	}
+	
+	@Override
+	protected void translateFan() {
+		RenderSystem.translatef(43, 33, 0);
 	}
 
 	@Override

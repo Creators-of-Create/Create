@@ -101,6 +101,8 @@ public abstract class FunnelBlock extends ProperDirectionalBlock implements ITE<
 			return;
 		if (!canInsertIntoFunnel(state))
 			return;
+		if (!entityIn.isAlive())
+			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 
 		Direction direction = state.get(FACING);
