@@ -8,7 +8,8 @@ public enum Mods {
 	TH("thermal", false), 
 	MW("mysticalworld", false), 
 	SM("silents_mechanisms", false), 
-	IE("immersiveengineering", true)
+	IE("immersiveengineering", true),
+	EID("eidolon", false)
 
 	;
 
