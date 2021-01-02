@@ -24,7 +24,11 @@ import net.minecraft.util.text.TextFormatting;
 public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
 
 	public ProcessingViaFanCategory(IDrawable icon) {
-		super(icon, emptyBackground(177, 70));
+		this(177, icon);
+	}
+	
+	protected ProcessingViaFanCategory(int width, IDrawable icon) {
+		super(icon, emptyBackground(width, 71));
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	public void draw(T recipe, double mouseX, double mouseY) {
 		renderWidgets(recipe, mouseX, mouseY);
 		RenderSystem.pushMatrix();
-		RenderSystem.translatef(56, 33, 0);
+		translateFan();
 		RenderSystem.rotatef(-12.5f, 1, 0, 0);
 		RenderSystem.rotatef(22.5f, 0, 1, 0);
 		int scale = 24;
@@ -80,6 +84,10 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 
 		renderAttachedBlock();
 		RenderSystem.popMatrix();
+	}
+
+	protected void translateFan() {
+		RenderSystem.translatef(56, 33, 0);
 	}
 
 	public abstract void renderAttachedBlock();

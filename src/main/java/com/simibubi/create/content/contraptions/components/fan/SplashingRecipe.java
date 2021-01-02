@@ -32,7 +32,7 @@ public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.Splashin
 
 	@Override
 	protected int getMaxOutputCount() {
-		return 6;
+		return 12;
 	}
 
 }

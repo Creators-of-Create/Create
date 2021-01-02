@@ -281,6 +281,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		if (!inventory.isEmpty())
 			return;
+		if (!entity.isAlive())
+			return;
 		if (world.isRemote)
 			return;
 
