@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
 import static com.simibubi.create.foundation.data.recipe.Mods.MW;
 import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+import static com.simibubi.create.foundation.data.recipe.Mods.INF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -972,7 +973,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		CRUSHED_OSMIUM = blastModdedCrushedMetal(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
 		CRUSHED_PLATINUM = blastModdedCrushedMetal(AllItems.CRUSHED_PLATINUM, "platinum", SM),
-		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, TH, IE, SM),
+		CRUSHED_SILVER = blastModdedCrushedMetal(AllItems.CRUSHED_SILVER, "silver", MW, TH, IE, SM, INF),
 		CRUSHED_TIN = blastModdedCrushedMetal(AllItems.CRUSHED_TIN, "tin", MEK, TH, MW, SM),
 		CRUSHED_LEAD = blastModdedCrushedMetal(AllItems.CRUSHED_LEAD, "lead", MW, TH, IE, SM),
 		CRUSHED_QUICKSILVER = blastModdedCrushedMetal(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),
