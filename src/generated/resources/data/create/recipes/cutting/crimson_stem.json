@@ -1,0 +1,14 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:crimson_stem"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:stripped_crimson_stem"
+    }
+  ],
+  "processingTime": 50
+}

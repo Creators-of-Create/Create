@@ -93,17 +93,9 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			.output(.25f, Items.DIAMOND, 1)
 			.output(.125f, Blocks.COBBLESTONE)),
 
-		NETHER_WART_NO_QUARK = create("nether_wart_block_no_quark", b -> b.duration(150)
+		NETHER_WART = create("nether_wart_block", b -> b.duration(150)
 			.require(Blocks.NETHER_WART_BLOCK)
-			.output(Items.NETHER_WART, 6)
-			.output(.5f, Items.NETHER_WART, 2)
-			.whenModMissing("quark")),
-
-		NETHER_WART_QUARK = create("nether_wart_block_quark", b -> b.duration(150)
-			.require(Blocks.NETHER_WART_BLOCK)
-			.output(Items.NETHER_WART, 2)
-			.output(.5f, Items.NETHER_WART, 2)
-			.whenModLoaded("quark")),
+			.output(.25f, Items.NETHER_WART, 1)),
 
 		GLOWSTONE = create(() -> Blocks.GLOWSTONE, b -> b.duration(150)
 			.output(Items.GLOWSTONE_DUST, 3)

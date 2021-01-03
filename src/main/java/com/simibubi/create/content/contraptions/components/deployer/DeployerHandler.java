@@ -195,7 +195,7 @@ public class DeployerHandler {
 		if (mode == Mode.PUNCH) {
 			if (!world.isBlockModifiable(player, clickedPos))
 				return;
-			if (clickedState.getRenderShape(world, clickedPos)
+			if (clickedState.getShape(world, clickedPos)
 				.isEmpty()) {
 				player.blockBreakingProgress = null;
 				return;
@@ -238,7 +238,7 @@ public class DeployerHandler {
 		ItemUseContext itemusecontext = new ItemUseContext(player, hand, result);
 		Event.Result useBlock = DEFAULT;
 		Event.Result useItem = DEFAULT;
-		if (!clickedState.getRenderShape(world, clickedPos)
+		if (!clickedState.getShape(world, clickedPos)
 			.isEmpty()) {
 			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
 			useBlock = event.getUseBlock();

@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags;
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.CactusBlock;
 import net.minecraft.block.ChorusFlowerBlock;
 import net.minecraft.block.ChorusPlantBlock;
@@ -89,7 +90,8 @@ public class TreeCutter {
 			return null;
 
 		visited.add(pos);
-		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1)).forEach(p -> frontier.add(new BlockPos(p)));
+		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1))
+			.forEach(p -> frontier.add(new BlockPos(p)));
 
 		// Find all logs
 		while (!frontier.isEmpty()) {
@@ -118,19 +120,22 @@ public class TreeCutter {
 			BlockState blockState = reader.getBlockState(currentPos);
 			boolean isLog = isLog(blockState);
 			boolean isLeaf = isLeaf(blockState);
+			boolean isGenericLeaf = isLeaf || isNonDecayingLeaf(blockState);
 
-			if (!isLog && !isLeaf)
+			if (!isLog && !isGenericLeaf)
 				continue;
-			if (isLeaf)
+			if (isGenericLeaf)
 				leaves.add(currentPos);
 
-			int distance = isLog ? 0 : blockState.get(LeavesBlock.DISTANCE);
+			int distance = !isLeaf ? 0 : blockState.get(LeavesBlock.DISTANCE);
 			for (Direction direction : Iterate.directions) {
 				BlockPos offset = currentPos.offset(direction);
 				if (visited.contains(offset))
 					continue;
 				BlockState state = reader.getBlockState(offset);
-				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance)
+				BlockPos subtract = offset.subtract(pos);
+				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
+				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance || isNonDecayingLeaf(state) && horizontalDistance < 4)
 					frontier.add(offset);
 			}
 
@@ -200,12 +205,17 @@ public class TreeCutter {
 	}
 
 	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
-		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1)).filter(Predicates.not(visited::contains))
-				.forEach(p -> frontier.add(new BlockPos(p)));
+		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1))
+			.filter(Predicates.not(visited::contains))
+			.forEach(p -> frontier.add(new BlockPos(p)));
 	}
 
 	private static boolean isLog(BlockState state) {
 		return state.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state);
+	}
+
+	private static boolean isNonDecayingLeaf(BlockState state) {
+		return state.isIn(BlockTags.WART_BLOCKS) || state.getBlock() == Blocks.SHROOMLIGHT;
 	}
 
 	private static boolean isLeaf(BlockState state) {
