@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -28,6 +29,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	private LazyOptional<IFluidHandler> capability;
 	private FluidDrainingBehaviour drainer;
 	private FluidFillingBehaviour filler;
+	private HosePulleyFluidHandler handler;
+	private boolean infinite;
 
 	public HosePulleyTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -35,9 +38,23 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			.startWithValue(0);
 		isMoving = true;
 		internalTank = new SmartFluidTank(1500, this::onTankContentsChanged);
-		IFluidHandler handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
+		handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
 			() -> pos.down((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
 		capability = LazyOptional.of(() -> handler);
+	}
+
+	@Override
+	public void sendData() {
+		infinite = filler.infinite || drainer.infinite;
+		super.sendData();
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean addToGoggleTooltip = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		if (infinite)
+			TooltipHelper.addHint(tooltip, "hint.hose_pulley");
+		return addToGoggleTooltip;
 	}
 
 	@Override
@@ -59,10 +76,10 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			offset.setValue(Math.round(offset.getValue()));
 			isMoving = false;
 		}
-		
+
 		if (isMoving) {
 			float newOffset = offset.getValue() + getMovementSpeed();
-			if (newOffset < 0) 
+			if (newOffset < 0)
 				isMoving = false;
 			if (!world.getBlockState(pos.down((int) Math.ceil(newOffset)))
 				.getMaterial()
@@ -74,7 +91,7 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 				filler.reset();
 			}
 		}
-		
+
 		super.onSpeedChanged(previousSpeed);
 	}
 
@@ -127,6 +144,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			filler.reset();
 			return;
 		}
+
+		sendData();
 	}
 
 	@Override
@@ -134,6 +153,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 		compound.put("Offset", offset.writeNBT());
 		compound.put("Tank", internalTank.writeToNBT(new CompoundNBT()));
 		super.write(compound, clientPacket);
+		if (clientPacket)
+			compound.putBoolean("Infinite", infinite);
 	}
 
 	@Override
@@ -141,6 +162,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 		offset.readNBT(compound.getCompound("Offset"), clientPacket);
 		internalTank.readFromNBT(compound.getCompound("Tank"));
 		super.read(compound, clientPacket);
+		if (clientPacket)
+			infinite = compound.getBoolean("Infinite");
 	}
 
 	@Override

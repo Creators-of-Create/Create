@@ -39,6 +39,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(Items.FLINT)),
 		SAND = create(() -> Blocks.SAND, b -> b.duration(150)
 			.output(AllPaletteBlocks.LIMESAND.get())),
+		SANDSTONE = create(() -> Blocks.SANDSTONE, b -> b.duration(150)
+			.output(Blocks.SAND)),
 		DIORITE = create(() -> Blocks.DIORITE, b -> b.duration(200)
 			.output(AllPaletteBlocks.LIMESAND.get())),
 

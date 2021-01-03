@@ -114,8 +114,9 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
-				&& !MechanicalPressTileEntity.canCompress(r.getIngredients()), BasinRecipe::convertShapeless)
+			.recipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS && r.getIngredients()
+				.size() > 1 && !MechanicalPressTileEntity.canCompress(r.getIngredients()),
+				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
 			.enableWhen(c -> c.allowShapelessInMixer)
@@ -171,6 +172,8 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
+			.recipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS && r.getIngredients()
+				.size() == 1)
 			.recipes(
 				r -> (r.getType() == IRecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.type)
 					&& (r instanceof ShapedRecipe))

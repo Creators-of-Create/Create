@@ -94,6 +94,11 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	public static boolean isStraight(BlockState state) {
 		return hasWindow(state) || state.get(SHAPE) == Shape.STRAIGHT;
 	}
+	
+	public static boolean isJunction(BlockState state) {
+		Shape shape = state.get(SHAPE);
+		return shape == Shape.CROSS || shape == Shape.T_LEFT || shape == Shape.T_RIGHT;
+	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

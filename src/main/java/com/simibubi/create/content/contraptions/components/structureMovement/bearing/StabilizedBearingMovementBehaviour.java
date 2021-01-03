@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import java.util.Optional;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -55,8 +53,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 			if (axis.isVertical())
 				offset = -orientedCE.getYaw(renderPartialTicks);
 			else {
-				Optional<Direction> initialOrientation = orientedCE.getInitialOrientation();
-				if (initialOrientation.isPresent() && initialOrientation.get()
+				if (orientedCE.isInitialOrientationPresent() && orientedCE.getInitialOrientation()
 					.getAxis() == axis)
 					offset = -orientedCE.getPitch(renderPartialTicks);
 			}

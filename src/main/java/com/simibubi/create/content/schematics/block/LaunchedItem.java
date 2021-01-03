@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.block;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
@@ -161,6 +162,8 @@ public abstract class LaunchedItem {
 					data.putInt("x", target.getX());
 					data.putInt("y", target.getY());
 					data.putInt("z", target.getZ());
+					if (tile instanceof KineticTileEntity)
+						((KineticTileEntity) tile).warnOfMovement();
 					tile.read(data);
 				}
 			}

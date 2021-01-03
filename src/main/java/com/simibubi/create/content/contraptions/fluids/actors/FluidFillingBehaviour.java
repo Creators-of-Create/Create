@@ -76,6 +76,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			if (!infinite) {
 				reset();
 				infinite = true;
+				tileEntity.sendData();
 			}
 			infinityCheckFrontier.clear();
 			setLongValidationTimer();
@@ -236,6 +237,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		queue.enqueue(new BlockPosEntry(root, 0));
 		infinite = false;
 		setValidationTimer();
+		tileEntity.sendData();
 	}
 
 	enum SpaceType {

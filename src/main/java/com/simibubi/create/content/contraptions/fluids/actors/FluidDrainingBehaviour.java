@@ -174,6 +174,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		infinite = false;
 		setValidationTimer();
 		frontier.add(new BlockPosEntry(root, 0));
+		tileEntity.sendData();
 	}
 
 	protected boolean checkValid(World world, BlockPos root) {
@@ -322,6 +323,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		newValidationSet.clear();
 		validationFrontier.clear();
 		validationVisited.clear();
+		tileEntity.sendData();
 	}
 
 	public static BehaviourType<FluidDrainingBehaviour> TYPE = new BehaviourType<>();

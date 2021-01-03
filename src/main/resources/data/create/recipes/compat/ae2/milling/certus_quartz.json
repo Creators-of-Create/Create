@@ -1,0 +1,21 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "appliedenergistics2"
+		}
+	],
+	"type": "create:milling",
+    "ingredients": [
+    	{
+    		"tag": "forge:gems/certus_quartz"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "appliedenergistics2:certus_quartz_dust",
+			"count": 1
+		}
+	],
+	"processingTime": 200
+}

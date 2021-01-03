@@ -93,8 +93,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 			boolean moving = te.inventory.recipeDuration != 0;
 			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
+			float processingSpeed = MathHelper.clamp(Math.abs(te.getSpeed()) / 32, 1, 128);
 			if (moving)
-				offset = MathHelper.clamp(offset + (-partialTicks + .5f) / te.inventory.recipeDuration, 0, 1);
+				offset = MathHelper.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / te.inventory.recipeDuration, 0, 1);
 
 			if (te.getSpeed() == 0)
 				offset = .5f;

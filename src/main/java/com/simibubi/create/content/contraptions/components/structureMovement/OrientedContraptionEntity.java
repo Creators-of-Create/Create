@@ -13,7 +13,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.entity.CreateDataSerializers;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -54,8 +53,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	private static final DataParameter<Optional<UUID>> COUPLING =
 		EntityDataManager.createKey(OrientedContraptionEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-	private static final DataParameter<Optional<Direction>> INITIAL_ORIENTATION =
-		EntityDataManager.createKey(OrientedContraptionEntity.class, CreateDataSerializers.OPTIONAL_DIRECTION);
+	private static final DataParameter<Direction> INITIAL_ORIENTATION =
+		EntityDataManager.createKey(OrientedContraptionEntity.class, DataSerializers.DIRECTION);
 
 	protected Vec3d motionBeforeStall;
 	protected boolean forceAngle;
@@ -92,15 +91,15 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public void setInitialOrientation(Direction direction) {
-		dataManager.set(INITIAL_ORIENTATION, Optional.of(direction));
+		dataManager.set(INITIAL_ORIENTATION, direction);
 	}
 
-	public Optional<Direction> getInitialOrientation() {
+	public Direction getInitialOrientation() {
 		return dataManager.get(INITIAL_ORIENTATION);
 	}
 
 	public void deferOrientation(Direction newInitialAngle) {
-		dataManager.set(INITIAL_ORIENTATION, Optional.empty());
+		dataManager.set(INITIAL_ORIENTATION, Direction.UP);
 		yaw = initialYawOffset = newInitialAngle.getHorizontalAngle();
 	}
 
@@ -110,8 +109,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public float getInitialYaw() {
-		return dataManager.get(INITIAL_ORIENTATION)
-			.orElse(Direction.SOUTH)
+		return (isInitialOrientationPresent() ? dataManager.get(INITIAL_ORIENTATION) : Direction.SOUTH)
 			.getHorizontalAngle();
 	}
 
@@ -119,7 +117,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	protected void registerData() {
 		super.registerData();
 		dataManager.register(COUPLING, Optional.empty());
-		dataManager.register(INITIAL_ORIENTATION, Optional.empty());
+		dataManager.register(INITIAL_ORIENTATION, Direction.UP);
 	}
 
 	@Override
@@ -177,9 +175,10 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			compound.put("CachedMotion",
 				newDoubleNBTList(motionBeforeStall.x, motionBeforeStall.y, motionBeforeStall.z));
 
-		Optional<Direction> optional = dataManager.get(INITIAL_ORIENTATION);
-		if (optional.isPresent())
-			NBTHelper.writeEnum(compound, "InitialOrientation", optional.get());
+		Direction optional = dataManager.get(INITIAL_ORIENTATION);
+		if (optional.getAxis()
+			.isHorizontal())
+			NBTHelper.writeEnum(compound, "InitialOrientation", optional);
 		if (forceAngle) {
 			compound.putFloat("ForceYaw", yaw);
 			forceAngle = false;
@@ -195,9 +194,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
-		if (key == INITIAL_ORIENTATION && dataManager.get(INITIAL_ORIENTATION)
-			.isPresent())
+		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent())
 			startAtInitialYaw();
+	}
+
+	public boolean isInitialOrientationPresent() {
+		return dataManager.get(INITIAL_ORIENTATION)
+			.getAxis()
+			.isHorizontal();
 	}
 
 	public void startAtInitialYaw() {
@@ -343,6 +347,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		}
 
+		prevYaw = yaw;
 		if (wasStalled)
 			return false;
 
@@ -353,8 +358,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
 		Vec3d motion = movementVector.normalize();
 
-		if (!dataManager.get(INITIAL_ORIENTATION)
-			.isPresent() && !world.isRemote) {
+		if (!isInitialOrientationPresent() && !world.isRemote) {
 			if (motion.length() > 0) {
 				Direction facingFromVector = Direction.getFacingFromVector(motion.x, motion.y, motion.z);
 				if (initialYawOffset != -1)

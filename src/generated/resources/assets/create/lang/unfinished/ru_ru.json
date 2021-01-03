@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 519",
+	"_": "Missing Localizations: 521",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1085,6 +1085,8 @@
 	"create.tooltip.chute.fans_pull_up": "UNLOCALIZED: Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "UNLOCALIZED: Fans pull from Below",
 
+	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
+	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
 	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "UNLOCALIZED: Horizontal Funnels",

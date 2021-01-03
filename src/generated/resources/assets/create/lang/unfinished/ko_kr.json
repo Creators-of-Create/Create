@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 48",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1085,6 +1085,8 @@
 	"create.tooltip.chute.fans_pull_up": "선풍기가 위에서 당김",
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
 
+	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
+	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "목표 없음",
 	"create.hint.mechanical_arm_no_targets": "이 _기계 팔_은 _목표_가 설정되지 않은 것 같습니다. _기계 팔을 손에 들고_ 벨트, 아이템 거치대, 깔때기를 _우클릭_하여 목표로 지정하세요.",
 	"create.hint.horizontal_funnel.title": "깔때기가 수평임",

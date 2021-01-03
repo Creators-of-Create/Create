@@ -244,9 +244,8 @@ public class MinecartContraptionItem extends Item {
 		tag.remove("Pos");
 		tag.remove("Motion");
 
-		Optional<Direction> initialOrientation = entity.getInitialOrientation();
-		if (initialOrientation.isPresent())
-			NBTHelper.writeEnum(tag, "InitialOrientation", initialOrientation.get());
+		if (entity.isInitialOrientationPresent())
+			NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
 
 		stack.getOrCreateTag()
 			.put("Contraption", tag);

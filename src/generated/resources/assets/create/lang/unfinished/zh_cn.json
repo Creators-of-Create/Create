@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1",
+	"_": "Missing Localizations: 3",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1085,6 +1085,8 @@
 	"create.tooltip.chute.fans_pull_up": "鼓风机从下方进行吸引",
 	"create.tooltip.chute.fans_pull_down": "鼓风机从上方进行吸引",
 
+	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
+	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "没有目标",
 	"create.hint.mechanical_arm_no_targets": "看起来这个_动力臂_没有被分配任何_目标_。在手持机械臂的同时，右键选取传送带、置物台、漏斗或其他设备来设置目标。",
 	"create.hint.horizontal_funnel.title": "水平漏斗",

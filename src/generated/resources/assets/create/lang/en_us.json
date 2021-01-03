@@ -1084,6 +1084,8 @@
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 
+	"create.hint.hose_pulley.title": "Bottomless Supply",
+	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "No Targets",
 	"create.hint.mechanical_arm_no_targets": "It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "Horizontal Funnels",
@@ -1503,7 +1505,7 @@
 	"block.create.reinforced_rail.tooltip.summary": "A timber stabilized rail, _does not need supports_.",
 
 	"block.create.mechanical_mixer.tooltip": "MECHANICAL MIXER",
-	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk for applying any shapeless crafting recipes to items beneath it. Requires constant _Rotational Force_ and a _Basin_ placed below (with a gap in between).",
+	"block.create.mechanical_mixer.tooltip.summary": "A kinetic whisk providing automated shapeless crafting recipes of multiple ingredients. Requires constant _Rotational Force_ and a _Basin_ placed below (with a gap in between).",
 	"block.create.mechanical_mixer.tooltip.condition1": "When above Basin",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Starts to mix items in the basin whenever all necessary ingredients are present. To prevent unwanted recipes, use the filter slot on the basin or cut the rotational force until all desired ingredients have been added.",
 
