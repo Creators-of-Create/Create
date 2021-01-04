@@ -61,7 +61,7 @@ public class CogWheelBlock extends AbstractShaftBlock {
                 continue;
 
             BlockState blockState = worldIn.getBlockState(pos.offset(facing));
-            if (blockState.has(AXIS) && facing.getAxis() == blockState.get(AXIS))
+            if (blockState.contains(AXIS) && facing.getAxis() == blockState.get(AXIS))
             	continue;
             
             if (isLargeCog(blockState) || isLarge && isSmallCog(blockState))
