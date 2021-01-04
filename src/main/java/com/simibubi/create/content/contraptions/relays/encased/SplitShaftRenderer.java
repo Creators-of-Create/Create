@@ -5,13 +5,11 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -29,28 +27,31 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
 		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTick();
 
 		for (Direction direction : Iterate.directions) {
 			Axis axis = direction.getAxis();
 			if (boxAxis != axis)
 				continue;
 
-			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed() * 3f / 10) % 360;
-			float modifier = 1;
 
-			if (te instanceof SplitShaftTileEntity)
-				modifier = ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
+			InstancedBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), direction);
 
-			angle *= modifier;
-			angle += offset;
-			angle = angle / 180f * (float) Math.PI;
+			shaft.setupInstance(data -> {
+				float speed = te.getSpeed();
 
-			SuperByteBuffer superByteBuffer =
-				AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), direction);
-			kineticRotationTransform(superByteBuffer, te, axis, angle, light);
-			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				float modifier = 1;
+
+				if (te instanceof SplitShaftTileEntity)
+					modifier = ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
+
+				speed *= modifier;
+
+				data.setPackedLight(light)
+					.setRotationalSpeed(speed)
+					.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
+					.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+					.setPosition(pos);
+			});
 		}
 	}
 

@@ -10,7 +10,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -26,8 +27,8 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(te.getBlockState());
+	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthInstanced(te.getBlockState());
 	}
 
 	protected static SuperByteBuffer getRotatingModel(BlockState state) {

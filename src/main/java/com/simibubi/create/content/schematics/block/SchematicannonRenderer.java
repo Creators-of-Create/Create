@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

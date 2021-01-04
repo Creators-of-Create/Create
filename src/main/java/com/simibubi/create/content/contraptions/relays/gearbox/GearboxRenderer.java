@@ -4,12 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -27,31 +25,32 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			int light, int overlay) {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTick();
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();
 			if (boxAxis == axis)
 				continue;
 
-			SuperByteBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), direction);
-			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed() * 3f / 10) % 360;
+			InstancedBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), direction);
 
-			if (te.getSpeed() != 0 && te.hasSource()) {
-				BlockPos source = te.source.subtract(te.getPos());
-				Direction sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
-				if (sourceFacing.getAxis() == direction.getAxis())
-					angle *= sourceFacing == direction ? 1 : -1;
-				else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
-					angle *= -1;
-			}
+			shaft.setupInstance(data -> {
+				float speed = te.getSpeed();
 
-			angle += offset;
-			angle = angle / 180f * (float) Math.PI;
+				if (te.getSpeed() != 0 && te.hasSource()) {
+					BlockPos source = te.source.subtract(te.getPos());
+					Direction sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
+					if (sourceFacing.getAxis() == direction.getAxis())
+						speed *= sourceFacing == direction ? 1 : -1;
+					else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
+						speed *= -1;
+				}
 
-			kineticRotationTransform(shaft, te, axis, angle, light);
-			shaft.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				data.setPackedLight(light)
+					.setRotationalSpeed(speed)
+					.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
+					.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+					.setPosition(pos);
+			});
 		}
 	}
 

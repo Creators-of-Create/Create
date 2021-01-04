@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -9,8 +8,9 @@ import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBufferCache.Compartment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -36,22 +36,35 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	@Override
+	public boolean isGlobalRenderer(KineticTileEntity te) {
+		return true;
+	}
+
+	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		for (RenderType type : RenderType.getBlockLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
-				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
+				renderRotatingBuffer(te, getRotatedModel(te), light);
 	}
 
-	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, MatrixStack ms,
-		IVertexBuilder buffer, int light) {
-		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
-		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
+	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, int light) {
+		InstancedBuffer instancedRenderer = CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, renderedState);
+		renderRotatingBuffer(te, instancedRenderer, light);
 	}
 
-	public static void renderRotatingBuffer(KineticTileEntity te, SuperByteBuffer superBuffer, MatrixStack ms,
-		IVertexBuilder buffer, int light) {
-		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, buffer);
+	public static void renderRotatingBuffer(KineticTileEntity te, InstancedBuffer instancer, int light) {
+		instancer.setupInstance(data -> {
+			final BlockPos pos = te.getPos();
+			Axis axis = ((IRotate) te.getBlockState()
+									 .getBlock()).getRotationAxis(te.getBlockState());
+
+			data.setPackedLight(light)
+				.setRotationalSpeed(te.getSpeed())
+				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
+				.setRotationAxis(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getUnitVector())
+				.setPosition(pos);
+		});
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
@@ -116,8 +129,8 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return te.getBlockState();
 	}
 
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
+	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
+		return CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

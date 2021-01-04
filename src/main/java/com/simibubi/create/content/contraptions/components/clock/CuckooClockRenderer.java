@@ -7,7 +7,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity.Animation;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -90,12 +91,12 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
 		return transform(AllBlockPartials.SHAFT_HALF, te);
 	}
 
-	private SuperByteBuffer transform(AllBlockPartials partial, KineticTileEntity te) {
-		return partial.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
+	private InstancedBuffer transform(AllBlockPartials partial, KineticTileEntity te) {
+		return partial.renderOnDirectionalSouthInstanced(te.getBlockState(), te.getBlockState()
 			.get(CuckooClockBlock.HORIZONTAL_FACING)
 			.getOpposite());
 	}

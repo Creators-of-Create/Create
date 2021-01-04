@@ -16,9 +16,10 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.ShadowRenderHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.ShadowRenderHelper;
 
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -95,28 +96,25 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					: start ? AllBlockPartials.BELT_START
 						: end ? AllBlockPartials.BELT_END : AllBlockPartials.BELT_MIDDLE;
 
-			SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
-				.light(light);
-			SpriteShiftEntry spriteShift =
-				diagonal ? AllSpriteShifts.BELT_DIAGONAL : bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
+			InstancedBuffer beltBuffer = beltPartial.renderOnInstanced(blockState);
 			int cycleLength = diagonal ? 12 : 16;
 			int cycleOffset = bottom ? 8 : 0;
 
 			// UV shift
-			float speed = te.getSpeed();
-			if (speed != 0) {
-				float time = renderTick * axisDirection.getOffset();
+
+			beltBuffer.setupInstance(data -> {
+				float speed = te.getSpeed();
 				if (diagonal && (downward ^ alongX) || !sideways && !diagonal && alongX
-					|| sideways && axisDirection == AxisDirection.NEGATIVE)
+						|| sideways && axisDirection == AxisDirection.NEGATIVE)
 					speed = -speed;
-				int textureIndex = (int) (((speed * time / 36) + cycleOffset) % cycleLength);
-				if (textureIndex < 0)
-					textureIndex += cycleLength;
 
-				beltBuffer.shiftUVtoSheet(spriteShift, (textureIndex % 4) / 4f, (textureIndex / 4) / 4f, 4);
-			}
-
-			beltBuffer.renderInto(ms, vb);
+				data.setPackedLight(light)
+					.setPosition(te.getPos())
+					.setRotationalSpeed(speed)
+					.setRotationAxis(0, 0, 0)
+					.setCycleLength(cycleLength)
+					.setCycleOffset(cycleOffset);
+			});
 
 			// Diagonal belt do not have a separate bottom model
 			if (diagonal)
@@ -140,10 +138,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			msr.rotateX(90);
 			msr.unCentre();
 
-			SuperByteBuffer superBuffer = CreateClient.bufferCache
-				.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
-			KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light)
-				.renderInto(ms, vb);
+			InstancedBuffer superBuffer = CreateClient.kineticRenderer
+				.renderDirectionalPartialInstanced(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
+			KineticTileEntityRenderer.renderRotatingBuffer(te, superBuffer, light);
 		}
 
 		renderItems(te, partialTicks, ms, buffer, light, overlay);

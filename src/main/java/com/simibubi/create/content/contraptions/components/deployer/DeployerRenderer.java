@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -102,7 +102,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), light);
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
@@ -112,10 +112,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		SuperByteBuffer hand = te.getHandPose()
 			.renderOn(blockState);
 
-		transform(te.getWorld(), pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
-			vb);
-		transform(te.getWorld(), hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
-			vb);
+		transform(te.getWorld(), (SuperByteBuffer) pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
+																																   vb);
+		transform(te.getWorld(), (SuperByteBuffer) hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
+																																	vb);
 	}
 
 	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {

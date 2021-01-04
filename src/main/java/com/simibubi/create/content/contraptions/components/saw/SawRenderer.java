@@ -10,11 +10,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.*;
 
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -79,9 +78,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		ms.pop();
 	}
 
-	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light,
-			int overlay) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(RenderType.getSolid()), light);
+	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), light);
 	}
 
 	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
@@ -125,11 +123,11 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		}
 	}
 
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
-			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(state.rotate(Rotation.CLOCKWISE_180));
-		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
+		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}
 

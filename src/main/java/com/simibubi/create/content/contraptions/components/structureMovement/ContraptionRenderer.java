@@ -10,10 +10,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
-import com.simibubi.create.foundation.utility.TileEntityRenderHelper;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.utility.render.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.utility.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockRenderType;

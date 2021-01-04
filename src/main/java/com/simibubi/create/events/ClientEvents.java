@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -76,6 +77,8 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 
+		CreateClient.kineticRenderer.tick();
+
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
 		CreateClient.schematicHandler.tick();
@@ -112,6 +115,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
+		CreateClient.kineticRenderer.renderInstances(event);
+
 		MatrixStack ms = event.getMatrixStack();
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 		Vec3d view = info.getProjectedView();

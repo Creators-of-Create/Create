@@ -16,9 +16,11 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache;
+import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
+import com.simibubi.create.foundation.utility.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -42,6 +44,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
+	public static FastKineticRenderer kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 
 	private static CustomBlockModels customBlockModels;
@@ -56,6 +59,8 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
+
+		ShaderHelper.initShaders();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
@@ -66,6 +71,10 @@ public class CreateClient {
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
+
+		kineticRenderer = new FastKineticRenderer();
+		kineticRenderer.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		kineticRenderer.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();

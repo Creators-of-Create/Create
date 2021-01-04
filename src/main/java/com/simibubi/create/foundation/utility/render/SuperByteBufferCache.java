@@ -1,11 +1,15 @@
-package com.simibubi.create.foundation.utility;
+package com.simibubi.create.foundation.utility.render;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import com.google.common.collect.Collections2;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -50,7 +54,6 @@ public class SuperByteBufferCache {
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
-
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
 		MatrixStack modelTransform) {
 		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
@@ -108,21 +111,27 @@ public class SuperByteBufferCache {
 	}
 
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+		BufferBuilder builder = getBufferBuilder(model, referenceState, ms);
+
+		return new SuperByteBuffer(builder);
+	}
+
+	public static BufferBuilder getBufferBuilder(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		Minecraft mc = Minecraft.getInstance();
 		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		BufferBuilder builder = new BufferBuilder(512);
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
-			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true, mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 		builder.finishDrawing();
-
-		return new SuperByteBuffer(builder);
+		return builder;
 	}
+
 
 	public void invalidate() {
 		cache.forEach((comp, cache) -> cache.invalidateAll());
+		CreateClient.kineticRenderer.invalidate();
 	}
 
 }

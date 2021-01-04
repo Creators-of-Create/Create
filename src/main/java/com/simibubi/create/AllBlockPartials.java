@@ -11,12 +11,10 @@ import java.util.Map;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.*;
 
+import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
@@ -216,6 +214,25 @@ public class AllBlockPartials {
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.unCentre();
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
+	}
+
+	public InstancedBuffer renderOnInstanced(BlockState referenceState) {
+		return CreateClient.kineticRenderer.renderPartialInstanced(this, referenceState);
+	}
+
+	public InstancedBuffer renderOnDirectionalSouthInstanced(BlockState referenceState) {
+		Direction facing = referenceState.get(FACING);
+		return renderOnDirectionalSouthInstanced(referenceState, facing);
+	}
+	public InstancedBuffer renderOnDirectionalSouthInstanced(BlockState referenceState, Direction facing) {
+		MatrixStack ms = new MatrixStack();
+		// TODO 1.15 find a way to cache this model matrix computation
+		MatrixStacker.of(ms)
+					 .centre()
+					 .rotateY(AngleHelper.horizontalAngle(facing))
+					 .rotateX(AngleHelper.verticalAngle(facing))
+					 .unCentre();
+		return CreateClient.kineticRenderer.renderDirectionalPartialInstanced(this, referenceState, facing, ms);
 	}
 
 }
