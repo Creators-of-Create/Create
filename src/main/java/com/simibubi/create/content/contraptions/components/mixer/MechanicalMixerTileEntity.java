@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
@@ -208,8 +207,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
 		return ((r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
-			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get()) || r.getType() == AllRecipeTypes.MIXING.type)
-			&& !MechanicalPressTileEntity.canCompress(r.getIngredients());
+			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+				.size() > 1)
+			|| r.getType() == AllRecipeTypes.MIXING.type);
 	}
 
 	@Override

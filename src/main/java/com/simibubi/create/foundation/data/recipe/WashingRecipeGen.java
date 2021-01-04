@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.EID;
 import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.INF;
 import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
 import static com.simibubi.create.foundation.data.recipe.Mods.MW;
 import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
-import static com.simibubi.create.foundation.data.recipe.Mods.EID;
 
 import java.util.function.Supplier;
 
@@ -53,7 +54,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 
 		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, "osmium", MEK),
 		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, "platinum", SM),
-		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, "silver", TH, MW, IE, SM),
+		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, "silver", TH, MW, IE, SM, INF),
 		CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, "tin", TH, MEK, MW, SM),
 		CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, "lead", MEK, TH, MW, IE, SM, EID),
 		CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, "quicksilver", MW),

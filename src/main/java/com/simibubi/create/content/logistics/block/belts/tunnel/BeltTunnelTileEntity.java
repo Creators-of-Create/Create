@@ -36,12 +36,15 @@ import net.minecraftforge.items.IItemHandler;
 public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public HashMap<Direction, InterpolatedChasingValue> flaps;
+	public Set<Direction> sides;
+	
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
 	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
 		flaps = new HashMap<>();
+		sides = new HashSet<>();
 		flapsToSend = new LinkedList<>();
 	}
 
@@ -57,6 +60,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		for (Direction direction : flaps.keySet())
 			flapsNBT.add(IntNBT.of(direction.getIndex()));
 		compound.put("Flaps", flapsNBT);
+		
+		ListNBT sidesNBT = new ListNBT();
+		for (Direction direction : sides)
+			sidesNBT.add(IntNBT.of(direction.getIndex()));
+		compound.put("Sides", sidesNBT);
+		
 		super.write(compound, clientPacket);
 
 		if (!clientPacket)
@@ -83,6 +92,12 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		for (INBT inbt : flapsNBT)
 			if (inbt instanceof IntNBT)
 				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
+		
+		sides.clear();
+		ListNBT sidesNBT = compound.getList("Sides", NBT.TAG_INT);
+		for (INBT inbt : sidesNBT)
+			if (inbt instanceof IntNBT)
+				sides.add(Direction.byIndex(((IntNBT) inbt).getInt()));
 
 		for (Direction d : Iterate.directions)
 			if (!newFlaps.contains(d))
@@ -91,6 +106,10 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				flaps.put(d, new InterpolatedChasingValue().start(.25f)
 					.target(0)
 					.withSpeed(.05f));
+		
+		// Backwards compat
+		if (!compound.contains("Sides") && compound.contains("Flaps"))
+			sides.addAll(flaps.keySet());
 
 		super.fromTag(state, compound, clientPacket);
 
@@ -108,11 +127,9 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public void updateTunnelConnections() {
 		flaps.clear();
+		sides.clear();
 		BlockState tunnelState = getBlockState();
 		for (Direction direction : Iterate.horizontalDirections) {
-			BlockState blockState = world.getBlockState(pos.offset(direction));
-			if (blockState.getBlock() instanceof BeltTunnelBlock)
-				continue;
 			if (direction.getAxis() != tunnelState.get(BlockStateProperties.HORIZONTAL_AXIS)) {
 				boolean positive =
 					direction.getAxisDirection() == AxisDirection.POSITIVE ^ direction.getAxis() == Axis.Z;
@@ -124,11 +141,16 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
-
-			BlockState funnelState = world.getBlockState(getPos().offset(direction));
-			if (funnelState.getBlock() instanceof BeltFunnelBlock)
-				if (funnelState.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
-					&& funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
+			
+			sides.add(direction);
+			
+			// Flap might be occluded
+			BlockState nextState = world.getBlockState(pos.offset(direction));
+			if (nextState.getBlock() instanceof BeltTunnelBlock)
+				continue;
+			if (nextState.getBlock() instanceof BeltFunnelBlock)
+				if (nextState.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
+					&& nextState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
 					continue;
 
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)

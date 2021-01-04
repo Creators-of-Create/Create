@@ -675,7 +675,6 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
 		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.tag(AllBlockTags.SAFE_NBT.tag)
 			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
 				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)

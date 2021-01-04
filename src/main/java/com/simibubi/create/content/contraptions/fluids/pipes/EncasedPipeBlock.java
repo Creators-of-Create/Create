@@ -14,6 +14,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -35,7 +37,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class EncasedPipeBlock extends Block implements IWrenchable {
+public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = SixWayBlock.FACING_TO_PROPERTY_MAP;
 
@@ -135,6 +137,11 @@ public class EncasedPipeBlock extends Block implements IWrenchable {
 			to = to.with(property, from.get(property));
 		}
 		return to;
+	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState());
 	}
 
 }

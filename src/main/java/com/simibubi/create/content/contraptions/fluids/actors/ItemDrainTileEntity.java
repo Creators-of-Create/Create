@@ -28,6 +28,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemDrainTileEntity extends SmartTileEntity {
 
@@ -58,12 +59,18 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		ItemStack inserted = transportedStack.stack;
-		ItemStack empty = ItemStack.EMPTY;
+		ItemStack returned = ItemStack.EMPTY;
 
 		if (!getHeldItemStack().isEmpty())
 			return inserted;
+		
+		if (inserted.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(world, inserted)) {
+			returned = ItemHandlerHelper.copyStackWithSize(inserted, inserted.getCount() - 1);
+			inserted = ItemHandlerHelper.copyStackWithSize(inserted, 1);
+		}
+		
 		if (simulate)
-			return empty;
+			return returned;
 
 		transportedStack = transportedStack.copy();
 		transportedStack.beltPosition = side.getAxis()
@@ -74,7 +81,7 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 		markDirty();
 		sendData();
 
-		return empty;
+		return returned;
 	}
 
 	public ItemStack getHeldItemStack() {

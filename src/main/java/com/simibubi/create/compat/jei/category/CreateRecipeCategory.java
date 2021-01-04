@@ -102,8 +102,9 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			if (input)
 				return;
 			ProcessingOutput output = results.get(slotIndex - 1);
-			if (output.getChance() != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", (int) (output.getChance() * 100))
+			float chance = output.getChance();
+			if (chance != 1)
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
 					.formatted(TextFormatting.GOLD));
 		});
 	}

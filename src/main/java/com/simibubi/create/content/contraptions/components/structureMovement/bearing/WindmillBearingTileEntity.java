@@ -27,6 +27,13 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		super.updateGeneratedRotation();
 		lastGeneratedSpeed = getGeneratedSpeed();
 	}
+	
+	@Override
+	public void onSpeedChanged(float prevSpeed) {
+		boolean cancelAssembly = assembleNextTick;
+		super.onSpeedChanged(prevSpeed);
+		assembleNextTick = cancelAssembly;
+	}
 
 	@Override
 	public float getGeneratedSpeed() {

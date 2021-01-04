@@ -45,6 +45,8 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 		ItemStack filter = getFilter(context);
 
 		for (ItemEntity item : items) {
+			if (!item.isAlive())
+				continue;
 			ItemStack toInsert = item.getItem();
 			if (!filter.isEmpty() && !FilterItem.test(context.world, toInsert, filter))
 				continue;

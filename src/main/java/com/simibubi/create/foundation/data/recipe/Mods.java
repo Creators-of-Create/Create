@@ -9,7 +9,8 @@ public enum Mods {
 	MW("mysticalworld", false), 
 	SM("silents_mechanisms", false), 
 	IE("immersiveengineering", true),
-	EID("eidolon", false)
+	EID("eidolon", false),
+	INF("iceandfire", false)
 
 	;
 

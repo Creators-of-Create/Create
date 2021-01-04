@@ -3,13 +3,16 @@ package com.simibubi.create.foundation.item;
 import static net.minecraft.util.text.TextFormatting.GOLD;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+import com.google.common.base.Strings;
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
@@ -18,22 +21,30 @@ import com.simibubi.create.content.contraptions.components.flywheel.engine.Engin
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.TieredItem;
 import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextProcessing;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class TooltipHelper {
 
-	public static final int maxCharsPerLine = 35;
+	public static final int maxWidthPerLine = 200;
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
@@ -71,40 +82,54 @@ public class TooltipHelper {
 	@Deprecated
 	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,
 		int indent) {
-		String lineStart = defaultColor.toString();
-		for (int i = 0; i < indent; i++)
-			lineStart += " ";
-
 		// Apply markup
 		String markedUp = s.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
 
-		String[] words = markedUp.split(" ");
-		List<String> lines = new ArrayList<>();
-		StringBuilder currentLine = new StringBuilder(lineStart);
-		String word;
-		boolean firstWord = true;
-		boolean lastWord;
-
-		// Apply hard wrap
-		for (int i = 0; i < words.length; i++) {
-			word = words[i];
-			lastWord = i == words.length - 1;
-
-			if (!lastWord && !firstWord && currentLine.length() + word.length() > maxCharsPerLine) {
-				lines.add(currentLine.toString());
-				currentLine = new StringBuilder(lineStart);
-				firstWord = true;
-			}
-
-			currentLine.append((firstWord ? "" : " ") + word);
-			firstWord = false;
+		// Split words
+		List<String> words = new LinkedList<>();
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		iterator.setText(markedUp);
+		int start = iterator.first();
+		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
+			String word = markedUp.substring(start, end);
+			words.add(word);
 		}
 
-		if (!firstWord) {
+		// Apply hard wrap
+		FontRenderer font = Minecraft.getInstance().fontRenderer;
+		List<String> lines = new LinkedList<>();
+		StringBuilder currentLine = new StringBuilder();
+		int width = 0;
+		for (String word : words) {
+			int newWidth = font.getStringWidth(word);
+			if (width + newWidth > maxWidthPerLine) {
+				if (width > 0) {
+					String line = currentLine.toString();
+					lines.add(line);
+					currentLine = new StringBuilder();
+					width = 0;
+				} else {
+					lines.add(word);
+					continue;
+				}
+			}
+			currentLine.append(word);
+			width += newWidth;
+		}
+		if (width > 0) {
 			lines.add(currentLine.toString());
 		}
 
-		return lines;
+		// Format
+		String lineStart = Strings.repeat(" ", indent);
+		List<String> formattedLines = new ArrayList<>(lines.size());
+		String format = defaultColor.toString();
+		for (String line : lines) {
+			String formattedLine = format + lineStart + line;
+			formattedLines.add(formattedLine);
+//			format = TextFormatting.getFormatString(formattedLine);
+		}
+		return formattedLines;
 	}
 
 	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor,
@@ -124,42 +149,109 @@ public class TooltipHelper {
 
 	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor,
 		TextFormatting highlightColor, int indent) {
+		String s = getUnformattedDeepText(c);
+		
+		// Apply markup
+		String markedUp = s;//.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
+
+		// Split words
+		List<String> words = new LinkedList<>();
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		iterator.setText(markedUp);
+		int start = iterator.first();
+		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
+			String word = markedUp.substring(start, end);
+			words.add(word);
+		}
+
+		// Apply hard wrap
+		FontRenderer font = Minecraft.getInstance().fontRenderer;
+		List<String> lines = new LinkedList<>();
+		StringBuilder currentLine = new StringBuilder();
+		int width = 0;
+		for (String word : words) {
+			int newWidth = font.getStringWidth(word);
+			if (width + newWidth > maxWidthPerLine) {
+				if (width > 0) {
+					String line = currentLine.toString();
+					lines.add(line);
+					currentLine = new StringBuilder();
+					width = 0;
+				} else {
+					lines.add(word);
+					continue;
+				}
+			}
+			currentLine.append(word);
+			width += newWidth;
+		}
+		if (width > 0) {
+			lines.add(currentLine.toString());
+		}
+
+		// Format
 		IFormattableTextComponent lineStart = StringTextComponent.EMPTY.copy();
 		for (int i = 0; i < indent; i++)
 			lineStart.append(" ");
 		lineStart.formatted(defaultColor);
-
-		List<ITextComponent> lines = new ArrayList<>();
-		String rawText = getUnformattedDeepText(c);
-		String[] words = rawText.split(" ");
-		String word;
-		IFormattableTextComponent currentLine = lineStart.copy();
-
-		boolean firstWord = true;
-		boolean lastWord;
-
-		// Apply hard wrap
-		for (int i = 0; i < words.length; i++) {
-			word = words[i];
-			lastWord = i == words.length - 1;
-
-			if (!lastWord && !firstWord && getComponentLength(currentLine) + word.length() > maxCharsPerLine) {
-				lines.add(currentLine);
-				currentLine = lineStart.copy();
-				firstWord = true;
+		List<ITextComponent> formattedLines = new ArrayList<>(lines.size());
+		Couple<TextFormatting> f = Couple.create(highlightColor, defaultColor);
+		
+		for (String string : lines) {
+			boolean currentlyHighlighted = false;
+			IFormattableTextComponent currentComponent = lineStart.copy();
+			String[] split = string.split("_");
+			for (String part : split) {
+				currentComponent.append(new StringTextComponent(part).formatted(f.get(currentlyHighlighted)));
+				if (split.length != 1)
+					currentlyHighlighted = !currentlyHighlighted;
 			}
-
-			currentLine.append(new StringTextComponent((firstWord ? "" : " ") + word.replace("_", ""))
-				.formatted(word.matches("_([^_]+)_") ? highlightColor : defaultColor));
-			firstWord = false;
+			
+			formattedLines.add(currentComponent);
 		}
-
-		if (!firstWord) {
-			lines.add(currentLine);
-		}
-
-		return lines;
+		
+		
+		return formattedLines;
 	}
+	
+//	public static List<ITextComponent> cutTextComponentOld(ITextComponent c, TextFormatting defaultColor,
+//		TextFormatting highlightColor, int indent) {
+//		IFormattableTextComponent lineStart = StringTextComponent.EMPTY.copy();
+//		for (int i = 0; i < indent; i++)
+//			lineStart.append(" ");
+//		lineStart.formatted(defaultColor);
+//
+//		List<ITextComponent> lines = new ArrayList<>();
+//		String rawText = getUnformattedDeepText(c);
+//		String[] words = rawText.split(" ");
+//		String word;
+//		IFormattableTextComponent currentLine = lineStart.copy();
+//
+//		boolean firstWord = true;
+//		boolean lastWord;
+//
+//		// Apply hard wrap
+//		for (int i = 0; i < words.length; i++) {
+//			word = words[i];
+//			lastWord = i == words.length - 1;
+//
+//			if (!lastWord && !firstWord && getComponentLength(currentLine) + word.length() > maxCharsPerLine) {
+//				lines.add(currentLine);
+//				currentLine = lineStart.copy();
+//				firstWord = true;
+//			}
+//
+//			currentLine.append(new StringTextComponent((firstWord ? "" : " ") + word.replace("_", ""))
+//				.formatted(word.matches("_([^_]+)_") ? highlightColor : defaultColor));
+//			firstWord = false;
+//		}
+//
+//		if (!firstWord) {
+//			lines.add(currentLine);
+//		}
+//
+//		return lines;
+//	}
 
 	private static void checkLocale() {
 		Language currentLanguage = Minecraft.getInstance()
@@ -171,12 +263,10 @@ public class TooltipHelper {
 		}
 	}
 
-	public static boolean hasTooltip(ItemStack stack) {
+	public static boolean hasTooltip(ItemStack stack, PlayerEntity player) {
 		checkLocale();
 
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean hasGlasses =
-			player != null && AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;

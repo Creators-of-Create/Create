@@ -146,7 +146,7 @@ public class ClientEvents {
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
-		if (Minecraft.getInstance().player == null)
+		if (event.getPlayer() == null)
 			return;
 
 		ItemStack stack = event.getItemStack();
@@ -155,7 +155,7 @@ public class ClientEvents {
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
 			return;
 
-		if (TooltipHelper.hasTooltip(stack)) {
+		if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
 			List<ITextComponent> itemTooltip = event.getToolTip();
 			List<ITextComponent> toolTip = new ArrayList<>();
 			toolTip.add(itemTooltip.remove(0));

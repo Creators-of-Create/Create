@@ -59,7 +59,7 @@ public class PlacementOffset {
 	public void placeInWorld(World world, BlockItem blockItem, PlayerEntity player, ItemStack item) {
 		placeInWorld(world, blockItem.getBlock().getDefaultState(), player, item);
 	}
-
+	
 	public void placeInWorld(World world, BlockState defaultState, PlayerEntity player, ItemStack item) {
 		if (world.isRemote)
 			return;

@@ -5,6 +5,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
@@ -60,6 +61,9 @@ public class CogWheelBlock extends AbstractShaftBlock {
                 continue;
 
             BlockState blockState = worldIn.getBlockState(pos.offset(facing));
+            if (blockState.has(AXIS) && facing.getAxis() == blockState.get(AXIS))
+            	continue;
+            
             if (isLargeCog(blockState) || isLarge && isSmallCog(blockState))
                 return false;
         }
@@ -73,6 +77,9 @@ public class CogWheelBlock extends AbstractShaftBlock {
         BlockState placedAgainst = world.getBlockState(placedOnPos);
         Block block = placedAgainst.getBlock();
 
+        if (context.getPlayer() != null && context.getPlayer().isSneaking())
+			return this.getDefaultState().with(AXIS, context.getFace().getAxis());
+        
         BlockState stateBelow = world.getBlockState(context.getPos()
                 .down());
         FluidState FluidState = context.getWorld().getFluidState(context.getPos());

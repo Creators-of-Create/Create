@@ -748,8 +748,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		// Block doesnt have a mapping (Water, lava, etc)
 		if (state.getBlock() == Blocks.STRUCTURE_VOID)
 			return true;
-		if (getItemForBlock(state).getItem() == Items.AIR && state.getBlock() != Blocks.AIR)
-			return true;
+		
+		ItemRequirement requirement = ItemRequirement.of(state);
+		if (requirement.isEmpty())
+			return false;
+		if (requirement.isInvalid())
+			return false;
 
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
 		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.DOUBLE_BLOCK_HALF)

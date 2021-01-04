@@ -29,6 +29,8 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
 		if (input1 == null || input2 == null)
 			return false;
+		if (input1.data.isEmpty() || input2.data.isEmpty())
+			return false;
 		if (pos.add(input1.data.get(0))
 			.equals(otherPos.add(input2.data.get(0))))
 			return true;

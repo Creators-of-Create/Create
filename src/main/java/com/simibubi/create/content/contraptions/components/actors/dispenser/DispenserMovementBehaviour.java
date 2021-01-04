@@ -23,6 +23,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_PROJECTILE_DISPENSE_BEHAVIOURS = new HashMap<>();
 	private static final DispenserLookup BEHAVIOUR_LOOKUP = new DispenserLookup();
+	private static boolean spawneggsRegistered = false;
 
 	public static void gatherMovedDispenseItemBehaviours() {
 		IMovedDispenseItemBehaviour.init();
@@ -34,6 +35,11 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 
 	@Override
 	protected void activate(MovementContext context, BlockPos pos) {
+		if (!spawneggsRegistered) {
+			spawneggsRegistered = true;
+			IMovedDispenseItemBehaviour.initSpawneggs();
+		}
+		
 		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
 			context.world.playEvent(1001, pos, 0);

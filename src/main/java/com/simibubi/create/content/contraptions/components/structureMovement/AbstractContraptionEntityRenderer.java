@@ -46,7 +46,9 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 
 		ms.push();
 		transform(entity, partialTicks, matrixStacks);
-		ContraptionRenderer.render(entity.world, entity.getContraption(), ms, msLocal, buffers);
+		Contraption contraption = entity.getContraption();
+		if (contraption != null)
+			ContraptionRenderer.render(entity.world, contraption, ms, msLocal, buffers);
 		ms.pop();
 
 	}

@@ -1,10 +1,12 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemDrainItemHandler implements IItemHandler {
 
@@ -31,13 +33,21 @@ public class ItemDrainItemHandler implements IItemHandler {
 		if (!te.getHeldItemStack()
 			.isEmpty())
 			return stack;
+		
+		ItemStack returned = ItemStack.EMPTY;
+		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(te.getWorld(), stack)) {
+			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
+			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+		}
+		
 		if (!simulate) {
 			TransportedItemStack heldItem = new TransportedItemStack(stack);
 			heldItem.prevBeltPosition = 0;
 			te.setHeldItem(heldItem, side.getOpposite());
 			te.notifyUpdate();
 		}
-		return ItemStack.EMPTY;
+		
+		return returned;
 	}
 
 	@Override

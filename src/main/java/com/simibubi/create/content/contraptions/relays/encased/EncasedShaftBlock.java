@@ -4,6 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
@@ -13,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.world.IBlockReader;
 
-public class EncasedShaftBlock extends AbstractEncasedShaftBlock {
+public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpecialBlockItemRequirement {
 
 	private BlockEntry<CasingBlock> casing;
 
@@ -47,4 +49,10 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock {
 		KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), AllBlocks.SHAFT.getDefaultState().with(AXIS, state.get(AXIS)));
 		return ActionResultType.SUCCESS;
 	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState());
+	}
+
 }

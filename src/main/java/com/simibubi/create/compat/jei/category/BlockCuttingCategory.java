@@ -47,20 +47,20 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 		itemStacks.init(0, true, 4, 4);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
 
-		List<ItemStack> results = recipe.getOutputs();
+		List<List<ItemStack>> results = recipe.getCondensedOutputs();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
 			int xOffset = (outputIndex % 5) * 19;
 			int yOffset = (outputIndex / 5) * -19;
 
 			itemStacks.init(outputIndex + 1, false, 77 + xOffset, 47 + yOffset);
-			itemStacks.set(outputIndex + 1, results.get(outputIndex).getStack());
+			itemStacks.set(outputIndex + 1, results.get(outputIndex));
 		}
 	}
 
 	@Override
 	public void draw(CondensedBlockCuttingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 4, 4);
-		int size = recipe.getOutputs().size();
+		int size = Math.min(recipe.getOutputs().size(), 15);
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 5) * 19;
 			int yOffset = (i / 5) * -19;
@@ -84,6 +84,23 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 		public List<ItemStack> getOutputs() {
 			return outputs;
+		}
+		
+		public List<List<ItemStack>> getCondensedOutputs() {
+			List<List<ItemStack>> result = new ArrayList<>();
+			int index = 0;
+			boolean firstPass = true;
+			for (ItemStack itemStack : outputs) {
+				if (firstPass)
+					result.add(new ArrayList<>());
+				result.get(index).add(itemStack);
+				index++;
+				if (index >= 15) {
+					index = 0;
+					firstPass = false;
+				}
+			}
+			return result;
 		}
 
 		public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<IRecipe<?>> stoneCuttingRecipes) {

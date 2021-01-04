@@ -32,6 +32,7 @@ public class AllFluids {
 
 	public static RegistryEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 		.lang(f -> "fluid.create.tea", "Builder's Tea")
+		.tag(AllTags.forgeFluidTag("tea"))
 		.register();
 
 	public static RegistryEntry<VirtualFluid> MILK = REGISTRATE.virtualFluid("milk")
@@ -49,17 +50,24 @@ public class AllFluids {
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
 			.tag(AllTags.forgeFluidTag("honey"))
+			.bucket()
+			.properties(p -> p.maxStackSize(1))
+			.build()
 			.register();
 
 	public static RegistryEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
 		REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
 			.lang(f -> "fluid.create.chocolate", "Chocolate")
+			.tag(AllTags.forgeFluidTag("chocolate"))
 			.attributes(b -> b.viscosity(500)
 				.density(1400))
 			.properties(p -> p.levelDecreasePerBlock(2)
 				.tickRate(25)
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
+			.bucket()
+			.properties(p -> p.maxStackSize(1))
+			.build()
 			.register();
 
 	// Load this class

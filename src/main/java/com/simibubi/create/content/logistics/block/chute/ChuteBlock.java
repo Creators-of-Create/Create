@@ -79,6 +79,8 @@ public class ChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntit
 			return;
 		if (entityIn.world.isRemote)
 			return;
+		if (!entityIn.isAlive())
+			return;
 		DirectBeltInputBehaviour input = TileEntityBehaviour.get(entityIn.world, new BlockPos(entityIn.getPositionVec()
 			.add(0, 0.5f, 0)).down(), DirectBeltInputBehaviour.TYPE);
 		if (input == null)

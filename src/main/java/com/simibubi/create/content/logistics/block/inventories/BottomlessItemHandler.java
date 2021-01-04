@@ -37,6 +37,9 @@ public class BottomlessItemHandler extends ItemStackHandler {
 	}
 
 	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {}
+
+	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		return ItemStack.EMPTY;
 	}

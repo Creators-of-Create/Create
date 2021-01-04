@@ -234,6 +234,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
 			if (!(entity instanceof ItemEntity))
 				continue;
+			if (!entity.isAlive())
+				continue;
 			ItemEntity itemEntity = (ItemEntity) entity;
 			pressedItems.add(itemEntity.getItem());
 			sendData();

@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
@@ -29,7 +30,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecipe> {
+public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRecipe> {
 
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
@@ -38,13 +39,13 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 	}
 
 	@Override
-	public void setIngredients(ShapedRecipe recipe, IIngredients ingredients) {
+	public void setIngredients(ICraftingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, ShapedRecipe recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, ICraftingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 
@@ -61,8 +62,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 		for (int i = 0; i < size; i++) {
 			float f = 19 * scale;
 			int slotSize = (int) (16 * scale);
-			int xPosition = (int) (x + 1 + (i % recipe.getWidth()) * f);
-			int yPosition = (int) (y + 1 + (i / recipe.getWidth()) * f);
+			int xPosition = (int) (x + 1 + (i % getWidth(recipe)) * f);
+			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
 			itemStacks.init(i + 1, true, renderer, xPosition, yPosition, slotSize, slotSize, 0, 0);
 			itemStacks.set(i + 1, Arrays.asList(recipeIngredients.get(i)
 				.getMatchingStacks()));
@@ -72,30 +73,38 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 
 	static int maxSize = 100;
 
-	public static float getScale(ShapedRecipe recipe) {
-		int w = recipe.getWidth();
-		int h = recipe.getHeight();
+	public static float getScale(ICraftingRecipe recipe) {
+		int w = getWidth(recipe);
+		int h = getHeight(recipe);
 		return Math.min(1, maxSize / (19f * Math.max(w, h)));
 	}
 
-	public static int getYPadding(ShapedRecipe recipe) {
-		return 3 + 50 - (int) (getScale(recipe) * recipe.getHeight() * 19 * .5);
+	public static int getYPadding(ICraftingRecipe recipe) {
+		return 3 + 50 - (int) (getScale(recipe) * getHeight(recipe) * 19 * .5);
 	}
 
-	public static int getXPadding(ShapedRecipe recipe) {
-		return 3 + 50 - (int) (getScale(recipe) * recipe.getWidth() * 19 * .5);
+	public static int getXPadding(ICraftingRecipe recipe) {
+		return 3 + 50 - (int) (getScale(recipe) * getWidth(recipe) * 19 * .5);
+	}
+
+	private static int getWidth(ICraftingRecipe recipe) {
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getWidth() : 1;
+	}
+
+	private static int getHeight(ICraftingRecipe recipe) {
+		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
 	}
 
 	@Override
-	public void draw(ShapedRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(ICraftingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		matrixStack.push();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
-		for (int row = 0; row < recipe.getHeight(); row++)
-			for (int col = 0; col < recipe.getWidth(); col++)
+		for (int row = 0; row < getHeight(recipe); row++)
+			for (int col = 0; col < getWidth(recipe); col++)
 				if (!recipe.getIngredients()
-					.get(row * recipe.getWidth() + col)
+					.get(row * getWidth(recipe) + col)
 					.hasNoMatchingItems()) {
 					matrixStack.push();
 					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
@@ -126,15 +135,15 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ShapedRecip
 	}
 
 	@Override
-	public Class<? extends ShapedRecipe> getRecipeClass() {
-		return ShapedRecipe.class;
+	public Class<? extends ICraftingRecipe> getRecipeClass() {
+		return ICraftingRecipe.class;
 	}
 
 	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 
-		private final ShapedRecipe recipe;
+		private final ICraftingRecipe recipe;
 
-		public CrafterIngredientRenderer(ShapedRecipe recipe) {
+		public CrafterIngredientRenderer(ICraftingRecipe recipe) {
 			this.recipe = recipe;
 		}
 

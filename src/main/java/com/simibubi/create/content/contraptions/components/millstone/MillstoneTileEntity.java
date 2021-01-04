@@ -18,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -28,6 +28,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 	public ItemStackHandler inputInv;
 	public ItemStackHandler outputInv;
+	public LazyOptional<IItemHandler> capability;
 	public int timer;
 	private MillingRecipe lastRecipe;
 
@@ -35,6 +36,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		super(type);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
+		capability = LazyOptional.of(MillstoneInventoryHandler::new);
 	}
 
 	@Override
@@ -82,6 +84,12 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
+	@Override
+	public void remove() {
+		super.remove();
+		capability.invalidate();
+	}
+	
 	private void process() {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 
@@ -139,9 +147,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return LazyOptional.of(MillstoneInventoryHandler::new)
-				.cast();
+		if (isItemHandlerCap(cap))
+			return capability.cast();
 		return super.getCapability(cap, side);
 	}
 

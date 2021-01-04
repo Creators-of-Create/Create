@@ -137,7 +137,7 @@ public class SpoutTileEntity extends SmartTileEntity {
 			.setFluid(fluid);
 		sendSplash = true;
 		notifyUpdate();
-		return PASS;
+		return HOLD;
 	}
 
 	private void processTicCastBlock() {
