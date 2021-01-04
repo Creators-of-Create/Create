@@ -34,7 +34,7 @@
 	"block.create.andesite_funnel.tooltip.behaviour3": "Will _transfer_ items _downward_, much like a buffer-less hopper.",
 	
 	"block.create.andesite_tunnel.tooltip": "ANDESITE TUNNEL",
-	"block.create.andesite_tunnel.tooltip.summary": "A protective cover for your _Belts_ and a great way to cover the holes left in your wall because of them.",
+	"block.create.andesite_tunnel.tooltip.summary": "A protective cover for your _Mechanical_ _Belts!_ _Andesite Tunnels_ can split off one item from a stack when another belt or depot is placed at the side of the main belt.",
 	"block.create.andesite_tunnel.tooltip.control1": "R-Click with Wrench on Side",
 	"block.create.andesite_tunnel.tooltip.action1": "_Adjusts window shutters_ if the tunnel has a window on that face.",
 	
@@ -48,7 +48,7 @@
 	"block.create.brass_funnel.tooltip.behaviour3": "Will _transfer_ items _downward_, much like a buffer-less hopper.",
 	
 	"block.create.brass_tunnel.tooltip": "BRASS TUNNEL",
-	"block.create.brass_tunnel.tooltip.summary": "_Brass Tunnels_ come with a number of _Filtering_ and _Splitting_ options for your _Belts_.",
+	"block.create.brass_tunnel.tooltip.summary": "A fancy protective cover for your _Mechanical_ _Belts!_ _Brass Tunnels_ also come with a number of _Filtering_ and _Splitting_ options for your items.",
 	"block.create.brass_tunnel.tooltip.condition1": "When placed side by side",
 	"block.create.brass_tunnel.tooltip.behaviour1": "_Brass Tunnels_ connect to each other allowing for content from one _Belt_ to be redirected to another.",
 	"block.create.brass_tunnel.tooltip.condition2": "Filtering",
