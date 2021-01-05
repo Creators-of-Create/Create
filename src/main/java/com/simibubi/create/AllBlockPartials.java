@@ -13,7 +13,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.BeltBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -216,15 +217,19 @@ public class AllBlockPartials {
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 	}
 
-	public InstancedBuffer renderOnInstanced(BlockState referenceState) {
-		return CreateClient.kineticRenderer.renderPartialInstanced(this, referenceState);
+	public RotatingBuffer renderOnRotating(BlockState referenceState) {
+		return CreateClient.kineticRenderer.renderPartialRotating(this, referenceState);
 	}
 
-	public InstancedBuffer renderOnDirectionalSouthInstanced(BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectionalSouthInstanced(referenceState, facing);
+	public BeltBuffer renderOnBelt(BlockState referenceState) {
+		return CreateClient.kineticRenderer.renderPartialBelt(this, referenceState);
 	}
-	public InstancedBuffer renderOnDirectionalSouthInstanced(BlockState referenceState, Direction facing) {
+
+	public RotatingBuffer renderOnDirectionalSouthRotating(BlockState referenceState) {
+		Direction facing = referenceState.get(FACING);
+		return renderOnDirectionalSouthRotating(referenceState, facing);
+	}
+	public RotatingBuffer renderOnDirectionalSouthRotating(BlockState referenceState, Direction facing) {
 		MatrixStack ms = new MatrixStack();
 		// TODO 1.15 find a way to cache this model matrix computation
 		MatrixStacker.of(ms)

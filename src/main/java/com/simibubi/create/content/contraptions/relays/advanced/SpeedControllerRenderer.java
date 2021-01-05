@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -23,7 +24,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), light);
 	}
 
-	private InstancedBuffer getRotatedModel(SpeedControllerTileEntity te) {
+	private RotatingBuffer getRotatedModel(SpeedControllerTileEntity te) {
 		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
 				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
 	}

@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -44,10 +45,10 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), te.getBlockState()
-			.get(BearingBlock.FACING)
-			.getOpposite());
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), te.getBlockState()
+                                                                                                  .get(BearingBlock.FACING)
+                                                                                                  .getOpposite());
 	}
 
 }

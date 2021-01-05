@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.*;
 
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -123,10 +124,10 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		}
 	}
 
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
-			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
+			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
 		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}

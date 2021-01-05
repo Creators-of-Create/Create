@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
@@ -52,8 +53,8 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouthInstanced(te.getBlockState());
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouthRotating(te.getBlockState());
 	}
 
 }

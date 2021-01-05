@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -34,7 +35,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 				continue;
 
 
-			InstancedBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), direction);
+			RotatingBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction);
 
 			shaft.setupInstance(data -> {
 				float speed = te.getSpeed();

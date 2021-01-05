@@ -9,6 +9,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.P
 import com.simibubi.create.foundation.utility.*;
 
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -116,8 +117,8 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.ARM_COG.renderOnInstanced(te.getBlockState());
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.ARM_COG.renderOnRotating(te.getBlockState());
 	}
 
 }

@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -31,10 +32,10 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
 		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
 		
-		InstancedBuffer shaftHalf =
-			AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), direction.getOpposite());
-		InstancedBuffer fanInner =
-			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthInstanced(te.getBlockState(), direction.getOpposite());
+		RotatingBuffer shaftHalf =
+			AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
+		RotatingBuffer fanInner =
+			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
 
 		renderRotatingBuffer(te, shaftHalf, lightBehind);
 		fanInner.setupInstance(data -> {

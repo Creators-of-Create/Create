@@ -9,7 +9,6 @@ layout (location = 4) in vec2 light;
 layout (location = 5) in float speed;
 layout (location = 6) in float rotationOffset;
 layout (location = 7) in vec3 rotationAxis;
-layout (location = 8) in int[2] uvScroll; // uvScroll[0] <- cycleLength, uvScroll[1] <- cycleOffset
 
 out vec2 TexCoords;
 out vec2 Light;
@@ -19,9 +18,12 @@ uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
 
-mat4 rotationMatrix(vec3 axis, float angle)
+mat4 kineticRotation()
 {
-    axis = normalize(axis);
+    float degrees = rotationOffset + time * speed * -3./10.;
+    float angle = fract(degrees / 360.) * PI * 2.;
+
+    vec3 axis = normalize(rotationAxis);
     float s = sin(angle);
     float c = cos(angle);
     float oc = 1.0 - c;
@@ -34,26 +36,11 @@ mat4 rotationMatrix(vec3 axis, float angle)
 
 void main()
 {
-    vec4 renderPos;
-    int textureIndex = 0;
-    if (abs(rotationAxis.x) + abs(rotationAxis.y) + abs(rotationAxis.z) < 0.2) {
-        renderPos = vec4(aPos + instancePos, 1f);
+    vec4 renderPos = kineticRotation() * vec4(aPos - vec3(0.5), 1);
 
-        textureIndex = int((speed * time / 36) + uvScroll[1]) % uvScroll[0];
-        if (textureIndex < 0) {
-            textureIndex += uvScroll[0];
-        }
+    renderPos += vec4(instancePos + vec3(0.5), 0);
 
-    } else {
-        float degrees = rotationOffset + time * speed * 3./10.;
-        float angle = fract(-degrees / 360.) * PI * 2.;
-
-        renderPos = rotationMatrix(rotationAxis, angle) * vec4(aPos - vec3(0.5), 1f);
-
-        renderPos += vec4(instancePos + vec3(0.5), 0);
-    }
-
-    TexCoords = aTexCoords + vec2(float(textureIndex % 4) / 4f, float(textureIndex / 4) / 4f);
+    TexCoords = aTexCoords;
 
     gl_Position = projection * view * renderPos;
     Light = light;

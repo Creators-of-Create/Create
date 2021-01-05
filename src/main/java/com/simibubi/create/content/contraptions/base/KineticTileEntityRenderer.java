@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBufferCache.Compartment;
 
@@ -49,11 +50,11 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, int light) {
-		InstancedBuffer instancedRenderer = CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, renderedState);
+		RotatingBuffer instancedRenderer = CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, instancedRenderer, light);
 	}
 
-	public static void renderRotatingBuffer(KineticTileEntity te, InstancedBuffer instancer, int light) {
+	public static void renderRotatingBuffer(KineticTileEntity te, RotatingBuffer instancer, int light) {
 		instancer.setupInstance(data -> {
 			final BlockPos pos = te.getPos();
 			Axis axis = ((IRotate) te.getBlockState()
@@ -129,7 +130,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return te.getBlockState();
 	}
 
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
 		return CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, getRenderedBlockState(te));
 	}
 

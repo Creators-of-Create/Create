@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock.ConnectionState;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
@@ -75,10 +76,10 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), te.getBlockState()
-			.get(HORIZONTAL_FACING)
-			.getOpposite());
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), te.getBlockState()
+                                                                                                  .get(HORIZONTAL_FACING)
+                                                                                                  .getOpposite());
 	}
 
 	protected SuperByteBuffer transformConnector(SuperByteBuffer buffer, boolean upper, boolean rotating, float angle,

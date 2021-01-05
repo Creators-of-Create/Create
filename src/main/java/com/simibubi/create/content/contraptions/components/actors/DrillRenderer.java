@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -27,8 +28,8 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected InstancedBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthInstanced(te.getBlockState());
+	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthRotating(te.getBlockState());
 	}
 
 	protected static SuperByteBuffer getRotatingModel(BlockState state) {

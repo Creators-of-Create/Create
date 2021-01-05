@@ -5,10 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.*;
 
 import java.nio.Buffer;
@@ -16,12 +13,14 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class InstancedBuffer extends TemplateBuffer {
+public abstract class InstancedBuffer<T> extends TemplateBuffer {
 
-    public int vao, ebo, invariantVBO, instanceVBO, instanceCount;
+    protected static ByteBuffer MATRIX_BUF = GLAllocation.createDirectByteBuffer(16 << 2);
 
-    private final ArrayList<InstanceData> data = new ArrayList<>();
-    private boolean shouldBuild = true;
+    protected int vao, ebo, invariantVBO, instanceVBO, instanceCount;
+
+    protected final ArrayList<T> data = new ArrayList<>();
+    protected boolean shouldBuild = true;
 
     public InstancedBuffer(BufferBuilder buf) {
         super(buf);
@@ -113,166 +112,52 @@ public class InstancedBuffer extends TemplateBuffer {
         });
     }
 
-    public void setupInstance(Consumer<InstanceData> setup) {
+    protected void addData(T instance) {
+        data.add(instance);
+        instanceCount++;
+    }
+
+    protected abstract T newInstance();
+
+    protected abstract int numAttributes();
+
+    public void setupInstance(Consumer<T> setup) {
         if (!shouldBuild) return;
 
-        InstanceData instanceData = new InstanceData();
+        T instanceData = newInstance();
         setup.accept(instanceData);
 
-        data.add(instanceData);
-        instanceCount++;
+        addData(instanceData);
     }
 
     public void render() {
 
         GL30.glBindVertexArray(vao);
-        if (finishBuffering()) {
+        finishBuffering();
 
-            for (int i = 0; i <= 8; i++) {
-                GL40.glEnableVertexAttribArray(i);
-            }
-
-            GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-            GL40.glDrawElementsInstanced(GL11.GL_QUADS, count, GL11.GL_UNSIGNED_SHORT, 0, instanceCount);
-
-            for (int i = 0; i <= 8; i++) {
-                GL40.glDisableVertexAttribArray(i);
-            }
+        for (int i = 0; i <= 10; i++) {
+            GL40.glEnableVertexAttribArray(i);
         }
+
+        GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+        GL40.glDrawElementsInstanced(GL11.GL_QUADS, count, GL11.GL_UNSIGNED_SHORT, 0, instanceCount);
+
+        for (int i = 0; i <= 10; i++) {
+            GL40.glDisableVertexAttribArray(i);
+        }
+
         GL30.glBindVertexArray(0);
     }
 
-    private boolean finishBuffering() {
-        if (!shouldBuild) return true;
+    private void finishBuffering() {
+        if (!shouldBuild) return;
 
-        int floatSize = VertexFormatElement.Type.FLOAT.getSize();
-        int intSize = VertexFormatElement.Type.INT.getSize();
-        int stride = floatSize * 10 + intSize * 2;
-
-        int instanceSize = data.size() * stride;
-
-        if (instanceSize == 0) return false;
-
-        ByteBuffer buffer = GLAllocation.createDirectByteBuffer(instanceSize);
-        buffer.order(template.order());
-        ((Buffer) buffer).limit(instanceSize);
-
-        data.forEach(instanceData -> instanceData.buffer(buffer));
-        buffer.rewind();
-
-        GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, instanceVBO);
-        GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-
-        // the render position
-        GL20.glVertexAttribPointer(3, 3, GL11.GL_FLOAT, false, stride, 0);
-
-        // vertex lighting
-        GL20.glVertexAttribPointer(4, 2, GL11.GL_FLOAT, false, stride, floatSize * 3L);
-
-        // rotational speed and offset
-        GL20.glVertexAttribPointer(5, 1, GL11.GL_FLOAT, false, stride, floatSize * 5L);
-        GL20.glVertexAttribPointer(6, 1, GL11.GL_FLOAT, false, stride, floatSize * 6L);
-        // rotation axis
-        GL20.glVertexAttribPointer(7, 3, GL11.GL_FLOAT, false, stride, floatSize * 7L);
-        // uv scrolling
-        GL20.glVertexAttribPointer(8, 2, GL11.GL_INT, false, stride, floatSize * 10L);
-
-        for (int i = 3; i <= 8; i++) {
-            GL40.glVertexAttribDivisor(i, 1);
-        }
-
-        // Deselect (bind to 0) the VBO
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        finishBufferingInternal();
 
         shouldBuild = false;
         data.clear();
-
-        return true;
     }
 
-    public static class InstanceData {
-        private float x;
-        private float y;
-        private float z;
-        private int packedLight = 0;
-        private float rotationalSpeed;
-        private float rotationOffset;
-        private float rotationAxisX;
-        private float rotationAxisY;
-        private float rotationAxisZ;
-        private int cycleLength;
-        private int cycleOffset;
-
-        public InstanceData setPackedLight(int packedLight) {
-            this.packedLight = packedLight;
-            return this;
-        }
-
-        public InstanceData setRotationalSpeed(float rotationalSpeed) {
-            this.rotationalSpeed = rotationalSpeed;
-            return this;
-        }
-
-        public InstanceData setRotationOffset(float rotationOffset) {
-            this.rotationOffset = rotationOffset;
-            return this;
-        }
-
-        public InstanceData setPosition(Vector3f pos) {
-            this.x = pos.getX();
-            this.y = pos.getY();
-            this.z = pos.getZ();
-            return this;
-        }
-
-        public InstanceData setPosition(BlockPos pos) {
-            this.x = pos.getX();
-            this.y = pos.getY();
-            this.z = pos.getZ();
-            return this;
-        }
-
-        public InstanceData setRotationAxis(Vector3f axis) {
-            this.rotationAxisX = axis.getX();
-            this.rotationAxisY = axis.getY();
-            this.rotationAxisZ = axis.getZ();
-            return this;
-        }
-
-        public InstanceData setRotationAxis(float rotationAxisX, float rotationAxisY, float rotationAxisZ) {
-            this.rotationAxisX = rotationAxisX;
-            this.rotationAxisY = rotationAxisY;
-            this.rotationAxisZ = rotationAxisZ;
-            return this;
-        }
-
-        public InstanceData setCycleLength(int cycleLength) {
-            this.cycleLength = cycleLength;
-            return this;
-        }
-
-        public InstanceData setCycleOffset(int cycleOffset) {
-            this.cycleOffset = cycleOffset;
-            return this;
-        }
-
-        void buffer(ByteBuffer buf) {
-            float blockLightCoordinates = LightTexture.getBlockLightCoordinates(packedLight) / (float) 0xF;
-            float skyLightCoordinates = LightTexture.getSkyLightCoordinates(packedLight) / (float) 0xF;
-
-            buf.putFloat(x);
-            buf.putFloat(y);
-            buf.putFloat(z);
-            buf.putFloat(blockLightCoordinates);
-            buf.putFloat(skyLightCoordinates);
-            buf.putFloat(rotationalSpeed);
-            buf.putFloat(rotationOffset);
-            buf.putFloat(rotationAxisX);
-            buf.putFloat(rotationAxisY);
-            buf.putFloat(rotationAxisZ);
-            buf.putInt(cycleLength);
-            buf.putInt(cycleOffset);
-        }
-    }
+    protected abstract void finishBufferingInternal();
 }

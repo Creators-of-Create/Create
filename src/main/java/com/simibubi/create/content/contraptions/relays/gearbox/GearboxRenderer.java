@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.render.InstancedBuffer;
 
+import com.simibubi.create.foundation.utility.render.RotatingBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -31,7 +32,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			if (boxAxis == axis)
 				continue;
 
-			InstancedBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthInstanced(te.getBlockState(), direction);
+			RotatingBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction);
 
 			shaft.setupInstance(data -> {
 				float speed = te.getSpeed();
