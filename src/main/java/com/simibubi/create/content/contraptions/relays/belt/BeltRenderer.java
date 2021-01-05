@@ -65,6 +65,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		boolean end = part == BeltPart.END;
 		boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
 		boolean alongX = facing.getAxis() == Axis.X;
+		boolean alongZ = facing.getAxis() == Axis.Z;
 
 		if (downward || beltSlope == BeltSlope.VERTICAL && axisDirection == AxisDirection.POSITIVE) {
 			boolean b = start;
@@ -89,8 +90,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			beltBuffer.setupInstance(data -> {
 				float speed = te.getSpeed();
-				if (diagonal && (downward ^ alongX) || !sideways && !diagonal && alongX
-						|| sideways && axisDirection == AxisDirection.NEGATIVE)
+				if (((axisDirection == AxisDirection.NEGATIVE) ^ upward) ^ ((alongX && !diagonal) || (alongZ && diagonal)))
 					speed = -speed;
 
 				float horizontalAngle = facing.getHorizontalAngle();
