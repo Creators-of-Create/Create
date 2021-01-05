@@ -1,10 +1,11 @@
 package com.simibubi.create.foundation.utility.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
@@ -34,7 +35,7 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
     protected void finishBufferingInternal() {
         int floatSize = VertexFormatElement.Type.FLOAT.getSize();
         int intSize = VertexFormatElement.Type.INT.getSize();
-        int stride = floatSize * 22;
+        int stride = floatSize * 16;
 
         int instanceSize = instanceCount * stride;
 
@@ -51,16 +52,21 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
         // render position
         GL20.glVertexAttribPointer(3, 3, GL11.GL_FLOAT, false, stride, 0);
 
-        // model matrix
-        for (int i = 0; i < 4; i++) {
-            GL20.glVertexAttribPointer(4 + i, 4, GL11.GL_FLOAT, false, stride, floatSize * (4 * i + 3));
-        }
+        // render rotation
+        GL20.glVertexAttribPointer(4, 3, GL11.GL_FLOAT, false, stride, floatSize * 3L);
 
         // light map
-        GL20.glVertexAttribPointer(8, 2, GL11.GL_FLOAT, false, stride, floatSize * 16L);
+        GL20.glVertexAttribPointer(5, 2, GL11.GL_FLOAT, false, stride, floatSize * 6L);
 
-        // rotational speed and offset
-        GL20.glVertexAttribPointer(9, 1, GL11.GL_FLOAT, false, stride, floatSize * 18L);
+        // speed
+        GL20.glVertexAttribPointer(6, 1, GL11.GL_FLOAT, false, stride, floatSize * 8L);
+
+        // uv data
+        GL20.glVertexAttribPointer(7, 2, GL11.GL_FLOAT, false, stride, floatSize * 9L);
+
+        GL20.glVertexAttribPointer(8, 4, GL11.GL_FLOAT, false, stride, floatSize * 11L);
+
+        GL20.glVertexAttribPointer(9, 1, GL11.GL_FLOAT, false, stride, floatSize * 15L);
 
         for (int i = 3; i <= numAttributes(); i++) {
             GL40.glVertexAttribDivisor(i, 1);
@@ -74,9 +80,18 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
         private float x;
         private float y;
         private float z;
-        private Matrix4f model;
+        private float rotX;
+        private float rotY;
+        private float rotZ;
         private int packedLight;
         private float rotationalSpeed;
+        private float sourceU;
+        private float sourceV;
+        private float minU;
+        private float minV;
+        private float maxU;
+        private float maxV;
+        private float scrollMult;
 
         public BeltData setPosition(BlockPos pos) {
             this.x = pos.getX();
@@ -85,8 +100,10 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
             return this;
         }
 
-        public BeltData setModel(Matrix4f model) {
-            this.model = model;
+        public BeltData setRotation(float rotX, float rotY, float rotZ) {
+            this.rotX = rotX;
+            this.rotY = rotY;
+            this.rotZ = rotZ;
             return this;
         }
 
@@ -100,6 +117,25 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
             return this;
         }
 
+        public BeltData setScrollTexture(SpriteShiftEntry spriteShift) {
+            TextureAtlasSprite source = spriteShift.getOriginal();
+            TextureAtlasSprite target = spriteShift.getTarget();
+
+            this.sourceU = source.getMinU();
+            this.sourceV = source.getMinV();
+            this.minU = target.getMinU();
+            this.minV = target.getMinV();
+            this.maxU = target.getMaxU();
+            this.maxV = target.getMaxV();
+
+            return this;
+        }
+
+        public BeltData setScrollMult(float scrollMult) {
+            this.scrollMult = scrollMult;
+            return this;
+        }
+
         void buffer(ByteBuffer buf) {
             float blockLightCoordinates = LightTexture.getBlockLightCoordinates(packedLight) / (float) 0xF;
             float skyLightCoordinates = LightTexture.getSkyLightCoordinates(packedLight) / (float) 0xF;
@@ -108,14 +144,22 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
             buf.putFloat(y);
             buf.putFloat(z);
 
-            InstancedBuffer.MATRIX_BUF.rewind();
-            model.write(InstancedBuffer.MATRIX_BUF.asFloatBuffer());
-            InstancedBuffer.MATRIX_BUF.rewind();
+            buf.putFloat(rotX);
+            buf.putFloat(rotY);
+            buf.putFloat(rotZ);
 
-            buf.put(InstancedBuffer.MATRIX_BUF);
             buf.putFloat(blockLightCoordinates);
             buf.putFloat(skyLightCoordinates);
             buf.putFloat(rotationalSpeed);
+
+            buf.putFloat(sourceU);
+            buf.putFloat(sourceV);
+            buf.putFloat(minU);
+            buf.putFloat(minV);
+            buf.putFloat(maxU);
+            buf.putFloat(maxV);
+
+            buf.putFloat(scrollMult);
         }
     }
 }

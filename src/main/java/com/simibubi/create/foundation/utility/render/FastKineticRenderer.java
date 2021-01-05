@@ -50,17 +50,17 @@ public class FastKineticRenderer {
     }
 
     public void tick() {
-        for (Cache<Object, RotatingBuffer> cache : rotating.values()) {
-            for (RotatingBuffer renderer : cache.asMap().values()) {
-                renderer.clearInstanceData();
-            }
-        }
-
-        for (Cache<Object, BeltBuffer> cache : belts.values()) {
-            for (BeltBuffer renderer : cache.asMap().values()) {
-                renderer.clearInstanceData();
-            }
-        }
+//        for (Cache<Object, RotatingBuffer> cache : rotating.values()) {
+//            for (RotatingBuffer renderer : cache.asMap().values()) {
+//                renderer.clearInstanceData();
+//            }
+//        }
+//
+//        for (Cache<Object, BeltBuffer> cache : belts.values()) {
+//            for (BeltBuffer renderer : cache.asMap().values()) {
+//                renderer.clearInstanceData();
+//            }
+//        }
     }
 
     public void enqueue(Runnable run) {
@@ -216,6 +216,11 @@ public class FastKineticRenderer {
 
     public void invalidate() {
         rotating.values().forEach(cache -> {
+            cache.asMap().values().forEach(InstancedBuffer::invalidate);
+            cache.invalidateAll();
+        });
+
+        belts.values().forEach(cache -> {
             cache.asMap().values().forEach(InstancedBuffer::invalidate);
             cache.invalidateAll();
         });

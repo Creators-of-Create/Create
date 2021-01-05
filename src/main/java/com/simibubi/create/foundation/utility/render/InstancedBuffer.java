@@ -15,8 +15,6 @@ import java.util.function.Consumer;
 
 public abstract class InstancedBuffer<T> extends TemplateBuffer {
 
-    protected static ByteBuffer MATRIX_BUF = GLAllocation.createDirectByteBuffer(16 << 2);
-
     protected int vao, ebo, invariantVBO, instanceVBO, instanceCount;
 
     protected final ArrayList<T> data = new ArrayList<>();
@@ -112,11 +110,6 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
         });
     }
 
-    protected void addData(T instance) {
-        data.add(instance);
-        instanceCount++;
-    }
-
     protected abstract T newInstance();
 
     protected abstract int numAttributes();
@@ -127,7 +120,8 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
         T instanceData = newInstance();
         setup.accept(instanceData);
 
-        addData(instanceData);
+        data.add(instanceData);
+        instanceCount++;
     }
 
     public void render() {
