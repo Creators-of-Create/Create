@@ -64,10 +64,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		boolean start = part == BeltPart.START;
 		boolean end = part == BeltPart.END;
 		boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
+		boolean vertical = beltSlope == BeltSlope.VERTICAL;
 		boolean alongX = facing.getAxis() == Axis.X;
 		boolean alongZ = facing.getAxis() == Axis.Z;
 
-		if (downward || beltSlope == BeltSlope.VERTICAL && axisDirection == AxisDirection.POSITIVE) {
+		if (downward || vertical && axisDirection == AxisDirection.POSITIVE) {
 			boolean b = start;
 			start = end;
 			end = b;
@@ -90,16 +91,17 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			beltBuffer.setupInstance(data -> {
 				float speed = te.getSpeed();
-				if (((axisDirection == AxisDirection.NEGATIVE) ^ upward) ^ ((alongX && !diagonal) || (alongZ && diagonal)))
+				if (((axisDirection == AxisDirection.NEGATIVE) ^ upward) ^
+					((alongX && !diagonal) || (alongZ && diagonal)) ^
+					vertical)
 					speed = -speed;
 
-				float horizontalAngle = facing.getHorizontalAngle();
+				float rotX = !diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0;
+				float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 270 : 0);
+				float rotZ = sideways ? 90 : (vertical ? 180 : 0);
+
 				data.setPosition(te.getPos())
-					.setRotation(
-							!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0,
-							horizontalAngle + (upward ? 180 : 0) + (sideways ? 270 : 0),
-							sideways ? 90 : 0
-					)
+					.setRotation(rotX, rotY, rotZ)
 					.setPackedLight(light)
 					.setRotationalSpeed(speed)
 					.setScrollTexture(spriteShift)
