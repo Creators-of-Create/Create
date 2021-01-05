@@ -2,11 +2,8 @@ package com.simibubi.create.foundation.utility.render.shader;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.shader.IShaderManager;
 import net.minecraft.client.shader.ShaderLinkHelper;
 import net.minecraft.client.shader.ShaderLoader;
@@ -14,8 +11,6 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.MemoryUtil;
@@ -26,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.util.EnumMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ShaderHelper {
@@ -102,7 +96,7 @@ public class ShaderHelper {
     private static ShaderLoader createShader(IResourceManager manager, String filename, ShaderLoader.ShaderType shaderType) throws IOException {
         ResourceLocation loc = new ResourceLocation(Create.ID, filename);
         try (InputStream is = new BufferedInputStream(manager.getResource(loc).getInputStream())) {
-            return ShaderLoader.func_216534_a(shaderType, loc.toString(), is, shaderType.name().toLowerCase(Locale.ROOT));
+            return ShaderLoader.func_216534_a(shaderType, loc.toString(), is); // , shaderType.name().toLowerCase(Locale.ROOT));
         }
     }
 

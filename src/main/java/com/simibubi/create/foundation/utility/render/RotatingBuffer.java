@@ -1,14 +1,12 @@
 package com.simibubi.create.foundation.utility.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -16,7 +14,6 @@ import org.lwjgl.opengl.GL40;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.util.function.Consumer;
 
 public class RotatingBuffer extends InstancedBuffer<RotatingBuffer.InstanceData> {
     public RotatingBuffer(BufferBuilder buf) {

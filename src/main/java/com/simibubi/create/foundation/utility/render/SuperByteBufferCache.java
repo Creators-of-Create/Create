@@ -5,11 +5,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.google.common.collect.Collections2;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 

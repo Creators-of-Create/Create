@@ -1,23 +1,12 @@
 package com.simibubi.create.foundation.utility.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
-import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.time.temporal.TemporalAccessor;
 
 public class TemplateBuffer {
     protected ByteBuffer template;

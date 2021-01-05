@@ -17,8 +17,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +27,6 @@ import org.lwjgl.opengl.GL40;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -101,7 +99,7 @@ public class FastKineticRenderer {
             GlStateManager.uniformMatrix4(projection, false, ShaderHelper.MATRIX_BUFFER);
 
             // view matrix
-            Vector3d pos = gameRenderer.getActiveRenderInfo().getProjectedView();
+            Vec3d pos = gameRenderer.getActiveRenderInfo().getProjectedView();
             Matrix4f translate = Matrix4f.translate((float) -pos.x, (float) -pos.y, (float) -pos.z);
             translate.multiplyBackward(event.getMatrixStack().peek().getModel());
 
