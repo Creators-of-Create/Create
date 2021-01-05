@@ -37,12 +37,14 @@ void main()
 {
     vec3 rot = fract(rotationDegrees / 360.) * PI * 2.;
 
-    vec4 renderPos = rotate(vec3(1, 0, 0), rot.x) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(0, 1, 0), rot.y) * vec4(aPos - vec3(0.5), 1f);
+    mat4 rotation = rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
+
+    vec4 renderPos = rotation * vec4(aPos - vec3(0.5), 1f);
     renderPos += vec4(instancePos + vec3(0.5), 0);
 
     float scrollSize = scrollTexture.w - scrollTexture.y;
 
-    float scroll = fract(speed * time / (36. * 16.)) * scrollSize * scrollMult;
+    float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
 
     Light = light;
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
