@@ -36,9 +36,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.extensions.IForgeTileEntity;
-import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
@@ -459,4 +456,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return overStressed;
 	}
 
+	public static AxisAlignedBB NOWHERE_AABB = new AxisAlignedBB(Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return super.getRenderBoundingBox();
+	}
 }

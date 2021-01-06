@@ -23,6 +23,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
 import java.util.*;
@@ -71,7 +72,9 @@ public class FastKineticRenderer {
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        RenderSystem.enableCull();
+        RenderSystem.enableLighting();
+        RenderSystem.enableDepthTest();
+        GL11.glCullFace(GL11.GL_BACK);
 
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
         LightTexture lightManager = gameRenderer.getLightmapTextureManager();
@@ -79,11 +82,11 @@ public class FastKineticRenderer {
         Texture blockAtlasTexture = Minecraft.getInstance().textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
         Texture lightTexture = Minecraft.getInstance().textureManager.getTexture(lightManager.resourceLocation);
 
-        GL40.glActiveTexture(GL40.GL_TEXTURE0);
-        GL40.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
+        GL13.glActiveTexture(GL40.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
 
-        GL40.glActiveTexture(GL40.GL_TEXTURE0 + 1);
-        GL40.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
+        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
         RenderSystem.texParameter(3553, 10241, 9729);
         RenderSystem.texParameter(3553, 10240, 9729);
         RenderSystem.texParameter(3553, 10242, 10496);
@@ -134,6 +137,7 @@ public class FastKineticRenderer {
         RenderSystem.disableCull();
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
 
         while (!runs.isEmpty()) {
             runs.remove().run();
