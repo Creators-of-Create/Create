@@ -84,6 +84,7 @@ public class FastKineticRenderer {
 
         GL13.glActiveTexture(GL40.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
+        blockAtlasTexture.setBlurMipmap(false, true);
 
         GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
@@ -129,10 +130,10 @@ public class FastKineticRenderer {
 
         ShaderHelper.releaseShader();
 
-        GL40.glActiveTexture(GL40.GL_TEXTURE0 + 1);
-        GL40.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-        GL40.glActiveTexture(GL40.GL_TEXTURE0);
-        GL40.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL13.glActiveTexture(GL40.GL_TEXTURE0);
+        blockAtlasTexture.restoreLastBlurMipmap();
 
         RenderSystem.disableCull();
         RenderSystem.disableBlend();
