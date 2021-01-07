@@ -13,6 +13,7 @@ layout (location = 7) in vec2 sourceUV;
 layout (location = 8) in vec4 scrollTexture;
 layout (location = 9) in float scrollMult;
 
+out vec3 Normal;
 out vec2 TexCoords;
 out vec2 Light;
 
@@ -21,8 +22,7 @@ uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
 
-mat4 rotate(vec3 axis, float angle)
-{
+mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
     float c = cos(angle);
     float oc = 1.0 - c;
@@ -33,8 +33,7 @@ mat4 rotate(vec3 axis, float angle)
                 0.,                                 0.,                                 0.,                                 1.);
 }
 
-void main()
-{
+void main() {
     vec3 rot = fract(rotationDegrees / 360.) * PI * 2.;
 
     mat4 rotation = rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
@@ -46,6 +45,7 @@ void main()
 
     float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
 
+    Normal = normalize((rotation * vec4(aNormal, 0.)).xyz);
     Light = light;
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
     gl_Position = projection * view * renderPos;

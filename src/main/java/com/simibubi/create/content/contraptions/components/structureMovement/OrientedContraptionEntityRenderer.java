@@ -56,8 +56,19 @@ public class OrientedContraptionEntityRenderer extends AbstractContraptionEntity
 				.unCentre();
 	}
 
+	@Override
+	public Vec3d getPosition(OrientedContraptionEntity entity, float partialTicks) {
+
+		return Vec3d.ZERO;
+	}
+
+	@Override
+	public Vec3d getRotation(OrientedContraptionEntity contraptionEntity, float partialTicks) {
+		return Vec3d.ZERO;
+	}
+
 	private void repositionOnContraption(OrientedContraptionEntity entity, float partialTicks,
-		MatrixStack[] matrixStacks, Entity ridingEntity) {
+										 MatrixStack[] matrixStacks, Entity ridingEntity) {
 		AbstractContraptionEntity parent = (AbstractContraptionEntity) ridingEntity;
 		Vec3d passengerPosition = parent.getPassengerPosition(entity, partialTicks);
 		double x = passengerPosition.x - MathHelper.lerp(partialTicks, entity.lastTickPosX, entity.getX());
@@ -91,6 +102,29 @@ public class OrientedContraptionEntityRenderer extends AbstractContraptionEntity
 			for (MatrixStack stack : matrixStacks)
 				stack.translate(cartX, cartY, cartZ);
 		}
+	}
+
+	private Vec3d getCartPosition(float partialTicks, Entity ridingEntity) {
+		AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
+		double cartX = MathHelper.lerp(partialTicks, cart.lastTickPosX, cart.getX());
+		double cartY = MathHelper.lerp(partialTicks, cart.lastTickPosY, cart.getY());
+		double cartZ = MathHelper.lerp(partialTicks, cart.lastTickPosZ, cart.getZ());
+		Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
+
+		if (cartPos != null) {
+			Vec3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
+			Vec3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
+			if (cartPosFront == null)
+				cartPosFront = cartPos;
+			if (cartPosBack == null)
+				cartPosBack = cartPos;
+
+			cartX = cartPos.x - cartX;
+			cartY = (cartPosFront.y + cartPosBack.y) / 2.0D - cartY;
+			cartZ = cartPos.z - cartZ;
+		}
+
+		return new Vec3d(cartX, cartY, cartZ);
 	}
 
 }

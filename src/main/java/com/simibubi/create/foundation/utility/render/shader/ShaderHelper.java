@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.shader.IShaderManager;
 import net.minecraft.client.shader.ShaderLinkHelper;
 import net.minecraft.client.shader.ShaderLoader;
@@ -11,6 +12,8 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.MemoryUtil;
@@ -28,6 +31,7 @@ public class ShaderHelper {
     public static final Logger log = LogManager.getLogger("shader");
 
     public static final FloatBuffer FLOAT_BUFFER = MemoryUtil.memAllocFloat(1);
+    public static final FloatBuffer VEC3_BUFFER = MemoryUtil.memAllocFloat(3);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
     private static final Map<Shader, ShaderProgram> PROGRAMS = new EnumMap<>(Shader.class);
@@ -46,6 +50,32 @@ public class ShaderHelper {
                         }
                     });
         }
+    }
+
+    public static int getShaderHandle(Shader shader) {
+        ShaderProgram shaderProgram = PROGRAMS.get(shader);
+
+        return shaderProgram.getProgram();
+    }
+
+    public static ShaderCallback getViewProjectionCallback(RenderWorldLastEvent event) {
+        return shader -> {
+            ShaderHelper.MATRIX_BUFFER.position(0);
+            event.getProjectionMatrix().write(ShaderHelper.MATRIX_BUFFER);
+
+            int projection = GlStateManager.getUniformLocation(shader, "projection");
+            GlStateManager.uniformMatrix4(projection, false, ShaderHelper.MATRIX_BUFFER);
+
+            // view matrix
+            Vec3d pos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+            Matrix4f translate = Matrix4f.translate((float) -pos.x, (float) -pos.y, (float) -pos.z);
+            translate.multiplyBackward(event.getMatrixStack().peek().getModel());
+
+            ShaderHelper.MATRIX_BUFFER.position(0);
+            translate.write(ShaderHelper.MATRIX_BUFFER);
+            int view = GlStateManager.getUniformLocation(shader, "view");
+            GlStateManager.uniformMatrix4(view, false, ShaderHelper.MATRIX_BUFFER);
+        };
     }
 
     public static void useShader(Shader shader) {

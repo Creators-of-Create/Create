@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -137,8 +138,8 @@ public class BeltBuffer extends InstancedBuffer<BeltBuffer.BeltData> {
         }
 
         void buffer(ByteBuffer buf) {
-            float blockLightCoordinates = LightTexture.getBlockLightCoordinates(packedLight) / (float) 0xF;
-            float skyLightCoordinates = LightTexture.getSkyLightCoordinates(packedLight) / (float) 0xF;
+            float blockLightCoordinates = LightUtil.getProperBlockLight(packedLight);
+            float skyLightCoordinates = LightUtil.getProperSkyLight(packedLight);
 
             buf.putFloat(x);
             buf.putFloat(y);

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 
+import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
@@ -18,6 +19,8 @@ public class ResourceReloadHandler extends ReloadListener<Object> {
 	protected void apply(Object $, IResourceManager resourceManagerIn, IProfiler profilerIn) {
 		SpriteShifter.reloadUVs();
 		CreateClient.bufferCache.invalidate();
+		CreateClient.kineticRenderer.invalidate();
+		FastContraptionRenderer.invalidateAll();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class AbstractContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
 
@@ -22,6 +24,9 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 	}
 
 	protected abstract void transform(C contraptionEntity, float partialTicks, MatrixStack[] matrixStacks);
+
+	public abstract Vec3d getPosition(C contraptionEntity, float partialTicks);
+	public abstract Vec3d getRotation(C contraptionEntity, float partialTicks);
 
 	@Override
 	public boolean shouldRender(C entity, ClippingHelperImpl p_225626_2_, double p_225626_3_, double p_225626_5_,
@@ -47,8 +52,10 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 		ms.push();
 		transform(entity, partialTicks, matrixStacks);
 		Contraption contraption = entity.getContraption();
-		if (contraption != null)
+		if (contraption != null) {
 			ContraptionRenderer.render(entity.world, contraption, ms, msLocal, buffers);
+			// not ready yet FastContraptionRenderer.markForRendering(entity.world, contraption, getPosition(entity, partialTicks), getRotation(entity, partialTicks));
+		}
 		ms.pop();
 
 	}

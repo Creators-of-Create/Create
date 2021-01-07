@@ -32,7 +32,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
+import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -111,11 +111,14 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		CreateClient.bufferCache.invalidate();
+		CreateClient.kineticRenderer.invalidate();
+		FastContraptionRenderer.invalidateAll();
 	}
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		CreateClient.kineticRenderer.renderInstances(event);
+		FastContraptionRenderer.renderAll(event);
 
 		MatrixStack ms = event.getMatrixStack();
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();

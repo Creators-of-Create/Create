@@ -42,11 +42,16 @@ public class ContraptionRenderer {
 	protected static PlacementSimulationWorld renderWorld;
 
 	public static void render(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+							  IRenderTypeBuffer buffer) {
+		renderDynamic(world, c, ms, msLocal, buffer);
+		renderStructure(world, c, ms, msLocal, buffer);
+	}
+
+	public static void renderDynamic(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
+									 IRenderTypeBuffer buffer) {
 		renderTileEntities(world, c, ms, msLocal, buffer);
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
-		renderStructure(world, c, ms, msLocal, buffer);
 		renderActors(world, c, ms, msLocal, buffer);
 	}
 
@@ -69,12 +74,17 @@ public class ContraptionRenderer {
 		}
 	}
 
-	private static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
+	protected static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
 		TileEntityRenderHelper.renderTileEntities(world, c.renderedTileEntities, ms, msLocal, buffer);
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {
+		BufferBuilder builder = buildStructure(c, layer);
+		return new SuperByteBuffer(builder);
+	}
+
+	protected static BufferBuilder buildStructure(Contraption c, RenderType layer) {
 		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
@@ -89,10 +99,10 @@ public class ContraptionRenderer {
 		renderWorld.setTileEntities(c.presentTileEntities.values());
 
 		for (BlockInfo info : c.getBlocks()
-			.values())
+							   .values())
 			renderWorld.setBlockState(info.pos, info.state);
 		for (BlockInfo info : c.getBlocks()
-			.values()) {
+							   .values()) {
 			BlockState state = info.state;
 
 			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
@@ -110,10 +120,10 @@ public class ContraptionRenderer {
 
 		builder.finishDrawing();
 		renderWorld.clear();
-		return new SuperByteBuffer(builder);
+		return builder;
 	}
 
-	private static void renderActors(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
+	protected static void renderActors(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 		for (Pair<BlockInfo, MovementContext> actor : c.getActors()) {

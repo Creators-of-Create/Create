@@ -122,8 +122,8 @@ public class RotatingBuffer extends InstancedBuffer<RotatingBuffer.InstanceData>
         }
 
         void buffer(ByteBuffer buf) {
-            float blockLightCoordinates = LightTexture.getBlockLightCoordinates(packedLight) / (float) 0xF;
-            float skyLightCoordinates = LightTexture.getSkyLightCoordinates(packedLight) / (float) 0xF;
+            float blockLightCoordinates = LightUtil.getProperBlockLight(packedLight);
+            float skyLightCoordinates = LightUtil.getProperSkyLight(packedLight);
 
             buf.putFloat(x);
             buf.putFloat(y);

@@ -69,49 +69,12 @@ public class FastKineticRenderer {
     }
 
     public void renderInstances(RenderWorldLastEvent event) {
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-
-        RenderSystem.enableLighting();
-        RenderSystem.enableDepthTest();
-        GL11.glCullFace(GL11.GL_BACK);
-
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-        LightTexture lightManager = gameRenderer.getLightmapTextureManager();
 
-        Texture blockAtlasTexture = Minecraft.getInstance().textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-        Texture lightTexture = Minecraft.getInstance().textureManager.getTexture(lightManager.resourceLocation);
+        setup(gameRenderer);
 
-        GL13.glActiveTexture(GL40.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
-        blockAtlasTexture.setBlurMipmap(false, true);
+        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(event);
 
-        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
-        RenderSystem.texParameter(3553, 10241, 9729);
-        RenderSystem.texParameter(3553, 10240, 9729);
-        RenderSystem.texParameter(3553, 10242, 10496);
-        RenderSystem.texParameter(3553, 10243, 10496);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableTexture();
-
-        ShaderCallback callback = shader -> {
-            ShaderHelper.MATRIX_BUFFER.position(0);
-            event.getProjectionMatrix().write(ShaderHelper.MATRIX_BUFFER);
-
-            int projection = GlStateManager.getUniformLocation(shader, "projection");
-            GlStateManager.uniformMatrix4(projection, false, ShaderHelper.MATRIX_BUFFER);
-
-            // view matrix
-            Vec3d pos = gameRenderer.getActiveRenderInfo().getProjectedView();
-            Matrix4f translate = Matrix4f.translate((float) -pos.x, (float) -pos.y, (float) -pos.z);
-            translate.multiplyBackward(event.getMatrixStack().peek().getModel());
-
-            ShaderHelper.MATRIX_BUFFER.position(0);
-            translate.write(ShaderHelper.MATRIX_BUFFER);
-            int view = GlStateManager.getUniformLocation(shader, "view");
-            GlStateManager.uniformMatrix4(view, false, ShaderHelper.MATRIX_BUFFER);
-        };
         ShaderHelper.useShader(Shader.ROTATING_INSTANCED, callback);
 
         rotating.values()
@@ -123,26 +86,63 @@ public class FastKineticRenderer {
         ShaderHelper.useShader(Shader.BELT_INSTANCED, callback);
 
         belts.values()
-                .stream()
-                .flatMap(cache -> cache.asMap().values().stream())
-                .filter(type -> !type.isEmpty())
-                .forEach(InstancedBuffer::render);
+             .stream()
+             .flatMap(cache -> cache.asMap().values().stream())
+             .filter(type -> !type.isEmpty())
+             .forEach(InstancedBuffer::render);
 
         ShaderHelper.releaseShader();
 
+        teardown();
+
+        while (!runs.isEmpty()) {
+            runs.remove().run();
+        }
+    }
+
+    public void setup(GameRenderer gameRenderer) {
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        RenderSystem.enableLighting();
+        RenderSystem.enableDepthTest();
+        GL11.glCullFace(GL11.GL_BACK);
+
+        LightTexture lightManager = gameRenderer.getLightmapTextureManager();
+
+        Texture blockAtlasTexture = Minecraft.getInstance().textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+        Texture lightTexture = Minecraft.getInstance().textureManager.getTexture(lightManager.resourceLocation);
+
+        // bind the block atlas texture to 0
+        GL13.glActiveTexture(GL40.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
+        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+
+        // bind the light texture to 1 and setup the mysterious filtering options
+        GL13.glActiveTexture(GL40.GL_TEXTURE1);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10241, 9729);
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10240, 9729);
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10242, 10496);
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10243, 10496);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableTexture();
+    }
+
+    public void teardown() {
+
         GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+
         GL13.glActiveTexture(GL40.GL_TEXTURE0);
-        blockAtlasTexture.restoreLastBlurMipmap();
+        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
         RenderSystem.disableCull();
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableDepthTest();
-
-        while (!runs.isEmpty()) {
-            runs.remove().run();
-        }
     }
 
     public void registerCompartment(SuperByteBufferCache.Compartment<?> instance) {

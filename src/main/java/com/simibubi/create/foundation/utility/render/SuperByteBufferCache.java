@@ -128,7 +128,6 @@ public class SuperByteBufferCache {
 
 	public void invalidate() {
 		cache.forEach((comp, cache) -> cache.invalidateAll());
-		CreateClient.kineticRenderer.invalidate();
 	}
 
 }
