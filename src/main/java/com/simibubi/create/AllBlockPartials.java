@@ -13,8 +13,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.BeltBuffer;
-import com.simibubi.create.foundation.utility.render.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.BeltBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;

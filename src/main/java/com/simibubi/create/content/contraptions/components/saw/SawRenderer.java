@@ -12,8 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.InstancedBuffer;
-import com.simibubi.create.foundation.utility.render.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

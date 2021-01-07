@@ -7,6 +7,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.render.instancing.BeltBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.shader.Shader;
 import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
@@ -17,7 +20,6 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -81,7 +83,7 @@ public class FastKineticRenderer {
                 .stream()
                 .flatMap(cache -> cache.asMap().values().stream())
                 .filter(type -> !type.isEmpty())
-                .forEach(InstancedBuffer::render);
+                .forEach(InstanceBuffer::render);
 
         ShaderHelper.useShader(Shader.BELT_INSTANCED, callback);
 
@@ -89,7 +91,7 @@ public class FastKineticRenderer {
              .stream()
              .flatMap(cache -> cache.asMap().values().stream())
              .filter(type -> !type.isEmpty())
-             .forEach(InstancedBuffer::render);
+             .forEach(InstanceBuffer::render);
 
         ShaderHelper.releaseShader();
 
@@ -221,12 +223,12 @@ public class FastKineticRenderer {
 
     public void invalidate() {
         rotating.values().forEach(cache -> {
-            cache.asMap().values().forEach(InstancedBuffer::invalidate);
+            cache.asMap().values().forEach(InstanceBuffer::invalidate);
             cache.invalidateAll();
         });
 
         belts.values().forEach(cache -> {
-            cache.asMap().values().forEach(InstancedBuffer::invalidate);
+            cache.asMap().values().forEach(InstanceBuffer::invalidate);
             cache.invalidateAll();
         });
     }

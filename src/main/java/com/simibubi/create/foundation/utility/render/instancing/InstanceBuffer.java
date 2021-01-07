@@ -1,8 +1,9 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.utility.render.instancing;
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.render.TemplateBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -13,14 +14,14 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public abstract class InstancedBuffer<T> extends TemplateBuffer {
+public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuffer {
 
     protected int vao, ebo, invariantVBO, instanceVBO, instanceCount;
 
-    protected final ArrayList<T> data = new ArrayList<>();
+    protected final ArrayList<D> data = new ArrayList<>();
     protected boolean shouldBuild = true;
 
-    public InstancedBuffer(BufferBuilder buf) {
+    public InstanceBuffer(BufferBuilder buf) {
         super(buf);
         setupMainData();
     }
@@ -86,6 +87,8 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
         GL30.glBindVertexArray(0);
     }
 
+    protected abstract VertexFormat getInstanceFormat();
+
     public int numInstances() {
         return instanceCount;
     }
@@ -110,14 +113,12 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
         });
     }
 
-    protected abstract T newInstance();
+    protected abstract D newInstance();
 
-    protected abstract int numAttributes();
-
-    public void setupInstance(Consumer<T> setup) {
+    public void setupInstance(Consumer<D> setup) {
         if (!shouldBuild) return;
 
-        T instanceData = newInstance();
+        D instanceData = newInstance();
         setup.accept(instanceData);
 
         data.add(instanceData);
@@ -129,7 +130,8 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
         GL30.glBindVertexArray(vao);
         finishBuffering();
 
-        for (int i = 0; i <= numAttributes(); i++) {
+        int numAttributes = getInstanceFormat().getNumAttributes() + 3;
+        for (int i = 0; i <= numAttributes; i++) {
             GL40.glEnableVertexAttribArray(i);
         }
 
@@ -137,7 +139,7 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
 
         GL40.glDrawElementsInstanced(GL11.GL_QUADS, count, GL11.GL_UNSIGNED_SHORT, 0, instanceCount);
 
-        for (int i = 0; i <= numAttributes(); i++) {
+        for (int i = 0; i <= numAttributes; i++) {
             GL40.glDisableVertexAttribArray(i);
         }
 
@@ -148,11 +150,30 @@ public abstract class InstancedBuffer<T> extends TemplateBuffer {
     private void finishBuffering() {
         if (!shouldBuild) return;
 
-        finishBufferingInternal();
+        VertexFormat instanceFormat = getInstanceFormat();
+
+        int instanceSize = instanceCount * instanceFormat.getStride();
+
+        ByteBuffer buffer = GLAllocation.createDirectByteBuffer(instanceSize);
+        buffer.order(template.order());
+        ((Buffer) buffer).limit(instanceSize);
+
+        data.forEach(instanceData -> instanceData.write(buffer));
+        buffer.rewind();
+
+        GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, instanceVBO);
+        GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+
+        instanceFormat.informAttributes(3);
+
+        for (int i = 0; i < instanceFormat.getNumAttributes(); i++) {
+            GL40.glVertexAttribDivisor(i + 3, 1);
+        }
+
+        // Deselect (bind to 0) the VBO
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
         shouldBuild = false;
         data.clear();
     }
-
-    protected abstract void finishBufferingInternal();
 }
