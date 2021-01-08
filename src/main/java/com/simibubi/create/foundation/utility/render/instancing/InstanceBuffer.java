@@ -14,7 +14,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+
 public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuffer {
+    public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV);
 
     protected int vao, ebo, invariantVBO, instanceVBO, instanceCount;
 
@@ -27,9 +30,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
     }
 
     private void setupMainData() {
-        int floatSize = VertexFormatElement.Type.FLOAT.getSize();
-
-        int stride = floatSize * 8;
+        int stride = FORMAT.getStride();
         int invariantSize = count * stride;
 
         ByteBuffer constant = GLAllocation.createDirectByteBuffer(invariantSize);
@@ -72,14 +73,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
         GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 
-        // vertex positions
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, 0);
-
-        // vertex normals
-        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, stride, floatSize * 3L);
-
-        // uv position
-        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, floatSize * 6L);
+        FORMAT.informAttributes(0);
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);

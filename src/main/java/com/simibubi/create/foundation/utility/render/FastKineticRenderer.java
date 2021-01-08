@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.Texture;
@@ -74,7 +75,7 @@ public class FastKineticRenderer {
     }
 
     public void tick() {
-        // TODO: (later) detect changes in lighting with a mixin to ClientChunkProvider.markLightChanged()
+        // TODO: (later) detect changes in lighting with a mixin (or forge hook) to ClientChunkProvider.markLightChanged()
         for (Cache<Object, RotatingBuffer> cache : rotating.values()) {
             for (RotatingBuffer renderer : cache.asMap().values()) {
                 renderer.clearInstanceData();

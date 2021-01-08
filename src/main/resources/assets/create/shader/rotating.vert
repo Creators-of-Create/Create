@@ -10,9 +10,10 @@ layout (location = 5) in float speed;
 layout (location = 6) in float rotationOffset;
 layout (location = 7) in vec3 rotationAxis;
 
-out vec3 Normal;
 out vec2 TexCoords;
 out vec2 Light;
+out vec4 Color;
+out float Diffuse;
 
 uniform float time;
 uniform int ticks;
@@ -34,14 +35,21 @@ mat4 kineticRotation() {
                 0.,                                 0.,                                 0.,                                 1.);
 }
 
+float diffuse(vec3 normal) {
+    float x = normal.x;
+    float y = normal.y;
+    float z = normal.z;
+    return min(x * x * 0.6f + y * y * ((3f + y) / 4f) + z * z * 0.8f, 1f);
+}
 void main() {
     mat4 rotation = kineticRotation();
     vec4 renderPos = rotation * vec4(aPos - vec3(0.5), 1);
 
     renderPos += vec4(instancePos + vec3(0.5), 0);
 
+    Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
+    Color = vec4(1f);
     TexCoords = aTexCoords;
-    Normal = normalize((rotation * vec4(aNormal, 0.)).xyz);
     gl_Position = projection * view * renderPos;
     Light = light;
 }

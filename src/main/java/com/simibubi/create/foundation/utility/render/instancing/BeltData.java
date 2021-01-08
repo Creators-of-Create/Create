@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
 public class BeltData extends BasicData<BeltData> {
-    public static VertexFormat FORMAT = new VertexFormat(VEC3, VEC2, VEC3, FLOAT, VEC2, VEC4, FLOAT);
+    public static VertexFormat FORMAT = new VertexFormat(POSITION, LIGHT, VEC3, FLOAT, VEC2, VEC4, FLOAT);
 
     private float rotX;
     private float rotY;

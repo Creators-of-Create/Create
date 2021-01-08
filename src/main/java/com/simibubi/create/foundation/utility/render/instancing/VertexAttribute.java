@@ -4,12 +4,17 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.GL20;
 
 public class VertexAttribute {
+    public static final VertexAttribute MAT4 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 16);
+    public static final VertexAttribute VEC4 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 4);
+    public static final VertexAttribute VEC3 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 3);
+    public static final VertexAttribute VEC2 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 2);
+    public static final VertexAttribute FLOAT = new VertexAttribute(VertexFormatElement.Type.FLOAT, 1);
 
-    public static VertexAttribute MAT4 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 16);
-    public static VertexAttribute VEC4 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 4);
-    public static VertexAttribute VEC3 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 3);
-    public static VertexAttribute VEC2 = new VertexAttribute(VertexFormatElement.Type.FLOAT, 2);
-    public static VertexAttribute FLOAT = new VertexAttribute(VertexFormatElement.Type.FLOAT, 1);
+    public static final VertexAttribute POSITION = VEC3;
+    public static final VertexAttribute NORMAL = VEC3;
+    public static final VertexAttribute COLOR = VEC4;
+    public static final VertexAttribute UV = VEC2;
+    public static final VertexAttribute LIGHT= VEC2;
 
     private final VertexFormatElement.Type type;
     private final int count;

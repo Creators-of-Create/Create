@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
 public class RotatingData extends BasicData<RotatingData> {
-    public static VertexFormat FORMAT = new VertexFormat(VEC3, VEC2, FLOAT, FLOAT, VEC3);
+    public static VertexFormat FORMAT = new VertexFormat(POSITION, LIGHT, FLOAT, FLOAT, VEC3);
 
     private float rotationalSpeed;
     private float rotationOffset;

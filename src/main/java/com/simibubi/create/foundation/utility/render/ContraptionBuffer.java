@@ -2,15 +2,19 @@ package com.simibubi.create.foundation.utility.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.*;
+import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 public class ContraptionBuffer extends TemplateBuffer {
+    public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV, COLOR);
 
     protected int vao, ebo, vbo;
 
@@ -39,7 +43,7 @@ public class ContraptionBuffer extends TemplateBuffer {
 
         GL40.glDrawElements(GL11.GL_QUADS, count, GL11.GL_UNSIGNED_SHORT, 0);
 
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= FORMAT.getNumAttributes(); i++) {
             GL40.glDisableVertexAttribArray(i);
         }
 
@@ -48,9 +52,7 @@ public class ContraptionBuffer extends TemplateBuffer {
     }
 
     private void setup() {
-        int floatSize = VertexFormatElement.Type.FLOAT.getSize();
-
-        int stride = floatSize * 8;
+        int stride = FORMAT.getStride();
         int invariantSize = count * stride;
 
         ByteBuffer constant = GLAllocation.createDirectByteBuffer(invariantSize);
@@ -75,6 +77,11 @@ public class ContraptionBuffer extends TemplateBuffer {
             constant.putFloat(getU(template, i));
             constant.putFloat(getV(template, i));
 
+            constant.putFloat(getR(template, i) / 255f);
+            constant.putFloat(getG(template, i) / 255f);
+            constant.putFloat(getB(template, i) / 255f);
+            constant.putFloat(getA(template, i) / 255f);
+
             indices.putShort((short) i);
         }
         constant.rewind();
@@ -92,14 +99,7 @@ public class ContraptionBuffer extends TemplateBuffer {
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
         GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 
-        // vertex positions
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, stride, 0);
-
-        // vertex normals
-        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, stride, floatSize * 3L);
-
-        // uv position
-        GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, stride, floatSize * 6L);
+        FORMAT.informAttributes(0);
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
