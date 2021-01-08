@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 public class FastContraptionRenderer extends ContraptionRenderer {
 
-    private static final Cache<Contraption, FastContraptionRenderer> renderers = CacheBuilder.newBuilder().build();
+    private static final Cache<Integer, FastContraptionRenderer> renderers = CacheBuilder.newBuilder().build();
 
     private ArrayList<ContraptionBuffer> renderLayers = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
     private static FastContraptionRenderer getRenderer(World world, Contraption c) {
         try {
-            return renderers.get(c, () -> new FastContraptionRenderer(world, c));
+            return renderers.get(c.entity.getEntityId(), () -> new FastContraptionRenderer(world, c));
         } catch (ExecutionException e) {
             e.printStackTrace();
             return null;
@@ -120,13 +120,20 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, ShaderHelper.getViewProjectionCallback(event));
         int shader = ShaderHelper.getShaderHandle(Shader.CONTRAPTION_STRUCTURE);
 
+        ArrayList<Integer> toRemove = new ArrayList<>();
+
         for (FastContraptionRenderer renderer : renderers.asMap().values()) {
-            renderer.render(shader);
+            if (renderer.c.entity.isAlive())
+                renderer.render(shader);
+            else
+                toRemove.add(renderer.c.entity.getEntityId());
         }
 
         ShaderHelper.releaseShader();
 
         CreateClient.kineticRenderer.teardown();
+
+        renderers.invalidateAll(toRemove);
     }
 
     public static void invalidateAll() {

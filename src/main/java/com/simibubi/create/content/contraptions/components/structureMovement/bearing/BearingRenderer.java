@@ -5,9 +5,11 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
+import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;

@@ -13,6 +13,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 
 public class GearboxRenderer extends KineticTileEntityRenderer {
 
@@ -25,6 +26,9 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			int light, int overlay) {
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
+
+		int blockLight = te.getWorld().getLightLevel(LightType.BLOCK, te.getPos());
+		int skyLight = te.getWorld().getLightLevel(LightType.SKY, te.getPos());
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();
@@ -45,7 +49,8 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 						speed *= -1;
 				}
 
-				data.setPackedLight(light)
+				data.setBlockLight(blockLight)
+					.setSkyLight(skyLight)
 					.setRotationalSpeed(speed)
 					.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
 					.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())

@@ -38,14 +38,16 @@ mat4 contraptionRotation() {
 }
 
 void main() {
-    vec4 rotatedPos = contraptionRotation() * vec4(aPos - vec3(0.5), 1);
+    mat4 rotation = contraptionRotation();
+
+    vec4 rotatedPos = rotation * vec4(aPos - vec3(0.5), 1);
 
     vec4 worldPos = rotatedPos + vec4(cPos + vec3(0.5), 0);
 
     vec3 boxCoord = (worldPos.xyz - cPos - cSize * 0.5) / cSize;
 
-    //Light = texture(lightVolume, boxCoord).rg;
-    Normal = aNormal;
+    Light = vec2(1.);
+    Normal = normalize((rotation * vec4(aNormal, 0.)).xyz);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
 }

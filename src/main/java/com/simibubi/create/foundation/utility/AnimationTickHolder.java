@@ -11,7 +11,8 @@ public class AnimationTickHolder {
 	}
 
 	public static float getRenderTick() {
-		return ticks + Minecraft.getInstance().getRenderPartialTicks();
+		Minecraft mc = Minecraft.getInstance();
+		return ticks + (mc.isGamePaused() ? mc.renderPartialTicksPaused : mc.getRenderPartialTicks());
 	}
 
 }

@@ -6,8 +6,8 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
 layout (location = 3) in vec3 instancePos;
-layout (location = 4) in vec3 rotationDegrees;
-layout (location = 5) in vec2 light;
+layout (location = 4) in vec2 light;
+layout (location = 5) in vec3 rotationDegrees;
 layout (location = 6) in float speed;
 layout (location = 7) in vec2 sourceUV;
 layout (location = 8) in vec4 scrollTexture;

@@ -6,10 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.render.instancing.BeltBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.shader.Shader;
 import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
@@ -18,11 +15,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -36,12 +35,13 @@ import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.utility.render.SuperByteBufferCache.PARTIAL;
 
-@Mod.EventBusSubscriber(modid = Create.ID, value = Dist.CLIENT)
 public class FastKineticRenderer {
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, RotatingBuffer>> rotating;
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, BeltBuffer>> belts;
 
     Queue<Runnable> runs;
+
+    boolean rebuild;
 
     public FastKineticRenderer() {
         rotating = new HashMap<>();
@@ -52,7 +52,29 @@ public class FastKineticRenderer {
         registerCompartment(SuperByteBufferCache.DIRECTIONAL_PARTIAL);
     }
 
+    public void buildTileEntityBuffers(World world) {
+
+        List<TileEntity> tileEntities = world.loadedTileEntityList;
+
+        if (!tileEntities.isEmpty()) {
+            for (TileEntity te : tileEntities) {
+                if (te instanceof IInstanceRendered) {
+                    TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
+
+                    if (renderer instanceof IInstancedTileEntityRenderer) {
+                        addInstancedData(te, (IInstancedTileEntityRenderer<? super TileEntity>) renderer);
+                    }
+                }
+            }
+        }
+    }
+
+    private <T extends TileEntity> void addInstancedData(T te, IInstancedTileEntityRenderer<T> renderer) {
+        renderer.addInstanceData(te);
+    }
+
     public void tick() {
+        // TODO: (later) detect changes in lighting with a mixin to ClientChunkProvider.markLightChanged()
         for (Cache<Object, RotatingBuffer> cache : rotating.values()) {
             for (RotatingBuffer renderer : cache.asMap().values()) {
                 renderer.clearInstanceData();
@@ -64,6 +86,8 @@ public class FastKineticRenderer {
                 renderer.clearInstanceData();
             }
         }
+
+//        rebuild = true;
     }
 
     public void enqueue(Runnable run) {
@@ -72,6 +96,11 @@ public class FastKineticRenderer {
 
     public void renderInstances(RenderWorldLastEvent event) {
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
+//
+//        if (rebuild) {
+//            buildTileEntityBuffers(Minecraft.getInstance().world);
+//            rebuild = false;
+//        }
 
         setup(gameRenderer);
 

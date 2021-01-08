@@ -53,8 +53,8 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 		transform(entity, partialTicks, matrixStacks);
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
-			ContraptionRenderer.render(entity.world, contraption, ms, msLocal, buffers);
-			// not ready yet FastContraptionRenderer.markForRendering(entity.world, contraption, getPosition(entity, partialTicks), getRotation(entity, partialTicks));
+			ContraptionRenderer.renderDynamic(entity.world, contraption, ms, msLocal, buffers);
+			FastContraptionRenderer.markForRendering(entity.world, contraption, getPosition(entity, partialTicks), getRotation(entity, partialTicks));
 		}
 		ms.pop();
 

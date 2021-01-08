@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBufferCache.Compartment;
@@ -22,11 +23,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
+public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> implements IInstancedTileEntityRenderer<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
 	public static boolean rainbowMode = false;
@@ -43,27 +45,35 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		for (RenderType type : RenderType.getBlockLayers())
-			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
-				renderRotatingBuffer(te, getRotatedModel(te), light);
+//		for (RenderType type : RenderType.getBlockLayers())
+//			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
+//				renderRotatingBuffer(te, getRotatedModel(te));
+		addInstanceData(te);
 	}
 
-	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, int light) {
+	@Override
+	public void addInstanceData(KineticTileEntity te) {
+		renderRotatingBuffer(te, getRotatedModel(te));
+	}
+
+	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState) {
 		RotatingBuffer instancedRenderer = CreateClient.kineticRenderer.renderBlockInstanced(KINETIC_TILE, renderedState);
-		renderRotatingBuffer(te, instancedRenderer, light);
+		renderRotatingBuffer(te, instancedRenderer);
 	}
 
-	public static void renderRotatingBuffer(KineticTileEntity te, RotatingBuffer instancer, int light) {
+	public static void renderRotatingBuffer(KineticTileEntity te, RotatingBuffer instancer) {
 		instancer.setupInstance(data -> {
 			final BlockPos pos = te.getPos();
 			Axis axis = ((IRotate) te.getBlockState()
 									 .getBlock()).getRotationAxis(te.getBlockState());
 
-			data.setPackedLight(light)
-				.setRotationalSpeed(te.getSpeed())
-				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
-				.setRotationAxis(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getUnitVector())
-				.setPosition(pos);
+			data
+					.setBlockLight(te.getWorld().getLightLevel(LightType.BLOCK, te.getPos()))
+					.setSkyLight(te.getWorld().getLightLevel(LightType.SKY, te.getPos()))
+					.setRotationalSpeed(te.getSpeed())
+					.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
+					.setRotationAxis(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getUnitVector())
+					.setPosition(pos);
 		});
 	}
 

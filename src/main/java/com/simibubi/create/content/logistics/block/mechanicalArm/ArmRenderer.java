@@ -8,8 +8,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

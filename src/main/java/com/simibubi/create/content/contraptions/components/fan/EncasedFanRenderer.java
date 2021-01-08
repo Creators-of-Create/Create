@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.LightType;
 
 public class EncasedFanRenderer extends KineticTileEntityRenderer {
 
@@ -25,18 +26,24 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+		addInstanceData(te);
+	}
+
+	@Override
+	public void addInstanceData(KineticTileEntity te) {
 		Direction direction = te.getBlockState()
-			.get(FACING);
+								.get(FACING);
 
-		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
-		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
-		
+		BlockPos inFront = te.getPos().offset(direction);
+		int blockLight = te.getWorld().getLightLevel(LightType.BLOCK, inFront);
+		int skyLight = te.getWorld().getLightLevel(LightType.SKY, inFront);
+
 		RotatingBuffer shaftHalf =
-			AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
+				AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
 		RotatingBuffer fanInner =
-			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
+				AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(te.getBlockState(), direction.getOpposite());
 
-		renderRotatingBuffer(te, shaftHalf, lightBehind);
+		renderRotatingBuffer(te, shaftHalf);
 		fanInner.setupInstance(data -> {
 			final BlockPos pos = te.getPos();
 			Direction.Axis axis = ((IRotate) te.getBlockState()
@@ -48,12 +55,12 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 			if (speed < 0)
 				speed = MathHelper.clamp(speed, -64 * 20, -80);
 
-			data.setPackedLight(lightInFront)
+			data.setBlockLight(blockLight)
+				.setSkyLight(skyLight)
 				.setRotationalSpeed(speed)
 				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
 				.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
 				.setPosition(pos);
 		});
 	}
-
 }

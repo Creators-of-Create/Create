@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.*;
 
+import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
@@ -29,7 +30,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
+public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implements IInstancedTileEntityRenderer<SawTileEntity> {
 
 	public SawRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -41,7 +42,13 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderBlade(te, ms, buffer, light);
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
-		renderShaft(te, ms, buffer, light, overlay);
+
+		addInstanceData(te);
+	}
+
+	@Override
+	public void addInstanceData(SawTileEntity te) {
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
 	}
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light){
@@ -79,7 +86,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 	}
 
 	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), light);
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
 	}
 
 	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,

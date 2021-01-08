@@ -8,7 +8,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
@@ -22,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
@@ -38,7 +38,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
+	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;

@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -37,7 +38,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
+public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> implements IInstancedTileEntityRenderer<DeployerTileEntity> {
 
 	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -49,10 +50,17 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
+
+		addInstanceData(te);
+	}
+
+	@Override
+	public void addInstanceData(DeployerTileEntity te) {
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te));
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-		int light, int overlay) {
+							  int light, int overlay) {
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
@@ -102,7 +110,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), light);
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te));
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();

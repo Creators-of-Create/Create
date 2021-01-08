@@ -5,11 +5,12 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 
+import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
-public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedControllerTileEntity> {
+public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedControllerTileEntity> implements IInstancedTileEntityRenderer<SpeedControllerTileEntity> {
 
 	public SpeedControllerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -20,7 +21,12 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 			IRenderTypeBuffer buffer, int light, int overlay) {
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), light);
+		addInstanceData(tileEntityIn);
+	}
+
+	@Override
+	public void addInstanceData(SpeedControllerTileEntity te) {
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
 	}
 
 	private RotatingBuffer getRotatedModel(SpeedControllerTileEntity te) {
