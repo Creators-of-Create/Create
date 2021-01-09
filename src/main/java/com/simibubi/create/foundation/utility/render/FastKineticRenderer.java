@@ -175,6 +175,7 @@ public class FastKineticRenderer {
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableDepthTest();
+        RenderSystem.disableLighting();
     }
 
     public void registerCompartment(SuperByteBufferCache.Compartment<?> instance) {
