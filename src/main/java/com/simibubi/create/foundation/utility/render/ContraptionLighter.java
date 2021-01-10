@@ -91,7 +91,7 @@ public class ContraptionLighter {
     private void setupPosition(Contraption c) {
         Vec3d positionVec = c.entity.getPositionVec();
         minX = (int) (Math.floor(positionVec.x) - sizeX / 2);
-        minY = (int) (Math.floor(positionVec.y));
+        minY = (int) (Math.floor(positionVec.y) - 1);
         minZ = (int) (Math.floor(positionVec.z) - sizeZ / 2);
     }
 
