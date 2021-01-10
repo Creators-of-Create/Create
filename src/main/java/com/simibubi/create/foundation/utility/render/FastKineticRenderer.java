@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.Texture;
@@ -29,7 +28,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -40,14 +38,11 @@ public class FastKineticRenderer {
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, RotatingBuffer>> rotating;
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, BeltBuffer>> belts;
 
-    Queue<Runnable> runs;
-
     boolean rebuild;
 
     public FastKineticRenderer() {
         rotating = new HashMap<>();
         belts = new HashMap<>();
-        runs = new ConcurrentLinkedQueue<>();
         registerCompartment(SuperByteBufferCache.GENERIC_TILE);
         registerCompartment(SuperByteBufferCache.PARTIAL);
         registerCompartment(SuperByteBufferCache.DIRECTIONAL_PARTIAL);
@@ -91,10 +86,6 @@ public class FastKineticRenderer {
 //        rebuild = true;
     }
 
-    public void enqueue(Runnable run) {
-        runs.add(run);
-    }
-
     public void renderInstances(RenderWorldLastEvent event) {
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
 //
@@ -126,10 +117,6 @@ public class FastKineticRenderer {
         ShaderHelper.releaseShader();
 
         teardown();
-
-        while (!runs.isEmpty()) {
-            runs.remove().run();
-        }
     }
 
     public void setup(GameRenderer gameRenderer) {
@@ -254,12 +241,12 @@ public class FastKineticRenderer {
 
     public void invalidate() {
         rotating.values().forEach(cache -> {
-            cache.asMap().values().forEach(InstanceBuffer::invalidate);
+            cache.asMap().values().forEach(InstanceBuffer::delete);
             cache.invalidateAll();
         });
 
         belts.values().forEach(cache -> {
-            cache.asMap().values().forEach(InstanceBuffer::invalidate);
+            cache.asMap().values().forEach(InstanceBuffer::delete);
             cache.invalidateAll();
         });
     }

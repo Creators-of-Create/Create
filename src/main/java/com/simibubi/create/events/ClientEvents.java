@@ -33,6 +33,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.utility.render.RenderWork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -135,6 +136,8 @@ public class ClientEvents {
 		buffer.draw();
 
 		ms.pop();
+
+		RenderWork.runAll();
 	}
 
 	@SubscribeEvent

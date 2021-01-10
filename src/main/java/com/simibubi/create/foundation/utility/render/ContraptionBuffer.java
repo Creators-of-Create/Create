@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryUtil;
+
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
 import java.nio.Buffer;
@@ -23,8 +25,8 @@ public class ContraptionBuffer extends TemplateBuffer {
         setup();
     }
 
-    public void invalidate() {
-        CreateClient.kineticRenderer.enqueue(() -> {
+    public void delete() {
+        RenderWork.enqueue(() -> {
             GL15.glDeleteBuffers(vbo);
             GL15.glDeleteBuffers(ebo);
             GL30.glDeleteVertexArrays(vao);
@@ -95,9 +97,11 @@ public class ContraptionBuffer extends TemplateBuffer {
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, vbo);
         GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, constant, GL15.GL_STATIC_DRAW);
+        MemoryUtil.memFree(constant);
 
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
         GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
+        MemoryUtil.memFree(indices);
 
         FORMAT.informAttributes(0);
 

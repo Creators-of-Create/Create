@@ -1,36 +1,32 @@
 package com.simibubi.create.foundation.utility.render;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.lighting.WorldLightManager;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.Set;
 
 public class ContraptionLighter {
 
-    int minX;
-    int minY;
-    int minZ;
+    private int minX;
+    private int minY;
+    private int minZ;
 
-    int sizeX;
-    int sizeY;
-    int sizeZ;
+    private final int sizeX;
+    private final int sizeY;
+    private final int sizeZ;
 
-    ByteBuffer lightVolume;
+    private ByteBuffer lightVolume;
 
-    boolean dirty;
+    private boolean dirty;
 
-    int texture;
+    private int texture;
 
     public ContraptionLighter(Contraption contraption) {
         texture = GL11.glGenTextures();
@@ -50,7 +46,7 @@ public class ContraptionLighter {
 
         lightVolume = GLAllocation.createDirectByteBuffer(sizeX * sizeY * sizeZ * 2);
 
-        tick(contraption);
+        update(contraption);
     }
 
     public static int nextPowerOf2(int a)  {
@@ -83,8 +79,11 @@ public class ContraptionLighter {
     }
 
     public void delete() {
-        CreateClient.kineticRenderer.enqueue(() -> {
+        RenderWork.enqueue(() -> {
             GL15.glDeleteTextures(texture);
+            texture = 0;
+            MemoryUtil.memFree(lightVolume);
+            lightVolume = null;
         });
     }
 
@@ -95,7 +94,9 @@ public class ContraptionLighter {
         minZ = (int) (Math.floor(positionVec.z) - sizeZ / 2);
     }
 
-    public void tick(Contraption c) {
+    public void update(Contraption c) {
+        if (lightVolume == null) return;
+
         setupPosition(c);
 
         World world = c.entity.world;
@@ -129,6 +130,8 @@ public class ContraptionLighter {
     }
 
     public void use() {
+        if (texture == 0 || lightVolume == null) return;
+
         GL13.glEnable(GL31.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE0 + 4);
         GL12.glBindTexture(GL12.GL_TEXTURE_3D, texture);

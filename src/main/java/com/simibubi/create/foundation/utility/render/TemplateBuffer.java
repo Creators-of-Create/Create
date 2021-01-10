@@ -23,7 +23,7 @@ public class TemplateBuffer {
         count = state.getFirst().getCount();
         int size = count * formatSize;
 
-        template = GLAllocation.createDirectByteBuffer(size);
+        template = ByteBuffer.allocate(size);
         template.order(rendered.order());
         ((Buffer)template).limit(((Buffer)rendered).limit());
         template.put(rendered);

@@ -25,7 +25,13 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 
 	protected abstract void transform(C contraptionEntity, float partialTicks, MatrixStack[] matrixStacks);
 
-	public abstract Vec3d getPosition(C contraptionEntity, float partialTicks);
+	public Vec3d getPosition(C entity, float partialTicks) {
+		double x = MathHelper.lerp(partialTicks, entity.lastTickPosX, entity.getX());
+		double y = MathHelper.lerp(partialTicks, entity.lastTickPosY, entity.getY());
+		double z = MathHelper.lerp(partialTicks, entity.lastTickPosZ, entity.getZ());
+		return new Vec3d(x, y, z);
+	}
+
 	public abstract Vec3d getRotation(C contraptionEntity, float partialTicks);
 
 	@Override

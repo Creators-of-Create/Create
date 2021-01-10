@@ -3,11 +3,13 @@ package com.simibubi.create.foundation.utility.render.instancing;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.render.RenderWork;
 import com.simibubi.create.foundation.utility.render.TemplateBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -69,9 +71,11 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, invariantVBO);
         GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, constant, GL15.GL_STATIC_DRAW);
+        MemoryUtil.memFree(constant);
 
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
         GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
+        MemoryUtil.memFree(indices);
 
         FORMAT.informAttributes(0);
 
@@ -96,8 +100,8 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
         shouldBuild = true;
     }
 
-    public void invalidate() {
-        CreateClient.kineticRenderer.enqueue(() -> {
+    public void delete() {
+        RenderWork.enqueue(() -> {
             GL15.glDeleteBuffers(invariantVBO);
             GL15.glDeleteBuffers(instanceVBO);
             GL15.glDeleteBuffers(ebo);
@@ -158,10 +162,11 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, instanceVBO);
         GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 
-        instanceFormat.informAttributes(3);
+        int staticAttributes = FORMAT.getNumAttributes();
+        instanceFormat.informAttributes(staticAttributes);
 
         for (int i = 0; i < instanceFormat.getNumAttributes(); i++) {
-            GL40.glVertexAttribDivisor(i + 3, 1);
+            GL40.glVertexAttribDivisor(i + staticAttributes, 1);
         }
 
         // Deselect (bind to 0) the VBO

@@ -28,13 +28,6 @@ public class ControlledContraptionEntityRenderer extends AbstractContraptionEnti
 				.unCentre();
 	}
 
-	public Vec3d getPosition(ControlledContraptionEntity entity, float partialTicks) {
-		double x = MathHelper.lerp(partialTicks, entity.lastTickPosX, entity.getX());
-		double y = MathHelper.lerp(partialTicks, entity.lastTickPosY, entity.getY());
-		double z = MathHelper.lerp(partialTicks, entity.lastTickPosZ, entity.getZ());
-		return new Vec3d(x, y, z);
-	}
-
 	public Vec3d getRotation(ControlledContraptionEntity entity, float partialTicks) {
 		Axis axis = entity.getRotationAxis();
 		if (axis == null) return Vec3d.ZERO;

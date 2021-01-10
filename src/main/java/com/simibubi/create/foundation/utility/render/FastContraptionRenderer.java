@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.utility.render;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -10,20 +8,14 @@ import com.simibubi.create.foundation.utility.render.shader.Shader;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
 
 public class FastContraptionRenderer extends ContraptionRenderer {
 
@@ -48,9 +40,9 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     public static void tick() {
         if (Minecraft.getInstance().isGamePaused()) return;
 
-        CreateClient.kineticRenderer.enqueue(() -> {
+        RenderWork.enqueue(() -> {
             for (FastContraptionRenderer renderer : renderers.values()) {
-                renderer.lighter.tick(renderer.c);
+                renderer.lighter.update(renderer.c);
             }
         });
     }
@@ -101,7 +93,11 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     }
 
     private void buildLayers() {
-        invalidate();
+        for (ContraptionBuffer buffer : renderLayers) {
+            buffer.delete();
+        }
+
+        renderLayers.clear();
 
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
@@ -112,8 +108,9 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
     private void invalidate() {
         for (ContraptionBuffer buffer : renderLayers) {
-            buffer.invalidate();
+            buffer.delete();
         }
+
         lighter.delete();
 
         renderLayers.clear();
