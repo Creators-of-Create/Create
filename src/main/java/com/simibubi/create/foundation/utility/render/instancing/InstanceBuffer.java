@@ -124,7 +124,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
         GL30.glBindVertexArray(vao);
         finishBuffering();
 
-        int numAttributes = getInstanceFormat().getNumAttributes() + 3;
+        int numAttributes = getInstanceFormat().getNumAttributes() + FORMAT.getNumAttributes();
         for (int i = 0; i <= numAttributes; i++) {
             GL40.glEnableVertexAttribArray(i);
         }

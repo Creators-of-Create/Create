@@ -8,12 +8,11 @@ layout (location = 3) in vec4 aColor;
 
 out float Diffuse;
 out vec2 TexCoords;
-out vec2 Light;
 out vec4 Color;
+out vec3 BoxCoord;
 
-layout (binding = 2) uniform sampler3D lightVolume;
-
-uniform vec3 cSize;
+uniform vec3 lightBoxSize;
+uniform vec3 lightBoxMin;
 uniform vec3 cPos;
 uniform vec3 cRot;
 
@@ -53,13 +52,13 @@ void main() {
 
     vec4 worldPos = rotatedPos + vec4(cPos + vec3(0.5), 0);
 
-    vec3 boxCoord = (worldPos.xyz - cPos - cSize * 0.5) / cSize;
+    vec3 boxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
 
     float df = diffuse(normalize(aNormal));
 
     Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
     Color = vec4(aColor.rgb / df, aColor.a);
-    Light = vec2(1.);
+    BoxCoord = boxCoord;
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
 }

@@ -15,7 +15,6 @@ layout (location = 9) in float scrollMult;
 
 out vec2 TexCoords;
 out vec2 Light;
-out vec4 Color;
 out float Diffuse;
 
 uniform float time;
@@ -54,7 +53,6 @@ void main() {
     float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
 
     Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
-    Color = vec4(1f);
     Light = light;
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
     gl_Position = projection * view * renderPos;

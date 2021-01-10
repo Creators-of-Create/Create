@@ -78,6 +78,7 @@ public class ClientEvents {
 			return;
 
 		CreateClient.kineticRenderer.tick();
+		FastContraptionRenderer.tick();
 
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();

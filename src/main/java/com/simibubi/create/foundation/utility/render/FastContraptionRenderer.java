@@ -14,18 +14,20 @@ import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 
 public class FastContraptionRenderer extends ContraptionRenderer {
 
-    private static final Cache<Integer, FastContraptionRenderer> renderers = CacheBuilder.newBuilder().build();
+    private static final HashMap<Integer, FastContraptionRenderer> renderers = new HashMap<>();
 
     private ArrayList<ContraptionBuffer> renderLayers = new ArrayList<>();
 
@@ -43,33 +45,48 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         buildLayers();
     }
 
+    public static void tick() {
+        if (Minecraft.getInstance().isGamePaused()) return;
+
+        CreateClient.kineticRenderer.enqueue(() -> {
+            for (FastContraptionRenderer renderer : renderers.values()) {
+                renderer.lighter.tick(renderer.c);
+            }
+        });
+    }
+
     private void setRenderSettings(Vec3d position, Vec3d rotation) {
         renderPos = position;
         renderRot = rotation;
     }
 
     private void render(int shader) {
-//        GL13.glActiveTexture(GL40.GL_TEXTURE2);
-//        lighter.use();
-
-        int cSize = GlStateManager.getUniformLocation(shader, "cSize");
-        int cPos = GlStateManager.getUniformLocation(shader, "cPos");
-        int cRot = GlStateManager.getUniformLocation(shader, "cRot");
+        lighter.use();
 
         FloatBuffer buf = ShaderHelper.VEC3_BUFFER;
 
-        buf.put(0, (float) c.bounds.getXSize());
-        buf.put(1, (float) c.bounds.getYSize());
-        buf.put(2, (float) c.bounds.getZSize());
+        int lightBoxSize = GlStateManager.getUniformLocation(shader, "lightBoxSize");
+        buf.put(0, (float) lighter.getSizeX());
+        buf.put(1, (float) lighter.getSizeY());
+        buf.put(2, (float) lighter.getSizeZ());
         buf.rewind();
-        GlStateManager.uniform3(cSize, buf);
+        GlStateManager.uniform3(lightBoxSize, buf);
 
+        int lightBoxMin = GlStateManager.getUniformLocation(shader, "lightBoxMin");
+        buf.put(0, (float) lighter.getMinX());
+        buf.put(1, (float) lighter.getMinY());
+        buf.put(2, (float) lighter.getMinZ());
+        buf.rewind();
+        GlStateManager.uniform3(lightBoxMin, buf);
+
+        int cPos = GlStateManager.getUniformLocation(shader, "cPos");
         buf.put(0, (float) renderPos.x);
         buf.put(1, (float) renderPos.y);
         buf.put(2, (float) renderPos.z);
         buf.rewind();
         GlStateManager.uniform3(cPos, buf);
 
+        int cRot = GlStateManager.getUniformLocation(shader, "cRot");
         buf.put(0, (float) renderRot.x);
         buf.put(1, (float) renderRot.y);
         buf.put(2, (float) renderRot.z);
@@ -79,6 +96,8 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         for (ContraptionBuffer layer : renderLayers) {
             layer.render();
         }
+
+        lighter.release();
     }
 
     private void buildLayers() {
@@ -86,8 +105,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
-        for (int i = 0; i < blockLayers.size(); i++) {
-            RenderType layer = blockLayers.get(i);
+        for (RenderType layer : blockLayers) {
             renderLayers.add(buildStructureBuffer(c, layer));
         }
     }
@@ -96,6 +114,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         for (ContraptionBuffer buffer : renderLayers) {
             buffer.invalidate();
         }
+        lighter.delete();
 
         renderLayers.clear();
     }
@@ -105,12 +124,16 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     }
 
     private static FastContraptionRenderer getRenderer(World world, Contraption c) {
-        try {
-            return renderers.get(c.entity.getEntityId(), () -> new FastContraptionRenderer(world, c));
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return null;
+        FastContraptionRenderer renderer;
+        int entityId = c.entity.getEntityId();
+        if (renderers.containsKey(entityId)) {
+            renderer = renderers.get(entityId);
+        } else {
+            renderer = new FastContraptionRenderer(world, c);
+            renderers.put(entityId, renderer);
         }
+
+        return renderer;
     }
 
     public static void renderAll(RenderWorldLastEvent event) {
@@ -123,7 +146,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
         ArrayList<Integer> toRemove = new ArrayList<>();
 
-        for (FastContraptionRenderer renderer : renderers.asMap().values()) {
+        for (FastContraptionRenderer renderer : renderers.values()) {
             if (renderer.c.entity.isAlive())
                 renderer.render(shader);
             else
@@ -134,15 +157,17 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
         CreateClient.kineticRenderer.teardown();
 
-        renderers.invalidateAll(toRemove);
+        for (Integer id : toRemove) {
+            renderers.remove(id);
+        }
     }
 
     public static void invalidateAll() {
-        for (FastContraptionRenderer renderer : renderers.asMap().values()) {
+        for (FastContraptionRenderer renderer : renderers.values()) {
             renderer.invalidate();
         }
 
-        renderers.invalidateAll();
+        renderers.clear();
     }
 
     private static ContraptionBuffer buildStructureBuffer(Contraption c, RenderType layer) {

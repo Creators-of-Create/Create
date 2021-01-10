@@ -12,7 +12,6 @@ layout (location = 7) in vec3 rotationAxis;
 
 out vec2 TexCoords;
 out vec2 Light;
-out vec4 Color;
 out float Diffuse;
 
 uniform float time;
@@ -48,7 +47,6 @@ void main() {
     renderPos += vec4(instancePos + vec3(0.5), 0);
 
     Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
-    Color = vec4(1f);
     TexCoords = aTexCoords;
     gl_Position = projection * view * renderPos;
     Light = light;
