@@ -40,8 +40,7 @@ mat4 kineticRotation() {
     float degrees = rotationOffset + time * speed * -3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
 
-    vec3 axis = normalize(rotationAxis);
-    return rotate(axis, angle);
+    return rotate(normalize(rotationAxis), angle);
 }
 
 mat4 contraptionRotation() {
@@ -64,7 +63,7 @@ void main() {
     vec4 worldPos = contraptionRotation * localPos + vec4(cPos + 0.5, 0);
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(contraptionRotation * localRotation * vec4(aNormal, 0.)).xyz);
+    Diffuse = diffuse(normalize(contraptionRotation * kineticRotation * vec4(aNormal, 0.)).xyz);
     Color = vec4(1.);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;

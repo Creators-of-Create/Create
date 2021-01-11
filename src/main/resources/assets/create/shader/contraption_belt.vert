@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 core
 #define PI 3.1415926538
 
 layout (location = 0) in vec3 aPos;
