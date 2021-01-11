@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.utility.render;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
+import com.simibubi.create.content.schematics.client.SchematicRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.shader.Shader;
@@ -174,15 +176,6 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
         ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
 
-        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
-        for (FastContraptionRenderer renderer : renderers.values()) {
-            renderer.setup(structureShader);
-            for (ContraptionBuffer layer : renderer.renderLayers) {
-                layer.render();
-            }
-            renderer.teardown();
-        }
-
         int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
         for (FastContraptionRenderer renderer : renderers.values()) {
             renderer.setup(rotatingShader);
@@ -194,6 +187,15 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         for (FastContraptionRenderer renderer : renderers.values()) {
             renderer.setup(beltShader);
             renderer.kinetics.renderBelts();
+            renderer.teardown();
+        }
+
+        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            renderer.setup(structureShader);
+            for (ContraptionBuffer layer : renderer.renderLayers) {
+                layer.render();
+            }
             renderer.teardown();
         }
 

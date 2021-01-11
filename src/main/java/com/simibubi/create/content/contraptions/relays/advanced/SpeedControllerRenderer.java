@@ -19,17 +19,17 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	protected void renderSafe(SpeedControllerTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
 			IRenderTypeBuffer buffer, int light, int overlay) {
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
-
+		addInstanceData(new InstanceContext.World<>(tileEntityIn));
 	}
 
 	@Override
 	public void addInstanceData(InstanceContext<SpeedControllerTileEntity> ctx) {
-		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx.te));
+		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx));
 	}
 
-	private InstanceBuffer<RotatingData> getRotatedModel(SpeedControllerTileEntity te) {
-		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
-				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
+	private InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<SpeedControllerTileEntity> ctx) {
+		return ctx.getKinetics().renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
+				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(ctx.te)));
 	}
 
 }
