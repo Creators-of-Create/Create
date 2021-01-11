@@ -23,7 +23,7 @@ public class ContraptionLighter {
     private final int sizeY;
     private final int sizeZ;
 
-    private ByteBuffer lightVolume;
+    private SafeDirectBuffer lightVolume;
 
     private boolean dirty;
 
@@ -45,7 +45,7 @@ public class ContraptionLighter {
         sizeY = nextPowerOf2(maxY - minY);
         sizeZ = nextPowerOf2(maxZ - minZ);
 
-        lightVolume = GLAllocation.createDirectByteBuffer(sizeX * sizeY * sizeZ * 2);
+        lightVolume = new SafeDirectBuffer(sizeX * sizeY * sizeZ * 2);
 
         update(contraption);
     }
@@ -83,7 +83,11 @@ public class ContraptionLighter {
         RenderWork.enqueue(() -> {
             GL15.glDeleteTextures(texture);
             texture = 0;
-            MemoryUtil.memFree(lightVolume);
+            try {
+                lightVolume.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             lightVolume = null;
         });
     }
@@ -140,7 +144,7 @@ public class ContraptionLighter {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL13.GL_CLAMP);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP);
         if (dirty) {
-            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightVolume);
+            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightVolume.getBacking());
             dirty = false;
         }
     }
