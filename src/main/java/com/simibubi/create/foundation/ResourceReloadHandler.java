@@ -18,9 +18,7 @@ public class ResourceReloadHandler extends ReloadListener<Object> {
 	@Override
 	protected void apply(Object $, IResourceManager resourceManagerIn, IProfiler profilerIn) {
 		SpriteShifter.reloadUVs();
-		CreateClient.bufferCache.invalidate();
-		CreateClient.kineticRenderer.invalidate();
-		FastContraptionRenderer.invalidateAll();
+		CreateClient.invalidateRenderers();
 	}
 
 }

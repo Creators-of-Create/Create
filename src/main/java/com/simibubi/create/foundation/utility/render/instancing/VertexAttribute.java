@@ -11,8 +11,8 @@ public class VertexAttribute {
     public static final VertexAttribute FLOAT = new VertexAttribute(VertexFormatElement.Type.FLOAT, 1);
 
     public static final VertexAttribute POSITION = VEC3;
-    public static final VertexAttribute NORMAL = VEC3;
-    public static final VertexAttribute COLOR = VEC4;
+    public static final VertexAttribute NORMAL = new VertexAttribute(VertexFormatElement.Type.BYTE, 3);
+    public static final VertexAttribute COLOR = new VertexAttribute(VertexFormatElement.Type.BYTE, 4);
     public static final VertexAttribute UV = VEC2;
     public static final VertexAttribute LIGHT= VEC2;
 

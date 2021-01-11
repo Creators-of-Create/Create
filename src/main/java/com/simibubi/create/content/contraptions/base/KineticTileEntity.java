@@ -457,8 +457,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public static AxisAlignedBB NOWHERE_AABB = new AxisAlignedBB(Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox();
+	}
+
+	@Override
+	public double getMaxRenderDistanceSquared() {
+		return 16384.0D; // TODO: make this a config option
 	}
 }

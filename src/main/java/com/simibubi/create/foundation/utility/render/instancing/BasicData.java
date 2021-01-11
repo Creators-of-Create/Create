@@ -1,9 +1,8 @@
 package com.simibubi.create.foundation.utility.render.instancing;
 
+import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
-
-import java.nio.ByteBuffer;
 
 public class BasicData<D extends BasicData<D>> extends InstanceData {
 
@@ -38,7 +37,7 @@ public class BasicData<D extends BasicData<D>> extends InstanceData {
     }
 
     @Override
-    public void write(ByteBuffer buf) {
+    public void write(SafeDirectBuffer buf) {
         putVec3(buf, x, y, z);
 
         putVec2(buf, blockLight, skyLight);

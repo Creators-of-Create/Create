@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.utility.render.shader;
 
 public enum Shader {
-    ROTATING_INSTANCED("shader/rotating.vert", "shader/instanced.frag"),
-    BELT_INSTANCED("shader/belt.vert", "shader/instanced.frag"),
+    ROTATING("shader/rotating.vert", "shader/instanced.frag"),
+    BELT("shader/belt.vert", "shader/instanced.frag"),
     CONTRAPTION_STRUCTURE("shader/contraption.vert", "shader/contraption.frag"),
+    CONTRAPTION_ROTATING("shader/contraption_rotating.vert", "shader/contraption.frag"),
+    CONTRAPTION_BELT("shader/contraption_belt.vert", "shader/contraption.frag"),
     ;
 
     public final String vert;

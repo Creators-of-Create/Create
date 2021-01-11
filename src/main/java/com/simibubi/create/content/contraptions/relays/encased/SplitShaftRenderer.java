@@ -7,7 +7,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -25,18 +28,26 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
-
-		addInstanceData(te);
+		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 	@Override
-	public void addInstanceData(KineticTileEntity te) {
+	public void addInstanceData(InstanceContext<KineticTileEntity> ctx) {
+		KineticTileEntity te = ctx.te;
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
 		final BlockPos pos = te.getPos();
 
-		int blockLight = te.getWorld().getLightLevel(LightType.BLOCK, te.getPos());
-		int skyLight = te.getWorld().getLightLevel(LightType.SKY, te.getPos());
+		int blockLight;
+		int skyLight;
+
+		if (ctx.checkWorldLight()) {
+			blockLight = te.getWorld().getLightLevel(LightType.BLOCK, te.getPos());
+			skyLight = te.getWorld().getLightLevel(LightType.SKY, te.getPos());
+		} else {
+			blockLight = 0;
+			skyLight = 0;
+		}
 
 		for (Direction direction : Iterate.directions) {
 			Axis axis = direction.getAxis();
@@ -44,7 +55,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 				continue;
 
 
-			RotatingBuffer shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState(), direction);
+			InstanceBuffer<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
 
 			shaft.setupInstance(data -> {
 				float speed = te.getSpeed();

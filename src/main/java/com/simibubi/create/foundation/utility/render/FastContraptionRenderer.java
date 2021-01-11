@@ -1,16 +1,23 @@
 package com.simibubi.create.foundation.utility.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.shader.Shader;
+import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL40;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -25,6 +32,8 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
     private ContraptionLighter lighter;
 
+    public final FastKineticRenderer kinetics;
+
     private Contraption c;
 
     private Vec3d renderPos;
@@ -33,18 +42,49 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     public FastContraptionRenderer(World world, Contraption c) {
         this.c = c;
         this.lighter = new ContraptionLighter(c);
+        this.kinetics = new FastKineticRenderer();
 
-        buildLayers();
+        buildLayers(c);
+        buildInstancedTiles(c);
+    }
+
+    private void buildLayers(Contraption c) {
+        for (ContraptionBuffer buffer : renderLayers) {
+            buffer.delete();
+        }
+
+        renderLayers.clear();
+
+        List<RenderType> blockLayers = RenderType.getBlockLayers();
+
+        for (RenderType layer : blockLayers) {
+            renderLayers.add(buildStructureBuffer(c, layer));
+        }
+    }
+
+    private void buildInstancedTiles(Contraption c) {
+        List<TileEntity> tileEntities = c.renderedTileEntities;
+        if (!tileEntities.isEmpty()) {
+            for (TileEntity te : tileEntities) {
+                if (te instanceof IInstanceRendered) {
+                    TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
+
+                    if (renderer instanceof IInstancedTileEntityRenderer) {
+                        kinetics.addInstancedData(this, te, (IInstancedTileEntityRenderer<? super TileEntity>) renderer);
+                    }
+                }
+            }
+        }
+
+        kinetics.markAllDirty();
     }
 
     public static void tick() {
         if (Minecraft.getInstance().isGamePaused()) return;
 
-        RenderWork.enqueue(() -> {
-            for (FastContraptionRenderer renderer : renderers.values()) {
-                renderer.lighter.update(renderer.c);
-            }
-        });
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            renderer.lighter.update(renderer.c);
+        }
     }
 
     private void setRenderSettings(Vec3d position, Vec3d rotation) {
@@ -52,9 +92,16 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         renderRot = rotation;
     }
 
-    private void render(int shader) {
+    private void setup(int shader) {
+        setupShaderUniforms(shader);
         lighter.use();
+    }
 
+    private void teardown() {
+        lighter.release();
+    }
+
+    private void setupShaderUniforms(int shader) {
         FloatBuffer buf = ShaderHelper.VEC3_BUFFER;
 
         int lightBoxSize = GlStateManager.getUniformLocation(shader, "lightBoxSize");
@@ -84,26 +131,6 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         buf.put(2, (float) renderRot.z);
         buf.rewind();
         GlStateManager.uniform3(cRot, buf);
-
-        for (ContraptionBuffer layer : renderLayers) {
-            layer.render();
-        }
-
-        lighter.release();
-    }
-
-    private void buildLayers() {
-        for (ContraptionBuffer buffer : renderLayers) {
-            buffer.delete();
-        }
-
-        renderLayers.clear();
-
-        List<RenderType> blockLayers = RenderType.getBlockLayers();
-
-        for (RenderType layer : blockLayers) {
-            renderLayers.add(buildStructureBuffer(c, layer));
-        }
     }
 
     private void invalidate() {
@@ -112,6 +139,8 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         }
 
         lighter.delete();
+
+        kinetics.invalidate();
 
         renderLayers.clear();
     }
@@ -133,26 +162,56 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         return renderer;
     }
 
-    public static void renderAll(RenderWorldLastEvent event) {
+    public static void renderAll(Matrix4f projectionMat, Matrix4f viewMat) {
+        removeDeadContraptions();
+
+        if (renderers.isEmpty()) return;
+
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-        CreateClient.kineticRenderer.setup(gameRenderer);
-        GlStateManager.enableCull();
+        FastKineticRenderer.setup(gameRenderer);
+        GL11.glEnable(GL13.GL_TEXTURE_3D);
+        GL13.glActiveTexture(GL40.GL_TEXTURE4);
 
-        ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, ShaderHelper.getViewProjectionCallback(event));
-        int shader = ShaderHelper.getShaderHandle(Shader.CONTRAPTION_STRUCTURE);
+        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
 
-        ArrayList<Integer> toRemove = new ArrayList<>();
-
+        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
         for (FastContraptionRenderer renderer : renderers.values()) {
-            if (renderer.c.entity.isAlive())
-                renderer.render(shader);
-            else
-                toRemove.add(renderer.c.entity.getEntityId());
+            renderer.setup(structureShader);
+            for (ContraptionBuffer layer : renderer.renderLayers) {
+                layer.render();
+            }
+            renderer.teardown();
+        }
+
+        int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            renderer.setup(rotatingShader);
+            renderer.kinetics.renderRotating();
+            renderer.teardown();
+        }
+
+        int beltShader = ShaderHelper.useShader(Shader.CONTRAPTION_BELT, callback);
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            renderer.setup(beltShader);
+            renderer.kinetics.renderBelts();
+            renderer.teardown();
         }
 
         ShaderHelper.releaseShader();
 
-        CreateClient.kineticRenderer.teardown();
+        GL11.glDisable(GL13.GL_TEXTURE_3D);
+        FastKineticRenderer.teardown();
+    }
+
+    public static void removeDeadContraptions() {
+        ArrayList<Integer> toRemove = new ArrayList<>();
+
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            if (!renderer.c.entity.isAlive()) {
+                toRemove.add(renderer.c.entity.getEntityId());
+                renderer.invalidate();
+            }
+        }
 
         for (Integer id : toRemove) {
             renderers.remove(id);

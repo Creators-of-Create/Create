@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -51,12 +52,11 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 
-		addInstanceData(te);
 	}
 
 	@Override
-	public void addInstanceData(DeployerTileEntity te) {
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te));
+	public void addInstanceData(InstanceContext<DeployerTileEntity> ctx) {
+		KineticTileEntityRenderer.renderRotatingKineticBlock(ctx, getRenderedBlockState(ctx.te));
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
@@ -110,7 +110,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te));
+		KineticTileEntityRenderer.renderRotatingKineticBlock(new InstanceContext.World<>(te), getRenderedBlockState(te));
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();

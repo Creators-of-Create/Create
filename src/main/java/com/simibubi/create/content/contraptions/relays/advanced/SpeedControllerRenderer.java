@@ -5,8 +5,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 
-import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.*;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -21,15 +20,14 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 			IRenderTypeBuffer buffer, int light, int overlay) {
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		addInstanceData(tileEntityIn);
 	}
 
 	@Override
-	public void addInstanceData(SpeedControllerTileEntity te) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
+	public void addInstanceData(InstanceContext<SpeedControllerTileEntity> ctx) {
+		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx.te));
 	}
 
-	private RotatingBuffer getRotatedModel(SpeedControllerTileEntity te) {
+	private InstanceBuffer<RotatingData> getRotatedModel(SpeedControllerTileEntity te) {
 		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
 				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
 	}

@@ -1,10 +1,8 @@
 package com.simibubi.create.foundation.utility.render.instancing;
 
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.BlockPos;
-
-import java.nio.ByteBuffer;
 
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
@@ -55,7 +53,7 @@ public class BeltData extends BasicData<BeltData> {
     }
 
     @Override
-    public void write(ByteBuffer buf) {
+    public void write(SafeDirectBuffer buf) {
         super.write(buf);
 
         putVec3(buf, rotX, rotY, rotZ);

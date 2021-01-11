@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity.Animation;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 
 import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
@@ -93,14 +93,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
-		return transform(AllBlockPartials.SHAFT_HALF, te);
-	}
-
-	private RotatingBuffer transform(AllBlockPartials partial, KineticTileEntity te) {
-		return partial.renderOnDirectionalSouthRotating(te.getBlockState(), te.getBlockState()
-                                                                              .get(CuckooClockBlock.HORIZONTAL_FACING)
-                                                                              .getOpposite());
+	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
+		BlockState blockState = ctx.te.getBlockState();
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, blockState, blockState.get(CuckooClockBlock.HORIZONTAL_FACING).getOpposite());
 	}
 
 	private SuperByteBuffer rotateHand(SuperByteBuffer buffer, float angle, Direction facing) {

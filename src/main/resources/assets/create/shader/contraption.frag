@@ -16,7 +16,6 @@ vec4 light() {
     return texture2D(LightMap, lm);
 }
 
-
 void main() {
     vec4 tex = texture2D(BlockAtlas, TexCoords);
 

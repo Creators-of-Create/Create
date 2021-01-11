@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 
 import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -16,8 +16,8 @@ public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(te.getBlockState());
+	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, ctx.te.getBlockState());
 	}
 
 }

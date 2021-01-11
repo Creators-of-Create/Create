@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.utility.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import org.lwjgl.opengl.GL15;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -11,7 +13,7 @@ import java.nio.ByteOrder;
 public class TemplateBuffer {
     protected ByteBuffer template;
     protected int formatSize;
-    protected int count;
+    protected int vertexCount;
 
     public TemplateBuffer(BufferBuilder buf) {
         Pair<BufferBuilder.DrawState, ByteBuffer> state = buf.popData();
@@ -20,14 +22,30 @@ public class TemplateBuffer {
 
         formatSize = buf.getVertexFormat()
                         .getSize();
-        count = state.getFirst().getCount();
-        int size = count * formatSize;
+        vertexCount = state.getFirst().getCount();
+        int size = vertexCount * formatSize;
 
         template = ByteBuffer.allocate(size);
         template.order(rendered.order());
         ((Buffer)template).limit(((Buffer)rendered).limit());
         template.put(rendered);
         ((Buffer)template).rewind();
+    }
+
+    protected void buildEBO(int ebo) throws Exception {
+        int indicesSize = vertexCount * VertexFormatElement.Type.USHORT.getSize();
+        try (SafeDirectBuffer indices = new SafeDirectBuffer(indicesSize)) {
+            indices.order(template.order());
+            indices.limit(indicesSize);
+
+            for (int i = 0; i < vertexCount; i++) {
+                indices.putShort((short) i);
+            }
+            indices.rewind();
+
+            GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+            GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices.getBacking(), GL15.GL_STATIC_DRAW);
+        }
     }
 
     public boolean isEmpty() {

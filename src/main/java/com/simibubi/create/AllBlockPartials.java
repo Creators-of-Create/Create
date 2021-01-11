@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.instancing.BeltBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -217,19 +218,20 @@ public class AllBlockPartials {
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 	}
 
-	public RotatingBuffer renderOnRotating(BlockState referenceState) {
-		return CreateClient.kineticRenderer.renderPartialRotating(this, referenceState);
+	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnRotating(InstanceContext<T> ctx, BlockState referenceState) {
+		return ctx.getKinetics().renderPartialRotating(this, referenceState);
 	}
 
-	public BeltBuffer renderOnBelt(BlockState referenceState) {
-		return CreateClient.kineticRenderer.renderPartialBelt(this, referenceState);
+	public <T extends BeltTileEntity> InstanceBuffer<BeltData> renderOnBelt(InstanceContext<T> ctx, BlockState referenceState) {
+		return ctx.getKinetics().renderPartialBelt(this, referenceState);
 	}
 
-	public RotatingBuffer renderOnDirectionalSouthRotating(BlockState referenceState) {
+	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnDirectionalSouthRotating(InstanceContext<T> ctx, BlockState referenceState) {
 		Direction facing = referenceState.get(FACING);
-		return renderOnDirectionalSouthRotating(referenceState, facing);
+		return renderOnDirectionalSouthRotating(ctx, referenceState, facing);
 	}
-	public RotatingBuffer renderOnDirectionalSouthRotating(BlockState referenceState, Direction facing) {
+
+	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnDirectionalSouthRotating(InstanceContext<T> ctx, BlockState referenceState, Direction facing) {
 		MatrixStack ms = new MatrixStack();
 		// TODO 1.15 find a way to cache this model matrix computation
 		MatrixStacker.of(ms)
@@ -237,7 +239,7 @@ public class AllBlockPartials {
 					 .rotateY(AngleHelper.horizontalAngle(facing))
 					 .rotateX(AngleHelper.verticalAngle(facing))
 					 .unCentre();
-		return CreateClient.kineticRenderer.renderDirectionalPartialInstanced(this, referenceState, facing, ms);
+		return ctx.getKinetics().renderDirectionalPartialInstanced(this, referenceState, facing, ms);
 	}
 
 }

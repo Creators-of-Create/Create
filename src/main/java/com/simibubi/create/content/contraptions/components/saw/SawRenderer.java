@@ -12,8 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -43,12 +42,11 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		addInstanceData(te);
 	}
 
 	@Override
-	public void addInstanceData(SawTileEntity te) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
+	public void addInstanceData(InstanceContext<SawTileEntity> ctx) {
+		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx));
 	}
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light){
@@ -86,7 +84,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 	}
 
 	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
+		//KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
 	}
 
 	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
@@ -130,11 +128,12 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 		}
 	}
 
-	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
+	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<SawTileEntity> ctx) {
+		KineticTileEntity te = ctx.te;
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
-			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
-		return CreateClient.kineticRenderer.renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
+			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
+		return ctx.getKinetics().renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}
 

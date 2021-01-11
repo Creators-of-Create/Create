@@ -58,34 +58,28 @@ public class ShaderHelper {
         return shaderProgram.getProgram();
     }
 
-    public static ShaderCallback getViewProjectionCallback(RenderWorldLastEvent event) {
+    public static ShaderCallback getViewProjectionCallback(Matrix4f projectionMat, Matrix4f viewMat) {
         return shader -> {
             ShaderHelper.MATRIX_BUFFER.position(0);
-            event.getProjectionMatrix().write(ShaderHelper.MATRIX_BUFFER);
-
+            projectionMat.write(ShaderHelper.MATRIX_BUFFER);
             int projection = GlStateManager.getUniformLocation(shader, "projection");
             GlStateManager.uniformMatrix4(projection, false, ShaderHelper.MATRIX_BUFFER);
 
-            // view matrix
-            Vec3d pos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
-            Matrix4f translate = Matrix4f.translate((float) -pos.x, (float) -pos.y, (float) -pos.z);
-            translate.multiplyBackward(event.getMatrixStack().peek().getModel());
-
             ShaderHelper.MATRIX_BUFFER.position(0);
-            translate.write(ShaderHelper.MATRIX_BUFFER);
+            viewMat.write(ShaderHelper.MATRIX_BUFFER);
             int view = GlStateManager.getUniformLocation(shader, "view");
             GlStateManager.uniformMatrix4(view, false, ShaderHelper.MATRIX_BUFFER);
         };
     }
 
-    public static void useShader(Shader shader) {
-        useShader(shader, null);
+    public static int useShader(Shader shader) {
+        return useShader(shader, null);
     }
 
-    public static void useShader(Shader shader, @Nullable ShaderCallback cb) {
+    public static int useShader(Shader shader, @Nullable ShaderCallback cb) {
         ShaderProgram prog = PROGRAMS.get(shader);
         if (prog == null) {
-            return;
+            return -1;
         }
 
         int program = prog.getProgram();
@@ -102,6 +96,8 @@ public class ShaderHelper {
         if (cb != null) {
             cb.call(program);
         }
+
+        return program;
     }
 
     public static void releaseShader() {

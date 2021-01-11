@@ -37,6 +37,7 @@ import com.simibubi.create.foundation.utility.render.RenderWork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
@@ -112,21 +113,25 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		CreateClient.bufferCache.invalidate();
-		CreateClient.kineticRenderer.invalidate();
-		FastContraptionRenderer.invalidateAll();
+		CreateClient.invalidateRenderers();
 	}
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		CreateClient.kineticRenderer.renderInstances(event);
-		FastContraptionRenderer.renderAll(event);
+		Matrix4f projection = event.getProjectionMatrix();
+		// view matrix
+		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+
+		Matrix4f view = Matrix4f.translate((float) -cameraPos.x, (float) -cameraPos.y, (float) -cameraPos.z);
+		view.multiplyBackward(event.getMatrixStack().peek().getModel());
+
+		CreateClient.kineticRenderer.renderInstancesAsWorld(projection, view);
+		FastContraptionRenderer.renderAll(projection, view);
 
 		MatrixStack ms = event.getMatrixStack();
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		Vec3d view = info.getProjectedView();
 		ms.push();
-		ms.translate(-view.getX(), -view.getY(), -view.getZ());
+		ms.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
 		CouplingRenderer.renderAll(ms, buffer);

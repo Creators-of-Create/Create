@@ -21,8 +21,7 @@ uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
 
-mat4 rotate(vec3 axis, float angle)
-{
+mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
     float c = cos(angle);
     float oc = 1.0 - c;
@@ -47,18 +46,11 @@ float diffuse(vec3 normal) {
 
 void main() {
     mat4 rotation = contraptionRotation();
+    vec4 worldPos = (rotation * vec4(aPos - vec3(0.5), 1)) + vec4(cPos + vec3(0.5), 0);
 
-    vec4 rotatedPos = rotation * vec4(aPos - vec3(0.5), 1);
-
-    vec4 worldPos = rotatedPos + vec4(cPos + vec3(0.5), 0);
-
-    vec3 boxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-
-    float df = diffuse(normalize(aNormal));
-
-    Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
-    Color = vec4(aColor.rgb / df, aColor.a);
-    BoxCoord = boxCoord;
+    BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
+    Diffuse = diffuse(normalize(rotation * vec4(aNormal, 0.)).xyz);
+    Color = aColor;
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
 }

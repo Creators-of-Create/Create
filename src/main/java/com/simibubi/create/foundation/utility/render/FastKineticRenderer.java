@@ -3,9 +3,9 @@ package com.simibubi.create.foundation.utility.render;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.shader.Shader;
 import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
@@ -21,7 +21,6 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -35,8 +34,8 @@ import java.util.function.Supplier;
 import static com.simibubi.create.foundation.utility.render.SuperByteBufferCache.PARTIAL;
 
 public class FastKineticRenderer {
-    Map<SuperByteBufferCache.Compartment<?>, Cache<Object, RotatingBuffer>> rotating;
-    Map<SuperByteBufferCache.Compartment<?>, Cache<Object, BeltBuffer>> belts;
+    Map<SuperByteBufferCache.Compartment<?>, Cache<Object, InstanceBuffer<RotatingData>>> rotating;
+    Map<SuperByteBufferCache.Compartment<?>, Cache<Object, InstanceBuffer<BeltData>>> belts;
 
     boolean rebuild;
 
@@ -46,6 +45,7 @@ public class FastKineticRenderer {
         registerCompartment(SuperByteBufferCache.GENERIC_TILE);
         registerCompartment(SuperByteBufferCache.PARTIAL);
         registerCompartment(SuperByteBufferCache.DIRECTIONAL_PARTIAL);
+        registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
     }
 
     public void buildTileEntityBuffers(World world) {
@@ -65,66 +65,102 @@ public class FastKineticRenderer {
         }
     }
 
-    private <T extends TileEntity> void addInstancedData(T te, IInstancedTileEntityRenderer<T> renderer) {
-        renderer.addInstanceData(te);
+    <T extends TileEntity> void addInstancedData(T te, IInstancedTileEntityRenderer<T> renderer) {
+        renderer.addInstanceData(new InstanceContext.World<>(te));
+    }
+
+    <T extends TileEntity> void addInstancedData(FastContraptionRenderer c, T te, IInstancedTileEntityRenderer<T> renderer) {
+        renderer.addInstanceData(new InstanceContext.Contraption<>(te, c));
+    }
+
+    /**
+     * This function should be called after building instances.
+     * It must be called either on the render thread before committing to rendering, or in a place where there are
+     * guaranteed to be no race conditions with the render thread, i.e. when constructing a FastContraptionRenderer.
+     */
+    public void markAllDirty() {
+        for (Cache<Object, InstanceBuffer<RotatingData>> cache : rotating.values()) {
+            for (InstanceBuffer<RotatingData> renderer : cache.asMap().values()) {
+                renderer.markDirty();
+            }
+        }
+
+        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
+            for (InstanceBuffer<BeltData> renderer : cache.asMap().values()) {
+                renderer.markDirty();
+            }
+        }
     }
 
     public void tick() {
         // TODO: (later) detect changes in lighting with a mixin (or forge hook) to ClientChunkProvider.markLightChanged()
-        for (Cache<Object, RotatingBuffer> cache : rotating.values()) {
-            for (RotatingBuffer renderer : cache.asMap().values()) {
+        for (Cache<Object, InstanceBuffer<RotatingData>> cache : rotating.values()) {
+            for (InstanceBuffer<RotatingData> renderer : cache.asMap().values()) {
                 renderer.clearInstanceData();
             }
         }
 
-        for (Cache<Object, BeltBuffer> cache : belts.values()) {
-            for (BeltBuffer renderer : cache.asMap().values()) {
+        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
+            for (InstanceBuffer<BeltData> renderer : cache.asMap().values()) {
                 renderer.clearInstanceData();
             }
         }
 
-//        rebuild = true;
+        //buildTileEntityBuffers(Minecraft.getInstance().world);
+
+        rebuild = true;
     }
 
-    public void renderInstances(RenderWorldLastEvent event) {
+    void renderBelts() {
+        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
+            for (InstanceBuffer<BeltData> type : cache.asMap().values()) {
+                if (!type.isEmpty()) {
+                    type.render();
+                }
+            }
+        }
+    }
+
+    void renderRotating() {
+        for (Cache<Object, InstanceBuffer<RotatingData>> cache : rotating.values()) {
+            for (InstanceBuffer<RotatingData> rotatingDataInstanceBuffer : cache.asMap().values()) {
+                if (!rotatingDataInstanceBuffer.isEmpty()) {
+                    rotatingDataInstanceBuffer.render();
+                }
+            }
+        }
+    }
+
+    public void renderInstancesAsWorld(Matrix4f projection, Matrix4f view) {
         GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-//
-//        if (rebuild) {
-//            buildTileEntityBuffers(Minecraft.getInstance().world);
-//            rebuild = false;
-//        }
+
+        if (rebuild) {
+            markAllDirty();
+            rebuild = false;
+        }
 
         setup(gameRenderer);
 
-        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(event);
+        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projection, view);
 
-        ShaderHelper.useShader(Shader.ROTATING_INSTANCED, callback);
+        ShaderHelper.useShader(Shader.ROTATING, callback);
+        renderRotating();
 
-        rotating.values()
-                .stream()
-                .flatMap(cache -> cache.asMap().values().stream())
-                .filter(type -> !type.isEmpty())
-                .forEach(InstanceBuffer::render);
-
-        ShaderHelper.useShader(Shader.BELT_INSTANCED, callback);
-
-        belts.values()
-             .stream()
-             .flatMap(cache -> cache.asMap().values().stream())
-             .filter(type -> !type.isEmpty())
-             .forEach(InstanceBuffer::render);
+        ShaderHelper.useShader(Shader.BELT, callback);
+        renderBelts();
 
         ShaderHelper.releaseShader();
 
         teardown();
     }
 
-    public void setup(GameRenderer gameRenderer) {
+    public static void setup(GameRenderer gameRenderer) {
         RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.defaultBlendFunc();
 
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
         GL11.glCullFace(GL11.GL_BACK);
 
         LightTexture lightManager = gameRenderer.getLightmapTextureManager();
@@ -149,9 +185,9 @@ public class FastKineticRenderer {
         RenderSystem.enableTexture();
     }
 
-    public void teardown() {
+    public static void teardown() {
 
-        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 1);
+        GL13.glActiveTexture(GL40.GL_TEXTURE1);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
         GL13.glActiveTexture(GL40.GL_TEXTURE0);
@@ -175,26 +211,26 @@ public class FastKineticRenderer {
         belts.put(instance, CacheBuilder.newBuilder().expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS).build());
     }
 
-    public RotatingBuffer renderPartialRotating(AllBlockPartials partial, BlockState referenceState) {
+    public InstanceBuffer<RotatingData> renderPartialRotating(AllBlockPartials partial, BlockState referenceState) {
         return getRotating(PARTIAL, partial, () -> rotatingInstancedRenderer(partial.get(), referenceState));
     }
 
-    public BeltBuffer renderPartialBelt(AllBlockPartials partial, BlockState referenceState) {
+    public InstanceBuffer<BeltData> renderPartialBelt(AllBlockPartials partial, BlockState referenceState) {
         return getBelt(PARTIAL, partial, () -> beltInstancedRenderer(partial.get(), referenceState));
     }
 
-    public RotatingBuffer renderDirectionalPartialInstanced(AllBlockPartials partial, BlockState referenceState, Direction dir,
+    public InstanceBuffer<RotatingData> renderDirectionalPartialInstanced(AllBlockPartials partial, BlockState referenceState, Direction dir,
                                                              MatrixStack modelTransform) {
         return getRotating(SuperByteBufferCache.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
                            () -> rotatingInstancedRenderer(partial.get(), referenceState, modelTransform));
     }
 
-    public RotatingBuffer renderBlockInstanced(SuperByteBufferCache.Compartment<BlockState> compartment, BlockState toRender) {
+    public InstanceBuffer<RotatingData> renderBlockInstanced(SuperByteBufferCache.Compartment<BlockState> compartment, BlockState toRender) {
         return getRotating(compartment, toRender, () -> rotatingInstancedRenderer(toRender));
     }
 
-    public <T> RotatingBuffer getRotating(SuperByteBufferCache.Compartment<T> compartment, T key, Supplier<RotatingBuffer> supplier) {
-        Cache<Object, RotatingBuffer> compartmentCache = this.rotating.get(compartment);
+    public <T> InstanceBuffer<RotatingData> getRotating(SuperByteBufferCache.Compartment<T> compartment, T key, Supplier<InstanceBuffer<RotatingData>> supplier) {
+        Cache<Object, InstanceBuffer<RotatingData>> compartmentCache = this.rotating.get(compartment);
         try {
             return compartmentCache.get(key, supplier::get);
         } catch (ExecutionException e) {
@@ -203,8 +239,8 @@ public class FastKineticRenderer {
         }
     }
 
-    public <T> BeltBuffer getBelt(SuperByteBufferCache.Compartment<T> compartment, T key, Supplier<BeltBuffer> supplier) {
-        Cache<Object, BeltBuffer> compartmentCache = this.belts.get(compartment);
+    public <T> InstanceBuffer<BeltData> getBelt(SuperByteBufferCache.Compartment<T> compartment, T key, Supplier<InstanceBuffer<BeltData>> supplier) {
+        Cache<Object, InstanceBuffer<BeltData>> compartmentCache = this.belts.get(compartment);
         try {
             return compartmentCache.get(key, supplier::get);
         } catch (ExecutionException e) {
@@ -214,40 +250,40 @@ public class FastKineticRenderer {
     }
 
 
-    private RotatingBuffer rotatingInstancedRenderer(BlockState renderedState) {
+    private InstanceBuffer<RotatingData> rotatingInstancedRenderer(BlockState renderedState) {
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         return rotatingInstancedRenderer(dispatcher.getModelForState(renderedState), renderedState);
     }
 
-    private RotatingBuffer rotatingInstancedRenderer(IBakedModel model, BlockState renderedState) {
+    private InstanceBuffer<RotatingData> rotatingInstancedRenderer(IBakedModel model, BlockState renderedState) {
         return rotatingInstancedRenderer(model, renderedState, new MatrixStack());
     }
 
-    private BeltBuffer beltInstancedRenderer(IBakedModel model, BlockState renderedState) {
+    private InstanceBuffer<BeltData> beltInstancedRenderer(IBakedModel model, BlockState renderedState) {
         return beltInstancedRenderer(model, renderedState, new MatrixStack());
     }
 
-    private RotatingBuffer rotatingInstancedRenderer(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+    private InstanceBuffer<RotatingData> rotatingInstancedRenderer(IBakedModel model, BlockState referenceState, MatrixStack ms) {
         BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
 
         return new RotatingBuffer(builder);
     }
 
-    private BeltBuffer beltInstancedRenderer(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+    private InstanceBuffer<BeltData> beltInstancedRenderer(IBakedModel model, BlockState referenceState, MatrixStack ms) {
         BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
 
         return new BeltBuffer(builder);
     }
 
     public void invalidate() {
-        rotating.values().forEach(cache -> {
-            cache.asMap().values().forEach(InstanceBuffer::delete);
-            cache.invalidateAll();
-        });
+        for (Cache<Object, InstanceBuffer<RotatingData>> objectInstanceBufferCache : rotating.values()) {
+            objectInstanceBufferCache.asMap().values().forEach(InstanceBuffer::delete);
+            objectInstanceBufferCache.invalidateAll();
+        }
 
-        belts.values().forEach(cache -> {
+        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
             cache.asMap().values().forEach(InstanceBuffer::delete);
             cache.invalidateAll();
-        });
+        }
     }
 }

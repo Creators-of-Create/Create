@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility.render;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -132,22 +133,19 @@ public class ContraptionLighter {
     public void use() {
         if (texture == 0 || lightVolume == null) return;
 
-        GL13.glEnable(GL31.GL_TEXTURE_3D);
-        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 4);
         GL12.glBindTexture(GL12.GL_TEXTURE_3D, texture);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MIN_FILTER, GL13.GL_LINEAR);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MAG_FILTER, GL13.GL_LINEAR);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL13.GL_CLAMP);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP);
         if (dirty) {
             GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightVolume);
             dirty = false;
         }
-        GL40.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MIN_FILTER, GL13.GL_LINEAR);
-        GL40.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MAG_FILTER, GL13.GL_LINEAR);
-        GL40.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP);
-        GL40.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL13.GL_CLAMP);
-        GL40.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP);
     }
 
     public void release() {
-        GL13.glActiveTexture(GL40.GL_TEXTURE0 + 4);
         GL12.glBindTexture(GL12.GL_TEXTURE_3D, 0);
     }
 }

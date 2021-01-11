@@ -1,12 +1,11 @@
 package com.simibubi.create.content.contraptions.components.millstone;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 
 import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
@@ -17,8 +16,8 @@ public class MillstoneRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected RotatingBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.kineticRenderer.renderPartialRotating(AllBlockPartials.MILLSTONE_COG, te.getBlockState());
+	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
+		return AllBlockPartials.MILLSTONE_COG.renderOnRotating(ctx, ctx.te.getBlockState());
 	}
 	
 }

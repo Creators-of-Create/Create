@@ -7,6 +7,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
@@ -30,6 +31,8 @@ public class TileEntityRenderHelper {
 
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
+			if (tileEntity instanceof IInstanceRendered) continue; // TODO: some things still need to render
+
 			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
 			if (renderer == null) {
 				iterator.remove();

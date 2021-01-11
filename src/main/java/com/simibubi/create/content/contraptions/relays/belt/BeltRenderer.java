@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -13,9 +15,9 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.render.instancing.BeltBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
+import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
+import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.ShadowRenderHelper;
 
 import net.minecraft.block.BlockState;
@@ -51,13 +53,13 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 		if (!AllBlocks.BELT.has(blockState))
 			return;
 
-		addInstanceData(te);
-
+		addInstanceData(new InstanceContext.World<>(te));
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 	@Override
-	public void addInstanceData(BeltTileEntity te) {
+	public void addInstanceData(InstanceContext<BeltTileEntity> ctx) {
+		BeltTileEntity te = ctx.te;
 		BlockState blockState = te.getBlockState();
 		if (!AllBlocks.BELT.has(blockState))
 			return;
@@ -83,6 +85,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 			end = b;
 		}
 
+		FastKineticRenderer fastKineticRenderer = ctx.getKinetics();
+
 		for (boolean bottom : Iterate.trueAndFalse) {
 
 			AllBlockPartials beltPartial = diagonal
@@ -94,7 +98,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 					: start ? AllBlockPartials.BELT_START
 					: end ? AllBlockPartials.BELT_END : AllBlockPartials.BELT_MIDDLE;
 
-			BeltBuffer beltBuffer = beltPartial.renderOnBelt(blockState);
+			InstanceBuffer<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
 			SpriteShiftEntry spriteShift =
 					diagonal ? AllSpriteShifts.BELT_DIAGONAL : bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
 
@@ -139,9 +143,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 			msr.rotateX(90);
 			msr.unCentre();
 
-			RotatingBuffer rotatingBuffer = CreateClient.kineticRenderer
+			InstanceBuffer<RotatingData> rotatingBuffer = fastKineticRenderer
 					.renderDirectionalPartialInstanced(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
-			KineticTileEntityRenderer.renderRotatingBuffer(te, rotatingBuffer);
+			KineticTileEntityRenderer.renderRotatingBuffer(ctx, rotatingBuffer);
 		}
 
 	}

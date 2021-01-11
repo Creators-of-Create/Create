@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
+import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
 import com.simibubi.create.foundation.utility.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
@@ -73,8 +74,6 @@ public class CreateClient {
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
 
 		kineticRenderer = new FastKineticRenderer();
-		kineticRenderer.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		kineticRenderer.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
@@ -180,4 +179,9 @@ public class CreateClient {
 		return casingConnectivity;
 	}
 
+	public static void invalidateRenderers() {
+		CreateClient.bufferCache.invalidate();
+		CreateClient.kineticRenderer.invalidate();
+		FastContraptionRenderer.invalidateAll();
+	}
 }
