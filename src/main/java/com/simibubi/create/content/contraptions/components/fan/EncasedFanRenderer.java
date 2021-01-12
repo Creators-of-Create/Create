@@ -10,10 +10,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 
 import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -58,7 +56,7 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 			data.setRotationalSpeed(speed)
 				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
 				.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-				.setPosition(pos);
+				.setTileEntity(te);
 
 			if (ctx.checkWorldLight()) {
 				BlockPos inFront = te.getPos().offset(direction);

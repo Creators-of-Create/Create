@@ -25,15 +25,6 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 
 	protected abstract void transform(C contraptionEntity, float partialTicks, MatrixStack[] matrixStacks);
 
-	public Vec3d getPosition(C entity, float partialTicks) {
-		double x = MathHelper.lerp(partialTicks, entity.lastTickPosX, entity.getX());
-		double y = MathHelper.lerp(partialTicks, entity.lastTickPosY, entity.getY());
-		double z = MathHelper.lerp(partialTicks, entity.lastTickPosZ, entity.getZ());
-		return new Vec3d(x, y, z);
-	}
-
-	public abstract Vec3d getRotation(C contraptionEntity, float partialTicks);
-
 	@Override
 	public boolean shouldRender(C entity, ClippingHelperImpl p_225626_2_, double p_225626_3_, double p_225626_5_,
 		double p_225626_7_) {
@@ -60,7 +51,7 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
 			ContraptionRenderer.renderDynamic(entity.world, contraption, ms, msLocal, buffers);
-			FastContraptionRenderer.markForRendering(entity.world, contraption, getPosition(entity, partialTicks), getRotation(entity, partialTicks));
+			FastContraptionRenderer.markForRendering(entity.world, contraption, msLocal);
 		}
 		ms.pop();
 

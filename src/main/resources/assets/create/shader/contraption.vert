@@ -13,13 +13,13 @@ out vec3 BoxCoord;
 
 uniform vec3 lightBoxSize;
 uniform vec3 lightBoxMin;
-uniform vec3 cPos;
-uniform vec3 cRot;
+uniform mat4 model;
 
 uniform float time;
 uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
+uniform int debug;
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -32,11 +32,6 @@ mat4 rotate(vec3 axis, float angle) {
                 0.,                                 0.,                                 0.,                                 1.);
 }
 
-mat4 contraptionRotation() {
-    vec3 rot = -fract(cRot / 360) * PI * 2;
-    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
-}
-
 float diffuse(vec3 normal) {
     float x = normal.x;
     float y = normal.y;
@@ -45,12 +40,11 @@ float diffuse(vec3 normal) {
 }
 
 void main() {
-    mat4 rotation = contraptionRotation();
-    vec4 worldPos = (rotation * vec4(aPos - vec3(0.5), 1)) + vec4(cPos + vec3(0.5), 0);
+    vec4 worldPos = model * vec4(aPos, 1);
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(rotation * vec4(aNormal, 0.)).xyz);
-    Color = aColor;
+    Diffuse = diffuse(normalize(model * vec4(aNormal, 0.)).xyz);
+    Color = vec4(1);//aColor;
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
 }

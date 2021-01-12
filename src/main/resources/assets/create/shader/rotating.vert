@@ -4,20 +4,23 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-layout (location = 3) in vec3 instancePos;
-layout (location = 4) in vec2 light;
-layout (location = 5) in float speed;
-layout (location = 6) in float rotationOffset;
-layout (location = 7) in vec3 rotationAxis;
+layout (location = 3) in vec3 networkTint;
+layout (location = 4) in vec3 instancePos;
+layout (location = 5) in vec2 light;
+layout (location = 6) in float speed;
+layout (location = 7) in float rotationOffset;
+layout (location = 8) in vec3 rotationAxis;
 
 out vec2 TexCoords;
 out vec2 Light;
 out float Diffuse;
+out vec4 Color;
 
 uniform float time;
 uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
+uniform int debug;
 
 mat4 kineticRotation() {
     float degrees = rotationOffset + time * speed * -3./10.;
@@ -50,4 +53,10 @@ void main() {
     TexCoords = aTexCoords;
     gl_Position = projection * view * renderPos;
     Light = light;
+
+    if (debug == 1) {
+        Color = vec4(networkTint, 1);
+    } else {
+        Color = vec4(1);
+    }
 }

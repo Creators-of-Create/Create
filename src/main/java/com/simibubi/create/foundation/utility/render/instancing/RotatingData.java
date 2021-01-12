@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.Vector3f;
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
 public class RotatingData extends BasicData<RotatingData> {
-    public static VertexFormat FORMAT = new VertexFormat(POSITION, LIGHT, FLOAT, FLOAT, VEC3);
+    public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, FLOAT, FLOAT, VEC3);
 
     private float rotationalSpeed;
     private float rotationOffset;

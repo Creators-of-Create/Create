@@ -27,17 +27,4 @@ public class ControlledContraptionEntityRenderer extends AbstractContraptionEnti
 				.rotate(angle, axis)
 				.unCentre();
 	}
-
-	public Vec3d getRotation(ControlledContraptionEntity entity, float partialTicks) {
-		Axis axis = entity.getRotationAxis();
-		if (axis == null) return Vec3d.ZERO;
-
-		float angle = entity.getAngle(partialTicks);
-
-		if (axis == Axis.X) return new Vec3d(angle, 0, 0);
-		if (axis == Axis.Y) return new Vec3d(0, angle, 0);
-		if (axis == Axis.Z) return new Vec3d(0, 0, angle);
-
-		throw new IllegalStateException("impossible axis");
-	}
 }

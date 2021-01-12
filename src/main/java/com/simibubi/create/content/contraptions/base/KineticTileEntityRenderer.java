@@ -68,7 +68,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 			data.setRotationalSpeed(te.getSpeed())
 				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
 				.setRotationAxis(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getUnitVector())
-				.setPosition(pos);
+				.setTileEntity(te);
 
 			if (ctx.checkWorldLight()) {
 				data.setBlockLight(te.getWorld().getLightLevel(LightType.BLOCK, te.getPos()))

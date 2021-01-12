@@ -5,22 +5,25 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-layout (location = 3) in vec3 instancePos;
-layout (location = 4) in vec2 light;
-layout (location = 5) in vec3 rotationDegrees;
-layout (location = 6) in float speed;
-layout (location = 7) in vec2 sourceUV;
-layout (location = 8) in vec4 scrollTexture;
-layout (location = 9) in float scrollMult;
+layout (location = 3) in vec3 networkTint;
+layout (location = 4) in vec3 instancePos;
+layout (location = 5) in vec2 light;
+layout (location = 6) in vec3 rotationDegrees;
+layout (location = 7) in float speed;
+layout (location = 8) in vec2 sourceUV;
+layout (location = 9) in vec4 scrollTexture;
+layout (location = 10) in float scrollMult;
 
 out vec2 TexCoords;
 out vec2 Light;
 out float Diffuse;
+out vec4 Color;
 
 uniform float time;
 uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
+uniform int debug;
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -56,4 +59,10 @@ void main() {
     Light = light;
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
     gl_Position = projection * view * renderPos;
+
+    if (debug == 1) {
+        Color = vec4(networkTint, 1);
+    } else {
+        Color = vec4(1);
+    }
 }

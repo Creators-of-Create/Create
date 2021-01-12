@@ -1,20 +1,15 @@
 package com.simibubi.create.foundation.utility.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.utility.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
 
 import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 public class ContraptionBuffer extends TemplateBuffer {
-    public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV, COLOR);
+    public static final VertexFormat FORMAT = new VertexFormat(InstanceBuffer.FORMAT, RGBA);
 
     protected int vao, ebo, vbo;
 
@@ -55,10 +50,9 @@ public class ContraptionBuffer extends TemplateBuffer {
         int stride = FORMAT.getStride();
         int invariantSize = vertexCount * stride;
 
-        GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
-        GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-        // Deselect (bind to 0) the VAO
-        GL30.glBindVertexArray(0);
+        vao = GL30.glGenVertexArrays();
+        ebo = GlStateManager.genBuffers();
+        vbo = GlStateManager.genBuffers();
 
         try (SafeDirectBuffer constant = new SafeDirectBuffer(invariantSize)) {
             constant.order(template.order());
@@ -83,11 +77,7 @@ public class ContraptionBuffer extends TemplateBuffer {
             }
             constant.rewind();
 
-            vao = GL30.glGenVertexArrays();
             GL30.glBindVertexArray(vao);
-
-            ebo = GlStateManager.genBuffers();
-            vbo = GlStateManager.genBuffers();
 
             GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, vbo);
             GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, constant.getBacking(), GL15.GL_STATIC_DRAW);
@@ -95,7 +85,7 @@ public class ContraptionBuffer extends TemplateBuffer {
 
             FORMAT.informAttributes(0);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);

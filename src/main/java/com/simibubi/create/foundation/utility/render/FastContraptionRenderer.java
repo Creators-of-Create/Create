@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.utility.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
@@ -38,8 +40,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
     private Contraption c;
 
-    private Vec3d renderPos;
-    private Vec3d renderRot;
+    private Matrix4f model;
 
     public FastContraptionRenderer(World world, Contraption c) {
         this.c = c;
@@ -89,9 +90,8 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         }
     }
 
-    private void setRenderSettings(Vec3d position, Vec3d rotation) {
-        renderPos = position;
-        renderRot = rotation;
+    private void setRenderSettings(Matrix4f model) {
+        this.model = model;
     }
 
     private void setup(int shader) {
@@ -120,19 +120,10 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         buf.rewind();
         GlStateManager.uniform3(lightBoxMin, buf);
 
-        int cPos = GlStateManager.getUniformLocation(shader, "cPos");
-        buf.put(0, (float) renderPos.x);
-        buf.put(1, (float) renderPos.y);
-        buf.put(2, (float) renderPos.z);
-        buf.rewind();
-        GlStateManager.uniform3(cPos, buf);
-
-        int cRot = GlStateManager.getUniformLocation(shader, "cRot");
-        buf.put(0, (float) renderRot.x);
-        buf.put(1, (float) renderRot.y);
-        buf.put(2, (float) renderRot.z);
-        buf.rewind();
-        GlStateManager.uniform3(cRot, buf);
+        int model = GlStateManager.getUniformLocation(shader, "model");
+        this.model.write(ShaderHelper.MATRIX_BUFFER);
+        ShaderHelper.MATRIX_BUFFER.rewind();
+        GlStateManager.uniformMatrix4(model, false, ShaderHelper.MATRIX_BUFFER);
     }
 
     private void invalidate() {
@@ -147,8 +138,8 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         renderLayers.clear();
     }
 
-    public static void markForRendering(World world, Contraption c, Vec3d position, Vec3d rotation) {
-        getRenderer(world, c).setRenderSettings(position, rotation);
+    public static void markForRendering(World world, Contraption c, MatrixStack model) {
+        getRenderer(world, c).setRenderSettings(model.peek().getModel());
     }
 
     private static FastContraptionRenderer getRenderer(World world, Contraption c) {
@@ -176,6 +167,16 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
         ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
 
+
+        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
+        for (FastContraptionRenderer renderer : renderers.values()) {
+            renderer.setup(structureShader);
+            for (ContraptionBuffer layer : renderer.renderLayers) {
+                layer.render();
+            }
+            renderer.teardown();
+        }
+
         int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
         for (FastContraptionRenderer renderer : renderers.values()) {
             renderer.setup(rotatingShader);
@@ -187,15 +188,6 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         for (FastContraptionRenderer renderer : renderers.values()) {
             renderer.setup(beltShader);
             renderer.kinetics.renderBelts();
-            renderer.teardown();
-        }
-
-        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
-        for (FastContraptionRenderer renderer : renderers.values()) {
-            renderer.setup(structureShader);
-            for (ContraptionBuffer layer : renderer.renderLayers) {
-                layer.render();
-            }
             renderer.teardown();
         }
 

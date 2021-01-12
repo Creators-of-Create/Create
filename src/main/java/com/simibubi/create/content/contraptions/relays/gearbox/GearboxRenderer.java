@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingBuffer;
 import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -71,7 +70,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 					.setRotationalSpeed(speed)
 					.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
 					.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-					.setPosition(pos);
+					.setTileEntity(te);
 			});
 		}
 	}

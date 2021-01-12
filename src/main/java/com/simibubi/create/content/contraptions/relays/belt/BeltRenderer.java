@@ -1,21 +1,17 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.Random;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
 import com.simibubi.create.foundation.utility.render.instancing.*;
 import com.simibubi.create.foundation.utility.render.ShadowRenderHelper;
@@ -113,7 +109,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 				float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 270 : 0);
 				float rotZ = sideways ? 90 : (vertical ? 180 : 0);
 
-				data.setPosition(te.getPos())
+				data.setTileEntity(te)
 					.setBlockLight(te.getWorld().getLightLevel(LightType.BLOCK, te.getPos()))
 					.setSkyLight(te.getWorld().getLightLevel(LightType.SKY, te.getPos()))
 					.setRotation(rotX, rotY, rotZ)

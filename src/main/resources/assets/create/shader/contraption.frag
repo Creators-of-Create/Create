@@ -19,5 +19,5 @@ vec4 light() {
 void main() {
     vec4 tex = texture2D(BlockAtlas, TexCoords);
 
-    fragColor = vec4(tex.rgb * light().rgb * Diffuse, tex.a);
+    fragColor = vec4(tex.rgb * light().rgb * Diffuse, tex.a) * Color;
 }

@@ -57,32 +57,6 @@ public class OrientedContraptionEntityRenderer extends AbstractContraptionEntity
 				.unCentre();
 	}
 
-	@Override
-	public Vec3d getPosition(OrientedContraptionEntity entity, float partialTicks) {
-		Vec3d offset = Vec3d.ZERO;
-
-		Entity ridingEntity = entity.getRidingEntity();
-		if (ridingEntity instanceof AbstractMinecartEntity)
-			offset = getCartOffset(partialTicks, ridingEntity);
-		else if (ridingEntity instanceof AbstractContraptionEntity) {
-			if (ridingEntity.getRidingEntity() instanceof AbstractMinecartEntity)
-				offset = getCartOffset(partialTicks, ridingEntity.getRidingEntity());
-			else
-				offset = getContraptionOffset(entity, partialTicks, ridingEntity);
-		}
-
-		Vec3d pos = super.getPosition(entity, partialTicks);
-		return new Vec3d(pos.x + offset.x - 0.5, pos.y + offset.y, pos.z + offset.z - 0.5);
-	}
-
-	public Vec3d getRotation(OrientedContraptionEntity entity, float partialTicks) {
-		float angleInitialYaw = entity.getInitialYaw();
-		float angleYaw = entity.getYaw(partialTicks);
-		float anglePitch = entity.getPitch(partialTicks);
-
-		return new Vec3d(0, angleInitialYaw + angleYaw, anglePitch);
-	}
-
 	private void repositionOnContraption(OrientedContraptionEntity entity, float partialTicks,
 										 MatrixStack[] matrixStacks, Entity ridingEntity) {
 		Vec3d pos = getContraptionOffset(entity, partialTicks, ridingEntity);

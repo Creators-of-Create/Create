@@ -162,10 +162,10 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
             instanceFormat.informAttributes(staticAttributes);
 
             for (int i = 0; i < instanceFormat.getNumAttributes(); i++) {
-                GL40.glVertexAttribDivisor(i + staticAttributes, 1);
+                GL33.glVertexAttribDivisor(i + staticAttributes, 1);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         // Deselect (bind to 0) the VBO
