@@ -41,7 +41,24 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		InstanceBuffer<RotatingData> fanInner =
 				AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
 
-		renderRotatingBuffer(ctx, shaftHalf);
+		shaftHalf.setupInstance(data -> {
+			final BlockPos pos = te.getPos();
+			Direction.Axis axis = ((IRotate) te.getBlockState()
+											   .getBlock()).getRotationAxis(te.getBlockState());
+			data.setRotationalSpeed(te.getSpeed())
+				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
+				.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+				.setTileEntity(te);
+
+			if (ctx.checkWorldLight()) {
+				BlockPos behind = te.getPos().offset(direction.getOpposite());
+				int blockLight = te.getWorld().getLightLevel(LightType.BLOCK, behind);
+				int skyLight = te.getWorld().getLightLevel(LightType.SKY, behind);
+
+				data.setBlockLight(blockLight)
+					.setSkyLight(skyLight);
+			}
+		});
 		fanInner.setupInstance(data -> {
 			final BlockPos pos = te.getPos();
 			Direction.Axis axis = ((IRotate) te.getBlockState()
