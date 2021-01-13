@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "package": "com.simibubi.create.foundation.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "create.refmap.json",
+    "client": [
+        "LightUpdateMixin",
+        "RenderInLayerMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "minVersion": "0.8"
+}
