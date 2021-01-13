@@ -102,7 +102,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			
 			if (world.isRemote && carts.containsKey(uniqueID)) {
 				MinecartController minecartController = carts.get(uniqueID);
-				if (minecartController.isPresent() && minecartController.cart().getEntityId() != cart.getEntityId())
+				AbstractMinecartEntity minecartEntity = minecartController.cart();
+				if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId()) 
 					continue; // Away with you, Fake Entities!
 			}
 			
