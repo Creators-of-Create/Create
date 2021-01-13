@@ -3,7 +3,6 @@ package com.simibubi.create.foundation;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;

@@ -1,12 +1,12 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
-import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class ContraptionBuffer extends TemplateBuffer {
     public static final VertexFormat FORMAT = new VertexFormat(InstanceBuffer.FORMAT, RGBA);

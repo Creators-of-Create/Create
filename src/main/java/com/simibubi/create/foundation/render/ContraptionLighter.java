@@ -1,17 +1,12 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
 
 public class ContraptionLighter {
 

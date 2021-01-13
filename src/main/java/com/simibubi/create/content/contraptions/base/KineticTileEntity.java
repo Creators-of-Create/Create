@@ -21,7 +21,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;

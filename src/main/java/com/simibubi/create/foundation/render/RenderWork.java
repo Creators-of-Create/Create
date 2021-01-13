@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

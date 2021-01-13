@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.instancing.*;
-import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;

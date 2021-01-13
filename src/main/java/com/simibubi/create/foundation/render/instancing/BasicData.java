@@ -1,12 +1,12 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
+import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
-import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class BasicData<D extends BasicData<D>> extends InstanceData {
     public static final VertexFormat FORMAT = new VertexFormat(RGB, POSITION, LIGHT);

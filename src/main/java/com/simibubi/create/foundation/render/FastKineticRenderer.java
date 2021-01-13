@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -6,10 +6,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.*;
-import com.simibubi.create.foundation.utility.render.shader.Shader;
-import com.simibubi.create.foundation.utility.render.shader.ShaderCallback;
-import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.shader.Shader;
+import com.simibubi.create.foundation.render.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import static com.simibubi.create.foundation.utility.render.SuperByteBufferCache.PARTIAL;
+import static com.simibubi.create.foundation.render.SuperByteBufferCache.PARTIAL;
 
 public class FastKineticRenderer {
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, InstanceBuffer<RotatingData>>> rotating;

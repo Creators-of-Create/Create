@@ -4,9 +4,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 
-import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
-import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 public class CreativeMotorRenderer extends KineticTileEntityRenderer {

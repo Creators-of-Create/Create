@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

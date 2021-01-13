@@ -1,17 +1,17 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.utility.render.RenderWork;
-import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
-import com.simibubi.create.foundation.utility.render.TemplateBuffer;
+import com.simibubi.create.foundation.render.RenderWork;
+import com.simibubi.create.foundation.render.SafeDirectBuffer;
+import com.simibubi.create.foundation.render.TemplateBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuffer {
     public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV);

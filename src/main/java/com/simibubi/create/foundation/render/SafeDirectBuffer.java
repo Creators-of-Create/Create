@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import net.minecraft.client.renderer.GLAllocation;
 import sun.nio.ch.DirectBuffer;

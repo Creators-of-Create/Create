@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import java.util.Iterator;
 
@@ -7,7 +7,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.render.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;

@@ -1,11 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 
-import com.simibubi.create.foundation.utility.render.instancing.*;
+import com.simibubi.create.foundation.render.instancing.*;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 

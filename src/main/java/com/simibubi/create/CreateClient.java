@@ -16,12 +16,12 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
-import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
-import com.simibubi.create.foundation.utility.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.render.FastKineticRenderer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import com.simibubi.create.foundation.utility.render.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;

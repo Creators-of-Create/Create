@@ -1,9 +1,9 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
+import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.Vector3f;
 
-import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class RotatingData extends BasicData<RotatingData> {
     public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, FLOAT, FLOAT, VEC3);

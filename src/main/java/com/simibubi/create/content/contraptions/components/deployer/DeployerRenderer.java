@@ -16,11 +16,11 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.foundation.utility.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

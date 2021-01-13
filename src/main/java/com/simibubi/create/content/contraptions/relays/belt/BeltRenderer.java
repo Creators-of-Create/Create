@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
-import com.simibubi.create.foundation.utility.render.instancing.*;
-import com.simibubi.create.foundation.utility.render.ShadowRenderHelper;
+import com.simibubi.create.foundation.render.FastKineticRenderer;
+import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.ShadowRenderHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

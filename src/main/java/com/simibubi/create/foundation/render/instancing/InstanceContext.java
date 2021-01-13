@@ -1,8 +1,8 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
-import com.simibubi.create.foundation.utility.render.FastKineticRenderer;
+import com.simibubi.create.foundation.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.render.FastKineticRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 public abstract class InstanceContext<T extends TileEntity> {

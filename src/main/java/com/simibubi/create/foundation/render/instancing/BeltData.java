@@ -1,10 +1,10 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
+import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import static com.simibubi.create.foundation.utility.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class BeltData extends BasicData<BeltData> {
     public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, VEC3, FLOAT, VEC2, VEC4, FLOAT);

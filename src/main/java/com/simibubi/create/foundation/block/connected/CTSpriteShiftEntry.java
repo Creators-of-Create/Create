@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 

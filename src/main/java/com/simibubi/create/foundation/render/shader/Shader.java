@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render.shader;
+package com.simibubi.create.foundation.render.shader;
 
 public enum Shader {
     ROTATING("shader/rotating.vert", "shader/instanced.frag"),

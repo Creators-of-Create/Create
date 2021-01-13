@@ -4,7 +4,6 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -12,8 +11,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.*;
 
-import com.simibubi.create.foundation.utility.render.instancing.*;
-import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

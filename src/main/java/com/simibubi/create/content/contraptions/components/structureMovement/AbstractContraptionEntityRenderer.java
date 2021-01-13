@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.render.FastContraptionRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 
 public abstract class AbstractContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
 

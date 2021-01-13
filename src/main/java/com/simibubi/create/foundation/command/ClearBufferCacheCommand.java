@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.CreateClient;
 
-import com.simibubi.create.foundation.utility.render.FastContraptionRenderer;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;

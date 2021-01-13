@@ -1,11 +1,10 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;

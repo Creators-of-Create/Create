@@ -1,8 +1,6 @@
-package com.simibubi.create.foundation.utility.render.instancing;
+package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.utility.render.SafeDirectBuffer;
-
-import java.nio.ByteBuffer;
+import com.simibubi.create.foundation.render.SafeDirectBuffer;
 
 public abstract class InstanceData {
 

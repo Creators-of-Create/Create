@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render;
+package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility.render.shader;
+package com.simibubi.create.foundation.render.shader;
 
 /**
  * A Callback for when a shader is called. Used to define shader uniforms.

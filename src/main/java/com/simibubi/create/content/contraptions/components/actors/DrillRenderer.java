@@ -10,12 +10,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceBuffer;
-import com.simibubi.create.foundation.utility.render.instancing.InstanceContext;
-import com.simibubi.create.foundation.utility.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import com.simibubi.create.foundation.utility.render.instancing.RotatingData;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
