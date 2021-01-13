@@ -828,7 +828,7 @@ public abstract class Contraption {
 		}
 		for (BlockInfo block : blocks.values()) {
 			BlockPos targetPos = transform.apply(block.pos);
-			world.markAndNotifyBlock(targetPos, null, block.state, block.state, BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
+			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state, BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
 		for (int i = 0; i < inventory.getSlots(); i++)
