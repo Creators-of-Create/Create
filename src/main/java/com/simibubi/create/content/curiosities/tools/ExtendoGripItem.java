@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
@@ -115,6 +116,8 @@ public class ExtendoGripItem extends Item {
 		if (mc.world == null || player == null)
 			return;
 		if (!isHoldingExtendoGrip(player))
+			return;
+		if (mc.objectMouseOver instanceof BlockRayTraceResult && mc.objectMouseOver.getType() != Type.MISS)
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
