@@ -61,9 +61,9 @@
     {
       "when": {
         "south": "false",
-        "north": "true",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "north": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lu_x"
@@ -72,9 +72,9 @@
     {
       "when": {
         "south": "true",
-        "north": "false",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ru_x"
@@ -83,9 +83,9 @@
     {
       "when": {
         "south": "false",
-        "north": "true",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "north": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ld_x"
@@ -94,9 +94,9 @@
     {
       "when": {
         "south": "true",
-        "north": "false",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/rd_x"
@@ -105,9 +105,9 @@
     {
       "when": {
         "south": "false",
-        "north": "false",
+        "up": "true",
         "down": "true",
-        "up": "true"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_x"
@@ -116,9 +116,9 @@
     {
       "when": {
         "south": "false",
-        "north": "false",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_x"
@@ -127,9 +127,9 @@
     {
       "when": {
         "south": "false",
-        "north": "false",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_x"
@@ -138,9 +138,9 @@
     {
       "when": {
         "south": "true",
-        "north": "true",
+        "up": "false",
         "down": "false",
-        "up": "false"
+        "north": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_x"
@@ -149,9 +149,9 @@
     {
       "when": {
         "south": "false",
-        "north": "true",
+        "up": "false",
         "down": "false",
-        "up": "false"
+        "north": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_x"
@@ -160,9 +160,9 @@
     {
       "when": {
         "south": "true",
-        "north": "false",
+        "up": "false",
         "down": "false",
-        "up": "false"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_x"
@@ -171,9 +171,9 @@
     {
       "when": {
         "south": "false",
-        "north": "false",
+        "up": "false",
         "down": "false",
-        "up": "false"
+        "north": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/none_x"
@@ -302,10 +302,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "true",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "west": "false",
+        "east": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lu_z"
@@ -313,10 +313,10 @@
     },
     {
       "when": {
-        "west": "true",
-        "east": "false",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "west": "true",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ru_z"
@@ -324,10 +324,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "true",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "west": "false",
+        "east": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ld_z"
@@ -335,10 +335,10 @@
     },
     {
       "when": {
-        "west": "true",
-        "east": "false",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "west": "true",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/rd_z"
@@ -346,10 +346,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "false",
+        "up": "true",
         "down": "true",
-        "up": "true"
+        "west": "false",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -357,10 +357,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "false",
+        "up": "true",
         "down": "false",
-        "up": "true"
+        "west": "false",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -368,10 +368,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "false",
+        "up": "false",
         "down": "true",
-        "up": "false"
+        "west": "false",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/ud_z"
@@ -379,10 +379,10 @@
     },
     {
       "when": {
+        "up": "false",
+        "down": "false",
         "west": "true",
-        "east": "true",
-        "down": "false",
-        "up": "false"
+        "east": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -390,10 +390,10 @@
     },
     {
       "when": {
+        "up": "false",
+        "down": "false",
         "west": "false",
-        "east": "true",
-        "down": "false",
-        "up": "false"
+        "east": "true"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -401,10 +401,10 @@
     },
     {
       "when": {
+        "up": "false",
+        "down": "false",
         "west": "true",
-        "east": "false",
-        "down": "false",
-        "up": "false"
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/lr_z"
@@ -412,10 +412,10 @@
     },
     {
       "when": {
-        "west": "false",
-        "east": "false",
+        "up": "false",
         "down": "false",
-        "up": "false"
+        "west": "false",
+        "east": "false"
       },
       "apply": {
         "model": "create:block/fluid_pipe/none_z"
