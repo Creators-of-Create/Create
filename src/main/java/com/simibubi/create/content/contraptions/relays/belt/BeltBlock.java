@@ -358,7 +358,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	public static void initBelt(World world, BlockPos pos) {
-		if (world instanceof  ServerWorld && ((ServerWorld) world).getChunkProvider().getChunkGenerator() instanceof DebugChunkGenerator)
+		if (world.isRemote)
+			return;
+		if (world instanceof ServerWorld && ((ServerWorld) world).getChunkProvider().getChunkGenerator() instanceof DebugChunkGenerator)
 			return;
 
 		BlockState state = world.getBlockState(pos);
