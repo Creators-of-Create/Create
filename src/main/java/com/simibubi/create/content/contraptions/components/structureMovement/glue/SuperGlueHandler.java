@@ -66,6 +66,8 @@ public class SuperGlueHandler {
 		ModifiableAttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
+		if (AllItems.WRENCH.isIn(placer.getHeldItemMainhand()))
+			return;
 
 		double distance = reachAttribute.getValue();
 		Vector3d start = placer.getEyePosition(1);

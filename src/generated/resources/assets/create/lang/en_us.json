@@ -411,8 +411,6 @@
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
 
-	"fluid.create.chocolate": "Chocolate",
-	"fluid.create.honey": "Honey",
 	"fluid.create.milk": "Milk",
 	"fluid.create.potion": "Potion",
 	"fluid.create.tea": "Builder's Tea",

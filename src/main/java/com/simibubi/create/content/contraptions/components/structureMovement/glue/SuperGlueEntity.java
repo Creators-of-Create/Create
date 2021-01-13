@@ -12,6 +12,7 @@ import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -273,9 +274,9 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (ray.getType() == Type.MISS)
 			return;
 		BlockRayTraceResult blockRay = (BlockRayTraceResult) ray;
-		if (!blockRay.getPos()
-			.offset(blockRay.getFace())
-			.equals(getHangingPosition()))
+		BlockFace rayFace = new BlockFace(blockRay.getPos(), blockRay.getFace());
+		BlockFace hangingFace = new BlockFace(getHangingPosition(), getFacingDirection().getOpposite());
+		if (!rayFace.isEquivalent(hangingFace))
 			return;
 
 		for (Hand handIn : Hand.values()) {
