@@ -216,6 +216,16 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		builder.addLootPool(poolBuilder.rolls(ConstantRange.of(1)));
 		return builder;
 	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+		return true;
+	}
+	
+	@Override
+	public int getComparatorInputOverride(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+		return Math.max(0, state.get(HEAT_LEVEL).ordinal() -1);
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {

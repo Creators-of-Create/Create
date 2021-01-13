@@ -97,6 +97,16 @@ public class LitBlazeBurnerBlock extends Block {
 			}
 		}
 	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+		return true;
+	}
+	
+	@Override
+	public int getComparatorInputOverride(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+		return 1;
+	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos,

@@ -102,9 +102,11 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			
 			if (world.isRemote && carts.containsKey(uniqueID)) {
 				MinecartController minecartController = carts.get(uniqueID);
-				AbstractMinecartEntity minecartEntity = minecartController.cart();
-				if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId()) 
-					continue; // Away with you, Fake Entities!
+				if (minecartController != null) {
+					AbstractMinecartEntity minecartEntity = minecartController.cart();
+					if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId()) 
+						continue; // Away with you, Fake Entities!
+				}
 			}
 			
 			cartsWithCoupling.remove(uniqueID);
@@ -145,6 +147,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			.getPos();
 		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(event.getWorld());
 		for (MinecartController minecartController : carts.values()) {
+			if (minecartController == null)
+				continue;
 			if (!minecartController.isPresent())
 				continue;
 			AbstractMinecartEntity cart = minecartController.cart();
