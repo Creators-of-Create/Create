@@ -1,9 +1,6 @@
 package com.simibubi.create.foundation.utility.render;
 
 import net.minecraft.client.renderer.GLAllocation;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-import sun.misc.Cleaner;
 import sun.nio.ch.DirectBuffer;
 
 import java.nio.*;
@@ -18,11 +15,7 @@ public class SafeDirectBuffer implements AutoCloseable {
 
     public void close() throws Exception {
         if (wrapped instanceof DirectBuffer) {
-            Cleaner cleaner = ((DirectBuffer) wrapped).cleaner();
-            if (!cleaner.isEnqueued()) {
-                cleaner.clean();
-                cleaner.enqueue();
-            }
+            ((DirectBuffer) wrapped).cleaner().clean();
         }
     }
 
