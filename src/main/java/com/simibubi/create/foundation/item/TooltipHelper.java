@@ -170,7 +170,7 @@ public class TooltipHelper {
 		StringBuilder currentLine = new StringBuilder();
 		int width = 0;
 		for (String word : words) {
-			int newWidth = font.getStringWidth(word);
+			int newWidth = font.getStringWidth(word.replaceAll("_", ""));
 			if (width + newWidth > maxWidthPerLine) {
 				if (width > 0) {
 					String line = currentLine.toString();
@@ -190,24 +190,22 @@ public class TooltipHelper {
 		}
 
 		// Format
-		IFormattableTextComponent lineStart = StringTextComponent.EMPTY.copy();
-		for (int i = 0; i < indent; i++)
-			lineStart.append(" ");
+		IFormattableTextComponent lineStart = new StringTextComponent(Strings.repeat(" ", indent));
 		lineStart.formatted(defaultColor);
 		List<ITextComponent> formattedLines = new ArrayList<>(lines.size());
 		Couple<TextFormatting> f = Couple.create(highlightColor, defaultColor);
-		
+
+		boolean currentlyHighlighted = false;
 		for (String string : lines) {
-			boolean currentlyHighlighted = false;
 			IFormattableTextComponent currentComponent = lineStart.copy();
 			String[] split = string.split("_");
 			for (String part : split) {
 				currentComponent.append(new StringTextComponent(part).formatted(f.get(currentlyHighlighted)));
-				if (split.length != 1)
-					currentlyHighlighted = !currentlyHighlighted;
+				currentlyHighlighted = !currentlyHighlighted;
 			}
 			
 			formattedLines.add(currentComponent);
+			currentlyHighlighted = !currentlyHighlighted;
 		}
 		
 		
