@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-
 import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -73,4 +72,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		return AllBlocks.HAND_CRANK.get();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

@@ -1,18 +1,20 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.*;
-
-import com.simibubi.create.foundation.render.instancing.*;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -27,6 +29,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implements IInstancedTileEntityRenderer<SawTileEntity> {
 
@@ -46,6 +50,11 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 	@Override
 	public void addInstanceData(InstanceContext<SawTileEntity> ctx) {
 		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx));
+	}
+
+	@Override
+	public void markForRebuild(InstanceContext<SawTileEntity> ctx) {
+		getRotatedModel(ctx).clearInstanceData();
 	}
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light){

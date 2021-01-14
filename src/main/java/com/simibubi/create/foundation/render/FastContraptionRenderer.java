@@ -10,7 +10,9 @@ import com.simibubi.create.foundation.render.shader.Shader;
 import com.simibubi.create.foundation.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +30,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
 
     private static final HashMap<Integer, FastContraptionRenderer> renderers = new HashMap<>();
 
-    private ArrayList<ContraptionBuffer> renderLayers = new ArrayList<>();
+    private HashMap<RenderType, ContraptionBuffer> renderLayers = new HashMap<>();
 
     private ContraptionLighter lighter;
 
@@ -48,7 +50,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     }
 
     private void buildLayers(Contraption c) {
-        for (ContraptionBuffer buffer : renderLayers) {
+        for (ContraptionBuffer buffer : renderLayers.values()) {
             buffer.delete();
         }
 
@@ -57,7 +59,7 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
         for (RenderType layer : blockLayers) {
-            renderLayers.add(buildStructureBuffer(c, layer));
+            renderLayers.put(layer, buildStructureBuffer(c, layer));
         }
     }
 
@@ -123,15 +125,14 @@ public class FastContraptionRenderer extends ContraptionRenderer {
     }
 
     private void invalidate() {
-        for (ContraptionBuffer buffer : renderLayers) {
+        for (ContraptionBuffer buffer : renderLayers.values()) {
             buffer.delete();
         }
+        renderLayers.clear();
 
         lighter.delete();
 
         kinetics.invalidate();
-
-        renderLayers.clear();
     }
 
     public static void markForRendering(World world, Contraption c, MatrixStack model) {
@@ -151,46 +152,48 @@ public class FastContraptionRenderer extends ContraptionRenderer {
         return renderer;
     }
 
-    public static void renderAll(Matrix4f projectionMat, Matrix4f viewMat) {
+    public static void renderLayer(RenderType renderType, Matrix4f projectionMat, Matrix4f viewMat) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
 
-        GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-        FastKineticRenderer.setup(gameRenderer);
+        FastKineticRenderer.setup(Minecraft.getInstance().gameRenderer);
         GL11.glEnable(GL13.GL_TEXTURE_3D);
-        GL13.glActiveTexture(GL40.GL_TEXTURE4);
+        GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
 
-
         int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
         for (FastContraptionRenderer renderer : renderers.values()) {
-            renderer.setup(structureShader);
-            for (ContraptionBuffer layer : renderer.renderLayers) {
-                layer.render();
+            ContraptionBuffer buffer = renderer.renderLayers.get(renderType);
+            if (buffer != null) {
+                renderer.setup(structureShader);
+                buffer.render();
+                renderer.teardown();
             }
-            renderer.teardown();
         }
 
-        int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
-        for (FastContraptionRenderer renderer : renderers.values()) {
-            renderer.setup(rotatingShader);
-            renderer.kinetics.renderRotating();
-            renderer.teardown();
-        }
+        if (renderType == FastKineticRenderer.getKineticRenderLayer()) {
+            int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
+            for (FastContraptionRenderer renderer : renderers.values()) {
+                renderer.setup(rotatingShader);
+                renderer.kinetics.renderRotating();
+                renderer.teardown();
+            }
 
-        int beltShader = ShaderHelper.useShader(Shader.CONTRAPTION_BELT, callback);
-        for (FastContraptionRenderer renderer : renderers.values()) {
-            renderer.setup(beltShader);
-            renderer.kinetics.renderBelts();
-            renderer.teardown();
+            int beltShader = ShaderHelper.useShader(Shader.CONTRAPTION_BELT, callback);
+            for (FastContraptionRenderer renderer : renderers.values()) {
+                renderer.setup(beltShader);
+                renderer.kinetics.renderBelts();
+                renderer.teardown();
+            }
         }
 
         ShaderHelper.releaseShader();
 
         GL11.glDisable(GL13.GL_TEXTURE_3D);
         FastKineticRenderer.teardown();
+        GL13.glActiveTexture(GL40.GL_TEXTURE0);
     }
 
     public static void removeDeadContraptions() {

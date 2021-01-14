@@ -8,7 +8,7 @@ in vec4 Color;
 out vec4 fragColor;
 
 layout(binding=0) uniform sampler2D BlockAtlas;
-layout(binding=1) uniform sampler2D LightMap;
+layout(binding=2) uniform sampler2D LightMap;
 
 vec4 light() {
     vec2 lm = Light * 0.9375 + 0.03125;

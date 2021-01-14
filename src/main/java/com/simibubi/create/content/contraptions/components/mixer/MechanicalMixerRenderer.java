@@ -5,9 +5,11 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,9 +33,6 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
-		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
-
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
@@ -52,4 +51,8 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 			.renderInto(ms, vb);
 	}
 
+	@Override
+	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
+		return AllBlockPartials.SHAFTLESS_COGWHEEL.renderOnRotating(ctx, ctx.te.getBlockState());
+	}
 }

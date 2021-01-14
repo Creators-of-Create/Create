@@ -5,11 +5,10 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.Iterate;
-
 import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -53,7 +52,6 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 			if (boxAxis != axis)
 				continue;
 
-
 			InstanceBuffer<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
 
 			shaft.setupInstance(data -> {
@@ -73,6 +71,21 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 					.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
 					.setTileEntity(te);
 			});
+		}
+	}
+
+	@Override
+	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
+		KineticTileEntity te = ctx.te;
+		Block block = te.getBlockState().getBlock();
+		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
+
+		for (Direction direction : Iterate.directions) {
+			Axis axis = direction.getAxis();
+			if (boxAxis != axis) continue;
+
+			InstanceBuffer<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
+			shaft.clearInstanceData();
 		}
 	}
 }

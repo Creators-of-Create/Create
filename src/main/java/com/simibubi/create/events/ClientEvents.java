@@ -24,6 +24,8 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -32,12 +34,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.render.FastContraptionRenderer;
-import com.simibubi.create.foundation.render.RenderWork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
@@ -74,13 +73,10 @@ public class ClientEvents {
 		if (event.phase == Phase.START)
 			return;
 
-		AnimationTickHolder.tick();
-
 		if (!isGameActive())
 			return;
 
-		CreateClient.kineticRenderer.tick();
-		FastContraptionRenderer.tick();
+		AnimationTickHolder.tick();
 
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
@@ -114,19 +110,12 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		CreateClient.invalidateRenderers();
+		AnimationTickHolder.ticks = 0;
 	}
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		Matrix4f projection = event.getProjectionMatrix();
-		// view matrix
 		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
-
-		Matrix4f view = Matrix4f.translate((float) -cameraPos.x, (float) -cameraPos.y, (float) -cameraPos.z);
-		view.multiplyBackward(event.getMatrixStack().peek().getModel());
-
-		CreateClient.kineticRenderer.renderInstancesAsWorld(projection, view);
-		FastContraptionRenderer.renderAll(projection, view);
 
 		MatrixStack ms = event.getMatrixStack();
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
@@ -143,6 +132,7 @@ public class ClientEvents {
 		ms.pop();
 
 		RenderWork.runAll();
+		FastRenderDispatcher.endFrame();
 	}
 
 	@SubscribeEvent

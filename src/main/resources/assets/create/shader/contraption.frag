@@ -8,7 +8,7 @@ in vec3 BoxCoord;
 out vec4 fragColor;
 
 layout(binding=0) uniform sampler2D BlockAtlas;
-layout(binding=1) uniform sampler2D LightMap;
+layout(binding=2) uniform sampler2D LightMap;
 layout(binding=4) uniform sampler3D LightVolume;
 
 vec4 light() {

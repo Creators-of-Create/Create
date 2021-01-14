@@ -26,9 +26,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.render.SuperByteBufferCache.PARTIAL;
@@ -37,12 +38,11 @@ public class FastKineticRenderer {
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, InstanceBuffer<RotatingData>>> rotating;
     Map<SuperByteBufferCache.Compartment<?>, Cache<Object, InstanceBuffer<BeltData>>> belts;
 
-    boolean rebuild;
+    public boolean dirty = false;
 
     public FastKineticRenderer() {
         rotating = new HashMap<>();
         belts = new HashMap<>();
-        registerCompartment(SuperByteBufferCache.GENERIC_TILE);
         registerCompartment(SuperByteBufferCache.PARTIAL);
         registerCompartment(SuperByteBufferCache.DIRECTIONAL_PARTIAL);
         registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
@@ -92,25 +92,6 @@ public class FastKineticRenderer {
         }
     }
 
-    public void tick() {
-        // TODO: (later) detect changes in lighting with a mixin (or forge hook) to ClientChunkProvider.markLightChanged()
-        for (Cache<Object, InstanceBuffer<RotatingData>> cache : rotating.values()) {
-            for (InstanceBuffer<RotatingData> renderer : cache.asMap().values()) {
-                renderer.clearInstanceData();
-            }
-        }
-
-        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
-            for (InstanceBuffer<BeltData> renderer : cache.asMap().values()) {
-                renderer.clearInstanceData();
-            }
-        }
-
-        //buildTileEntityBuffers(Minecraft.getInstance().world);
-
-        rebuild = true;
-    }
-
     void renderBelts() {
         for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
             for (InstanceBuffer<BeltData> type : cache.asMap().values()) {
@@ -131,15 +112,15 @@ public class FastKineticRenderer {
         }
     }
 
-    public void renderInstancesAsWorld(Matrix4f projection, Matrix4f view) {
-        GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-
-        if (rebuild) {
+    public void renderInstancesAsWorld(RenderType layer, Matrix4f projection, Matrix4f view) {
+        if (dirty) {
+            buildTileEntityBuffers(Minecraft.getInstance().world);
             markAllDirty();
-            rebuild = false;
+
+            dirty = false;
         }
 
-        setup(gameRenderer);
+        layer.startDrawing();
 
         ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projection, view);
 
@@ -151,7 +132,7 @@ public class FastKineticRenderer {
 
         ShaderHelper.releaseShader();
 
-        teardown();
+        layer.endDrawing();
     }
 
     public static void setup(GameRenderer gameRenderer) {
@@ -206,11 +187,6 @@ public class FastKineticRenderer {
         belts.put(instance, CacheBuilder.newBuilder().build());
     }
 
-    public void registerCompartment(SuperByteBufferCache.Compartment<?> instance, long ticksUntilExpired) {
-        rotating.put(instance, CacheBuilder.newBuilder().expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS).build());
-        belts.put(instance, CacheBuilder.newBuilder().expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS).build());
-    }
-
     public InstanceBuffer<RotatingData> renderPartialRotating(AllBlockPartials partial, BlockState referenceState) {
         return getRotating(PARTIAL, partial, () -> rotatingInstancedRenderer(partial.get(), referenceState));
     }
@@ -249,7 +225,6 @@ public class FastKineticRenderer {
         }
     }
 
-
     private InstanceBuffer<RotatingData> rotatingInstancedRenderer(BlockState renderedState) {
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         return rotatingInstancedRenderer(dispatcher.getModelForState(renderedState), renderedState);
@@ -285,5 +260,9 @@ public class FastKineticRenderer {
             cache.asMap().values().forEach(InstanceBuffer::delete);
             cache.invalidateAll();
         }
+    }
+
+    public static RenderType getKineticRenderLayer() {
+        return RenderType.getCutoutMipped();
     }
 }

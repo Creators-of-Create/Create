@@ -84,12 +84,11 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
     }
 
     public void clearInstanceData() {
-        instanceCount = 0;
         shouldBuild = true;
     }
 
     public void markDirty() {
-        rebuffer = true;
+        if (shouldBuild) rebuffer = true;
     }
 
     public void delete() {
@@ -140,7 +139,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
     }
 
     private void finishBuffering() {
-        if (!rebuffer || isEmpty()) return;
+        if (!rebuffer || data.isEmpty()) return;
 
         instanceCount = data.size();
 

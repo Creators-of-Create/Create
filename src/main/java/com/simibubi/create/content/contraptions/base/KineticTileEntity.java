@@ -1,12 +1,5 @@
 package com.simibubi.create.content.contraptions.base;
 
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
@@ -17,11 +10,11 @@ import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
@@ -36,6 +29,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -245,6 +244,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
+
+		if (clientPacket)
+			FastRenderDispatcher.markForRebuild(this);
 	}
 
 	public float getGeneratedSpeed() {

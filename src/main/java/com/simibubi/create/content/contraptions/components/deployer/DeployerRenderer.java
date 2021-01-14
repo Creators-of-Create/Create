@@ -1,8 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -11,24 +8,18 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
-
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
@@ -38,6 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> implements IInstancedTileEntityRenderer<DeployerTileEntity> {
 
@@ -57,6 +51,11 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	@Override
 	public void addInstanceData(InstanceContext<DeployerTileEntity> ctx) {
 		KineticTileEntityRenderer.renderRotatingKineticBlock(ctx, getRenderedBlockState(ctx.te));
+	}
+
+	@Override
+	public void markForRebuild(InstanceContext<DeployerTileEntity> ctx) {
+		KineticTileEntityRenderer.markForRebuild(ctx, getRenderedBlockState(ctx.te));
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

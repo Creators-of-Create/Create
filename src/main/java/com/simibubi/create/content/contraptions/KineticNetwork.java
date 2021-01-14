@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class KineticNetwork {
 

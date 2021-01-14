@@ -1,24 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
+import com.simibubi.create.content.contraptions.relays.belt.transport.*;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
-import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -26,7 +11,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -50,6 +34,17 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
+import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
+import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
+import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 public class BeltTileEntity extends KineticTileEntity {
 
@@ -471,4 +466,10 @@ public class BeltTileEntity extends KineticTileEntity {
 			.build();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		// Since only the controller does the item rendering, we potentially
+		// save a *lot* of time by not processing the other belts.
+		return isController();
+	}
 }

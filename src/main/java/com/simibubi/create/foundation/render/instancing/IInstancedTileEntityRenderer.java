@@ -4,5 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IInstancedTileEntityRenderer<T extends TileEntity> {
 
-    void addInstanceData(InstanceContext<T> te);
+    void addInstanceData(InstanceContext<T> ctx);
+
+    void markForRebuild(InstanceContext<T> ctx);
 }

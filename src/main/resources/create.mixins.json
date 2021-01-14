@@ -3,10 +3,7 @@
     "package": "com.simibubi.create.foundation.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
-    "client": [
-        "LightUpdateMixin",
-        "RenderInLayerMixin"
-    ],
+    "client": ["CancelTileEntityRenderMixin", "LightUpdateMixin", "OnRemoveTileMixin", "RenderInLayerMixin"],
     "injectors": {
         "defaultRequire": 1
     },

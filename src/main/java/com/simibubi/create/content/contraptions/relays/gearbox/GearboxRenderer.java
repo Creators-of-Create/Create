@@ -1,14 +1,15 @@
 package com.simibubi.create.content.contraptions.relays.gearbox;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.Iterate;
-
 import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -16,6 +17,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
+
+import java.util.List;
 
 public class GearboxRenderer extends KineticTileEntityRenderer {
 
@@ -32,7 +35,6 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 	@Override
 	public void addInstanceData(InstanceContext<KineticTileEntity> ctx) {
 		KineticTileEntity te = ctx.te;
-		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
 
 		int blockLight;
@@ -46,20 +48,16 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			skyLight = 0;
 		}
 
-		for (Direction direction : Iterate.directions) {
-			final Axis axis = direction.getAxis();
-			if (boxAxis == axis)
-				continue;
-
-			InstanceBuffer<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
-
-			shaft.setupInstance(data -> {
+		for (Pair<Direction, InstanceBuffer<RotatingData>> shaft : getBuffers(ctx)) {
+			shaft.getSecond().setupInstance(data -> {
 				float speed = te.getSpeed();
+				Direction direction = shaft.getFirst();
+				Axis axis = direction.getAxis();
 
 				if (te.getSpeed() != 0 && te.hasSource()) {
 					BlockPos source = te.source.subtract(te.getPos());
 					Direction sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
-					if (sourceFacing.getAxis() == direction.getAxis())
+					if (sourceFacing.getAxis() == axis)
 						speed *= sourceFacing == direction ? 1 : -1;
 					else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
 						speed *= -1;
@@ -73,5 +71,30 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 					.setTileEntity(te);
 			});
 		}
+	}
+
+	@Override
+	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
+		getBuffers(ctx).stream().map(Pair::getSecond).forEach(InstanceBuffer::clearInstanceData);
+	}
+
+	private List<Pair<Direction, InstanceBuffer<RotatingData>>> getBuffers(InstanceContext<KineticTileEntity> ctx) {
+		KineticTileEntity te = ctx.te;
+		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
+
+		List<Pair<Direction, InstanceBuffer<RotatingData>>> buffers = Lists.newArrayListWithCapacity(4);
+
+		for (Direction direction : Iterate.directions) {
+			final Axis axis = direction.getAxis();
+			if (boxAxis == axis)
+				continue;
+
+			InstanceBuffer<RotatingData> buffer = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
+			Pair<Direction, InstanceBuffer<RotatingData>> pair = Pair.of(direction, buffer);
+
+			buffers.add(pair);
+		}
+
+		return buffers;
 	}
 }

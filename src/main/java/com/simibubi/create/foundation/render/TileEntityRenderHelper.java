@@ -1,13 +1,9 @@
 package com.simibubi.create.foundation.render;
 
-import java.util.Iterator;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
@@ -20,6 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Iterator;
+
 public class TileEntityRenderHelper {
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
@@ -31,7 +29,7 @@ public class TileEntityRenderHelper {
 
 		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
 			TileEntity tileEntity = iterator.next();
-			if (tileEntity instanceof IInstanceRendered) continue; // TODO: some things still need to render
+			//if (tileEntity instanceof IInstanceRendered) continue; // TODO: some things still need to render
 
 			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
 			if (renderer == null) {

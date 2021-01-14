@@ -1,13 +1,10 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-
 import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
@@ -17,6 +14,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
+
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class EncasedFanRenderer extends KineticTileEntityRenderer {
 
@@ -84,5 +83,20 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 					.setSkyLight(skyLight);
 			}
 		});
+	}
+
+	@Override
+	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
+		KineticTileEntity te = ctx.te;
+		Direction direction = te.getBlockState()
+								.get(FACING);
+
+		InstanceBuffer<RotatingData> shaftHalf =
+				AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
+		InstanceBuffer<RotatingData> fanInner =
+				AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
+
+		shaftHalf.clearInstanceData();
+		fanInner.clearInstanceData();
 	}
 }

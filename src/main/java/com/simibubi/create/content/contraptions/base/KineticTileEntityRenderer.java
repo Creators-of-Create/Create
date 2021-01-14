@@ -4,13 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.render.instancing.*;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -45,7 +47,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 //			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
 //				renderRotatingBuffer(te, getRotatedModel(te));
 
-		addInstanceData(new InstanceContext.World<>(te));
+//		addInstanceData(new InstanceContext.World<>(te));
 	}
 
 	@Override
@@ -53,9 +55,18 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		renderRotatingBuffer(ctx, getRotatedModel(ctx));
 	}
 
+	@Override
+	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
+		getRotatedModel(ctx).clearInstanceData();
+	}
+
 	public static <T extends KineticTileEntity> void renderRotatingKineticBlock(InstanceContext<T> ctx, BlockState renderedState) {
 		InstanceBuffer<RotatingData> instancedRenderer = ctx.getKinetics().renderBlockInstanced(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(ctx, instancedRenderer);
+	}
+
+	public static <T extends KineticTileEntity> void markForRebuild(InstanceContext<T> ctx, BlockState renderedState) {
+		ctx.getKinetics().renderBlockInstanced(KINETIC_TILE, renderedState).clearInstanceData();
 	}
 
 	public static <T extends KineticTileEntity> void renderRotatingBuffer(InstanceContext<T> ctx, InstanceBuffer<RotatingData> instancer) {
