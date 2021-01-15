@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.render.SuperByteBufferCache.PARTIAL;
@@ -79,15 +80,25 @@ public class FastKineticRenderer {
      * guaranteed to be no race conditions with the render thread, i.e. when constructing a FastContraptionRenderer.
      */
     public void markAllDirty() {
+        runOnAll(InstanceBuffer::markDirty);
+    }
+
+    public void invalidate() {
+        runOnAll(InstanceBuffer::delete);
+        belts.values().forEach(Cache::invalidateAll);
+        rotating.values().forEach(Cache::invalidateAll);
+    }
+
+    private void runOnAll(Consumer<InstanceBuffer<?>> f) {
         for (Cache<Object, InstanceBuffer<RotatingData>> cache : rotating.values()) {
             for (InstanceBuffer<RotatingData> renderer : cache.asMap().values()) {
-                renderer.markDirty();
+                f.accept(renderer);
             }
         }
 
         for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
             for (InstanceBuffer<BeltData> renderer : cache.asMap().values()) {
-                renderer.markDirty();
+                f.accept(renderer);
             }
         }
     }
@@ -248,18 +259,6 @@ public class FastKineticRenderer {
         BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
 
         return new BeltBuffer(builder);
-    }
-
-    public void invalidate() {
-        for (Cache<Object, InstanceBuffer<RotatingData>> objectInstanceBufferCache : rotating.values()) {
-            objectInstanceBufferCache.asMap().values().forEach(InstanceBuffer::delete);
-            objectInstanceBufferCache.invalidateAll();
-        }
-
-        for (Cache<Object, InstanceBuffer<BeltData>> cache : belts.values()) {
-            cache.asMap().values().forEach(InstanceBuffer::delete);
-            cache.invalidateAll();
-        }
     }
 
     public static RenderType getKineticRenderLayer() {

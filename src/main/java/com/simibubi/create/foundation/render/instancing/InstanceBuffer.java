@@ -84,6 +84,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
     }
 
     public void clearInstanceData() {
+        instanceCount = 0;
         shouldBuild = true;
     }
 
