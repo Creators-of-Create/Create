@@ -55,8 +55,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	private int flickerTally;
 	private int networkSize;
 	private int validationCountdown;
-	private float lastStressApplied;
-	private float lastCapacityProvided;
+	protected float lastStressApplied;
+	protected float lastCapacityProvided;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
