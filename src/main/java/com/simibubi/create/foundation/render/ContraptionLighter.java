@@ -8,6 +8,10 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.*;
 
+import java.nio.ByteBuffer;
+
+import static com.simibubi.create.foundation.render.RenderMath.nextPowerOf2;
+
 public class ContraptionLighter {
 
     private int minX;
@@ -43,11 +47,6 @@ public class ContraptionLighter {
         lightVolume = new SafeDirectBuffer(sizeX * sizeY * sizeZ * 2);
 
         update(contraption);
-    }
-
-    public static int nextPowerOf2(int a)  {
-        int h = Integer.highestOneBit(a);
-        return (h == a) ? h : (h << 1);
     }
 
     public int getSizeX() {

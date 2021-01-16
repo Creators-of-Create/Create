@@ -12,10 +12,10 @@ public class VertexAttribute {
 
     public static final VertexAttribute POSITION = VEC3;
     public static final VertexAttribute NORMAL = new VertexAttribute(VertexFormatElement.Type.BYTE, 3, true);
-    public static final VertexAttribute RGBA = new VertexAttribute(VertexFormatElement.Type.BYTE, 4, true);
-    public static final VertexAttribute RGB = new VertexAttribute(VertexFormatElement.Type.BYTE, 3, true);
+    public static final VertexAttribute RGBA = new VertexAttribute(VertexFormatElement.Type.UBYTE, 4, true);
+    public static final VertexAttribute RGB = new VertexAttribute(VertexFormatElement.Type.UBYTE, 3, true);
     public static final VertexAttribute UV = VEC2;
-    public static final VertexAttribute LIGHT = new VertexAttribute(VertexFormatElement.Type.FLOAT, 2);
+    public static final VertexAttribute LIGHT = new VertexAttribute(VertexFormatElement.Type.UBYTE, 2, true);
 
     private final VertexFormatElement.Type type;
     private final int count;

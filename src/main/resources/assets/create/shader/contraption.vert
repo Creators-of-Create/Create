@@ -43,8 +43,8 @@ void main() {
     vec4 worldPos = model * vec4(aPos, 1);
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(model * vec4(aNormal, 0.)).xyz);
-    Color = vec4(1);//aColor;
+    Diffuse = diffuse((model * vec4(aNormal, 0.)).xyz);
+    Color = aColor / diffuse(aNormal);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
 }

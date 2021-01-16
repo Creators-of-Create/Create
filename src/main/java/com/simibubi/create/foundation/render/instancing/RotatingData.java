@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.Vector3f;
+
+import java.nio.ByteBuffer;
 
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
@@ -39,10 +40,10 @@ public class RotatingData extends BasicData<RotatingData> {
     }
 
     @Override
-    public void write(SafeDirectBuffer buf) {
+    public void write(ByteBuffer buf) {
         super.write(buf);
-        putFloat(buf, rotationalSpeed);
-        putFloat(buf, rotationOffset);
+        put(buf, rotationalSpeed);
+        put(buf, rotationOffset);
 
         putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
     }

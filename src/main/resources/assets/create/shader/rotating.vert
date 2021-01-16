@@ -49,13 +49,17 @@ void main() {
 
     renderPos += vec4(instancePos + vec3(0.5), 0);
 
-    Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
+    vec3 norm = (rotation * vec4(aNormal, 0.)).xyz;
+
+    Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     gl_Position = projection * view * renderPos;
     Light = light;
 
     if (debug == 1) {
         Color = vec4(networkTint, 1);
+    } else if (debug == 2) {
+        Color = vec4(norm, 1);
     } else {
         Color = vec4(1);
     }

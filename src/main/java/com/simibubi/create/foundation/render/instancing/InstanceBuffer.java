@@ -2,12 +2,14 @@ package com.simibubi.create.foundation.render.instancing;
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import com.simibubi.create.foundation.render.TemplateBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -18,13 +20,15 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
 
     protected int vao, ebo, invariantVBO, instanceVBO, instanceCount;
 
+    protected int bufferSize = -1;
+
     protected final ArrayList<D> data = new ArrayList<>();
     protected boolean rebuffer = false;
     protected boolean shouldBuild = true;
 
     public InstanceBuffer(BufferBuilder buf) {
         super(buf);
-        setup();
+        if (vertexCount > 0) setup();
     }
 
     private void setup() {
@@ -37,35 +41,33 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
         invariantVBO = GlStateManager.genBuffers();
         instanceVBO = GlStateManager.genBuffers();
 
-        try (SafeDirectBuffer constant = new SafeDirectBuffer(invariantSize)) {
-            constant.order(template.order());
-            constant.limit(invariantSize);
+        GL30.glBindVertexArray(vao);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, invariantVBO);
 
-            for (int i = 0; i < vertexCount; i++) {
-                constant.putFloat(getX(template, i));
-                constant.putFloat(getY(template, i));
-                constant.putFloat(getZ(template, i));
+        // allocate the buffer on the gpu
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
-                constant.put(getNX(template, i));
-                constant.put(getNY(template, i));
-                constant.put(getNZ(template, i));
+        // mirror it in system memory so we can write to it
+        ByteBuffer constant = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
 
-                constant.putFloat(getU(template, i));
-                constant.putFloat(getV(template, i));
-            }
-            constant.rewind();
+        for (int i = 0; i < vertexCount; i++) {
+            constant.putFloat(getX(template, i));
+            constant.putFloat(getY(template, i));
+            constant.putFloat(getZ(template, i));
 
-            GL30.glBindVertexArray(vao);
+            constant.put(getNX(template, i));
+            constant.put(getNY(template, i));
+            constant.put(getNZ(template, i));
 
-            GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, invariantVBO);
-            GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, constant.getBacking(), GL15.GL_STATIC_DRAW);
-
-            buildEBO(ebo);
-
-            FORMAT.informAttributes(0);
-        } catch (Exception e) {
-            delete();
+            constant.putFloat(getU(template, i));
+            constant.putFloat(getV(template, i));
         }
+        constant.rewind();
+        GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+
+        buildEBO(ebo);
+
+        FORMAT.informAttributes(0);
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -93,16 +95,19 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
     }
 
     public void delete() {
-        RenderWork.enqueue(() -> {
-            GL15.glDeleteBuffers(invariantVBO);
-            GL15.glDeleteBuffers(instanceVBO);
-            GL15.glDeleteBuffers(ebo);
-            GL30.glDeleteVertexArrays(vao);
-            vao = 0;
-            ebo = 0;
-            invariantVBO = 0;
-            instanceVBO = 0;
-        });
+        if (vertexCount > 0) {
+            RenderWork.enqueue(() -> {
+                GL15.glDeleteBuffers(invariantVBO);
+                GL15.glDeleteBuffers(instanceVBO);
+                GL15.glDeleteBuffers(ebo);
+                GL30.glDeleteVertexArrays(vao);
+                vao = 0;
+                ebo = 0;
+                invariantVBO = 0;
+                instanceVBO = 0;
+                bufferSize = -1;
+            });
+        }
     }
 
     protected abstract D newInstance();
@@ -146,26 +151,27 @@ public abstract class InstanceBuffer<D extends InstanceData> extends TemplateBuf
 
         VertexFormat instanceFormat = getInstanceFormat();
 
-        int instanceSize = instanceCount * instanceFormat.getStride();
+        int instanceSize = RenderMath.nextPowerOf2(instanceCount * instanceFormat.getStride());
 
-        try (SafeDirectBuffer buffer = new SafeDirectBuffer(instanceSize)) {
-            buffer.order(template.order());
-            buffer.limit(instanceSize);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, instanceVBO);
 
-            data.forEach(instanceData -> instanceData.write(buffer));
-            buffer.rewind();
+        // this changes enough that it's not worth reallocating the entire buffer every time.
+        if (instanceSize > bufferSize) {
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, instanceSize, GL15.GL_STATIC_DRAW);
+            bufferSize = instanceSize;
+        }
 
-            GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, instanceVBO);
-            GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, buffer.getBacking(), GL15.GL_STATIC_DRAW);
+        ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
 
-            int staticAttributes = FORMAT.getNumAttributes();
-            instanceFormat.informAttributes(staticAttributes);
+        data.forEach(instanceData -> instanceData.write(buffer));
+        buffer.rewind();
+        GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
 
-            for (int i = 0; i < instanceFormat.getNumAttributes(); i++) {
-                GL33.glVertexAttribDivisor(i + staticAttributes, 1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        int staticAttributes = FORMAT.getNumAttributes();
+        instanceFormat.informAttributes(staticAttributes);
+
+        for (int i = 0; i < instanceFormat.getNumAttributes(); i++) {
+            GL33.glVertexAttribDivisor(i + staticAttributes, 1);
         }
 
         // Deselect (bind to 0) the VBO

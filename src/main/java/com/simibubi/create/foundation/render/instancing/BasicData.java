@@ -2,9 +2,10 @@ package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
+
+import java.nio.ByteBuffer;
 
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
@@ -17,16 +18,16 @@ public class BasicData<D extends BasicData<D>> extends InstanceData {
     private float x;
     private float y;
     private float z;
-    private float blockLight;
-    private float skyLight;
+    private byte blockLight;
+    private byte skyLight;
 
     public D setBlockLight(int blockLight) {
-        this.blockLight = blockLight / 15f;
+        this.blockLight = (byte) ((blockLight & 0xF) << 4);
         return (D) this;
     }
 
     public D setSkyLight(int skyLight) {
-        this.skyLight = skyLight / 15f;
+        this.skyLight = (byte) ((skyLight & 0xF) << 4);
         return (D) this;
     }
 
@@ -61,10 +62,8 @@ public class BasicData<D extends BasicData<D>> extends InstanceData {
     }
 
     @Override
-    public void write(SafeDirectBuffer buf) {
-        buf.put(r);
-        buf.put(g);
-        buf.put(b);
+    public void write(ByteBuffer buf) {
+        putVec3(buf, r, g, b);
 
         putVec3(buf, x, y, z);
 

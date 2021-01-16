@@ -32,20 +32,20 @@ public class TemplateBuffer {
         ((Buffer)template).rewind();
     }
 
-    protected void buildEBO(int ebo) throws Exception {
+    protected void buildEBO(int ebo){
         int indicesSize = vertexCount * VertexFormatElement.Type.USHORT.getSize();
-        try (SafeDirectBuffer indices = new SafeDirectBuffer(indicesSize)) {
-            indices.order(template.order());
-            indices.limit(indicesSize);
 
-            for (int i = 0; i < vertexCount; i++) {
-                indices.putShort((short) i);
-            }
-            indices.rewind();
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
 
-            GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
-            GlStateManager.bufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices.getBacking(), GL15.GL_STATIC_DRAW);
+        ByteBuffer indices = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
+
+        for (int i = 0; i < vertexCount; i++) {
+            indices.putShort((short) i);
         }
+        indices.rewind();
+
+        GL15.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
     }
 
     public boolean isEmpty() {

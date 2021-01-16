@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
+import java.nio.ByteBuffer;
+
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class ContraptionBuffer extends TemplateBuffer {
@@ -15,19 +17,21 @@ public class ContraptionBuffer extends TemplateBuffer {
 
     public ContraptionBuffer(BufferBuilder buf) {
         super(buf);
-        setup();
+        if (vertexCount > 0) setup();
     }
 
     public void delete() {
-        RenderWork.enqueue(() -> {
-            GL15.glDeleteBuffers(vbo);
-            GL15.glDeleteBuffers(ebo);
-            GL30.glDeleteVertexArrays(vao);
-        });
+        if (vertexCount > 0) {
+            RenderWork.enqueue(() -> {
+                GL15.glDeleteBuffers(vbo);
+                GL15.glDeleteBuffers(ebo);
+                GL30.glDeleteVertexArrays(vao);
+            });
+        }
     }
 
     public void render() {
-
+        if (vertexCount == 0) return;
         GL30.glBindVertexArray(vao);
 
         for (int i = 0; i <= 3; i++) {
@@ -54,39 +58,38 @@ public class ContraptionBuffer extends TemplateBuffer {
         ebo = GlStateManager.genBuffers();
         vbo = GlStateManager.genBuffers();
 
-        try (SafeDirectBuffer constant = new SafeDirectBuffer(invariantSize)) {
-            constant.order(template.order());
-            constant.limit(invariantSize);
+        GL30.glBindVertexArray(vao);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 
-            for (int i = 0; i < vertexCount; i++) {
-                constant.putFloat(getX(template, i));
-                constant.putFloat(getY(template, i));
-                constant.putFloat(getZ(template, i));
+        // allocate the buffer on the gpu
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
-                constant.put(getNX(template, i));
-                constant.put(getNY(template, i));
-                constant.put(getNZ(template, i));
+        // mirror it in system memory so we can write to it
+        ByteBuffer constant = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
 
-                constant.putFloat(getU(template, i));
-                constant.putFloat(getV(template, i));
+        for (int i = 0; i < vertexCount; i++) {
+            constant.putFloat(getX(template, i));
+            constant.putFloat(getY(template, i));
+            constant.putFloat(getZ(template, i));
 
-                constant.put(getR(template, i));
-                constant.put(getG(template, i));
-                constant.put(getB(template, i));
-                constant.put(getA(template, i));
-            }
-            constant.rewind();
+            constant.put(getNX(template, i));
+            constant.put(getNY(template, i));
+            constant.put(getNZ(template, i));
 
-            GL30.glBindVertexArray(vao);
+            constant.putFloat(getU(template, i));
+            constant.putFloat(getV(template, i));
 
-            GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, vbo);
-            GlStateManager.bufferData(GL15.GL_ARRAY_BUFFER, constant.getBacking(), GL15.GL_STATIC_DRAW);
-            buildEBO(ebo);
-
-            FORMAT.informAttributes(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+            constant.put(getR(template, i));
+            constant.put(getG(template, i));
+            constant.put(getB(template, i));
+            constant.put(getA(template, i));
         }
+        constant.rewind();
+        GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+
+        buildEBO(ebo);
+
+        FORMAT.informAttributes(0);
 
         GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
         GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
