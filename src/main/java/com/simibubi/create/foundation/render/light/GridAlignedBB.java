@@ -3,14 +3,11 @@ package com.simibubi.create.foundation.render.light;
 import com.simibubi.create.foundation.render.RenderMath;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.LightType;
-
-import java.util.function.IntFunction;
 
 import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
+import static com.simibubi.create.foundation.render.RenderMath.rotateSideLength;
 
 public class GridAlignedBB {
     public int minX;
@@ -94,11 +91,11 @@ public class GridAlignedBB {
 
     public void rotate45(Direction.Axis axis) {
         if (axis == Direction.Axis.X) {
-            this.grow(0, RenderMath.timesSqrt2(sizeY()), RenderMath.timesSqrt2(sizeZ()));
+            this.grow(0, rotateSideLength(sizeY()), rotateSideLength(sizeZ()));
         } else if (axis == Direction.Axis.Y) {
-            this.grow(RenderMath.timesSqrt2(sizeX()), 0, RenderMath.timesSqrt2(sizeZ()));
+            this.grow(rotateSideLength(sizeX()), 0, rotateSideLength(sizeZ()));
         } else if (axis == Direction.Axis.Z) {
-            this.grow(RenderMath.timesSqrt2(sizeX()), RenderMath.timesSqrt2(sizeY()), 0);
+            this.grow(rotateSideLength(sizeX()), rotateSideLength(sizeY()), 0);
         }
     }
 
