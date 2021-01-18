@@ -2,17 +2,33 @@ package com.simibubi.create.foundation.render.light;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.RenderedContraption;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
-import com.simibubi.create.foundation.utility.outliner.Outline;
+
+import java.util.ArrayList;
 
 public class LightVolumeDebugger {
     public static void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
         ContraptionRenderDispatcher.renderers.values()
                                              .stream()
-                                             .map(r -> r.getLighter().lightVolume.getBox())
-                                             .map(volume -> new AABBOutline(GridAlignedBB.toAABB(volume)))
+                                             .flatMap(r -> {
+                                                 GridAlignedBB texture = r.getLighter().lightVolume.getTextureVolume();
+                                                 GridAlignedBB sample = r.getLighter().lightVolume.getSampleVolume();
+
+                                                 ArrayList<Pair<GridAlignedBB, Integer>> pairs = new ArrayList<>(2);
+
+                                                 pairs.add(Pair.of(texture, 0xFFFFFF));
+                                                 pairs.add(Pair.of(sample, 0xFFFF00));
+
+                                                 return pairs.stream();
+                                             })
+                                             .map(pair -> {
+                                                 AABBOutline outline = new AABBOutline(GridAlignedBB.toAABB(pair.getFirst()));
+
+                                                 outline.getParams().colored(pair.getSecond());
+                                                 return outline;
+                                             })
                                              .forEach(outline -> outline.render(ms, buffer));
     }
 }

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.light;
 
 import com.simibubi.create.foundation.render.RenderMath;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
@@ -79,12 +80,26 @@ public class GridAlignedBB {
     }
 
     public void translate(Vec3i by) {
-        this.minX += by.getX();
-        this.minY += by.getY();
-        this.minZ += by.getZ();
-        this.maxX += by.getX();
-        this.maxY += by.getY();
-        this.maxZ += by.getZ();
+        translate(by.getX(), by.getY(), by.getZ());
+    }
+
+    public void translate(int x, int y, int z) {
+        minX += x;
+        maxX += x;
+        minY += y;
+        maxY += y;
+        minZ += z;
+        maxZ += z;
+    }
+
+    public void rotate45(Direction.Axis axis) {
+        if (axis == Direction.Axis.X) {
+            this.grow(0, RenderMath.timesSqrt2(sizeY()), RenderMath.timesSqrt2(sizeZ()));
+        } else if (axis == Direction.Axis.Y) {
+            this.grow(RenderMath.timesSqrt2(sizeX()), 0, RenderMath.timesSqrt2(sizeZ()));
+        } else if (axis == Direction.Axis.Z) {
+            this.grow(RenderMath.timesSqrt2(sizeX()), RenderMath.timesSqrt2(sizeY()), 0);
+        }
     }
 
     /**
@@ -103,12 +118,12 @@ public class GridAlignedBB {
         int diffY = newSizeY - sizeY;
         int diffZ = newSizeZ - sizeZ;
 
-        this.minX -= diffX / 2; // floor division for the minimums
-        this.minY -= diffY / 2;
-        this.minZ -= diffZ / 2;
-        this.maxX += (diffX + 1) / 2; // ceiling divison for the maximums
-        this.maxY += (diffY + 1) / 2;
-        this.maxZ += (diffZ + 1) / 2;
+        minX -= diffX / 2; // floor division for the minimums
+        minY -= diffY / 2;
+        minZ -= diffZ / 2;
+        maxX += (diffX + 1) / 2; // ceiling divison for the maximums
+        maxY += (diffY + 1) / 2;
+        maxZ += (diffZ + 1) / 2;
     }
 
     /**
@@ -134,12 +149,12 @@ public class GridAlignedBB {
     }
 
     public void grow(int x, int y, int z) {
-        this.minX -= x;
-        this.minY -= y;
-        this.minZ -= z;
-        this.maxX += x;
-        this.maxY += y;
-        this.maxZ += z;
+        minX -= x;
+        minY -= y;
+        minZ -= z;
+        maxX += x;
+        maxY += y;
+        maxZ += z;
     }
 
     public GridAlignedBB intersect(GridAlignedBB other) {

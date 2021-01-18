@@ -4,7 +4,6 @@ package com.simibubi.create.foundation.render.instancing;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.RenderWork;
-import com.simibubi.create.foundation.render.SafeDirectBuffer;
 import com.simibubi.create.foundation.render.TemplateBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;

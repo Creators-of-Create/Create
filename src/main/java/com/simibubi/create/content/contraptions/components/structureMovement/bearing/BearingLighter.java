@@ -13,6 +13,7 @@ public class BearingLighter extends ContraptionLighter<BearingContraption> {
     @Override
     public GridAlignedBB getContraptionBounds() {
         GridAlignedBB localBounds = GridAlignedBB.fromAABB(contraption.bounds);
+        localBounds.rotate45(contraption.getFacing().getAxis());
         localBounds.translate(contraption.anchor);
         return localBounds;
     }

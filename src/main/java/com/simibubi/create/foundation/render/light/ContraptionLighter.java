@@ -16,9 +16,10 @@ public abstract class ContraptionLighter<C extends Contraption> {
 
         GridAlignedBB bounds = getContraptionBounds();
         bounds.grow(1); // so we have at least enough data on the edges to avoid artifacts
+        GridAlignedBB importantArea = GridAlignedBB.copy(bounds);
         bounds.nextPowerOf2Centered();
 
-        lightVolume = new LightVolume(bounds);
+        lightVolume = new LightVolume(bounds, importantArea);
 
         lightVolume.initialize(contraption.entity.world);
     }

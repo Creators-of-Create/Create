@@ -11,11 +11,14 @@ import net.minecraft.world.World;
 
 public class StabilizedContraption extends Contraption {
 
+	public Contraption parent;
+
 	private Direction facing;
 
 	public StabilizedContraption() {}
 
-	public StabilizedContraption(Direction facing) {
+	public StabilizedContraption(Contraption parent, Direction facing) {
+		this.parent = parent;
 		this.facing = facing;
 	}
 

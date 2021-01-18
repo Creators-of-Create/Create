@@ -10,70 +10,80 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
+// TODO: Don't immediately destroy light volumes.
+//  There's a high chance that a contraption will stop and soon after start again.
+//  By caching lightvolumes based on their volumes/locations, we can save having
+//  to reread all the lighting data in those cases.
 public class LightVolume {
 
-    private final GridAlignedBB volume;
+    private final GridAlignedBB sampleVolume;
+    private final GridAlignedBB textureVolume;
     private ByteBuffer lightData;
 
     private boolean bufferDirty;
 
     private int glTexture;
 
-    public LightVolume(GridAlignedBB volume) {
+    public LightVolume(GridAlignedBB textureVolume, GridAlignedBB sampleVolume) {
         // the gpu requires that all textures have power of 2 side lengths
-        if (!volume.hasPowerOf2Sides())
+        if (!textureVolume.hasPowerOf2Sides())
             throw new IllegalArgumentException("LightVolume must have power of 2 side lengths");
 
-        this.volume = volume;
+        this.textureVolume = textureVolume;
+        this.sampleVolume = sampleVolume;
 
         this.glTexture = GL11.glGenTextures();
-        this.lightData = MemoryUtil.memAlloc(this.volume.volume() * 2); // TODO: maybe figure out how to pack light coords into a single byte
+        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: maybe figure out how to pack light coords into a single byte
     }
 
-    public GridAlignedBB getBox() {
-        return GridAlignedBB.copy(volume);
+    public GridAlignedBB getTextureVolume() {
+        return GridAlignedBB.copy(textureVolume);
+    }
+
+    public GridAlignedBB getSampleVolume() {
+        return GridAlignedBB.copy(sampleVolume);
     }
 
     public int getMinX() {
-        return volume.minX;
+        return textureVolume.minX;
     }
 
     public int getMinY() {
-        return volume.minY;
+        return textureVolume.minY;
     }
 
     public int getMinZ() {
-        return volume.minZ;
+        return textureVolume.minZ;
     }
 
     public int getMaxX() {
-        return volume.maxX;
+        return textureVolume.maxX;
     }
 
     public int getMaxY() {
-        return volume.maxY;
+        return textureVolume.maxY;
     }
 
     public int getMaxZ() {
-        return volume.maxZ;
+        return textureVolume.maxZ;
     }
 
     public int getSizeX() {
-        return volume.sizeX();
+        return textureVolume.sizeX();
     }
 
     public int getSizeY() {
-        return volume.sizeY();
+        return textureVolume.sizeY();
     }
 
     public int getSizeZ() {
-        return volume.sizeZ();
+        return textureVolume.sizeZ();
     }
 
 
     public void notifyLightUpdate(ILightReader world, LightType type, SectionPos location) {
         GridAlignedBB changedVolume = GridAlignedBB.fromSection(location);
-        changedVolume.intersectAssign(volume); // compute the region contained by us that has dirty lighting data.
+        changedVolume.intersectAssign(sampleVolume); // compute the region contained by us that has dirty lighting data.
 
         if (!changedVolume.empty()) {
             if (type == LightType.BLOCK) copyBlock(world, changedVolume);
@@ -88,11 +98,11 @@ public class LightVolume {
     public void initialize(ILightReader world) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        int shiftX = volume.minX;
-        int shiftY = volume.minY;
-        int shiftZ = volume.minZ;
+        int shiftX = textureVolume.minX;
+        int shiftY = textureVolume.minY;
+        int shiftZ = textureVolume.minZ;
 
-        volume.forEachContained((x, y, z) -> {
+        textureVolume.forEachContained((x, y, z) -> {
             pos.setPos(x, y, z);
 
             int blockLight = world.getLightLevel(LightType.BLOCK, pos);
@@ -111,9 +121,9 @@ public class LightVolume {
     public void copyBlock(ILightReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        int xShift = volume.minX;
-        int yShift = volume.minY;
-        int zShift = volume.minZ;
+        int xShift = textureVolume.minX;
+        int yShift = textureVolume.minY;
+        int zShift = textureVolume.minZ;
 
         worldVolume.forEachContained((x, y, z) -> {
             pos.setPos(x, y, z);
@@ -133,9 +143,9 @@ public class LightVolume {
     public void copySky(ILightReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
-        int xShift = volume.minX;
-        int yShift = volume.minY;
-        int zShift = volume.minZ;
+        int xShift = textureVolume.minX;
+        int yShift = textureVolume.minY;
+        int zShift = textureVolume.minZ;
 
         worldVolume.forEachContained((x, y, z) -> {
             pos.setPos(x, y, z);
@@ -159,7 +169,7 @@ public class LightVolume {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
         if (bufferDirty) {
-            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, volume.sizeX(), volume.sizeY(), volume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
             bufferDirty = false;
         }
     }
@@ -199,6 +209,6 @@ public class LightVolume {
     }
 
     private int index(int x, int y, int z) {
-        return (x + volume.sizeX() * (y + z * volume.sizeY())) * 2;
+        return (x + textureVolume.sizeX() * (y + z * textureVolume.sizeY())) * 2;
     }
 }

@@ -126,7 +126,7 @@ public class ClientEvents {
 		CouplingRenderer.renderAll(ms, buffer);
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
-		LightVolumeDebugger.render(ms, buffer);
+//		LightVolumeDebugger.render(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 
