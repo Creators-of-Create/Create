@@ -16,7 +16,8 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.RenderedContraption;
 import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
@@ -182,6 +183,6 @@ public class CreateClient {
 	public static void invalidateRenderers() {
 		CreateClient.bufferCache.invalidate();
 		CreateClient.kineticRenderer.invalidate();
-		FastContraptionRenderer.invalidateAll();
+		ContraptionRenderDispatcher.invalidateAll();
 	}
 }

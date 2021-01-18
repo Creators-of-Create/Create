@@ -55,13 +55,17 @@ void main() {
 
     float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
 
-    Diffuse = diffuse(normalize((rotation * vec4(aNormal, 0.)).xyz));
+    vec3 norm = (rotation * vec4(aNormal, 0.)).xyz;
+
+    Diffuse = diffuse(norm);
     Light = light;
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
     gl_Position = projection * view * renderPos;
 
     if (debug == 1) {
         Color = vec4(networkTint, 1);
+    } else if (debug == 2) {
+        Color = vec4(norm, 1);
     } else {
         Color = vec4(1);
     }

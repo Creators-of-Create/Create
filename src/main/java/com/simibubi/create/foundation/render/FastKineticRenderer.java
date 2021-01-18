@@ -70,7 +70,7 @@ public class FastKineticRenderer {
         renderer.addInstanceData(new InstanceContext.World<>(te));
     }
 
-    <T extends TileEntity> void addInstancedData(FastContraptionRenderer c, T te, IInstancedTileEntityRenderer<T> renderer) {
+    <T extends TileEntity> void addInstancedData(RenderedContraption c, T te, IInstancedTileEntityRenderer<T> renderer) {
         renderer.addInstanceData(new InstanceContext.Contraption<>(te, c));
     }
 
@@ -87,6 +87,7 @@ public class FastKineticRenderer {
         runOnAll(InstanceBuffer::delete);
         belts.values().forEach(Cache::invalidateAll);
         rotating.values().forEach(Cache::invalidateAll);
+        dirty = true;
     }
 
     private void runOnAll(Consumer<InstanceBuffer<?>> f) {

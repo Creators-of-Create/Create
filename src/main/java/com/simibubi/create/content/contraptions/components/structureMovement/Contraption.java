@@ -18,6 +18,10 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.foundation.render.light.EmptyLighter;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -954,6 +958,11 @@ public abstract class Contraption {
 		MountedFluidStorage mountedFluidStorage = fluidStorage.get(localPos);
 		if (mountedFluidStorage != null)
 			mountedFluidStorage.updateFluid(containedFluid);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public ContraptionLighter<?> makeLighter() {
+		return new EmptyLighter(this);
 	}
 
 }

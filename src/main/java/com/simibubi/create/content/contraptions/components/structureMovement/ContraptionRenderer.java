@@ -84,7 +84,7 @@ public class ContraptionRenderer {
 		return new SuperByteBuffer(builder);
 	}
 
-	protected static BufferBuilder buildStructure(Contraption c, RenderType layer) {
+	public static BufferBuilder buildStructure(Contraption c, RenderType layer) {
 		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 

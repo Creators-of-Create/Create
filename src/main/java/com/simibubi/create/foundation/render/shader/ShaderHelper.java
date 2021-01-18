@@ -13,6 +13,8 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.MemoryUtil;
@@ -41,11 +43,13 @@ public class ShaderHelper {
         if (Minecraft.getInstance() != null
                 && Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
             ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(
-                    (IResourceManagerReloadListener) manager -> {
-                        PROGRAMS.values().forEach(ShaderLinkHelper::deleteShader);
-                        PROGRAMS.clear();
-                        for (Shader shader : Shader.values()) {
-                            createProgram(manager, shader);
+                    (ISelectiveResourceReloadListener) (manager, predicate) -> {
+                        if (predicate.test(VanillaResourceType.SHADERS)) {
+                            PROGRAMS.values().forEach(ShaderLinkHelper::deleteShader);
+                            PROGRAMS.clear();
+                            for (Shader shader : Shader.values()) {
+                                createProgram(manager, shader);
+                            }
                         }
                     });
         }

@@ -19,6 +19,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.SectionPos;
+import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.chunk.Chunk;
 
@@ -42,11 +43,11 @@ public class FastRenderDispatcher {
             CreateClient.kineticRenderer.renderInstancesAsWorld(type, projection, view);
         }
 
-        FastContraptionRenderer.renderLayer(type, projection, view);
+        ContraptionRenderDispatcher.renderLayer(type, projection, view);
     }
 
     public static void notifyLightUpdate(ClientChunkProvider world, LightType type, SectionPos pos) {
-        FastContraptionRenderer.tick();
+        ContraptionRenderDispatcher.notifyLightUpdate((ILightReader) world.getWorld(), type, pos);
 
         Chunk chunk = world.getChunk(pos.getSectionX(), pos.getSectionZ(), false);
 

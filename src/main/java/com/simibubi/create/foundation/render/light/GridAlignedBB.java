@@ -1,0 +1,203 @@
+package com.simibubi.create.foundation.render.light;
+
+import com.simibubi.create.foundation.render.RenderMath;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.LightType;
+
+import java.util.function.IntFunction;
+
+import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
+
+public class GridAlignedBB {
+    public int minX;
+    public int minY;
+    public int minZ;
+    public int maxX;
+    public int maxY;
+    public int maxZ;
+
+    public GridAlignedBB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+    }
+
+    public static GridAlignedBB copy(GridAlignedBB bb) {
+        return new GridAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+    }
+
+    public static GridAlignedBB fromAABB(AxisAlignedBB aabb) {
+        int minX = (int) Math.floor(aabb.minX);
+        int minY = (int) Math.floor(aabb.minY);
+        int minZ = (int) Math.floor(aabb.minZ);
+        int maxX = (int) Math.ceil(aabb.maxX);
+        int maxY = (int) Math.ceil(aabb.maxY);
+        int maxZ = (int) Math.ceil(aabb.maxZ);
+        return new GridAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public static GridAlignedBB fromSection(SectionPos pos) {
+        return new GridAlignedBB(pos.getWorldStartX(),
+                                 pos.getWorldStartY(),
+                                 pos.getWorldStartZ(),
+                                 pos.getWorldEndX() + 1,
+                                 pos.getWorldEndY() + 1,
+                                 pos.getWorldEndZ() + 1);
+    }
+
+    public static AxisAlignedBB toAABB(GridAlignedBB bb) {
+        return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+    }
+
+    public int sizeX() {
+        return maxX - minX;
+    }
+
+    public int sizeY() {
+        return maxY - minY;
+    }
+
+    public int sizeZ() {
+        return maxZ - minZ;
+    }
+
+    public int volume() {
+        return sizeX() * sizeY() * sizeZ();
+    }
+
+    public boolean empty() {
+        // if any dimension has side length 0 this box contains no volume
+        return  minX == maxX ||
+                minY == maxY ||
+                minZ == maxZ;
+    }
+
+    public void translate(Vec3i by) {
+        this.minX += by.getX();
+        this.minY += by.getY();
+        this.minZ += by.getZ();
+        this.maxX += by.getX();
+        this.maxY += by.getY();
+        this.maxZ += by.getZ();
+    }
+
+    /**
+     * Grow this bounding box to have power of 2 side length, scaling from the center.
+     */
+    public void nextPowerOf2Centered() {
+        int sizeX = sizeX();
+        int sizeY = sizeY();
+        int sizeZ = sizeZ();
+
+        int newSizeX = RenderMath.nextPowerOf2(sizeX);
+        int newSizeY = RenderMath.nextPowerOf2(sizeY);
+        int newSizeZ = RenderMath.nextPowerOf2(sizeZ);
+
+        int diffX = newSizeX - sizeX;
+        int diffY = newSizeY - sizeY;
+        int diffZ = newSizeZ - sizeZ;
+
+        this.minX -= diffX / 2; // floor division for the minimums
+        this.minY -= diffY / 2;
+        this.minZ -= diffZ / 2;
+        this.maxX += (diffX + 1) / 2; // ceiling divison for the maximums
+        this.maxY += (diffY + 1) / 2;
+        this.maxZ += (diffZ + 1) / 2;
+    }
+
+    /**
+     * Grow this bounding box to have power of 2 side lengths, scaling from the minimum coords.
+     */
+    public void nextPowerOf2() {
+        int sizeX = RenderMath.nextPowerOf2(sizeX());
+        int sizeY = RenderMath.nextPowerOf2(sizeY());
+        int sizeZ = RenderMath.nextPowerOf2(sizeZ());
+
+        this.maxX = this.minX + sizeX;
+        this.maxY = this.minY + sizeY;
+        this.maxZ = this.minZ + sizeZ;
+    }
+
+    public boolean hasPowerOf2Sides() {
+        // this is only true if all individual side lengths are powers of 2
+        return isPowerOf2(volume());
+    }
+
+    public void grow(int s) {
+        this.grow(s, s, s);
+    }
+
+    public void grow(int x, int y, int z) {
+        this.minX -= x;
+        this.minY -= y;
+        this.minZ -= z;
+        this.maxX += x;
+        this.maxY += y;
+        this.maxZ += z;
+    }
+
+    public GridAlignedBB intersect(GridAlignedBB other) {
+        int minX = Math.max(this.minX, other.minX);
+        int minY = Math.max(this.minY, other.minY);
+        int minZ = Math.max(this.minZ, other.minZ);
+        int maxX = Math.min(this.maxX, other.maxX);
+        int maxY = Math.min(this.maxY, other.maxY);
+        int maxZ = Math.min(this.maxZ, other.maxZ);
+        return new GridAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public void intersectAssign(GridAlignedBB other) {
+        this.minX = Math.max(this.minX, other.minX);
+        this.minY = Math.max(this.minY, other.minY);
+        this.minZ = Math.max(this.minZ, other.minZ);
+        this.maxX = Math.min(this.maxX, other.maxX);
+        this.maxY = Math.min(this.maxY, other.maxY);
+        this.maxZ = Math.min(this.maxZ, other.maxZ);
+    }
+
+    public GridAlignedBB union(GridAlignedBB other) {
+        int minX = Math.min(this.minX, other.minX);
+        int minY = Math.min(this.minY, other.minY);
+        int minZ = Math.min(this.minZ, other.minZ);
+        int maxX = Math.max(this.maxX, other.maxX);
+        int maxY = Math.max(this.maxY, other.maxY);
+        int maxZ = Math.max(this.maxZ, other.maxZ);
+        return new GridAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public void unionAssign(GridAlignedBB other) {
+        this.minX = Math.min(this.minX, other.minX);
+        this.minY = Math.min(this.minY, other.minY);
+        this.minZ = Math.min(this.minZ, other.minZ);
+        this.maxX = Math.max(this.maxX, other.maxX);
+        this.maxY = Math.max(this.maxY, other.maxY);
+        this.maxZ = Math.max(this.maxZ, other.maxZ);
+    }
+
+    public boolean intersects(GridAlignedBB other) {
+        return this.intersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
+    }
+
+    public boolean intersects(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        return this.minX < maxX && this.maxX > minX && this.minY < maxY && this.maxY > minY && this.minZ < maxZ && this.maxZ > minZ;
+    }
+
+    public void forEachContained(CoordinateConsumer func) {
+        if (empty()) return;
+
+        for (int x = minX; x < maxX; x++) {
+            for (int y = Math.max(minY, 0); y < Math.min(maxY, 255); y++) { // clamp to world height limits
+                for (int z = minZ; z < maxZ; z++) {
+                    func.consume(x, y, z);
+                }
+            }
+        }
+    }
+
+}

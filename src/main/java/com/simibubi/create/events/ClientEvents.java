@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.RenderWork;
+import com.simibubi.create.foundation.render.light.LightVolumeDebugger;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -118,7 +119,6 @@ public class ClientEvents {
 		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 
 		MatrixStack ms = event.getMatrixStack();
-		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 		ms.push();
 		ms.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
@@ -126,6 +126,7 @@ public class ClientEvents {
 		CouplingRenderer.renderAll(ms, buffer);
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.outliner.renderOutlines(ms, buffer);
+		LightVolumeDebugger.render(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 

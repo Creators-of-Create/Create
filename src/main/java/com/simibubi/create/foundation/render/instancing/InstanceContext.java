@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.FastContraptionRenderer;
+import com.simibubi.create.foundation.render.RenderedContraption;
 import com.simibubi.create.foundation.render.FastKineticRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -19,9 +19,9 @@ public abstract class InstanceContext<T extends TileEntity> {
 
     public static class Contraption<T extends TileEntity> extends InstanceContext<T> {
 
-        public final FastContraptionRenderer c;
+        public final RenderedContraption c;
 
-        public Contraption(T te, FastContraptionRenderer c) {
+        public Contraption(T te, RenderedContraption c) {
             super(te);
             this.c = c;
         }

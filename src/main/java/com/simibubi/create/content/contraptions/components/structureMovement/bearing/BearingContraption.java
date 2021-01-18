@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -88,4 +91,9 @@ public class BearingContraption extends Contraption {
 		return axis == facing.getAxis();
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new BearingLighter(this);
+	}
 }
