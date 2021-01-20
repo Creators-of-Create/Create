@@ -156,7 +156,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateStressApplied() {
-		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getBlockState().getBlock());
+		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getStressConfigKey());
 		this.lastStressApplied = impact;
 		return impact;
 	}

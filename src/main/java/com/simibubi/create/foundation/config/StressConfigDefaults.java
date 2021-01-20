@@ -28,14 +28,14 @@ public class StressConfigDefaults {
 	
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setImpact(double impact) {
 		return b -> {
-			registeredDefaultImpacts.put(Create.asResource(b.getName()), impact);
+			registeredDefaultImpacts.put(new ResourceLocation(b.getName()), impact);
 			return b;
 		};
 	}
 	
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setCapacity(double capacity) {
 		return b -> {
-			registeredDefaultCapacities.put(Create.asResource(b.getName()), capacity);
+			registeredDefaultCapacities.put(new ResourceLocation(b.getName()), capacity);
 			return b;
 		};
 	}
