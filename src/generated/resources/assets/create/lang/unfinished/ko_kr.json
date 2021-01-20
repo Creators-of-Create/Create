@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 50",
+	"_": "Missing Localizations: 51",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -681,6 +681,7 @@
 	"create.recipe.mechanical_crafting": "기계 조합",
 	"create.recipe.automatic_shaped": "유형 자동 조합",
 	"create.recipe.block_cutting": "블 절단",
+	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "휴대용 블록발사기 업그레이드",
 	"create.recipe.sandpaper_polishing": "사포질",
 	"create.recipe.mystery_conversion": "?",

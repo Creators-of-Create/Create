@@ -98,6 +98,9 @@ repositories {
         name = "tterrag maven"
         url = "https://maven.tterrag.com/"
     }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 configurations {
@@ -115,6 +118,8 @@ dependencies {
  	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
   	// at runtime, use the full JEI jar
   	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
+    // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1216",
+	"_": "Missing Localizations: 1217",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -681,6 +681,7 @@
 	"create.recipe.mechanical_crafting": "UNLOCALIZED: Mechanical Crafting",
 	"create.recipe.automatic_shaped": "UNLOCALIZED: Automated Shaped Crafting",
 	"create.recipe.block_cutting": "UNLOCALIZED: Block Cutting",
+	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "Blockzapper Portátil",
 	"create.recipe.sandpaper_polishing": "UNLOCALIZED: Sandpaper Polishing",
 	"create.recipe.mystery_conversion": "UNLOCALIZED: Mysterious Conversion",

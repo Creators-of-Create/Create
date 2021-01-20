@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 3",
+	"_": "Missing Localizations: 4",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -681,6 +681,7 @@
 	"create.recipe.mechanical_crafting": "自动合成",
 	"create.recipe.automatic_shaped": "自动合成",
 	"create.recipe.block_cutting": "方块切割",
+	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "手持式方块放置器",
 	"create.recipe.sandpaper_polishing": "砂纸打磨",
 	"create.recipe.mystery_conversion": "神秘转化",
