@@ -190,7 +190,7 @@ public abstract class Contraption {
 		// Create subcontraptions
 		for (BlockFace blockFace : pendingSubContraptions) {
 			Direction face = blockFace.getFace();
-			StabilizedContraption subContraption = new StabilizedContraption(this, face);
+			StabilizedContraption subContraption = new StabilizedContraption(entity.getUniqueID(), face);
 			World world = entity.world;
 			BlockPos pos = blockFace.getPos();
 			if (!subContraption.assemble(world, pos))

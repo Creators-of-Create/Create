@@ -24,13 +24,10 @@ public class LightVolume {
 
     private int glTexture;
 
-    public LightVolume(GridAlignedBB textureVolume, GridAlignedBB sampleVolume) {
-        // the gpu requires that all textures have power of 2 side lengths
-        if (!textureVolume.hasPowerOf2Sides())
-            throw new IllegalArgumentException("LightVolume must have power of 2 side lengths");
-
-        this.textureVolume = textureVolume;
-        this.sampleVolume = sampleVolume;
+    public LightVolume(GridAlignedBB sampleVolume) {
+        this.sampleVolume = GridAlignedBB.copy(sampleVolume);
+        sampleVolume.nextPowerOf2Centered();
+        this.textureVolume = sampleVolume;
 
         this.glTexture = GL11.glGenTextures();
         this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: maybe figure out how to pack light coords into a single byte

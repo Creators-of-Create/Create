@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.render.light;
 
 import com.simibubi.create.foundation.render.RenderMath;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
@@ -99,6 +101,55 @@ public class GridAlignedBB {
         }
     }
 
+    public void mirrorAbout(Direction.Axis axis) {
+        Vec3i axisVec = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getDirectionVec();
+        int flipX = axisVec.getX() - 1;
+        int flipY = axisVec.getY() - 1;
+        int flipZ = axisVec.getZ() - 1;
+
+        int maxX = this.maxX * flipX;
+        int maxY = this.maxY * flipY;
+        int maxZ = this.maxZ * flipZ;
+        this.maxX = this.minX * flipX;
+        this.maxY = this.minY * flipY;
+        this.maxZ = this.minZ * flipZ;
+        this.minX = maxX;
+        this.minY = maxY;
+        this.minZ = maxZ;
+    }
+
+    public void expandAroundAxis(Direction.Axis axis) {
+        int maxXDiff = Math.max(this.maxX - 1, -this.minX);
+        int maxYDiff = Math.max(this.maxY - 1, -this.minY);
+        int maxZDiff = Math.max(this.maxZ - 1, -this.minZ);
+
+        int maxDiff;
+        if (axis == Direction.Axis.X)
+            maxDiff = Math.max(maxZDiff, maxYDiff);
+        else if (axis == Direction.Axis.Y)
+            maxDiff = Math.max(maxZDiff, maxXDiff);
+        else if (axis == Direction.Axis.Z)
+            maxDiff = Math.max(maxXDiff, maxYDiff);
+        else
+            maxDiff = 0;
+
+        Vec3i axisVec = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getDirectionVec();
+        int axisX = axisVec.getX();
+        int axisY = axisVec.getY();
+        int axisZ = axisVec.getZ();
+
+        int planeX = 1 - axisX;
+        int planeY = 1 - axisY;
+        int planeZ = 1 - axisZ;
+
+        minX = axisX * minX - maxDiff * planeX;
+        minY = axisY * minY - maxDiff * planeY;
+        minZ = axisZ * minZ - maxDiff * planeZ;
+        maxX = axisX * maxX + (maxDiff + 1) * planeX;
+        maxY = axisY * maxY + (maxDiff + 1) * planeY;
+        maxZ = axisZ * maxZ + (maxDiff + 1) * planeZ;
+    }
+
     /**
      * Grow this bounding box to have power of 2 side length, scaling from the center.
      */
@@ -190,6 +241,15 @@ public class GridAlignedBB {
         this.maxX = Math.max(this.maxX, other.maxX);
         this.maxY = Math.max(this.maxY, other.maxY);
         this.maxZ = Math.max(this.maxZ, other.maxZ);
+    }
+
+    public void unionAssign(AxisAlignedBB other) {
+        this.minX = Math.min(this.minX, (int) Math.floor(other.minX));
+        this.minY = Math.min(this.minY, (int) Math.floor(other.minY));
+        this.minZ = Math.min(this.minZ, (int) Math.floor(other.minZ));
+        this.maxX = Math.max(this.maxX, (int) Math.ceil(other.maxX));
+        this.maxY = Math.max(this.maxY, (int) Math.ceil(other.maxY));
+        this.maxZ = Math.max(this.maxZ, (int) Math.ceil(other.maxZ));
     }
 
     public boolean intersects(GridAlignedBB other) {

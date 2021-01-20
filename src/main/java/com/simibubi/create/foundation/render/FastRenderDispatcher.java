@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
@@ -22,6 +23,8 @@ import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.chunk.Chunk;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import java.util.Map;
 
@@ -40,7 +43,12 @@ public class FastRenderDispatcher {
         Matrix4f projection = getProjectionMatrix();
 
         if (type == FastKineticRenderer.getKineticRenderLayer()) {
+            RenderSystem.enableDepthTest();
+            RenderSystem.enableCull();
+            GL11.glCullFace(GL11.GL_BACK);
             CreateClient.kineticRenderer.renderInstancesAsWorld(type, projection, view);
+            RenderSystem.disableCull();
+            //RenderSystem.disableDepthTest();
         }
 
         ContraptionRenderDispatcher.renderLayer(type, projection, view);

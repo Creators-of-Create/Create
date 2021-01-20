@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.light.LightVolume;
 import com.simibubi.create.foundation.render.shader.Shader;
@@ -14,9 +15,7 @@ import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
+import org.lwjgl.opengl.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +52,11 @@ public class ContraptionRenderDispatcher {
         if (renderers.isEmpty()) return;
 
         FastKineticRenderer.setup(Minecraft.getInstance().gameRenderer);
+//        if (renderType == RenderType.getTranslucent()) {
+//            GL30.glEnable(GL11.GL_DEPTH_TEST);
+//            GL20.glDepthFunc(GL20.GL_LESS);
+//            RenderSystem.defaultBlendFunc();
+//        }
         GL11.glEnable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
@@ -81,6 +85,10 @@ public class ContraptionRenderDispatcher {
 
         ShaderHelper.releaseShader();
 
+//        if (renderType == RenderType.getTranslucent()) {
+//            GL30.glEnable(GL11.GL_DEPTH_TEST);
+//            GL20.glDepthFunc(GL20.GL_LEQUAL);
+//        }
         GL11.glDisable(GL13.GL_TEXTURE_3D);
         FastKineticRenderer.teardown();
         GL13.glActiveTexture(GL40.GL_TEXTURE0);

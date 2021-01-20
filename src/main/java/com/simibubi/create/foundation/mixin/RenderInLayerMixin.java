@@ -20,7 +20,7 @@ public class RenderInLayerMixin {
      * layer-correct custom rendering. RenderWorldLast is not refined enough for rendering world objects.
      * This should probably be a forge event.
      */
-    @Inject(at = @At("HEAD"), method = "renderLayer")
+    @Inject(at = @At("TAIL"), method = "renderLayer")
     private void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         FastRenderDispatcher.renderLayer(type, stack, cameraX, cameraY, cameraZ);
     }

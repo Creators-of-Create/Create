@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import com.simibubi.create.foundation.render.light.GridAlignedBB;
-import net.minecraft.util.math.AxisAlignedBB;
 
 public class BearingLighter extends ContraptionLighter<BearingContraption> {
 
