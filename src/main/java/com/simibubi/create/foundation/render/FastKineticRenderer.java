@@ -147,53 +147,6 @@ public class FastKineticRenderer {
         layer.endDrawing();
     }
 
-    public static void setup(GameRenderer gameRenderer) {
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-
-        RenderSystem.enableLighting();
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableCull();
-        GL11.glCullFace(GL11.GL_BACK);
-
-        LightTexture lightManager = gameRenderer.getLightmapTextureManager();
-
-        Texture blockAtlasTexture = Minecraft.getInstance().textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-        Texture lightTexture = Minecraft.getInstance().textureManager.getTexture(lightManager.resourceLocation);
-
-        // bind the block atlas texture to 0
-        GL13.glActiveTexture(GL40.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, blockAtlasTexture.getGlTextureId());
-        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
-        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-        // bind the light texture to 1 and setup the mysterious filtering options
-        GL13.glActiveTexture(GL40.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightTexture.getGlTextureId());
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10241, 9729);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10240, 9729);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10242, 10496);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, 10243, 10496);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableTexture();
-    }
-
-    public static void teardown() {
-
-        GL13.glActiveTexture(GL40.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-
-        GL13.glActiveTexture(GL40.GL_TEXTURE0);
-        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
-        GL40.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-        RenderSystem.disableCull();
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableLighting();
-    }
-
     public void registerCompartment(SuperByteBufferCache.Compartment<?> instance) {
         rotating.put(instance, CacheBuilder.newBuilder().build());
         belts.put(instance, CacheBuilder.newBuilder().build());
