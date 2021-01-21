@@ -7,13 +7,13 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class RotatingData extends BasicData<RotatingData> {
-    public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, FLOAT, FLOAT, VEC3);
+    public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, FLOAT, FLOAT, NORMAL);
 
     private float rotationalSpeed;
     private float rotationOffset;
-    private float rotationAxisX;
-    private float rotationAxisY;
-    private float rotationAxisZ;
+    private byte rotationAxisX;
+    private byte rotationAxisY;
+    private byte rotationAxisZ;
 
     public RotatingData setRotationalSpeed(float rotationalSpeed) {
         this.rotationalSpeed = rotationalSpeed;
@@ -26,16 +26,14 @@ public class RotatingData extends BasicData<RotatingData> {
     }
 
     public RotatingData setRotationAxis(Vector3f axis) {
-        this.rotationAxisX = axis.getX();
-        this.rotationAxisY = axis.getY();
-        this.rotationAxisZ = axis.getZ();
+        setRotationAxis(axis.getX(), axis.getY(), axis.getZ());
         return this;
     }
 
     public RotatingData setRotationAxis(float rotationAxisX, float rotationAxisY, float rotationAxisZ) {
-        this.rotationAxisX = rotationAxisX;
-        this.rotationAxisY = rotationAxisY;
-        this.rotationAxisZ = rotationAxisZ;
+        this.rotationAxisX = (byte) (rotationAxisX * 127);
+        this.rotationAxisY = (byte) (rotationAxisY * 127);
+        this.rotationAxisZ = (byte) (rotationAxisZ * 127);
         return this;
     }
 
