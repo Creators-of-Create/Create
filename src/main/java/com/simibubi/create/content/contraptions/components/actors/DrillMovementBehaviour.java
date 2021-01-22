@@ -35,6 +35,11 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
+	public void addInstance(MovementContext context) {
+		super.addInstance(context);
+	}
+
+	@Override
 	protected DamageSource getDamageSource() {
 		return DrillBlock.damageSourceDrill;
 	}

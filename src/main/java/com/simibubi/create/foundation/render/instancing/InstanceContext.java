@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.RenderedContraption;
+import com.simibubi.create.foundation.render.contraption.RenderedContraption;
 import com.simibubi.create.foundation.render.FastKineticRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -11,6 +11,14 @@ public abstract class InstanceContext<T extends TileEntity> {
 
     public InstanceContext(T te) {
         this.te = te;
+    }
+
+    public RenderMaterial<InstanceBuffer<RotatingData>> getRotating() {
+        return getKinetics().get(KineticRenderMaterials.ROTATING);
+    }
+
+    public RenderMaterial<InstanceBuffer<BeltData>> getBelts() {
+        return getKinetics().get(KineticRenderMaterials.BELTS);
     }
 
     public abstract FastKineticRenderer getKinetics();

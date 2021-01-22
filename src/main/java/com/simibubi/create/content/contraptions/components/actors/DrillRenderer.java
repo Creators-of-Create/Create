@@ -37,6 +37,10 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
 	}
 
+	public static void addInstanceForContraption(MovementContext context) {
+		//AllBlockPartials.DRILL_HEAD.
+	}
+
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };

@@ -141,7 +141,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
 			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
-		return ctx.getKinetics().renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
+		return ctx.getRotating().getModel(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}
 

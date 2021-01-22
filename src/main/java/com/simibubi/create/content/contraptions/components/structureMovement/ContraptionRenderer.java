@@ -12,7 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 

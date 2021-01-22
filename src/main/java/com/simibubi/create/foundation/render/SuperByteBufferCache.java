@@ -27,20 +27,13 @@ import net.minecraft.util.math.BlockPos;
 
 public class SuperByteBufferCache {
 
-	public static class Compartment<T> {
-	}
-
-	public static final Compartment<BlockState> GENERIC_TILE = new Compartment<>();
-	public static final Compartment<AllBlockPartials> PARTIAL = new Compartment<>();
-	public static final Compartment<Pair<Direction, AllBlockPartials>> DIRECTIONAL_PARTIAL = new Compartment<>();
-
 	Map<Compartment<?>, Cache<Object, SuperByteBuffer>> cache;
 
 	public SuperByteBufferCache() {
 		cache = new HashMap<>();
-		registerCompartment(GENERIC_TILE);
-		registerCompartment(PARTIAL);
-		registerCompartment(DIRECTIONAL_PARTIAL);
+		registerCompartment(Compartment.GENERIC_TILE);
+		registerCompartment(Compartment.PARTIAL);
+		registerCompartment(Compartment.DIRECTIONAL_PARTIAL);
 	}
 
 	public SuperByteBuffer renderBlock(BlockState toRender) {
@@ -48,23 +41,23 @@ public class SuperByteBufferCache {
 	}
 
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
-		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
+		return get(Compartment.PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
 		MatrixStack modelTransform) {
-		return get(PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
+		return get(Compartment.PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState,
 		Direction dir) {
-		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-			() -> standardModelRender(partial.get(), referenceState));
+		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
+				   () -> standardModelRender(partial.get(), referenceState));
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir,
 		MatrixStack modelTransform) {
-		return get(DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-			() -> standardModelRender(partial.get(), referenceState, modelTransform));
+		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
+				   () -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {
@@ -72,7 +65,7 @@ public class SuperByteBufferCache {
 	}
 
 	SuperByteBuffer getGeneric(BlockState key, Supplier<SuperByteBuffer> supplier) {
-		return get(GENERIC_TILE, key, supplier);
+		return get(Compartment.GENERIC_TILE, key, supplier);
 	}
 
 	public <T> SuperByteBuffer get(Compartment<T> compartment, T key, Supplier<SuperByteBuffer> supplier) {

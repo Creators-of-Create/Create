@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.light;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;

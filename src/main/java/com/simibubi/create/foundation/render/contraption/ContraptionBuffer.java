@@ -1,6 +1,7 @@
-package com.simibubi.create.foundation.render;
+package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.render.GPUBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;

@@ -1,12 +1,15 @@
-package com.simibubi.create.foundation.render;
+package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.light.LightVolume;
 import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Matrix4f;
@@ -14,15 +17,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL20;
+import net.minecraft.world.gen.feature.template.Template;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.nio.FloatBuffer;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class RenderedContraption {
 
     private final ContraptionLighter<?> lighter;
 
-    public final FastKineticRenderer kinetics;
+    public final ContraptionKineticRenderer kinetics;
 
     private Contraption contraption;
 
@@ -40,7 +39,7 @@ public class RenderedContraption {
     public RenderedContraption(World world, Contraption contraption) {
         this.contraption = contraption;
         this.lighter = contraption.makeLighter();
-        this.kinetics = new FastKineticRenderer();
+        this.kinetics = new ContraptionKineticRenderer();
 
         buildLayers(contraption);
         buildInstancedTiles(contraption);
@@ -96,6 +95,21 @@ public class RenderedContraption {
         }
 
         kinetics.markAllDirty();
+    }
+
+    private void buildActors(Contraption c) {
+        List<MutablePair<Template.BlockInfo, MovementContext>> actors = c.getActors();
+
+        for (MutablePair<Template.BlockInfo, MovementContext> actor : actors) {
+            Template.BlockInfo blockInfo = actor.left;
+            MovementContext context = actor.right;
+
+            MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
+
+            if (movementBehaviour != null) {
+                movementBehaviour.addInstance(context);
+            }
+        }
     }
 
     void setRenderSettings(Matrix4f model) {

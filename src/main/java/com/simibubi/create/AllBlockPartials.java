@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -219,11 +220,11 @@ public class AllBlockPartials {
 	}
 
 	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnRotating(InstanceContext<T> ctx, BlockState referenceState) {
-		return ctx.getKinetics().renderPartialRotating(this, referenceState);
+		return ctx.getRotating().getModel(this, referenceState);
 	}
 
 	public <T extends BeltTileEntity> InstanceBuffer<BeltData> renderOnBelt(InstanceContext<T> ctx, BlockState referenceState) {
-		return ctx.getKinetics().renderPartialBelt(this, referenceState);
+		return ctx.getBelts().getModel(this, referenceState);
 	}
 
 	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnDirectionalSouthRotating(InstanceContext<T> ctx, BlockState referenceState) {
@@ -232,14 +233,16 @@ public class AllBlockPartials {
 	}
 
 	public <T extends KineticTileEntity> InstanceBuffer<RotatingData> renderOnDirectionalSouthRotating(InstanceContext<T> ctx, BlockState referenceState, Direction facing) {
-		MatrixStack ms = new MatrixStack();
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStacker.of(ms)
-					 .centre()
-					 .rotateY(AngleHelper.horizontalAngle(facing))
-					 .rotateX(AngleHelper.verticalAngle(facing))
-					 .unCentre();
-		return ctx.getKinetics().renderDirectionalPartialInstanced(this, referenceState, facing, ms);
+		Supplier<MatrixStack> ms = () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+						 .centre()
+						 .rotateY(AngleHelper.horizontalAngle(facing))
+						 .rotateX(AngleHelper.verticalAngle(facing))
+						 .unCentre();
+			return stack;
+		};
+		return ctx.getRotating().getModel(this, referenceState, facing, ms);
 	}
 
 }

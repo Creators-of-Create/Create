@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
+import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
@@ -61,12 +61,12 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static <T extends KineticTileEntity> void renderRotatingKineticBlock(InstanceContext<T> ctx, BlockState renderedState) {
-		InstanceBuffer<RotatingData> instancedRenderer = ctx.getKinetics().renderBlockInstanced(KINETIC_TILE, renderedState);
+		InstanceBuffer<RotatingData> instancedRenderer = ctx.getRotating().getModel(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(ctx, instancedRenderer);
 	}
 
 	public static <T extends KineticTileEntity> void markForRebuild(InstanceContext<T> ctx, BlockState renderedState) {
-		ctx.getKinetics().renderBlockInstanced(KINETIC_TILE, renderedState).clearInstanceData();
+		ctx.getRotating().getModel(KINETIC_TILE, renderedState).clearInstanceData();
 	}
 
 	public static <T extends KineticTileEntity> void renderRotatingBuffer(InstanceContext<T> ctx, InstanceBuffer<RotatingData> instancer) {
@@ -151,7 +151,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return ctx.getKinetics().renderBlockInstanced(KINETIC_TILE, getRenderedBlockState(ctx.te));
+		return ctx.getRotating().getModel(KINETIC_TILE, getRenderedBlockState(ctx.te));
 	}
 
 }

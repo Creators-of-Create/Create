@@ -159,6 +159,7 @@ public class LightVolume {
         // just in case something goes wrong or we accidentally call this before this volume is properly disposed of.
         if (glTexture == 0 || lightData == null) return;
 
+        GL13.glActiveTexture(GL40.GL_TEXTURE4);
         GL12.glBindTexture(GL12.GL_TEXTURE_3D, glTexture);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MIN_FILTER, GL13.GL_LINEAR);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MAG_FILTER, GL13.GL_LINEAR);

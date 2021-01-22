@@ -30,6 +30,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.LightType;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> implements IInstancedTileEntityRenderer<BeltTileEntity> {
 
@@ -82,8 +83,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 			end = b;
 		}
 
-		FastKineticRenderer fastKineticRenderer = ctx.getKinetics();
-
 		for (boolean bottom : Iterate.trueAndFalse) {
 
 			AllBlockPartials beltPartial = diagonal
@@ -128,23 +127,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 		}
 
 		if (te.hasPulley()) {
-			// TODO 1.15 find a way to cache this model matrix computation
-			MatrixStack modelTransform = new MatrixStack();
-			Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
-									  .rotateY();
-			if (sideways)
-				dir = Direction.UP;
-			MatrixStacker msr = MatrixStacker.of(modelTransform);
-			msr.centre();
-			if (dir.getAxis() == Axis.X)
-				msr.rotateY(90);
-			if (dir.getAxis() == Axis.Y)
-				msr.rotateX(90);
-			msr.rotateX(90);
-			msr.unCentre();
-
-			InstanceBuffer<RotatingData> rotatingBuffer = fastKineticRenderer
-					.renderDirectionalPartialInstanced(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
+			InstanceBuffer<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
 			KineticTileEntityRenderer.renderRotatingBuffer(ctx, rotatingBuffer);
 		}
 	}
@@ -152,7 +135,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 	@Override
 	public void markForRebuild(InstanceContext<BeltTileEntity> ctx) {
 		BeltTileEntity te = ctx.te;
-		FastKineticRenderer fastKineticRenderer = ctx.getKinetics();
 
 		BlockState blockState = te.getBlockState();
 		if (!AllBlocks.BELT.has(blockState))
@@ -197,25 +179,34 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 				break;
 		}
 
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStack modelTransform = new MatrixStack();
+		InstanceBuffer<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
+
+		rotatingBuffer.clearInstanceData();
+	}
+
+	private InstanceBuffer<RotatingData> getPulleyModel(InstanceContext<BeltTileEntity> ctx, BlockState blockState, boolean sideways) {
 		Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
 								  .rotateY();
 		if (sideways)
 			dir = Direction.UP;
-		MatrixStacker msr = MatrixStacker.of(modelTransform);
-		msr.centre();
-		if (dir.getAxis() == Axis.X)
-			msr.rotateY(90);
-		if (dir.getAxis() == Axis.Y)
+
+		Axis axis = dir.getAxis();
+
+		Supplier<MatrixStack> ms = () -> {
+			MatrixStack modelTransform = new MatrixStack();
+			MatrixStacker msr = MatrixStacker.of(modelTransform);
+			msr.centre();
+			if (axis == Axis.X)
+				msr.rotateY(90);
+			if (axis == Axis.Y)
+				msr.rotateX(90);
 			msr.rotateX(90);
-		msr.rotateX(90);
-		msr.unCentre();
+			msr.unCentre();
 
-		InstanceBuffer<RotatingData> rotatingBuffer = fastKineticRenderer
-				.renderDirectionalPartialInstanced(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
+			return modelTransform;
+		};
 
-		rotatingBuffer.clearInstanceData();
+		return ctx.getRotating().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
 	}
 
 	protected void renderItems(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

@@ -27,4 +27,11 @@ public abstract class DynamicInstanceBuffer<S extends InstanceData, D extends In
     protected int getTotalShaderAttributeCount() {
         return super.getTotalShaderAttributeCount() + getDynamicFormat().getShaderAttributeCount();
     }
+
+    @Override
+    protected void preDrawTask() {
+        super.preDrawTask();
+
+
+    }
 }

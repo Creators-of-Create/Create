@@ -1,17 +1,13 @@
-package com.simibubi.create.foundation.render;
+package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.render.light.LightVolume;
+import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.shader.Shader;
 import com.simibubi.create.foundation.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.shader.ShaderHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
@@ -64,17 +60,8 @@ public class ContraptionRenderDispatcher {
         }
 
         if (renderType == FastKineticRenderer.getKineticRenderLayer()) {
-            int rotatingShader = ShaderHelper.useShader(Shader.CONTRAPTION_ROTATING, callback);
             for (RenderedContraption renderer : renderers.values()) {
-                renderer.setup(rotatingShader);
-                renderer.kinetics.renderRotating();
-                renderer.teardown();
-            }
-
-            int beltShader = ShaderHelper.useShader(Shader.CONTRAPTION_BELT, callback);
-            for (RenderedContraption renderer : renderers.values()) {
-                renderer.setup(beltShader);
-                renderer.kinetics.renderBelts();
+                renderer.kinetics.render(renderType, projectionMat, viewMat, renderer::setup);
                 renderer.teardown();
             }
         }

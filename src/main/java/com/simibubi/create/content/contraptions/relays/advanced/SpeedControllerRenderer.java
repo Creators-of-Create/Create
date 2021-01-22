@@ -34,7 +34,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	}
 
 	private InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<SpeedControllerTileEntity> ctx) {
-		return ctx.getKinetics().renderBlockInstanced(KineticTileEntityRenderer.KINETIC_TILE,
+		return ctx.getRotating().getModel(KineticTileEntityRenderer.KINETIC_TILE,
 				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(ctx.te)));
 	}
 
