@@ -90,6 +90,8 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEn
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
+import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
+import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
@@ -276,6 +278,12 @@ public class AllTileEntities {
 		.tileEntity("chute", ChuteTileEntity::new)
 		.validBlocks(AllBlocks.CHUTE)
 		.renderer(() -> ChuteRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<SmartChuteTileEntity> SMART_CHUTE = Create.registrate()
+		.tileEntity("smart_chute", SmartChuteTileEntity::new)
+		.validBlocks(AllBlocks.SMART_CHUTE)
+		.renderer(() -> SmartChuteRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<BeltTunnelTileEntity> ANDESITE_TUNNEL = Create.registrate()

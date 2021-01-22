@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1151",
+	"_": "Missing Localizations: 1152",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -368,6 +368,7 @@
 	"block.create.sequenced_gearshift": "UNLOCALIZED: Sequenced Gearshift",
 	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Casing",
 	"block.create.shaft": "Drijfas",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "UNLOCALIZED: Smart Fluid Pipe",
 	"block.create.speedometer": "Snelheidsmeter",
 	"block.create.spout": "UNLOCALIZED: Spout",
@@ -681,7 +682,6 @@
 	"create.recipe.mechanical_crafting": "UNLOCALIZED: Mechanical Crafting",
 	"create.recipe.automatic_shaped": "UNLOCALIZED: Automated Shaped Crafting",
 	"create.recipe.block_cutting": "Blok Zagen",
-	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "Blokzapper",
 	"create.recipe.sandpaper_polishing": "UNLOCALIZED: Sandpaper Polishing",
 	"create.recipe.mystery_conversion": "UNLOCALIZED: Mysterious Conversion",
@@ -1083,6 +1083,7 @@
 	"create.tooltip.chute.fans_push_down": "UNLOCALIZED: Fans push from Above",
 	"create.tooltip.chute.fans_pull_up": "UNLOCALIZED: Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "UNLOCALIZED: Fans pull from Below",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
 	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",

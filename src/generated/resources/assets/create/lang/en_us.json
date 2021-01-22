@@ -367,6 +367,7 @@
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
 	"block.create.shadow_steel_casing": "Shadow Casing",
 	"block.create.shaft": "Shaft",
+	"block.create.smart_chute": "Smart Chute",
 	"block.create.smart_fluid_pipe": "Smart Fluid Pipe",
 	"block.create.speedometer": "Speedometer",
 	"block.create.spout": "Spout",
@@ -1082,6 +1083,7 @@
 	"create.tooltip.chute.fans_push_down": "Fans push from Above",
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
+	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",

@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.INF;
 import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
 import static com.simibubi.create.foundation.data.recipe.Mods.MW;
 import static com.simibubi.create.foundation.data.recipe.Mods.SM;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
-import static com.simibubi.create.foundation.data.recipe.Mods.INF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,6 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -567,6 +566,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('I', I.andesite())
 				.patternLine("II")
 				.patternLine("AA")),
+
+		SMART_CHUTE = create(AllBlocks.SMART_CHUTE).unlockedBy(AllBlocks.CHUTE::get)
+			.viaShaped(b -> b.key('P', I.electronTube())
+				.key('S', AllBlocks.CHUTE.get())
+				.key('I', I.brassSheet())
+				.patternLine("I")
+				.patternLine("S")
+				.patternLine("P")),
 
 		DEPOT = create(AllBlocks.DEPOT).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('A', I.andesite())

@@ -58,7 +58,8 @@ public class AllBlockPartials {
 		HARVESTER_BLADE = get("mechanical_harvester/blade"), DEPLOYER_POLE = get("deployer/pole"),
 		DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"), DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"), ANALOG_LEVER_HANDLE = get("analog_lever/handle"),
-		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), BELT_FUNNEL_FLAP = get("belt_funnel/flap"),
+		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), FUNNEL_FLAP = get("funnel/flap"), 
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"),
 		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), FLEXPEATER_INDICATOR = get("diodes/indicator"),
 		FLYWHEEL = get("flywheel/wheel"), FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
 

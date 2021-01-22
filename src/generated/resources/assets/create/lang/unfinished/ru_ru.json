@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1",
+	"_": "Missing Localizations: 2",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -368,6 +368,7 @@
 	"block.create.sequenced_gearshift": "Последовательный переключатель передач",
 	"block.create.shadow_steel_casing": "Теневой кожух",
 	"block.create.shaft": "Вал",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "Умная жидкостная труба",
 	"block.create.speedometer": "Спидометр",
 	"block.create.spout": "Слив",
@@ -681,7 +682,6 @@
 	"create.recipe.mechanical_crafting": "Механическое создание",
 	"create.recipe.automatic_shaped": "Автоматическая форменная сборка",
 	"create.recipe.block_cutting": "Резка блока",
-	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "Ручная блоковая пушка",
 	"create.recipe.sandpaper_polishing": "Полировка наждачной бумагой",
 	"create.recipe.mystery_conversion": "Хроматический метаморфоз",
@@ -1083,6 +1083,7 @@
 	"create.tooltip.chute.fans_push_down": "Вентилятор толкает сверху",
 	"create.tooltip.chute.fans_pull_up": "Вентилятор тянет сверху",
 	"create.tooltip.chute.fans_pull_down": "Вентилятор тянет снизу",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "Безграничное снабжение",
 	"create.hint.hose_pulley": "Целевой водный резервуар считается бесконечным.",

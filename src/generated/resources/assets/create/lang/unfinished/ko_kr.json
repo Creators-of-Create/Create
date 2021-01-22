@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 51",
+	"_": "Missing Localizations: 52",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -368,6 +368,7 @@
 	"block.create.sequenced_gearshift": "순서 기어쉬프트",
 	"block.create.shadow_steel_casing": "그림자 케이스",
 	"block.create.shaft": "축",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "스마트 액체 파이프",
 	"block.create.speedometer": "속도 계측기",
 	"block.create.spout": "수도꼭지",
@@ -681,7 +682,6 @@
 	"create.recipe.mechanical_crafting": "기계 조합",
 	"create.recipe.automatic_shaped": "유형 자동 조합",
 	"create.recipe.block_cutting": "블 절단",
-	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "휴대용 블록발사기 업그레이드",
 	"create.recipe.sandpaper_polishing": "사포질",
 	"create.recipe.mystery_conversion": "?",
@@ -1083,6 +1083,7 @@
 	"create.tooltip.chute.fans_push_down": "선풍기가 위에서 밈",
 	"create.tooltip.chute.fans_pull_up": "선풍기가 위에서 당김",
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
 	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",

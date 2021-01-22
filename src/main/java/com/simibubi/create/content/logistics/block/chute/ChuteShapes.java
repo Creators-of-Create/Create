@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.chute;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 
@@ -22,6 +23,9 @@ public class ChuteShapes {
 	public static final VoxelShape COLLISION_MASK = Block.makeCuboidShape(0, 0, 0, 16, 24, 16);
 
 	public static VoxelShape createShape(BlockState state) {
+		if (AllBlocks.SMART_CHUTE.has(state))
+			return AllShapes.SMART_CHUTE;
+		
 		Direction direction = state.get(ChuteBlock.FACING);
 		Shape shape = state.get(ChuteBlock.SHAPE);
 

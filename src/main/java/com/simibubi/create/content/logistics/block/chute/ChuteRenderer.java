@@ -31,6 +31,11 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 			&& (te.bottomPullDistance == 0 || te.itemPosition.get(partialTicks) > .5f))
 			return;
 
+		renderItem(te, partialTicks, ms, buffer, light, overlay);
+	}
+
+	public static void renderItem(ChuteTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+		int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		MatrixStacker msr = MatrixStacker.of(ms);

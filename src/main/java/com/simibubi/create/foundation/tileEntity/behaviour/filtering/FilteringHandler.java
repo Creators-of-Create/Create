@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -66,6 +68,11 @@ public class FilteringHandler {
 		ItemStack toApply = player.getHeldItem(hand)
 			.copy();
 
+		if (AllItems.WRENCH.isIn(toApply))
+			return;
+		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
+			return;
+		
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
 				if (behaviour.getFilter()
