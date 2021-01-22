@@ -15,7 +15,7 @@ public class BrassFunnelBlock extends FunnelBlock {
 
 	@Override
 	public BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state) {
-		Direction facing = state.get(FACING);
+		Direction facing = state.get(HORIZONTAL_FACING);
 		return AllBlocks.BRASS_BELT_FUNNEL.getDefaultState()
 			.with(BeltFunnelBlock.HORIZONTAL_FACING, facing)
 			.with(POWERED, state.get(POWERED));

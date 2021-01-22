@@ -23,7 +23,7 @@ public class ChuteItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (!te.item.isEmpty())
+		if (!te.canAcceptItem(stack))
 			return stack;
 		if (!simulate) 
 			te.setItem(stack);

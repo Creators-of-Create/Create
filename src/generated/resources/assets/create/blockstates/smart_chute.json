@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "create:block/smart_chute/block"
+    },
+    "powered=true": {
+      "model": "create:block/smart_chute/block_powered"
+    }
+  }
+}

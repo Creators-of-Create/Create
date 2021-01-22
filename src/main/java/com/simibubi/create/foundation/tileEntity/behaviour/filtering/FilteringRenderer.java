@@ -75,7 +75,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 			.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-			.scrollTooltip(showCount ? "[" + Lang.translate("action.scroll") + "]" : "")
+			.scrollTooltip(showCount && !isFilterSlotted ? "[" + Lang.translate("action.scroll") + "]" : "")
 			.passive(!hit);
 
 		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))

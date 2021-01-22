@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/smart_chute/block",
+	"textures": {
+		"5": "create:block/brass_funnel_tall_powered"
+	}
+}

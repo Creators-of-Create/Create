@@ -68,34 +68,26 @@ public class AllShapes {
 		NIXIE_TUBE_CEILING = shape(0, 12, 0, 16, 16, 16).add(9, 1, 5, 15, 16, 11)
 			.add(1, 1, 5, 7, 16, 11)
 			.forHorizontalAxis(),
-		FUNNEL = shape(2, -2, 2, 14, 2, 14).add(3, 2, 3, 13, 6, 13)
-			.add(2, 6, 2, 14, 10, 14)
-			.add(0, 10, 0, 16, 16, 16)
-			.forDirectional(UP),
-		FUNNEL_COLLISION = shape(2, -2, 2, 14, 2, 14).add(3, 2, 3, 13, 6, 13)
-			.add(2, 6, 2, 14, 10, 14)
-			.add(0, 10, 0, 16, 13, 16)
-			.forDirectional(UP),
+		FUNNEL_COLLISION = shape(0, 0, 0, 16, 4, 16).forDirectional(UP),
 		BELT_FUNNEL_RETRACTED = shape(2, -2, 14, 14, 14, 18).add(0, -5, 8, 16, 16, 14)
 			.forHorizontal(NORTH),
 		BELT_FUNNEL_EXTENDED = shape(2, -2, 14, 14, 14, 18).add(3, -4, 10, 13, 13, 14)
 			.add(2, -4, 6, 14, 14, 10)
 			.add(0, -5, 0, 16, 16, 6)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_PERPENDICULAR = 
-			shape(2, -2, 14, 14, 14, 18)
-			.add(1, 8, 12, 15, 15, 14)
+		BELT_FUNNEL_PERPENDICULAR = shape(2, -2, 14, 14, 14, 18).add(1, 8, 12, 15, 15, 14)
 			.add(0.1, 13, 7, 15.9, 15, 11)
 			.add(0.1, 9, 8, 15.9, 13, 12)
 			.add(0.1, 5, 9, 15.9, 9, 13)
 			.add(0.1, 1, 10, 15.9, 5, 14)
 			.add(0.1, -3, 11, 15.9, 1, 15)
 			.forHorizontal(NORTH),
-		BELT_FUNNEL_CONNECTED = 
-			shape(2, -2, 14, 14, 14, 18)
-			.add(0, -5, 5, 16, 16, 11)
-			.add(2, -4, 2, 14, 14, -2)
-			.add(3, -2, 0, 13, 13, 16)
+		FUNNEL = shape(2, 2, 14, 14, 14, 18).add(1, 8, 12, 15, 15, 14)
+			.add(0.1, 13, 7, 15.9, 15, 11)
+			.add(0.1, 9, 8, 15.9, 13, 12)
+			.add(0.1, 5, 9, 15.9, 9, 13)
+			.add(0.1, 1, 10, 15.9, 5, 14)
+			.add(0.1, -1, 11, 15.9, 1, 15)
 			.forHorizontal(NORTH),
 		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),
@@ -183,12 +175,21 @@ public class AllShapes {
 			.build(),
 		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
 			.build(),
+		SMART_CHUTE = shape(0, 0, 0, 16, 5, 16).add(0, 9, 0, 16, 15, 16)
+			.add(1, 0, 1, 15, 16, 15)
+			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),
 		TANK_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK)
 			.build(),
 		TANK_TOP_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK_TOP_LID)
 			.add(TANK)
+			.build(),
+		FUNNEL_FLOOR = shape(2, -2, 2, 14, 8, 14).add(1, 2, 1, 15, 8, 15)
+			.add(0, 4, 0, 16, 10, 16)
+			.build(),
+		FUNNEL_CEILING = shape(2, 8, 2, 14, 18, 14).add(1, 8, 1, 15, 14, 15)
+			.add(0, 6, 0, 16, 12, 16)
 			.build(),
 		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build()
