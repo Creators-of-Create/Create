@@ -44,8 +44,14 @@ public class TileEntityRenderHelper {
 				Vector4f vec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 				vec.transform(matrix);
 				BlockPos lightPos = new BlockPos(vec.getX(), vec.getY(), vec.getZ());
-				renderer.render(tileEntity, pt, ms, buffer, WorldRenderer.getLightmapCoordinates(world, lightPos),
-					OverlayTexture.DEFAULT_UV);
+				try {
+					renderer.render(tileEntity, pt, ms, buffer, WorldRenderer.getLightmapCoordinates(world, lightPos),
+							OverlayTexture.DEFAULT_UV);
+				} catch (NullPointerException e) {
+					if(AllConfigs.CLIENT.explainRenderErrors.get()) {
+						throw e;
+					}
+				}
 				ms.pop();
 
 			} catch (Exception e) {
@@ -54,13 +60,14 @@ public class TileEntityRenderHelper {
 				String message = "TileEntity " + tileEntity.getType()
 					.getRegistryName()
 					.toString() + " didn't want to render while moved.\n";
+
+
 				if (AllConfigs.CLIENT.explainRenderErrors.get()) {
 					Create.logger.error(message, e);
 					continue;
 				}
 				
 				Create.logger.error(message);
-				continue;
 			}
 		}
 	}
