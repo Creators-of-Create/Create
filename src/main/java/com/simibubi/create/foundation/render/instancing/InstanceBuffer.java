@@ -99,7 +99,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
     }
 
     protected int getTotalShaderAttributeCount() {
-        return getInstanceFormat().getShaderAttributeCount() + FORMAT.getShaderAttributeCount();
+        return getInstanceFormat().getShaderAttributeCount() + super.getTotalShaderAttributeCount();
     }
 
     @Override
@@ -130,7 +130,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
         buffer.rewind();
         GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
 
-        int staticAttributes = FORMAT.getShaderAttributeCount();
+        int staticAttributes = getModelFormat().getShaderAttributeCount();
         instanceFormat.informAttributes(staticAttributes);
 
         for (int i = 0; i < instanceFormat.getShaderAttributeCount(); i++) {

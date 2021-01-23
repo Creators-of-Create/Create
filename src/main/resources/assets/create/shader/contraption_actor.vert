@@ -9,10 +9,11 @@ layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 instancePos;
 layout (location = 4) in float rotationOffset;
 layout (location = 5) in vec3 localRotationAxis;
-layout (location = 6) in vec3 localOrientation;
+layout (location = 6) in vec3 localRotation;
+layout (location = 7) in vec3 rotationCenter;
 
 // dynamic data
-layout (location = 7) in vec3 relativeMotion;
+//layout (location = 7) in vec3 relativeMotion;
 
 out float Diffuse;
 out vec2 TexCoords;
@@ -40,7 +41,12 @@ mat4 rotate(vec3 axis, float angle) {
     0.,                                 0.,                                 0.,                                 1.);
 }
 
+mat4 rotation(vec3 rot) {
+    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
+}
+
 mat4 kineticRotation() {
+    const float speed = 20;
     float degrees = rotationOffset + time * speed * -3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
 
@@ -55,13 +61,17 @@ float diffuse(vec3 normal) {
 }
 
 void main() {
+    vec3 rot = fract(localRotation / 360.) * PI * 2.;
+    mat4 localRot = rotation(rot);
+    vec4 localPos = localRot * vec4(aPos - 0.5, 1f) + vec4(0.5, 0.5, 0.5, 0);
+
     mat4 kineticRotation = kineticRotation();
-    vec4 localPos = kineticRotation * vec4(aPos - 0.5, 1f) + vec4(instancePos + 0.5, 0);
+    localPos = kineticRotation * vec4(localPos.xyz - rotationCenter, 1) + vec4(instancePos + rotationCenter, 0);
 
     vec4 worldPos = model * localPos;
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(model * kineticRotation * vec4(aNormal, 0.)).xyz);
+    Diffuse = diffuse(normalize(model * localRot * kineticRotation * vec4(aNormal, 0.)).xyz);
     Color = vec4(1.);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;

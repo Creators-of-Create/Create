@@ -7,8 +7,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.FastKineticRenderer;
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
+import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -43,6 +43,8 @@ public class RenderedContraption {
 
         buildLayers(contraption);
         buildInstancedTiles(contraption);
+        buildActors(contraption);
+        kinetics.markAllDirty();
     }
 
     public int getEntityId() {
@@ -55,6 +57,10 @@ public class RenderedContraption {
 
     public ContraptionLighter<?> getLighter() {
         return lighter;
+    }
+
+    public RenderMaterial<InstanceBuffer<StaticRotatingActorData>> getActorMaterial() {
+        return kinetics.get(KineticRenderMaterials.ACTORS);
     }
 
     public void doRenderLayer(RenderType layer, int shader) {
@@ -93,8 +99,6 @@ public class RenderedContraption {
                 }
             }
         }
-
-        kinetics.markAllDirty();
     }
 
     private void buildActors(Contraption c) {
@@ -107,7 +111,7 @@ public class RenderedContraption {
             MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 
             if (movementBehaviour != null) {
-                movementBehaviour.addInstance(context);
+                movementBehaviour.addInstance(this, context);
             }
         }
     }

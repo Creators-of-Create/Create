@@ -7,6 +7,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.contraption.RenderedContraption;
+import com.simibubi.create.foundation.render.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -19,6 +22,7 @@ import com.simibubi.create.foundation.render.instancing.RotatingData;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 
@@ -37,8 +41,20 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
 	}
 
-	public static void addInstanceForContraption(MovementContext context) {
-		//AllBlockPartials.DRILL_HEAD.
+	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
+		RenderMaterial<InstanceBuffer<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
+
+		BlockState state = context.state;
+		InstanceBuffer<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);
+
+		model.setupInstance(data -> {
+			Direction facing = state.get(DrillBlock.FACING);
+			Vector3f orientation = facing.getOpposite().getUnitVector();
+			data.setPosition(context.localPos)
+				.setRotationOffset(0)
+				.setRotationAxis(orientation)
+				.setLocalRotation(AngleHelper.verticalAngle(facing), facing.getHorizontalAngle(), 0);
+		});
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,

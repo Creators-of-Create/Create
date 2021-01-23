@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.contraption.RenderedContraption;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -31,12 +32,12 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		DrillRenderer.renderInContraption(context, ms, msLocal, buffer);
+		//DrillRenderer.renderInContraption(context, ms, msLocal, buffer);
 	}
 
 	@Override
-	public void addInstance(MovementContext context) {
-		super.addInstance(context);
+	public void addInstance(RenderedContraption contraption, MovementContext context) {
+		DrillRenderer.addInstanceForContraption(contraption, context);
 	}
 
 	@Override

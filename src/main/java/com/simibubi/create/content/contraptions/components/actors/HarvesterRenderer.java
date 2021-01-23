@@ -5,6 +5,10 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.contraption.RenderedContraption;
+import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -14,6 +18,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -32,6 +37,25 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		SuperByteBuffer superBuffer = AllBlockPartials.HARVESTER_BLADE.renderOnHorizontal(blockState);
 		superBuffer.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
+	}
+
+	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
+		RenderMaterial<InstanceBuffer<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
+
+		BlockState state = context.state;
+		InstanceBuffer<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
+
+		model.setupInstance(data -> {
+			Direction facing = state.get(HORIZONTAL_FACING);
+			Direction rotationAxis = facing.rotateY();
+			float originOffset = 1 / 16f;
+			Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
+			data.setPosition(context.localPos)
+				.setRotationOffset(0)
+				.setRotationCenter(rotOffset)
+				.setRotationAxis(rotationAxis.getUnitVector())
+				.setLocalRotation(0, facing.getHorizontalAngle(), 0);
+		});
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,

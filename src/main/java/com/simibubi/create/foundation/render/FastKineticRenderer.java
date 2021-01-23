@@ -73,7 +73,7 @@ public class FastKineticRenderer {
 
     public void invalidate() {
         for (RenderMaterial<?> material : materials.values()) {
-            material.runOnAll(InstanceBuffer::delete);
+            material.delete();
         }
         dirty = true;
     }
