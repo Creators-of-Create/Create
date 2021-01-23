@@ -29,6 +29,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+
+	public ConfigBool canStickWithoutSuperglue = b (false, "canStickWithoutSuperglue", Comments.canStickWithoutSuperglue);
 	
 	public CStress stressValues = nested(1, CStress::new, Comments.stress);
 
@@ -63,6 +65,7 @@ public class CKinetics extends ConfigBase {
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
 		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
 		static String maxCartCouplingLength = "Maximum allowed distance of two coupled minecarts.";
+		static String canStickWithoutSuperglue = "Whether you can remove the need to put superglue onto a surface";
 		static String stats = "Configure speed/capacity levels for requirements and indicators.";
 		static String rpm = "[in Revolutions per Minute]";
 		static String su = "[in Stress Units]";

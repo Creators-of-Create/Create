@@ -7,7 +7,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEffectPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueEffectPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionFluidPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
@@ -73,7 +74,8 @@ public enum AllPackets {
 	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
 	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new),
-	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
+	GLUE_EFFECT(SuperGlueEffectPacket.class, SuperGlueEffectPacket::new),
+	UNSTICKY_GLUE_EFFECT(UnstickyGlueEffectPacket.class, UnstickyGlueEffectPacket::new),
 	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
 	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
 	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new),

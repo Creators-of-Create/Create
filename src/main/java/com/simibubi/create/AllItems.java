@@ -13,6 +13,7 @@ import static com.simibubi.create.content.AllSections.SCHEMATICS;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
@@ -166,6 +167,9 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
+		.register();
+
+	public static final ItemEntry<UnstickyGlueItem> UNSTICKY_GLUE = REGISTRATE.item("unsticky_glue", UnstickyGlueItem::new)
 		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =

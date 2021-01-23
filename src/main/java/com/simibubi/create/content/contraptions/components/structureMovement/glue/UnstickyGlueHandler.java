@@ -31,12 +31,12 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 @EventBusSubscriber
-public class SuperGlueHandler {
+public class UnstickyGlueHandler {
 
-	public static Map<Direction, SuperGlueEntity> gatherGlue(IWorld world, BlockPos pos) {
-		List<SuperGlueEntity> entities = world.getEntitiesWithinAABB(SuperGlueEntity.class, new AxisAlignedBB(pos));
-		Map<Direction, SuperGlueEntity> map = new HashMap<>();
-		for (SuperGlueEntity entity : entities)
+	public static Map<Direction, UnstickyGlueEntity> gatherGlue(IWorld world, BlockPos pos) {
+		List<UnstickyGlueEntity> entities = world.getEntitiesWithinAABB(UnstickyGlueEntity.class, new AxisAlignedBB(pos));
+		Map<Direction, UnstickyGlueEntity> map = new HashMap<>();
+		for (UnstickyGlueEntity entity : entities)
 			map.put(entity.getAttachedDirection(pos), entity);
 		return map;
 	}
@@ -52,10 +52,10 @@ public class SuperGlueHandler {
 		if (world.isRemote())
 			return;
 
-		Map<Direction, SuperGlueEntity> gatheredGlue = gatherGlue(world, pos);
+		Map<Direction, UnstickyGlueEntity> gatheredGlue = gatherGlue(world, pos);
 		for (Direction direction : gatheredGlue.keySet())
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-				new SuperGlueEffectPacket(pos, direction, true));
+				new UnstickyGlueEffectPacket(pos, direction, true));
 
 		if (entity instanceof PlayerEntity)
 			glueInOffHandAppliesOnBlockPlace(event, pos, (PlayerEntity) entity);
@@ -64,7 +64,7 @@ public class SuperGlueHandler {
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
 		ItemStack itemstack = placer.getHeldItemOffhand();
 		ModifiableAttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
-		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
+		if (!AllItems.UNSTICKY_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
 		if (AllItems.WRENCH.isIn(placer.getHeldItemMainhand()))
 			return;
@@ -91,7 +91,7 @@ public class SuperGlueHandler {
 			return;
 		}
 
-		SuperGlueEntity entity = new SuperGlueEntity(world, ray.getPos(), face.getOpposite());
+		UnstickyGlueEntity entity = new UnstickyGlueEntity(world, ray.getPos(), face.getOpposite());
 		CompoundNBT compoundnbt = itemstack.getTag();
 		if (compoundnbt != null)
 			EntityType.applyItemNBT(world, placer, entity, compoundnbt);
@@ -101,9 +101,9 @@ public class SuperGlueHandler {
 				entity.playPlaceSound();
 				world.addEntity(entity);
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-					new SuperGlueEffectPacket(ray.getPos(), face, true));
+					new UnstickyGlueEffectPacket(ray.getPos(), face, true));
 			}
-			itemstack.damageItem(1, placer, SuperGlueItem::onBroken);
+			itemstack.damageItem(1, placer, UnstickyGlueItem::onBroken);
 		}
 	}
 

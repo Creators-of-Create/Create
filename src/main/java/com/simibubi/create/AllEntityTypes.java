@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -30,6 +32,8 @@ public class AllEntityTypes {
 			AbstractContraptionEntity::build);
 	public static final RegistryEntry<EntityType<SuperGlueEntity>> SUPER_GLUE = register("super_glue",
 		SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, SuperGlueEntity::build);
+	public static final RegistryEntry<EntityType<UnstickyGlueEntity>> UNSTICKY_GLUE = register("unsticky_glue",
+		UnstickyGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, UnstickyGlueEntity::build);
 	public static final RegistryEntry<EntityType<SeatEntity>> SEAT =
 		register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, SeatEntity::build);
 
@@ -55,6 +59,7 @@ public class AllEntityTypes {
 		RenderingRegistry.registerEntityRenderingHandler(ORIENTED_CONTRAPTION.get(),
 			OrientedContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SUPER_GLUE.get(), SuperGlueRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(UNSTICKY_GLUE.get(), UnstickyGlueRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SEAT.get(), SeatEntity.Render::new);
 	}
 }

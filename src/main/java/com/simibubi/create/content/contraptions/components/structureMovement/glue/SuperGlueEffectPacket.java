@@ -13,19 +13,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class GlueEffectPacket extends SimplePacketBase {
+public class SuperGlueEffectPacket extends SimplePacketBase {
 
 	private BlockPos pos;
 	private Direction direction;
 	private boolean fullBlock;
 
-	public GlueEffectPacket(BlockPos pos, Direction direction, boolean fullBlock) {
+	public SuperGlueEffectPacket(BlockPos pos, Direction direction, boolean fullBlock) {
 		this.pos = pos;
 		this.direction = direction;
 		this.fullBlock = fullBlock;
 	}
 
-	public GlueEffectPacket(PacketBuffer buffer) {
+	public SuperGlueEffectPacket(PacketBuffer buffer) {
 		pos = buffer.readBlockPos();
 		direction = Direction.byIndex(buffer.readByte());
 		fullBlock = buffer.readBoolean();

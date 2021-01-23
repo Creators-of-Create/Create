@@ -54,18 +54,18 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
+public class UnstickyGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
 	protected Direction facingDirection = Direction.SOUTH;
 
-	public SuperGlueEntity(EntityType<?> type, World world) {
+	public UnstickyGlueEntity(EntityType<?> type, World world) {
 		super(type, world);
 	}
 
-	public SuperGlueEntity(World world, BlockPos pos, Direction direction) {
-		this(AllEntityTypes.SUPER_GLUE.get(), world);
+	public UnstickyGlueEntity(World world, BlockPos pos, Direction direction) {
+		this(AllEntityTypes.UNSTICKY_GLUE.get(), world);
 		hangingPosition = pos;
 		facingDirection = direction;
 		updateFacingWithBoundingBox();
@@ -86,7 +86,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		playSound(SoundEvents.ENTITY_SLIME_SQUISH_SMALL, 1.0F, 1.0F);
 		if (onValidSurface()) {
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-				new SuperGlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
+				new UnstickyGlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
 			playSound(AllSoundEvents.SLIME_ADDED.get(), 0.5F, 0.5F);
 		}
 	}
@@ -173,7 +173,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (!isValidFace(world, pos2, getFacingDirection())
 			&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
 			return false;
-		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
+		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof UnstickyGlueEntity)
 			.isEmpty();
 	}
 
@@ -241,7 +241,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
-		return AllItems.SUPER_GLUE.asStack();
+		return AllItems.UNSTICKY_GLUE.asStack();
 	}
 
 	@Override
@@ -389,7 +389,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
-		EntityType.Builder<SuperGlueEntity> entityBuilder = (EntityType.Builder<SuperGlueEntity>) builder;
+		EntityType.Builder<UnstickyGlueEntity> entityBuilder = (EntityType.Builder<UnstickyGlueEntity>) builder;
 		return entityBuilder;
 	}
 
@@ -416,7 +416,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.SUPER_GLUE.get());
+		return new ItemRequirement(ItemUseType.DAMAGE, AllItems.UNSTICKY_GLUE.get());
 	}
 
 	@Override

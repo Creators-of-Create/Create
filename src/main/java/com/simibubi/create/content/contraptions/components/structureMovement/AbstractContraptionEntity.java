@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.foundation.collision.Matrix3d;
@@ -570,6 +571,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (e instanceof AbstractMinecartEntity)
 			return !(contraption instanceof MountedContraption);
 		if (e instanceof SuperGlueEntity)
+			return false;
+		if (e instanceof UnstickyGlueEntity)
 			return false;
 		if (e instanceof SeatEntity)
 			return false;

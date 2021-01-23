@@ -32,6 +32,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.UnstickyGlueHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
@@ -105,11 +107,13 @@ public abstract class Contraption {
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 	protected List<MutablePair<BlockInfo, MovementContext>> actors;
 	protected Set<Pair<BlockPos, Direction>> superglue;
+	protected Set<Pair<BlockPos, Direction>> unstickyglue;
 	protected List<BlockPos> seats;
 	protected Map<UUID, Integer> seatMapping;
 	protected Map<UUID, BlockFace> stabilizedSubContraptions;
 
 	private List<SuperGlueEntity> glueToRemove;
+	private List<UnstickyGlueEntity> unstickyGlueToRemove;
 	private Map<BlockPos, Entity> initialPassengers;
 	private List<BlockFace> pendingSubContraptions;
 
@@ -123,9 +127,11 @@ public abstract class Contraption {
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
 		superglue = new HashSet<>();
+		unstickyglue = new HashSet<>();
 		seatMapping = new HashMap<>();
 		fluidStorage = new HashMap<>();
 		glueToRemove = new ArrayList<>();
+		unstickyGlueToRemove = new ArrayList<>();
 		initialPassengers = new HashMap<>();
 		presentTileEntities = new HashMap<>();
 		renderedTileEntities = new ArrayList<>();
@@ -295,9 +301,11 @@ public abstract class Contraption {
 			frontier.add(pos.down());
 
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
+		Map<Direction, UnstickyGlueEntity> unstickyglue = UnstickyGlueHandler.gatherGlue(world, pos);
 
 		// Slime blocks and super glue drag adjacent blocks if possible
 		boolean isStickyBlock = state.isStickyBlock();
+		boolean canStickWithoutSuperglue = AllConfigs.SERVER.kinetics.canStickWithoutSuperglue.get();
 		for (Direction offset : Iterate.directions) {
 			BlockPos offsetPos = pos.offset(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
@@ -308,17 +316,25 @@ public abstract class Contraption {
 					return false;
 				continue;
 			}
+			if (canStickWithoutSuperglue && AllBlocks.CART_ASSEMBLER.has(state))
+				continue;
 
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
+			boolean faceHasUnstickyGlue = unstickyglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
 				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
+			boolean suitableForNoSuperglue = canStickWithoutSuperglue && world.isBlockPresent(offsetPos)
+				&& !BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset) && !BlockMovementTraits.isBlockAttachedTowards(world, pos, world.getBlockState(pos), offset.getOpposite()) && !faceHasUnstickyGlue;
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 
-			if (!wasVisited && ((isStickyBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
+			if (!wasVisited && ((isStickyBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue
+					|| suitableForNoSuperglue))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
+			if (faceHasUnstickyGlue)
+				addGlue(unstickyglue.get(offset));
 		}
 
 		addBlock(pos, capture(world, pos));
@@ -502,6 +518,13 @@ public abstract class Contraption {
 		glueToRemove.add(entity);
 	}
 
+	protected void addGlue(UnstickyGlueEntity entity) {
+		BlockPos pos = entity.getHangingPosition();
+		Direction direction = entity.getFacingDirection();
+		this.unstickyglue.add(Pair.of(toLocalPos(pos), direction));
+		unstickyGlueToRemove.add(entity);
+	}
+
 	protected BlockPos toLocalPos(BlockPos globalPos) {
 		return globalPos.subtract(anchor);
 	}
@@ -570,6 +593,10 @@ public abstract class Contraption {
 
 		superglue.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Superglue", NBT.TAG_COMPOUND), c -> superglue
+			.add(Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.byIndex(c.getByte("Direction")))));
+
+		unstickyglue.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Unstickyglue", NBT.TAG_COMPOUND), c -> unstickyglue
 			.add(Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.byIndex(c.getByte("Direction")))));
 
 		seats.clear();
@@ -657,6 +684,15 @@ public abstract class Contraption {
 			superglueNBT.add(c);
 		}
 
+		ListNBT unstickyglueNBT = new ListNBT();
+		for (Pair<BlockPos, Direction> glueEntry : unstickyglue) {
+			CompoundNBT c = new CompoundNBT();
+			c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
+			c.putByte("Direction", (byte) glueEntry.getValue()
+				.getIndex());
+			unstickyglueNBT.add(c);
+		}
+
 		ListNBT storageNBT = new ListNBT();
 		if (!spawnPacket) {
 			for (BlockPos pos : storage.keySet()) {
@@ -700,6 +736,7 @@ public abstract class Contraption {
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
 		nbt.put("Superglue", superglueNBT);
+		nbt.put("Unstickyglue", unstickyglueNBT);
 		nbt.put("Storage", storageNBT);
 		nbt.put("FluidStorage", fluidStorageNBT);
 		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
@@ -719,6 +756,7 @@ public abstract class Contraption {
 		fluidStorage.values()
 			.forEach(MountedFluidStorage::removeStorageFromWorld);
 		glueToRemove.forEach(SuperGlueEntity::remove);
+		unstickyGlueToRemove.forEach(UnstickyGlueEntity::remove);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
 			for (Iterator<BlockInfo> iterator = blocks.values()
@@ -841,6 +879,17 @@ public abstract class Contraption {
 			Direction targetFacing = transform.transformFacing(pair.getValue());
 
 			SuperGlueEntity entity = new SuperGlueEntity(world, targetPos, targetFacing);
+			if (entity.onValidSurface()) {
+				if (!world.isRemote)
+					world.addEntity(entity);
+			}
+		}
+
+		for (Pair<BlockPos, Direction> pair : unstickyglue) {
+			BlockPos targetPos = transform.apply(pair.getKey());
+			Direction targetFacing = transform.transformFacing(pair.getValue());
+
+			UnstickyGlueEntity entity = new UnstickyGlueEntity(world, targetPos, targetFacing);
 			if (entity.onValidSurface()) {
 				if (!world.isRemote)
 					world.addEntity(entity);

@@ -238,6 +238,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("AS")
 				.patternLine("NA")),
 
+		UNSTICKY_GLUE = create(AllItems.UNSTICKY_GLUE).unlockedByTag(I::ironSheet)
+			.viaShaped(b -> b.key('A', Tags.Items.SAND)
+				.key('S', I.ironSheet())
+				.key('N', Tags.Items.NUGGETS_IRON)
+				.patternLine("AS")
+				.patternLine("NA")),
+
 		CRAFTER_SLOT_COVER = create(AllItems.CRAFTER_SLOT_COVER).unlockedBy(AllBlocks.MECHANICAL_CRAFTER::get)
 			.viaShaped(b -> b.key('A', I.brassNugget())
 				.patternLine("AAA")),

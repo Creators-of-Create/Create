@@ -410,6 +410,7 @@
 	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
+	"entity.create.unsticky_glue": "Unsticky Glue",
 
 	"fluid.create.milk": "Milk",
 	"fluid.create.potion": "Potion",
@@ -477,6 +478,7 @@
 	"item.create.schematic_and_quill": "Schematic And Quill",
 	"item.create.shadow_steel": "Shadow Steel",
 	"item.create.super_glue": "Super Glue",
+	"item.create.unsticky_glue": "Unsticky Glue",
 	"item.create.tree_fertilizer": "Tree Fertilizer",
 	"item.create.vertical_gearbox": "Vertical Gearbox",
 	"item.create.wand_of_symmetry": "Wand Of Symmetry",
@@ -1750,11 +1752,18 @@
 	"item.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking at them_",
 
 	"item.create.super_glue.tooltip": "SUPER GLUE",
-	"item.create.super_glue.tooltip.summary": "Glue a block to another, and they will forever be inseparable.",
+	"item.create.super_glue.tooltip.summary": "Glue a block to another, and they will forever be inseparable. The server setting _canStickWithoutSuperglue_ makes blocks automatically connect _without_ this.",
 	"item.create.super_glue.tooltip.condition1": "When Used",
 	"item.create.super_glue.tooltip.behaviour1": "Makes the _clicked face_ of a block _sticky_. Blocks attached to sticky faces will be _dragged along_ when moved by _mechanical pistons_, _bearings_ and other controllers.",
 	"item.create.super_glue.tooltip.condition2": "When Held in Offhand",
 	"item.create.super_glue.tooltip.behaviour2": "_Automatically attaches_ blocks placed from the main hand to the _side_ they were _placed against._",
+
+	"item.create.unsticky_glue.tooltip": "UNSTICKY GLUE",
+	"item.create.unsticky_glue.tooltip.summary": "Connect blocks with this and they will _not be connected_ when a contraption moves. Works in tandem with the server setting _canStickWithoutSuperglue_, which allows blocks to automatically form a structure _without_ the use of _Super Glue_ or _Chassis_",
+	"item.create.unsticky_glue.tooltip.condition1": "When Used",
+	"item.create.unsticky_glue.tooltip.behaviour1": "Makes the _clicked face_ of a block _unsticky_. Blocks attached to sticky faces will _not_ be _dragged along_ when moved by _mechanical pistons_, _bearings_ and other controllers.",
+	"item.create.unsticky_glue.tooltip.condition2": "When Held in Offhand",
+	"item.create.unsticky_glue.tooltip.behaviour2": "_Automatically separates_ blocks placed from the main hand to the _side_ they were _placed against._",
 
 	"item.create.builders_tea.tooltip": "BUILDERS TEA",
 	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
