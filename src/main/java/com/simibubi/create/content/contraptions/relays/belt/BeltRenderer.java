@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
@@ -40,7 +41,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
-	
+
 	@Override
 	public boolean isGlobalRenderer(BeltTileEntity te) {
 		return BeltBlock.canTransportObjects(te.getBlockState());
@@ -97,14 +98,22 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
 				.light(light);
-			SpriteShiftEntry spriteShift =
-				diagonal ? AllSpriteShifts.BELT_DIAGONAL : bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
+
+			SpriteShiftEntry spriteShift = null;
+			if (te.color.isPresent()) {
+				DyeColor color = te.color.get();
+				spriteShift = (diagonal ? AllSpriteShifts.DYED_DIAGONAL_BELTS
+					: bottom ? AllSpriteShifts.DYED_OFFSET_BELTS : AllSpriteShifts.DYED_BELTS).get(color);
+			} else
+				spriteShift = diagonal ? AllSpriteShifts.BELT_DIAGONAL
+					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
+
 			int cycleLength = diagonal ? 12 : 16;
 			int cycleOffset = bottom ? 8 : 0;
 
 			// UV shift
 			float speed = te.getSpeed();
-			if (speed != 0) {
+			if (speed != 0 || te.color.isPresent()) {
 				float time = renderTick * axisDirection.getOffset();
 				if (diagonal && (downward ^ alongX) || !sideways && !diagonal && alongX
 					|| sideways && axisDirection == AxisDirection.NEGATIVE)

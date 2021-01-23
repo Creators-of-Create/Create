@@ -94,7 +94,6 @@ import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerB
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltColor;
 import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
@@ -314,7 +313,6 @@ public class AllBlocks {
 		.properties(p -> p.hardnessAndResistance(0.8F))
 		.blockstate(new BeltGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(1.0))
-		.onRegister(CreateRegistrate.blockColors(() -> BeltColor::new))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
 		.register();
 
