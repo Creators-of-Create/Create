@@ -24,25 +24,25 @@ uniform int debug;
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
     float c = cos(angle);
-    float oc = 1.0 - c;
+    float oc = 1 - c;
 
-    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.,
-                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.,
-                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.,
-                0.,                                 0.,                                 0.,                                 1.);
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0,
+                0,                                  0,                                  0,                                  1);
 }
 
 float diffuse(vec3 normal) {
     float x = normal.x;
     float y = normal.y;
     float z = normal.z;
-    return min(x * x * 0.6f + y * y * ((3f + y) / 4f) + z * z * 0.8f, 1f);
+    return min(x * x * .6 + y * y * ((3 + y) / 4) + z * z * .8, 1);
 }
 
 void main() {
     vec4 worldPos = model * vec4(aPos, 1);
 
-    vec3 norm = (model * vec4(aNormal, 0.)).xyz;
+    vec3 norm = (model * vec4(aNormal, 0)).xyz;
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
     Diffuse = diffuse(norm);

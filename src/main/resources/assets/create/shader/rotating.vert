@@ -22,34 +22,38 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform int debug;
 
-mat4 kineticRotation() {
-    float degrees = rotationOffset + time * speed * -3./10.;
-    float angle = fract(degrees / 360.) * PI * 2.;
-
-    vec3 axis = normalize(rotationAxis);
+mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
     float c = cos(angle);
-    float oc = 1.0 - c;
+    float oc = 1 - c;
 
-    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.,
-                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.,
-                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.,
-                0.,                                 0.,                                 0.,                                 1.);
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0,
+                0,                                  0,                                  0,                                  1);
 }
 
 float diffuse(vec3 normal) {
     float x = normal.x;
     float y = normal.y;
     float z = normal.z;
-    return min(x * x * 0.6f + y * y * ((3f + y) / 4f) + z * z * 0.8f, 1f);
+    return min(x * x * .6 + y * y * ((3 + y) / 4) + z * z * .8, 1);
 }
+
+mat4 kineticRotation() {
+    float degrees = rotationOffset + time * speed * -3/10;
+    float angle = fract(degrees / 360) * PI * 2;
+
+    return rotate(normalize(rotationAxis), angle);
+}
+
 void main() {
     mat4 rotation = kineticRotation();
     vec4 renderPos = rotation * vec4(aPos - vec3(0.5), 1);
 
     renderPos += vec4(instancePos + vec3(0.5), 0);
 
-    vec3 norm = (rotation * vec4(aNormal, 0.)).xyz;
+    vec3 norm = (rotation * vec4(aNormal, 0)).xyz;
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
