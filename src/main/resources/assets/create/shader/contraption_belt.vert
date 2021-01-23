@@ -65,9 +65,16 @@ void main() {
     float scrollSize = scrollTexture.w - scrollTexture.y;
     float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
 
+    vec3 norm = normalize(model * localRotation * vec4(aNormal, 0.)).xyz;
+
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(model * localRotation * vec4(aNormal, 0.)).xyz);
-    Color = vec4(1.);
+    Diffuse = diffuse(norm);
     TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0., scroll);
     gl_Position = projection * view * worldPos;
+
+    if (debug == 2) {
+        Color = vec4(norm, 1);
+    } else {
+        Color = vec4(1.);
+    }
 }

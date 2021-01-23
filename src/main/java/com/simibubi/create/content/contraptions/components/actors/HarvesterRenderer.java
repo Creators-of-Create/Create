@@ -47,13 +47,12 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 
 		model.setupInstance(data -> {
 			Direction facing = state.get(HORIZONTAL_FACING);
-			Direction rotationAxis = facing.rotateY();
 			float originOffset = 1 / 16f;
 			Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 			data.setPosition(context.localPos)
 				.setRotationOffset(0)
 				.setRotationCenter(rotOffset)
-				.setRotationAxis(rotationAxis.getUnitVector())
+				.setRotationAxis(-1, 0, 0)
 				.setLocalRotation(0, facing.getHorizontalAngle(), 0);
 		});
 	}

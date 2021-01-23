@@ -94,18 +94,11 @@ public class FastKineticRenderer {
     public void render(RenderType layer, Matrix4f projection, Matrix4f view, ShaderCallback callback) {
         prepareFrame();
 
-        layer.startDrawing();
-
         for (RenderMaterial<?> material : materials.values()) {
-            material.render(projection, view, callback);
+            if (material.canRenderInLayer(layer))
+                material.render(layer, projection, view, callback);
         }
 
         ShaderHelper.releaseShader();
-
-        layer.endDrawing();
-    }
-
-    public static RenderType getKineticRenderLayer() {
-        return RenderType.getCutoutMipped();
     }
 }

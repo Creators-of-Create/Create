@@ -42,9 +42,17 @@ float diffuse(vec3 normal) {
 void main() {
     vec4 worldPos = model * vec4(aPos, 1);
 
+    vec3 norm = (model * vec4(aNormal, 0.)).xyz;
+
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse((model * vec4(aNormal, 0.)).xyz);
+    Diffuse = diffuse(norm);
     Color = aColor / diffuse(aNormal);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
+
+    if (debug == 2) {
+        Color = vec4(norm, 1);
+    } else {
+        Color = aColor / diffuse(aNormal);
+    }
 }

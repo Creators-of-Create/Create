@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.render.Compartment.PARTIAL;
@@ -34,31 +35,41 @@ public class RenderMaterial<MODEL extends InstanceBuffer<?>> {
     protected final Map<Compartment<?>, Cache<Object, MODEL>> models;
     protected final ModelFactory<MODEL> factory;
     protected final Shader shader;
+    protected final Predicate<RenderType> layerPredicate;
 
+    /**
+     * Creates a material that renders in the default layer (CUTOUT_MIPPED)
+     */
     public RenderMaterial(Shader shader, ModelFactory<MODEL> factory) {
+        this(shader, factory, type -> type == RenderType.getCutoutMipped());
+    }
+
+    public RenderMaterial(Shader shader, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
         this.models = new HashMap<>();
         this.factory = factory;
         this.shader = shader;
+        this.layerPredicate = layerPredicate;
         registerCompartment(Compartment.PARTIAL);
         registerCompartment(Compartment.DIRECTIONAL_PARTIAL);
         registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
     }
 
-    public void render(Matrix4f projection, Matrix4f view) {
-        render(projection, view, null);
+    public boolean canRenderInLayer(RenderType layer) {
+        return layerPredicate.test(layer);
     }
 
-    public void render(Matrix4f projection, Matrix4f view, ShaderCallback setup) {
-        int handle = setupShader(projection, view);
-        if (setup != null) setup.call(handle);
+    public void render(RenderType layer, Matrix4f projection, Matrix4f view) {
+        render(layer, projection, view, null);
+    }
+
+    public void render(RenderType layer, Matrix4f projection, Matrix4f view, ShaderCallback setup) {
+        ShaderCallback cb = ShaderHelper.getViewProjectionCallback(projection, view);
+
+        if (setup != null) cb = cb.andThen(setup);
+
+        ShaderHelper.useShader(shader, cb);
         makeRenderCalls();
         teardown();
-    }
-
-    protected int setupShader(Matrix4f projection, Matrix4f view) {
-        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projection, view);
-
-        return ShaderHelper.useShader(shader, callback);
     }
 
     public void teardown() {}

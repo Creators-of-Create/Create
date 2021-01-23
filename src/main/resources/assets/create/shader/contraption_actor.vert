@@ -46,7 +46,7 @@ mat4 rotation(vec3 rot) {
 }
 
 mat4 kineticRotation() {
-    const float speed = 20;
+    const float speed = -20;
     float degrees = rotationOffset + time * speed * -3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
 
@@ -61,18 +61,26 @@ float diffuse(vec3 normal) {
 }
 
 void main() {
+    mat4 kineticRotation = kineticRotation();
+    vec4 localPos = kineticRotation * vec4(aPos - rotationCenter, 1) + vec4(rotationCenter, 0);
+    //localPos = vec4(localPos.xyz + instancePos, 1);
+
     vec3 rot = fract(localRotation / 360.) * PI * 2.;
     mat4 localRot = rotation(rot);
-    vec4 localPos = localRot * vec4(aPos - 0.5, 1f) + vec4(0.5, 0.5, 0.5, 0);
-
-    mat4 kineticRotation = kineticRotation();
-    localPos = kineticRotation * vec4(localPos.xyz - rotationCenter, 1) + vec4(instancePos + rotationCenter, 0);
+    localPos = localRot * vec4(localPos.xyz - 0.5, 1f) + vec4(instancePos + 0.5, 0);
 
     vec4 worldPos = model * localPos;
 
+    vec3 norm = normalize(model * localRot * kineticRotation * vec4(aNormal, 0.)).xyz;
+
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
-    Diffuse = diffuse(normalize(model * localRot * kineticRotation * vec4(aNormal, 0.)).xyz);
-    Color = vec4(1.);
+    Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     gl_Position = projection * view * worldPos;
+
+    if (debug == 2) {
+        Color = vec4(norm, 1);
+    } else {
+        Color = vec4(1.);
+    }
 }

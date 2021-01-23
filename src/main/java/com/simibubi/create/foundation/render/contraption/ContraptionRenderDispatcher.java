@@ -43,12 +43,12 @@ public class ContraptionRenderDispatcher {
         return renderer;
     }
 
-    public static void renderLayer(RenderType renderType, Matrix4f projectionMat, Matrix4f viewMat) {
+    public static void renderLayer(RenderType layer, Matrix4f projectionMat, Matrix4f viewMat) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
 
-        renderType.startDrawing();
+        layer.startDrawing();
         GL11.glEnable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
@@ -56,20 +56,15 @@ public class ContraptionRenderDispatcher {
 
         int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
         for (RenderedContraption renderer : renderers.values()) {
-            renderer.doRenderLayer(renderType, structureShader);
+            renderer.doRenderLayer(layer, structureShader);
         }
 
-        if (renderType == FastKineticRenderer.getKineticRenderLayer()) {
-            for (RenderedContraption renderer : renderers.values()) {
-                renderer.kinetics.render(renderType, projectionMat, viewMat, renderer::setup);
-                renderer.teardown();
-            }
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.kinetics.render(layer, projectionMat, viewMat, renderer::setup);
+            renderer.teardown();
         }
 
-        ShaderHelper.releaseShader();
-
-
-        renderType.endDrawing();
+        layer.endDrawing();
         GL11.glDisable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE0);
     }

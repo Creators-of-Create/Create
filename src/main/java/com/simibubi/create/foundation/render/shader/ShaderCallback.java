@@ -7,4 +7,11 @@ package com.simibubi.create.foundation.render.shader;
 public interface ShaderCallback {
 
     void call(int shader);
+
+    default ShaderCallback andThen(ShaderCallback other) {
+        return i -> {
+            call(i);
+            other.call(i);
+        };
+    }
 }

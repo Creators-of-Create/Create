@@ -9,6 +9,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 // TODO: Don't immediately destroy light volumes.
 //  There's a high chance that a contraption will stop and soon after start again.
@@ -20,7 +21,8 @@ public class LightVolume {
     private final GridAlignedBB textureVolume;
     private ByteBuffer lightData;
 
-    private boolean bufferDirty;
+    private final AtomicBoolean bufferDirty = new AtomicBoolean(false);
+    private boolean removed;
 
     private int glTexture;
 
@@ -108,7 +110,7 @@ public class LightVolume {
             writeLight(x - shiftX, y - shiftY, z - shiftZ, blockLight, skyLight);
         });
 
-        bufferDirty = true;
+        bufferDirty.set(true);
     }
 
     /**
@@ -130,7 +132,7 @@ public class LightVolume {
             writeBlock(x - xShift, y - yShift, z - zShift, light);
         });
 
-        bufferDirty = true;
+        bufferDirty.set(true);
     }
 
     /**
@@ -152,12 +154,12 @@ public class LightVolume {
             writeSky(x - xShift, y - yShift, z - zShift, light);
         });
 
-        bufferDirty = true;
+        bufferDirty.set(true);
     }
 
     public void use() {
         // just in case something goes wrong or we accidentally call this before this volume is properly disposed of.
-        if (glTexture == 0 || lightData == null) return;
+        if (glTexture == 0 || lightData == null || removed) return;
 
         GL13.glActiveTexture(GL40.GL_TEXTURE4);
         GL12.glBindTexture(GL12.GL_TEXTURE_3D, glTexture);
@@ -166,9 +168,9 @@ public class LightVolume {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_S, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
-        if (bufferDirty) {
+        if (bufferDirty.get()) {
             GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
-            bufferDirty = false;
+            bufferDirty.set(false);
         }
     }
 
@@ -177,6 +179,7 @@ public class LightVolume {
     }
 
     public void delete() {
+        removed = true;
         RenderWork.enqueue(() -> {
             GL15.glDeleteTextures(glTexture);
             glTexture = 0;

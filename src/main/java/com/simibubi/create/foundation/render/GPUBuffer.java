@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
 public abstract class GPUBuffer extends TemplateBuffer {
 
     protected int vao, ebo, invariantVBO;
+    protected boolean removed;
 
     public GPUBuffer(BufferBuilder buf) {
         super(buf);
@@ -68,7 +69,7 @@ public abstract class GPUBuffer extends TemplateBuffer {
     }
 
     public void render() {
-        if (vao == 0) return;
+        if (vao == 0 || removed) return;
 
         GL30.glBindVertexArray(vao);
         preDrawTask();
@@ -91,6 +92,7 @@ public abstract class GPUBuffer extends TemplateBuffer {
     }
 
     public void delete() {
+        removed = true;
         if (vertexCount > 0) {
             RenderWork.enqueue(this::deleteInternal);
         }

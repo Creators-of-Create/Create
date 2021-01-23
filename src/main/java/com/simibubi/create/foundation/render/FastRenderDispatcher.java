@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispat
 import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -41,17 +42,18 @@ public class FastRenderDispatcher {
         view.multiplyBackward(stack.peek().getModel());
 
         Matrix4f projection = getProjectionMatrix();
+        type.startDrawing();
 
-        if (type == FastKineticRenderer.getKineticRenderLayer()) {
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableCull();
-            GL11.glCullFace(GL11.GL_BACK);
-            CreateClient.kineticRenderer.render(type, projection, view);
-            RenderSystem.disableCull();
-            //RenderSystem.disableDepthTest();
-        }
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
+        GL11.glCullFace(GL11.GL_BACK);
+        CreateClient.kineticRenderer.render(type, projection, view);
+        RenderSystem.disableCull();
+        //RenderSystem.disableDepthTest();
 
         ContraptionRenderDispatcher.renderLayer(type, projection, view);
+        ShaderHelper.releaseShader();
+        type.endDrawing();
     }
 
     public static void notifyLightUpdate(ClientChunkProvider world, LightType type, SectionPos pos) {

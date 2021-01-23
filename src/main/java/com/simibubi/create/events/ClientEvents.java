@@ -115,6 +115,12 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
+	public static void onUnloadWorld(WorldEvent.Unload event) {
+		CreateClient.invalidateRenderers();
+		AnimationTickHolder.ticks = 0;
+	}
+
+	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 

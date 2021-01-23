@@ -49,10 +49,9 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 		model.setupInstance(data -> {
 			Direction facing = state.get(DrillBlock.FACING);
-			Vector3f orientation = facing.getOpposite().getUnitVector();
 			data.setPosition(context.localPos)
 				.setRotationOffset(0)
-				.setRotationAxis(orientation)
+				.setRotationAxis(0, 0, 1)
 				.setLocalRotation(AngleHelper.verticalAngle(facing), facing.getHorizontalAngle(), 0);
 		});
 	}
