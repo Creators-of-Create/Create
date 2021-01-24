@@ -37,6 +37,11 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Override
 	public void addInstance(RenderedContraption contraption, MovementContext context) {
 		HarvesterRenderer.addInstanceForContraption(contraption, context);
 	}

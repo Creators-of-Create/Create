@@ -76,7 +76,7 @@ public class ContraptionRenderer {
 
 	protected static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, c.renderedTileEntities, ms, msLocal, buffer);
+		TileEntityRenderHelper.renderTileEntities(world, c.specialRenderedTileEntities, ms, msLocal, buffer);
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {

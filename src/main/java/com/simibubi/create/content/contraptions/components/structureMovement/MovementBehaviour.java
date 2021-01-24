@@ -48,8 +48,12 @@ public abstract class MovementBehaviour {
 
 	}
 
-	public boolean hasSpecialMovementRenderer() {
-		return true;
+	public boolean renderAsNormalTileEntity() {
+		return false;
+	}
+
+	public boolean hasSpecialInstancedRendering() {
+		return false;
 	}
 
 	@OnlyIn(Dist.CLIENT)

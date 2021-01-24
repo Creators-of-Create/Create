@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
@@ -22,6 +21,7 @@ import net.minecraft.world.gen.feature.template.Template;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.nio.FloatBuffer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,7 +87,7 @@ public class RenderedContraption {
     }
 
     private void buildInstancedTiles(Contraption c) {
-        List<TileEntity> tileEntities = c.renderedTileEntities;
+        Collection<TileEntity> tileEntities = c.maybeInstancedTileEntities;
         if (!tileEntities.isEmpty()) {
             for (TileEntity te : tileEntities) {
                 if (te instanceof IInstanceRendered) {

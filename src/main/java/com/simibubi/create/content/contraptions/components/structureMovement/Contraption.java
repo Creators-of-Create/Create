@@ -118,7 +118,8 @@ public abstract class Contraption {
 
 	// Client
 	public Map<BlockPos, TileEntity> presentTileEntities;
-	public List<TileEntity> renderedTileEntities;
+	public List<TileEntity> maybeInstancedTileEntities;
+	public List<TileEntity> specialRenderedTileEntities;
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -131,7 +132,8 @@ public abstract class Contraption {
 		glueToRemove = new ArrayList<>();
 		initialPassengers = new HashMap<>();
 		presentTileEntities = new HashMap<>();
-		renderedTileEntities = new ArrayList<>();
+		maybeInstancedTileEntities = new ArrayList<>();
+		specialRenderedTileEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 	}
@@ -520,7 +522,7 @@ public abstract class Contraption {
 	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		blocks.clear();
 		presentTileEntities.clear();
-		renderedTileEntities.clear();
+		specialRenderedTileEntities.clear();
 
 		nbt.getList("Blocks", 10)
 			.forEach(c -> {
@@ -534,7 +536,7 @@ public abstract class Contraption {
 					Block block = info.state.getBlock();
 					CompoundNBT tag = info.nbt;
 					MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-					if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
+					if (tag == null)
 						return;
 
 					tag.putInt("x", info.pos.getX());
@@ -557,8 +559,15 @@ public abstract class Contraption {
 					if (te instanceof KineticTileEntity)
 						((KineticTileEntity) te).setSpeed(0);
 					te.getBlockState();
+
+					if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
+						maybeInstancedTileEntities.add(te);
+
+					if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
+						return;
+
 					presentTileEntities.put(info.pos, te);
-					renderedTileEntities.add(te);
+					specialRenderedTileEntities.add(te);
 				}
 			});
 
@@ -576,7 +585,8 @@ public abstract class Contraption {
 			.add(Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.byIndex(c.getByte("Direction")))));
 
 		seats.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add(NBTUtil.readBlockPos(c)));
+		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add
+				(NBTUtil.readBlockPos(c)));
 
 		seatMapping.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),

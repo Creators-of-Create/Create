@@ -21,7 +21,7 @@ public class LightVolume {
     private final GridAlignedBB textureVolume;
     private ByteBuffer lightData;
 
-    private final AtomicBoolean bufferDirty = new AtomicBoolean(false);
+    private boolean bufferDirty;
     private boolean removed;
 
     private int glTexture;
@@ -110,7 +110,7 @@ public class LightVolume {
             writeLight(x - shiftX, y - shiftY, z - shiftZ, blockLight, skyLight);
         });
 
-        bufferDirty.set(true);
+        bufferDirty = true;
     }
 
     /**
@@ -132,7 +132,7 @@ public class LightVolume {
             writeBlock(x - xShift, y - yShift, z - zShift, light);
         });
 
-        bufferDirty.set(true);
+        bufferDirty = true;
     }
 
     /**
@@ -154,7 +154,7 @@ public class LightVolume {
             writeSky(x - xShift, y - yShift, z - zShift, light);
         });
 
-        bufferDirty.set(true);
+        bufferDirty = true;
     }
 
     public void use() {
@@ -168,9 +168,9 @@ public class LightVolume {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_S, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
-        if (bufferDirty.get()) {
+        if (bufferDirty) {
             GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
-            bufferDirty.set(false);
+            bufferDirty = false;
         }
     }
 

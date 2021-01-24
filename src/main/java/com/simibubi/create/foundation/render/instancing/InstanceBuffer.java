@@ -104,7 +104,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
 
     @Override
     protected void drawCall() {
-        GL40.glDrawElementsInstanced(GL11.GL_QUADS, vertexCount, GL11.GL_UNSIGNED_SHORT, 0, instanceCount);
+        GL31.glDrawElementsInstanced(GL11.GL_QUADS, vertexCount, GL11.GL_UNSIGNED_SHORT, 0, instanceCount);
     }
 
     protected void preDrawTask() {
