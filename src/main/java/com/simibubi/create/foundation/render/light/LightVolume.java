@@ -102,7 +102,7 @@ public class LightVolume {
      * Completely (re)populate this volume with block and sky lighting data.
      * This is expensive and should be avoided.
      */
-    public void initialize(ILightReader world) {
+    public synchronized void initialize(ILightReader world) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int shiftX = textureVolume.minX;
@@ -125,7 +125,7 @@ public class LightVolume {
      * Copy block light from the world into this volume.
      * @param worldVolume the region in the world to copy data from.
      */
-    public void copyBlock(ILightReader world, GridAlignedBB worldVolume) {
+    public synchronized void copyBlock(ILightReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int xShift = textureVolume.minX;
@@ -147,7 +147,7 @@ public class LightVolume {
      * Copy sky light from the world into this volume.
      * @param worldVolume the region in the world to copy data from.
      */
-    public void copySky(ILightReader world, GridAlignedBB worldVolume) {
+    public synchronized void copySky(ILightReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int xShift = textureVolume.minX;
@@ -177,9 +177,13 @@ public class LightVolume {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL20.GL_MIRRORED_REPEAT);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
         if (bufferDirty) {
-            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+            uploadTexture();
             bufferDirty = false;
         }
+    }
+
+    private synchronized void uploadTexture() {
+        GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
     }
 
     public void release() {
