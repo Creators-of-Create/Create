@@ -185,8 +185,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);
-			factor = .5f - MathHelper.clamp(MathHelper.lerp(Minecraft.getInstance()
-				.getRenderPartialTicks(), distance, nextDistance), 0, 1);
+			factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
 		}
 
 		Vec3d offset = new Vec3d(blockState.get(FACING)

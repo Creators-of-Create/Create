@@ -2,8 +2,7 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-
-import net.minecraft.client.Minecraft;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -47,8 +46,7 @@ public class LineOutline extends Outline {
 
 		@Override
 		public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
-			float pt = Minecraft.getInstance()
-				.getRenderPartialTicks();
+			float pt = AnimationTickHolder.getPartialTicks();
 			float distanceToTarget = 1 - MathHelper.lerp(pt, prevProgress, progress);
 			Vec3d start = end.add(this.start.subtract(end)
 				.scale(distanceToTarget));

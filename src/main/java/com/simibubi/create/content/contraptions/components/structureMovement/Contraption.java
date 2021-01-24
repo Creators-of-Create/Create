@@ -1,30 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.light.EmptyLighter;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -49,20 +24,14 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.foundation.render.light.EmptyLighter;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
@@ -84,6 +53,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -93,6 +64,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
@@ -192,7 +173,7 @@ public abstract class Contraption {
 		// Create subcontraptions
 		for (BlockFace blockFace : pendingSubContraptions) {
 			Direction face = blockFace.getFace();
-			StabilizedContraption subContraption = new StabilizedContraption(entity.getUniqueID(), face);
+			StabilizedContraption subContraption = new StabilizedContraption(face);
 			World world = entity.world;
 			BlockPos pos = blockFace.getPos();
 			if (!subContraption.assemble(world, pos))

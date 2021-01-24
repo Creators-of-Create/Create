@@ -1,11 +1,11 @@
-package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
+package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.foundation.render.contraption.RenderedContraption;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import com.simibubi.create.foundation.render.light.GridAlignedBB;
 
-public class MountedLighter extends ContraptionLighter<MountedContraption> {
-    public MountedLighter(MountedContraption contraption) {
+public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {
+    public NonStationaryLighter(C contraption) {
         super(contraption);
     }
 

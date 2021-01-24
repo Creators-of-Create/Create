@@ -1,8 +1,5 @@
 package com.simibubi.create.content.schematics.client.tools;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -10,11 +7,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -24,6 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class SchematicToolBase implements ISchematicTool {
 
@@ -91,8 +91,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 
 		// Select location at distance
 		if (selectIgnoreBlocks) {
-			float pt = Minecraft.getInstance()
-				.getRenderPartialTicks();
+			float pt = AnimationTickHolder.getPartialTicks();
 			selectedPos = new BlockPos(player.getEyePosition(pt)
 				.add(player.getLookVec()
 					.scale(selectionRange)));

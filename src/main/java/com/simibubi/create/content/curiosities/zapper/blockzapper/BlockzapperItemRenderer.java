@@ -1,20 +1,11 @@
 package com.simibubi.create.content.curiosities.zapper.blockzapper;
 
-import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.Accelerator;
-import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.Amplifier;
-import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.Body;
-import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.Retriever;
-import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.Scope;
-import static java.lang.Math.max;
-import static net.minecraft.util.math.MathHelper.clamp;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,6 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
+import static com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components.*;
+import static java.lang.Math.max;
+import static net.minecraft.util.math.MathHelper.clamp;
+
 public class BlockzapperItemRenderer extends ZapperItemRenderer<BlockzapperModel> {
 
 	@Override
@@ -32,8 +27,7 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer<BlockzapperModel
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		super.render(stack, model, renderer, ms, buffer, light, overlay);
 
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
 		renderer.render(model.getBakedModel(), light);

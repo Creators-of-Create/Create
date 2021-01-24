@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.light.LightVolumeDebugger;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -187,6 +186,7 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
+		ContraptionRenderDispatcher.renderTick(event);
 	}
 
 	protected static boolean isGameActive() {

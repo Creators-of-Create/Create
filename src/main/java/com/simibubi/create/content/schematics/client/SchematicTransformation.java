@@ -1,14 +1,11 @@
 package com.simibubi.create.content.schematics.client;
 
-import static java.lang.Math.abs;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -16,6 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
+
+import static java.lang.Math.abs;
 
 public class SchematicTransformation {
 
@@ -52,8 +51,7 @@ public class SchematicTransformation {
 	}
 
 	public void applyGLTransformations(MatrixStack ms) {
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
 		ms.translate(x.get(pt), y.get(pt), z.get(pt));
@@ -93,8 +91,7 @@ public class SchematicTransformation {
 	}
 
 	public Vec3d toLocalSpace(Vec3d vec) {
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		Vec3d rotationOffset = getRotationOffset(true);
 
 		vec = vec.subtract(x.get(pt), y.get(pt), z.get(pt));
@@ -181,8 +178,7 @@ public class SchematicTransformation {
 	}
 
 	public float getCurrentRotation() {
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		return rotation.get(pt);
 	}
 

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,7 +24,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
 		TransformType perspective = mainModel.getCurrentPerspective();
-		float partialTicks = Minecraft.getInstance().getRenderPartialTicks();
+		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || perspective == TransformType.FIRST_PERSON_RIGHT_HAND;

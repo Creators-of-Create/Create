@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector4f;
@@ -22,8 +22,7 @@ public class TileEntityRenderHelper {
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
 		MatrixStack localTransform, IRenderTypeBuffer buffer) {
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
 
