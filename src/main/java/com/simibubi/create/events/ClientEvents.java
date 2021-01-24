@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.RenderWork;
+import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.light.LightVolumeDebugger;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
@@ -106,6 +107,7 @@ public class ClientEvents {
 		ArmInteractionPointHandler.tick();
 		PlacementHelpers.tick();
 		CreateClient.outliner.tickOutlines();
+		ContraptionRenderDispatcher.tick();
 	}
 
 	@SubscribeEvent

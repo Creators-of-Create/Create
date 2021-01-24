@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.shader.Shader;
 import com.simibubi.create.foundation.render.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.shader.ShaderHelper;
@@ -27,6 +26,12 @@ public class ContraptionRenderDispatcher {
     public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
+        }
+    }
+
+    public static void tick() {
+        for (RenderedContraption contraption : renderers.values()) {
+            contraption.getLighter().tick(contraption);
         }
     }
 

@@ -53,9 +53,9 @@ void main() {
 
     float scrollSize = scrollTexture.w - scrollTexture.y;
 
-    float scroll = fract(speed * time / (36 * 16.)) * scrollSize * scrollMult;
+    float scroll = fract(speed * time / (36 * 16)) * scrollSize * scrollMult;
 
-    vec3 norm = (rotation * vec4(aNormal, 0.)).xyz;
+    vec3 norm = (rotation * vec4(aNormal, 0)).xyz;
 
     Diffuse = diffuse(norm);
     Light = light;

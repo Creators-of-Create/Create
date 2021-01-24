@@ -55,6 +55,19 @@ public class GridAlignedBB {
         return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
     }
 
+    public GridAlignedBB copy() {
+        return copy(this);
+    }
+
+    public boolean sameAs(GridAlignedBB other) {
+        return  minX == other.minX &&
+                minY == other.minY &&
+                minZ == other.minZ &&
+                maxX == other.maxX &&
+                maxY == other.maxY &&
+                maxZ == other.maxZ;
+    }
+
     public int sizeX() {
         return maxX - minX;
     }
@@ -270,6 +283,32 @@ public class GridAlignedBB {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GridAlignedBB that = (GridAlignedBB) o;
+
+        if (minX != that.minX) return false;
+        if (minY != that.minY) return false;
+        if (minZ != that.minZ) return false;
+        if (maxX != that.maxX) return false;
+        if (maxY != that.maxY) return false;
+        return maxZ == that.maxZ;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minX;
+        result = 31 * result + minY;
+        result = 31 * result + minZ;
+        result = 31 * result + maxX;
+        result = 31 * result + maxY;
+        result = 31 * result + maxZ;
+        return result;
     }
 
 }

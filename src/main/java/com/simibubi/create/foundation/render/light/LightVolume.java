@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //  to reread all the lighting data in those cases.
 public class LightVolume {
 
-    private final GridAlignedBB sampleVolume;
-    private final GridAlignedBB textureVolume;
+    private GridAlignedBB sampleVolume;
+    private GridAlignedBB textureVolume;
     private ByteBuffer lightData;
 
     private boolean bufferDirty;
@@ -27,12 +27,16 @@ public class LightVolume {
     private int glTexture;
 
     public LightVolume(GridAlignedBB sampleVolume) {
-        this.sampleVolume = GridAlignedBB.copy(sampleVolume);
-        sampleVolume.nextPowerOf2Centered();
-        this.textureVolume = sampleVolume;
+        setSampleVolume(sampleVolume);
 
         this.glTexture = GL11.glGenTextures();
         this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: maybe figure out how to pack light coords into a single byte
+    }
+
+    private void setSampleVolume(GridAlignedBB sampleVolume) {
+        this.sampleVolume = sampleVolume;
+        this.textureVolume = sampleVolume.copy();
+        this.textureVolume.nextPowerOf2Centered();
     }
 
     public GridAlignedBB getTextureVolume() {
@@ -79,6 +83,10 @@ public class LightVolume {
         return textureVolume.sizeZ();
     }
 
+    public void move(ILightReader world, GridAlignedBB newSampleVolume) {
+        setSampleVolume(newSampleVolume);
+        initialize(world);
+    }
 
     public void notifyLightUpdate(ILightReader world, LightType type, SectionPos location) {
         GridAlignedBB changedVolume = GridAlignedBB.fromSection(location);

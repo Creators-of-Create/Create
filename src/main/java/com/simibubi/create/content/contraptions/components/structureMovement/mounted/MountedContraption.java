@@ -4,6 +4,7 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 
 import java.util.List;
 
+import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -159,5 +160,10 @@ public class MountedContraption extends Contraption {
 			return;
 		IItemHandlerModifiable handlerFromInv = new InvWrapper((IInventory) cart);
 		inventory = new CombinedInvWrapper(handlerFromInv, inventory);
+	}
+
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new MountedLighter(this);
 	}
 }

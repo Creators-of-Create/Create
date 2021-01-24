@@ -1,18 +1,11 @@
-package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
+package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.contraption.RenderedContraption;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import com.simibubi.create.foundation.render.light.GridAlignedBB;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3i;
 
-import java.util.List;
-
-public class StabilizedLighter extends ContraptionLighter<StabilizedContraption> {
-    public StabilizedLighter(StabilizedContraption contraption) {
+public class MountedLighter extends ContraptionLighter<MountedContraption> {
+    public MountedLighter(MountedContraption contraption) {
         super(contraption);
     }
 
