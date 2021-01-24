@@ -28,7 +28,7 @@
 	"block.create.belt": "メカニカルベルト",
 	"block.create.birch_window": "シラカバの窓",
 	"block.create.birch_window_pane": "シラカバの窓パネル",
-	"block.create.black_sail": “黒色の帆",
+	"block.create.black_sail": "黒色の帆",
 	"block.create.black_seat": "黒色のシート",
 	"block.create.black_valve_handle": "黒色のバルブハンドル",
 	"block.create.blaze_burner": "ブレイズバーナー",
@@ -1137,7 +1137,7 @@
 	"item.create.example_item.tooltip.behaviour2": "好きなだけ挙動を追加することができます。",
 	"item.create.example_item.tooltip.control1": "Ctrlを押したとき",
 	"item.create.example_item.tooltip.action1": "これらのコントロールが表示されます。",
-	
+
 	"block.create.andesite_encased_shaft.tooltip": "安山岩のケース入りシャフト",
 	"block.create.andesite_encased_shaft.tooltip.summary": "クリエイティブ限定アイテム。_安山岩ケーシング_を_設置した_シャフトに使って覆ったもの。ケーシングブロックは消費されません。",
 
