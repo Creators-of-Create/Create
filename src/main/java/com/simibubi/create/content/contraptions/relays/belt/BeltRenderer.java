@@ -37,11 +37,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
-	
-	@Override
-	public boolean isGlobalRenderer(BeltTileEntity te) {
-		return BeltBlock.canTransportObjects(te.getBlockState());
-	}
 
 	@Override
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

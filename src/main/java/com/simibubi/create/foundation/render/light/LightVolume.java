@@ -178,12 +178,13 @@ public class LightVolume {
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
         if (bufferDirty) {
             uploadTexture();
-            bufferDirty = false;
         }
     }
 
     private synchronized void uploadTexture() {
+        lightData.rewind();
         GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, textureVolume.sizeX(), textureVolume.sizeY(), textureVolume.sizeZ(), 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+        bufferDirty = false;
     }
 
     public void release() {
