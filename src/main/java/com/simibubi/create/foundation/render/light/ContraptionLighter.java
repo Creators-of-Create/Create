@@ -2,17 +2,14 @@ package com.simibubi.create.foundation.render.light;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
-import net.minecraft.world.LightType;
-
-import static com.simibubi.create.foundation.render.RenderMath.nextPowerOf2;
 
 public abstract class ContraptionLighter<C extends Contraption> {
     protected final C contraption;
     public final LightVolume lightVolume;
 
     protected GridAlignedBB bounds;
+
+    protected boolean scheduleRebuild;
 
     protected ContraptionLighter(C contraption) {
         this.contraption = contraption;
@@ -22,6 +19,7 @@ public abstract class ContraptionLighter<C extends Contraption> {
         lightVolume = new LightVolume(contraptionBoundsToVolume(bounds));
 
         lightVolume.initialize(contraption.entity.world);
+        scheduleRebuild = true;
     }
 
     protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
@@ -33,7 +31,12 @@ public abstract class ContraptionLighter<C extends Contraption> {
         return bounds;
     }
 
-    public void tick(RenderedContraption owner) {}
+    public void tick(RenderedContraption owner) {
+        if (scheduleRebuild) {
+            lightVolume.initialize(owner.contraption.entity.world);
+            scheduleRebuild = false;
+        }
+    }
 
     public abstract GridAlignedBB getContraptionBounds();
 }

@@ -32,7 +32,7 @@ public class RenderedContraption {
 
     public final ContraptionKineticRenderer kinetics;
 
-    private Contraption contraption;
+    public Contraption contraption;
 
     private Matrix4f model;
 

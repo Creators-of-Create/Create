@@ -21,6 +21,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 
     @Override
     public void tick(RenderedContraption owner) {
+        super.tick(owner);
         GridAlignedBB contraptionBounds = getContraptionBounds();
 
         if (!contraptionBounds.sameAs(bounds)) {
