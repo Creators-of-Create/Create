@@ -32,19 +32,18 @@ public class BeltCrusherInteractionHandler {
                 continue;
             Direction crusherFacing = crusherState.get(CrushingWheelControllerBlock.FACING);
             Direction movementFacing = beltInventory.belt.getMovementFacing();
-            boolean blocking = crusherFacing == movementFacing;
             if (crusherFacing != movementFacing)
                 continue;
 
             float crusherEntry = segment + .5f;
             crusherEntry += .399f * (beltMovementPositive ? -1 : 1);
+            float postCrusherEntry = crusherEntry + .199f * (!beltMovementPositive ? -1 : 1);
 
-            boolean hasCrossed = nextOffset > crusherEntry && beltMovementPositive
-                    || nextOffset < crusherEntry && !beltMovementPositive;
+            boolean hasCrossed = nextOffset > crusherEntry && nextOffset < postCrusherEntry && beltMovementPositive
+                    || nextOffset < crusherEntry && nextOffset > postCrusherEntry && !beltMovementPositive;
             if (!hasCrossed)
                 return false;
-            if (blocking)
-                currentItem.beltPosition = crusherEntry;
+            currentItem.beltPosition = crusherEntry;
 
             TileEntity te = world.getTileEntity(crusherPos);
             if (!(te instanceof CrushingWheelControllerTileEntity))
@@ -52,20 +51,11 @@ public class BeltCrusherInteractionHandler {
 
             CrushingWheelControllerTileEntity crusherTE = (CrushingWheelControllerTileEntity) te;
 
-            int amountToExtract = -1;
             ItemStack toInsert = currentItem.stack.copy();
-            if (amountToExtract > toInsert.getCount())
-                if (blocking)
-                    return true;
-                else
-                    continue;
 
             ItemStack remainder = ItemHandlerHelper.insertItemStacked(crusherTE.inventory, toInsert, false);
             if (toInsert.equals(remainder, false))
-                if (blocking)
-                    return true;
-                else
-                    continue;
+                return true;
 
             int notFilled = currentItem.stack.getCount() - toInsert.getCount();
             if (!remainder.isEmpty()) {
@@ -75,8 +65,7 @@ public class BeltCrusherInteractionHandler {
 
             currentItem.stack = remainder;
             beltInventory.belt.sendData();
-            if (blocking)
-                return true;
+            return true;
         }
 
         return false;

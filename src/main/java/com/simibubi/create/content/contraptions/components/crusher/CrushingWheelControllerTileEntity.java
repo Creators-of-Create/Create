@@ -137,7 +137,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			//Output Items
 			if (facing.getAxis().isHorizontal() || facing == Direction.DOWN) {
 				BlockPos nextPos = pos.add(facing.getAxis() == Axis.X ? 1f * offset : 0f
-						, (facing == Direction.DOWN || facing.getAxis().isHorizontal()) ? -1f : 0f
+						, (-1f)
 						, facing.getAxis() == Axis.Z ? 1f * offset : 0f);
 				DirectBeltInputBehaviour behaviour = TileEntityBehaviour.get(world, nextPos, DirectBeltInputBehaviour.TYPE);
 				if (behaviour != null) {
