@@ -465,11 +465,4 @@ public class BeltTileEntity extends KineticTileEntity {
 		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
 			.build();
 	}
-
-	@Override
-	public boolean shouldRenderAsTE() {
-		// Since only the controller does the item rendering, we potentially
-		// save a *lot* of time by not processing the other belts.
-		return isController();
-	}
 }

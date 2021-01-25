@@ -376,10 +376,4 @@ public class DeployerTileEntity extends KineticTileEntity {
 		TooltipHelper.addHint(tooltip, "hint.full_deployer");
 		return true;
 	}
-
-	@Override
-	public boolean shouldRenderAsTE() {
-		return true;
-	}
-
 }

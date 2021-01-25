@@ -143,8 +143,4 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	protected abstract Object getRecipeCacheKey();
 
-	@Override
-	public boolean shouldRenderAsTE() {
-		return true;
-	}
 }

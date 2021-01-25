@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;
+import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.GL15;
@@ -32,10 +33,13 @@ public class TemplateBuffer {
         ((Buffer)template).rewind();
     }
 
-    protected void buildEBO(int ebo){
+    protected final GlBuffer createEBO(){
+        GlBuffer ebo = new GlBuffer();
+
         int indicesSize = vertexCount * VertexFormatElement.Type.USHORT.getSize();
 
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+        ebo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
 
         ByteBuffer indices = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
@@ -46,6 +50,10 @@ public class TemplateBuffer {
         indices.rewind();
 
         GL15.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
+
+        ebo.unbind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+
+        return ebo;
     }
 
     public boolean isEmpty() {

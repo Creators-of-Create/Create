@@ -26,7 +26,6 @@ public class StabilizedContraption extends Contraption {
 		if (!searchMovedStructure(world, offset, null))
 			return false;
 		startMoving(world);
-		expandBoundsAroundAxis(Axis.Y);
 		if (blocks.isEmpty())
 			return false;
 		return true;

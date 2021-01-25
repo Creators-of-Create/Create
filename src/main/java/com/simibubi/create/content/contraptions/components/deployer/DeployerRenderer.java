@@ -40,6 +40,11 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	}
 
 	@Override
+	public boolean isGlobalRenderer(DeployerTileEntity te) {
+		return true;
+	}
+
+	@Override
 	protected void renderSafe(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		renderItem(te, partialTicks, ms, buffer, light, overlay);

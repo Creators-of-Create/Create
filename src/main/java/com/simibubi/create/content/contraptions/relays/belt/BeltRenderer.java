@@ -51,6 +51,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 	}
 
 	@Override
+	public boolean isGlobalRenderer(BeltTileEntity te) {
+		return te.isController();
+	}
+
+	@Override
 	public void addInstanceData(InstanceContext<BeltTileEntity> ctx) {
 		BeltTileEntity te = ctx.te;
 		BlockState blockState = te.getBlockState();

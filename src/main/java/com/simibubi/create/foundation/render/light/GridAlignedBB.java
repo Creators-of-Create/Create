@@ -9,7 +9,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
-import static com.simibubi.create.foundation.render.RenderMath.rotateSideLength;
 
 public class GridAlignedBB {
     public int minX;
@@ -26,6 +25,10 @@ public class GridAlignedBB {
         this.maxX = maxX;
         this.maxY = maxY;
         this.maxZ = maxZ;
+    }
+
+    public static GridAlignedBB ofRadius(int radius) {
+        return new GridAlignedBB(-radius, -radius, -radius, radius + 1, radius + 1, radius + 1);
     }
 
     public static GridAlignedBB copy(GridAlignedBB bb) {
@@ -104,16 +107,6 @@ public class GridAlignedBB {
         maxZ += z;
     }
 
-    public void rotate45(Direction.Axis axis) {
-        if (axis == Direction.Axis.X) {
-            this.grow(0, rotateSideLength(sizeY()), rotateSideLength(sizeZ()));
-        } else if (axis == Direction.Axis.Y) {
-            this.grow(rotateSideLength(sizeX()), 0, rotateSideLength(sizeZ()));
-        } else if (axis == Direction.Axis.Z) {
-            this.grow(rotateSideLength(sizeX()), rotateSideLength(sizeY()), 0);
-        }
-    }
-
     public void mirrorAbout(Direction.Axis axis) {
         Vec3i axisVec = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getDirectionVec();
         int flipX = axisVec.getX() - 1;
@@ -129,38 +122,6 @@ public class GridAlignedBB {
         this.minX = maxX;
         this.minY = maxY;
         this.minZ = maxZ;
-    }
-
-    public void expandAroundAxis(Direction.Axis axis) {
-        int maxXDiff = Math.max(this.maxX - 1, -this.minX);
-        int maxYDiff = Math.max(this.maxY - 1, -this.minY);
-        int maxZDiff = Math.max(this.maxZ - 1, -this.minZ);
-
-        int maxDiff;
-        if (axis == Direction.Axis.X)
-            maxDiff = Math.max(maxZDiff, maxYDiff);
-        else if (axis == Direction.Axis.Y)
-            maxDiff = Math.max(maxZDiff, maxXDiff);
-        else if (axis == Direction.Axis.Z)
-            maxDiff = Math.max(maxXDiff, maxYDiff);
-        else
-            maxDiff = 0;
-
-        Vec3i axisVec = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getDirectionVec();
-        int axisX = axisVec.getX();
-        int axisY = axisVec.getY();
-        int axisZ = axisVec.getZ();
-
-        int planeX = 1 - axisX;
-        int planeY = 1 - axisY;
-        int planeZ = 1 - axisZ;
-
-        minX = axisX * minX - maxDiff * planeX;
-        minY = axisY * minY - maxDiff * planeY;
-        minZ = axisZ * minZ - maxDiff * planeZ;
-        maxX = axisX * maxX + (maxDiff + 1) * planeX;
-        maxY = axisY * maxY + (maxDiff + 1) * planeY;
-        maxZ = axisZ * maxZ + (maxDiff + 1) * planeZ;
     }
 
     /**
@@ -269,6 +230,19 @@ public class GridAlignedBB {
         return this.intersects(other.minX, other.minY, other.minZ, other.maxX, other.maxY, other.maxZ);
     }
 
+    public boolean contains(GridAlignedBB other) {
+        return  other.minX >= this.minX &&
+                other.maxX <= this.maxX &&
+                other.minY >= this.minY &&
+                other.maxY <= this.maxY &&
+                other.minZ >= this.minZ &&
+                other.maxZ <= this.maxZ;
+    }
+
+    public boolean isContainedBy(GridAlignedBB other) {
+        return other.contains(this);
+    }
+
     public boolean intersects(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         return this.minX < maxX && this.maxX > minX && this.minY < maxY && this.maxY > minY && this.minZ < maxZ && this.maxZ > minZ;
     }
@@ -292,12 +266,7 @@ public class GridAlignedBB {
 
         GridAlignedBB that = (GridAlignedBB) o;
 
-        if (minX != that.minX) return false;
-        if (minY != that.minY) return false;
-        if (minZ != that.minZ) return false;
-        if (maxX != that.maxX) return false;
-        if (maxY != that.maxY) return false;
-        return maxZ == that.maxZ;
+        return this.sameAs(that);
     }
 
     @Override

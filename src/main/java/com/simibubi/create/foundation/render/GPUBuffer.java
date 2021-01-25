@@ -1,18 +1,20 @@
 package com.simibubi.create.foundation.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.render.gl.GlBuffer;
+import com.simibubi.create.foundation.render.gl.GlVertexArray;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
 
 public abstract class GPUBuffer extends TemplateBuffer {
 
-    protected int vao, ebo, invariantVBO;
+    protected GlVertexArray vao;
+
+    protected GlBuffer ebo;
+    protected GlBuffer invariantVBO;
     protected boolean removed;
 
     public GPUBuffer(BufferBuilder buf) {
@@ -25,12 +27,18 @@ public abstract class GPUBuffer extends TemplateBuffer {
 
         int invariantSize = vertexCount * stride;
 
-        vao = GL30.glGenVertexArrays();
-        ebo = GlStateManager.genBuffers();
-        invariantVBO = GlStateManager.genBuffers();
+        vao = new GlVertexArray();
+        invariantVBO = new GlBuffer();
+        ebo = createEBO();
 
-        GL30.glBindVertexArray(vao);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, invariantVBO);
+        vao.bind();
+
+        int numAttributes = getTotalShaderAttributeCount();
+        for (int i = 0; i <= numAttributes; i++) {
+            GL40.glEnableVertexAttribArray(i);
+        }
+
+        invariantVBO.bind(GL15.GL_ARRAY_BUFFER);
 
         // allocate the buffer on the gpu
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
@@ -44,14 +52,11 @@ public abstract class GPUBuffer extends TemplateBuffer {
         constant.rewind();
         GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
 
-        buildEBO(ebo);
-
         getModelFormat().informAttributes(0);
 
-        GlStateManager.bindBuffers(GL15.GL_ARRAY_BUFFER, 0);
-        GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+        invariantVBO.unbind(GL15.GL_ARRAY_BUFFER);
         // Deselect (bind to 0) the VAO
-        GL30.glBindVertexArray(0);
+        vao.unbind();
     }
 
     protected abstract void copyVertex(ByteBuffer to, int index);
@@ -69,26 +74,17 @@ public abstract class GPUBuffer extends TemplateBuffer {
     }
 
     public void render() {
-        if (vao == 0 || removed) return;
+        if (vertexCount == 0 || removed) return;
 
-        GL30.glBindVertexArray(vao);
+        vao.bind();
         preDrawTask();
 
-        int numAttributes = getTotalShaderAttributeCount();
-        for (int i = 0; i <= numAttributes; i++) {
-            GL40.glEnableVertexAttribArray(i);
-        }
-
-        GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, ebo);
+        ebo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
 
         drawCall();
 
-        for (int i = 0; i <= numAttributes; i++) {
-            GL40.glDisableVertexAttribArray(i);
-        }
-
-        GlStateManager.bindBuffers(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-        GL30.glBindVertexArray(0);
+        ebo.unbind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+        vao.unbind();
     }
 
     public void delete() {
@@ -99,11 +95,8 @@ public abstract class GPUBuffer extends TemplateBuffer {
     }
 
     protected void deleteInternal() {
-        GL15.glDeleteBuffers(invariantVBO);
-        GL15.glDeleteBuffers(ebo);
-        GL30.glDeleteVertexArrays(vao);
-        vao = 0;
-        ebo = 0;
-        invariantVBO = 0;
+        invariantVBO.delete();
+        ebo.delete();
+        vao.delete();
     }
 }

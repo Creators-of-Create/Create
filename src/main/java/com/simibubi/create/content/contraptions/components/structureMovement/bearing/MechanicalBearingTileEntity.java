@@ -282,4 +282,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return true;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

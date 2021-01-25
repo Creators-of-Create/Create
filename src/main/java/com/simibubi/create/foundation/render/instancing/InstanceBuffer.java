@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.render.GPUBuffer;
 import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.TemplateBuffer;
+import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
@@ -18,7 +19,7 @@ import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*
 public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
     public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV);
 
-    protected int instanceVBO;
+    protected GlBuffer instanceVBO;
     protected int instanceCount;
 
     protected int instanceBufferSize = -1;
@@ -34,7 +35,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
     @Override
     protected void setup() {
         super.setup();
-        instanceVBO = GlStateManager.genBuffers();
+        instanceVBO = new GlBuffer();
     }
 
     @Override
@@ -76,15 +77,8 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
     }
 
     protected void deleteInternal() {
-        GL15.glDeleteBuffers(invariantVBO);
-        GL15.glDeleteBuffers(instanceVBO);
-        GL15.glDeleteBuffers(ebo);
-        GL30.glDeleteVertexArrays(vao);
-        vao = 0;
-        ebo = 0;
-        invariantVBO = 0;
-        instanceVBO = 0;
-        instanceBufferSize = -1;
+        super.deleteInternal();
+        instanceVBO.delete();
     }
 
     protected abstract D newInstance();
@@ -116,7 +110,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
 
         int instanceSize = RenderMath.nextPowerOf2(instanceCount * instanceFormat.getStride());
 
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, instanceVBO);
+        instanceVBO.bind(GL15.GL_ARRAY_BUFFER);
 
         // this changes enough that it's not worth reallocating the entire buffer every time.
         if (instanceSize > instanceBufferSize) {
@@ -137,8 +131,7 @@ public abstract class InstanceBuffer<D extends InstanceData> extends GPUBuffer {
             GL33.glVertexAttribDivisor(i + staticAttributes, 1);
         }
 
-        // Deselect (bind to 0) the VBO
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        instanceVBO.unbind(GL15.GL_ARRAY_BUFFER);
 
         shouldBuild = false;
         rebuffer = false;

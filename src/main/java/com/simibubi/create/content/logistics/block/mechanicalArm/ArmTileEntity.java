@@ -513,8 +513,4 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 	}
 
-	@Override
-	public boolean shouldRenderAsTE() {
-		return true;
-	}
 }
