@@ -37,7 +37,7 @@ public class BeltCrusherInteractionHandler {
 
             float crusherEntry = segment + .5f;
             crusherEntry += .399f * (beltMovementPositive ? -1 : 1);
-            float postCrusherEntry = crusherEntry + .199f * (!beltMovementPositive ? -1 : 1);
+            float postCrusherEntry = crusherEntry + .799f * (!beltMovementPositive ? -1 : 1);
 
             boolean hasCrossed = nextOffset > crusherEntry && nextOffset < postCrusherEntry && beltMovementPositive
                     || nextOffset < crusherEntry && nextOffset > postCrusherEntry && !beltMovementPositive;
