@@ -37,7 +37,7 @@ public class EdgeInteractionHandler {
 		Hand hand = event.getHand();
 		ItemStack heldItem = player.getHeldItem(hand);
 
-		if (player.isSneaking())
+		if (player.isSneaking() || player.isSpectator())
 			return;
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)

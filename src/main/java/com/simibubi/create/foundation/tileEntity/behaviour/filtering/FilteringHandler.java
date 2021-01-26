@@ -43,7 +43,7 @@ public class FilteringHandler {
 		PlayerEntity player = event.getPlayer();
 		Hand hand = event.getHand();
 
-		if (player.isSneaking())
+		if (player.isSneaking() || player.isSpectator())
 			return;
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
