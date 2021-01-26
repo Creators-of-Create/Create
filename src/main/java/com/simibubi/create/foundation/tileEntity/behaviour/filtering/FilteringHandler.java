@@ -75,12 +75,12 @@ public class FilteringHandler {
 		
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
-				if (behaviour.getFilter()
-					.getItem() instanceof FilterItem)
-					player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
 				if (toApply.getItem() instanceof FilterItem)
 					player.getHeldItem(hand)
 						.shrink(1);
+				if (behaviour.getFilter()
+					.getItem() instanceof FilterItem)
+					player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
 			}
 			if (toApply.getItem() instanceof FilterItem)
 				toApply.setCount(1);
