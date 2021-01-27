@@ -5,9 +5,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.foundation.render.shader.Shader;
-import com.simibubi.create.foundation.render.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;

@@ -2,15 +2,14 @@ package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.*;
 
-public abstract class DynamicInstanceBuffer<S extends InstanceData, D extends InstanceData> extends InstanceBuffer<S> {
+public abstract class DynamicInstancedModel<S extends InstanceData, D extends InstanceData> extends InstancedModel<S> {
 
     protected GlBuffer dynamicVBO;
 
     protected int dynamicBufferSize = -1;
 
-    public DynamicInstanceBuffer(BufferBuilder buf) {
+    public DynamicInstancedModel(BufferBuilder buf) {
         super(buf);
     }
 

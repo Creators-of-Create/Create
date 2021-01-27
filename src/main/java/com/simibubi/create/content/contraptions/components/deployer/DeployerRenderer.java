@@ -114,7 +114,6 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(new InstanceContext.World<>(te), getRenderedBlockState(te));
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();

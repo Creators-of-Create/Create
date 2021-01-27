@@ -4,11 +4,11 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-layout (location = 3) in vec3 networkTint;
-layout (location = 4) in vec3 instancePos;
-layout (location = 5) in vec2 light;
+layout (location = 3) in vec3 instancePos;
+layout (location = 4) in vec2 light;
+layout (location = 5) in vec3 networkTint;
 layout (location = 6) in float speed;
-layout (location = 7) in float rotationOffset;
+layout (location = 7) in float offset;
 layout (location = 8) in vec3 rotationAxis;
 
 out float Diffuse;
@@ -25,6 +25,7 @@ uniform int ticks;
 uniform mat4 projection;
 uniform mat4 view;
 uniform int debug;
+
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -44,16 +45,20 @@ float diffuse(vec3 normal) {
     return min(x * x * .6 + y * y * ((3 + y) / 4) + z * z * .8, 1);
 }
 
+mat4 rotation(vec3 rot) {
+    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
+}
+
 mat4 kineticRotation() {
-    float degrees = rotationOffset + time * speed * -3/10;
+    float degrees = offset + time * speed * -3/10;
     float angle = fract(degrees / 360) * PI * 2;
 
-    return rotate(normalize(rotationAxis), angle);
+    return rotate(vec3(0, 1, 0), angle);
 }
 
 void main() {
     mat4 kineticRotation = kineticRotation();
-    vec4 localPos = kineticRotation * vec4(aPos - .5, 1) + vec4(instancePos + .5, 0);
+    vec4 localPos = kineticRotation * vec4(aPos - 0.5, 1) + vec4(instancePos + .5, 0);
 
     vec4 worldPos = model * localPos;
 

@@ -4,11 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
-import com.simibubi.create.foundation.render.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.light.ILightListener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
@@ -16,8 +15,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
@@ -28,13 +26,49 @@ import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FastRenderDispatcher {
+
+    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> addedTiles = new WorldAttached<>(ConcurrentLinkedQueue::new);
+    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> removedTiles = new WorldAttached<>(ConcurrentLinkedQueue::new);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
     public static void endFrame() {
         projectionMatrixThisFrame = null;
+    }
+
+    public static void enqueueUpdate(TileEntity te) {
+        addedTiles.get(te.getWorld()).add(te);
+    }
+
+    public static void enqueueRemove(TileEntity te) {
+        removedTiles.get(te.getWorld()).add(te);
+    }
+
+    public static void tick() {
+        ClientWorld world = Minecraft.getInstance().world;
+
+        ConcurrentLinkedQueue<TileEntity> added = addedTiles.get(world);
+
+        if (added != null) {
+            while (!added.isEmpty()) {
+                TileEntity te = added.poll();
+
+                CreateClient.kineticRenderer.update(te);
+            }
+        }
+
+        ConcurrentLinkedQueue<TileEntity> removed = removedTiles.get(world);
+
+        if (removed != null) {
+            while (!removed.isEmpty()) {
+                TileEntity te = removed.poll();
+
+                CreateClient.kineticRenderer.remove(te);
+            }
+        }
     }
 
     public static void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ) {
@@ -69,23 +103,10 @@ public class FastRenderDispatcher {
                  .stream()
                  .filter(entry -> SectionPos.toChunk(entry.getKey().getY()) == sectionY)
                  .map(Map.Entry::getValue)
-                 .forEach(FastRenderDispatcher::markForRebuild);
+                 .filter(tile -> tile instanceof ILightListener)
+                 .map(tile -> (ILightListener) tile)
+                 .forEach(ILightListener::onChunkLightUpdate);
         }
-    }
-
-    public static void markForRebuild(TileEntity te) {
-        if (te instanceof IInstanceRendered) {
-            TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
-
-            if (renderer instanceof IInstancedTileEntityRenderer) {
-                markForRebuild(te, (IInstancedTileEntityRenderer<? super TileEntity>) renderer);
-            }
-        }
-    }
-
-    private static <T extends TileEntity> void markForRebuild(T te, IInstancedTileEntityRenderer<T> renderer) {
-        CreateClient.kineticRenderer.dirty = true;
-        renderer.markForRebuild(new InstanceContext.World<>(te));
     }
 
     // copied from GameRenderer.renderWorld

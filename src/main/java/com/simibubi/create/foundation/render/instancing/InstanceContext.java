@@ -1,10 +1,11 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
 import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import com.simibubi.create.foundation.render.FastKineticRenderer;
 import net.minecraft.tileentity.TileEntity;
 
+@Deprecated
 public abstract class InstanceContext<T extends TileEntity> {
 
     public final T te;
@@ -13,15 +14,15 @@ public abstract class InstanceContext<T extends TileEntity> {
         this.te = te;
     }
 
-    public RenderMaterial<InstanceBuffer<RotatingData>> getRotating() {
+    public RenderMaterial<InstancedModel<RotatingData>> getRotating() {
         return getKinetics().get(KineticRenderMaterials.ROTATING);
     }
 
-    public RenderMaterial<InstanceBuffer<BeltData>> getBelts() {
+    public RenderMaterial<InstancedModel<BeltData>> getBelts() {
         return getKinetics().get(KineticRenderMaterials.BELTS);
     }
 
-    public abstract FastKineticRenderer getKinetics();
+    public abstract InstancedTileRenderDispatcher getKinetics();
 
     public abstract boolean checkWorldLight();
 
@@ -35,7 +36,7 @@ public abstract class InstanceContext<T extends TileEntity> {
         }
 
         @Override
-        public FastKineticRenderer getKinetics() {
+        public InstancedTileRenderDispatcher getKinetics() {
             return c.kinetics;
         }
 
@@ -52,7 +53,7 @@ public abstract class InstanceContext<T extends TileEntity> {
         }
 
         @Override
-        public FastKineticRenderer getKinetics() {
+        public InstancedTileRenderDispatcher getKinetics() {
             return CreateClient.kineticRenderer;
         }
 

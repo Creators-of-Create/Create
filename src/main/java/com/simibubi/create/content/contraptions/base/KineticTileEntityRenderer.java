@@ -4,11 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -56,7 +56,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static <T extends KineticTileEntity> void renderRotatingKineticBlock(InstanceContext<T> ctx, BlockState renderedState) {
-		InstanceBuffer<RotatingData> instancedRenderer = ctx.getRotating().getModel(KINETIC_TILE, renderedState);
+		InstancedModel<RotatingData> instancedRenderer = ctx.getRotating().getModel(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(ctx, instancedRenderer);
 	}
 
@@ -64,7 +64,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		ctx.getRotating().getModel(KINETIC_TILE, renderedState).clearInstanceData();
 	}
 
-	public static <T extends KineticTileEntity> void renderRotatingBuffer(InstanceContext<T> ctx, InstanceBuffer<RotatingData> instancer) {
+	public static <T extends KineticTileEntity> void renderRotatingBuffer(InstanceContext<T> ctx, InstancedModel<RotatingData> instancer) {
 		instancer.setupInstance(data -> {
 			T te = ctx.te;
 			final BlockPos pos = te.getPos();
@@ -145,7 +145,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return te.getBlockState();
 	}
 
-	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
+	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
 		return ctx.getRotating().getModel(KINETIC_TILE, getRenderedBlockState(ctx.te));
 	}
 

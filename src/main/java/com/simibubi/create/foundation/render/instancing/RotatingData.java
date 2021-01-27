@@ -1,27 +1,22 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.Direction;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.NORMAL;
 
-public class RotatingData extends BasicData<RotatingData> {
-    public static VertexFormat FORMAT = new VertexFormat(BasicData.FORMAT, FLOAT, FLOAT, NORMAL);
+public class RotatingData extends KineticData<RotatingData> {
+    public static VertexFormat FORMAT = new VertexFormat(KineticData.FORMAT, NORMAL);
 
-    private float rotationalSpeed;
-    private float rotationOffset;
     private byte rotationAxisX;
     private byte rotationAxisY;
     private byte rotationAxisZ;
 
-    public RotatingData setRotationalSpeed(float rotationalSpeed) {
-        this.rotationalSpeed = rotationalSpeed;
-        return this;
-    }
-
-    public RotatingData setRotationOffset(float rotationOffset) {
-        this.rotationOffset = rotationOffset;
+    public RotatingData setRotationAxis(Direction.Axis axis) {
+        Direction orientation = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
+        setRotationAxis(orientation.getUnitVector());
         return this;
     }
 
@@ -40,8 +35,6 @@ public class RotatingData extends BasicData<RotatingData> {
     @Override
     public void write(ByteBuffer buf) {
         super.write(buf);
-        put(buf, rotationalSpeed);
-        put(buf, rotationOffset);
 
         putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
     }

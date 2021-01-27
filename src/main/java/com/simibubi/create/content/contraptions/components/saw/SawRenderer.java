@@ -7,8 +7,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -136,7 +136,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 		}
 	}
 
-	protected InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<SawTileEntity> ctx) {
+	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<SawTileEntity> ctx) {
 		KineticTileEntity te = ctx.te;
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())

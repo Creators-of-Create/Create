@@ -7,7 +7,6 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.FastKineticRenderer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -85,18 +84,10 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 
 		for (boolean bottom : Iterate.trueAndFalse) {
 
-			AllBlockPartials beltPartial = diagonal
-					? start ? AllBlockPartials.BELT_DIAGONAL_START
-					: end ? AllBlockPartials.BELT_DIAGONAL_END : AllBlockPartials.BELT_DIAGONAL_MIDDLE
-					: bottom
-					? start ? AllBlockPartials.BELT_START_BOTTOM
-					: end ? AllBlockPartials.BELT_END_BOTTOM : AllBlockPartials.BELT_MIDDLE_BOTTOM
-					: start ? AllBlockPartials.BELT_START
-					: end ? AllBlockPartials.BELT_END : AllBlockPartials.BELT_MIDDLE;
+			AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-			InstanceBuffer<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
-			SpriteShiftEntry spriteShift =
-					diagonal ? AllSpriteShifts.BELT_DIAGONAL : bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
+			InstancedModel<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
+			SpriteShiftEntry spriteShift = getSpriteShiftEntry(diagonal, bottom);
 
 			beltBuffer.setupInstance(data -> {
 				float speed = te.getSpeed();
@@ -127,8 +118,31 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 		}
 
 		if (te.hasPulley()) {
-			InstanceBuffer<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
+			InstancedModel<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
 			KineticTileEntityRenderer.renderRotatingBuffer(ctx, rotatingBuffer);
+		}
+	}
+
+	public static SpriteShiftEntry getSpriteShiftEntry(boolean diagonal, boolean bottom) {
+		if (diagonal) return AllSpriteShifts.BELT_DIAGONAL;
+		if (bottom) return AllSpriteShifts.BELT_OFFSET;
+		return AllSpriteShifts.BELT;
+	}
+
+	public static AllBlockPartials getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
+		if (diagonal) {
+			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
+			if (end) return AllBlockPartials.BELT_DIAGONAL_END;
+			return AllBlockPartials.BELT_DIAGONAL_MIDDLE;
+		} else {
+			if (bottom) {
+				if (start) return AllBlockPartials.BELT_START_BOTTOM;
+				if (end) return AllBlockPartials.BELT_END_BOTTOM;
+				return AllBlockPartials.BELT_MIDDLE_BOTTOM;
+			}
+			if (start) return AllBlockPartials.BELT_START;
+			if (end) return AllBlockPartials.BELT_END;
+			return AllBlockPartials.BELT_MIDDLE;
 		}
 	}
 
@@ -161,16 +175,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 
 		for (boolean bottom : Iterate.trueAndFalse) {
 
-			AllBlockPartials beltPartial = diagonal
-					? start ? AllBlockPartials.BELT_DIAGONAL_START
-					: end ? AllBlockPartials.BELT_DIAGONAL_END : AllBlockPartials.BELT_DIAGONAL_MIDDLE
-					: bottom
-					? start ? AllBlockPartials.BELT_START_BOTTOM
-					: end ? AllBlockPartials.BELT_END_BOTTOM : AllBlockPartials.BELT_MIDDLE_BOTTOM
-					: start ? AllBlockPartials.BELT_START
-					: end ? AllBlockPartials.BELT_END : AllBlockPartials.BELT_MIDDLE;
+			AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-			InstanceBuffer<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
+			InstancedModel<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
 
 			beltBuffer.clearInstanceData();
 
@@ -179,12 +186,12 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 				break;
 		}
 
-		InstanceBuffer<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
+		InstancedModel<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
 
 		rotatingBuffer.clearInstanceData();
 	}
 
-	private InstanceBuffer<RotatingData> getPulleyModel(InstanceContext<BeltTileEntity> ctx, BlockState blockState, boolean sideways) {
+	private InstancedModel<RotatingData> getPulleyModel(InstanceContext<BeltTileEntity> ctx, BlockState blockState, boolean sideways) {
 		Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
 								  .rotateY();
 		if (sideways)

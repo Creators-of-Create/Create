@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -33,7 +33,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		getRotatedModel(ctx).clearInstanceData();
 	}
 
-	private InstanceBuffer<RotatingData> getRotatedModel(InstanceContext<SpeedControllerTileEntity> ctx) {
+	private InstancedModel<RotatingData> getRotatedModel(InstanceContext<SpeedControllerTileEntity> ctx) {
 		return ctx.getRotating().getModel(KineticTileEntityRenderer.KINETIC_TILE,
 				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(ctx.te)));
 	}

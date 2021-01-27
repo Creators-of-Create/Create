@@ -7,9 +7,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.shader.Shader;
-import com.simibubi.create.foundation.render.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL40;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.render.Compartment.PARTIAL;
 
-public class RenderMaterial<MODEL extends InstanceBuffer<?>> {
+public class RenderMaterial<MODEL extends InstancedModel<?>> {
 
     protected final Map<Compartment<?>, Cache<Object, MODEL>> models;
     protected final ModelFactory<MODEL> factory;
@@ -75,7 +74,7 @@ public class RenderMaterial<MODEL extends InstanceBuffer<?>> {
     public void teardown() {}
 
     public void delete() {
-        runOnAll(InstanceBuffer::delete);
+        runOnAll(InstancedModel::delete);
         models.values().forEach(Cache::invalidateAll);
     }
 
@@ -103,6 +102,11 @@ public class RenderMaterial<MODEL extends InstanceBuffer<?>> {
 
     public MODEL getModel(AllBlockPartials partial, BlockState referenceState) {
         return get(PARTIAL, partial, () -> buildModel(partial.get(), referenceState));
+    }
+
+    public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir) {
+        return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
+                   () -> buildModel(partial.get(), referenceState));
     }
 
     public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {

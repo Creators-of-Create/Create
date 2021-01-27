@@ -6,10 +6,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.shader.ShaderHelper;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RenderedContraption {
-    private HashMap<RenderType, ContraptionBuffer> renderLayers = new HashMap<>();
+    private HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
 
     private final ContraptionLighter<?> lighter;
 
@@ -59,12 +59,12 @@ public class RenderedContraption {
         return lighter;
     }
 
-    public RenderMaterial<InstanceBuffer<StaticRotatingActorData>> getActorMaterial() {
+    public RenderMaterial<InstancedModel<StaticRotatingActorData>> getActorMaterial() {
         return kinetics.get(KineticRenderMaterials.ACTORS);
     }
 
     public void doRenderLayer(RenderType layer, int shader) {
-        ContraptionBuffer buffer = renderLayers.get(layer);
+        ContraptionModel buffer = renderLayers.get(layer);
         if (buffer != null) {
             setup(shader);
             buffer.render();
@@ -73,7 +73,7 @@ public class RenderedContraption {
     }
 
     private void buildLayers(Contraption c) {
-        for (ContraptionBuffer buffer : renderLayers.values()) {
+        for (ContraptionModel buffer : renderLayers.values()) {
             buffer.delete();
         }
 
@@ -153,7 +153,7 @@ public class RenderedContraption {
     }
 
     void invalidate() {
-        for (ContraptionBuffer buffer : renderLayers.values()) {
+        for (ContraptionModel buffer : renderLayers.values()) {
             buffer.delete();
         }
         renderLayers.clear();
@@ -163,8 +163,8 @@ public class RenderedContraption {
         kinetics.invalidate();
     }
 
-    private static ContraptionBuffer buildStructureBuffer(Contraption c, RenderType layer) {
+    private static ContraptionModel buildStructureBuffer(Contraption c, RenderType layer) {
         BufferBuilder builder = ContraptionRenderer.buildStructure(c, layer);
-        return new ContraptionBuffer(builder);
+        return new ContraptionModel(builder);
     }
 }

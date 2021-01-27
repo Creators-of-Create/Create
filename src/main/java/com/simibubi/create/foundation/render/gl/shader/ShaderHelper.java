@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.shader;
+package com.simibubi.create.foundation.render.gl.shader;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.Create;
@@ -11,7 +11,6 @@ import net.minecraft.client.shader.ShaderLinkHelper;
 import net.minecraft.client.shader.ShaderLoader;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;

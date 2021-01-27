@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.render.instancing.actors;
 
-import com.simibubi.create.foundation.render.instancing.DynamicInstanceBuffer;
+import com.simibubi.create.foundation.render.instancing.DynamicInstancedModel;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class RotatingActorBuffer extends DynamicInstanceBuffer<StaticRotatingActorData, DynamicRotatingActorData> {
-    public RotatingActorBuffer(BufferBuilder buf) {
+public class RotatingActorModel extends DynamicInstancedModel<StaticRotatingActorData, DynamicRotatingActorData> {
+    public RotatingActorModel(BufferBuilder buf) {
         super(buf);
     }
 

@@ -1,20 +1,20 @@
 package com.simibubi.create.foundation.render.contraption;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.render.GPUBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
+import com.simibubi.create.foundation.render.BufferedModel;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.RGBA;
 
-public class ContraptionBuffer extends GPUBuffer {
-    public static final VertexFormat FORMAT = new VertexFormat(InstanceBuffer.FORMAT, RGBA);
+public class ContraptionModel extends BufferedModel {
+    public static final VertexFormat FORMAT = new VertexFormat(InstancedModel.FORMAT, RGBA);
 
-    public ContraptionBuffer(BufferBuilder buf) {
+    public ContraptionModel(BufferBuilder buf) {
         super(buf);
     }
 

@@ -5,14 +5,15 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-layout (location = 3) in vec3 networkTint;
-layout (location = 4) in vec3 instancePos;
-layout (location = 5) in vec2 light;
-layout (location = 6) in vec3 rotationDegrees;
-layout (location = 7) in float speed;
-layout (location = 8) in vec2 sourceUV;
-layout (location = 9) in vec4 scrollTexture;
-layout (location = 10) in float scrollMult;
+layout (location = 3) in vec3 instancePos;
+layout (location = 4) in vec2 light;
+layout (location = 5) in vec3 networkTint;
+layout (location = 6) in float speed;
+layout (location = 7) in float offset;
+layout (location = 8) in vec3 eulerAngles;
+layout (location = 9) in vec2 uv;
+layout (location = 10) in vec4 scrollTexture;
+layout (location = 11) in float scrollMult;
 
 out float Diffuse;
 out vec2 TexCoords;
@@ -53,7 +54,7 @@ mat4 rotation(vec3 rot) {
 }
 
 mat4 localRotation() {
-    vec3 rot = fract(rotationDegrees / 360) * PI * 2;
+    vec3 rot = fract(eulerAngles / 360) * PI * 2;
     return rotation(rot);
 }
 
@@ -64,13 +65,13 @@ void main() {
     vec4 worldPos = model * localPos;
 
     float scrollSize = scrollTexture.w - scrollTexture.y;
-    float scroll = fract(speed * time / (36 * 16)) * scrollSize * scrollMult;
+    float scroll = fract(speed * time / (36 * 16) + offset) * scrollSize * scrollMult;
 
     vec3 norm = normalize(model * localRotation * vec4(aNormal, 0)).xyz;
 
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
     Diffuse = diffuse(norm);
-    TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0, scroll);
+    TexCoords = aTexCoords - uv + scrollTexture.xy + vec2(0, scroll);
     gl_Position = projection * view * worldPos;
 
     if (debug == 2) {

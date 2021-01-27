@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
 
-public abstract class GPUBuffer extends TemplateBuffer {
+public abstract class BufferedModel extends TemplateBuffer {
 
     protected GlVertexArray vao;
 
@@ -17,7 +17,7 @@ public abstract class GPUBuffer extends TemplateBuffer {
     protected GlBuffer invariantVBO;
     protected boolean removed;
 
-    public GPUBuffer(BufferBuilder buf) {
+    public BufferedModel(BufferBuilder buf) {
         super(buf);
         if (vertexCount > 0) setup();
     }

@@ -5,8 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
@@ -48,7 +48,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			skyLight = 0;
 		}
 
-		for (Pair<Direction, InstanceBuffer<RotatingData>> shaft : getBuffers(ctx)) {
+		for (Pair<Direction, InstancedModel<RotatingData>> shaft : getBuffers(ctx)) {
 			shaft.getSecond().setupInstance(data -> {
 				float speed = te.getSpeed();
 				Direction direction = shaft.getFirst();
@@ -75,22 +75,22 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
-		getBuffers(ctx).stream().map(Pair::getSecond).forEach(InstanceBuffer::clearInstanceData);
+		getBuffers(ctx).stream().map(Pair::getSecond).forEach(InstancedModel::clearInstanceData);
 	}
 
-	private List<Pair<Direction, InstanceBuffer<RotatingData>>> getBuffers(InstanceContext<KineticTileEntity> ctx) {
+	private List<Pair<Direction, InstancedModel<RotatingData>>> getBuffers(InstanceContext<KineticTileEntity> ctx) {
 		KineticTileEntity te = ctx.te;
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 
-		List<Pair<Direction, InstanceBuffer<RotatingData>>> buffers = Lists.newArrayListWithCapacity(4);
+		List<Pair<Direction, InstancedModel<RotatingData>>> buffers = Lists.newArrayListWithCapacity(4);
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();
 			if (boxAxis == axis)
 				continue;
 
-			InstanceBuffer<RotatingData> buffer = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
-			Pair<Direction, InstanceBuffer<RotatingData>> pair = Pair.of(direction, buffer);
+			InstancedModel<RotatingData> buffer = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction);
+			Pair<Direction, InstancedModel<RotatingData>> pair = Pair.of(direction, buffer);
 
 			buffers.add(pair);
 		}

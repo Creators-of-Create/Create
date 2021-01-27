@@ -5,14 +5,15 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-layout (location = 3) in vec3 networkTint;
-layout (location = 4) in vec3 instancePos;
-layout (location = 5) in vec2 light;
-layout (location = 6) in vec3 rotationDegrees;
-layout (location = 7) in float speed;
-layout (location = 8) in vec2 sourceUV;
-layout (location = 9) in vec4 scrollTexture;
-layout (location = 10) in float scrollMult;
+layout (location = 3) in vec3 instancePos;
+layout (location = 4) in vec2 light;
+layout (location = 5) in vec3 networkTint;
+layout (location = 6) in float speed;
+layout (location = 7) in float offset;
+layout (location = 8) in vec3 eulerAngles;
+layout (location = 9) in vec2 uv;
+layout (location = 10) in vec4 scrollTexture;
+layout (location = 11) in float scrollMult;
 
 out vec2 TexCoords;
 out vec2 Light;
@@ -36,6 +37,10 @@ mat4 rotate(vec3 axis, float angle) {
                 0,                                  0,                                  0,                                  1);
 }
 
+mat4 rotation(vec3 rot) {
+    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
+}
+
 float diffuse(vec3 normal) {
     float x = normal.x;
     float y = normal.y;
@@ -43,23 +48,23 @@ float diffuse(vec3 normal) {
     return min(x * x * .6 + y * y * ((3 + y) / 4) + z * z * .8, 1);
 }
 
+mat4 localRotation() {
+    vec3 rot = fract(eulerAngles / 360) * PI * 2;
+    return rotation(rot);
+}
+
 void main() {
-    vec3 rot = fract(rotationDegrees / 360) * PI * 2;
-
-    mat4 rotation = rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
-
-    vec4 renderPos = rotation * vec4(aPos - vec3(.5), 1);
-    renderPos += vec4(instancePos + vec3(.5), 0);
+    mat4 localRotation = localRotation();
+    vec4 renderPos = localRotation * vec4(aPos - vec3(.5), 1) + vec4(instancePos + vec3(.5), 0);
 
     float scrollSize = scrollTexture.w - scrollTexture.y;
+    float scroll = fract(speed * time / (36 * 16) + offset) * scrollSize * scrollMult;
 
-    float scroll = fract(speed * time / (36 * 16)) * scrollSize * scrollMult;
-
-    vec3 norm = (rotation * vec4(aNormal, 0)).xyz;
+    vec3 norm = (localRotation * vec4(aNormal, 0)).xyz;
 
     Diffuse = diffuse(norm);
     Light = light;
-    TexCoords = aTexCoords - sourceUV + scrollTexture.xy + vec2(0, scroll);
+    TexCoords = aTexCoords - uv + scrollTexture.xy + vec2(0, scroll);
     gl_Position = projection * view * renderPos;
 
     if (debug == 1) {

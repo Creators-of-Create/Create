@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
@@ -246,7 +247,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			FastRenderDispatcher.markForRebuild(this);
+			CreateClient.kineticRenderer.update(this);
 	}
 
 	public float getGeneratedSpeed() {
@@ -458,8 +459,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return overStressed;
 	}
 
-	public static AxisAlignedBB NOWHERE_AABB = new AxisAlignedBB(Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
-
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return super.getRenderBoundingBox();
@@ -468,5 +467,20 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public double getMaxRenderDistanceSquared() {
 		return 16384.0D; // TODO: make this a config option
+	}
+
+	@Override
+	public void requestModelDataUpdate() {
+		super.requestModelDataUpdate();
+		if (this.removed) {
+			FastRenderDispatcher.enqueueRemove(this);
+		} else {
+			FastRenderDispatcher.enqueueUpdate(this);
+		}
+	}
+
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
 	}
 }

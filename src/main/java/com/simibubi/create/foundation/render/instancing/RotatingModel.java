@@ -2,19 +2,19 @@ package com.simibubi.create.foundation.render.instancing;
 
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class BeltBuffer extends InstanceBuffer<BeltData> {
-    public BeltBuffer(BufferBuilder buf) {
+public class RotatingModel extends InstancedModel<RotatingData> {
+    public RotatingModel(BufferBuilder buf) {
         super(buf);
     }
 
     @Override
-    protected BeltData newInstance() {
-        return new BeltData();
+    protected RotatingData newInstance() {
+        return new RotatingData();
     }
 
     @Override
     protected VertexFormat getInstanceFormat() {
-        return BeltData.FORMAT;
+        return RotatingData.FORMAT;
     }
 
 }

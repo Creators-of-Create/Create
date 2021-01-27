@@ -5,8 +5,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstanceBuffer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -35,9 +35,9 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		Direction direction = te.getBlockState()
 								.get(FACING);
 
-		InstanceBuffer<RotatingData> shaftHalf =
+		InstancedModel<RotatingData> shaftHalf =
 				AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
-		InstanceBuffer<RotatingData> fanInner =
+		InstancedModel<RotatingData> fanInner =
 				AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
 
 		shaftHalf.setupInstance(data -> {
@@ -91,9 +91,9 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		Direction direction = te.getBlockState()
 								.get(FACING);
 
-		InstanceBuffer<RotatingData> shaftHalf =
+		InstancedModel<RotatingData> shaftHalf =
 				AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
-		InstanceBuffer<RotatingData> fanInner =
+		InstancedModel<RotatingData> fanInner =
 				AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(ctx, te.getBlockState(), direction.getOpposite());
 
 		shaftHalf.clearInstanceData();
