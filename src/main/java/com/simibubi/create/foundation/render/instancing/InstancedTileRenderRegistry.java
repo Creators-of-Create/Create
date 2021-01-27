@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.google.common.collect.Maps;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
@@ -19,7 +19,7 @@ public class InstancedTileRenderRegistry {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public <T extends TileEntity> TileEntityInstance<? super T> create(InstancedTileRenderDispatcher manager, T tile) {
+    public <T extends TileEntity> TileEntityInstance<? super T> create(InstancedTileRenderer manager, T tile) {
         TileEntityType<?> type = tile.getType();
         IRendererFactory<? super T> factory = (IRendererFactory<? super T>) this.renderers.get(type);
 

@@ -4,6 +4,7 @@ import com.simibubi.create.content.contraptions.base.*;
 import com.simibubi.create.content.contraptions.components.actors.*;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterInstance;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterRenderer;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankRenderer;
@@ -14,6 +15,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerRend
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanRenderer;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
+import com.simibubi.create.content.contraptions.components.fan.FanInstance;
 import com.simibubi.create.content.contraptions.components.fan.NozzleTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
@@ -28,6 +30,7 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorRe
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressRenderer;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
@@ -133,20 +136,21 @@ public class AllTileEntities {
 		.tileEntity("encased_shaft", EncasedShaftTileEntity::new)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE)
 		.renderer(() -> EncasedShaftRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<AdjustablePulleyTileEntity> ADJUSTABLE_PULLEY = Create.registrate()
 		.tileEntity("adjustable_pulley", AdjustablePulleyTileEntity::new)
 		.validBlocks(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 		.renderer(() -> EncasedShaftRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<EncasedFanTileEntity> ENCASED_FAN = Create.registrate()
 		.tileEntity("encased_fan", EncasedFanTileEntity::new)
 		.validBlocks(AllBlocks.ENCASED_FAN)
 		.renderer(() -> EncasedFanRenderer::new)
+		.onRegister(FanInstance::register)
 		.register();
 
 	public static final TileEntityEntry<NozzleTileEntity> NOZZLE = Create.registrate()
@@ -173,6 +177,7 @@ public class AllTileEntities {
 		.tileEntity("turntable", TurntableTileEntity::new)
 		.validBlocks(AllBlocks.TURNTABLE)
 		.renderer(() -> KineticTileEntityRenderer::new)
+		.onRegister(SingleRotatingInstance::register)
 		.register();
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
@@ -180,7 +185,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
 		.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
 		.renderer(() -> HandCrankRenderer::new)
-		.onRegister(BackHalfShaftInstance::register)
+		.onRegister(SingleRotatingInstance::register)
 		.register();
 
 	public static final TileEntityEntry<CuckooClockTileEntity> CUCKOO_CLOCK = Create.registrate()
@@ -223,7 +228,7 @@ public class AllTileEntities {
 		.tileEntity("fluid_valve", FluidValveTileEntity::new)
 		.validBlocks(AllBlocks.FLUID_VALVE)
 		.renderer(() -> FluidValveRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<FluidTankTileEntity> FLUID_TANK = Create.registrate()
@@ -242,7 +247,7 @@ public class AllTileEntities {
 		.tileEntity("hose_pulley", HosePulleyTileEntity::new)
 		.validBlocks(AllBlocks.HOSE_PULLEY)
 		.renderer(() -> HosePulleyRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<SpoutTileEntity> SPOUT = Create.registrate()
@@ -293,7 +298,7 @@ public class AllTileEntities {
 		.tileEntity("mechanical_piston", MechanicalPistonTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 		.renderer(() -> MechanicalPistonRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<WindmillBearingTileEntity> WINDMILL_BEARING = Create.registrate()
@@ -321,7 +326,7 @@ public class AllTileEntities {
 		.tileEntity("rope_pulley", PulleyTileEntity::new)
 		.validBlocks(AllBlocks.ROPE_PULLEY)
 		.renderer(() -> PulleyRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<ChassisTileEntity> CHASSIS = Create.registrate()
@@ -341,6 +346,7 @@ public class AllTileEntities {
 		.tileEntity("saw", SawTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_SAW)
 		.renderer(() -> SawRenderer::new)
+		.onRegister(SawInstance::register)
 		.register();
 
 	public static final TileEntityEntry<HarvesterTileEntity> HARVESTER = Create.registrate()
@@ -407,7 +413,7 @@ public class AllTileEntities {
 		.tileEntity("mechanical_press", MechanicalPressTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_PRESS)
 		.renderer(() -> MechanicalPressRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<MechanicalMixerTileEntity> MECHANICAL_MIXER = Create.registrate()
@@ -421,7 +427,7 @@ public class AllTileEntities {
 		.tileEntity("deployer", DeployerTileEntity::new)
 		.validBlocks(AllBlocks.DEPLOYER)
 		.renderer(() -> DeployerRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<BasinTileEntity> BASIN = Create.registrate()
@@ -440,7 +446,7 @@ public class AllTileEntities {
 		.tileEntity("mechanical_crafter", MechanicalCrafterTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_CRAFTER)
 		.renderer(() -> MechanicalCrafterRenderer::new)
-		.onRegister(ShaftlessCogInstance::register)
+		.onRegister(MechanicalCrafterInstance::register)
 		.register();
 
 	public static final TileEntityEntry<SequencedGearshiftTileEntity> SEQUENCED_GEARSHIFT = Create.registrate()
@@ -454,21 +460,21 @@ public class AllTileEntities {
 		.tileEntity("rotation_speed_controller", SpeedControllerTileEntity::new)
 		.validBlocks(AllBlocks.ROTATION_SPEED_CONTROLLER)
 		.renderer(() -> SpeedControllerRenderer::new)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<SpeedGaugeTileEntity> SPEEDOMETER = Create.registrate()
 		.tileEntity("speedometer", SpeedGaugeTileEntity::new)
 		.validBlocks(AllBlocks.SPEEDOMETER)
 		.renderer(() -> GaugeRenderer::speed)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<StressGaugeTileEntity> STRESSOMETER = Create.registrate()
 		.tileEntity("stressometer", StressGaugeTileEntity::new)
 		.validBlocks(AllBlocks.STRESSOMETER)
 		.renderer(() -> GaugeRenderer::stress)
-		.onRegister(SingleRotatingShaftInstance::register)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<AnalogLeverTileEntity> ANALOG_LEVER = Create.registrate()

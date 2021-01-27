@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.render.light.ILightListener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -25,13 +26,17 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 public class FastRenderDispatcher {
 
-    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> addedTiles = new WorldAttached<>(ConcurrentLinkedQueue::new);
-    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> removedTiles = new WorldAttached<>(ConcurrentLinkedQueue::new);
+    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> queuedUpdates = new WorldAttached<>(ConcurrentLinkedQueue::new);
+    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> queuedRemovals = new WorldAttached<>(ConcurrentLinkedQueue::new);
+    public static WorldAttached<ConcurrentLinkedQueue<TileEntityInstance<?>>> addedLastTick = new WorldAttached<>(ConcurrentLinkedQueue::new);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
@@ -40,34 +45,28 @@ public class FastRenderDispatcher {
     }
 
     public static void enqueueUpdate(TileEntity te) {
-        addedTiles.get(te.getWorld()).add(te);
+        queuedUpdates.get(te.getWorld()).add(te);
     }
 
     public static void enqueueRemove(TileEntity te) {
-        removedTiles.get(te.getWorld()).add(te);
+        queuedRemovals.get(te.getWorld()).add(te);
     }
 
     public static void tick() {
         ClientWorld world = Minecraft.getInstance().world;
 
-        ConcurrentLinkedQueue<TileEntity> added = addedTiles.get(world);
+        runQueue(addedLastTick.get(world), TileEntityInstance::updateLight);
+        runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
+        runQueue(queuedRemovals.get(world), CreateClient.kineticRenderer::remove);
+    }
 
-        if (added != null) {
-            while (!added.isEmpty()) {
-                TileEntity te = added.poll();
+    private static <T> void runQueue(@Nullable Queue<T> q, Consumer<T> action) {
+        if (q == null) return;
 
-                CreateClient.kineticRenderer.update(te);
-            }
-        }
+        while (!q.isEmpty()) {
+            T t = q.poll();
 
-        ConcurrentLinkedQueue<TileEntity> removed = removedTiles.get(world);
-
-        if (removed != null) {
-            while (!removed.isEmpty()) {
-                TileEntity te = removed.poll();
-
-                CreateClient.kineticRenderer.remove(te);
-            }
+            action.accept(t);
         }
     }
 

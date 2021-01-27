@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -33,7 +32,7 @@ import net.minecraft.world.World;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> implements IInstancedTileEntityRenderer<DeployerTileEntity> {
+public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
 	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -53,12 +52,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 	}
 
-	@Override
 	public void addInstanceData(InstanceContext<DeployerTileEntity> ctx) {
 		KineticTileEntityRenderer.renderRotatingKineticBlock(ctx, getRenderedBlockState(ctx.te));
 	}
 
-	@Override
 	public void markForRebuild(InstanceContext<DeployerTileEntity> ctx) {
 		KineticTileEntityRenderer.markForRebuild(ctx, getRenderedBlockState(ctx.te));
 	}

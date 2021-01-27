@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -227,7 +227,7 @@ public class AllBlockPartials {
 		return ctx.getRotating().getModel(this, referenceState);
 	}
 
-	public InstancedModel<RotatingData> renderOnRotating(InstancedTileRenderDispatcher ctx, BlockState referenceState) {
+	public InstancedModel<RotatingData> renderOnRotating(InstancedTileRenderer ctx, BlockState referenceState) {
 		return ctx.get(KineticRenderMaterials.ROTATING).getModel(this, referenceState);
 	}
 
@@ -236,7 +236,7 @@ public class AllBlockPartials {
 		return ctx.getBelts().getModel(this, referenceState);
 	}
 
-	public InstancedModel<BeltData> renderOnBelt(InstancedTileRenderDispatcher ctx, BlockState referenceState) {
+	public InstancedModel<BeltData> renderOnBelt(InstancedTileRenderer ctx, BlockState referenceState) {
 		return ctx.get(KineticRenderMaterials.BELTS).getModel(this, referenceState);
 	}
 
@@ -246,7 +246,7 @@ public class AllBlockPartials {
 		return renderOnDirectionalSouthRotating(ctx, referenceState, facing);
 	}
 
-	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderDispatcher dispatcher, BlockState referenceState) {
+	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer dispatcher, BlockState referenceState) {
 		Direction facing = referenceState.get(FACING);
 		return renderOnDirectionalSouthRotating(dispatcher, referenceState, facing);
 	}
@@ -256,7 +256,7 @@ public class AllBlockPartials {
 		return renderOnDirectionalSouthRotating(ctx.getKinetics(), referenceState, facing);
 	}
 
-	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderDispatcher dispatcher, BlockState referenceState, Direction facing) {
+	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer dispatcher, BlockState referenceState, Direction facing) {
 		Supplier<MatrixStack> ms = () -> {
 			MatrixStack stack = new MatrixStack();
 			MatrixStacker.of(stack)

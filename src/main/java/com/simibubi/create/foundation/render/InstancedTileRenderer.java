@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render;
 
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
 import com.simibubi.create.foundation.render.gl.shader.Shader;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
@@ -13,12 +12,12 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InstancedTileRenderDispatcher {
+public class InstancedTileRenderer {
     protected Map<TileEntity, TileEntityInstance<?>> renderers = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<?>> materials = new HashMap<>();
 
-    public InstancedTileRenderDispatcher() {
+    public InstancedTileRenderer() {
         registerMaterials();
     }
 
@@ -40,7 +39,10 @@ public class InstancedTileRenderDispatcher {
         } else {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
-            renderers.put(tile, renderer);
+            if (renderer != null) {
+                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(renderer);
+                renderers.put(tile, renderer);
+            }
 
             return renderer;
         }
@@ -75,25 +77,11 @@ public class InstancedTileRenderDispatcher {
         }
     }
 
-    public <T extends TileEntity> void addInstancedData(RenderedContraption c, T te, IInstancedTileEntityRenderer<T> renderer) {
-        renderer.addInstanceData(new InstanceContext.Contraption<>(te, c));
-    }
-
-    /**
-     * This function should be called after building instances.
-     * It must be called either on the render thread before committing to rendering, or in a place where there are
-     * guaranteed to be no race conditions with the render thread, i.e. when constructing a FastContraptionRenderer.
-     */
-    public void markAllDirty() {
-        for (RenderMaterial<?> material : materials.values()) {
-            material.runOnAll(InstancedModel::markDirty);
-        }
-    }
-
     public void invalidate() {
         for (RenderMaterial<?> material : materials.values()) {
             material.delete();
         }
+        renderers.clear();
     }
 
     public void render(RenderType layer, Matrix4f projection, Matrix4f view) {

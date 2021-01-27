@@ -5,10 +5,7 @@ import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL31;
-import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

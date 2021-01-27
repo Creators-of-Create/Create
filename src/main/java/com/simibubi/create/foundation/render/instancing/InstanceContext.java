@@ -1,8 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 @Deprecated
@@ -22,29 +21,9 @@ public abstract class InstanceContext<T extends TileEntity> {
         return getKinetics().get(KineticRenderMaterials.BELTS);
     }
 
-    public abstract InstancedTileRenderDispatcher getKinetics();
+    public abstract InstancedTileRenderer getKinetics();
 
     public abstract boolean checkWorldLight();
-
-    public static class Contraption<T extends TileEntity> extends InstanceContext<T> {
-
-        public final RenderedContraption c;
-
-        public Contraption(T te, RenderedContraption c) {
-            super(te);
-            this.c = c;
-        }
-
-        @Override
-        public InstancedTileRenderDispatcher getKinetics() {
-            return c.kinetics;
-        }
-
-        @Override
-        public boolean checkWorldLight() {
-            return false;
-        }
-    }
 
     public static class World<T extends TileEntity> extends InstanceContext<T> {
 
@@ -53,7 +32,7 @@ public abstract class InstanceContext<T extends TileEntity> {
         }
 
         @Override
-        public InstancedTileRenderDispatcher getKinetics() {
+        public InstancedTileRenderer getKinetics() {
             return CreateClient.kineticRenderer;
         }
 

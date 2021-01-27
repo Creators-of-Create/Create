@@ -10,12 +10,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-// TODO: Don't immediately destroy light volumes.
-//  There's a high chance that a contraption will stop and soon after start again.
-//  By caching lightvolumes based on their volumes/locations, we can save having
-//  to reread all the lighting data in those cases.
 public class LightVolume {
 
     private GridAlignedBB sampleVolume;
@@ -31,7 +26,7 @@ public class LightVolume {
         setSampleVolume(sampleVolume);
 
         this.glTexture = new GlTexture(GL20.GL_TEXTURE_3D);
-        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: maybe figure out how to pack light coords into a single byte
+        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2);
     }
 
     private void setSampleVolume(GridAlignedBB sampleVolume) {
@@ -225,10 +220,7 @@ public class LightVolume {
             int sizeX = textureVolume.sizeX();
             int sizeY = textureVolume.sizeY();
             int sizeZ = textureVolume.sizeZ();
-            if (sizeX * sizeY * sizeZ * 2 > lightData.capacity())
-                throw new IllegalStateException("Volume too big for buffer");
 
-            lightData.rewind();
             GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
             bufferDirty = false;
         }

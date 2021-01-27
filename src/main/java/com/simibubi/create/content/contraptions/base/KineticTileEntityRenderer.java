@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
@@ -26,7 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> implements IInstancedTileEntityRenderer<KineticTileEntity> {
+public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
 	public static boolean rainbowMode = false;
@@ -45,12 +44,10 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 //		addInstanceData(new InstanceContext.World<>(te));
 	}
 
-	@Override
 	public void addInstanceData(InstanceContext<KineticTileEntity> ctx) {
 		renderRotatingBuffer(ctx, getRotatedModel(ctx));
 	}
 
-	@Override
 	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
 		getRotatedModel(ctx).clearInstanceData();
 	}

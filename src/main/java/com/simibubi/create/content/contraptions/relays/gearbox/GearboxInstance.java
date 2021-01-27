@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedTileRenderRegistry;
@@ -14,19 +14,22 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     public static void register(TileEntityType<? extends GearboxTileEntity> type) {
-        InstancedTileRenderRegistry.instance.register(type, GearboxInstance::new);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+                InstancedTileRenderRegistry.instance.register(type, GearboxInstance::new));
     }
 
     protected EnumMap<Direction, InstanceKey<RotatingData>> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(InstancedTileRenderDispatcher modelManager, GearboxTileEntity tile) {
+    public GearboxInstance(InstancedTileRenderer modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -54,7 +57,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
                 data.setBlockLight(blockLight)
                     .setSkyLight(skyLight)
                     .setRotationalSpeed(getSpeed(direction))
-                    .setRotationOffset(getRotationOffsetForPosition(tile, pos, axis))
+                    .setRotationOffset(getRotationOffset(axis))
                     .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
                     .setTileEntity(tile);
             });
@@ -93,7 +96,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
                 Direction.Axis axis = direction.getAxis();
 
                 data.setRotationalSpeed(getSpeed(direction))
-                    .setRotationOffset(getRotationOffsetForPosition(tile, pos, axis))
+                    .setRotationOffset(getRotationOffset(axis))
                     .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
             });
         }

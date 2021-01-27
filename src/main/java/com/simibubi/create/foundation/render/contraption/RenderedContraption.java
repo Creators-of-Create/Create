@@ -7,14 +7,15 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
-import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.instancing.KineticRenderMaterials;
+import com.simibubi.create.foundation.render.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
@@ -44,7 +45,6 @@ public class RenderedContraption {
         buildLayers(contraption);
         buildInstancedTiles(contraption);
         buildActors(contraption);
-        kinetics.markAllDirty();
     }
 
     public int getEntityId() {
@@ -91,11 +91,7 @@ public class RenderedContraption {
         if (!tileEntities.isEmpty()) {
             for (TileEntity te : tileEntities) {
                 if (te instanceof IInstanceRendered) {
-                    TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
-
-                    if (renderer instanceof IInstancedTileEntityRenderer) {
-                        kinetics.addInstancedData(this, te, (IInstancedTileEntityRenderer<? super TileEntity>) renderer);
-                    }
+                    kinetics.getRenderer(te); // this is enough to instantiate the model instance
                 }
             }
         }

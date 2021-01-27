@@ -472,9 +472,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
-		if (this.removed) {
-			FastRenderDispatcher.enqueueRemove(this);
-		} else {
+		if (!this.removed) {
 			FastRenderDispatcher.enqueueUpdate(this);
 		}
 	}

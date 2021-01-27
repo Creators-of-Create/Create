@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -14,6 +14,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -21,7 +23,8 @@ import java.util.function.Supplier;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     public static void register(TileEntityType<? extends BeltTileEntity> type) {
-        InstancedTileRenderRegistry.instance.register(type, BeltInstance::new);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+                InstancedTileRenderRegistry.instance.register(type, BeltInstance::new));
     }
 
     private boolean upward;
@@ -35,7 +38,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     protected ArrayList<InstanceKey<BeltData>> keys;
     protected InstanceKey<RotatingData> pulleyKey;
 
-    public BeltInstance(InstancedTileRenderDispatcher modelManager, BeltTileEntity tile) {
+    public BeltInstance(InstancedTileRenderer modelManager, BeltTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -75,7 +78,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         if (tile.hasPulley()) {
             InstancedModel<RotatingData> pulleyModel = getPulleyModel(blockState);
 
-            pulleyKey = pulleyModel.setupInstance(setupFunc(tile.getSpeed(), getRotationAxisOf(tile)));
+            pulleyKey = pulleyModel.setupInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
         }
     }
 
@@ -86,7 +89,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         }
 
         if (pulleyKey != null) {
-            updateRotation(pulleyKey, getRotationAxisOf(tile));
+            updateRotation(pulleyKey, getRotationAxis());
         }
     }
 

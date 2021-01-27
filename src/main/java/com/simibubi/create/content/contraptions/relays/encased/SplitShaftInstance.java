@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.foundation.render.InstancedTileRenderDispatcher;
+import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedTileRenderRegistry;
@@ -14,17 +14,20 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
 
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
     public static void register(TileEntityType<? extends SplitShaftTileEntity> type) {
-        InstancedTileRenderRegistry.instance.register(type, SplitShaftInstance::new);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+                InstancedTileRenderRegistry.instance.register(type, SplitShaftInstance::new));
     }
 
     protected ArrayList<InstanceKey<RotatingData>> keys;
 
-    public SplitShaftInstance(InstancedTileRenderDispatcher modelManager, SplitShaftTileEntity tile) {
+    public SplitShaftInstance(InstancedTileRenderer modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -80,7 +83,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
             final BlockPos pos = tile.getPos();
 
             data.setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
-                .setRotationOffset(getRotationOffsetForPosition(tile, pos, axis))
+                .setRotationOffset(getRotationOffset(axis))
                 .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
         });
     }

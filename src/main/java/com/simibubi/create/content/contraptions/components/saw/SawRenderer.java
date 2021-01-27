@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.IInstancedTileEntityRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
@@ -32,7 +31,7 @@ import net.minecraft.util.math.Vec3d;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implements IInstancedTileEntityRenderer<SawTileEntity> {
+public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	public SawRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -47,12 +46,10 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> implement
 
 	}
 
-	@Override
 	public void addInstanceData(InstanceContext<SawTileEntity> ctx) {
 		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx));
 	}
 
-	@Override
 	public void markForRebuild(InstanceContext<SawTileEntity> ctx) {
 		getRotatedModel(ctx).clearInstanceData();
 	}

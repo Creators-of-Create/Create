@@ -8,7 +8,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
-import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.render.instancing.BeltData;
+import com.simibubi.create.foundation.render.instancing.InstanceContext;
+import com.simibubi.create.foundation.render.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -31,7 +34,7 @@ import net.minecraft.world.LightType;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> implements IInstancedTileEntityRenderer<BeltTileEntity> {
+public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -54,7 +57,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 		return te.isController();
 	}
 
-	@Override
 	public void addInstanceData(InstanceContext<BeltTileEntity> ctx) {
 		BeltTileEntity te = ctx.te;
 		BlockState blockState = te.getBlockState();
@@ -146,7 +148,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> impleme
 		}
 	}
 
-	@Override
 	public void markForRebuild(InstanceContext<BeltTileEntity> ctx) {
 		BeltTileEntity te = ctx.te;
 
