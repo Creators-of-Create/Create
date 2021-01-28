@@ -35,15 +35,14 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
     protected void init() {
         keys = new ArrayList<>(2);
 
-        BlockState state = tile.getBlockState();
-        Block block = state.getBlock();
-        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(state);
+        Block block = lastState.getBlock();
+        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(lastState);
 
         float speed = tile.getSpeed();
 
         for (Direction dir : Iterate.directionsInAxis(boxAxis)) {
 
-            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, state, dir);
+            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, dir);
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
@@ -53,9 +52,8 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
     @Override
     public void onUpdate() {
-        BlockState state = tile.getBlockState();
-        Block block = state.getBlock();
-        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(state);
+        Block block = lastState.getBlock();
+        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(lastState);
 
         Direction[] directions = Iterate.directionsInAxis(boxAxis);
 
@@ -80,7 +78,6 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
     protected void updateRotation(InstanceKey<RotatingData> key, Direction dir) {
         key.modifyInstance(data -> {
             Direction.Axis axis = dir.getAxis();
-            final BlockPos pos = tile.getPos();
 
             data.setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
                 .setRotationOffset(getRotationOffset(axis))

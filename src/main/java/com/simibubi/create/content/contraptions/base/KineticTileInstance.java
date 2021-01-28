@@ -27,8 +27,8 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     protected final Consumer<RotatingData> setupFunc(float speed, Direction.Axis axis) {
         return data -> {
-            data.setBlockLight(tile.getWorld().getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(tile.getWorld().getLightLevel(LightType.SKY, pos))
+            data.setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
                 .setTileEntity(tile)
                 .setRotationalSpeed(speed)
                 .setRotationOffset(getRotationOffset(axis))

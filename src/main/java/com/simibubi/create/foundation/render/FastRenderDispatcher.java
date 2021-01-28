@@ -27,16 +27,16 @@ import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class FastRenderDispatcher {
 
-    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> queuedUpdates = new WorldAttached<>(ConcurrentLinkedQueue::new);
-    public static WorldAttached<ConcurrentLinkedQueue<TileEntity>> queuedRemovals = new WorldAttached<>(ConcurrentLinkedQueue::new);
-    public static WorldAttached<ConcurrentLinkedQueue<TileEntityInstance<?>>> addedLastTick = new WorldAttached<>(ConcurrentLinkedQueue::new);
+    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
+    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedRemovals = new WorldAttached<>(ConcurrentHashMap::newKeySet);
+    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntityInstance<?>, Boolean>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
@@ -56,18 +56,21 @@ public class FastRenderDispatcher {
         ClientWorld world = Minecraft.getInstance().world;
 
         runQueue(addedLastTick.get(world), TileEntityInstance::updateLight);
-        runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
         runQueue(queuedRemovals.get(world), CreateClient.kineticRenderer::remove);
+        CreateClient.kineticRenderer.clean();
+
+        runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
     }
 
-    private static <T> void runQueue(@Nullable Queue<T> q, Consumer<T> action) {
-        if (q == null) return;
+    private static <T> void runQueue(@Nullable ConcurrentHashMap.KeySetView<T, Boolean> changed, Consumer<T> action) {
+        if (changed == null) return;
 
-        while (!q.isEmpty()) {
-            T t = q.poll();
+        // because of potential concurrency issues, we make a copy of what's in the set at the time we get here
+        ArrayList<T> tiles = new ArrayList<>(changed);
 
-            action.accept(t);
-        }
+        tiles.forEach(action);
+
+        changed.removeAll(tiles);
     }
 
     public static void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ) {

@@ -45,7 +45,6 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
     @Override
     public void remove() {
         rotatingModelKey.delete();
-        rotatingModelKey = null;
     }
 
     protected BlockState getRenderedBlockState() {

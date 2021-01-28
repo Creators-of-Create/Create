@@ -112,6 +112,5 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     public void remove() {
         shaft.delete();
         fan.delete();
-        shaft = fan = null;
     }
 }

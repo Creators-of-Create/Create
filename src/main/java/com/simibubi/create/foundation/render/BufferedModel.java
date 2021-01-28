@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.render;
 
+import com.simibubi.create.foundation.render.gl.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import com.simibubi.create.foundation.render.gl.GlVertexArray;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL40;
+import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
 
@@ -35,7 +36,7 @@ public abstract class BufferedModel extends TemplateBuffer {
 
         int numAttributes = getTotalShaderAttributeCount();
         for (int i = 0; i <= numAttributes; i++) {
-            GL40.glEnableVertexAttribArray(i);
+            GL20.glEnableVertexAttribArray(i);
         }
 
         invariantVBO.bind(GL15.GL_ARRAY_BUFFER);
@@ -44,13 +45,11 @@ public abstract class BufferedModel extends TemplateBuffer {
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
         // mirror it in system memory so we can write to it
-        ByteBuffer constant = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
-
-        for (int i = 0; i < vertexCount; i++) {
-            copyVertex(constant, i);
-        }
-        constant.rewind();
-        GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+        Backend.MAP_BUFFER.mapBuffer(GL15.GL_ARRAY_BUFFER, invariantSize, buffer -> {
+            for (int i = 0; i < vertexCount; i++) {
+                copyVertex(buffer, i);
+            }
+        });
 
         getModelFormat().informAttributes(0);
 

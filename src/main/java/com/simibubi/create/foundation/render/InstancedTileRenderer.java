@@ -4,13 +4,16 @@ import com.simibubi.create.foundation.render.gl.shader.Shader;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InstancedTileRenderer {
     protected Map<TileEntity, TileEntityInstance<?>> renderers = new HashMap<>();
@@ -31,12 +34,17 @@ public class InstancedTileRenderer {
         return (RenderMaterial<M>) materials.get(materialType);
     }
 
+    @Nullable
+    public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile) {
+        return getInstance(tile, true);
+    }
+
     @SuppressWarnings("unchecked")
     @Nullable
-    public <T extends TileEntity> TileEntityInstance<? super T> getRenderer(T tile) {
+    public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
         if (renderers.containsKey(tile)) {
             return (TileEntityInstance<? super T>) renderers.get(tile);
-        } else {
+        } else if (create) {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
             if (renderer != null) {
@@ -45,35 +53,46 @@ public class InstancedTileRenderer {
             }
 
             return renderer;
+        } else {
+            return null;
         }
     }
 
     public <T extends TileEntity> void onLightUpdate(T tile) {
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> renderer = getRenderer(tile);
+            TileEntityInstance<? super T> instance = getInstance(tile);
 
-            if (renderer != null)
-                renderer.updateLight();
+            if (instance != null)
+                instance.updateLight();
         }
     }
 
     public <T extends TileEntity> void update(T tile) {
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> renderer = getRenderer(tile);
+            TileEntityInstance<? super T> instance = getInstance(tile);
 
-            if (renderer != null)
-                renderer.update();
+            if (instance != null)
+                instance.update();
         }
     }
 
     public <T extends TileEntity> void remove(T tile) {
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> renderer = getRenderer(tile);
+            TileEntityInstance<? super T> instance = getInstance(tile, false);
 
-            if (renderer != null) {
-                renderer.remove();
+            if (instance != null) {
+                instance.remove();
                 renderers.remove(tile);
             }
+        }
+    }
+
+    public void clean() {
+        // Clean up twice a second. This doesn't have to happen every tick,
+        // but this does need to be run to ensure we don't miss anything.
+        if (AnimationTickHolder.ticks % 10 == 0) {
+            List<TileEntity> removed = renderers.keySet().stream().filter(TileEntity::isRemoved).collect(Collectors.toList());
+            removed.forEach(renderers::remove);
         }
     }
 

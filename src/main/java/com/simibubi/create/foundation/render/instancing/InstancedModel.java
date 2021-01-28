@@ -1,11 +1,16 @@
 package com.simibubi.create.foundation.render.instancing;
 
 
+import com.google.common.collect.Range;
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
+import com.simibubi.create.foundation.render.gl.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GL33;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     protected final ArrayList<InstanceKey<D>> keys = new ArrayList<>();
     protected final ArrayList<D> data = new ArrayList<>();
     protected int minIndexChanged = -1;
+    protected int maxIndexChanged = -1;
 
     public InstancedModel(BufferBuilder buf) {
         super(buf);
@@ -67,10 +73,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
     }
 
-    public void markDirty() {
-        minIndexChanged = 0;
-    }
-
     protected void deleteInternal() {
         super.deleteInternal();
         instanceVBO.delete();
@@ -91,7 +93,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             keys.get(i).index--;
         }
 
-        setMinIndexChanged(key.index);
+        markIndexChanged(index - 1);
+        maxIndexChanged = keys.size() - 1;
 
         key.invalidate();
     }
@@ -103,7 +106,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
         edit.accept(data);
 
-        setMinIndexChanged(key.index);
+        markIndexChanged(key.index);
     }
 
     public synchronized InstanceKey<D> setupInstance(Consumer<D> setup) {
@@ -114,16 +117,22 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         data.add(instanceData);
         keys.add(key);
 
-        setMinIndexChanged(key.index);
+        markIndexChanged(key.index);
 
         return key;
     }
 
-    protected void setMinIndexChanged(int index) {
+    protected void markIndexChanged(int index) {
         if (minIndexChanged < 0) {
             minIndexChanged = index;
-        } else {
-            minIndexChanged = Math.min(minIndexChanged, index);
+        } else if (index < minIndexChanged) {
+            minIndexChanged = index;
+        }
+
+        if (maxIndexChanged < 0) {
+            maxIndexChanged = index;
+        } else if (index > maxIndexChanged) {
+            maxIndexChanged = index;
         }
     }
 
@@ -161,16 +170,17 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, instanceSize, GL15.GL_STATIC_DRAW);
             glBufferSize = instanceSize;
             minIndexChanged = 0;
+            maxIndexChanged = data.size() - 1;
         }
 
-        ByteBuffer buffer = GL15.glMapBuffer(GL15.GL_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
+        int offset = minIndexChanged * stride;
+        int length = (1 + maxIndexChanged - minIndexChanged) * stride;
 
-        buffer.position(stride * minIndexChanged);
-        for (int i = minIndexChanged; i < data.size(); i++) {
-            data.get(i).write(buffer);
-        }
-        buffer.rewind();
-        GL15.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+        Backend.MAP_BUFFER.mapBuffer(GL15.GL_ARRAY_BUFFER, offset, length, buffer -> {
+            for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
+                data.get(i).write(buffer);
+            }
+        });
 
         glInstanceCount = data.size();
 
@@ -184,5 +194,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         instanceVBO.unbind(GL15.GL_ARRAY_BUFFER);
 
         minIndexChanged = -1;
+        maxIndexChanged = -1;
     }
 }

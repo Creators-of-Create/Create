@@ -27,18 +27,6 @@ public class CancelTileEntityRenderMixin {
     private void noRenderInstancedTiles(CallbackInfoReturnable<List<TileEntity>> cir) {
         List<TileEntity> tiles = cir.getReturnValue();
 
-        List<TileEntity> out = new ArrayList<>(tiles.size());
-
-        for (TileEntity tile : tiles) {
-            if (tile instanceof IInstanceRendered) {
-                IInstanceRendered instanceRendered = (IInstanceRendered) tile;
-
-                if (!instanceRendered.shouldRenderAsTE()) continue;
-            }
-
-            out.add(tile);
-        }
-
-        cir.setReturnValue(out);
+        tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
     }
 }

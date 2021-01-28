@@ -37,13 +37,10 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected void init() {
         keys = new EnumMap<>(Direction.class);
 
-        BlockState state = tile.getBlockState();
+        final Direction.Axis boxAxis = lastState.get(BlockStateProperties.AXIS);
 
-        final Direction.Axis boxAxis = state.get(BlockStateProperties.AXIS);
-
-        BlockPos pos = tile.getPos();
-        int blockLight = tile.getWorld().getLightLevel(LightType.BLOCK, pos);
-        int skyLight = tile.getWorld().getLightLevel(LightType.SKY, pos);
+        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
+        int skyLight = world.getLightLevel(LightType.SKY, pos);
         updateSourceFacing();
 
         for (Direction direction : Iterate.directions) {
@@ -51,7 +48,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             if (boxAxis == axis)
                 continue;
 
-            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, state, direction);
+            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, direction);
 
             InstanceKey<RotatingData> key = shaft.setupInstance(data -> {
                 data.setBlockLight(blockLight)
@@ -79,7 +76,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
     protected void updateSourceFacing() {
         if (tile.hasSource()) {
-            BlockPos source = tile.source.subtract(tile.getPos());
+            BlockPos source = tile.source.subtract(pos);
             sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
         } else {
             sourceFacing = null;
@@ -89,7 +86,6 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     @Override
     public void onUpdate() {
         updateSourceFacing();
-        BlockPos pos = tile.getPos();
         for (Map.Entry<Direction, InstanceKey<RotatingData>> key : keys.entrySet()) {
             key.getValue().modifyInstance(data -> {
                 Direction direction = key.getKey();
@@ -104,7 +100,6 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
     @Override
     public void updateLight() {
-        BlockPos pos = tile.getPos();
         int blockLight = tile.getWorld().getLightLevel(LightType.BLOCK, pos);
         int skyLight = tile.getWorld().getLightLevel(LightType.SKY, pos);
 
@@ -115,10 +110,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
     @Override
     public void remove() {
-        for (InstanceKey<RotatingData> key : keys.values()) {
-            key.delete();
-        }
-
+        keys.values().forEach(InstanceKey::delete);
         keys.clear();
     }
 }

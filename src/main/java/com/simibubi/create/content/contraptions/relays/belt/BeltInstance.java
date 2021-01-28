@@ -44,14 +44,13 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     protected void init() {
-        BlockState blockState = tile.getBlockState();
-        if (!AllBlocks.BELT.has(blockState))
+        if (!AllBlocks.BELT.has(lastState))
             return;
 
         keys = new ArrayList<>(2);
 
-        beltSlope = blockState.get(BeltBlock.SLOPE);
-        facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
+        beltSlope = lastState.get(BeltBlock.SLOPE);
+        facing = lastState.get(BeltBlock.HORIZONTAL_FACING);
         upward = beltSlope == BeltSlope.UPWARD;
         diagonal = beltSlope.isDiagonal();
         sideways = beltSlope == BeltSlope.SIDEWAYS;
@@ -59,7 +58,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         alongX = facing.getAxis() == Direction.Axis.X;
         alongZ = facing.getAxis() == Direction.Axis.Z;
 
-        BeltPart part = blockState.get(BeltBlock.PART);
+        BeltPart part = lastState.get(BeltBlock.PART);
         boolean start = part == BeltPart.START;
         boolean end = part == BeltPart.END;
 
@@ -67,7 +66,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             AllBlockPartials beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(diagonal, bottom);
 
-            InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, blockState);
+            InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
             Consumer<BeltData> setupFunc = setupFunc(spriteShift);
 
             keys.add(beltModel.setupInstance(setupFunc));
@@ -76,7 +75,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         }
 
         if (tile.hasPulley()) {
-            InstancedModel<RotatingData> pulleyModel = getPulleyModel(blockState);
+            InstancedModel<RotatingData> pulleyModel = getPulleyModel();
 
             pulleyKey = pulleyModel.setupInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
         }
@@ -107,7 +106,6 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         keys.forEach(InstanceKey::delete);
         keys.clear();
         if (pulleyKey != null) pulleyKey.delete();
-        pulleyKey = null;
     }
 
     private float getScrollSpeed() {
@@ -122,8 +120,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return speed;
     }
 
-    private InstancedModel<RotatingData> getPulleyModel(BlockState blockState) {
-        Direction dir = getOrientation(blockState);
+    private InstancedModel<RotatingData> getPulleyModel() {
+        Direction dir = getOrientation();
 
         Direction.Axis axis = dir.getAxis();
 
@@ -141,11 +139,11 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             return modelTransform;
         };
 
-        return rotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
+        return rotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, lastState, dir, ms);
     }
 
-    private Direction getOrientation(BlockState blockState) {
-        Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
+    private Direction getOrientation() {
+        Direction dir = lastState.get(BeltBlock.HORIZONTAL_FACING)
                                   .rotateY();
         if (beltSlope == BeltSlope.SIDEWAYS)
             dir = Direction.UP;
@@ -161,8 +159,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
             BlockPos pos = tile.getPos();
             data.setTileEntity(tile)
-                .setBlockLight(tile.getWorld().getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(tile.getWorld().getLightLevel(LightType.SKY, pos))
+                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
                 .setRotation(rotX, rotY, rotZ)
                 .setRotationalSpeed(getScrollSpeed())
                 .setRotationOffset(0)

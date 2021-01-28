@@ -247,7 +247,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			CreateClient.kineticRenderer.update(this);
+			FastRenderDispatcher.enqueueUpdate(this);
 	}
 
 	public float getGeneratedSpeed() {

@@ -91,7 +91,7 @@ public class RenderedContraption {
         if (!tileEntities.isEmpty()) {
             for (TileEntity te : tileEntities) {
                 if (te instanceof IInstanceRendered) {
-                    kinetics.getRenderer(te); // this is enough to instantiate the model instance
+                    kinetics.getInstance(te); // this is enough to instantiate the model instance
                 }
             }
         }
