@@ -106,6 +106,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         keys.forEach(InstanceKey::delete);
         keys.clear();
         if (pulleyKey != null) pulleyKey.delete();
+        pulleyKey = null;
     }
 
     private float getScrollSpeed() {
