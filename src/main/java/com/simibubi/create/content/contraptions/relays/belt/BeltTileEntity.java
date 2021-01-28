@@ -27,6 +27,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.LightType;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -60,6 +61,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected LazyOptional<IItemHandler> itemHandler;
 
 	public CompoundNBT trackerUpdateTag;
+
+	// client
+	public byte blockLight;
+	public byte skyLight;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -211,6 +216,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (!clientPacket)
 			return;
+		updateLight();
 		if (casingBefore == casing)
 			return;
 		requestModelDataUpdate();
@@ -464,5 +470,16 @@ public class BeltTileEntity extends KineticTileEntity {
 	public IModelData getModelData() {
 		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
 			.build();
+	}
+
+	@Override
+	public void onChunkLightUpdate() {
+		super.onChunkLightUpdate();
+		updateLight();
+	}
+
+	private void updateLight() {
+		skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
+		blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
 	}
 }

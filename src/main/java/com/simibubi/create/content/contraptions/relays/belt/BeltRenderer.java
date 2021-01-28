@@ -148,50 +148,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		}
 	}
 
-	public void markForRebuild(InstanceContext<BeltTileEntity> ctx) {
-		BeltTileEntity te = ctx.te;
-
-		BlockState blockState = te.getBlockState();
-		if (!AllBlocks.BELT.has(blockState))
-			return;
-
-		BeltSlope beltSlope = blockState.get(BeltBlock.SLOPE);
-		BeltPart part = blockState.get(BeltBlock.PART);
-		Direction facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
-		AxisDirection axisDirection = facing.getAxisDirection();
-
-		boolean downward = beltSlope == BeltSlope.DOWNWARD;
-		boolean upward = beltSlope == BeltSlope.UPWARD;
-		boolean diagonal = downward || upward;
-		boolean start = part == BeltPart.START;
-		boolean end = part == BeltPart.END;
-		boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
-		boolean vertical = beltSlope == BeltSlope.VERTICAL;
-
-		if (downward || vertical && axisDirection == AxisDirection.POSITIVE) {
-			boolean b = start;
-			start = end;
-			end = b;
-		}
-
-		for (boolean bottom : Iterate.trueAndFalse) {
-
-			AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
-
-			InstancedModel<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
-
-			beltBuffer.clearInstanceData();
-
-			// Diagonal belt do not have a separate bottom model
-			if (diagonal)
-				break;
-		}
-
-		InstancedModel<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
-
-		rotatingBuffer.clearInstanceData();
-	}
-
 	private InstancedModel<RotatingData> getPulleyModel(InstanceContext<BeltTileEntity> ctx, BlockState blockState, boolean sideways) {
 		Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
 								  .rotateY();
@@ -246,10 +202,13 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 			float verticalMovement = verticality;
 
+
 			if (te.getSpeed() == 0) {
 				offset = transported.beltPosition;
 				sideOffset = transported.sideOffset;
 			}
+
+			int stackLight = getPackedLight(te, offset);
 
 			if (offset < .5)
 				verticalMovement = 0;
@@ -318,7 +277,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderItem(transported.stack, TransformType.FIXED, light, overlay, ms, buffer);
+				itemRenderer.renderItem(transported.stack, TransformType.FIXED, stackLight, overlay, ms, buffer);
 				ms.pop();
 
 				if (!renderUpright) {
@@ -335,4 +294,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		ms.pop();
 	}
 
+	protected int getPackedLight(BeltTileEntity controller, float beltPos) {
+		BeltTileEntity belt = BeltHelper.getBeltForOffset(controller, beltPos);
+
+		if (belt == null) return 0;
+
+		return (belt.skyLight << 20) | (belt.blockLight << 4);
+	}
 }
