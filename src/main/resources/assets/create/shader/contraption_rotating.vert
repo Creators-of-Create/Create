@@ -53,7 +53,7 @@ mat4 kineticRotation() {
     float degrees = offset + time * speed * -3/10;
     float angle = fract(degrees / 360) * PI * 2;
 
-    return rotate(vec3(0, 1, 0), angle);
+    return rotate(rotationAxis, angle);
 }
 
 void main() {
