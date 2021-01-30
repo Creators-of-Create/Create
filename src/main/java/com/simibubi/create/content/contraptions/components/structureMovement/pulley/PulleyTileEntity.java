@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
@@ -42,7 +44,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void assemble() {
+	protected void assemble() throws AssemblyException {
 		if (!(world.getBlockState(pos)
 			.getBlock() instanceof PulleyBlock))
 			return;
@@ -189,12 +191,18 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
+		if (compound.contains("LastException"))
+			lastException = ITextComponent.Serializer.fromJson(compound.getString("LastException"));
+		else
+			lastException = null;
 		super.read(compound, clientPacket);
 	}
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
+		if (lastException != null)
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException));
 		super.write(compound, clientPacket);
 	}
 

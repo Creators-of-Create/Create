@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
@@ -229,13 +230,20 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			.isCoupledThroughContraption())
 			return;
 
-		CartMovementMode mode =
-			getTileEntityOptional(world, pos).map(te -> CartMovementMode.values()[te.movementMode.value])
+		
+		Optional<CartAssemblerTileEntity> assembler = getTileEntityOptional(world, pos);
+		CartMovementMode mode = assembler.map(te -> CartMovementMode.values()[te.movementMode.value])
 				.orElse(CartMovementMode.ROTATE);
 
 		MountedContraption contraption = new MountedContraption(mode);
-		if (!contraption.assemble(world, pos))
+		try {
+			assembler.ifPresent(te -> te.lastException = null);
+			if (!contraption.assemble(world, pos))
+				return;
+		} catch (AssemblyException e) {
+			assembler.ifPresent(te -> te.lastException = e.message);
 			return;
+		}
 
 		boolean couplingFound = contraption.connectedCart != null;
 		Optional<Direction> initialOrientation = cart.getMotion()

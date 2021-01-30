@@ -135,7 +135,7 @@ public abstract class Contraption {
 		stabilizedSubContraptions = new HashMap<>();
 	}
 
-	public abstract boolean assemble(World world, BlockPos pos);
+	public abstract boolean assemble(World world, BlockPos pos) throws AssemblyException;
 
 	protected abstract boolean canAxisBeStabilized(Axis axis);
 
@@ -180,7 +180,7 @@ public abstract class Contraption {
 			if (!moveBlock(world, forcedDirection, frontier, visited))
 				return false;
 		}
-		return false;
+		throw new AssemblyException("structureTooLarge");
 	}
 
 	public void onEntityCreated(AbstractContraptionEntity entity) {
@@ -192,8 +192,12 @@ public abstract class Contraption {
 			StabilizedContraption subContraption = new StabilizedContraption(face);
 			World world = entity.world;
 			BlockPos pos = blockFace.getPos();
-			if (!subContraption.assemble(world, pos))
+			try {
+				if (!subContraption.assemble(world, pos))
+					continue;
+			} catch (AssemblyException e) {
 				continue;
+			}
 			subContraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 			OrientedContraptionEntity movedContraption =
 				OrientedContraptionEntity.create(world, subContraption, Optional.of(face));
@@ -243,6 +247,7 @@ public abstract class Contraption {
 		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
 	}
 
+	/** move the first block in frontier queue */
 	protected boolean moveBlock(World world, @Nullable Direction forcedDirection, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) {
 		BlockPos pos = frontier.poll();
@@ -250,15 +255,17 @@ public abstract class Contraption {
 			return false;
 		visited.add(pos);
 
+		if (World.isOutsideBuildHeight(pos))
+			return true;
 		if (!world.isBlockPresent(pos))
-			return false;
+			throw new AssemblyException("chunkNotLoaded");
 		if (isAnchoringBlockAt(pos))
 			return true;
 		BlockState state = world.getBlockState(pos);
 		if (!BlockMovementTraits.movementNecessary(state, world, pos))
 			return true;
 		if (!movementAllowed(state, world, pos))
-			return false;
+			throw AssemblyException.unmovableBlock(pos, state);
 		if (state.getBlock() instanceof AbstractChassisBlock
 			&& !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
@@ -309,7 +316,7 @@ public abstract class Contraption {
 				continue;
 			if (!movementAllowed(blockState, world, offsetPos)) {
 				if (offset == forcedDirection)
-					return false;
+					throw AssemblyException.unmovableBlock(pos, state);
 				continue;
 			}
 
@@ -338,7 +345,10 @@ public abstract class Contraption {
 		}
 
 		addBlock(pos, capture(world, pos));
-		return blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+		if (blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
+			return true;
+		else
+			throw new AssemblyException("structureTooLarge");
 	}
 
 	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
@@ -414,7 +424,7 @@ public abstract class Contraption {
 				break;
 			}
 			if (limit <= -1)
-				return false;
+				throw new AssemblyException("tooManyPistonPoles");
 		}
 
 		BlockPos searchPos = pos;
@@ -433,7 +443,7 @@ public abstract class Contraption {
 		}
 
 		if (limit <= -1)
-			return false;
+			throw new AssemblyException("tooManyPistonPoles");
 		return true;
 	}
 

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
@@ -52,7 +53,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		if (!collectExtensions(world, pos, orientation))
 			return false;
 		int count = blocks.size();
@@ -90,7 +91,7 @@ public class PistonContraption extends TranslatingContraption {
 
 				nextBlock = world.getBlockState(actualStart.offset(direction));
 				if (extensionsInFront > MechanicalPistonBlock.maxAllowedPistonPoles())
-					return false;
+					throw new AssemblyException("tooManyPistonPoles");
 			}
 		}
 
@@ -113,7 +114,7 @@ public class PistonContraption extends TranslatingContraption {
 			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 
 			if (extensionsInFront + extensionsInBack > MechanicalPistonBlock.maxAllowedPistonPoles())
-				return false;
+				throw new AssemblyException("tooManyPistonPoles");
 		}
 
 		anchor = pos.offset(direction, initialExtensionProgress + 1);
@@ -125,7 +126,7 @@ public class PistonContraption extends TranslatingContraption {
 						1, 1);
 
 		if (extensionLength == 0)
-			return false;
+			throw new AssemblyException("noPistonPoles");
 
 		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
@@ -155,8 +156,10 @@ public class PistonContraption extends TranslatingContraption {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
+			if (retracting && World.isOutsideBuildHeight(currentPos))
+				return true;
 			if (!world.isBlockPresent(currentPos))
-				return false;
+				throw new AssemblyException("chunkNotLoaded");
 			BlockState state = world.getBlockState(currentPos);
 			if (!BlockMovementTraits.movementNecessary(state, world, currentPos))
 				return true;
@@ -165,7 +168,10 @@ public class PistonContraption extends TranslatingContraption {
 			if (isPistonHead(state) && state.get(FACING) == direction.getOpposite())
 				return true;
 			if (!BlockMovementTraits.movementAllowed(state, world, currentPos))
-				return retracting;
+				if (retracting)
+					return true;
+				else
+					throw AssemblyException.unmovableBlock(currentPos, state);
 			if (retracting && state.getPushReaction() == PushReaction.PUSH_ONLY)
 				return true;
 			frontier.add(currentPos);

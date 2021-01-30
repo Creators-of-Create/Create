@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -16,12 +17,14 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 
-public class CartAssemblerTileEntity extends SmartTileEntity {
+public class CartAssemblerTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 	private static final int assemblyCooldown = 8;
 
 	protected ScrollOptionBehaviour<CartMovementMode> movementMode;
 	private int ticksSinceMinecartUpdate;
+	protected ITextComponent lastException; //TODO
 
 	public CartAssemblerTileEntity(TileEntityType<? extends CartAssemblerTileEntity> type) {
 		super(type);
@@ -104,4 +107,10 @@ public class CartAssemblerTileEntity extends SmartTileEntity {
 		return ticksSinceMinecartUpdate >= assemblyCooldown;
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		if (lastException != null)
+			tooltip.add(lastException.getFormattedText());
+		return lastException != null;
+	}
 }

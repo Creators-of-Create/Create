@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -39,7 +40,7 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
-		Direction direction) {
+		Direction direction) throws AssemblyException {
 		int hourArmBlocks = 0;
 
 		ClockworkContraption hourArm = new ClockworkContraption();
@@ -82,7 +83,7 @@ public class ClockworkContraption extends Contraption {
 	}
 	
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		return searchMovedStructure(world, pos, facing);
 	}
 

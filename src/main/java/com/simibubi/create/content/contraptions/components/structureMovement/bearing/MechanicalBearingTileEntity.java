@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -22,6 +23,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity {
 
@@ -31,6 +33,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected boolean running;
 	protected boolean assembleNextTick;
 	protected float clientAngleDiff;
+	protected ITextComponent lastException;
 
 	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
@@ -62,6 +65,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
+		if (lastException != null)
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException));
 		super.write(compound, clientPacket);
 	}
 
@@ -70,6 +75,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
+		if (compound.contains("LastException"))
+			lastException = ITextComponent.Serializer.fromJson(compound.getString("LastException"));
+		else
+			lastException = null;
 		super.read(compound, clientPacket);
 		if (!clientPacket)
 			return;
@@ -120,8 +129,14 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 		Direction direction = getBlockState().get(FACING);
 		BearingContraption contraption = new BearingContraption(isWindmill(), direction);
-		if (!contraption.assemble(world, pos))
+		try {
+			lastException = null;
+			if (!contraption.assemble(world, pos))
+				return;
+		} catch (AssemblyException e) {
+			lastException = e.message;
 			return;
+		}
 
 		if (isWindmill())
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, world, pos, 5);
@@ -282,4 +297,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		return true;
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		if (lastException != null)
+			tooltip.add(lastException.getFormattedText());
+		return lastException != null || added;
+	}
 }

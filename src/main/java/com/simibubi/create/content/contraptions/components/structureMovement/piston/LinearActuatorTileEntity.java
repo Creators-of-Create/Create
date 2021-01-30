@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class LinearActuatorTileEntity extends KineticTileEntity implements IControlContraption {
 
@@ -27,6 +29,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	protected boolean forceMove;
 	protected ScrollOptionBehaviour<MovementMode> movementMode;
 	protected boolean waitingForSpeedChange;
+	protected ITextComponent lastException;
 
 	// Custom position sync
 	protected float clientOffsetDiff;
@@ -80,7 +83,12 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 				return;
 			} else {
 				if (getSpeed() != 0)
-					assemble();
+					try {
+						assemble();
+						lastException = null;
+					} catch (AssemblyException e) {
+						lastException = e.message;
+					}
 			}
 			return;
 		}
@@ -153,6 +161,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		compound.putBoolean("Running", running);
 		compound.putBoolean("Waiting", waitingForSpeedChange);
 		compound.putFloat("Offset", offset);
+		if (lastException != null)
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException));
 		super.write(compound, clientPacket);
 		
 		if (clientPacket && forceMove) {
@@ -169,6 +179,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		running = compound.getBoolean("Running");
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
+		if (compound.contains("LastException"))
+			lastException = ITextComponent.Serializer.fromJson(compound.getString("LastException"));
+		else
+			lastException = null;
 		super.read(compound, clientPacket);
 
 		if (!clientPacket)
@@ -185,7 +199,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 
 	public abstract void disassemble();
 
-	protected abstract void assemble();
+	protected abstract void assemble() throws AssemblyException;
 
 	protected abstract int getExtensionRange();
 
@@ -287,6 +301,14 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	@Override
 	public BlockPos getBlockPosition() {
 		return pos;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		if (lastException != null)
+			tooltip.add(lastException.getFormattedText());
+		return lastException != null || added;
 	}
 
 }
