@@ -25,19 +25,37 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.WoodType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.entity.EntityType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
 public class WindowGen {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
+
+	private static Properties glassProperties(Properties p) {
+		return p.allowsSpawning(WindowGen::never).solidBlock(WindowGen::never).suffocates(WindowGen::never)
+				.blockVision(WindowGen::never);
+	}
+
+	private static boolean never(BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
+		return false;
+	}
+
+	private static Boolean never(BlockState p_235427_0_, IBlockReader p_235427_1_, BlockPos p_235427_2_,
+			EntityType<?> p_235427_3_) {
+		return false;
+	}
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock) {
 		return woodenWindowBlock(woodType, planksBlock, () -> RenderType::getCutoutMipped);
@@ -75,6 +93,7 @@ public class WindowGen {
 				.addCriterion("has_ingredient", p.hasItem(ingredient.get()))
 				.build(p::accept))
 			.initialProperties(() -> Blocks.GLASS)
+			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.registerSilkTouch(g))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
@@ -88,6 +107,7 @@ public class WindowGen {
 			.onRegister(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::getTranslucent)
 			.initialProperties(() -> Blocks.GLASS)
+			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.registerSilkTouch(g))
 			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
