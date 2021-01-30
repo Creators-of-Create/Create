@@ -1,27 +1,37 @@
 package com.simibubi.create.foundation.render.contraption;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class RenderedContraption {
     private HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
@@ -76,10 +86,11 @@ public class RenderedContraption {
 
         renderLayers.clear();
 
+        PlacementSimulationWorld renderWorld = setupRenderWorld(c);
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
         for (RenderType layer : blockLayers) {
-            renderLayers.put(layer, buildStructureBuffer(c, layer));
+            renderLayers.put(layer, buildStructureModel(renderWorld, c, layer));
         }
     }
 
@@ -156,8 +167,58 @@ public class RenderedContraption {
         kinetics.invalidate();
     }
 
-    private static ContraptionModel buildStructureBuffer(Contraption c, RenderType layer) {
-        BufferBuilder builder = ContraptionRenderer.buildStructure(c, layer);
+    private static ContraptionModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+        BufferBuilder builder = buildStructure(renderWorld, c, layer);
         return new ContraptionModel(builder);
+    }
+
+    public static PlacementSimulationWorld setupRenderWorld(Contraption c) {
+        PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
+
+        renderWorld.setTileEntities(c.presentTileEntities.values());
+
+        for (Template.BlockInfo info : c.getBlocks()
+                                        .values())
+            renderWorld.setBlockState(info.pos, info.state);
+
+        WorldLightManager lighter = renderWorld.lighter;
+
+        renderWorld.chunkProvider.getLightSources().forEach((pos) -> lighter.func_215573_a(pos, renderWorld.getLightValue(pos)));
+
+        lighter.tick(Integer.MAX_VALUE, true, false);
+
+        return renderWorld;
+    }
+
+    public static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+
+        ForgeHooksClient.setRenderLayer(layer);
+        MatrixStack ms = new MatrixStack();
+        BlockRendererDispatcher dispatcher = Minecraft.getInstance()
+                                                      .getBlockRendererDispatcher();
+        BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
+        Random random = new Random();
+        BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+
+        for (Template.BlockInfo info : c.getBlocks()
+                                        .values()) {
+            BlockState state = info.state;
+
+            if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
+                continue;
+            if (!RenderTypeLookup.canRenderInLayer(state, layer))
+                continue;
+
+            IBakedModel originalModel = dispatcher.getModelForState(state);
+            ms.push();
+            ms.translate(info.pos.getX(), info.pos.getY(), info.pos.getZ());
+            blockRenderer.renderModel(renderWorld, originalModel, state, info.pos, ms, builder, true, random, 42,
+                                      OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+            ms.pop();
+        }
+
+        builder.finishDrawing();
+        return builder;
     }
 }

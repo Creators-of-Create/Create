@@ -103,14 +103,6 @@ public class ContraptionRenderer {
 							   .values())
 			renderWorld.setBlockState(info.pos, info.state);
 
-		WorldLightManager lighter = renderWorld.lighter;
-
-		renderWorld.chunkProvider.getLightSources().forEach((pos) -> {
-			lighter.func_215573_a(pos, renderWorld.getLightValue(pos));
-		});
-
-		lighter.tick(Integer.MAX_VALUE, true, false);
-
 		for (BlockInfo info : c.getBlocks()
 							   .values()) {
 			BlockState state = info.state;
