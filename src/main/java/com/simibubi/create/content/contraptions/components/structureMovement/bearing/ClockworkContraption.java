@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -92,11 +92,13 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	protected boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
+	protected boolean moveBlock(World world, Direction direction, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) {
-		if (ignoreBlocks.contains(pos))
+		if (ignoreBlocks.contains(frontier.peek())) {
+			frontier.poll();
 			return true;
-		return super.moveBlock(world, pos, direction, frontier, visited);
+		}
+		return super.moveBlock(world, direction, frontier, visited);
 	}
 
 	@Override

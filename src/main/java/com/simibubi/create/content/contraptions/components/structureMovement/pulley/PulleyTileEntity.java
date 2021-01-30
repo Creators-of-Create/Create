@@ -176,9 +176,10 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			return;
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
-		if (!BlockMovementTraits.movementNecessary(world, posBelow))
+		BlockState state = world.getBlockState(posBelow);
+		if (!BlockMovementTraits.movementNecessary(state, world, posBelow))
 			return;
-		if (BlockMovementTraits.isBrittle(world.getBlockState(posBelow)))
+		if (BlockMovementTraits.isBrittle(state))
 			return;
 
 		disassemble();

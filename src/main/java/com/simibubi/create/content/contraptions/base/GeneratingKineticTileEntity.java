@@ -38,7 +38,7 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		if (!(tileEntity instanceof KineticTileEntity))
 			return;
 		KineticTileEntity sourceTe = (KineticTileEntity) tileEntity;
-		if (reActivateSource && sourceTe != null && Math.abs(sourceTe.getSpeed()) >= Math.abs(getGeneratedSpeed()))
+		if (reActivateSource && Math.abs(sourceTe.getSpeed()) >= Math.abs(getGeneratedSpeed()))
 			reActivateSource = false;
 	}
 
