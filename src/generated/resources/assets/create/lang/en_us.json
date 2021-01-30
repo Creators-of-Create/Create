@@ -844,6 +844,7 @@
 	"create.gui.sequenced_gearshift.instruction.turn_distance.distance": "Distance",
 	"create.gui.sequenced_gearshift.instruction.wait": "Wait",
 	"create.gui.sequenced_gearshift.instruction.wait.duration": "Duration",
+	"create.gui.sequenced_gearshift.instruction.paused": "Paused",
 	"create.gui.sequenced_gearshift.instruction.end": "End",
 	"create.gui.sequenced_gearshift.speed": "Speed, Direction",
 	"create.gui.sequenced_gearshift.speed.forward": "Input speed, Forwards",

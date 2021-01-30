@@ -32,6 +32,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			return;
 		if (world.isRemote)
 			return;
+		if (currentInstructionDuration < 0)
+			return;
 		if (timer < currentInstructionDuration) {
 			timer++;
 			return;
@@ -66,6 +68,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	public void onRedstoneUpdate() {
 		if (!isIdle())
 			return;
+
 		if (!world.isBlockPowered(pos)) {
 			world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
 			return;
@@ -73,6 +76,19 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		if (getSpeed() == 0)
 			return;
 		run(0);
+	}
+
+	public void onIsPowered() {
+
+		Instruction instruction = getInstruction(currentInstruction);
+		if (instruction == null)
+			return;
+
+		switch (instruction.onIsPowered())
+		{
+			case CONTINUE:
+				run(currentInstruction + 1);
+		}
 	}
 
 	protected void run(int instructionIndex) {
