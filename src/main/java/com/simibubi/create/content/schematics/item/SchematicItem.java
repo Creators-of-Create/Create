@@ -1,17 +1,22 @@
 package com.simibubi.create.content.schematics.item;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
@@ -24,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -44,6 +50,8 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public class SchematicItem extends Item {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public SchematicItem(Properties properties) {
 		super(properties.maxStackSize(1));
@@ -94,6 +102,7 @@ public class SchematicItem extends Item {
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
+		settings.addProcessor(SchematicProcessor.INSTANCE);
 		return settings;
 	}
 
@@ -104,25 +113,30 @@ public class SchematicItem extends Item {
 		String schematic = blueprint.getTag()
 			.getString("File");
 
-		String filepath = "";
+		if (!schematic.endsWith(".nbt"))
+			return t;
 
-		if (Thread.currentThread()
-			.getThreadGroup() == SidedThreadGroups.SERVER)
-			filepath = "schematics/uploaded/" + owner + "/" + schematic;
-		else
-			filepath = "schematics/" + schematic;
+		Path dir;
+		Path file;
 
-		InputStream stream = null;
-		try {
-			stream = Files.newInputStream(Paths.get(filepath), StandardOpenOption.READ);
-			CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
+		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
+			dir = Paths.get("schematics", "uploaded").toAbsolutePath();
+			file = Paths.get(owner, schematic);
+		} else {
+			dir = Paths.get("schematics").toAbsolutePath();
+			file = Paths.get(schematic);
+		}
+
+		Path path = dir.resolve(file).normalize();
+		if (!path.startsWith(dir))
+			return t;
+
+		try (DataInputStream stream = new DataInputStream(new BufferedInputStream(
+				new GZIPInputStream(Files.newInputStream(path, StandardOpenOption.READ))))) {
+			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 			t.read(nbt);
-
 		} catch (IOException e) {
-			// Player/Server doesnt have schematic saved
-		} finally {
-			if (stream != null)
-				IOUtils.closeQuietly(stream);
+			LOGGER.warn("Failed to read schematic", e);
 		}
 
 		return t;
