@@ -217,6 +217,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		boolean overStressedBefore = overStressed;
+		Long networkBefore = network;
+		float speedBefore = speed;
 		clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement

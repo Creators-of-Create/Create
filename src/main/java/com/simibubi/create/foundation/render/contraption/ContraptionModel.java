@@ -4,15 +4,17 @@ import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.LightTexture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
 
+import static com.simibubi.create.foundation.render.instancing.VertexAttribute.LIGHT;
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.RGBA;
 
 public class ContraptionModel extends BufferedModel {
-    public static final VertexFormat FORMAT = new VertexFormat(InstancedModel.FORMAT, RGBA);
+    public static final VertexFormat FORMAT = new VertexFormat(InstancedModel.FORMAT, RGBA, LIGHT);
 
     public ContraptionModel(BufferBuilder buf) {
         super(buf);
@@ -35,6 +37,14 @@ public class ContraptionModel extends BufferedModel {
         to.put(getG(template, vertex));
         to.put(getB(template, vertex));
         to.put(getA(template, vertex));
+
+        int light = getLight(template, vertex);
+
+        byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
+        byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
+
+        to.put(block);
+        to.put(sky);
     }
 
     @Override

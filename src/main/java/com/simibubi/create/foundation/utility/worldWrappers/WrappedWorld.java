@@ -19,16 +19,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.MapData;
 
 public class WrappedWorld extends World {
 
 	protected World world;
 
+	public WrappedWorld(World world, WrappedChunkProvider provider) {
+		super(world.getWorldInfo(), world.getDimension().getType(), (w, d) -> provider,
+				world.getProfiler(), world.isRemote);
+		this.world = world;
+	}
+
 	public WrappedWorld(World world) {
 		super(world.getWorldInfo(), world.getDimension().getType(), (w, d) -> world.getChunkProvider(),
 				world.getProfiler(), world.isRemote);
 		this.world = world;
+	}
+
+	@Override
+	public WorldLightManager getLightingProvider() {
+		return super.getLightingProvider();
 	}
 
 	@Override

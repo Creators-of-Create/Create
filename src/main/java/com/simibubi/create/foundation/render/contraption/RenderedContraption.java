@@ -7,10 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.KineticRenderMaterials;
-import com.simibubi.create.foundation.render.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
 import net.minecraft.client.renderer.BufferBuilder;
