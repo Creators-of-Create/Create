@@ -241,11 +241,11 @@ public abstract class ZapperItem extends Item {
 		return UseAction.NONE;
 	}
 
-	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data) {
+	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data, PlayerEntity player) {
 		if (data != null && AllBlockTags.SAFE_NBT.matches(state)) {
 			TileEntity tile = world.getTileEntity(pos);
 			if (tile != null) {
-				data = NBTProcessors.process(tile, data, true);
+				data = NBTProcessors.process(tile, data, !player.isCreative());
 				if (data == null)
 					return;
 				data.putInt("x", pos.getX());
