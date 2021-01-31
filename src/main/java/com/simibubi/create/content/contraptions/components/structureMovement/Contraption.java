@@ -135,7 +135,7 @@ public abstract class Contraption {
 
 	public abstract boolean assemble(World world, BlockPos pos);
 
-	protected abstract boolean canAxisBeStabilized(Axis axis);
+	public abstract boolean canBeStabilized(Direction facing, BlockPos localPos);
 
 	protected abstract AllContraptionTypes getType();
 
@@ -338,7 +338,7 @@ public abstract class Contraption {
 
 	private void moveBearing(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
 		Direction facing = state.get(MechanicalBearingBlock.FACING);
-		if (!canAxisBeStabilized(facing.getAxis())) {
+		if (!canBeStabilized(facing, pos.subtract(anchor))) {
 			BlockPos offset = pos.offset(facing);
 			if (!visited.contains(offset))
 				frontier.add(offset);

@@ -149,7 +149,7 @@ public class MountedContraption extends Contraption {
 	}
 	
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return true;
 	}
 	

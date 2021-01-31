@@ -55,7 +55,7 @@ public class StabilizedContraption extends Contraption {
 	}
 	
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return false;
 	}
 	
