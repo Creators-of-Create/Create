@@ -154,7 +154,7 @@ public class SchematicItem extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if (!onItemUse(playerIn, handIn))
 			return super.onItemRightClick(worldIn, playerIn, handIn);
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
 	}
 
 	private boolean onItemUse(PlayerEntity player, Hand hand) {

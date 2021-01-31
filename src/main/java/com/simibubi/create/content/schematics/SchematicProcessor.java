@@ -2,8 +2,11 @@ package com.simibubi.create.content.schematics;
 
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
+import com.simibubi.create.foundation.utility.NBTProcessors;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
@@ -24,8 +27,10 @@ public class SchematicProcessor extends StructureProcessor {
     public Template.BlockInfo process(IWorldReader world, BlockPos pos, Template.BlockInfo rawInfo, Template.BlockInfo info, PlacementSettings settings, @Nullable Template template) {
 		if (info.nbt != null) {
 			TileEntity te = info.state.createTileEntity(world);
-			if (te != null && te.onlyOpsCanSetNbt()) {
-				return new Template.BlockInfo(info.pos, info.state, null);
+			if (te != null) {
+				CompoundNBT nbt = NBTProcessors.process(te, info.nbt, false);
+				if (nbt != info.nbt)
+					return new Template.BlockInfo(info.pos, info.state, nbt);
 			}
 		}
         return info;

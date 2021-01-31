@@ -48,6 +48,7 @@ import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -797,6 +798,8 @@ public abstract class Contraption {
 
 				TileEntity tileEntity = world.getTileEntity(targetPos);
 				CompoundNBT tag = block.nbt;
+				if (tileEntity != null)
+					tag = NBTProcessors.process(tileEntity, tag, false);
 				if (tileEntity != null && tag != null) {
 					tag.putInt("x", targetPos.getX());
 					tag.putInt("y", targetPos.getY());
@@ -828,7 +831,8 @@ public abstract class Contraption {
 		}
 		for (BlockInfo block : blocks.values()) {
 			BlockPos targetPos = transform.apply(block.pos);
-			world.markAndNotifyBlock(targetPos, null, block.state, block.state, BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
+			BlockState state = world.getBlockState(targetPos);
+			world.markAndNotifyBlock(targetPos, null, state, state, BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
 		}
 
 		for (int i = 0; i < inventory.getSlots(); i++)
