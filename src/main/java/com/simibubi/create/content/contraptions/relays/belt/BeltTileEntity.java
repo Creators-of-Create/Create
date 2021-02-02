@@ -478,6 +478,11 @@ public class BeltTileEntity extends KineticTileEntity {
 		updateLight();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return isController();
+	}
+
 	private void updateLight() {
 		skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
 		blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);

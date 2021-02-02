@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.contraption;
 
 import com.simibubi.create.foundation.render.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
 import com.simibubi.create.foundation.render.instancing.BeltModel;
 import com.simibubi.create.foundation.render.instancing.KineticRenderMaterials;
 import com.simibubi.create.foundation.render.instancing.RenderMaterial;
@@ -12,8 +12,8 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer {
 
     @Override
     public void registerMaterials() {
-        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(Shader.CONTRAPTION_BELT, BeltModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(Shader.CONTRAPTION_ROTATING, RotatingModel::new));
-        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(Shader.CONTRAPTION_ACTOR, RotatingActorModel::new));
+        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(AllShaderPrograms.CONTRAPTION_BELT, BeltModel::new));
+        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(AllShaderPrograms.CONTRAPTION_ROTATING, RotatingModel::new));
+        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(AllShaderPrograms.CONTRAPTION_ACTOR, RotatingActorModel::new));
     }
 }

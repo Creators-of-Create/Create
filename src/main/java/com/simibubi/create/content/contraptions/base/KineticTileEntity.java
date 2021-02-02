@@ -472,6 +472,19 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
+	public void onLoad() {
+		super.onLoad();
+		if (world != null && world.isRemote)
+			CreateClient.kineticRenderer.add(this);
+	}
+
+	@Override
+	public void onChunkUnloaded() {
+		if (world != null && world.isRemote)
+			CreateClient.kineticRenderer.remove(this);
+	}
+
+	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.removed) {

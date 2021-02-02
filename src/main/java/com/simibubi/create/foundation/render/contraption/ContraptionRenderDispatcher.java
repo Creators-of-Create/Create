@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -97,7 +97,7 @@ public class ContraptionRenderDispatcher {
 
         ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
 
-        int structureShader = ShaderHelper.useShader(Shader.CONTRAPTION_STRUCTURE, callback);
+        int structureShader = ShaderHelper.useShader(AllShaderPrograms.CONTRAPTION_STRUCTURE, callback);
         for (RenderedContraption renderer : renderers.values()) {
             renderer.doRenderLayer(layer, structureShader);
         }

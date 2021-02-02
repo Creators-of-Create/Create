@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
@@ -11,9 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class InstancedTileRenderer {
     protected Map<TileEntity, TileEntityInstance<?>> renderers = new HashMap<>();
@@ -25,8 +23,8 @@ public class InstancedTileRenderer {
     }
 
     public void registerMaterials() {
-        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(Shader.BELT, BeltModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(Shader.ROTATING, RotatingModel::new));
+        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(AllShaderPrograms.BELT, BeltModel::new));
+        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(AllShaderPrograms.ROTATING, RotatingModel::new));
     }
 
     @SuppressWarnings("unchecked")
@@ -42,13 +40,15 @@ public class InstancedTileRenderer {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (renderers.containsKey(tile)) {
-            return (TileEntityInstance<? super T>) renderers.get(tile);
+        TileEntityInstance<?> instance = renderers.get(tile);
+
+        if (instance != null) {
+            return (TileEntityInstance<? super T>) instance;
         } else if (create) {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
             if (renderer != null) {
-                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(renderer);
+                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
                 renderers.put(tile, renderer);
             }
 
@@ -60,16 +60,22 @@ public class InstancedTileRenderer {
 
     public <T extends TileEntity> void onLightUpdate(T tile) {
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> instance = getInstance(tile);
+            TileEntityInstance<? super T> instance = getInstance(tile, false);
 
             if (instance != null)
                 instance.updateLight();
         }
     }
 
+    public <T extends TileEntity> void add(T tile) {
+        if (tile instanceof IInstanceRendered) {
+            getInstance(tile);
+        }
+    }
+
     public <T extends TileEntity> void update(T tile) {
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> instance = getInstance(tile);
+            TileEntityInstance<? super T> instance = getInstance(tile, false);
 
             if (instance != null)
                 instance.update();
@@ -91,8 +97,7 @@ public class InstancedTileRenderer {
         // Clean up twice a second. This doesn't have to happen every tick,
         // but this does need to be run to ensure we don't miss anything.
         if (AnimationTickHolder.ticks % 10 == 0) {
-            List<TileEntity> removed = renderers.keySet().stream().filter(TileEntity::isRemoved).collect(Collectors.toList());
-            removed.forEach(renderers::remove);
+            renderers.keySet().stream().filter(TileEntity::isRemoved).forEach(renderers::remove);
         }
     }
 

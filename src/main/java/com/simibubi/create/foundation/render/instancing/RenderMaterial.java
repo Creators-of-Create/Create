@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.gl.shader.Shader;
+import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
@@ -33,17 +33,17 @@ public class RenderMaterial<MODEL extends InstancedModel<?>> {
 
     protected final Map<Compartment<?>, Cache<Object, MODEL>> models;
     protected final ModelFactory<MODEL> factory;
-    protected final Shader shader;
+    protected final AllShaderPrograms shader;
     protected final Predicate<RenderType> layerPredicate;
 
     /**
      * Creates a material that renders in the default layer (CUTOUT_MIPPED)
      */
-    public RenderMaterial(Shader shader, ModelFactory<MODEL> factory) {
+    public RenderMaterial(AllShaderPrograms shader, ModelFactory<MODEL> factory) {
         this(shader, factory, type -> type == RenderType.getCutoutMipped());
     }
 
-    public RenderMaterial(Shader shader, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+    public RenderMaterial(AllShaderPrograms shader, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
         this.models = new HashMap<>();
         this.factory = factory;
         this.shader = shader;

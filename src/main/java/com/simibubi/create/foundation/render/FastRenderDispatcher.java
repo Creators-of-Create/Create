@@ -35,8 +35,7 @@ import java.util.function.Consumer;
 public class FastRenderDispatcher {
 
     public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
-    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedRemovals = new WorldAttached<>(ConcurrentHashMap::newKeySet);
-    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntityInstance<?>, Boolean>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::newKeySet);
+    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
@@ -48,15 +47,10 @@ public class FastRenderDispatcher {
         queuedUpdates.get(te.getWorld()).add(te);
     }
 
-    public static void enqueueRemove(TileEntity te) {
-        queuedRemovals.get(te.getWorld()).add(te);
-    }
-
     public static void tick() {
         ClientWorld world = Minecraft.getInstance().world;
 
-        runQueue(addedLastTick.get(world), TileEntityInstance::updateLight);
-        runQueue(queuedRemovals.get(world), CreateClient.kineticRenderer::remove);
+        runQueue(addedLastTick.get(world), CreateClient.kineticRenderer::onLightUpdate);
         CreateClient.kineticRenderer.clean();
 
         runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);

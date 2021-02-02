@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render.light;
 
 import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.gl.GlTexture;
+import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
@@ -26,7 +27,19 @@ public class LightVolume {
         setSampleVolume(sampleVolume);
 
         this.glTexture = new GlTexture(GL20.GL_TEXTURE_3D);
-        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2);
+        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: reduce this to span only sampleVolume
+
+        // allocate space for the texture
+        GL20.glActiveTexture(GL20.GL_TEXTURE4);
+        glTexture.bind();
+
+        int sizeX = textureVolume.sizeX();
+        int sizeY = textureVolume.sizeY();
+        int sizeZ = textureVolume.sizeZ();
+        GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, 0);
+
+        glTexture.unbind();
+        GL20.glActiveTexture(GL20.GL_TEXTURE0);
     }
 
     private void setSampleVolume(GridAlignedBB sampleVolume) {
@@ -217,11 +230,19 @@ public class LightVolume {
 
     private void uploadTexture() {
         if (bufferDirty) {
+            GL20.glPixelStorei(GL20.GL_UNPACK_ROW_LENGTH, 0);
+            GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_PIXELS, 0);
+            GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_ROWS, 0);
+            GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_IMAGES, 0);
+            GL20.glPixelStorei(GL20.GL_UNPACK_IMAGE_HEIGHT, 0);
+            GL20.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 2);
             int sizeX = textureVolume.sizeX();
             int sizeY = textureVolume.sizeY();
             int sizeZ = textureVolume.sizeZ();
 
-            GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+            GL12.glTexSubImage3D(GL12.GL_TEXTURE_3D, 0, 0, 0, 0, sizeX, sizeY, sizeZ, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+
+            GL20.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 4); // 4 is the default
             bufferDirty = false;
         }
     }

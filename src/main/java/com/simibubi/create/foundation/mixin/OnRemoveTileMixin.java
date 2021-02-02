@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +28,6 @@ public class OnRemoveTileMixin {
      */
     @Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"), method = "removeTileEntity", locals = LocalCapture.CAPTURE_FAILHARD)
     private void onRemoveTile(BlockPos pos, CallbackInfo ci, TileEntity te) {
-        if (isRemote) FastRenderDispatcher.enqueueRemove(te);
+        if (isRemote) CreateClient.kineticRenderer.remove(te);
     }
 }

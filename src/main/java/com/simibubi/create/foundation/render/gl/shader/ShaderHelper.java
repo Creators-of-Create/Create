@@ -34,7 +34,7 @@ public class ShaderHelper {
     public static final FloatBuffer VEC3_BUFFER = MemoryUtil.memAllocFloat(3);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
-    private static final Map<Shader, ShaderProgram> PROGRAMS = new EnumMap<>(Shader.class);
+    private static final Map<AllShaderPrograms, ShaderProgram> PROGRAMS = new EnumMap<>(AllShaderPrograms.class);
 
     @SuppressWarnings("deprecation")
     public static void initShaders() {
@@ -46,7 +46,7 @@ public class ShaderHelper {
                         if (predicate.test(VanillaResourceType.SHADERS)) {
                             PROGRAMS.values().forEach(ShaderLinkHelper::deleteShader);
                             PROGRAMS.clear();
-                            for (Shader shader : Shader.values()) {
+                            for (AllShaderPrograms shader : AllShaderPrograms.values()) {
                                 createProgram(manager, shader);
                             }
                         }
@@ -54,7 +54,7 @@ public class ShaderHelper {
         }
     }
 
-    public static int getShaderHandle(Shader shader) {
+    public static int getShaderHandle(AllShaderPrograms shader) {
         ShaderProgram shaderProgram = PROGRAMS.get(shader);
 
         return shaderProgram.getProgram();
@@ -74,11 +74,11 @@ public class ShaderHelper {
         };
     }
 
-    public static int useShader(Shader shader) {
+    public static int useShader(AllShaderPrograms shader) {
         return useShader(shader, null);
     }
 
-    public static int useShader(Shader shader, @Nullable ShaderCallback cb) {
+    public static int useShader(AllShaderPrograms shader, @Nullable ShaderCallback cb) {
         ShaderProgram prog = PROGRAMS.get(shader);
         if (prog == null) {
             return -1;
@@ -109,7 +109,7 @@ public class ShaderHelper {
         ShaderLinkHelper.useProgram(0);
     }
 
-    private static void createProgram(IResourceManager manager, Shader shader) {
+    private static void createProgram(IResourceManager manager, AllShaderPrograms shader) {
         try {
             ShaderLoader vert = createShader(manager, shader.vert, ShaderLoader.ShaderType.VERTEX);
             ShaderLoader frag = createShader(manager, shader.frag, ShaderLoader.ShaderType.FRAGMENT);

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.gl.GlPrimitiveType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 
@@ -10,7 +11,7 @@ import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*
 
 public class BeltData extends KineticData<BeltData> {
     public static final VertexAttribute TARGET_UV = copy("scrollTexture", VEC4);
-    public static final VertexAttribute SCROLL_MULT = new VertexAttribute("scrollMult", VertexFormatElement.Type.BYTE, 1, true);
+    public static final VertexAttribute SCROLL_MULT = new VertexAttribute("scrollMult", GlPrimitiveType.BYTE, 1, true);
 
     public static VertexFormat FORMAT = new VertexFormat(KineticData.FORMAT, ROTATION, UV, TARGET_UV, SCROLL_MULT);
 
