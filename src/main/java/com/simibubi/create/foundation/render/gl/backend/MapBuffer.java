@@ -51,8 +51,4 @@ public enum MapBuffer {
 
 
     public abstract void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload);
-
-    public final void mapBuffer(int target, int size, Consumer<ByteBuffer> upload) {
-        mapBuffer(target, 0, size, upload);
-    }
 }

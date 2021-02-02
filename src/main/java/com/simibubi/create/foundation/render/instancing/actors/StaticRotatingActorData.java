@@ -10,11 +10,13 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
 
 public class StaticRotatingActorData extends InstanceData {
-    public static VertexFormat FORMAT = new VertexFormat(POSITION, FLOAT, NORMAL, VEC3, NORMAL);
+    public static VertexFormat FORMAT = new VertexFormat(POSITION, LIGHT, FLOAT, NORMAL, VEC3, NORMAL);
 
     private float x;
     private float y;
     private float z;
+    private byte blockLight;
+    private byte skyLight;
     private float rotationOffset;
     private byte rotationAxisX;
     private byte rotationAxisY;
@@ -30,6 +32,16 @@ public class StaticRotatingActorData extends InstanceData {
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
+        return this;
+    }
+
+    public StaticRotatingActorData setBlockLight(int blockLight) {
+        this.blockLight = (byte) ((blockLight & 0xF) << 4);
+        return this;
+    }
+
+    public StaticRotatingActorData setSkyLight(int skyLight) {
+        this.skyLight = (byte) ((skyLight & 0xF) << 4);
         return this;
     }
 
@@ -77,6 +89,7 @@ public class StaticRotatingActorData extends InstanceData {
     @Override
     public void write(ByteBuffer buf) {
         putVec3(buf, x, y, z);
+        putVec2(buf, blockLight, skyLight);
         put(buf, rotationOffset);
         putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
         putVec3(buf, localRotationX, localRotationY, localRotationZ);

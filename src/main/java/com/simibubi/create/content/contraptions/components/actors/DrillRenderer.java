@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
+import net.minecraft.world.LightType;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
@@ -50,6 +51,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 			float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
 			float eulerY = facing.getHorizontalAngle();
 			data.setPosition(context.localPos)
+				.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
 				.setRotationOffset(0)
 				.setRotationAxis(0, 0, 1)
 				.setLocalRotation(eulerX, eulerY, 0);

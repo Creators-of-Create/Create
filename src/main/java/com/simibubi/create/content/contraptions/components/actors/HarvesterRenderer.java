@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LightType;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -49,6 +50,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 			float originOffset = 1 / 16f;
 			Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 			data.setPosition(context.localPos)
+				.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
 				.setRotationOffset(0)
 				.setRotationCenter(rotOffset)
 				.setRotationAxis(-1, 0, 0)
@@ -80,7 +82,4 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 				.getModel())
 			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
-
-	public static void transformHead(MatrixStack ms, float angle) {}
-
 }

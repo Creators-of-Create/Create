@@ -19,6 +19,7 @@ out float Diffuse;
 out vec2 TexCoords;
 out vec4 Color;
 out vec3 BoxCoord;
+out vec2 ModelLight;
 
 uniform vec3 lightBoxSize;
 uniform vec3 lightBoxMin;
@@ -72,6 +73,7 @@ void main() {
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords - uv + scrollTexture.xy + vec2(0, scroll);
+    ModelLight = light;
     gl_Position = projection * view * worldPos;
 
     if (debug == 2) {

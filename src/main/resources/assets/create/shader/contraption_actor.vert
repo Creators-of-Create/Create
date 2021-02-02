@@ -7,18 +7,20 @@ layout (location = 2) in vec2 aTexCoords;
 
 // instance data
 layout (location = 3) in vec3 instancePos;
-layout (location = 4) in float rotationOffset;
-layout (location = 5) in vec3 localRotationAxis;
-layout (location = 6) in vec3 localRotation;
-layout (location = 7) in vec3 rotationCenter;
+layout (location = 4) in vec2 modelLight;
+layout (location = 5) in float rotationOffset;
+layout (location = 6) in vec3 localRotationAxis;
+layout (location = 7) in vec3 localRotation;
+layout (location = 8) in vec3 rotationCenter;
 
 // dynamic data
-//layout (location = 7) in vec3 relativeMotion;
+//layout (location = 9) in vec3 relativeMotion;
 
 out float Diffuse;
 out vec2 TexCoords;
 out vec4 Color;
 out vec3 BoxCoord;
+out vec2 ModelLight;
 
 uniform vec3 lightBoxSize;
 uniform vec3 lightBoxMin;
@@ -77,6 +79,7 @@ void main() {
     BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
+    ModelLight = modelLight;
     gl_Position = projection * view * worldPos;
 
     if (debug == 2) {

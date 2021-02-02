@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
@@ -36,6 +37,8 @@ import java.util.Random;
 public class RenderedContraption {
     private HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
 
+    public final PlacementSimulationWorld renderWorld;
+
     private final ContraptionLighter<?> lighter;
 
     public final ContraptionKineticRenderer kinetics;
@@ -48,10 +51,11 @@ public class RenderedContraption {
         this.contraption = contraption;
         this.lighter = contraption.makeLighter();
         this.kinetics = new ContraptionKineticRenderer();
+        this.renderWorld = setupRenderWorld(world, contraption);
 
-        buildLayers(contraption);
-        buildInstancedTiles(contraption);
-        buildActors(contraption);
+        buildLayers();
+        buildInstancedTiles();
+        buildActors();
     }
 
     public int getEntityId() {
@@ -79,34 +83,37 @@ public class RenderedContraption {
         }
     }
 
-    private void buildLayers(Contraption c) {
+    private void buildLayers() {
         for (ContraptionModel buffer : renderLayers.values()) {
             buffer.delete();
         }
 
         renderLayers.clear();
 
-        PlacementSimulationWorld renderWorld = setupRenderWorld(c);
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
         for (RenderType layer : blockLayers) {
-            renderLayers.put(layer, buildStructureModel(renderWorld, c, layer));
+            renderLayers.put(layer, buildStructureModel(renderWorld, contraption, layer));
         }
     }
 
-    private void buildInstancedTiles(Contraption c) {
-        Collection<TileEntity> tileEntities = c.maybeInstancedTileEntities;
+    private void buildInstancedTiles() {
+        Collection<TileEntity> tileEntities = contraption.maybeInstancedTileEntities;
         if (!tileEntities.isEmpty()) {
             for (TileEntity te : tileEntities) {
                 if (te instanceof IInstanceRendered) {
-                    kinetics.getInstance(te); // this is enough to instantiate the model instance
+                    World world = te.getWorld();
+                    BlockPos pos = te.getPos();
+                    te.setLocation(renderWorld, pos);
+                    kinetics.add(te);
+                    te.setLocation(world, pos);
                 }
             }
         }
     }
 
-    private void buildActors(Contraption c) {
-        List<MutablePair<Template.BlockInfo, MovementContext>> actors = c.getActors();
+    private void buildActors() {
+        List<MutablePair<Template.BlockInfo, MovementContext>> actors = contraption.getActors();
 
         for (MutablePair<Template.BlockInfo, MovementContext> actor : actors) {
             Template.BlockInfo blockInfo = actor.left;
@@ -172,8 +179,8 @@ public class RenderedContraption {
         return new ContraptionModel(builder);
     }
 
-    public static PlacementSimulationWorld setupRenderWorld(Contraption c) {
-        PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
+    public static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
+        PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
 
         renderWorld.setTileEntities(c.presentTileEntities.values());
 

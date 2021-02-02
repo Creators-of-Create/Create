@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import com.simibubi.create.foundation.render.gl.Backend;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import com.simibubi.create.foundation.render.gl.GlVertexArray;
 import com.simibubi.create.foundation.render.instancing.VertexFormat;
@@ -45,7 +45,7 @@ public abstract class BufferedModel extends TemplateBuffer {
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
         // mirror it in system memory so we can write to it
-        Backend.MAP_BUFFER.mapBuffer(GL15.GL_ARRAY_BUFFER, invariantSize, buffer -> {
+        Backend.mapBuffer(GL15.GL_ARRAY_BUFFER, invariantSize, buffer -> {
             for (int i = 0; i < vertexCount; i++) {
                 copyVertex(buffer, i);
             }

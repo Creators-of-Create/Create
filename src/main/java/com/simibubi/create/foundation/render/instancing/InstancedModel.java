@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.render.instancing;
 
 
-import com.google.common.collect.Range;
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
-import com.simibubi.create.foundation.render.gl.Backend;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.GL11;
@@ -161,7 +160,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         VertexFormat instanceFormat = getInstanceFormat();
 
         int stride = instanceFormat.getStride();
-        int instanceSize = RenderMath.nextPowerOf2((instanceCount() + 1) * stride);
+        int newInstanceCount = instanceCount();
+        int instanceSize = RenderMath.nextPowerOf2((newInstanceCount + 1) * stride);
 
         instanceVBO.bind(GL15.GL_ARRAY_BUFFER);
 
@@ -170,19 +170,29 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, instanceSize, GL15.GL_STATIC_DRAW);
             glBufferSize = instanceSize;
             minIndexChanged = 0;
-            maxIndexChanged = data.size() - 1;
+            maxIndexChanged = newInstanceCount - 1;
         }
 
         int offset = minIndexChanged * stride;
         int length = (1 + maxIndexChanged - minIndexChanged) * stride;
 
-        Backend.MAP_BUFFER.mapBuffer(GL15.GL_ARRAY_BUFFER, offset, length, buffer -> {
+        Backend.mapBuffer(GL15.GL_ARRAY_BUFFER, offset, length, buffer -> {
             for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
                 data.get(i).write(buffer);
             }
         });
 
-        glInstanceCount = data.size();
+        if (newInstanceCount < glInstanceCount) {
+            int clearFrom = (maxIndexChanged + 1) * stride;
+            int clearTo = (glInstanceCount) * stride;
+            Backend.mapBuffer(GL15.GL_ARRAY_BUFFER, clearFrom, clearTo - clearFrom, buffer -> {
+                for (int i = clearFrom; i < clearTo; i++) {
+                    buffer.put((byte) 0);
+                }
+            });
+        }
+
+        glInstanceCount = newInstanceCount;
 
         int staticAttributes = getModelFormat().getShaderAttributeCount();
         instanceFormat.informAttributes(staticAttributes);

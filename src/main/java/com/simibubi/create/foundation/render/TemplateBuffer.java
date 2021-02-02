@@ -1,8 +1,7 @@
 package com.simibubi.create.foundation.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.foundation.render.gl.Backend;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -42,7 +41,7 @@ public class TemplateBuffer {
         ebo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
 
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
-        Backend.MAP_BUFFER.mapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices -> {
+        Backend.mapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices -> {
             for (int i = 0; i < vertexCount; i++) {
                 indices.putShort((short) i);
             }
