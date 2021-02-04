@@ -92,8 +92,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             keys.get(i).index--;
         }
 
-        markIndexChanged(index - 1);
         maxIndexChanged = keys.size() - 1;
+        markIndexChanged(Math.min(maxIndexChanged, index));
 
         key.invalidate();
     }

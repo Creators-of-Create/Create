@@ -125,6 +125,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			BeltMovementHandler.transportEntity(this, entity, info);
 		});
 		toRemove.forEach(passengers::remove);
+
+		if (blockLight == -1)
+			updateLight();
 	}
 
 	@Override
@@ -216,7 +219,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (!clientPacket)
 			return;
-		updateLight();
+
 		if (casingBefore == casing)
 			return;
 		requestModelDataUpdate();
@@ -484,7 +487,12 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	private void updateLight() {
-		skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
-		blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
+		if (world != null) {
+			skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
+			blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
+		} else {
+			skyLight = -1;
+			blockLight = -1;
+		}
 	}
 }
