@@ -109,6 +109,8 @@ public class AllBlockPartials {
 
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
+		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
+		
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
