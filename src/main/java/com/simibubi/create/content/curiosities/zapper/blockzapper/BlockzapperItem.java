@@ -299,7 +299,6 @@ public class BlockzapperItem extends ZapperItem {
 	public static boolean isAllowedToPlace(World world, BlockPos pos,PlayerEntity player){
 		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, pos);
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
-			blocksnapshot.restore(true, false);
 			return false;
 		}
 		return true;
