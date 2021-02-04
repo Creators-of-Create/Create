@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -50,14 +49,6 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 
-	}
-
-	public void addInstanceData(InstanceContext<DeployerTileEntity> ctx) {
-		KineticTileEntityRenderer.renderRotatingKineticBlock(ctx, getRenderedBlockState(ctx.te));
-	}
-
-	public void markForRebuild(InstanceContext<DeployerTileEntity> ctx) {
-		KineticTileEntityRenderer.markForRebuild(ctx, getRenderedBlockState(ctx.te));
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

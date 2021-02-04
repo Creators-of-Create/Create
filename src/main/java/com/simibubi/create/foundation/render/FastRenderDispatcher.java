@@ -68,20 +68,20 @@ public class FastRenderDispatcher {
     }
 
     public static void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ) {
-        Matrix4f view = Matrix4f.translate((float) -cameraX, (float) -cameraY, (float) -cameraZ);
-        view.multiplyBackward(stack.peek().getModel());
+        Matrix4f viewProjection = Matrix4f.translate((float) -cameraX, (float) -cameraY, (float) -cameraZ);
+        viewProjection.multiplyBackward(stack.peek().getModel());
+        viewProjection.multiplyBackward(getProjectionMatrix());
 
-        Matrix4f projection = getProjectionMatrix();
         type.startDrawing();
 
         RenderSystem.enableDepthTest();
         RenderSystem.enableCull();
         GL11.glCullFace(GL11.GL_BACK);
-        CreateClient.kineticRenderer.render(type, projection, view);
+        CreateClient.kineticRenderer.render(type, viewProjection);
         RenderSystem.disableCull();
         //RenderSystem.disableDepthTest();
 
-        ContraptionRenderDispatcher.renderLayer(type, projection, view);
+        ContraptionRenderDispatcher.renderLayer(type, viewProjection);
         ShaderHelper.releaseShader();
         type.endDrawing();
     }

@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -42,42 +41,6 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 //				renderRotatingBuffer(te, getRotatedModel(te));
 
 //		addInstanceData(new InstanceContext.World<>(te));
-	}
-
-	public void addInstanceData(InstanceContext<KineticTileEntity> ctx) {
-		renderRotatingBuffer(ctx, getRotatedModel(ctx));
-	}
-
-	public void markForRebuild(InstanceContext<KineticTileEntity> ctx) {
-		getRotatedModel(ctx).clearInstanceData();
-	}
-
-	public static <T extends KineticTileEntity> void renderRotatingKineticBlock(InstanceContext<T> ctx, BlockState renderedState) {
-		InstancedModel<RotatingData> instancedRenderer = ctx.getRotating().getModel(KINETIC_TILE, renderedState);
-		renderRotatingBuffer(ctx, instancedRenderer);
-	}
-
-	public static <T extends KineticTileEntity> void markForRebuild(InstanceContext<T> ctx, BlockState renderedState) {
-		ctx.getRotating().getModel(KINETIC_TILE, renderedState).clearInstanceData();
-	}
-
-	public static <T extends KineticTileEntity> void renderRotatingBuffer(InstanceContext<T> ctx, InstancedModel<RotatingData> instancer) {
-		instancer.setupInstance(data -> {
-			T te = ctx.te;
-			final BlockPos pos = te.getPos();
-			Axis axis = ((IRotate) te.getBlockState()
-									 .getBlock()).getRotationAxis(te.getBlockState());
-
-			data.setRotationalSpeed(te.getSpeed())
-				.setRotationOffset(getRotationOffsetForPosition(te, pos, axis))
-				.setRotationAxis(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis).getUnitVector())
-				.setTileEntity(te);
-
-			if (ctx.checkWorldLight()) {
-				data.setBlockLight(te.getWorld().getLightLevel(LightType.BLOCK, te.getPos()))
-					.setSkyLight(te.getWorld().getLightLevel(LightType.SKY, te.getPos()));
-			}
-		});
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
@@ -142,8 +105,5 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		return te.getBlockState();
 	}
 
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return ctx.getRotating().getModel(KINETIC_TILE, getRenderedBlockState(ctx.te));
-	}
 
 }

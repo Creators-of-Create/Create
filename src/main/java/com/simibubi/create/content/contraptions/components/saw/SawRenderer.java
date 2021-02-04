@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -44,14 +43,6 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-	}
-
-	public void addInstanceData(InstanceContext<SawTileEntity> ctx) {
-		KineticTileEntityRenderer.renderRotatingBuffer(ctx, getRotatedModel(ctx));
-	}
-
-	public void markForRebuild(InstanceContext<SawTileEntity> ctx) {
-		getRotatedModel(ctx).clearInstanceData();
 	}
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light){
@@ -131,15 +122,6 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			
 			ms.pop();
 		}
-	}
-
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<SawTileEntity> ctx) {
-		KineticTileEntity te = ctx.te;
-		BlockState state = te.getBlockState();
-		if (state.get(FACING).getAxis().isHorizontal())
-			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
-		return ctx.getRotating().getModel(KineticTileEntityRenderer.KINETIC_TILE,
-				getRenderedBlockState(te));
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {

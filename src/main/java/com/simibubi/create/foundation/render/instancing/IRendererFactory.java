@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 @FunctionalInterface

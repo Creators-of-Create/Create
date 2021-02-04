@@ -7,7 +7,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
+import com.simibubi.create.foundation.render.gl.BasicProgram;
+import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
@@ -29,24 +30,24 @@ import java.util.function.Supplier;
 
 import static com.simibubi.create.foundation.render.Compartment.PARTIAL;
 
-public class RenderMaterial<MODEL extends InstancedModel<?>> {
+public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel<?>> {
 
     protected final Map<Compartment<?>, Cache<Object, MODEL>> models;
     protected final ModelFactory<MODEL> factory;
-    protected final AllShaderPrograms shader;
+    protected final ProgramSpec<P> programSpec;
     protected final Predicate<RenderType> layerPredicate;
 
     /**
      * Creates a material that renders in the default layer (CUTOUT_MIPPED)
      */
-    public RenderMaterial(AllShaderPrograms shader, ModelFactory<MODEL> factory) {
-        this(shader, factory, type -> type == RenderType.getCutoutMipped());
+    public RenderMaterial(ProgramSpec<P> programSpec, ModelFactory<MODEL> factory) {
+        this(programSpec, factory, type -> type == RenderType.getCutoutMipped());
     }
 
-    public RenderMaterial(AllShaderPrograms shader, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+    public RenderMaterial(ProgramSpec<P> programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
         this.models = new HashMap<>();
         this.factory = factory;
-        this.shader = shader;
+        this.programSpec = programSpec;
         this.layerPredicate = layerPredicate;
         registerCompartment(Compartment.PARTIAL);
         registerCompartment(Compartment.DIRECTIONAL_PARTIAL);
@@ -57,16 +58,16 @@ public class RenderMaterial<MODEL extends InstancedModel<?>> {
         return layerPredicate.test(layer);
     }
 
-    public void render(RenderType layer, Matrix4f projection, Matrix4f view) {
-        render(layer, projection, view, null);
+    public void render(RenderType layer, Matrix4f projection) {
+        render(layer, projection, null);
     }
 
-    public void render(RenderType layer, Matrix4f projection, Matrix4f view, ShaderCallback setup) {
-        ShaderCallback cb = ShaderHelper.getViewProjectionCallback(projection, view);
+    public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> setup) {
+        P program = ShaderHelper.getProgram(programSpec);
+        program.bind(viewProjection, 0);
 
-        if (setup != null) cb = cb.andThen(setup);
+        if (setup != null) setup.call(program);
 
-        ShaderHelper.useShader(shader, cb);
         makeRenderCalls();
         teardown();
     }

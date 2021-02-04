@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
+import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -15,10 +17,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
-
 public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
-    public static final VertexFormat FORMAT = new VertexFormat(POSITION, NORMAL, UV);
+    public static final VertexFormat FORMAT = new VertexFormat(CommonAttributes.POSITION, CommonAttributes.NORMAL, CommonAttributes.UV);
 
     protected GlBuffer instanceVBO;
     protected int glBufferSize = -1;

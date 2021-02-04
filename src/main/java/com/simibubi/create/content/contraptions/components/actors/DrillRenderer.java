@@ -6,11 +6,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.contraption.ContraptionProgram;
 import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -31,17 +30,12 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		super(dispatcher);
 	}
 
-	@Override
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthRotating(ctx, ctx.te.getBlockState());
-	}
-
 	protected static SuperByteBuffer getRotatingModel(BlockState state) {
 		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
 	}
 
 	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-		RenderMaterial<InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
+		RenderMaterial<?, InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
 
 		BlockState state = context.state;
 		InstancedModel<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);

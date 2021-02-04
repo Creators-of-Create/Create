@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.instancing.BeltData;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -57,74 +56,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		return te.isController();
 	}
 
-	public void addInstanceData(InstanceContext<BeltTileEntity> ctx) {
-		BeltTileEntity te = ctx.te;
-		BlockState blockState = te.getBlockState();
-		if (!AllBlocks.BELT.has(blockState))
-			return;
-
-		BeltSlope beltSlope = blockState.get(BeltBlock.SLOPE);
-		BeltPart part = blockState.get(BeltBlock.PART);
-		Direction facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
-		AxisDirection axisDirection = facing.getAxisDirection();
-
-		boolean downward = beltSlope == BeltSlope.DOWNWARD;
-		boolean upward = beltSlope == BeltSlope.UPWARD;
-		boolean diagonal = downward || upward;
-		boolean start = part == BeltPart.START;
-		boolean end = part == BeltPart.END;
-		boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
-		boolean vertical = beltSlope == BeltSlope.VERTICAL;
-		boolean alongX = facing.getAxis() == Axis.X;
-		boolean alongZ = facing.getAxis() == Axis.Z;
-
-		if (downward || vertical && axisDirection == AxisDirection.POSITIVE) {
-			boolean b = start;
-			start = end;
-			end = b;
-		}
-
-		for (boolean bottom : Iterate.trueAndFalse) {
-
-			AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
-
-			InstancedModel<BeltData> beltBuffer = beltPartial.renderOnBelt(ctx, blockState);
-			SpriteShiftEntry spriteShift = getSpriteShiftEntry(diagonal, bottom);
-
-			beltBuffer.setupInstance(data -> {
-				float speed = te.getSpeed();
-				if (((axisDirection == AxisDirection.NEGATIVE) ^ upward) ^
-						((alongX && !diagonal) || (alongZ && diagonal)) ^
-						vertical)
-					speed = -speed;
-
-				if (sideways && (facing == Direction.SOUTH || facing == Direction.WEST))
-					speed = -speed;
-
-				float rotX = !diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0;
-				float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
-				float rotZ = sideways ? 90 : (vertical ? 180 : 0);
-
-				data.setTileEntity(te)
-					.setBlockLight(te.getWorld().getLightLevel(LightType.BLOCK, te.getPos()))
-					.setSkyLight(te.getWorld().getLightLevel(LightType.SKY, te.getPos()))
-					.setRotation(rotX, rotY, rotZ)
-					.setRotationalSpeed(speed)
-					.setScrollTexture(spriteShift)
-					.setScrollMult(diagonal ? 3f / 8f : 0.5f);
-			});
-
-			// Diagonal belt do not have a separate bottom model
-			if (diagonal)
-				break;
-		}
-
-		if (te.hasPulley()) {
-			InstancedModel<RotatingData> rotatingBuffer = getPulleyModel(ctx, blockState, sideways);
-			KineticTileEntityRenderer.renderRotatingBuffer(ctx, rotatingBuffer);
-		}
-	}
-
 	public static SpriteShiftEntry getSpriteShiftEntry(boolean diagonal, boolean bottom) {
 		if (diagonal) return AllSpriteShifts.BELT_DIAGONAL;
 		if (bottom) return AllSpriteShifts.BELT_OFFSET;
@@ -146,31 +77,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (end) return AllBlockPartials.BELT_END;
 			return AllBlockPartials.BELT_MIDDLE;
 		}
-	}
-
-	private InstancedModel<RotatingData> getPulleyModel(InstanceContext<BeltTileEntity> ctx, BlockState blockState, boolean sideways) {
-		Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
-								  .rotateY();
-		if (sideways)
-			dir = Direction.UP;
-
-		Axis axis = dir.getAxis();
-
-		Supplier<MatrixStack> ms = () -> {
-			MatrixStack modelTransform = new MatrixStack();
-			MatrixStacker msr = MatrixStacker.of(modelTransform);
-			msr.centre();
-			if (axis == Axis.X)
-				msr.rotateY(90);
-			if (axis == Axis.Y)
-				msr.rotateX(90);
-			msr.rotateX(90);
-			msr.unCentre();
-
-			return modelTransform;
-		};
-
-		return ctx.getRotating().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
 	}
 
 	protected void renderItems(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

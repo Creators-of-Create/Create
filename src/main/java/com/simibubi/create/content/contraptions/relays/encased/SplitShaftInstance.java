@@ -3,17 +3,15 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 

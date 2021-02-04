@@ -40,7 +40,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	}
 
 	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-		RenderMaterial<InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
+		RenderMaterial<?, InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
 
 		BlockState state = context.state;
 		InstancedModel<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);

@@ -1,19 +1,22 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.gl.attrib.VertexAttribute;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
+import static com.simibubi.create.foundation.render.gl.attrib.VertexAttribute.*;
 
 public class KineticData<D extends KineticData<D>> extends InstanceData {
-    public static final VertexAttribute ROTATION_CENTER = copy("rotationCenter", VEC3);
-    public static final VertexAttribute SPEED = copy("speed", FLOAT);
-    public static final VertexAttribute OFFSET = copy("offset", FLOAT);
-    public static final VertexFormat FORMAT = new VertexFormat(INSTANCE_POSITION, LIGHT, RGB, SPEED, OFFSET);
+    public static final VertexAttribute ROTATION_CENTER = copy("rotationCenter", CommonAttributes.VEC3);
+    public static final VertexAttribute SPEED = copy("speed", CommonAttributes.FLOAT);
+    public static final VertexAttribute OFFSET = copy("offset", CommonAttributes.FLOAT);
+    public static final VertexFormat FORMAT = new VertexFormat(CommonAttributes.INSTANCE_POSITION, CommonAttributes.LIGHT, CommonAttributes.RGB, SPEED, OFFSET);
 
     private float x;
     private float y;

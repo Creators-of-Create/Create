@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.render.gl.GlBuffer;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 
 public abstract class DynamicInstancedModel<S extends InstanceData, D extends InstanceData> extends InstancedModel<S> {

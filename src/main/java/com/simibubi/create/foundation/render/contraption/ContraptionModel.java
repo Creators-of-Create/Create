@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render.contraption;
 
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
 import org.lwjgl.opengl.GL11;
@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.LIGHT;
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.RGBA;
+import static com.simibubi.create.foundation.render.gl.attrib.CommonAttributes.LIGHT;
+import static com.simibubi.create.foundation.render.gl.attrib.CommonAttributes.RGBA;
 
 public class ContraptionModel extends BufferedModel {
     public static final VertexFormat FORMAT = new VertexFormat(InstancedModel.FORMAT, RGBA, LIGHT);

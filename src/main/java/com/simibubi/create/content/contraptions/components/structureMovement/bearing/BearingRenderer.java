@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -43,12 +42,6 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 				AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
 		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-	}
-
-	@Override
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		BlockState blockState = ctx.te.getBlockState();
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, blockState, blockState.get(BearingBlock.FACING).getOpposite());
 	}
 
 }

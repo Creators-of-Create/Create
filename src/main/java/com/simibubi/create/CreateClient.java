@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
@@ -44,7 +44,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static InstancedTileRenderer kineticRenderer;
+	public static KineticRenderer kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 
 	private static CustomBlockModels customBlockModels;
@@ -72,7 +72,7 @@ public class CreateClient {
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
 
-		kineticRenderer = new InstancedTileRenderer();
+		kineticRenderer = new KineticRenderer();
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();

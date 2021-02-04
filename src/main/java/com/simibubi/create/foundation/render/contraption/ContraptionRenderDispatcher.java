@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
-import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
+import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -86,7 +86,7 @@ public class ContraptionRenderDispatcher {
         return renderer;
     }
 
-    public static void renderLayer(RenderType layer, Matrix4f projectionMat, Matrix4f viewMat) {
+    public static void renderLayer(RenderType layer, Matrix4f viewProjection) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
@@ -95,15 +95,14 @@ public class ContraptionRenderDispatcher {
         GL11.glEnable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
-        ShaderCallback callback = ShaderHelper.getViewProjectionCallback(projectionMat, viewMat);
-
-        int structureShader = ShaderHelper.useShader(AllShaderPrograms.CONTRAPTION_STRUCTURE, callback);
+        ContraptionProgram structureShader = ShaderHelper.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
+        structureShader.bind(viewProjection, 0);
         for (RenderedContraption renderer : renderers.values()) {
             renderer.doRenderLayer(layer, structureShader);
         }
 
         for (RenderedContraption renderer : renderers.values()) {
-            renderer.kinetics.render(layer, projectionMat, viewMat, renderer::setup);
+            renderer.kinetics.render(layer, viewProjection, renderer::setup);
             renderer.teardown();
         }
 

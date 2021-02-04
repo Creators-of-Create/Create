@@ -1,9 +1,9 @@
-package com.simibubi.create.foundation.render;
+package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.render.gl.shader.AllShaderPrograms;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.gl.BasicProgram;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
-import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
@@ -13,23 +13,20 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InstancedTileRenderer {
-    protected Map<TileEntity, TileEntityInstance<?>> renderers = new HashMap<>();
+public abstract class InstancedTileRenderer<P extends BasicProgram> {
+    protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
 
-    protected Map<MaterialType<?>, RenderMaterial<?>> materials = new HashMap<>();
+    protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
-    public InstancedTileRenderer() {
+    protected InstancedTileRenderer() {
         registerMaterials();
     }
 
-    public void registerMaterials() {
-        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(AllShaderPrograms.BELT, BeltModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(AllShaderPrograms.ROTATING, RotatingModel::new));
-    }
+    public abstract void registerMaterials();
 
     @SuppressWarnings("unchecked")
-    public <M extends InstancedModel<?>> RenderMaterial<M> get(MaterialType<M> materialType) {
-        return (RenderMaterial<M>) materials.get(materialType);
+    public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialType<M> materialType) {
+        return (RenderMaterial<P, M>) materials.get(materialType);
     }
 
     @Nullable
@@ -40,7 +37,7 @@ public class InstancedTileRenderer {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        TileEntityInstance<?> instance = renderers.get(tile);
+        TileEntityInstance<?> instance = instances.get(tile);
 
         if (instance != null) {
             return (TileEntityInstance<? super T>) instance;
@@ -49,7 +46,7 @@ public class InstancedTileRenderer {
 
             if (renderer != null) {
                 FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
-                renderers.put(tile, renderer);
+                instances.put(tile, renderer);
             }
 
             return renderer;
@@ -88,7 +85,7 @@ public class InstancedTileRenderer {
 
             if (instance != null) {
                 instance.remove();
-                renderers.remove(tile);
+                instances.remove(tile);
             }
         }
     }
@@ -97,25 +94,25 @@ public class InstancedTileRenderer {
         // Clean up twice a second. This doesn't have to happen every tick,
         // but this does need to be run to ensure we don't miss anything.
         if (AnimationTickHolder.ticks % 10 == 0) {
-            renderers.keySet().stream().filter(TileEntity::isRemoved).forEach(renderers::remove);
+            instances.keySet().stream().filter(TileEntity::isRemoved).forEach(instances::remove);
         }
     }
 
     public void invalidate() {
-        for (RenderMaterial<?> material : materials.values()) {
+        for (RenderMaterial<?, ?> material : materials.values()) {
             material.delete();
         }
-        renderers.clear();
+        instances.clear();
     }
 
-    public void render(RenderType layer, Matrix4f projection, Matrix4f view) {
-        render(layer, projection, view, null);
+    public void render(RenderType layer, Matrix4f viewProjection) {
+        render(layer, viewProjection, null);
     }
 
-    public void render(RenderType layer, Matrix4f projection, Matrix4f view, ShaderCallback callback) {
-        for (RenderMaterial<?> material : materials.values()) {
+    public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> callback) {
+        for (RenderMaterial<P, ?> material : materials.values()) {
             if (material.canRenderInLayer(layer))
-                material.render(layer, projection, view, callback);
+                material.render(layer, viewProjection, callback);
         }
 
         ShaderHelper.releaseShader();

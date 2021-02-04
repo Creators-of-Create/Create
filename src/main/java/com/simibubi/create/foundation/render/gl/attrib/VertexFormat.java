@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.instancing;
+package com.simibubi.create.foundation.render.gl.attrib;
 
 public class VertexFormat {
 

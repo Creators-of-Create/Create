@@ -20,17 +20,16 @@ out float Diffuse;
 out vec2 TexCoords;
 out vec4 Color;
 out vec3 BoxCoord;
-out vec2 ModelLight;
+out vec2 Light;
 
-uniform vec3 lightBoxSize;
-uniform vec3 lightBoxMin;
-uniform mat4 model;
+uniform vec3 uLightBoxSize;
+uniform vec3 uLightBoxMin;
+uniform mat4 uModel;
 
-uniform float time;
-uniform int ticks;
-uniform mat4 projection;
-uniform mat4 view;
-uniform int debug;
+uniform int uTicks;
+uniform float uTime;
+uniform mat4 uViewProjection;
+uniform int uDebug;
 
 
 mat4 rotate(vec3 axis, float angle) {
@@ -57,7 +56,7 @@ mat4 rotation(vec3 rot) {
 
 mat4 kineticRotation() {
     const float speed = -20;
-    float degrees = rotationOffset + time * speed * -3/10;
+    float degrees = rotationOffset + uTime * speed * -3/10;
     float angle = fract(degrees / 360) * PI * 2;
 
     return rotate(normalize(localRotationAxis), angle);
@@ -72,17 +71,17 @@ void main() {
     mat4 localRot = rotation(rot);
     localPos = localRot * vec4(localPos.xyz - .5, 1) + vec4(instancePos + .5, 0);
 
-    vec4 worldPos = model * localPos;
+    vec4 worldPos = uModel * localPos;
 
-    vec3 norm = normalize(model * localRot * kineticRotation * vec4(aNormal, 0)).xyz;
+    vec3 norm = normalize(uModel * localRot * kineticRotation * vec4(aNormal, 0)).xyz;
 
-    BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
+    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
-    ModelLight = modelLight;
-    gl_Position = projection * view * worldPos;
+    Light = modelLight;
+    gl_Position = uViewProjection * worldPos;
 
-    if (debug == 2) {
+    if (uDebug == 2) {
         Color = vec4(norm, 1);
     } else {
         Color = vec4(1);

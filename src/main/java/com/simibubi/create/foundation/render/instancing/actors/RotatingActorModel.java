@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.instancing.actors;
 
 import com.simibubi.create.foundation.render.instancing.DynamicInstancedModel;
-import com.simibubi.create.foundation.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 
 public class RotatingActorModel extends DynamicInstancedModel<StaticRotatingActorData, DynamicRotatingActorData> {

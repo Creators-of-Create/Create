@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock.ConnectionState;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -75,12 +74,6 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		wheel.renderInto(ms, vb);
 	}
 
-	@Override
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(ctx, ctx.te.getBlockState(), ctx.te.getBlockState()
-                                                                                                  .get(HORIZONTAL_FACING)
-                                                                                                  .getOpposite());
-	}
 
 	protected SuperByteBuffer transformConnector(SuperByteBuffer buffer, boolean upper, boolean rotating, float angle,
 		boolean flip) {

@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render.instancing;
 
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -8,13 +7,13 @@ import net.minecraft.world.World;
 
 public abstract class TileEntityInstance<T extends TileEntity> {
 
-    protected final InstancedTileRenderer modelManager;
+    protected final InstancedTileRenderer<?> modelManager;
     protected final T tile;
     protected final World world;
     protected final BlockPos pos;
     protected BlockState lastState;
 
-    public TileEntityInstance(InstancedTileRenderer modelManager, T tile) {
+    public TileEntityInstance(InstancedTileRenderer<?> modelManager, T tile) {
         this.modelManager = modelManager;
         this.tile = tile;
         this.world = tile.getWorld();

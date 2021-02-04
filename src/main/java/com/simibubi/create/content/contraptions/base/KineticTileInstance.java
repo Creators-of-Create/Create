@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.base;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends TileEntityInstance<T> {
 
-    public KineticTileInstance(InstancedTileRenderer modelManager, T tile) {
+    public KineticTileInstance(InstancedTileRenderer<?> modelManager, T tile) {
         super(modelManager, tile);
     }
 
@@ -60,7 +60,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
     }
 
-    protected final RenderMaterial<InstancedModel<RotatingData>> rotatingMaterial() {
-        return modelManager.get(KineticRenderMaterials.ROTATING);
+    protected final RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial() {
+        return modelManager.getMaterial(KineticRenderMaterials.ROTATING);
     }
 }

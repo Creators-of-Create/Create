@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.render;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import com.simibubi.create.foundation.render.gl.GlVertexArray;
-import com.simibubi.create.foundation.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;

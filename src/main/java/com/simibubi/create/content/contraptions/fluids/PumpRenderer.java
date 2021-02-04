@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -50,11 +49,6 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 			ms.pop();
 		}
-	}
-
-	@Override
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouthRotating(ctx, ctx.te.getBlockState());
 	}
 
 }

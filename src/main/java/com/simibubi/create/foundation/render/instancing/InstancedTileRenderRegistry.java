@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.render.instancing;
 
 import com.google.common.collect.Maps;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 

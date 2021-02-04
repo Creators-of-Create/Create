@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.instancing.RotatingData;

@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstanceContext;
 import com.simibubi.create.foundation.render.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -54,10 +53,5 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 			.translate(0, -renderedHeadOffset, 0)
 			.light(packedLightmapCoords)
 			.renderInto(ms, vb);
-	}
-
-	@Override
-	protected InstancedModel<RotatingData> getRotatedModel(InstanceContext<? extends KineticTileEntity> ctx) {
-		return AllBlockPartials.SHAFTLESS_COGWHEEL.renderOnRotating(ctx, ctx.te.getBlockState());
 	}
 }

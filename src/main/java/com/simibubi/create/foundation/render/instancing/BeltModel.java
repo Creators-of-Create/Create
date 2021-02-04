@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render.instancing;
 
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 
 public class BeltModel extends InstancedModel<BeltData> {

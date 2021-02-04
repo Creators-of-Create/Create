@@ -4,14 +4,14 @@ package com.simibubi.create.foundation.render.gl.shader;
  * A Callback for when a shader is called. Used to define shader uniforms.
  */
 @FunctionalInterface
-public interface ShaderCallback {
+public interface ShaderCallback<P extends GlProgram> {
 
-    void call(int shader);
+    void call(P program);
 
-    default ShaderCallback andThen(ShaderCallback other) {
-        return i -> {
-            call(i);
-            other.call(i);
+    default ShaderCallback<P> andThen(ShaderCallback<P> other) {
+        return program -> {
+            call(program);
+            other.call(program);
         };
     }
 }

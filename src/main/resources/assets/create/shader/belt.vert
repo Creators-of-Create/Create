@@ -16,15 +16,23 @@ layout (location = 10) in vec4 scrollTexture;
 layout (location = 11) in float scrollMult;
 
 out vec2 TexCoords;
-out vec2 Light;
-out float Diffuse;
 out vec4 Color;
+out float Diffuse;
+out vec2 Light;
 
-uniform float time;
-uniform int ticks;
-uniform mat4 projection;
-uniform mat4 view;
-uniform int debug;
+#if defined(CONTRAPTION)
+out vec3 BoxCoord;
+
+uniform vec3 uLightBoxSize;
+uniform vec3 uLightBoxMin;
+uniform mat4 uModel;
+#endif
+
+uniform int uTicks;
+uniform float uTime;
+uniform mat4 uViewProjection;
+uniform int uDebug;
+
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -37,15 +45,15 @@ mat4 rotate(vec3 axis, float angle) {
                 0,                                  0,                                  0,                                  1);
 }
 
-mat4 rotation(vec3 rot) {
-    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
-}
-
 float diffuse(vec3 normal) {
     float x = normal.x;
     float y = normal.y;
     float z = normal.z;
     return min(x * x * .6 + y * y * ((3 + y) / 4) + z * z * .8, 1);
+}
+
+mat4 rotation(vec3 rot) {
+    return rotate(vec3(0, 1, 0), rot.y) * rotate(vec3(0, 0, 1), rot.z) * rotate(vec3(1, 0, 0), rot.x);
 }
 
 mat4 localRotation() {
@@ -55,23 +63,41 @@ mat4 localRotation() {
 
 void main() {
     mat4 localRotation = localRotation();
-    vec4 renderPos = localRotation * vec4(aPos - vec3(.5), 1) + vec4(instancePos + vec3(.5), 0);
+    vec4 worldPos = localRotation * vec4(aPos - .5, 1) + vec4(instancePos + .5, 0);
+
+    #ifdef CONTRAPTION
+
+    worldPos = uModel * worldPos;
+    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+
+    mat4 normalMat = uModel * localRotation;
+    #else
+    mat4 normalMat = localRotation;
+    #endif
+
+    vec3 norm = normalize(normalMat * vec4(aNormal, 0)).xyz;
 
     float scrollSize = scrollTexture.w - scrollTexture.y;
-    float scroll = fract(speed * time / (36 * 16) + offset) * scrollSize * scrollMult;
-
-    vec3 norm = (localRotation * vec4(aNormal, 0)).xyz;
+    float scroll = fract(speed * uTime / (36 * 16) + offset) * scrollSize * scrollMult;
 
     Diffuse = diffuse(norm);
-    Light = light;
     TexCoords = aTexCoords - uv + scrollTexture.xy + vec2(0, scroll);
-    gl_Position = projection * view * renderPos;
+    Light = light;
+    gl_Position = uViewProjection * worldPos;
 
-    if (debug == 1) {
-        Color = vec4(networkTint, 1);
-    } else if (debug == 2) {
+    #ifdef CONTRAPTION
+    if (uDebug == 2) {
         Color = vec4(norm, 1);
     } else {
         Color = vec4(1);
     }
+    #else
+    if (uDebug == 1) {
+        Color = vec4(networkTint, 1);
+    } else if (uDebug == 2) {
+        Color = vec4(norm, 1);
+    } else {
+        Color = vec4(1);
+    }
+    #endif
 }

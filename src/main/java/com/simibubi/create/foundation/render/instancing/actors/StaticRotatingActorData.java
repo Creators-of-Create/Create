@@ -1,16 +1,15 @@
 package com.simibubi.create.foundation.render.instancing.actors;
 
+import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.instancing.InstanceData;
-import com.simibubi.create.foundation.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
-
 public class StaticRotatingActorData extends InstanceData {
-    public static VertexFormat FORMAT = new VertexFormat(POSITION, LIGHT, FLOAT, NORMAL, VEC3, NORMAL);
+    public static VertexFormat FORMAT = new VertexFormat(CommonAttributes.POSITION, CommonAttributes.LIGHT, CommonAttributes.FLOAT, CommonAttributes.NORMAL, CommonAttributes.VEC3, CommonAttributes.NORMAL);
 
     private float x;
     private float y;

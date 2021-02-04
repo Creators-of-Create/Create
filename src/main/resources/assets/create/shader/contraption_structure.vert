@@ -1,4 +1,4 @@
-#version 440 core
+#version 330 core
 #define PI 3.1415926538
 
 layout (location = 0) in vec3 aPos;
@@ -11,17 +11,16 @@ out float Diffuse;
 out vec2 TexCoords;
 out vec4 Color;
 out vec3 BoxCoord;
-out vec2 ModelLight;
+out vec2 Light;
 
-uniform vec3 lightBoxSize;
-uniform vec3 lightBoxMin;
-uniform mat4 model;
+uniform vec3 uLightBoxSize;
+uniform vec3 uLightBoxMin;
+uniform mat4 uModel;
 
-uniform float time;
-uniform int ticks;
-uniform mat4 projection;
-uniform mat4 view;
-uniform int debug;
+uniform int uTicks;
+uniform float uTime;
+uniform mat4 uViewProjection;
+uniform int uDebug;
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -42,18 +41,18 @@ float diffuse(vec3 normal) {
 }
 
 void main() {
-    vec4 worldPos = model * vec4(aPos, 1);
+    vec4 worldPos = uModel * vec4(aPos, 1);
 
-    vec3 norm = (model * vec4(aNormal, 0)).xyz;
+    vec3 norm = (uModel * vec4(aNormal, 0)).xyz;
 
-    BoxCoord = (worldPos.xyz - lightBoxMin) / lightBoxSize;
+    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
     Diffuse = diffuse(norm);
     Color = aColor / diffuse(aNormal);
     TexCoords = aTexCoords;
-    ModelLight = modelLight;
-    gl_Position = projection * view * worldPos;
+    Light = modelLight;
+    gl_Position = uViewProjection * worldPos;
 
-    if (debug == 2) {
+    if (uDebug == 2) {
         Color = vec4(norm, 1);
     } else {
         Color = aColor / diffuse(aNormal);

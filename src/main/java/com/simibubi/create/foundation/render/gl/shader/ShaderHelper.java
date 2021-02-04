@@ -1,14 +1,13 @@
 package com.simibubi.create.foundation.render.gl.shader;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.foundation.render.gl.BasicProgram;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.shader.IShaderManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.shader.ShaderLinkHelper;
-import net.minecraft.client.shader.ShaderLoader;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -16,6 +15,7 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
 import javax.annotation.Nullable;
@@ -23,143 +23,87 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ShaderHelper {
 
-    public static final Logger log = LogManager.getLogger("shader");
+    public static final Logger log = LogManager.getLogger(ShaderHelper.class);
 
     public static final FloatBuffer FLOAT_BUFFER = MemoryUtil.memAllocFloat(1); // TODO: these leak 80 bytes of memory per program launch
     public static final FloatBuffer VEC3_BUFFER = MemoryUtil.memAllocFloat(3);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
-    private static final Map<AllShaderPrograms, ShaderProgram> PROGRAMS = new EnumMap<>(AllShaderPrograms.class);
+    private static final Map<ResourceLocation, ProgramSpec<?>> REGISTRY = new HashMap<>();
+    private static final Map<ProgramSpec<?>, GlProgram> PROGRAMS = new HashMap<>();
 
-    @SuppressWarnings("deprecation")
+    public static <P extends GlProgram, S extends ProgramSpec<P>> S register(S spec) {
+        ResourceLocation name = spec.name;
+        if (REGISTRY.containsKey(name)) {
+            throw new IllegalStateException("Program spec '" + name + "' already registered.");
+        }
+        REGISTRY.put(name, spec);
+        return spec;
+    }
+
     public static void initShaders() {
         // Can be null when running datagenerators due to the unfortunate time we call this
-        if (Minecraft.getInstance() != null
-                && Minecraft.getInstance().getResourceManager() instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(
-                    (ISelectiveResourceReloadListener) (manager, predicate) -> {
-                        if (predicate.test(VanillaResourceType.SHADERS)) {
-                            PROGRAMS.values().forEach(ShaderLinkHelper::deleteShader);
-                            PROGRAMS.clear();
-                            for (AllShaderPrograms shader : AllShaderPrograms.values()) {
-                                createProgram(manager, shader);
-                            }
-                        }
-                    });
+        Minecraft mc = Minecraft.getInstance();
+        if (mc != null && mc.getResourceManager() instanceof IReloadableResourceManager) {
+            ISelectiveResourceReloadListener listener = (manager, predicate) -> {
+                if (predicate.test(VanillaResourceType.SHADERS)) {
+                    PROGRAMS.values().forEach(GlProgram::delete);
+                    PROGRAMS.clear();
+                    for (ProgramSpec<?> shader : REGISTRY.values()) {
+                        loadProgram(manager, shader);
+                    }
+                }
+            };
+            ((IReloadableResourceManager) mc.getResourceManager()).addReloadListener(listener);
         }
     }
 
-    public static int getShaderHandle(AllShaderPrograms shader) {
-        ShaderProgram shaderProgram = PROGRAMS.get(shader);
-
-        return shaderProgram.getProgram();
-    }
-
-    public static ShaderCallback getViewProjectionCallback(Matrix4f projectionMat, Matrix4f viewMat) {
-        return shader -> {
-            ShaderHelper.MATRIX_BUFFER.position(0);
-            projectionMat.write(ShaderHelper.MATRIX_BUFFER);
-            int projection = GlStateManager.getUniformLocation(shader, "projection");
-            GlStateManager.uniformMatrix4(projection, false, ShaderHelper.MATRIX_BUFFER);
-
-            ShaderHelper.MATRIX_BUFFER.position(0);
-            viewMat.write(ShaderHelper.MATRIX_BUFFER);
-            int view = GlStateManager.getUniformLocation(shader, "view");
-            GlStateManager.uniformMatrix4(view, false, ShaderHelper.MATRIX_BUFFER);
-        };
-    }
-
-    public static int useShader(AllShaderPrograms shader) {
-        return useShader(shader, null);
-    }
-
-    public static int useShader(AllShaderPrograms shader, @Nullable ShaderCallback cb) {
-        ShaderProgram prog = PROGRAMS.get(shader);
-        if (prog == null) {
-            return -1;
-        }
-
-        int program = prog.getProgram();
-        ShaderLinkHelper.useProgram(program);
-
-        int time = GlStateManager.getUniformLocation(program, "time");
-        FLOAT_BUFFER.position(0);
-        FLOAT_BUFFER.put(0, AnimationTickHolder.getRenderTick());
-        GlStateManager.uniform1(time, FLOAT_BUFFER);
-
-        int ticks = GlStateManager.getUniformLocation(program, "ticks");
-        GlStateManager.uniform1(ticks, AnimationTickHolder.ticks);
-
-        int debug = GlStateManager.getUniformLocation(program, "debug");
-        GlStateManager.uniform1(debug, KineticDebugger.isActive() ? 1 : 0);
-
-        if (cb != null) {
-            cb.call(program);
-        }
-
-        return program;
+    @SuppressWarnings("unchecked")
+    public static <P extends GlProgram, S extends ProgramSpec<P>> P getProgram(S spec) {
+        return (P) PROGRAMS.get(spec);
     }
 
     public static void releaseShader() {
-        ShaderLinkHelper.useProgram(0);
+        GL20.glUseProgram(0);
     }
 
-    private static void createProgram(IResourceManager manager, AllShaderPrograms shader) {
+    private static <P extends GlProgram, S extends ProgramSpec<P>> void loadProgram(IResourceManager manager, S programSpec) {
+        GlShader vert = null;
+        GlShader frag = null;
         try {
-            ShaderLoader vert = createShader(manager, shader.vert, ShaderLoader.ShaderType.VERTEX);
-            ShaderLoader frag = createShader(manager, shader.frag, ShaderLoader.ShaderType.FRAGMENT);
-            int progId = ShaderLinkHelper.createProgram();
-            ShaderProgram prog = new ShaderProgram(progId, vert, frag);
-            ShaderLinkHelper.linkProgram(prog);
-            PROGRAMS.put(shader, prog);
+            vert = loadShader(manager, programSpec.getVert(), ShaderType.VERTEX, programSpec.defines);
+            frag = loadShader(manager, programSpec.getFrag(), ShaderType.FRAGMENT, programSpec.defines);
 
-            log.info("Loaded program {}", shader.name());
+            P program = GlProgram.builder(programSpec.name)
+                     .attachShader(vert)
+                     .attachShader(frag)
+                     .build(programSpec.factory);
+
+            PROGRAMS.put(programSpec, program);
+
+            log.info("Loaded program {}", programSpec.name);
         } catch (IOException ex) {
-            log.error("Failed to load program {}", shader.name(), ex);
+            log.error("Failed to load program {}", programSpec.name, ex);
+        } finally {
+            if (vert != null) vert.delete();
+            if (frag != null) frag.delete();
         }
     }
 
-    private static ShaderLoader createShader(IResourceManager manager, String filename, ShaderLoader.ShaderType shaderType) throws IOException {
-        ResourceLocation loc = new ResourceLocation(Create.ID, filename);
-        try (InputStream is = new BufferedInputStream(manager.getResource(loc).getInputStream())) {
-            return ShaderLoader.func_216534_a(shaderType, loc.toString(), is); // , shaderType.name().toLowerCase(Locale.ROOT));
-        }
-    }
+    private static GlShader loadShader(IResourceManager manager, ResourceLocation name, ShaderType type, GlShader.PreProcessor preProcessor) throws IOException {
+        try (InputStream is = new BufferedInputStream(manager.getResource(name).getInputStream())) {
+            String source = TextureUtil.func_225687_b_(is);
 
-    private static class ShaderProgram implements IShaderManager {
-        private final int program;
-        private final ShaderLoader vert;
-        private final ShaderLoader frag;
-
-        private ShaderProgram(int program, ShaderLoader vert, ShaderLoader frag) {
-            this.program = program;
-            this.vert = vert;
-            this.frag = frag;
-        }
-
-        @Override
-        public int getProgram() {
-            return program;
-        }
-
-        @Override
-        public void markDirty() {
-
-        }
-
-        @Override
-        public ShaderLoader getVertexShaderLoader() {
-            return vert;
-        }
-
-        @Override
-        public ShaderLoader getFragmentShaderLoader() {
-            return frag;
+            if (source == null) {
+                throw new IOException("Could not load program " + name);
+            } else {
+                return new GlShader(type, name, source, preProcessor);
+            }
         }
     }
 }

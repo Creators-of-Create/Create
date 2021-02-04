@@ -1,13 +1,12 @@
 package com.simibubi.create.foundation.render.instancing.actors;
 
 import com.simibubi.create.foundation.render.instancing.InstanceData;
-import com.simibubi.create.foundation.render.instancing.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.Vector3f;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.*;
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.NORMAL;
+import static com.simibubi.create.foundation.render.gl.attrib.CommonAttributes.NORMAL;
 
 public class DynamicRotatingActorData extends InstanceData {
     public static VertexFormat FORMAT = new VertexFormat(NORMAL);

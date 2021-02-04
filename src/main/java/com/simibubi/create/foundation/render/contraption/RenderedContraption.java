@@ -1,12 +1,10 @@
 package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.render.light.ContraptionLighter;
@@ -28,7 +26,6 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -70,11 +67,11 @@ public class RenderedContraption {
         return lighter;
     }
 
-    public RenderMaterial<InstancedModel<StaticRotatingActorData>> getActorMaterial() {
-        return kinetics.get(KineticRenderMaterials.ACTORS);
+    public RenderMaterial<?, InstancedModel<StaticRotatingActorData>> getActorMaterial() {
+        return kinetics.getMaterial(KineticRenderMaterials.ACTORS);
     }
 
-    public void doRenderLayer(RenderType layer, int shader) {
+    public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
         ContraptionModel buffer = renderLayers.get(layer);
         if (buffer != null) {
             setup(shader);
@@ -131,36 +128,13 @@ public class RenderedContraption {
         this.model = model;
     }
 
-    void setup(int shader) {
-        setupShaderUniforms(shader);
+    void setup(ContraptionProgram shader) {
+        shader.bind(model, lighter.lightVolume.getTextureVolume());
         lighter.lightVolume.use();
     }
 
     void teardown() {
         lighter.lightVolume.release();
-    }
-
-    void setupShaderUniforms(int shader) {
-        FloatBuffer buf = ShaderHelper.VEC3_BUFFER;
-
-        int lightBoxSize = GlStateManager.getUniformLocation(shader, "lightBoxSize");
-        buf.put(0, (float) lighter.lightVolume.getSizeX());
-        buf.put(1, (float) lighter.lightVolume.getSizeY());
-        buf.put(2, (float) lighter.lightVolume.getSizeZ());
-        buf.rewind();
-        GlStateManager.uniform3(lightBoxSize, buf);
-
-        int lightBoxMin = GlStateManager.getUniformLocation(shader, "lightBoxMin");
-        buf.put(0, (float) lighter.lightVolume.getMinX());
-        buf.put(1, (float) lighter.lightVolume.getMinY());
-        buf.put(2, (float) lighter.lightVolume.getMinZ());
-        buf.rewind();
-        GlStateManager.uniform3(lightBoxMin, buf);
-
-        int model = GlStateManager.getUniformLocation(shader, "model");
-        this.model.write(ShaderHelper.MATRIX_BUFFER);
-        ShaderHelper.MATRIX_BUFFER.rewind();
-        GlStateManager.uniformMatrix4(model, false, ShaderHelper.MATRIX_BUFFER);
     }
 
     void invalidate() {

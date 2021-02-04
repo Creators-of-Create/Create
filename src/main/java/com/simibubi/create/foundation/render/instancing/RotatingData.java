@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.render.instancing;
 
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
 
 import java.nio.ByteBuffer;
 
-import static com.simibubi.create.foundation.render.instancing.VertexAttribute.NORMAL;
+import static com.simibubi.create.foundation.render.gl.attrib.CommonAttributes.NORMAL;
 
 public class RotatingData extends KineticData<RotatingData> {
     public static VertexFormat FORMAT = new VertexFormat(KineticData.FORMAT, NORMAL);

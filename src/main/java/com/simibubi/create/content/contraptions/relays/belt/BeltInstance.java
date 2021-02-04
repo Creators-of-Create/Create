@@ -5,11 +5,10 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.instancing.*;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +37,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     protected ArrayList<InstanceKey<BeltData>> keys;
     protected InstanceKey<RotatingData> pulleyKey;
 
-    public BeltInstance(InstancedTileRenderer modelManager, BeltTileEntity tile) {
+    public BeltInstance(InstancedTileRenderer<?> modelManager, BeltTileEntity tile) {
         super(modelManager, tile);
     }
 
