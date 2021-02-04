@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1211",
+	"_": "Missing Localizations: 1214",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +162,8 @@
 	"block.create.gabbro_cobblestone_stairs": "UNLOCALIZED: Gabbro Cobblestone Stairs",
 	"block.create.gabbro_cobblestone_wall": "UNLOCALIZED: Gabbro Cobblestone Wall",
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "Getriebe",
 	"block.create.gearshift": "Gangschaltung",
 	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
@@ -405,6 +407,7 @@
 	"block.create.zinc_ore": "UNLOCALIZED: Zinc Ore",
 
 	"entity.create.contraption": "UNLOCALIZED: Contraption",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "UNLOCALIZED: Seat",
 	"entity.create.stationary_contraption": "UNLOCALIZED: Stationary Contraption",
 	"entity.create.super_glue": "UNLOCALIZED: Super Glue",

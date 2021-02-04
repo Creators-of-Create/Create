@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 8",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +162,8 @@
 	"block.create.gabbro_cobblestone_stairs": "辉长岩圆石楼梯",
 	"block.create.gabbro_cobblestone_wall": "辉长岩圆石墙",
 	"block.create.gabbro_pillar": "竖纹辉长岩",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "十字齿轮箱",
 	"block.create.gearshift": "换挡齿轮箱",
 	"block.create.glass_fluid_pipe": "玻璃流体管道",
@@ -405,6 +407,7 @@
 	"block.create.zinc_ore": "锌矿石",
 
 	"entity.create.contraption": "结构",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "坐垫",
 	"entity.create.stationary_contraption": "固定结构",
 	"entity.create.super_glue": "强力胶",

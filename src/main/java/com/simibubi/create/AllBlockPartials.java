@@ -71,6 +71,8 @@ public class AllBlockPartials {
 		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), CUCKOO_PIG = get("cuckoo_clock/pig"),
 		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), 
 		
+		GANTRY_COGS = get("gantry_pinion/wheels"),
+		
 		ROPE_COIL = get("rope_pulley/rope_coil"),
 		ROPE_HALF = get("rope_pulley/rope_half"), 
 		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
