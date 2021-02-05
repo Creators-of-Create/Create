@@ -14,12 +14,12 @@ public class HorizontalHalfShaftInstance extends HalfShaftInstance {
                 InstancedTileRenderRegistry.instance.register(type, HorizontalHalfShaftInstance::new));
     }
 
-    public HorizontalHalfShaftInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public HorizontalHalfShaftInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
     @Override
     protected Direction getShaftDirection() {
-        return tile.getBlockState().get(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+        return lastState.get(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
     }
 }

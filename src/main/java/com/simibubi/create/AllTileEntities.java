@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanRendere
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.contraptions.components.fan.FanInstance;
 import com.simibubi.create.content.contraptions.components.fan.NozzleTileEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.FlyWheelInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineRenderer;
@@ -372,7 +373,7 @@ public class AllTileEntities {
 		.tileEntity("flywheel", FlywheelTileEntity::new)
 		.validBlocks(AllBlocks.FLYWHEEL)
 		.renderer(() -> FlywheelRenderer::new)
-		.onRegister(HorizontalHalfShaftInstance::register)
+		.onRegister(FlyWheelInstance::register)
 		.register();
 
 	public static final TileEntityEntry<FurnaceEngineTileEntity> FURNACE_ENGINE = Create.registrate()

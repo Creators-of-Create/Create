@@ -18,18 +18,17 @@ public class HalfShaftInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, HalfShaftInstance::new));
     }
 
-    public HalfShaftInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public HalfShaftInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        BlockState state = tile.getBlockState();
         Direction dir = getShaftDirection();
-        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, state, dir);
+        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, dir);
     }
 
     protected Direction getShaftDirection() {
-        return tile.getBlockState().get(BlockStateProperties.FACING);
+        return lastState.get(BlockStateProperties.FACING);
     }
 }
