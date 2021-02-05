@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -42,8 +42,8 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.BEARING;
+	protected ContraptionType getType() {
+		return ContraptionType.BEARING;
 	}
 
 	@Override

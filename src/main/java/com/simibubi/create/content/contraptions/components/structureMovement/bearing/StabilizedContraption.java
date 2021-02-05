@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -37,8 +37,8 @@ public class StabilizedContraption extends Contraption {
 	}
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.STABILIZED;
+	protected ContraptionType getType() {
+		return ContraptionType.STABILIZED;
 	}
 	
 	@Override

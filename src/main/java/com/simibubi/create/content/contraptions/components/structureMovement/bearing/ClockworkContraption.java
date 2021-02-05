@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -23,8 +23,8 @@ public class ClockworkContraption extends Contraption {
 	private Set<BlockPos> ignoreBlocks = new HashSet<>();
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.CLOCKWORK;
+	protected ContraptionType getType() {
+		return ContraptionType.CLOCKWORK;
 	}
 
 	private void ignoreBlocks(Set<BlockPos> blocks, BlockPos anchor) {

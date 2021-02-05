@@ -16,7 +16,7 @@ public abstract class TranslatingContraption extends Contraption {
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
 		if (getBlocks() == null)
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		if (cachedColliders == null || cachedColliderDirection != movementDirection) {
 			cachedColliders = new HashSet<>();
 			cachedColliderDirection = movementDirection;

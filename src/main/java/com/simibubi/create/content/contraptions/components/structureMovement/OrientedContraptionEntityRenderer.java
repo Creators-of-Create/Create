@@ -22,7 +22,7 @@ public class OrientedContraptionEntityRenderer extends AbstractContraptionEntity
 		if (!super.shouldRender(entity, p_225626_2_, p_225626_3_, p_225626_5_, p_225626_7_))
 			return false;
 		if (entity.getContraption()
-			.getType() == AllContraptionTypes.MOUNTED && entity.getRidingEntity() == null)
+			.getType() == ContraptionType.MOUNTED && entity.getRidingEntity() == null)
 			return false;
 		return true;
 	}
