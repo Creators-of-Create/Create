@@ -199,8 +199,9 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
-		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE);
-		
+		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
+			Blocks.SOUL_CAMPFIRE);
+
 		AllFluidTags.loadClass();
 	}
 }
