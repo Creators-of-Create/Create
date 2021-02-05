@@ -9,7 +9,7 @@
                 "item": "create:chromatic_compound"
             },
 			"G": {
-                "item": "minecraft:glass"
+                "tag": "forge:glass"
             },
             "E": {
                 "item": "create:handheld_blockzapper"

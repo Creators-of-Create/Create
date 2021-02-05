@@ -154,7 +154,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		compound.putBoolean("Waiting", waitingForSpeedChange);
 		compound.putFloat("Offset", offset);
 		super.write(compound, clientPacket);
-		
+
 		if (clientPacket && forceMove) {
 			compound.putBoolean("ForceMovement", forceMove);
 			forceMove = false;
@@ -247,7 +247,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = getSpeed() / 512f + clientOffsetDiff / 2f;
+		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f) + clientOffsetDiff / 2f;
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		return movementSpeed;
@@ -283,7 +283,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 	public boolean isAttachedTo(AbstractContraptionEntity contraption) {
 		return movedContraption == contraption;
 	}
-	
+
 	@Override
 	public BlockPos getBlockPosition() {
 		return pos;

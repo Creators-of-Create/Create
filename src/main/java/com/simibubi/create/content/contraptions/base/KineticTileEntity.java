@@ -30,6 +30,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -42,6 +43,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public @Nullable BlockPos source;
 	public boolean networkDirty;
 	public boolean updateSpeed;
+	public boolean preventSpeedUpdate;
 
 	protected KineticEffectHandler effects;
 	protected float speed;
@@ -361,11 +363,15 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		}
 
 		KineticTileEntity tileEntity = (KineticTileEntity) tileEntityIn;
-		if (tileEntity.hasNetwork())
-			tileEntity.getOrCreateNetwork()
-				.remove(tileEntity);
-		tileEntity.detachKinetics();
-		tileEntity.removeSource();
+		if (state.getBlock() instanceof KineticBlock
+			&& !((KineticBlock) state.getBlock()).areStatesKineticallyEquivalent(currentState, state)) {
+			if (tileEntity.hasNetwork())
+				tileEntity.getOrCreateNetwork()
+					.remove(tileEntity);
+			tileEntity.detachKinetics();
+			tileEntity.removeSource();
+		}
+
 		world.setBlockState(pos, state, 3);
 	}
 
@@ -404,7 +410,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return false;
 	}
 
-	@Override	
+	@Override
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
 		float stressAtBase = calculateStressApplied();
@@ -417,8 +423,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 			String stressString =
 				spacing + "%s%s" + Lang.translate("generic.unit.stress") + " " + TextFormatting.DARK_GRAY + "%s";
-			tooltip.add(" " + String.format(stressString, TextFormatting.AQUA, IHaveGoggleInformation.format(stressTotal),
-				Lang.translate("gui.goggles.at_current_speed")));
+			tooltip.add(" " + String.format(stressString, TextFormatting.AQUA,
+				IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed")));
 
 			added = true;
 		}
@@ -452,6 +458,74 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	public boolean isOverStressed() {
 		return overStressed;
+	}
+
+	// Custom Propagation
+
+	/**
+	 * Specify ratio of transferred rotation from this kinetic component to a
+	 * specific other.
+	 * 
+	 * @param target           other Kinetic TE to transfer to
+	 * @param stateFrom        this TE's blockstate
+	 * @param stateTo          other TE's blockstate
+	 * @param diff             difference in position (to.pos - from.pos)
+	 * @param connectedViaAxes whether these kinetic blocks are connected via mutual
+	 *                         IRotate.hasShaftTowards()
+	 * @param connectedViaCogs whether these kinetic blocks are connected via mutual
+	 *                         IRotate.hasIntegratedCogwheel()
+	 * @return factor of rotation speed from this TE to other. 0 if no rotation is
+	 *         transferred, or the standard rules apply (integrated shafts/cogs)
+	 */
+	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
+		boolean connectedViaAxes, boolean connectedViaCogs) {
+		return 0;
+	}
+
+	/**
+	 * Specify additional locations the rotation propagator should look for
+	 * potentially connected components. Neighbour list contains offset positions in
+	 * all 6 directions by default.
+	 * 
+	 * @param block
+	 * @param state
+	 * @param neighbours
+	 * @return
+	 */
+	public List<BlockPos> addPropagationLocations(IRotate block, BlockState state, List<BlockPos> neighbours) {
+		if (!canPropagateDiagonally(block, state))
+			return neighbours;
+
+		Axis axis = block.getRotationAxis(state);
+		BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
+			.forEach(offset -> {
+				if (axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)
+					return;
+				if (offset.distanceSq(0, 0, 0, false) != BlockPos.ZERO.distanceSq(1, 1, 0, false))
+					return;
+				neighbours.add(pos.add(offset));
+			});
+		return neighbours;
+	}
+
+	/**
+	 * Specify whether this component can propagate speed to the other in any
+	 * circumstance. Shaft and cogwheel connections are already handled by internal
+	 * logic. Does not have to be specified on both ends, it is assumed that this
+	 * relation is symmetrical.
+	 * 
+	 * @param other
+	 * @param state
+	 * @param otherState
+	 * @return true if this and the other component should check their propagation
+	 *         factor and are not already connected via integrated cogs or shafts
+	 */
+	public boolean isCustomConnection(KineticTileEntity other, BlockState state, BlockState otherState) {
+		return false;
+	}
+
+	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
+		return block.hasIntegratedCogwheel(world, pos, state);
 	}
 
 }
