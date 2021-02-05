@@ -23,8 +23,9 @@ public class SchematicProcessor extends StructureProcessor {
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
 
 	@Nullable
-    @Override
-    public Template.BlockInfo process(IWorldReader world, BlockPos pos, Template.BlockInfo rawInfo, Template.BlockInfo info, PlacementSettings settings, @Nullable Template template) {
+	@Override
+	public Template.BlockInfo process(IWorldReader world, BlockPos pos, Template.BlockInfo rawInfo,
+			Template.BlockInfo info, PlacementSettings settings, @Nullable Template template) {
 		if (info.nbt != null) {
 			TileEntity te = info.state.createTileEntity(world);
 			if (te != null) {
@@ -33,26 +34,25 @@ public class SchematicProcessor extends StructureProcessor {
 					return new Template.BlockInfo(info.pos, info.state, nbt);
 			}
 		}
-        return info;
-    }
+		return info;
+	}
 
 	@Nullable
-    @Override
-    public Template.EntityInfo processEntity(IWorldReader world, BlockPos pos, Template.EntityInfo rawInfo, Template.EntityInfo info, PlacementSettings settings, Template template) {
-		return EntityType.readEntityType(info.nbt)
-			.flatMap(type -> {
-				if (world instanceof World) {
-					Entity e = type.create((World) world);
-					if (e != null && !e.ignoreItemEntityData()) {
-						return Optional.of(info);
-					}
+	@Override
+	public Template.EntityInfo processEntity(IWorldReader world, BlockPos pos, Template.EntityInfo rawInfo,
+			Template.EntityInfo info, PlacementSettings settings, Template template) {
+		return EntityType.readEntityType(info.nbt).flatMap(type -> {
+			if (world instanceof World) {
+				Entity e = type.create((World) world);
+				if (e != null && !e.ignoreItemEntityData()) {
+					return Optional.of(info);
 				}
-				return Optional.empty();
-			})
-			.orElse(null);
-    }
+			}
+			return Optional.empty();
+		}).orElse(null);
+	}
 
-    @Override
+	@Override
 	protected IStructureProcessorType getType() {
 		return dynamic -> INSTANCE;
 	}
