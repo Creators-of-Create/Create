@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.packet;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -70,6 +71,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 			tag.put("Anchor", NBTUtil.writeBlockPos(anchor));
 			tag.putString("Rotation", rotation.name());
 			tag.putString("Mirror", mirror.name());
+			SchematicInstances.clearHash(stack);
 		});
 		context.get().setPacketHandled(true);
 	}

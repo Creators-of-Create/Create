@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
+import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -95,6 +96,7 @@ public class SchematicItem extends Item {
 		Template t = loadSchematic(blueprint);
 		tag.put("Bounds", NBTUtil.writeBlockPos(t.getSize()));
 		blueprint.setTag(tag);
+		SchematicInstances.clearHash(blueprint);
 	}
 
 	public static PlacementSettings getSettings(ItemStack blueprint) {

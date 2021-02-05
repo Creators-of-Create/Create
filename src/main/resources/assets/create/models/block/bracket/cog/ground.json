@@ -3,7 +3,8 @@
 	"parent": "block/block",
 	"textures": {
 		"4": "#plate",
-		"5": "#bracket"
+		"5": "#bracket",
+		"particle": "#plate"
 	},
 	"elements": [
 		{

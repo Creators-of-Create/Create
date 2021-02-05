@@ -13,6 +13,7 @@ public class AllCommands {
 				.then(ToggleDebugCommand.register())
 				.then(OverlayConfigCommand.register())
 				.then(FixLightingCommand.register())
+				.then(ReplaceInCommandBlocksCommand.register())
 
 				//dev-util
 				//Comment out for release
