@@ -2,9 +2,11 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -22,8 +24,17 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	public static final int DEFAULT_SPEED = 16;
 	protected ScrollValueBehaviour targetSpeed;
 
+	boolean hasBracket;
+
 	public SpeedControllerTileEntity(TileEntityType<? extends SpeedControllerTileEntity> type) {
 		super(type);
+		hasBracket = false;
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		updateBracket();
 	}
 
 	@Override
@@ -56,7 +67,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	public static float getConveyedSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
-			boolean targetingController) {
+		boolean targetingController) {
 		if (!(speedControllerIn instanceof SpeedControllerTileEntity))
 			return 0;
 
@@ -74,7 +85,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	public static float getDesiredOutputSpeed(KineticTileEntity cogWheel, KineticTileEntity speedControllerIn,
-			boolean targetingController) {
+		boolean targetingController) {
 		SpeedControllerTileEntity speedController = (SpeedControllerTileEntity) speedControllerIn;
 		float targetSpeed = speedController.targetSpeed.getValue();
 		float speed = speedControllerIn.getTheoreticalSpeed();
@@ -103,16 +114,25 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		return targetSpeed;
 	}
 
+	public void updateBracket() {
+		if (world == null || !world.isRemote)
+			return;
+		BlockState stateAbove = world.getBlockState(pos.up());
+		hasBracket = AllBlocks.LARGE_COGWHEEL.has(stateAbove) && stateAbove.get(CogWheelBlock.AXIS)
+			.isHorizontal();
+	}
+
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override
 		protected Vec3d getSouthLocation() {
-			return VecHelper.voxelSpace(8, 11.5f, 14);
+			return VecHelper.voxelSpace(8, 11f, 16);
 		}
 
 		@Override
 		protected boolean isSideActive(BlockState state, Direction direction) {
-			if (direction.getAxis().isVertical())
+			if (direction.getAxis()
+				.isVertical())
 				return false;
 			return state.get(SpeedControllerBlock.HORIZONTAL_AXIS) != direction.getAxis();
 		}

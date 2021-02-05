@@ -161,6 +161,8 @@
 	"block.create.gabbro_cobblestone_stairs": "Gabbro Cobblestone Stairs",
 	"block.create.gabbro_cobblestone_wall": "Gabbro Cobblestone Wall",
 	"block.create.gabbro_pillar": "Gabbro Pillar",
+	"block.create.gantry_pinion": "Gantry Pinion",
+	"block.create.gantry_shaft": "Gantry Shaft",
 	"block.create.gearbox": "Gearbox",
 	"block.create.gearshift": "Gearshift",
 	"block.create.glass_fluid_pipe": "Glass Fluid Pipe",
@@ -404,6 +406,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
+	"entity.create.gantry_contraption": "Gantry Contraption",
 	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
