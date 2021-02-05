@@ -337,7 +337,7 @@ e8b0a401c10d1ba67ed71ba31bd5f9bc28571b65 assets/create/blockstates/powered_toggl
 d06cd9a1101b18d306a786320aab12018b1325d6 assets/create/blockstates/purple_sail.json
 92957119abd5fbcca36a113b2a80255fd70fc303 assets/create/blockstates/purple_seat.json
 61035f8afe75ff7bbd291da5d8690bcbebe679eb assets/create/blockstates/purple_valve_handle.json
-bdd56f32ce0a148b6e466a55ab2777f69fc08cfc assets/create/blockstates/radial_chassis.json
+89b63c6e5875da07226854651079bcea85439f5b assets/create/blockstates/radial_chassis.json
 45877c4d90a7185c2f304edbd67379d800920439 assets/create/blockstates/red_sail.json
 da1b08387af7afa0855ee8d040f620c01f20660a assets/create/blockstates/red_seat.json
 722fc77bbf387af8a4016e42cbf9501d2b968881 assets/create/blockstates/red_valve_handle.json
@@ -404,7 +404,7 @@ e3f618c5b622d21880de858678d1802cbf65e615 assets/create/lang/en_ud.json
 acc852d80378b426d7ee6cb59c169e06b6d63b25 assets/create/lang/en_us.json
 30ce93c56557cea2f384a47b549fb893700523a5 assets/create/lang/unfinished/de_de.json
 77b8310f3cbed36fa0d2ee29e65ac6aee0c2adc2 assets/create/lang/unfinished/es_mx.json
-c81d5b374365ca8fcce1ff7a199b28e3c969c878 assets/create/lang/unfinished/fr_fr.json
+b8e44c8c33b3c36b850f579e317103eb57f85f07 assets/create/lang/unfinished/fr_fr.json
 89f7029d73733938ee9f900fc36d52ab7fc97563 assets/create/lang/unfinished/it_it.json
 b1935e7f8d79d1112e1685adb42daedb976ac6d7 assets/create/lang/unfinished/ja_jp.json
 23aaf879d07a24775aeba3b98c355c992b24f28b assets/create/lang/unfinished/ko_kr.json
