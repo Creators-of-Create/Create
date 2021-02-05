@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 843",
+	"_": "Missing Localizations: 848",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +162,8 @@
 	"block.create.gabbro_cobblestone_stairs": "UNLOCALIZED: Gabbro Cobblestone Stairs",
 	"block.create.gabbro_cobblestone_wall": "UNLOCALIZED: Gabbro Cobblestone Wall",
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "ギアボックス",
 	"block.create.gearshift": "ギアシフト",
 	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
@@ -368,6 +370,7 @@
 	"block.create.sequenced_gearshift": "シーケンスギアシフト",
 	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Casing",
 	"block.create.shaft": "軸",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "UNLOCALIZED: Smart Fluid Pipe",
 	"block.create.speedometer": "スピードメーター",
 	"block.create.spout": "UNLOCALIZED: Spout",
@@ -404,12 +407,11 @@
 	"block.create.zinc_ore": "亜鉛鉱石",
 
 	"entity.create.contraption": "UNLOCALIZED: Contraption",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "UNLOCALIZED: Seat",
 	"entity.create.stationary_contraption": "UNLOCALIZED: Stationary Contraption",
 	"entity.create.super_glue": "UNLOCALIZED: Super Glue",
 
-	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
-	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.milk": "UNLOCALIZED: Milk",
 	"fluid.create.potion": "UNLOCALIZED: Potion",
 	"fluid.create.tea": "UNLOCALIZED: Builder's Tea",
@@ -1084,7 +1086,10 @@
 	"create.tooltip.chute.fans_push_down": "UNLOCALIZED: Fans push from Above",
 	"create.tooltip.chute.fans_pull_up": "UNLOCALIZED: Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "UNLOCALIZED: Fans pull from Below",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
+	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
+	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "UNLOCALIZED: No Targets",
 	"create.hint.mechanical_arm_no_targets": "UNLOCALIZED: It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.horizontal_funnel.title": "UNLOCALIZED: Horizontal Funnels",
@@ -1161,7 +1166,7 @@
 	"block.create.andesite_funnel.tooltip.behaviour3": "UNLOCALIZED: Will _transfer_ items _downward_, much like a buffer-less hopper.",
 
 	"block.create.andesite_tunnel.tooltip": "UNLOCALIZED: ANDESITE TUNNEL",
-	"block.create.andesite_tunnel.tooltip.summary": "UNLOCALIZED: A protective cover for your _Belts_ and a great way to cover the holes left in your wall because of them.",
+	"block.create.andesite_tunnel.tooltip.summary": "UNLOCALIZED: A protective cover for your _Mechanical_ _Belts!_ _Andesite Tunnels_ can split off one item from a stack when another belt or depot is placed at the side of the main belt.",
 	"block.create.andesite_tunnel.tooltip.control1": "UNLOCALIZED: R-Click with Wrench on Side",
 	"block.create.andesite_tunnel.tooltip.action1": "UNLOCALIZED: _Adjusts window shutters_ if the tunnel has a window on that face.",
 
@@ -1175,7 +1180,7 @@
 	"block.create.brass_funnel.tooltip.behaviour3": "UNLOCALIZED: Will _transfer_ items _downward_, much like a buffer-less hopper.",
 
 	"block.create.brass_tunnel.tooltip": "UNLOCALIZED: BRASS TUNNEL",
-	"block.create.brass_tunnel.tooltip.summary": "UNLOCALIZED: _Brass Tunnels_ come with a number of _Filtering_ and _Splitting_ options for your _Belts_.",
+	"block.create.brass_tunnel.tooltip.summary": "UNLOCALIZED: A fancy protective cover for your _Mechanical_ _Belts!_ _Brass Tunnels_ also come with a number of _Filtering_ and _Splitting_ options for your items.",
 	"block.create.brass_tunnel.tooltip.condition1": "UNLOCALIZED: When placed side by side",
 	"block.create.brass_tunnel.tooltip.behaviour1": "UNLOCALIZED: _Brass Tunnels_ connect to each other allowing for content from one _Belt_ to be redirected to another.",
 	"block.create.brass_tunnel.tooltip.condition2": "UNLOCALIZED: Filtering",

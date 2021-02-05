@@ -63,6 +63,8 @@ public class SuperGlueHandler {
 		ItemStack itemstack = placer.getHeldItemOffhand();
 		if (!AllItems.SUPER_GLUE.isIn(itemstack))
 			return;
+		if (AllItems.WRENCH.isIn(placer.getHeldItemMainhand()))
+			return;
 
 		double distance = placer.getAttribute(PlayerEntity.REACH_DISTANCE)
 			.getValue();

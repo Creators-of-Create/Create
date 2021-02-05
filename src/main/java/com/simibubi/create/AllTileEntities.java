@@ -40,6 +40,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
@@ -68,6 +70,7 @@ import com.simibubi.create.content.contraptions.processing.BasinRenderer;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerRenderer;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerRenderer;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftTileEntity;
@@ -90,6 +93,8 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEn
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
+import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
+import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
@@ -201,6 +206,18 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK)
 		.renderer(() -> CuckooClockRenderer::new)
 		.register();
+	
+	public static final TileEntityEntry<GantryShaftTileEntity> GANTRY_SHAFT = Create.registrate()
+		.tileEntity("gantry_shaft", GantryShaftTileEntity::new)
+		.validBlocks(AllBlocks.GANTRY_SHAFT)
+		.renderer(() -> KineticTileEntityRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<GantryPinionTileEntity> GANTRY_PINION = Create.registrate()
+		.tileEntity("gantry_pinion", GantryPinionTileEntity::new)
+		.validBlocks(AllBlocks.GANTRY_PINION)
+		.renderer(() -> GantryPinionRenderer::new)
+		.register();
 
 	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP = Create.registrate()
 		.tileEntity("mechanical_pump", PumpTileEntity::new)
@@ -276,6 +293,12 @@ public class AllTileEntities {
 		.tileEntity("chute", ChuteTileEntity::new)
 		.validBlocks(AllBlocks.CHUTE)
 		.renderer(() -> ChuteRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<SmartChuteTileEntity> SMART_CHUTE = Create.registrate()
+		.tileEntity("smart_chute", SmartChuteTileEntity::new)
+		.validBlocks(AllBlocks.SMART_CHUTE)
+		.renderer(() -> SmartChuteRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<BeltTunnelTileEntity> ANDESITE_TUNNEL = Create.registrate()

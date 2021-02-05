@@ -23,7 +23,7 @@ public class ChuteItem extends BlockItem {
 		World world = context.getWorld();
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 
-		if (!(placedOnState.getBlock() instanceof ChuteBlock) || context.shouldCancelInteraction())
+		if (!AbstractChuteBlock.isChute(placedOnState) || context.shouldCancelInteraction())
 			return super.tryPlace(context);
 		if (face.getAxis()
 			.isVertical())
@@ -37,13 +37,13 @@ public class ChuteItem extends BlockItem {
 			.isReplaceable())
 			context = BlockItemUseContext.func_221536_a(context, correctPos, face);
 		else {
-			if (blockState.getBlock() instanceof ChuteBlock && blockState.get(ChuteBlock.FACING) == Direction.DOWN) {
-				if (!world.isRemote) {
-					world.setBlockState(correctPos,
-						ChuteBlock.updateDiagonalState(blockState.with(ChuteBlock.FACING, face),
-							world.getBlockState(correctPos.up()), world, correctPos));
-					return ActionResultType.SUCCESS;
-				}
+			if (!(blockState.getBlock() instanceof ChuteBlock) || world.isRemote)
+				return ActionResultType.FAIL;
+			AbstractChuteBlock block = (AbstractChuteBlock) blockState.getBlock();
+			if (block.getFacing(blockState) == Direction.DOWN) {
+				world.setBlockState(correctPos, block.updateChuteState(blockState.with(ChuteBlock.FACING, face),
+					world.getBlockState(correctPos.up()), world, correctPos));
+				return ActionResultType.SUCCESS;
 			}
 			return ActionResultType.FAIL;
 		}

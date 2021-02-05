@@ -206,7 +206,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
 		return ((r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
-			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get()) || r.getType() == AllRecipeTypes.MIXING.type);
+			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+				.size() > 1)
+			|| r.getType() == AllRecipeTypes.MIXING.type);
 	}
 
 	@Override

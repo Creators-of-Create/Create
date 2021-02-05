@@ -1,0 +1,21 @@
+{
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "appliedenergistics2"
+		}
+	],
+	"type": "create:milling",
+    "ingredients": [
+    	{
+    		"tag": "forge:ender_pearls"
+    	}
+    ], 
+	"results": [
+		{
+			"item": "appliedenergistics2:ender_dust",
+			"count": 1
+		}
+	],
+	"processingTime": 100
+}

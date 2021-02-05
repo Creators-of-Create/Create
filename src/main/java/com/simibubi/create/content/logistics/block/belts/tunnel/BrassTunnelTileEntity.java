@@ -13,8 +13,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -416,7 +414,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				continue;
 			if (direction == movementFacing.getOpposite())
 				continue;
-			if (tunnelTE.flaps.containsKey(direction) || tunnelTE.hasValidOutputFunnel(direction)) {
+			if (tunnelTE.sides.contains(direction)) {
 				BlockPos offset = tunnelTE.pos.down()
 					.offset(direction);
 				DirectBeltInputBehaviour inputBehaviour =
@@ -432,17 +430,6 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				continue;
 			}
 		}
-	}
-
-	protected boolean hasValidOutputFunnel(Direction side) {
-		BlockState funnelState = world.getBlockState(getPos().offset(side));
-		if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
-			return false;
-		if (funnelState.has(BeltFunnelBlock.POWERED) && funnelState.get(BeltFunnelBlock.POWERED))
-			return false;
-		if (funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING) != side.getOpposite())
-			return false;
-		return funnelState.get(BeltFunnelBlock.SHAPE) == Shape.EXTENDED;
 	}
 
 	@Override
@@ -462,7 +449,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	}
 
 	private boolean isValidFaceForFilter(Direction side) {
-		return flaps.containsKey(side);
+		return sides.contains(side);
 	}
 
 	@Override

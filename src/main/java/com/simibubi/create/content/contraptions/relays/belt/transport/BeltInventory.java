@@ -408,11 +408,11 @@ public class BeltInventory {
 	public void applyToEachWithin(float position, float maxDistanceToPosition,
 		Function<TransportedItemStack, TransportedResult> processFunction) {
 		boolean dirty = false;
-		for (TransportedItemStack transforted : items) {
-			ItemStack stackBefore = transforted.stack.copy();
-			if (Math.abs(position - transforted.beltPosition) >= maxDistanceToPosition)
+		for (TransportedItemStack transported : items) {
+			ItemStack stackBefore = transported.stack.copy();
+			if (Math.abs(position - transported.beltPosition) >= maxDistanceToPosition)
 				continue;
-			TransportedResult result = processFunction.apply(transforted);
+			TransportedResult result = processFunction.apply(transported);
 			if (result == null|| result.didntChangeFrom(stackBefore))
 				continue;
 
@@ -423,7 +423,7 @@ public class BeltInventory {
 				toInsert.add(held);
 			}
 			toInsert.addAll(result.getOutputs());
-			toRemove.add(transforted);
+			toRemove.add(transported);
 		}
 		if (dirty) {
 			belt.markDirty();

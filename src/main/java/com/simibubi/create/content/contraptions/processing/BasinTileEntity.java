@@ -308,7 +308,7 @@ public class BasinTileEntity extends SmartTileEntity {
 			: te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
 				.orElse(null);
 		boolean update = false;
-		
+
 		for (Iterator<ItemStack> iterator = spoutputBuffer.iterator(); iterator.hasNext();) {
 			ItemStack itemStack = iterator.next();
 
@@ -330,7 +330,7 @@ public class BasinTileEntity extends SmartTileEntity {
 			iterator.remove();
 			visualizedOutputItems.add(IntAttached.withZero(itemStack));
 		}
-		
+
 		if (update) {
 			notifyChangeOfContents();
 			sendData();
@@ -435,6 +435,11 @@ public class BasinTileEntity extends SmartTileEntity {
 		if (targetInv == null && !outputItems.isEmpty())
 			return false;
 		for (ItemStack itemStack : outputItems) {
+			// Catalyst items are never consumed
+			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+				.isItemEqual(itemStack)) 
+				continue;
+
 			if (simulate || direction == Direction.DOWN) {
 				if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 					.isEmpty())

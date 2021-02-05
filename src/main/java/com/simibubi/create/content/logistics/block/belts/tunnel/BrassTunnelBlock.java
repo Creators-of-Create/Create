@@ -4,6 +4,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -35,6 +36,10 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 		if (p_196243_1_.hasTileEntity()
 			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
 			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
+			withTileEntityDo(p_196243_2_, p_196243_3_, te -> {
+				if (te instanceof BrassTunnelTileEntity)
+					Block.spawnAsEntity(p_196243_2_, p_196243_3_, ((BrassTunnelTileEntity) te).stackToDistribute);
+			});
 			p_196243_2_.removeTileEntity(p_196243_3_);
 		}
 	}

@@ -2,35 +2,27 @@ package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
-import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
@@ -42,14 +34,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrenchable, ISpecialBlockItemRequirement {
+public class BeltFunnelBlock extends AbstractFunnelBlock implements ISpecialBlockItemRequirement {
 
 	private BlockEntry<? extends FunnelBlock> parent;
-
-	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 
 	public enum Shape implements IStringSerializable {
@@ -57,7 +45,6 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		EXTENDED(AllShapes.BELT_FUNNEL_EXTENDED),
 		PUSHING(AllShapes.BELT_FUNNEL_PERPENDICULAR),
 		PULLING(AllShapes.BELT_FUNNEL_PERPENDICULAR);
-//		CONNECTED(AllShapes.BELT_FUNNEL_CONNECTED); 
 
 		VoxelShaper shaper;
 
@@ -74,29 +61,12 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 	public BeltFunnelBlock(BlockEntry<? extends FunnelBlock> parent, Properties p_i48377_1_) {
 		super(p_i48377_1_);
 		this.parent = parent;
-		BlockState defaultState = getDefaultState().with(SHAPE, Shape.RETRACTED);
-		if (hasPoweredProperty())
-			defaultState = defaultState.with(POWERED, false);
-		setDefaultState(defaultState);
-	}
-
-	public abstract boolean hasPoweredProperty();
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.FUNNEL.create();
+		setDefaultState(getDefaultState().with(SHAPE, Shape.RETRACTED));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		if (hasPoweredProperty())
-			p_206840_1_.add(POWERED);
-		super.fillStateContainer(p_206840_1_.add(HORIZONTAL_FACING, SHAPE));
+		super.fillStateContainer(p_206840_1_.add(SHAPE));
 	}
 
 	@Override
@@ -106,45 +76,37 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 	}
 
 	@Override
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
+		ISelectionContext p_220071_4_) {
+		if (p_220071_4_.getEntity() instanceof ItemEntity
+			&& (p_220071_1_.get(SHAPE) == Shape.PULLING || p_220071_1_.get(SHAPE) == Shape.PUSHING))
+			return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
+		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
 		BlockState stateForPlacement = super.getStateForPlacement(ctx);
 		BlockPos pos = ctx.getPos();
 		World world = ctx.getWorld();
-		Direction facing = ctx.getPlayer() == null || ctx.getPlayer()
-			.isSneaking() ? ctx.getFace()
-				: ctx.getNearestLookingDirection()
-					.getOpposite();
-
-		if (hasPoweredProperty())
-			stateForPlacement = stateForPlacement.with(POWERED, world.isBlockPowered(pos));
+		Direction facing = ctx.getFace()
+			.getAxis()
+			.isHorizontal() ? ctx.getFace() : ctx.getPlacementHorizontalFacing();
 
 		BlockState state = stateForPlacement.with(HORIZONTAL_FACING, facing);
-		return state.with(SHAPE, getShapeForPosition(world, pos, facing));
+		boolean sneaking = ctx.getPlayer() != null && ctx.getPlayer()
+			.isSneaking();
+		return state.with(SHAPE, getShapeForPosition(world, pos, facing, !sneaking));
 	}
 
-	public static Shape getShapeForPosition(IBlockReader world, BlockPos pos, Direction facing) {
+	public static Shape getShapeForPosition(IBlockReader world, BlockPos pos, Direction facing, boolean extracting) {
 		BlockPos posBelow = pos.down();
 		BlockState stateBelow = world.getBlockState(posBelow);
+		Shape perpendicularState = extracting ? Shape.PUSHING : Shape.PULLING;
 		if (!AllBlocks.BELT.has(stateBelow))
-			return Shape.PUSHING;
+			return perpendicularState;
 		Direction movementFacing = stateBelow.get(BeltBlock.HORIZONTAL_FACING);
-		return movementFacing.getAxis() != facing.getAxis() ? Shape.PUSHING : Shape.RETRACTED;
-	}
-
-	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() && !FunnelBlock.isFunnel(newState)
-			|| !newState.hasTileEntity())) {
-			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
-			world.removeTileEntity(pos);
-		}
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean addDestroyEffects(BlockState state, World world, BlockPos pos, ParticleManager manager) {
-		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
-		return true;
+		return movementFacing.getAxis() != facing.getAxis() ? perpendicularState : Shape.RETRACTED;
 	}
 
 	@Override
@@ -160,9 +122,12 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 			BlockState parentState = parent.getDefaultState();
 			if (state.has(POWERED) && state.get(POWERED))
 				parentState = parentState.with(POWERED, true);
-			return parentState.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
+			if (state.get(SHAPE) == Shape.PUSHING)
+				parentState = parentState.with(FunnelBlock.EXTRACTING, true);
+			return parentState.with(FunnelBlock.HORIZONTAL_FACING, state.get(HORIZONTAL_FACING));
 		}
-		Shape updatedShape = getShapeForPosition(world, pos, state.get(HORIZONTAL_FACING));
+		Shape updatedShape =
+			getShapeForPosition(world, pos, state.get(HORIZONTAL_FACING), state.get(SHAPE) == Shape.PUSHING);
 		Shape currentShape = state.get(SHAPE);
 		if (updatedShape == currentShape)
 			return state;
@@ -185,19 +150,6 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		if (directBeltInputBehaviour == null)
 			return false;
 		return directBeltInputBehaviour.canSupportBeltFunnels();
-
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-		boolean isMoving) {
-		if (!hasPoweredProperty())
-			return;
-		if (worldIn.isRemote)
-			return;
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 	}
 
 	@Override
@@ -238,7 +190,7 @@ public abstract class BeltFunnelBlock extends HorizontalBlock implements IWrench
 		}
 		return ActionResultType.SUCCESS;
 	}
-	
+
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
 		return ItemRequirement.of(parent.getDefaultState());

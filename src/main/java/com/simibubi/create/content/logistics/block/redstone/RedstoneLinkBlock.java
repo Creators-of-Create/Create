@@ -168,9 +168,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		BlockPos neighbourPos = pos.offset(state.get(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		if (FunnelBlock.isFunnel(neighbour))
-			return true;
-		return Block.hasSolidSide(neighbour, worldIn, neighbourPos, state.get(FACING));
+		return !neighbour.getMaterial().isReplaceable();
 	}
 
 	@Override

@@ -120,7 +120,7 @@ public class MountedFluidStorage {
 			return;
 
 		SmartFluidTank inv = (SmartFluidTank) teHandler;
-		inv.setFluid(tank.getFluid());
+		inv.setFluid(tank.getFluid().copy());
 	}
 
 	public IFluidHandler getFluidHandler() {

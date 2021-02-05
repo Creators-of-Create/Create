@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1",
+	"_": "Missing Localizations: 8",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +162,8 @@
 	"block.create.gabbro_cobblestone_stairs": "辉长岩圆石楼梯",
 	"block.create.gabbro_cobblestone_wall": "辉长岩圆石墙",
 	"block.create.gabbro_pillar": "竖纹辉长岩",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "十字齿轮箱",
 	"block.create.gearshift": "换挡齿轮箱",
 	"block.create.glass_fluid_pipe": "玻璃流体管道",
@@ -368,6 +370,7 @@
 	"block.create.sequenced_gearshift": "可编程齿轮箱",
 	"block.create.shadow_steel_casing": "暗影机壳",
 	"block.create.shaft": "传动杆",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "智能流体管道",
 	"block.create.speedometer": "速度表",
 	"block.create.spout": "注液器",
@@ -404,12 +407,11 @@
 	"block.create.zinc_ore": "锌矿石",
 
 	"entity.create.contraption": "结构",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "坐垫",
 	"entity.create.stationary_contraption": "固定结构",
 	"entity.create.super_glue": "强力胶",
 
-	"fluid.create.chocolate": "巧克力",
-	"fluid.create.honey": "蜂蜜",
 	"fluid.create.milk": "牛奶",
 	"fluid.create.potion": "药水",
 	"fluid.create.tea": "茶",
@@ -1084,7 +1086,10 @@
 	"create.tooltip.chute.fans_push_down": "鼓风机从上方进行推动",
 	"create.tooltip.chute.fans_pull_up": "鼓风机从下方进行吸引",
 	"create.tooltip.chute.fans_pull_down": "鼓风机从上方进行吸引",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
+	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
+	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "没有目标",
 	"create.hint.mechanical_arm_no_targets": "看起来这个_动力臂_没有被分配任何_目标_。在手持机械臂的同时，右键选取传送带、置物台、漏斗或其他设备来设置目标。",
 	"create.hint.horizontal_funnel.title": "水平漏斗",

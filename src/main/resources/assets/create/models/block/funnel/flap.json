@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"4": "create:block/brass_funnel_back"
+	},
+	"elements": [
+		{
+			"name": "F4",
+			"from": [11, 0, 9],
+			"to": [14, 10, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 9]},
+			"faces": {
+				"north": {"uv": [14, 8.5, 12.5, 13.5], "texture": "#4"},
+				"east": {"uv": [13.5, 8.5, 14, 13.5], "texture": "#4"},
+				"south": {"uv": [12.5, 8.5, 14, 13.5], "texture": "#4"},
+				"west": {"uv": [12.5, 8.5, 13, 13.5], "texture": "#4"},
+				"up": {"uv": [12.5, 8.5, 14, 9], "texture": "#4"},
+				"down": {"uv": [12.5, 14.5, 14, 15], "texture": "#4"}
+			}
+		}
+	]
+}

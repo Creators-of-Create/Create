@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -57,9 +58,9 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 		BlockState placedOn = world.getBlockState(pos.offset(face.getOpposite()));
 		BlockState placedOnOpposite = world.getBlockState(pos.offset(face));
-		if (AllBlocks.CHUTE.has(placedOn))
+		if (AbstractChuteBlock.isChute(placedOn))
 			return getDefaultState().with(FACING, face.getOpposite());
-		if (AllBlocks.CHUTE.has(placedOnOpposite))
+		if (AbstractChuteBlock.isChute(placedOnOpposite))
 			return getDefaultState().with(FACING, face);
 
 		Direction preferredFacing = getPreferredFacing(context);
