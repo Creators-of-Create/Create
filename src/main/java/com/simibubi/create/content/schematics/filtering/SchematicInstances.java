@@ -9,7 +9,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.item.SchematicItem;
-import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.item.ItemStack;
@@ -62,10 +61,6 @@ public class SchematicInstances {
 		SchematicWorld world = new SchematicWorld(anchor, wrapped);
 		PlacementSettings settings = SchematicItem.getSettings(schematic);
 		activeTemplate.addBlocksToWorld(world, anchor, settings);
-
-		Debug.debugChat("Loading Schematic Instance of " + schematic.getTag()
-			.getString("File") + ". Total active instances: " + (loadedSchematics.get(wrapped).size() + 1));
-		
 
 		return world;
 	}
