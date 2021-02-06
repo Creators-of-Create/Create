@@ -187,13 +187,9 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-
-			if (!shouldPower) {
-				TileEntity te = worldIn.getTileEntity(blockPos);
-				if (te instanceof KineticTileEntity)
-					((KineticTileEntity) te).detachKinetics();
-			}
-
+			TileEntity te = worldIn.getTileEntity(blockPos);
+			if (te instanceof KineticTileEntity)
+				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
 				worldIn.setBlockState(blockPos, blockState.with(POWERED, shouldPower), 2);
 		}
