@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -115,7 +116,7 @@ public abstract class ZapperItem extends Item {
 				});
 				applyCooldown(player, item, false);
 			}
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
+			return new ActionResult<>(ActionResultType.SUCCESS, item);
 		}
 
 		boolean mainHand = hand == Hand.MAIN_HAND;
@@ -125,7 +126,7 @@ public abstract class ZapperItem extends Item {
 
 		// Pass To Offhand
 		if (mainHand && isSwap && gunInOtherHand)
-			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
+			return new ActionResult<>(ActionResultType.FAIL, item);
 		if (mainHand && !isSwap && gunInOtherHand)
 			item.getTag()
 				.putBoolean("_Swap", true);
@@ -144,7 +145,7 @@ public abstract class ZapperItem extends Item {
 			world.playSound(player, player.getPosition(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
 				1f, 0.5f);
 			player.sendStatusMessage(msg.applyTextStyle(TextFormatting.RED), true);
-			return new ActionResult<ItemStack>(ActionResultType.FAIL, item);
+			return new ActionResult<>(ActionResultType.FAIL, item);
 		}
 
 		BlockState stateToUse = Blocks.AIR.getDefaultState();
@@ -169,7 +170,7 @@ public abstract class ZapperItem extends Item {
 		// No target
 		if (pos == null || stateReplaced.getBlock() == Blocks.AIR) {
 			applyCooldown(player, item, gunInOtherHand);
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
+			return new ActionResult<>(ActionResultType.SUCCESS, item);
 		}
 
 		// Find exact position of gun barrel for VFX
@@ -183,7 +184,7 @@ public abstract class ZapperItem extends Item {
 		// Client side
 		if (world.isRemote) {
 			ZapperRenderHandler.dontAnimateItem(hand);
-			return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
+			return new ActionResult<>(ActionResultType.SUCCESS, item);
 		}
 
 		// Server side
@@ -195,7 +196,7 @@ public abstract class ZapperItem extends Item {
 				new ZapperBeamPacket(barrelPos, raytrace.getHitVec(), hand, true));
 		}
 
-		return new ActionResult<ItemStack>(ActionResultType.SUCCESS, item);
+		return new ActionResult<>(ActionResultType.SUCCESS, item);
 	}
 
 	public ITextComponent validateUsage(ItemStack item) {
@@ -240,10 +241,13 @@ public abstract class ZapperItem extends Item {
 		return UseAction.NONE;
 	}
 
-	public static void setTileData(World world, BlockPos pos, CompoundNBT data) {
-		if (data != null) {
+	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data, PlayerEntity player) {
+		if (data != null && AllBlockTags.SAFE_NBT.matches(state)) {
 			TileEntity tile = world.getTileEntity(pos);
-			if (tile != null && !tile.onlyOpsCanSetNbt()) {
+			if (tile != null) {
+				data = NBTProcessors.process(tile, data, !player.isCreative());
+				if (data == null)
+					return;
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
