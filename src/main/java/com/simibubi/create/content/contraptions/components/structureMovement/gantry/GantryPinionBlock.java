@@ -39,8 +39,8 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	}
 
 	@Override
-	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
-		super.updateNeighbors(stateIn, worldIn, pos, flags);
+	public void updateDiagonalNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
+		super.updateDiagonalNeighbors(stateIn, worldIn, pos, flags, count);
 		withTileEntityDo(worldIn, pos, GantryPinionTileEntity::checkValidGantryShaft);
 	}
 	

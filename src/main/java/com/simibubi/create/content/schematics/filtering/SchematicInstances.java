@@ -61,11 +61,7 @@ public class SchematicInstances {
 			.getCompound("Anchor"));
 		SchematicWorld world = new SchematicWorld(anchor, wrapped);
 		PlacementSettings settings = SchematicItem.getSettings(schematic);
-		activeTemplate.addBlocksToWorld(world, anchor, settings);
-
-		Debug.debugChat("Loading Schematic Instance of " + schematic.getTag()
-			.getString("File") + ". Total active instances: " + (loadedSchematics.get(wrapped).size() + 1));
-		
+		activeTemplate.place(world, anchor, settings, wrapped.getRandom());
 
 		return world;
 	}

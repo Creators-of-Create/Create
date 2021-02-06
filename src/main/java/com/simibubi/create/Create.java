@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
+import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -114,6 +115,10 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
+		
+		event.enqueueWork(() -> {
+			SchematicProcessor.register();
+		});
 	}
 	
 	public static void onBiomeLoad(BiomeLoadingEvent event) {

@@ -478,7 +478,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
-		return state.has(BeltBlock.SLOPE)
+		return state.contains(BeltBlock.SLOPE)
 			&& (state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD || state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD);
 	}
 

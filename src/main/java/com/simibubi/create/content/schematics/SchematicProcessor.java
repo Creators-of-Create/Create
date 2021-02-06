@@ -1,7 +1,10 @@
 package com.simibubi.create.content.schematics;
 
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
+import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.entity.Entity;
@@ -16,15 +19,22 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
-
 public class SchematicProcessor extends StructureProcessor {
+	
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
-
+	public static final Codec<SchematicProcessor> CODEC = Codec.unit(() -> {
+		return INSTANCE;
+	});
+	
+	public static IStructureProcessorType<SchematicProcessor> TYPE;
+	
+	public static void register() {
+		TYPE = IStructureProcessorType.register("schematic", CODEC);
+	}
+	
 	@Nullable
 	@Override
-	public Template.BlockInfo process(IWorldReader world, BlockPos pos, Template.BlockInfo rawInfo,
+	public Template.BlockInfo process(IWorldReader world, BlockPos pos, BlockPos anotherPos, Template.BlockInfo rawInfo,
 			Template.BlockInfo info, PlacementSettings settings, @Nullable Template template) {
 		if (info.nbt != null) {
 			TileEntity te = info.state.createTileEntity(world);
@@ -53,12 +63,8 @@ public class SchematicProcessor extends StructureProcessor {
 	}
 
 	@Override
-	protected IStructureProcessorType getType() {
-		return dynamic -> INSTANCE;
+	protected IStructureProcessorType<?> getType() {
+		return TYPE;
 	}
 
-	@Override
-	protected <T> Dynamic<T> serialize0(DynamicOps<T> ops) {
-		return new Dynamic<>(ops, ops.emptyMap());
-	}
 }

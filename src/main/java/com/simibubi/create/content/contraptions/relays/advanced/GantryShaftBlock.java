@@ -18,7 +18,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -36,14 +36,14 @@ import net.minecraft.world.World;
 
 public class GantryShaftBlock extends DirectionalKineticBlock {
 
-	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
+	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public enum Part implements IStringSerializable {
 		START, MIDDLE, END, SINGLE;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return Lang.asId(name());
 		}
 	}

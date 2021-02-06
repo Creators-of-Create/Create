@@ -12,6 +12,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ContraptionInteractionPacket extends SimplePacketBase {
@@ -54,7 +55,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-			double d = sender.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 			if (!sender.canEntityBeSeen(entityByID))
 				d -= 3;
 			d *= d;

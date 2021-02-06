@@ -21,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,7 +57,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 		checkPinionShaft();
 		tickActors();
-		Vec3d movementVec = getMotion();
+		Vector3d movementVec = getMotion();
 
 		if (ContraptionCollider.collideBlocks(this)) {
 			if (!world.isRemote)
@@ -73,15 +73,15 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	protected void checkPinionShaft() {
-		Vec3d movementVec;
+		Vector3d movementVec;
 		Direction facing = ((GantryContraption) contraption).getFacing();
-		Vec3d currentPosition = getAnchorVec().add(.5, .5, .5);
+		Vector3d currentPosition = getAnchorVec().add(.5, .5, .5);
 		BlockPos gantryShaftPos = new BlockPos(currentPosition).offset(facing.getOpposite());
 
 		TileEntity te = world.getTileEntity(gantryShaftPos);
 		if (!(te instanceof GantryShaftTileEntity) || !AllBlocks.GANTRY_SHAFT.has(te.getBlockState())) {
 			if (!world.isRemote) {
-				setContraptionMotion(Vec3d.ZERO);
+				setContraptionMotion(Vector3d.ZERO);
 				disassemble();
 			}
 			return;
@@ -92,16 +92,16 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		GantryShaftTileEntity gantryShaftTileEntity = (GantryShaftTileEntity) te;
 
 		float pinionMovementSpeed = gantryShaftTileEntity.getPinionMovementSpeed();
-		movementVec = new Vec3d(direction.getDirectionVec()).scale(pinionMovementSpeed);
+		movementVec = Vector3d.of(direction.getDirectionVec()).scale(pinionMovementSpeed);
 
 		if (blockState.get(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
-			setContraptionMotion(Vec3d.ZERO);
+			setContraptionMotion(Vector3d.ZERO);
 			if (!world.isRemote)
 				disassemble();
 			return;
 		}
 
-		Vec3d nextPosition = currentPosition.add(movementVec);
+		Vector3d nextPosition = currentPosition.add(movementVec);
 		double currentCoord = direction.getAxis()
 			.getCoordinate(currentPosition.x, currentPosition.y, currentPosition.z);
 		double nextCoord = direction.getAxis()
@@ -110,7 +110,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		if ((MathHelper.floor(currentCoord) + .5f < nextCoord != (pinionMovementSpeed * direction.getAxisDirection()
 			.getOffset() < 0)))
 			if (!gantryShaftTileEntity.canAssembleOn()) {
-				setContraptionMotion(Vec3d.ZERO);
+				setContraptionMotion(Vector3d.ZERO);
 				if (!world.isRemote)
 					disassemble();
 				return;
@@ -135,12 +135,12 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vec3d applyRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d applyRotation(Vector3d localPos, float partialTicks) {
 		return localPos;
 	}
 
 	@Override
-	public Vec3d reverseRotation(Vec3d localPos, float partialTicks) {
+	public Vector3d reverseRotation(Vector3d localPos, float partialTicks) {
 		return localPos;
 	}
 
@@ -175,12 +175,12 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	public void updateClientMotion() {
 		float modifier = movementAxis.getAxisDirection()
 			.getOffset();
-		setContraptionMotion(new Vec3d(movementAxis.getDirectionVec())
+		setContraptionMotion(Vector3d.of(movementAxis.getDirectionVec())
 			.scale((axisMotion + clientOffsetDiff * modifier / 2f) * ServerSpeedProvider.get()));
 	}
 
 	public double getAxisCoord() {
-		Vec3d anchorVec = getAnchorVec();
+		Vector3d anchorVec = getAnchorVec();
 		return movementAxis.getAxis()
 			.getCoordinate(anchorVec.x, anchorVec.y, anchorVec.z);
 	}

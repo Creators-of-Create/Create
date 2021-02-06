@@ -10,6 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ExtendoGripInteractionPacket extends SimplePacketBase {
@@ -60,7 +61,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 				return;
 			Entity entityByID = sender.getServerWorld().getEntityByID(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-				double d = sender.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 				if (!sender.canEntityBeSeen(entityByID))
 					d -= 3;
 				d *= d;

@@ -91,7 +91,7 @@ public class AllSpriteShifts {
 		}
 
 		for (DyeColor color : DyeColor.values()) {
-			String id = color.getName();
+			String id = color.getString();
 			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id));
 			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id));
 			DYED_DIAGONAL_BELTS.put(color, SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal"));

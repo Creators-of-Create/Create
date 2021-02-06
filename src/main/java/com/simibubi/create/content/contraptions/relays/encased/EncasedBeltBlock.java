@@ -139,7 +139,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 //			.updateNeighbors(context.getWorld(), context.getPos(), 1);
 		Axis axis = newState.get(AXIS);
 		newState = getDefaultState().with(AXIS, axis);
-		if (newState.has(BlockStateProperties.POWERED))
+		if (newState.contains(BlockStateProperties.POWERED))
 			newState = newState.with(BlockStateProperties.POWERED, context.getWorld()
 				.isBlockPowered(context.getPos()));
 		for (Direction facing : Iterate.directions) {

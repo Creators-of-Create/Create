@@ -154,7 +154,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 					for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class,
 						new AxisAlignedBB(pos.down()).shrink(.125f))) {
-						if (!itemEntity.isAlive() || !itemEntity.onGround)
+						if (!itemEntity.isAlive() || !itemEntity.isOnGround())
 							continue;
 						ItemStack stack = itemEntity.getItem();
 						Optional<PressingRecipe> recipe = getRecipe(stack);
@@ -236,7 +236,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(null, bb)) {
 			if (!(entity instanceof ItemEntity))
 				continue;
-			if (!entity.isAlive() || !entity.onGround)
+			if (!entity.isAlive() || !entity.isOnGround())
 				continue;
 			ItemEntity itemEntity = (ItemEntity) entity;
 			pressedItems.add(itemEntity.getItem());

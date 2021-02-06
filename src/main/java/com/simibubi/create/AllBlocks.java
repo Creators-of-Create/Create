@@ -708,7 +708,7 @@ public class AllBlocks {
 				boolean isFlipped = s.get(GantryShaftBlock.FACING)
 					.getAxisDirection() == AxisDirection.NEGATIVE;
 				String partName = s.get(GantryShaftBlock.PART)
-					.getName();
+					.getString();
 				String flipped = isFlipped ? "_flipped" : "";
 				String powered = isPowered ? "_powered" : "";
 				ModelFile existing = AssetLookup.partialBaseModel(c, p, partName);

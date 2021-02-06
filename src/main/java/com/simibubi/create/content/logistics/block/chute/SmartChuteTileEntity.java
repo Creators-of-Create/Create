@@ -32,7 +32,7 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 	@Override
 	protected boolean canCollectItemsFromBelow() {
 		BlockState blockState = getBlockState();
-		return blockState.has(SmartChuteBlock.POWERED) && !blockState.get(SmartChuteBlock.POWERED);
+		return blockState.contains(SmartChuteBlock.POWERED) && !blockState.get(SmartChuteBlock.POWERED);
 	}
 
 	@Override
