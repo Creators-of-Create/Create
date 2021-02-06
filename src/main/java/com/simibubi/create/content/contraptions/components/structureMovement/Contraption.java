@@ -63,6 +63,7 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
@@ -139,7 +140,7 @@ public abstract class Contraption {
 
 	public abstract boolean assemble(World world, BlockPos pos);
 
-	protected abstract boolean canAxisBeStabilized(Axis axis);
+	public abstract boolean canBeStabilized(Direction facing, BlockPos localPos);
 
 	protected abstract ContraptionType getType();
 
@@ -245,7 +246,7 @@ public abstract class Contraption {
 		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
 	}
 
-	protected boolean moveBlock(World world, BlockPos pos, Direction forcedDirection, List<BlockPos> frontier,
+	protected boolean moveBlock(World world, BlockPos pos, @Nullable Direction forcedDirection, List<BlockPos> frontier,
 		Set<BlockPos> visited) {
 		visited.add(pos);
 		frontier.remove(pos);
@@ -311,14 +312,13 @@ public abstract class Contraption {
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
 
 		// Slime blocks and super glue drag adjacent blocks if possible
-		boolean isStickyBlock = state.isStickyBlock();
 		for (Direction offset : Iterate.directions) {
 			BlockPos offsetPos = pos.offset(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
 			if (!movementAllowed(world, offsetPos)) {
-				if (offset == forcedDirection && isStickyBlock)
+				if (offset == forcedDirection)
 					return false;
 				continue;
 			}
@@ -328,8 +328,20 @@ public abstract class Contraption {
 			boolean blockAttachedTowardsFace =
 				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
+			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
+			if (canStick) {
+				if (state.getPushReaction() == PushReaction.PUSH_ONLY || blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+					canStick = false;
+				}
+				if (BlockMovementTraits.notSupportive(state, offset)) {
+					canStick = false;
+				}
+				if (BlockMovementTraits.notSupportive(blockState, offset.getOpposite())) {
+					canStick = false;
+				}
+			}
 
-			if (!wasVisited && ((isStickyBlock && !brittle) || blockAttachedTowardsFace || faceHasGlue))
+			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue || (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -418,7 +430,7 @@ public abstract class Contraption {
 
 	private void moveBearing(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
 		Direction facing = state.get(MechanicalBearingBlock.FACING);
-		if (!canAxisBeStabilized(facing.getAxis())) {
+		if (!canBeStabilized(facing, pos.subtract(anchor))) {
 			BlockPos offset = pos.offset(facing);
 			if (!visited.contains(offset))
 				frontier.add(offset);

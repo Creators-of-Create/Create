@@ -223,6 +223,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		AxisAlignedBB searchArea =
 			new AxisAlignedBB(center.add(0, -bottomPullDistance - 0.5, 0), center.add(0, -0.5, 0)).grow(.45f);
 		for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class, searchArea)) {
+			if (!itemEntity.isAlive())
+				continue;
 			ItemStack entityItem = itemEntity.getItem();
 			if (!canAcceptItem(entityItem))
 				continue;

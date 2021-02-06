@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -110,15 +109,17 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
-		facing = Direction.byIndex(tag.getInt("Facing"));
+		facing = Direction.byIndex(tag.getInt("facing"));
 		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
 		offset = tag.getInt("offset");
 		super.readNBT(world, tag, spawnData);
 	}
 
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
-		return axis == facing.getAxis();
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
+		if (BlockPos.ZERO.equals(localPos) || BlockPos.ZERO.equals(localPos.offset(facing)))
+			return false;
+		return facing.getAxis() == this.facing.getAxis();
 	}
 	
 	public static enum HandType {
