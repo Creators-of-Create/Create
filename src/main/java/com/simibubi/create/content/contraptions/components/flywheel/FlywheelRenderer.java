@@ -69,9 +69,9 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 					.renderInto(ms, vb);
 		}
 
-//		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING)
-//			.getAxis(), AngleHelper.rad(angle), light);
-//		wheel.renderInto(ms, vb);
+		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING)
+			.getAxis(), AngleHelper.rad(angle), light);
+		wheel.renderInto(ms, vb);
 	}
 
 

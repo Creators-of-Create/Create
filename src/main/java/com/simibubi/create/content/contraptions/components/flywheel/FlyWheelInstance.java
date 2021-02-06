@@ -24,7 +24,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
     protected Direction facing;
 
     protected InstanceKey<RotatingData> shaft;
-    protected InstanceKey<RotatingData> wheel;
+//    protected InstanceKey<RotatingData> wheel;
 
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
         super(modelManager, tile);
@@ -37,28 +37,28 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
         Consumer<RotatingData> setup = setupFunc(tile.getSpeed(), axis);
         shaft = shaftModel().setupInstance(setup);
-        wheel = wheelModel().setupInstance(setup);
+//        wheel = wheelModel().setupInstance(setup);
     }
 
     @Override
     protected void onUpdate() {
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
         updateRotation(shaft, axis);
-        updateRotation(wheel, axis);
+//        updateRotation(wheel, axis);
     }
 
     @Override
     public void updateLight() {
         shaft.modifyInstance(this::relight);
-        wheel.modifyInstance(this::relight);
+//        wheel.modifyInstance(this::relight);
     }
 
     @Override
     public void remove() {
         shaft.delete();
-        wheel.delete();
         shaft = null;
-        wheel = null;
+//        wheel.delete();
+//        wheel = null;
     }
 
     protected InstancedModel<RotatingData> shaftModel() {

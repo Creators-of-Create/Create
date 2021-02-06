@@ -68,10 +68,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         return instanceCount() == 0;
     }
 
-    public void clearInstanceData() {
-
-    }
-
     protected void deleteInternal() {
         super.deleteInternal();
         instanceVBO.delete();

@@ -56,7 +56,7 @@ public class SchematicHandler {
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
 		for (int i = 0; i < renderers.capacity(); i++)
-			renderers.add(new SchematicRenderer());
+			renderers.add(new SchematicRendererWithInstancing());
 
 		overlay = new SchematicHotbarSlotOverlay();
 		currentTool = Tools.Deploy;

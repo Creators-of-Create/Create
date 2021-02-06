@@ -34,7 +34,7 @@ public class SchematicRenderer {
 	private final Set<RenderType> startedBufferBuilders = new HashSet<>(getLayerCount());
 	private boolean active;
 	private boolean changed;
-	private SchematicWorld schematic;
+	protected SchematicWorld schematic;
 	private BlockPos anchor;
 
 	public SchematicRenderer() {
@@ -81,7 +81,7 @@ public class SchematicRenderer {
 			buffer);
 	}
 
-	private void redraw(Minecraft minecraft) {
+	protected void redraw(Minecraft minecraft) {
 		usedBlockRenderLayers.clear();
 		startedBufferBuilders.clear();
 

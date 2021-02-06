@@ -106,7 +106,7 @@ public class FastRenderDispatcher {
     }
 
     // copied from GameRenderer.renderWorld
-    private static Matrix4f getProjectionMatrix() {
+    public static Matrix4f getProjectionMatrix() {
         if (projectionMatrixThisFrame != null) return projectionMatrixThisFrame;
 
         float partialTicks = AnimationTickHolder.getPartialTicks();
