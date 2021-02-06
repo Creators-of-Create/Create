@@ -8,7 +8,7 @@
     "type": "create:cutting",
     "ingredients": [
     	{
-    		"item": "endergetic:poise_stem_stripped"
+    		"item": "endergetic:stripped_poise_stem"
     	}
     ],
 	"results": [

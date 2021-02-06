@@ -8,7 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "atmospheric:monkey_brush"
+      "item": "atmospheric:hot_monkey_brush"
     }
   ],
   "results": [

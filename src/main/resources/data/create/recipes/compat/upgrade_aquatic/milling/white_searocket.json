@@ -8,7 +8,7 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "upgrade_aquatic:searocket_white"
+      "item": "upgrade_aquatic:white_searocket"
     }
   ],
   "results": [
