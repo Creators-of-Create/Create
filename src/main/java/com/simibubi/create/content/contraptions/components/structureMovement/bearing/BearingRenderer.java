@@ -4,11 +4,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import net.minecraft.block.BlockState;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -42,6 +40,13 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 				AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
 		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+	}
+
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
+			.get(BearingBlock.FACING)
+			.getOpposite());
 	}
 
 }

@@ -42,14 +42,15 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (instance != null) {
             return (TileEntityInstance<? super T>) instance;
         } else if (create) {
-            TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
-
-            if (renderer != null) {
-                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
-                instances.put(tile, renderer);
-            }
-
-            return renderer;
+            return null;
+//            TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
+//
+//            if (renderer != null) {
+//                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
+//                instances.put(tile, renderer);
+//            }
+//
+//            return renderer;
         } else {
             return null;
         }

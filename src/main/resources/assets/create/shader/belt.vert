@@ -11,7 +11,7 @@ layout (location = 5) in vec3 networkTint;
 layout (location = 6) in float speed;
 layout (location = 7) in float offset;
 layout (location = 8) in vec3 eulerAngles;
-layout (location = 9) in vec2 uv;
+layout (location = 9) in vec2 sourceTexture;
 layout (location = 10) in vec4 scrollTexture;
 layout (location = 11) in float scrollMult;
 
@@ -81,7 +81,7 @@ void main() {
     float scroll = fract(speed * uTime / (36 * 16) + offset) * scrollSize * scrollMult;
 
     Diffuse = diffuse(norm);
-    TexCoords = aTexCoords - uv + scrollTexture.xy + vec2(0, scroll);
+    TexCoords = aTexCoords - sourceTexture + scrollTexture.xy + vec2(0, scroll);
     Light = light;
     gl_Position = uViewProjection * worldPos;
 

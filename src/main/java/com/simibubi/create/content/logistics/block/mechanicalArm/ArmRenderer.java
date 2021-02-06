@@ -6,13 +6,12 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -28,11 +27,6 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 	public ArmRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
-	}
-
-	@Override
-	public boolean isGlobalRenderer(KineticTileEntity te) {
-		return true;
 	}
 
 	@Override
@@ -121,6 +115,11 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		}
 
 		ms.pop();
+	}
+
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.ARM_COG.renderOn(te.getBlockState());
 	}
 
 }

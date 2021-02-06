@@ -1,18 +1,20 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -28,8 +30,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	public SawRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -42,7 +42,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderBlade(te, ms, buffer, light);
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
-
+		renderShaft(te, ms, buffer, light, overlay);
 	}
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light){
@@ -79,8 +79,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		ms.pop();
 	}
 
-	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		//KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te));
+	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+			int overlay) {
+		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(RenderType.getSolid()), light);
 	}
 
 	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
@@ -122,6 +123,14 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			
 			ms.pop();
 		}
+	}
+
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		BlockState state = te.getBlockState();
+		if (state.get(FACING).getAxis().isHorizontal())
+			return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(state.rotate(Rotation.CLOCKWISE_180));
+		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+				getRenderedBlockState(te));
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {

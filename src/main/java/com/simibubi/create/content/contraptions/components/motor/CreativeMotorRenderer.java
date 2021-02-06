@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.motor;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 public class CreativeMotorRenderer extends KineticTileEntityRenderer {
@@ -13,5 +13,9 @@ public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 		super(dispatcher);
 	}
 
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState());
+	}
 
 }

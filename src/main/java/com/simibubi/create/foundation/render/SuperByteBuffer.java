@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -29,9 +30,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	private MatrixStack transforms;
 
 	// Vertex Texture Coords
-	private boolean shouldShiftUV;
-	private SpriteShiftEntry spriteShift;
-	private float uTarget, vTarget;
+	private SpriteShiftFunc spriteShiftFunc;
 
 	// Vertex Lighting
 	private boolean shouldLight;
@@ -105,12 +104,8 @@ public class SuperByteBuffer extends TemplateBuffer {
 			float u = getU(buffer, i);
 			float v = getV(buffer, i);
 
-			if (shouldShiftUV) {
-				float targetU = spriteShift.getTarget()
-					.getInterpolatedU((getUnInterpolatedU(spriteShift.getOriginal(), u) / sheetSize) + uTarget * 16);
-				float targetV = spriteShift.getTarget()
-					.getInterpolatedV((getUnInterpolatedV(spriteShift.getOriginal(), v) / sheetSize) + vTarget * 16);
-				builder.texture(targetU, targetV);
+			if (spriteShiftFunc != null) {
+				spriteShiftFunc.shift(builder, u, v);
 			} else
 				builder.texture(u, v);
 
@@ -131,7 +126,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 		}
 
 		transforms = new MatrixStack();
-		shouldShiftUV = false;
+		spriteShiftFunc = null;
 		shouldColor = false;
 		shouldLight = false;
 	}
@@ -159,20 +154,29 @@ public class SuperByteBuffer extends TemplateBuffer {
 	}
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
-		shouldShiftUV = true;
-		spriteShift = entry;
-		uTarget = 0;
-		vTarget = 0;
-		sheetSize = 1;
+		this.spriteShiftFunc = (builder, u, v) -> {
+			float targetU = entry.getTarget().getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u)));
+			float targetV = entry.getTarget().getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v)));
+			builder.texture(targetU, targetV);
+		};
+		return this;
+	}
+
+	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
+		this.spriteShiftFunc = (builder, u, v) -> {
+			float targetU = u - entry.getOriginal().getMinU() + entry.getTarget().getMinU();
+			float targetV = v - entry.getOriginal().getMinV() + entry.getTarget().getMinV() + scrollV;
+			builder.texture(targetU, targetV);
+		};
 		return this;
 	}
 
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
-		shouldShiftUV = true;
-		spriteShift = entry;
-		this.uTarget = uTarget;
-		this.vTarget = vTarget;
-		this.sheetSize = sheetSize;
+		this.spriteShiftFunc = (builder, u, v) -> {
+			float targetU = entry.getTarget().getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
+			float targetV = entry.getTarget().getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
+			builder.texture(targetU, targetV);
+		};
 		return this;
 	}
 
@@ -218,6 +222,11 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	public boolean isEmpty() {
 		return ((Buffer) template).limit() == 0;
+	}
+
+	@FunctionalInterface
+	public interface SpriteShiftFunc {
+		void shift(IVertexBuilder builder, float u, float v);
 	}
 
 }

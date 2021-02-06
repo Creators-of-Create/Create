@@ -25,8 +25,8 @@ public class CancelTileEntityRenderMixin {
      */
     @Inject(at = @At("RETURN"), method = "getTileEntities", cancellable = true)
     private void noRenderInstancedTiles(CallbackInfoReturnable<List<TileEntity>> cir) {
-        List<TileEntity> tiles = cir.getReturnValue();
-
-        tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
+//        List<TileEntity> tiles = cir.getReturnValue();
+//
+//        tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
     }
 }

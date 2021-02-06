@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -8,16 +11,22 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
@@ -28,18 +37,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
-
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
 	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
-	}
-
-	@Override
-	public boolean isGlobalRenderer(DeployerTileEntity te) {
-		return true;
 	}
 
 	@Override
@@ -48,11 +49,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
-
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-							  int light, int overlay) {
+		int light, int overlay) {
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
@@ -102,6 +102,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
@@ -111,10 +112,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		SuperByteBuffer hand = te.getHandPose()
 			.renderOn(blockState);
 
-		transform(te.getWorld(), (SuperByteBuffer) pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
-																																   vb);
-		transform(te.getWorld(), (SuperByteBuffer) hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
-																																	vb);
+		transform(te.getWorld(), pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
+			vb);
+		transform(te.getWorld(), hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
+			vb);
 	}
 
 	protected Vec3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {

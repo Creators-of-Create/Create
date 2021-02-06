@@ -26,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
@@ -151,12 +152,12 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-//		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
-//		standardKineticRotationTransform(superBuffer, te, light);
-//		superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING)
-//			.getAxis() != Axis.X ? 0 : Math.PI / 2));
-//		superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
-//		superBuffer.renderInto(ms, vb);
+		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+		standardKineticRotationTransform(superBuffer, te, light);
+		superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING)
+			.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
+		superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
+		superBuffer.renderInto(ms, vb);
 
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
 		BlockPos pos = te.getPos();

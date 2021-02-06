@@ -1,15 +1,16 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock.ConnectionState;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -20,8 +21,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
-
-import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 public class FlywheelRenderer extends KineticTileEntityRenderer {
 
@@ -74,6 +73,12 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		wheel.renderInto(ms, vb);
 	}
 
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
+			.get(HORIZONTAL_FACING)
+			.getOpposite());
+	}
 
 	protected SuperByteBuffer transformConnector(SuperByteBuffer buffer, boolean upper, boolean rotating, float angle,
 		boolean flip) {

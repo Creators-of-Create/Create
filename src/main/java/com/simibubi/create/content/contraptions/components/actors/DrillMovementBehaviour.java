@@ -42,7 +42,7 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public void addInstance(RenderedContraption contraption, MovementContext context) {
-		DrillRenderer.addInstanceForContraption(contraption, context);
+		DrillInstance.addInstanceForContraption(contraption, context);
 	}
 
 	@Override

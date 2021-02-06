@@ -1,28 +1,23 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.contraption.ContraptionProgram;
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
-
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class DrillRenderer extends KineticTileEntityRenderer {
 
@@ -30,26 +25,13 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		super(dispatcher);
 	}
 
-	protected static SuperByteBuffer getRotatingModel(BlockState state) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
+	@Override
+	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(te.getBlockState());
 	}
 
-	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-		RenderMaterial<?, InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
-
-		BlockState state = context.state;
-		InstancedModel<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);
-
-		model.setupInstance(data -> {
-			Direction facing = state.get(DrillBlock.FACING);
-			float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
-			float eulerY = facing.getHorizontalAngle();
-			data.setPosition(context.localPos)
-				.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-				.setRotationOffset(0)
-				.setRotationAxis(0, 0, 1)
-				.setLocalRotation(eulerX, eulerY, 0);
-		});
+	protected static SuperByteBuffer getRotatingModel(BlockState state) {
+		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
