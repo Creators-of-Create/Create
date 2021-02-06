@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
@@ -33,7 +32,14 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
 		blockUpdate(state, worldIn, pos);
+	}
+
+	@Override
+	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
+		super.updateNeighbors(stateIn, worldIn, pos, flags);
+		blockUpdate(stateIn, worldIn, pos);
 	}
 
 	@Override
@@ -70,13 +76,13 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 			.isSneaking() ? preferredFacing : preferredFacing.getOpposite());
 	}
 
-	protected void blockUpdate(BlockState state, World worldIn, BlockPos pos) {
+	protected void blockUpdate(BlockState state, IWorld worldIn, BlockPos pos) {
 		if (worldIn instanceof WrappedWorld)
 			return;
 		notifyFanTile(worldIn, pos);
-		if (worldIn.isRemote)
+		if (worldIn.isRemote())
 			return;
-		withTileEntityDo(worldIn, pos, te -> te.updateGenerator(state.get(FACING)));
+		withTileEntityDo(worldIn, pos, te -> te.queueGeneratorUpdate());
 	}
 
 	protected void notifyFanTile(IWorld world, BlockPos pos) {

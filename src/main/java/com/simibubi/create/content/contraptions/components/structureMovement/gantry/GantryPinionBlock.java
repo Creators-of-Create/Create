@@ -10,11 +10,15 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -35,9 +39,14 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	}
 
 	@Override
+	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
+		super.updateNeighbors(stateIn, worldIn, pos, flags);
+		withTileEntityDo(worldIn, pos, GantryPinionTileEntity::checkValidGantryShaft);
+	}
+	
+	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
-		withTileEntityDo(worldIn, pos, GantryPinionTileEntity::checkValidGantryShaft);
 	}
 
 	@Override
@@ -48,6 +57,18 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	@Override
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
 		return context.getFace();
+	}
+
+	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+		BlockRayTraceResult hit) {
+		if (!player.isAllowEdit() || player.isSneaking())
+			return ActionResultType.PASS;
+		if (player.getHeldItem(handIn)
+			.isEmpty()) {
+			withTileEntityDo(worldIn, pos, te -> te.checkValidGantryShaft());
+			return ActionResultType.SUCCESS;
+		}
+		return ActionResultType.PASS;
 	}
 
 	@Override

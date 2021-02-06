@@ -23,6 +23,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
@@ -35,6 +36,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
@@ -71,6 +73,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -266,25 +269,11 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.GANTRY_PINION.has(state)) {
-			BlockPos offset = pos.offset(state.get(GantryPinionBlock.FACING));
-			if (!visited.contains(offset))
-				frontier.add(offset);
-		}
+		if (AllBlocks.GANTRY_PINION.has(state))
+			moveGantryPinion(world, pos, frontier, visited, state);
 
 		if (AllBlocks.GANTRY_SHAFT.has(state))
-			for (Direction d : Iterate.directions) {
-				BlockPos offset = pos.offset(d);
-				if (!visited.contains(offset)) {
-					BlockState offsetState = world.getBlockState(offset);
-					Direction facing = state.get(GantryShaftBlock.FACING);
-					if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState)
-						&& offsetState.get(GantryShaftBlock.FACING) == facing)
-						frontier.add(offset);
-					else if (AllBlocks.GANTRY_PINION.has(offsetState) && offsetState.get(GantryPinionBlock.FACING) == d)
-						frontier.add(offset);
-				}
-			}
+			moveGantryShaft(world, pos, frontier, visited, state);
 
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
@@ -302,6 +291,10 @@ public abstract class Contraption {
 		if (state.getBlock() instanceof MechanicalPistonBlock)
 			if (!moveMechanicalPiston(world, pos, frontier, visited, state))
 				return false;
+		if (isExtensionPole(state))
+			movePistonPole(world, pos, frontier, visited, state);
+		if (isPistonHead(state))
+			movePistonHead(world, pos, frontier, visited, state);
 
 		// Doors try to stay whole
 		if (state.getBlock() instanceof DoorBlock) {
@@ -344,6 +337,83 @@ public abstract class Contraption {
 
 		addBlock(pos, capture(world, pos));
 		return blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+	}
+
+	protected void movePistonHead(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) {
+		Direction direction = state.get(MechanicalPistonHeadBlock.FACING);
+		BlockPos offset = pos.offset(direction.getOpposite());
+		if (!visited.contains(offset)) {
+			BlockState blockState = world.getBlockState(offset);
+			if (isExtensionPole(blockState) && blockState.get(PistonExtensionPoleBlock.FACING)
+				.getAxis() == direction.getAxis())
+				frontier.add(offset);
+			if (blockState.getBlock() instanceof MechanicalPistonBlock) {
+				Direction pistonFacing = blockState.get(MechanicalPistonBlock.FACING);
+				if (pistonFacing == direction && blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
+					frontier.add(offset);
+			}
+		}
+		if (state.get(MechanicalPistonHeadBlock.TYPE) == PistonType.STICKY) {
+			BlockPos attached = pos.offset(direction);
+			if (!visited.contains(attached))
+				frontier.add(attached);
+		}
+	}
+
+	protected void movePistonPole(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) {
+		for (Direction d : Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING)
+			.getAxis())) {
+			BlockPos offset = pos.offset(d);
+			if (!visited.contains(offset)) {
+				BlockState blockState = world.getBlockState(offset);
+				if (isExtensionPole(blockState) && blockState.get(PistonExtensionPoleBlock.FACING)
+					.getAxis() == d.getAxis())
+					frontier.add(offset);
+				if (isPistonHead(blockState) && blockState.get(MechanicalPistonHeadBlock.FACING)
+					.getAxis() == d.getAxis())
+					frontier.add(offset);
+				if (blockState.getBlock() instanceof MechanicalPistonBlock) {
+					Direction pistonFacing = blockState.get(MechanicalPistonBlock.FACING);
+					if (pistonFacing == d || pistonFacing == d.getOpposite()
+						&& blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
+						frontier.add(offset);
+				}
+			}
+		}
+	}
+
+	protected void moveGantryPinion(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) {
+		BlockPos offset = pos.offset(state.get(GantryPinionBlock.FACING));
+		if (!visited.contains(offset))
+			frontier.add(offset);
+		Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
+		for (Direction d : Iterate.directionsInAxis(rotationAxis)) {
+			offset = pos.offset(d);
+			BlockState offsetState = world.getBlockState(offset);
+			if (AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.get(GantryShaftBlock.FACING)
+				.getAxis() == d.getAxis())
+				if (!visited.contains(offset))
+					frontier.add(offset);
+		}
+	}
+
+	protected void moveGantryShaft(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) {
+		for (Direction d : Iterate.directions) {
+			BlockPos offset = pos.offset(d);
+			if (!visited.contains(offset)) {
+				BlockState offsetState = world.getBlockState(offset);
+				Direction facing = state.get(GantryShaftBlock.FACING);
+				if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState)
+					&& offsetState.get(GantryShaftBlock.FACING) == facing)
+					frontier.add(offset);
+				else if (AllBlocks.GANTRY_PINION.has(offsetState) && offsetState.get(GantryPinionBlock.FACING) == d)
+					frontier.add(offset);
+			}
+		}
 	}
 
 	private void moveBearing(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
@@ -398,47 +468,25 @@ public abstract class Contraption {
 
 	private boolean moveMechanicalPiston(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
-		if (state.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			BlockPos searchPos = pos;
-			while (limit-- >= 0) {
-				searchPos = searchPos.offset(direction);
-				BlockState blockState = world.getBlockState(searchPos);
-				if (isExtensionPole(blockState)) {
-					if (blockState.get(PistonExtensionPoleBlock.FACING)
-						.getAxis() != direction.getAxis())
-						break;
-					if (!visited.contains(searchPos))
-						frontier.add(searchPos);
-					continue;
-				}
-				if (isPistonHead(blockState))
-					if (!visited.contains(searchPos))
-						frontier.add(searchPos);
-				break;
-			}
-			if (limit <= -1)
-				return false;
-		}
-
-		BlockPos searchPos = pos;
-		while (limit-- >= 0) {
-			searchPos = searchPos.offset(direction.getOpposite());
-			BlockState blockState = world.getBlockState(searchPos);
-			if (isExtensionPole(blockState)) {
-				if (blockState.get(PistonExtensionPoleBlock.FACING)
-					.getAxis() != direction.getAxis())
-					break;
-				if (!visited.contains(searchPos))
-					frontier.add(searchPos);
-				continue;
-			}
-			break;
-		}
-
-		if (limit <= -1)
+		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
+		if (pistonState == PistonState.MOVING)
 			return false;
+
+		BlockPos offset = pos.offset(direction.getOpposite());
+		if (!visited.contains(offset)) {
+			BlockState poleState = world.getBlockState(offset);
+			if (AllBlocks.PISTON_EXTENSION_POLE.has(poleState) && poleState.get(PistonExtensionPoleBlock.FACING)
+				.getAxis() == direction.getAxis())
+				frontier.add(offset);
+		}
+
+		if (pistonState == PistonState.EXTENDED || MechanicalPistonBlock.isStickyPiston(state)) {
+			offset = pos.offset(direction);
+			if (!visited.contains(offset))
+				frontier.add(offset);
+		}
+
 		return true;
 	}
 
