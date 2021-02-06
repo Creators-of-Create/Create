@@ -181,7 +181,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState arg1, int arg2) {
 		pos = pos.subtract(anchor);
-		bounds.expandTo(new MutableBoundingBox(pos, pos.add(1, 1, 1)));
+		bounds.expandTo(new MutableBoundingBox(pos, pos));
 		blocks.put(pos, arg1);
 		return true;
 	}

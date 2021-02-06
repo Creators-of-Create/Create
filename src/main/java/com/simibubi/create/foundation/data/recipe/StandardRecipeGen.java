@@ -318,6 +318,23 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P")
 				.patternLine("A")
 				.patternLine("P")),
+			
+		GANTRY_PINION = create(AllBlocks.GANTRY_PINION).unlockedBy(I::andesiteCasing)
+			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
+				.key('S', I.cog())
+				.key('C', I.andesiteCasing())
+				.key('I', I.shaft())
+				.patternLine(" B ")
+				.patternLine("ICI")
+				.patternLine(" S ")),
+
+		GANTRY_SHAFT = create(AllBlocks.GANTRY_SHAFT).returns(8)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('A', I.andesite())
+				.key('R', I.redstone())
+				.patternLine("A")
+				.patternLine("R")
+				.patternLine("A")),
 
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', I.andesiteCasing())
@@ -567,6 +584,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('I', I.andesite())
 				.patternLine("II")
 				.patternLine("AA")),
+
+		SMART_CHUTE = create(AllBlocks.SMART_CHUTE).unlockedBy(AllBlocks.CHUTE::get)
+			.viaShaped(b -> b.key('P', I.electronTube())
+				.key('S', AllBlocks.CHUTE.get())
+				.key('I', I.brassSheet())
+				.patternLine("I")
+				.patternLine("S")
+				.patternLine("P")),
 
 		DEPOT = create(AllBlocks.DEPOT).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('A', I.andesite())

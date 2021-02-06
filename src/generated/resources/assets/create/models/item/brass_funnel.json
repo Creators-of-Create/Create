@@ -1,9 +1,11 @@
 {
   "parent": "create:block/funnel/item",
   "textures": {
-    "0": "create:block/brass_funnel_plating",
-    "1": "create:block/brass_casing",
-    "2": "create:block/brass_funnel",
+    "particle": "create:block/brass_casing",
+    "7": "create:block/brass_funnel_plating",
+    "2": "create:block/brass_funnel_neutral",
+    "6": "create:block/brass_funnel",
+    "5": "create:block/brass_funnel_tall",
     "3": "create:block/brass_funnel_back"
   }
 }

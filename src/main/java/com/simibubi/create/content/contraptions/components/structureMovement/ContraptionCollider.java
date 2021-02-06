@@ -347,7 +347,7 @@ public class ContraptionCollider {
 		return potentialHits;
 	}
 
-	public static boolean collideBlocks(ControlledContraptionEntity contraptionEntity) {
+	public static boolean collideBlocks(AbstractContraptionEntity contraptionEntity) {
 		if (!contraptionEntity.supportsTerrainCollision())
 			return false;
 

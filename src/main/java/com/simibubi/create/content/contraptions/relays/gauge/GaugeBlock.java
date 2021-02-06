@@ -5,7 +5,6 @@ import java.util.Random;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -14,7 +13,6 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.TileEntity;
@@ -114,6 +112,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		return context.getFace();
 	}
 
+	@Override
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
 		return context.getPlacementHorizontalFacing().getAxis() != Axis.X;
 	}
@@ -127,8 +126,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			return false;
 		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
 			return false;
-		BlockState blockState = world.getBlockState(pos.offset(face));
-		if (BlockHelper.hasBlockSolidSide(blockState, world, pos, face.getOpposite()) && blockState.getMaterial() != Material.GLASS
+		if (!Block.shouldSideBeRendered(state, world, pos, face)
 				&& !(world instanceof WrappedWorld))
 			return false;
 		return true;

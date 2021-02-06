@@ -31,7 +31,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
-		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
+		for (ToolType toolType : player.getHeldItemMainhand()
+			.getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;
 		}
@@ -46,6 +47,24 @@ public abstract class KineticBlock extends Block implements IRotate {
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		// onBlockAdded is useless for init, as sometimes the TE gets re-instantiated
+
+		// however, if a block change occurs that does not change kinetic connections,
+		// we can prevent a major re-propagation here
+
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof KineticTileEntity) {
+			KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
+			kineticTileEntity.preventSpeedUpdate = false;
+
+			if (oldState.getBlock() != state.getBlock())
+				return;
+			if (state.hasTileEntity() != oldState.hasTileEntity())
+				return;
+			if (!areStatesKineticallyEquivalent(oldState, state))
+				return;
+
+			kineticTileEntity.preventSpeedUpdate = true;
+		}
 	}
 
 	@Override
@@ -63,6 +82,10 @@ public abstract class KineticBlock extends Block implements IRotate {
 		return true;
 	}
 
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		return getRotationAxis(newState) == getRotationAxis(oldState);
+	}
+
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
@@ -77,9 +100,14 @@ public abstract class KineticBlock extends Block implements IRotate {
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (!(tileEntity instanceof KineticTileEntity))
 			return;
+		KineticTileEntity kte = (KineticTileEntity) tileEntity;
+
+		if (kte.preventSpeedUpdate) {
+			kte.preventSpeedUpdate = false;
+			return;
+		}
 
 		// Remove previous information when block is added
-		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 		kte.warnOfMovement();
 		kte.clearKineticInformation();
 		kte.updateSpeed = true;

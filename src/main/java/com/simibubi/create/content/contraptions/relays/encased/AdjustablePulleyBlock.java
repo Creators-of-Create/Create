@@ -35,6 +35,7 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
 		if (oldState.getBlock() == state.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, AdjustablePulleyTileEntity::neighborChanged);
@@ -42,12 +43,19 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(POWERED, context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).with(POWERED, context.getWorld()
+			.isBlockPowered(context.getPos()));
+	}
+
+	@Override
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		return super.areStatesKineticallyEquivalent(oldState, newState)
+			&& oldState.get(POWERED) == newState.get(POWERED);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
 

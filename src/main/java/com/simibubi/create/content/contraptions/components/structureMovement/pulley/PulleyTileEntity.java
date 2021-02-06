@@ -48,6 +48,17 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			return;
 		if (speed == 0)
 			return;
+		int maxLength = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+		int i = 1;
+		while (i <= maxLength) {
+			BlockPos ropePos = pos.down(i);
+			BlockState ropeState = world.getBlockState(ropePos);
+			if (!AllBlocks.ROPE.has(ropeState) && !AllBlocks.PULLEY_MAGNET.has(ropeState)) {
+				break;
+			}
+			++i;
+		}
+		offset = i - 1;
 		if (offset >= getExtensionRange() && getSpeed() > 0)
 			return;
 		if (offset <= 0 && getSpeed() < 0)
@@ -70,7 +81,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			if (!canAssembleStructure && getSpeed() > 0)
 				return;
 
-			for (int i = ((int) offset); i > 0; i--) {
+			for (i = ((int) offset); i > 0; i--) {
 				BlockPos offset = pos.down(i);
 				BlockState oldState = world.getBlockState(offset);
 				if (oldState.getBlock() instanceof IWaterLoggable && oldState.contains(BlockStateProperties.WATERLOGGED)

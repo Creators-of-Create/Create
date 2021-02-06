@@ -113,7 +113,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
-		float movementSpeed = getSpeed() / 512f;
+		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f);
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);

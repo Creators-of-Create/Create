@@ -201,6 +201,7 @@ public class AllTags {
 
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
 			Blocks.SOUL_CAMPFIRE);
+		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 
 		AllFluidTags.loadClass();
 	}

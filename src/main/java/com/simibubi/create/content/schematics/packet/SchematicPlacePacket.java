@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -36,6 +37,8 @@ public class SchematicPlacePacket extends SimplePacketBase {
 				return;
 			Template t = SchematicItem.loadSchematic(stack);
 			PlacementSettings settings = SchematicItem.getSettings(stack);
+			if (player.canUseCommandBlock())
+				settings.func_215220_b(SchematicProcessor.INSTANCE); // remove processor
 			settings.setIgnoreEntities(false);
 			t.place(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
 					settings, player.getRNG());

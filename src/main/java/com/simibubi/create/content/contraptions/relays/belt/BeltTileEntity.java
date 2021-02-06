@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
@@ -24,7 +26,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.Block;
@@ -54,7 +55,7 @@ import net.minecraftforge.items.IItemHandler;
 public class BeltTileEntity extends KineticTileEntity {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
-	public int color;
+	public Optional<DyeColor> color;
 	public int beltLength;
 	public int index;
 	public Direction lastInsert;
@@ -75,7 +76,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		controller = BlockPos.ZERO;
 		itemHandler = LazyOptional.empty();
 		casing = CasingType.NONE;
-		color = -1;
+		color = Optional.empty();
 	}
 
 	@Override
@@ -177,10 +178,12 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (controller != null)
 			compound.put("Controller", NBTUtil.writeBlockPos(controller));
 		compound.putBoolean("IsController", isController());
-		compound.putInt("Color", color);
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
 		NBTHelper.writeEnum(compound, "Casing", casing);
+
+		if (color.isPresent())
+			NBTHelper.writeEnum(compound, "Dye", color.get());
 
 		if (isController())
 			compound.put("Inventory", getInventory().write());
@@ -194,11 +197,13 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (compound.getBoolean("IsController"))
 			controller = pos;
 
+		color = compound.contains("Dye") ? Optional.of(NBTHelper.readEnum(compound, "Dye", DyeColor.class))
+			: Optional.empty();
+
 		if (!wasMoved) {
 			if (!isController())
 				controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 			trackerUpdateTag = compound;
-			color = compound.getInt("Color");
 			beltLength = compound.getInt("Length");
 			index = compound.getInt("Index");
 		}
@@ -228,12 +233,17 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public void applyColor(DyeColor colorIn) {
-		int colorValue = colorIn.getMapColor().colorValue;
+		if (colorIn == null) {
+			if (!color.isPresent())
+				return;
+		} else if (color.isPresent() && color.get() == colorIn)
+			return;
+
 		for (BlockPos blockPos : BeltBlock.getBeltChain(world, getController())) {
 			BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 			if (belt == null)
 				continue;
-			belt.color = belt.color == -1 ? colorValue : ColorHelper.mixColors(belt.color, colorValue, .5f);
+			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
 		}
@@ -464,6 +474,20 @@ public class BeltTileEntity extends KineticTileEntity {
 	public IModelData getModelData() {
 		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
 			.build();
+	}
+
+	@Override
+	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
+		return state.has(BeltBlock.SLOPE)
+			&& (state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD || state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD);
+	}
+
+	@Override
+	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
+		boolean connectedViaAxes, boolean connectedViaCogs) {
+		if (target instanceof BeltTileEntity && !connectedViaAxes)
+			return getController().equals(((BeltTileEntity) target).getController()) ? 1 : 0;
+		return 0;
 	}
 
 }

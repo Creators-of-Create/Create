@@ -228,6 +228,12 @@ public class BlockMovementTraits {
 		if (state.getBlock() instanceof SailBlock)
 			return facing.getAxis() == state.get(SailBlock.FACING)
 				.getAxis();
+		if (AllBlocks.PISTON_EXTENSION_POLE.has(state))
+			return facing.getAxis() != state.get(BlockStateProperties.FACING)
+				.getAxis();
+		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
+			return facing.getAxis() != state.get(BlockStateProperties.FACING)
+				.getAxis();
 		return isBrittle(state);
 	}
 

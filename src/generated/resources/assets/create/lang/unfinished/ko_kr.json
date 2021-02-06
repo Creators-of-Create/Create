@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 54",
+	"_": "Missing Localizations: 59",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -164,6 +164,8 @@
 	"block.create.gabbro_cobblestone_stairs": "반려암 조약돌 계단",
 	"block.create.gabbro_cobblestone_wall": "반려암 조약돌 담장",
 	"block.create.gabbro_pillar": "반려암 기둥",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "기어박스",
 	"block.create.gearshift": "기어쉬프트",
 	"block.create.glass_fluid_pipe": "액체 파이프",
@@ -370,6 +372,7 @@
 	"block.create.sequenced_gearshift": "순서 기어쉬프트",
 	"block.create.shadow_steel_casing": "그림자 케이스",
 	"block.create.shaft": "축",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "스마트 액체 파이프",
 	"block.create.speedometer": "속도 계측기",
 	"block.create.spout": "수도꼭지",
@@ -408,6 +411,7 @@
 	"block.create.zinc_ore": "아연 광석",
 
 	"entity.create.contraption": "장치",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "좌석",
 	"entity.create.stationary_contraption": "고정된 장치",
 	"entity.create.super_glue": "강력 접착제",
@@ -1086,6 +1090,7 @@
 	"create.tooltip.chute.fans_push_down": "선풍기가 위에서 밈",
 	"create.tooltip.chute.fans_pull_up": "선풍기가 위에서 당김",
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
 	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",

@@ -9,6 +9,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
@@ -30,6 +31,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -62,6 +65,7 @@ import net.minecraft.world.gen.DebugChunkGenerator;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -81,6 +85,12 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
 		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
+	}
+
+	@Override
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		return super.areStatesKineticallyEquivalent(oldState.with(CASING, false), newState.with(CASING, false))
+			&& oldState.get(PART) == newState.get(PART);
 	}
 
 	@Override
@@ -220,7 +230,18 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return ActionResultType.PASS;
 		ItemStack heldItem = player.getHeldItem(handIn);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
+		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
+		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
+			.getFirst()
+			.getFluid()
+			.isEquivalentTo(Fluids.WATER);
 		boolean isHand = heldItem.isEmpty() && handIn == Hand.MAIN_HAND;
+
+		if (isDye || hasWater) {
+			if (!world.isRemote)
+				withTileEntityDo(world, pos, te -> te.applyColor(DyeColor.getColor(heldItem)));
+			return ActionResultType.SUCCESS;
+		}
 
 		BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos);
 		if (belt == null)

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -17,7 +16,7 @@ public abstract class TranslatingContraption extends Contraption {
 
 	public Set<BlockPos> getColliders(World world, Direction movementDirection) {
 		if (getBlocks() == null)
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		if (cachedColliders == null || cachedColliderDirection != movementDirection) {
 			cachedColliders = new HashSet<>();
 			cachedColliderDirection = movementDirection;
@@ -48,7 +47,7 @@ public abstract class TranslatingContraption extends Contraption {
 	}
 
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return false;
 	}
 	

@@ -163,6 +163,8 @@
 	"block.create.gabbro_cobblestone_stairs": "Gabbro Cobblestone Stairs",
 	"block.create.gabbro_cobblestone_wall": "Gabbro Cobblestone Wall",
 	"block.create.gabbro_pillar": "Gabbro Pillar",
+	"block.create.gantry_pinion": "Gantry Pinion",
+	"block.create.gantry_shaft": "Gantry Shaft",
 	"block.create.gearbox": "Gearbox",
 	"block.create.gearshift": "Gearshift",
 	"block.create.glass_fluid_pipe": "Glass Fluid Pipe",
@@ -369,6 +371,7 @@
 	"block.create.sequenced_gearshift": "Sequenced Gearshift",
 	"block.create.shadow_steel_casing": "Shadow Casing",
 	"block.create.shaft": "Shaft",
+	"block.create.smart_chute": "Smart Chute",
 	"block.create.smart_fluid_pipe": "Smart Fluid Pipe",
 	"block.create.speedometer": "Speedometer",
 	"block.create.spout": "Spout",
@@ -407,6 +410,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
+	"entity.create.gantry_contraption": "Gantry Contraption",
 	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
@@ -1085,6 +1089,7 @@
 	"create.tooltip.chute.fans_push_down": "Fans push from Above",
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
+	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",

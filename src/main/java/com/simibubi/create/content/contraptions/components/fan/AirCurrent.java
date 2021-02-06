@@ -82,7 +82,7 @@ public class AirCurrent {
 	protected void tickAffectedEntities(World world, Direction facing) {
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.getBoundingBox()
+			if (!entity.isAlive() || !entity.getBoundingBox()
 				.intersects(bounds)) {
 				iterator.remove();
 				continue;

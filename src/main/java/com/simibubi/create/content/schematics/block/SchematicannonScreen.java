@@ -429,8 +429,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void sendOptionUpdate(Option option, boolean set) {
-		AllPackets.channel.sendToServer(ConfigureSchematicannonPacket.setOption(container.getTileEntity()
-			.getPos(), option, set));
+		AllPackets.channel.sendToServer(new ConfigureSchematicannonPacket(option, set));
 	}
 
 }

@@ -18,44 +18,40 @@ import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.WoodType;
+import net.minecraft.item.DyeColor;
 
 public class AllSpriteShifts {
 
-	static final Map<WoodType, CTSpriteShiftEntry> 
-		WOODEN_WINDOWS = new IdentityHashMap<>();
-	static final Map<PaletteStoneVariants, Map<PaletteBlockPatterns.CTs, CTSpriteShiftEntry>> 
-		PALETTE_VARIANT_PATTERNS = new IdentityHashMap<>();
+	static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
+	static final Map<PaletteStoneVariants, Map<PaletteBlockPatterns.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
+		new IdentityHashMap<>();
 
-	public static final CTSpriteShiftEntry 
-		FRAMED_GLASS = getCT(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
+	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
+		DYED_OFFSET_BELTS = new IdentityHashMap<>(), DYED_DIAGONAL_BELTS = new IdentityHashMap<>();
+
+	public static final CTSpriteShiftEntry FRAMED_GLASS =
+		getCT(OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
 		HORIZONTAL_FRAMED_GLASS = getCT(HORIZONTAL, "palettes/framed_glass", "palettes/horizontal_framed_glass"),
 		VERTICAL_FRAMED_GLASS = getCT(VERTICAL, "palettes/framed_glass", "palettes/vertical_framed_glass"),
 		ORNATE_IRON_WINDOW = vertical("palettes/ornate_iron_window");
 
-	public static final CTSpriteShiftEntry 
-		CRAFTER_FRONT = getCT(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing"),
+	public static final CTSpriteShiftEntry CRAFTER_FRONT = getCT(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing"),
 		CRAFTER_SIDE = getCT(CTType.VERTICAL, "crafter_side"),
 		CRAFTER_OTHERSIDE = getCT(CTType.HORIZONTAL, "crafter_side");
 
-	public static final CTSpriteShiftEntry 
-		ANDESITE_CASING = omni("andesite_casing"),
-		BRASS_CASING = omni("brass_casing"),
-		COPPER_CASING = omni("copper_casing"),
-		SHADOW_STEEL_CASING = omni("shadow_steel_casing"),
-		REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
+	public static final CTSpriteShiftEntry ANDESITE_CASING = omni("andesite_casing"),
+		BRASS_CASING = omni("brass_casing"), COPPER_CASING = omni("copper_casing"),
+		SHADOW_STEEL_CASING = omni("shadow_steel_casing"), REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
 		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
-	
-	public static final CTSpriteShiftEntry 
-		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
+
+	public static final CTSpriteShiftEntry CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
 		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
-	
-	public static final CTSpriteShiftEntry 
-		BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
+
+	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
 		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank"),
 		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
 
-	public static final SpriteShiftEntry 
-		BELT = SpriteShifter.get("block/belt", "block/belt_animated"),
+	public static final SpriteShiftEntry BELT = SpriteShifter.get("block/belt", "block/belt_animated"),
 		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_animated"),
 		BELT_DIAGONAL = SpriteShifter.get("block/belt_diagonal", "block/belt_diagonal_animated"),
 		ANDESIDE_BELT_CASING = SpriteShifter.get("block/brass_casing_belt", "block/andesite_casing_belt"),
@@ -92,6 +88,13 @@ public class AllSpriteShifts {
 				String target = "palettes/" + variantName + "/" + textureName;
 				map.put(texture, getCT(texture.type, target));
 			}
+		}
+
+		for (DyeColor color : DyeColor.values()) {
+			String id = color.getName();
+			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id));
+			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id));
+			DYED_DIAGONAL_BELTS.put(color, SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal"));
 		}
 	}
 
