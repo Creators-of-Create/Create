@@ -39,6 +39,7 @@ minecraft {
             workingDirectory project.file('run')
             // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
+//            jvmArgs '-XX:+UnlockCommercialFeatures'
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {
