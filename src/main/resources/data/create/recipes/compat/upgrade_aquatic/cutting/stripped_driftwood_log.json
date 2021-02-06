@@ -8,7 +8,7 @@
     "type": "create:cutting",
     "ingredients": [
     	{
-    		"item": "upgrade_aquatic:driftwood_log_stripped"
+    		"item": "upgrade_aquatic:stripped_driftwood_log"
     	}
     ],
 	"results": [
