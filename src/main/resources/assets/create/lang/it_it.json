@@ -1,5 +1,4 @@
 {
-	"_": "Missing Localizations: 849",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +161,8 @@
 	"block.create.gabbro_cobblestone_stairs": "Scalini di pietrisco di gabbro",
 	"block.create.gabbro_cobblestone_wall": "Muretto di pietrisco di gabbro",
 	"block.create.gabbro_pillar": "Pilastro di gabbro",
+	"block.create.gantry_pinion": "Pignone a portale",
+	"block.create.gantry_shaft": "Albero a portale",
 	"block.create.gearbox": "Riduttore",
 	"block.create.gearshift": "Cambio",
 	"block.create.glass_fluid_pipe": "Tubo per fluidi con vetrata",
