@@ -40,4 +40,3 @@ local.properties
 
 # PDT-specific
 .buildpath
-src/generated/resources/.cache/cache

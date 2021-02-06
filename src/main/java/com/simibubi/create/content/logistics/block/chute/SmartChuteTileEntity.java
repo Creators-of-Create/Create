@@ -21,7 +21,7 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	@Override
 	protected boolean canAcceptItem(ItemStack stack) {
-		return super.canAcceptItem(stack) && canCollectItemsFromBelow();
+		return super.canAcceptItem(stack) && canCollectItemsFromBelow() && filtering.test(stack);
 	}
 
 	@Override

@@ -380,38 +380,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			.isHorizontal())
 			return false;
 
-//		BlockState stateBelow = world.getBlockState(pos.down());
-//		if (stateBelow.getBlock() instanceof FunnelBlock) {
-//			if (stateBelow.method_28500(BrassFunnelBlock.POWERED).orElse(false))
-//				return false;
-//			if (stateBelow.get(BrassFunnelBlock.FACING) != Direction.UP)
-//				return false;
-//			ItemStack remainder = FunnelBlock.tryInsert(world, pos.down(), item, simulate);
-//			if (!simulate)
-//				setItem(remainder);
-//			return remainder.isEmpty();
-//		}
-//
-//		DirectBeltInputBehaviour directInput =
-//			TileEntityBehaviour.get(world, pos.down(), DirectBeltInputBehaviour.TYPE);
-//		if (directInput != null) {
-//			if (!directInput.canInsertFromSide(Direction.UP))
-//				return false;
-//			ItemStack remainder = directInput.handleInsertion(item, Direction.UP, simulate);
-//			if (!simulate)
-//				setItem(remainder);
-//			return remainder.isEmpty();
-//		}
-//
-//		if (!capBelow.isPresent())
-//			capBelow = grabCapability(Direction.DOWN);
-//		if (capBelow.isPresent()) {
-//			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capBelow.orElse(null), item, simulate);
-//			if (!simulate)
-//				setItem(ItemStack.EMPTY);
-//			return remainder.isEmpty();
-//		}
-
 		if (Block.hasSolidSideOnTop(world, pos.down()))
 			return false;
 
@@ -430,15 +398,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private boolean handleUpwardOutput(boolean simulate) {
 		BlockState stateAbove = world.getBlockState(pos.up());
-//		if (stateAbove.getBlock() instanceof FunnelBlock) {
-//			boolean powered = stateAbove.method_28500(BrassFunnelBlock.POWERED).orElse(false);
-//			if (!powered && stateAbove.get(BrassFunnelBlock.FACING) == Direction.DOWN) {
-//				ItemStack remainder = FunnelBlock.tryInsert(world, pos.up(), item, simulate);
-//				if (remainder.isEmpty()) {
-//					if (!simulate)
-//						setItem(remainder);
-//					return true;
-//				}
 
 		if (world == null)
 			return false;
@@ -509,9 +468,12 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (world == null)
 			return LazyOptional.empty();
 		TileEntity te = world.getTileEntity(pos);
-		if (te == null
-			|| (te instanceof ChuteTileEntity) && (side != Direction.DOWN || !(te instanceof SmartChuteTileEntity)))
+		if (te == null)
 			return LazyOptional.empty();
+		if (te instanceof ChuteTileEntity) {
+			if (side != Direction.DOWN || !(te instanceof SmartChuteTileEntity) || getItemMotion() > 0)
+				return LazyOptional.empty();
+		}
 		return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite());
 	}
 
