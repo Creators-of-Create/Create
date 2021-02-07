@@ -1365,7 +1365,7 @@
 	"item.create.schematic_and_quill.tooltip.condition1": "Passo 1",
 	"item.create.schematic_and_quill.tooltip.behaviour1": "Seleziona due punti d'angolo usando il clic destro.",
 	"item.create.schematic_and_quill.tooltip.condition2": "Passo 2",
-	"item.create.schematic_and_quill.tooltip.behaviour2": "Premi _Ctrl_ e _scorri_ sui volti per regolare le dimensioni. Clic destro di nuovo per salvare.",
+	"item.create.schematic_and_quill.tooltip.behaviour2": "Premi _Ctrl_ e _scorri_ sulle facciate per regolare le dimensioni. Clic destro di nuovo per salvare.",
 	"item.create.schematic_and_quill.tooltip.control1": "Clic-Destro",
 	"item.create.schematic_and_quill.tooltip.action1": "Seleziona un punto d'angolo / conferma il salvataggio.",
 	"item.create.schematic_and_quill.tooltip.control2": "Ctrl premuto",
