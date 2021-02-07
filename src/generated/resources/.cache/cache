@@ -404,7 +404,7 @@ e3f618c5b622d21880de858678d1802cbf65e615 assets/create/lang/en_ud.json
 acc852d80378b426d7ee6cb59c169e06b6d63b25 assets/create/lang/en_us.json
 30ce93c56557cea2f384a47b549fb893700523a5 assets/create/lang/unfinished/de_de.json
 77b8310f3cbed36fa0d2ee29e65ac6aee0c2adc2 assets/create/lang/unfinished/es_mx.json
-b8e44c8c33b3c36b850f579e317103eb57f85f07 assets/create/lang/unfinished/fr_fr.json
+8db9f9147dcef8c8182c548a524f96f578c116ec assets/create/lang/unfinished/fr_fr.json
 89f7029d73733938ee9f900fc36d52ab7fc97563 assets/create/lang/unfinished/it_it.json
 b1935e7f8d79d1112e1685adb42daedb976ac6d7 assets/create/lang/unfinished/ja_jp.json
 23aaf879d07a24775aeba3b98c355c992b24f28b assets/create/lang/unfinished/ko_kr.json
@@ -3539,7 +3539,7 @@ d3fdb8ece6cb072a93ddb64a0baad5ac952117a4 data/create/recipes/weathered_limestone
 eedf31af7134d03656c5fa57229982f9c5bed07c data/create/tags/blocks/brittle.json
 13b55d6e905a02403d2e95e9ba2357f99c5f2241 data/create/tags/blocks/fan_heaters.json
 3bc64e3a1e7980237435b1770a9ba2102d57fcd4 data/create/tags/blocks/fan_transparent.json
-745a82505a68a6482407d87374e356781406ab46 data/create/tags/blocks/safe_nbt.json
+c81ea194e808985847159b201140d4aa4cbcca65 data/create/tags/blocks/safe_nbt.json
 c9ac7e3e5ec18554e7184168d65e9b8e44ef5610 data/create/tags/blocks/sails.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json

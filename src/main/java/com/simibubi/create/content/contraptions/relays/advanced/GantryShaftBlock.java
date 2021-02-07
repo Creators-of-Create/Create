@@ -113,17 +113,25 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = super.getStateForPlacement(context);
+		BlockPos pos = context.getPos();
+		World world = context.getWorld();
 		Direction face = context.getFace();
-		BlockState blockState = context.getWorld()
-			.getBlockState(context.getPos()
-				.offset(face.getOpposite()));
-		if (AllBlocks.GANTRY_SHAFT.has(blockState) && blockState.get(FACING)
-			.getAxis() == face.getAxis()) {
-			Direction facing = blockState.get(FACING);
+
+		BlockState neighbour = world.getBlockState(pos.offset(state.get(FACING)
+			.getOpposite()));
+
+		BlockState clickedState =
+			AllBlocks.GANTRY_SHAFT.has(neighbour) ? neighbour : world.getBlockState(pos.offset(face.getOpposite()));
+
+		if (AllBlocks.GANTRY_SHAFT.has(clickedState) && clickedState.get(FACING)
+			.getAxis() == state.get(FACING)
+				.getAxis()) {
+			Direction facing = clickedState.get(FACING);
 			state = state.with(FACING, context.getPlayer() == null || !context.getPlayer()
 				.isSneaking() ? facing : facing.getOpposite());
 		}
-		return state.with(POWERED, shouldBePowered(state, context.getWorld(), context.getPos()));
+
+		return state.with(POWERED, shouldBePowered(state, world, pos));
 	}
 
 	@Override
@@ -179,13 +187,9 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-
-			if (!shouldPower) {
-				TileEntity te = worldIn.getTileEntity(blockPos);
-				if (te instanceof KineticTileEntity)
-					((KineticTileEntity) te).detachKinetics();
-			}
-
+			TileEntity te = worldIn.getTileEntity(blockPos);
+			if (te instanceof KineticTileEntity)
+				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
 				worldIn.setBlockState(blockPos, blockState.with(POWERED, shouldPower), 2);
 		}

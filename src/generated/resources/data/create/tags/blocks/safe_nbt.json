@@ -23,6 +23,7 @@
     "create:redstone_link",
     "create:analog_lever",
     "create:adjustable_repeater",
-    "create:adjustable_pulse_repeater"
+    "create:adjustable_pulse_repeater",
+    "#minecraft:signs"
   ]
 }
