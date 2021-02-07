@@ -1,90 +1,93 @@
 package com.simibubi.create.foundation.worldgen;
 
-import static net.minecraft.world.biome.Biome.Category.DESERT;
-import static net.minecraft.world.biome.Biome.Category.OCEAN;
-
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.foundation.utility.Lang;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.minecraft.block.Block;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
-public enum AllWorldFeatures {
+public class AllWorldFeatures {
 
-	COPPER_ORE(new CountedOreFeature(AllBlocks.COPPER_ORE, 18, 2).between(40, 86)),
-	COPPER_ORE_OCEAN(new CountedOreFeature(AllBlocks.COPPER_ORE, 15, 4).between(20, 55).inBiomes(OCEAN)),
+	static Map<String, ConfigDrivenFeatureEntry> entries = new HashMap<>();
 
-	ZINC_ORE(new CountedOreFeature(AllBlocks.ZINC_ORE, 14, 4).between(15, 70)),
-	ZINC_ORE_DESERT(new CountedOreFeature(AllBlocks.ZINC_ORE, 17, 5).between(10, 85).inBiomes(DESERT)),
+	static final ConfigDrivenFeatureEntry
 
-	LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.LIMESTONE, 128, 1 / 32f).between(30, 70)),
-	WEATHERED_LIMESTONE(new ChanceOreFeature(AllPaletteBlocks.WEATHERED_LIMESTONE, 128, 1 / 32f).between(10, 30)),
-	DOLOMITE(new ChanceOreFeature(AllPaletteBlocks.DOLOMITE, 128, 1 / 64f).between(20, 70)),
-	GABBRO(new ChanceOreFeature(AllPaletteBlocks.GABBRO, 128, 1 / 64f).between(20, 70)),
-	SCORIA(new ChanceOreFeature(AllPaletteBlocks.NATURAL_SCORIA, 128, 1 / 32f).between(0, 10)), 
+	COPPER = register("copper_ore", AllBlocks.COPPER_ORE, 18, 2).between(40, 85),
+
+		ZINC = register("zinc_ore", AllBlocks.ZINC_ORE, 14, 4).between(15, 70),
+
+		LIMESTONE = register("limestone", AllPaletteBlocks.LIMESTONE, 128, 1 / 64f).between(30, 70),
+
+		WEATHERED_LIMESTONE =
+			register("weathered_limestone", AllPaletteBlocks.WEATHERED_LIMESTONE, 128, 1 / 64f).between(10, 30),
+
+		DOLOMITE = register("dolomite", AllPaletteBlocks.DOLOMITE, 128, 1 / 64f).between(20, 70),
+
+		GABBRO = register("gabbro", AllPaletteBlocks.GABBRO, 128, 1 / 64f).between(20, 70),
+
+		SCORIA = register("scoria", AllPaletteBlocks.NATURAL_SCORIA, 128, 1 / 32f).between(0, 10)
 
 	;
+
+	private static ConfigDrivenFeatureEntry register(String id, NonNullSupplier<? extends Block> block, int clusterSize,
+		float frequency) {
+		ConfigDrivenFeatureEntry configDrivenFeatureEntry =
+			new ConfigDrivenFeatureEntry(id, block, clusterSize, frequency);
+		entries.put(id, configDrivenFeatureEntry);
+		return configDrivenFeatureEntry;
+	}
 
 	/**
 	 * Increment this number if all worldgen entries should be overwritten in this
 	 * update. Worlds from the previous version will overwrite potentially changed
 	 * values with the new defaults.
 	 */
-	public static final int forcedUpdateVersion = 1;
+	public static final int forcedUpdateVersion = 2;
 
-	public IFeature feature;
-
-	AllWorldFeatures(IFeature feature) {
-		this.feature = feature;
-		this.feature.setId(Lang.asId(name()));
+	public static void registerFeatures() {
+		ForgeRegistries.FEATURES.register(ConfigDrivenOreFeature.INSTANCE);
+		ForgeRegistries.DECORATORS.register(ConfigDrivenDecorator.INSTANCE);
+		entries.entrySet()
+			.forEach((entry) -> {
+				Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, Create.ID + "_" + entry.getKey(),
+					entry.getValue()
+						.getFeature());
+			});
 	}
 
 	public static void reload(BiomeLoadingEvent event) {
-		for (AllWorldFeatures entry : AllWorldFeatures.values()) {
-			if (event.getName() == Biomes.THE_VOID.getRegistryName())
-				continue;
-			if (event.getCategory() == Category.NETHER)
-				continue;
-
-			Optional<ConfiguredFeature<?, ?>> createFeature = entry.feature.createFeature(event);
-			if (!createFeature.isPresent())
-				continue;
-
-			event.getGeneration().feature(entry.feature.getGenerationStage(), createFeature.get());
-		}
-
-//		// Debug contained ore features
-//		for (Biome biome : ForgeRegistries.BIOMES) {
-//			Debug.markTemporary();
-//			System.out.println(biome.getRegistryName().getPath() + " has the following features:");
-//			for (ConfiguredFeature<?> configuredFeature : biome.getFeatures(Decoration.UNDERGROUND_ORES)) {
-//				IFeatureConfig config = configuredFeature.config;
-//				if (!(config instanceof DecoratedFeatureConfig))
-//					continue;
-//				DecoratedFeatureConfig decoConf = (DecoratedFeatureConfig) config;
-//				if (!(decoConf.feature.config instanceof OreFeatureConfig))
-//					continue;
-//				OreFeatureConfig oreConf = (OreFeatureConfig) decoConf.feature.config;
-//				System.out.println(configuredFeature.feature.getRegistryName().getPath());
-//				System.out.println(oreConf.state.getBlock().getRegistryName().getPath());
-//				System.out.println("--");
-//			}
-//		}
+		entries.values()
+			.forEach(entry -> {
+				if (event.getName() == Biomes.THE_VOID.getRegistryName())
+					return;
+				if (event.getCategory() == Category.NETHER)
+					return;
+				event.getGeneration()
+					.feature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
+			});
 	}
 
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {
-		Arrays.stream(values()).forEach(entry -> {
-			builder.push(Lang.asId(entry.name()));
-			entry.feature.addToConfig(builder);
-			builder.pop();
-		});
+		entries.values()
+			.forEach(entry -> {
+				builder.push(entry.id);
+				entry.addToConfig(builder);
+				builder.pop();
+			});
 	}
+
+	public static void register() {}
 
 }

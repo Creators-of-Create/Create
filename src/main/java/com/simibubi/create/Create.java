@@ -84,6 +84,7 @@ public class Create {
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
+		AllWorldFeatures.register();
 
 		modEventBus.addListener(Create::init);
 		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, Create::onBiomeLoad);
@@ -118,6 +119,7 @@ public class Create {
 		
 		event.enqueueWork(() -> {
 			SchematicProcessor.register();
+			AllWorldFeatures.registerFeatures();
 		});
 	}
 	
