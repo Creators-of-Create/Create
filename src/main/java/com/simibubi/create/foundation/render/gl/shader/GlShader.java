@@ -1,8 +1,7 @@
 package com.simibubi.create.foundation.render.gl.shader;
 
 import com.simibubi.create.foundation.render.gl.GlObject;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
-import com.simibubi.create.foundation.render.gl.shader.ShaderType;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL20;
 
@@ -18,7 +17,7 @@ public class GlShader extends GlObject {
 
         if (preProcessor != null) {
             source = preProcessor.process(source);
-            ShaderHelper.log.info("Preprocessor run on " + name + ":\n" + source);
+            Backend.log.info("Preprocessor run on " + name);// + ":\n" + source);
         }
 
         GL20.glShaderSource(handle, source);
@@ -27,7 +26,7 @@ public class GlShader extends GlObject {
         String log = GL20.glGetShaderInfoLog(handle);
 
         if (!log.isEmpty()) {
-            ShaderHelper.log.warn("Shader compilation log for " + name + ": " + log);
+            Backend.log.warn("Shader compilation log for " + name + ": " + log);
         }
 
         if (GL20.glGetShaderi(handle, GL20.GL_COMPILE_STATUS) != GL20.GL_TRUE) {

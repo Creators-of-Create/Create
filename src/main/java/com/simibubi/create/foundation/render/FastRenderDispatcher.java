@@ -3,9 +3,8 @@ package com.simibubi.create.foundation.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
-import com.simibubi.create.foundation.render.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.render.light.ILightListener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -25,6 +24,7 @@ import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -56,18 +56,36 @@ public class FastRenderDispatcher {
         runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
     }
 
+    public static boolean available() {
+        return AllConfigs.CLIENT.experimentalRendering.get();
+    }
+
+    public static void refresh() {
+        RenderWork.enqueue(() -> {
+            CreateClient.kineticRenderer.invalidate();
+            Minecraft.getInstance().worldRenderer.loadRenderers();
+            ClientWorld world = Minecraft.getInstance().world;
+            if (world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+        });
+    }
+
     private static <T> void runQueue(@Nullable ConcurrentHashMap.KeySetView<T, Boolean> changed, Consumer<T> action) {
         if (changed == null) return;
 
-        // because of potential concurrency issues, we make a copy of what's in the set at the time we get here
-        ArrayList<T> tiles = new ArrayList<>(changed);
+        if (available()) {
+            // because of potential concurrency issues, we make a copy of what's in the set at the time we get here
+            ArrayList<T> tiles = new ArrayList<>(changed);
 
-        tiles.forEach(action);
-
-        changed.removeAll(tiles);
+            tiles.forEach(action);
+            changed.removeAll(tiles);
+        } else {
+            changed.clear();
+        }
     }
 
     public static void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ) {
+        if (!available()) return;
+
         Matrix4f viewProjection = Matrix4f.translate((float) -cameraX, (float) -cameraY, (float) -cameraZ);
         viewProjection.multiplyBackward(stack.peek().getModel());
         viewProjection.multiplyBackward(getProjectionMatrix());
@@ -82,7 +100,7 @@ public class FastRenderDispatcher {
         //RenderSystem.disableDepthTest();
 
         ContraptionRenderDispatcher.renderLayer(type, viewProjection);
-        ShaderHelper.releaseShader();
+        GL20.glUseProgram(0);
         type.endDrawing();
     }
 

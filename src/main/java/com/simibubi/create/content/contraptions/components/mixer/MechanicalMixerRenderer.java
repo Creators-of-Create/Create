@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
@@ -31,8 +33,10 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
-		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
+		if (!FastRenderDispatcher.available()) {
+			SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+			standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
+		}
 
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);

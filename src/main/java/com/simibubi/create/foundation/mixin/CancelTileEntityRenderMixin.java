@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +26,10 @@ public class CancelTileEntityRenderMixin {
      */
     @Inject(at = @At("RETURN"), method = "getTileEntities", cancellable = true)
     private void noRenderInstancedTiles(CallbackInfoReturnable<List<TileEntity>> cir) {
-//        List<TileEntity> tiles = cir.getReturnValue();
-//
-//        tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
+        if (FastRenderDispatcher.available()) {
+            List<TileEntity> tiles = cir.getReturnValue();
+
+            tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
+        }
     }
 }

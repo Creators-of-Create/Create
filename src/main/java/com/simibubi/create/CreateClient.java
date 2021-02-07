@@ -12,9 +12,10 @@ import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.render.KineticRenderer;
+import com.simibubi.create.foundation.render.OptifineHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -31,8 +32,6 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
@@ -62,10 +61,13 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 
-		ShaderHelper.initShaders();
+		Backend.init();
+		OptifineHandler.init();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
+		kineticRenderer = new KineticRenderer();
+
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
@@ -73,8 +75,6 @@ public class CreateClient {
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
-
-		kineticRenderer = new KineticRenderer();
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();

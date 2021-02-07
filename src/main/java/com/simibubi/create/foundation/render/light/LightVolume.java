@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.render.light;
 
 import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.gl.GlTexture;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;

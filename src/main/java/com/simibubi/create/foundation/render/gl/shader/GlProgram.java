@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.gl.shader;
 
 import com.simibubi.create.foundation.render.gl.GlObject;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL20;
 
@@ -29,13 +30,12 @@ public abstract class GlProgram extends GlObject {
      * Retrieves the index of the uniform with the given name.
      * @param uniform The name of the uniform to find the index of
      * @return The uniform's index
-     * @throws NullPointerException If no uniform exists with the given name
      */
     public int getUniformLocation(String uniform) {
         int index = GL20.glGetUniformLocation(this.handle(), uniform);
 
         if (index < 0) {
-            ShaderHelper.log.error("No uniform exists in program '" + this.name + "' with name: " + uniform);
+            Backend.log.warn("No active uniform '{}' exists in program '{}'. Could be unused.", uniform, this.name);
         }
 
         return index;
@@ -93,7 +93,7 @@ public abstract class GlProgram extends GlObject {
             String log = GL20.glGetProgramInfoLog(this.program);
 
             if (!log.isEmpty()) {
-                ShaderHelper.log.warn("Program link log for " + this.name + ": " + log);
+                Backend.log.warn("Program link log for " + this.name + ": " + log);
             }
 
             int result = GL20.glGetProgrami(this.program, GL20.GL_LINK_STATUS);

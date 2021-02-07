@@ -3,11 +3,11 @@ package com.simibubi.create.foundation.render.instancing;
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.BasicProgram;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL20;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -42,15 +42,14 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (instance != null) {
             return (TileEntityInstance<? super T>) instance;
         } else if (create) {
-            return null;
-//            TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
-//
-//            if (renderer != null) {
-//                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
-//                instances.put(tile, renderer);
-//            }
-//
-//            return renderer;
+            TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
+
+            if (renderer != null) {
+                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
+                instances.put(tile, renderer);
+            }
+
+            return renderer;
         } else {
             return null;
         }
@@ -116,6 +115,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
                 material.render(layer, viewProjection, callback);
         }
 
-        ShaderHelper.releaseShader();
+        GL20.glUseProgram(0);
     }
 }

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import com.simibubi.create.foundation.render.gl.backend.Backend;
+
 public class CClient extends ConfigBase {
 
 	public ConfigGroup client = group(0, "client",
@@ -13,12 +15,43 @@ public class CClient extends ConfigBase {
 	public ConfigBool rainbowDebug =
 		b(true, "enableRainbowDebug", "Show colourful debug information while the F3-Menu is open.");
 
+	public ConfigRender experimentalRendering =
+		new ConfigRender("experimentalRendering", true, "Use modern OpenGL features to drastically increase performance.");
+
 	public ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX", "Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY", "Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
 
 	@Override
 	public String getName() {
 		return "client";
+	}
+
+	public class ConfigRender extends ConfigBool {
+
+		public ConfigRender(String name, boolean def, String... comment) {
+			super(name, def, comment);
+		}
+
+		/**
+		 * Gets the configured value and checks if the rendering is actually supported.
+		 * @return True if fast rendering is enabled and the current system/configuration is capable.
+		 */
+		@Override
+		public Boolean get() {
+			boolean enabled = super.get();
+
+			if (enabled) {
+				switch (Backend.getAvailability()) {
+				case FULL:
+				case PARTIAL:
+					return true;
+				default:
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
 	}
 
 }

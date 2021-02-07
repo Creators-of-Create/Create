@@ -30,6 +30,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -475,13 +477,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void onLoad() {
 		super.onLoad();
 		if (world != null && world.isRemote)
-			CreateClient.kineticRenderer.add(this);
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
 	public void onChunkUnloaded() {
 		if (world != null && world.isRemote)
-			CreateClient.kineticRenderer.remove(this);
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
+import sun.nio.cs.FastCharsetProvider;
 
 public class SplitShaftRenderer extends KineticTileEntityRenderer {
 
@@ -26,6 +28,8 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
+		if (FastRenderDispatcher.available()) return;
+
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
 		final BlockPos pos = te.getPos();

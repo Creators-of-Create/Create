@@ -8,9 +8,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.gl.BasicProgram;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -63,7 +63,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
     }
 
     public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> setup) {
-        P program = ShaderHelper.getProgram(programSpec);
+        P program = Backend.getProgram(programSpec);
         program.bind(viewProjection, 0);
 
         if (setup != null) setup.call(program);

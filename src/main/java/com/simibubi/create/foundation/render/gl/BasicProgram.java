@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.render.gl;
 
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.shader.GlProgram;
-import com.simibubi.create.foundation.render.gl.shader.ShaderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.ResourceLocation;
@@ -43,9 +43,9 @@ public class BasicProgram extends GlProgram {
     }
 
     protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {
-        ShaderHelper.MATRIX_BUFFER.position(0);
-        mat.write(ShaderHelper.MATRIX_BUFFER);
-        ShaderHelper.MATRIX_BUFFER.rewind();
-        GL20.glUniformMatrix4fv(uniform, false, ShaderHelper.MATRIX_BUFFER);
+        Backend.MATRIX_BUFFER.position(0);
+        mat.write(Backend.MATRIX_BUFFER);
+        Backend.MATRIX_BUFFER.rewind();
+        GL20.glUniformMatrix4fv(uniform, false, Backend.MATRIX_BUFFER);
     }
 }

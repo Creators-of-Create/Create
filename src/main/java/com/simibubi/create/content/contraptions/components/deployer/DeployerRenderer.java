@@ -11,6 +11,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -102,7 +104,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
+		if (!FastRenderDispatcher.available()) {
+			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
+		}
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
