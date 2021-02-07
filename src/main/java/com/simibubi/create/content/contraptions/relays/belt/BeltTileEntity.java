@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
@@ -203,7 +204,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		color = compound.contains("Dye") ? Optional.of(NBTHelper.readEnum(compound, "Dye", DyeColor.class))
 			: Optional.empty();
-		
+
 		if (!wasMoved) {
 			if (!isController())
 				controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
@@ -242,7 +243,7 @@ public class BeltTileEntity extends KineticTileEntity {
 				return;
 		} else if (color.isPresent() && color.get() == colorIn)
 			return;
-		
+
 		for (BlockPos blockPos : BeltBlock.getBeltChain(world, getController())) {
 			BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
 			if (belt == null)
@@ -478,6 +479,20 @@ public class BeltTileEntity extends KineticTileEntity {
 	public IModelData getModelData() {
 		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
 			.build();
+	}
+
+	@Override
+	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
+		return state.has(BeltBlock.SLOPE)
+			&& (state.get(BeltBlock.SLOPE) == BeltSlope.UPWARD || state.get(BeltBlock.SLOPE) == BeltSlope.DOWNWARD);
+	}
+
+	@Override
+	public float propagateRotationTo(KineticTileEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
+		boolean connectedViaAxes, boolean connectedViaCogs) {
+		if (target instanceof BeltTileEntity && !connectedViaAxes)
+			return getController().equals(((BeltTileEntity) target).getController()) ? 1 : 0;
+		return 0;
 	}
 
 }

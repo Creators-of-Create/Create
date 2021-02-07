@@ -6,7 +6,7 @@
         ],
         "key": {
             "B": {
-                "item": "create:brass_ingot"
+                "tag": "forge:ingots/brass"
             },
 			"S": {
                 "item": "minecraft:sugar"

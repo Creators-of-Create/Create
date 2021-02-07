@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
@@ -38,8 +39,8 @@ public class PistonContraption extends TranslatingContraption {
 	private boolean retract;
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.PISTON;
+	protected ContraptionType getType() {
+		return ContraptionType.PISTON;
 	}
 
 	public PistonContraption() {}
@@ -164,6 +165,8 @@ public class PistonContraption extends TranslatingContraption {
 				return true;
 			if (!BlockMovementTraits.movementAllowed(world, currentPos))
 				return retracting;
+			if (retracting && state.getPushReaction() == PushReaction.PUSH_ONLY)
+				return true;
 			frontier.add(currentPos);
 			if (BlockMovementTraits.notSupportive(state, orientation))
 				return true;

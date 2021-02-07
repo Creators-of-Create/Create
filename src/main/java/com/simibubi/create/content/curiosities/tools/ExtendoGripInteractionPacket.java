@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
@@ -53,25 +54,29 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayerEntity sender = context.get()
-					.getSender();
-				if (sender == null)
+		context.get().enqueueWork(() -> {
+			ServerPlayerEntity sender = context.get().getSender();
+			if (sender == null)
+				return;
+			Entity entityByID = sender.getServerWorld().getEntityByID(target);
+			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
+				double d = sender.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+				if (!sender.canEntityBeSeen(entityByID))
+					d -= 3;
+				d *= d;
+				if (sender.getDistanceSq(entityByID) > d) {
+					// TODO log?
 					return;
-				Entity entityByID = sender.getServerWorld()
-					.getEntityByID(target);
-				if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-					if (interactionHand == null)
-						sender.attackTargetEntityWithCurrentItem(entityByID);
-					else if (specificPoint == null)
-						sender.interactOn(entityByID, interactionHand);
-					else
-						entityByID.applyPlayerInteraction(sender, specificPoint, interactionHand);
 				}
-			});
-		context.get()
-			.setPacketHandled(true);
+				if (interactionHand == null)
+					sender.attackTargetEntityWithCurrentItem(entityByID);
+				else if (specificPoint == null)
+					sender.interactOn(entityByID, interactionHand);
+				else
+					entityByID.applyPlayerInteraction(sender, specificPoint, interactionHand);
+			}
+		});
+		context.get().setPacketHandled(true);
 	}
 
 }

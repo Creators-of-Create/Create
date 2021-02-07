@@ -11,7 +11,6 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
@@ -70,11 +69,9 @@ public class RotationPropagator {
 		boolean connectedByGears = definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom)
 			&& definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo);
 
-		// Belt <-> Belt
-		if (from instanceof BeltTileEntity && to instanceof BeltTileEntity && !connectedByAxis) {
-			return ((BeltTileEntity) from).getController()
-				.equals(((BeltTileEntity) to).getController()) ? 1 : 0;
-		}
+		float custom = from.propagateRotationTo(to, stateFrom, stateTo, diff, connectedByAxis, connectedByGears);
+		if (custom != 0)
+			return custom;
 
 		// Axis <-> Axis
 		if (connectedByAxis) {
@@ -230,6 +227,9 @@ public class RotationPropagator {
 			float newSpeed = getConveyedSpeed(currentTE, neighbourTE);
 			float oppositeSpeed = getConveyedSpeed(neighbourTE, currentTE);
 
+			if (newSpeed == 0 && oppositeSpeed == 0)
+				continue;
+			
 			boolean incompatible =
 				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
 
@@ -395,7 +395,7 @@ public class RotationPropagator {
 		if (!(neighbourKTE.getBlockState()
 			.getBlock() instanceof IRotate))
 			return null;
-		if (!isConnected(currentTE, neighbourKTE))
+		if (!isConnected(currentTE, neighbourKTE) && !isConnected(neighbourKTE, currentTE))
 			return null;
 		return neighbourKTE;
 	}
@@ -403,14 +403,9 @@ public class RotationPropagator {
 	public static boolean isConnected(KineticTileEntity from, KineticTileEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
-
-		if (isLargeCogToSpeedController(stateFrom, stateTo, to.getPos()
-			.subtract(from.getPos())))
-			return true;
-		if (isLargeCogToSpeedController(stateTo, stateFrom, from.getPos()
-			.subtract(to.getPos())))
-			return true;
-		return getRotationSpeedModifier(from, to) != 0;
+		return isLargeCogToSpeedController(stateFrom, stateTo, to.getPos()
+			.subtract(from.getPos())) || getRotationSpeedModifier(from, to) != 0
+			|| from.isCustomConnection(to, stateFrom, stateTo);
 	}
 
 	private static List<KineticTileEntity> getConnectedNeighbours(KineticTileEntity te) {
@@ -436,30 +431,11 @@ public class RotationPropagator {
 			neighbours.add(te.getPos()
 				.offset(facing));
 
-		// Some Blocks can interface diagonally
 		BlockState blockState = te.getBlockState();
-		boolean isLargeWheel = isLargeCog(blockState);
-
 		if (!(blockState.getBlock() instanceof IRotate))
 			return neighbours;
 		IRotate block = (IRotate) blockState.getBlock();
-
-		if (block.hasIntegratedCogwheel(te.getWorld(), te.getPos(), blockState) || isLargeWheel
-			|| AllBlocks.BELT.has(blockState)) {
-			Axis axis = block.getRotationAxis(blockState);
-
-			BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
-				.forEach(offset -> {
-					if (!isLargeWheel && axis.getCoordinate(offset.getX(), offset.getY(), offset.getZ()) != 0)
-						return;
-					if (offset.distanceSq(0, 0, 0, false) != BlockPos.ZERO.distanceSq(1, 1, 0, false))
-						return;
-					neighbours.add(te.getPos()
-						.add(offset));
-				});
-		}
-
-		return neighbours;
+		return te.addPropagationLocations(block, blockState, neighbours);
 	}
 
 }

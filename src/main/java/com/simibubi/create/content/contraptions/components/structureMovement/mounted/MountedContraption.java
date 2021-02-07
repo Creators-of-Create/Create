@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -47,8 +47,8 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.MOUNTED;
+	protected ContraptionType getType() {
+		return ContraptionType.MOUNTED;
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class MountedContraption extends Contraption {
 	}
 	
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return true;
 	}
 	

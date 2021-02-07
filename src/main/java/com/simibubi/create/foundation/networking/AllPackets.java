@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionFluidPacket;
@@ -38,47 +39,52 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
+
 public enum AllPackets {
 
 	// Client to Server
-	NBT(NbtPacket.class, NbtPacket::new),
-	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new),
-	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new),
-	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new),
-	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new),
-	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new),
-	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new),
-	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new),
-	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new),
-	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new),
-	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new),
-	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new),
-	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new),
-	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new),
-	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new),
-	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new),
-	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new),
-	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket::new),
+	NBT(NbtPacket.class, NbtPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new, PLAY_TO_SERVER),
+	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new, PLAY_TO_SERVER),
+	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
+	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new, PLAY_TO_SERVER),
+	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new, PLAY_TO_SERVER),
+	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new, PLAY_TO_SERVER),
+	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new, PLAY_TO_SERVER),
+	PLACE_ARM(ArmPlacementPacket.class, ArmPlacementPacket::new, PLAY_TO_SERVER),
+	MINECART_COUPLING_CREATION(CouplingCreationPacket.class, CouplingCreationPacket::new, PLAY_TO_SERVER),
+	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new, PLAY_TO_SERVER),
+	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new, PLAY_TO_SERVER),
+	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
-	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new),
-	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new),
-	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new),
-	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new),
-	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new),
-	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new),
-	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new),
-	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new),
-	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new),
-	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new),
-	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket::new),
-	CONTRAPTION_FLUID(ContraptionFluidPacket.class, ContraptionFluidPacket::new),
+	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
+	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new, PLAY_TO_CLIENT),
+	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new, PLAY_TO_CLIENT),
+	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new, PLAY_TO_CLIENT),
+	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_SEAT_MAPPING(ContraptionSeatMappingPacket.class, ContraptionSeatMappingPacket::new, PLAY_TO_CLIENT),
+	LIMBSWING_UPDATE(LimbSwingUpdatePacket.class, LimbSwingUpdatePacket::new, PLAY_TO_CLIENT),
+	MINECART_CONTROLLER(MinecartControllerUpdatePacket.class, MinecartControllerUpdatePacket::new, PLAY_TO_CLIENT),
+	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_FLUID(ContraptionFluidPacket.class, ContraptionFluidPacket::new, PLAY_TO_CLIENT),
+	GANTRY_UPDATE(GantryContraptionUpdatePacket.class, GantryContraptionUpdatePacket::new, PLAY_TO_CLIENT),
 
 	;
 
@@ -88,14 +94,14 @@ public enum AllPackets {
 
 	private LoadedPacket<?> packet;
 
-	private <T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory) {
-		packet = new LoadedPacket<>(type, factory);
+	private <T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory, NetworkDirection direction) {
+		packet = new LoadedPacket<>(type, factory, direction);
 	}
 
 	public static void registerPackets() {
 		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(s -> true)
-			.clientAcceptedVersions(s -> true)
+			.serverAcceptedVersions(NETWORK_VERSION::equals)
+			.clientAcceptedVersions(NETWORK_VERSION::equals)
 			.networkProtocolVersion(() -> NETWORK_VERSION)
 			.simpleChannel();
 		for (AllPackets packet : values())
@@ -115,16 +121,18 @@ public enum AllPackets {
 		Function<PacketBuffer, T> decoder;
 		BiConsumer<T, Supplier<Context>> handler;
 		Class<T> type;
+		NetworkDirection direction;
 
-		private LoadedPacket(Class<T> type, Function<PacketBuffer, T> factory) {
+		private LoadedPacket(Class<T> type, Function<PacketBuffer, T> factory, NetworkDirection direction) {
 			encoder = T::write;
 			decoder = factory;
 			handler = T::handle;
 			this.type = type;
+			this.direction = direction;
 		}
 
 		private void register() {
-			channel.messageBuilder(type, index++)
+			channel.messageBuilder(type, index++, direction)
 				.encoder(encoder)
 				.decoder(decoder)
 				.consumer(handler)

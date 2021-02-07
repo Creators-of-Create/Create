@@ -88,6 +88,12 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		return super.areStatesKineticallyEquivalent(oldState.with(CASING, false), newState.with(CASING, false))
+			&& oldState.get(PART) == newState.get(PART);
+	}
+
+	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;

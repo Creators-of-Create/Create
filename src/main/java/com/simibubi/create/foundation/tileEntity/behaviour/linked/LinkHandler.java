@@ -28,7 +28,7 @@ public class LinkHandler {
 		PlayerEntity player = event.getPlayer();
 		Hand hand = event.getHand();
 		
-		if (player.isSneaking())
+		if (player.isSneaking() || player.isSpectator())
 			return;
 
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
