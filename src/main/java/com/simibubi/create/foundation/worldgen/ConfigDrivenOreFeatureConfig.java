@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.IFeatureConfig;
@@ -46,6 +47,8 @@ public class ConfigDrivenOreFeatureConfig implements IFeatureConfig, IPlacementC
 	}
 
 	public float getFrequency() {
+		if (AllConfigs.COMMON.worldGen.disable.get())
+			return 0;
 		return entry().frequency.getF();
 	}
 
