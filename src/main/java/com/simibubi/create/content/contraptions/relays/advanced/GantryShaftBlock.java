@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -10,11 +11,18 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
@@ -25,8 +33,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -38,6 +48,8 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 
 	public static final IProperty<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
+	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public enum Part implements IStringSerializable {
 		START, MIDDLE, END, SINGLE;
@@ -51,6 +63,25 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder.add(PART, POWERED));
+	}
+
+	@Override
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult ray) {
+		ItemStack heldItem = player.getHeldItem(hand);
+
+		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+		if (!placementHelper.matchesItem(heldItem))
+			return ActionResultType.PASS;
+
+		PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
+
+		if (!offset.isReplaceable(world))
+			return ActionResultType.PASS;
+
+		offset.placeInWorld(world, ((BlockItem) heldItem.getItem()).getBlock()
+			.getDefaultState(), player, heldItem);
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
@@ -235,6 +266,29 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
 			&& oldState.get(POWERED) == newState.get(POWERED);
+	}
+
+	public static class PlacementHelper extends PoleHelper<Direction> {
+
+		public PlacementHelper() {
+			super(AllBlocks.GANTRY_SHAFT::has, s -> s.get(FACING)
+				.getAxis(), FACING);
+		}
+
+		@Override
+		public Predicate<ItemStack> getItemPredicate() {
+			return AllBlocks.GANTRY_SHAFT::isIn;
+		}
+
+		@Override
+		public PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+			PlacementOffset offset = super.getOffset(world, state, pos, ray);
+			if (!offset.isSuccessful())
+				return offset;
+			return PlacementOffset.success(offset.getPos(), offset.getTransform()
+				.andThen(s -> s.with(POWERED, state.get(POWERED))));
+		}
+
 	}
 
 }

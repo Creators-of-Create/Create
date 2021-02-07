@@ -72,17 +72,6 @@ public class SailBlock extends ProperDirectionalBlock {
 				return ActionResultType.PASS;
 
 			offset.placeInWorld(world, ((BlockItem) heldItem.getItem()).getBlock().getDefaultState(), player, heldItem);
-
-			/*BlockState blockState = ((BlockItem) heldItem.getItem()).getBlock()
-					.getDefaultState()
-					.with(FACING, state.get(FACING));
-			BlockPos offsetPos = new BlockPos(offset.getPos());
-			if (!world.isRemote && world.getBlockState(offsetPos).getMaterial().isReplaceable()) {
-				world.setBlockState(offsetPos, blockState);
-				if (!player.isCreative())
-					heldItem.shrink(1);
-			}*/
-
 			return ActionResultType.SUCCESS;
 		}
 
