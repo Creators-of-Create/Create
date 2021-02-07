@@ -59,7 +59,7 @@ public final class NBTProcessors {
 		TileEntityType<?> type = tileEntity.getType();
 		if (survival && survivalProcessors.containsKey(type))
 			compound = survivalProcessors.get(type).apply(compound);
-		if (processors.containsKey(type))
+		if (compound != null && processors.containsKey(type))
 			return processors.get(type).apply(compound);
 		if (tileEntity.onlyOpsCanSetNbt())
 			return null;

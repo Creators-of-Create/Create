@@ -58,6 +58,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected Contraption contraption;
 	protected boolean initialized;
 	private boolean prevPosInvalid;
+	private boolean ticking;
 
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
 		super(entityTypeIn, worldIn);
@@ -245,6 +246,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (!world.isRemote)
 			contraption.stalled = false;
 
+		ticking = true;
 		for (MutablePair<BlockInfo, MovementContext> pair : contraption.getActors()) {
 			MovementContext context = pair.right;
 			BlockInfo blockInfo = pair.left;
@@ -264,13 +266,25 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				continue;
 			if (newPosVisited && !context.stall) {
 				actor.visitNewPosition(context, gridPosition);
+				if (!isAlive())
+					break;
 				context.firstMovement = false;
 			}
-			if (!oldMotion.equals(context.motion))
+			if (!oldMotion.equals(context.motion)) {
 				actor.onSpeedChanged(context, oldMotion, context.motion);
+				if (!isAlive())
+					break;
+			}
 			actor.tick(context);
+			if (!isAlive())
+				break;
 			contraption.stalled |= context.stall;
 		}
+		if (!isAlive()) {
+			contraption.stop(world);
+			return;
+		}
+		ticking = false;
 
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
@@ -444,7 +458,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public void remove(boolean keepData) {
 		if (!world.isRemote && !removed && contraption != null) {
-			contraption.stop(world);
+			if (!ticking)
+				contraption.stop(world);
 		}
 		super.remove(keepData);
 	}
