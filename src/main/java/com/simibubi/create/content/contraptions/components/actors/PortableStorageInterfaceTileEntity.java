@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -21,6 +22,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	protected float distance;
 	protected LerpedFloat connectionAnimation;
 	protected boolean powered;
+	protected Entity connectedEntity;
 
 	public PortableStorageInterfaceTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
@@ -32,11 +34,20 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 
 	public void startTransferringTo(Contraption contraption, float distance) {
 		this.distance = distance;
+		connectedEntity = contraption.entity;
 		startConnecting();
 		notifyUpdate();
 	}
 
-	protected abstract void stopTransferring();
+	protected void stopTransferring() {
+		connectedEntity = null;
+	}
+
+	public boolean canTransfer() {
+		if (connectedEntity != null && !connectedEntity.isAlive())
+			stopTransferring();
+		return connectedEntity != null && isConnected();
+	}
 
 	protected abstract void invalidateCapability();
 

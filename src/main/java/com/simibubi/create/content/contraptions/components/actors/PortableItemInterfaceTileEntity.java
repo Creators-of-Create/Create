@@ -33,6 +33,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		LazyOptional<IItemHandlerModifiable> oldCap = capability;
 		capability = LazyOptional.of(() -> new InterfaceItemHandler(new ItemStackHandler(0)));
 		oldCap.invalidate();
+		super.stopTransferring();
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (!isConnected())
+			if (!canTransfer())
 				return ItemStack.EMPTY;
 			ItemStack extractItem = super.extractItem(slot, amount, simulate);
 			if (!simulate && !extractItem.isEmpty())
@@ -65,7 +66,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (!isConnected())
+			if (!canTransfer())
 				return stack;
 			ItemStack insertItem = super.insertItem(slot, stack, simulate);
 			if (!simulate && !insertItem.equals(stack, false))
