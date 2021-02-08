@@ -38,19 +38,7 @@ public class CClient extends ConfigBase {
 		 */
 		@Override
 		public Boolean get() {
-			boolean enabled = super.get();
-
-			if (enabled) {
-				switch (Backend.getAvailability()) {
-				case FULL:
-				case PARTIAL:
-					return true;
-				default:
-					return false;
-				}
-			} else {
-				return false;
-			}
+			return super.get() && Backend.canUse();
 		}
 	}
 

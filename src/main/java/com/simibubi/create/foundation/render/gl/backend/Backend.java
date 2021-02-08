@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render.gl.backend;
 
-import com.simibubi.create.foundation.render.OptifineHandler;
 import com.simibubi.create.foundation.render.gl.shader.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -33,19 +32,16 @@ public class Backend {
     public static final FloatBuffer VEC3_BUFFER = MemoryUtil.memAllocFloat(3);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
-    private static final Backend instance = new Backend();
-    public static Backend instance() {
-        return instance;
-    }
-
     private static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();
     private static final Map<ProgramSpec<?>, GlProgram> programs = new HashMap<>();
 
     public static GLCapabilities capabilities;
-    private static RenderingAvailability availability;
+    private static SystemCapability capability;
     private static MapBuffer mapBuffer;
 
-
+    public Backend() {
+        throw new IllegalStateException();
+    }
 
     public static void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload) {
         mapBuffer.mapBuffer(target, offset, length, upload);
@@ -101,32 +97,51 @@ public class Backend {
         return Arrays.stream(constants).filter(it -> it.supported(caps)).findFirst().orElse(last);
     }
 
-    public static RenderingAvailability getAvailability() {
-        return availability;
+    public static boolean canUse() {
+        return isCapable() && !OptifineHandler.usingShaders();
+    }
+
+    public static SystemCapability getCapability() {
+        return capability;
+    }
+
+    public static boolean isCapable() {
+        return capability.isCapable();
     }
 
     public static void init() {
         // Can be null when running datagenerators due to the unfortunate time we call this
         Minecraft mc = Minecraft.getInstance();
-        if (mc != null && mc.getResourceManager() instanceof IReloadableResourceManager) {
+        if (mc == null) return;
+
+        IResourceManager manager = mc.getResourceManager();
+
+        if (manager instanceof IReloadableResourceManager) {
             ISelectiveResourceReloadListener listener = Backend::onResourceManagerReload;
-            ((IReloadableResourceManager) mc.getResourceManager()).addReloadListener(listener);
+            ((IReloadableResourceManager) manager).addReloadListener(listener);
         }
     }
 
-    public static void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
+    private static void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
         if (predicate.test(VanillaResourceType.SHADERS)) {
             capabilities = GL.createCapabilities();
             mapBuffer = getLatest(MapBuffer.class);
 
-            OptifineHandler.refresh();
-            refreshAvailability();
+            refresh();
 
             programs.values().forEach(GlProgram::delete);
             programs.clear();
             for (ProgramSpec<?> shader : registry.values()) {
                 loadProgram(manager, shader);
             }
+        }
+    }
+
+    public static void refresh() {
+        if (capabilities.OpenGL33) {
+            capability = SystemCapability.CAPABLE;
+        } else {
+            capability = SystemCapability.INCAPABLE;
         }
     }
 
@@ -162,18 +177,6 @@ public class Backend {
             } else {
                 return new GlShader(type, name, source, preProcessor);
             }
-        }
-    }
-
-    public static void refreshAvailability() {
-        if (capabilities.OpenGL33) {
-            availability = RenderingAvailability.FULL;
-
-            OptifineHandler.get()
-                           .filter(OptifineHandler::isUsingShaders)
-                           .ifPresent(it -> availability = RenderingAvailability.OPTIFINE_SHADERS);
-        } else {
-            availability = RenderingAvailability.INCAPABLE;
         }
     }
 }

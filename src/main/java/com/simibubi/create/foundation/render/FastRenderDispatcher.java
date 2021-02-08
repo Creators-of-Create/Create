@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
+import com.simibubi.create.foundation.render.gl.backend.OptifineHandler;
 import com.simibubi.create.foundation.render.light.ILightListener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -63,6 +65,7 @@ public class FastRenderDispatcher {
     public static void refresh() {
         RenderWork.enqueue(() -> {
             CreateClient.kineticRenderer.invalidate();
+            OptifineHandler.refresh();
             Minecraft.getInstance().worldRenderer.loadRenderers();
             ClientWorld world = Minecraft.getInstance().world;
             if (world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);

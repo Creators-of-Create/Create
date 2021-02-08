@@ -25,6 +25,11 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
+	public boolean isGlobalRenderer(KineticTileEntity te) {
+		return true;
+	}
+
+	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		BlockState blockState = te.getBlockState();

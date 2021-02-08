@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.render.KineticRenderer;
-import com.simibubi.create.foundation.render.OptifineHandler;
+import com.simibubi.create.foundation.render.gl.backend.OptifineHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.backend.Backend;

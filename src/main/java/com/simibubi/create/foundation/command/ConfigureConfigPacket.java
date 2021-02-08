@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
-import javafx.scene.layout.Background;
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
@@ -88,11 +87,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		private static void experimentalRendering(String value) {
 			boolean last = AllConfigs.CLIENT.experimentalRendering.get();
 			AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
-			Backend.refreshAvailability();
-
-			if (last != AllConfigs.CLIENT.experimentalRendering.get()) {
-				FastRenderDispatcher.refresh();
-			}
+			FastRenderDispatcher.refresh();
 		}
 		
 		@OnlyIn(Dist.CLIENT)
