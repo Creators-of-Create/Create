@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -18,7 +19,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-
 @MethodsReturnNonnullByDefault
 public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {
 
@@ -27,18 +27,21 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	protected int entitySearchCooldown;
 	protected boolean isGenerator;
 	protected boolean updateAirFlow;
+	protected boolean updateGenerator;
 
 	public EncasedFanTileEntity(TileEntityType<? extends EncasedFanTileEntity> type) {
 		super(type);
 		isGenerator = false;
 		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
+		updateGenerator = false;
 	}
 
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
-		isGenerator = compound.getBoolean("Generating");
+		if (!wasMoved) 
+			isGenerator = compound.getBoolean("Generating");
 		if (clientPacket)
 			airCurrent.rebuild();
 	}
@@ -64,12 +67,20 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		return isGenerator ? AllConfigs.SERVER.kinetics.generatingFanSpeed.get() : 0;
 	}
 
-	public void updateGenerator(Direction facing) {
-		boolean shouldGenerate = world.isBlockPowered(pos) && facing == Direction.DOWN
-			&& world.isBlockPresent(pos.down()) && blockBelowIsHot();
+	public void queueGeneratorUpdate() {
+		updateGenerator = true;
+	}
+
+	public void updateGenerator() {
+		BlockState blockState = getBlockState();
+		if (!AllBlocks.ENCASED_FAN.has(blockState))
+			return;
+		if (blockState.get(EncasedFanBlock.FACING) != Direction.DOWN)
+			return;
+		
+		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
 		if (shouldGenerate == isGenerator)
 			return;
-
 		isGenerator = shouldGenerate;
 		updateGeneratedRotation();
 	}
@@ -169,6 +180,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			updateAirFlow = false;
 			airCurrent.rebuild();
 			sendData();
+		}
+		
+		if (updateGenerator) {
+			updateGenerator = false;
+			updateGenerator();
 		}
 
 		if (getSpeed() == 0 || isGenerator)

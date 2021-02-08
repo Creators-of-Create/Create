@@ -44,7 +44,8 @@ public interface IWrenchable {
 	}
 
 	default BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		return newState;
+//		return newState;
+		return Block.getValidBlockForPosition(newState, context.getWorld(), context.getPos());
 	}
 
 	default ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {

@@ -69,6 +69,11 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
+	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		return false;
+	}
+	
+	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (state.get(VERTICAL))
 			return face.getAxis()

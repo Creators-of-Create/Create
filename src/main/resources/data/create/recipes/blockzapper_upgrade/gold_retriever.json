@@ -6,10 +6,10 @@
         ],
         "key": {
             "B": {
-                "item": "create:brass_ingot"
+                "tag": "forge:ingots/brass"
             },
 			"R": {
-                "item": "minecraft:redstone"
+                "tag": "forge:dusts/redstone"
             },
             "E": {
                 "item": "create:handheld_blockzapper"

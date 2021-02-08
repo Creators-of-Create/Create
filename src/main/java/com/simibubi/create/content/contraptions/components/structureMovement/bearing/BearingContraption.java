@@ -3,13 +3,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -43,8 +42,8 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.BEARING;
+	protected ContraptionType getType() {
+		return ContraptionType.BEARING;
 	}
 
 	@Override
@@ -84,8 +83,10 @@ public class BearingContraption extends Contraption {
 	}
 
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
-		return axis == facing.getAxis();
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
+		if (facing.getOpposite() == this.facing && BlockPos.ZERO.equals(localPos))
+			return false;
+		return facing.getAxis() == this.facing.getAxis();
 	}
 
 }
