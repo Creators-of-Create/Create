@@ -18,7 +18,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
-public class MetaDocHandler {
+public class MetaDocTooltipHandler {
 
 	static LerpedFloat holdWProgress = LerpedFloat.linear()
 		.startWithValue(0);
@@ -38,21 +38,27 @@ public class MetaDocHandler {
 			return;
 
 		ItemStack stack = slotUnderMouse.getStack();
+
+		if (!MetaDocs.all.containsKey(stack.getItem()
+			.getRegistryName()))
+			return;
+
 		if (prevStack != stack)
 			holdWProgress.startWithValue(0);
 
 		float value = holdWProgress.getValue();
-		if (InputMappings.isKeyDown(instance.getWindow()
-			.getHandle(),
-			instance.gameSettings.keyBindForward.getKey()
-				.getKeyCode())) {
-//		if (AllKeys.altDown()) {
+		int keyCode = instance.gameSettings.keyBindForward.getKey()
+			.getKeyCode();
+		long window = instance.getWindow()
+			.getHandle();
+
+		if (InputMappings.isKeyDown(window, keyCode)) {
 			if (value >= 1)
-				ScreenOpener.open(new MetaDocScreen());
+				ScreenOpener.open(new MetaDocScreen(MetaDocs.compile(stack.getItem()
+					.getRegistryName())));
 			holdWProgress.setValue(Math.min(1, value + Math.max(.25f, value) * .25f));
-		} else {
+		} else
 			holdWProgress.setValue(Math.max(0, value - .05f));
-		}
 
 		lastHoveredStack = stack;
 	}
@@ -88,7 +94,7 @@ public class MetaDocHandler {
 			return ColorHelper.mixColors(0x5000FF, 5592575, progress * 2);
 //		if (progress < .75f)
 //			return ColorHelper.mixColors(16733695, 5636095, (progress - .5f) * 4);
-		return ColorHelper.mixColors(5592575, 5636095, (progress - .5f) * 2);
+		return ColorHelper.mixColors(5592575, 0xffffff, (progress - .5f) * 2);
 	}
 
 	private static ITextComponent makeProgressBar(float progress) {
@@ -98,11 +104,11 @@ public class MetaDocHandler {
 		if (progress < 1)
 			bar += Strings.repeat("\u2592", 12 - filledLength);
 
-		TextFormatting color = TextFormatting.GRAY;
+		TextFormatting color = TextFormatting.DARK_GRAY;
 		if (progress > 0)
-			color = TextFormatting.BLUE;
+			color = TextFormatting.GRAY;
 		if (progress == 1f)
-			color = TextFormatting.AQUA;
+			color = TextFormatting.WHITE;
 
 		ITextComponent leftBr = new StringTextComponent("").applyTextStyle(TextFormatting.WHITE);
 		ITextComponent rightBr = new StringTextComponent("").applyTextStyle(TextFormatting.WHITE);

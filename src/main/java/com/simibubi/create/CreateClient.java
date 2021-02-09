@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
+import com.simibubi.create.foundation.metadoc.MetaDocs;
+import com.simibubi.create.foundation.metadoc.WorldSectionElement;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -66,6 +68,7 @@ public class CreateClient {
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
+		bufferCache.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
@@ -73,6 +76,7 @@ public class CreateClient {
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 		AllFluids.assignRenderLayers();
+		MetaDocs.register();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();

@@ -26,7 +26,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionP
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.metadoc.MetaDocHandler;
+import com.simibubi.create.foundation.metadoc.MetaDocTooltipHandler;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
@@ -88,7 +88,7 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		MetaDocHandler.tick();
+		MetaDocTooltipHandler.tick();
 		ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
@@ -150,7 +150,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
-		MetaDocHandler.handleTooltipColor(event);
+		MetaDocTooltipHandler.handleTooltipColor(event);
 	}
 	
 	@SubscribeEvent
@@ -175,7 +175,7 @@ public class ClientEvents {
 			itemTooltip.addAll(0, toolTip);
 		}
 		
-		MetaDocHandler.addToTooltip(event.getToolTip(), stack);
+		MetaDocTooltipHandler.addToTooltip(event.getToolTip(), stack);
 	}
 
 	@SubscribeEvent
