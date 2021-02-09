@@ -15,8 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
-
 public class AnimatedSpout extends AnimatedKinetics {
 
 	private List<FluidStack> fluids;
@@ -38,7 +36,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 
-		float cycle = (ticks + AnimationTickHolder.getPartialTicks()) % 30;
+		float cycle = AnimationTickHolder.getRenderTick() % 30;
 		float squeeze = cycle < 20 ? MathHelper.sin((float) (cycle / 20f * Math.PI)) : 0;
 		squeeze *= 20;
 

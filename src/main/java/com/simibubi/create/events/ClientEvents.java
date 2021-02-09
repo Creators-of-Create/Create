@@ -50,7 +50,6 @@ import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -114,13 +113,13 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		CreateClient.invalidateRenderers();
-		AnimationTickHolder.ticks = 0;
+		AnimationTickHolder.reset();
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		CreateClient.invalidateRenderers();
-		AnimationTickHolder.ticks = 0;
+		AnimationTickHolder.reset();
 	}
 
 	@SubscribeEvent

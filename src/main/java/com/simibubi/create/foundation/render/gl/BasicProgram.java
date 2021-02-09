@@ -36,7 +36,7 @@ public class BasicProgram extends GlProgram {
     public void bind(Matrix4f viewProjection, int debugMode) {
         super.bind();
 
-        GL20.glUniform1i(uTicks, AnimationTickHolder.ticks);
+        GL20.glUniform1i(uTicks, AnimationTickHolder.getTicks());
         GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTick());
         uploadMatrixUniform(uViewProjection, viewProjection);
         GL20.glUniform1i(uDebug, debugMode);

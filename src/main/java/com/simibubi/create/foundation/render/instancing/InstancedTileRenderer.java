@@ -93,7 +93,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public void clean() {
         // Clean up twice a second. This doesn't have to happen every tick,
         // but this does need to be run to ensure we don't miss anything.
-        if (AnimationTickHolder.ticks % 10 == 0) {
+        if (AnimationTickHolder.getTicks() % 10 == 0) {
             instances.keySet().stream().filter(TileEntity::isRemoved).forEach(instances::remove);
         }
     }

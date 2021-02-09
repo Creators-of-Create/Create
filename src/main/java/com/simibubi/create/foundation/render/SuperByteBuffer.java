@@ -1,24 +1,21 @@
 package com.simibubi.create.foundation.render;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.pipeline.LightUtil;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 public class SuperByteBuffer extends TemplateBuffer {
 
@@ -60,6 +57,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	private static final Long2DoubleMap skyLightCache = new Long2DoubleOpenHashMap();
 	private static final Long2DoubleMap blockLightCache = new Long2DoubleOpenHashMap();
 	Vector4f pos = new Vector4f();
+	Vector3f normal = new Vector3f();
 	Vector4f lightPos = new Vector4f();
 
 	public void renderInto(MatrixStack input, IVertexBuilder builder) {
@@ -68,12 +66,18 @@ public class SuperByteBuffer extends TemplateBuffer {
 			return;
 		((Buffer) buffer).rewind();
 
-		Matrix4f t = input.peek()
-			.getModel()
-			.copy();
+		Matrix3f normalMat = transforms.peek()
+								  .getNormal()
+								  .copy();
+		//normalMat.multiply(transforms.peek().getNormal());
+
+		Matrix4f modelMat = input.peek()
+								 .getModel()
+								 .copy();
+
 		Matrix4f localTransforms = transforms.peek()
-			.getModel();
-		t.multiply(localTransforms);
+											 .getModel();
+		modelMat.multiply(localTransforms);
 
 		if (shouldLight && lightTransform != null) {
 			skyLightCache.clear();
@@ -90,16 +94,33 @@ public class SuperByteBuffer extends TemplateBuffer {
 			byte g = getG(buffer, i);
 			byte b = getB(buffer, i);
 			byte a = getA(buffer, i);
+			float normalX = getNX(buffer, i) / 127f;
+			float normalY = getNY(buffer, i) / 127f;
+			float normalZ = getNZ(buffer, i) / 127f;
+
+			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
+			normal.set(normalX, normalY, normalZ);
+			normal.transform(normalMat);
+			float instanceDiffuse = LightUtil.diffuseLight(normal.getX(), normal.getY(), normal.getZ());
 
 			pos.set(x, y, z, 1F);
-			pos.transform(t);
+			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
+			//builder.color((byte) Math.max(0, normal.getX() * 255), (byte) Math.max(0, normal.getY() * 255), (byte) Math.max(0, normal.getZ() * 255), a);
 			if (shouldColor) {
-				float lum = (r < 0 ? 255 + r : r) / 256f;
-				builder.color((int) (this.r * lum), (int) (this.g * lum), (int) (this.b * lum), this.a);
-			} else
-				builder.color(r, g, b, a);
+				//float lum = (r < 0 ? 255 + r : r) / 256f;
+				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
+				int colorG = Math.min(255, (int) (((float) this.g) * instanceDiffuse));
+				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
+				builder.color(colorR, colorG, colorB, this.a);
+			} else {
+				float diffuseMult = instanceDiffuse / staticDiffuse;
+				int colorR = Math.min(255, (int) (((float) Byte.toUnsignedInt(r)) * diffuseMult));
+				int colorG = Math.min(255, (int) (((float) Byte.toUnsignedInt(g)) * diffuseMult));
+				int colorB = Math.min(255, (int) (((float) Byte.toUnsignedInt(b)) * diffuseMult));
+				builder.color(colorR, colorG, colorB, a);
+			}
 
 			float u = getU(buffer, i);
 			float v = getV(buffer, i);
@@ -121,7 +142,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 			} else
 				builder.light(getLight(buffer, i));
 
-			builder.normal(getNX(buffer, i), getNY(buffer, i), getNZ(buffer, i))
+			builder.normal(normal.getX(), normal.getY(), normal.getZ())
 				.endVertex();
 		}
 

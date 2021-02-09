@@ -63,8 +63,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	public CompoundNBT trackerUpdateTag;
 
 	// client
-	public byte blockLight;
-	public byte skyLight;
+	public byte blockLight = -1;
+	public byte skyLight = -1;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -137,11 +137,17 @@ public class BeltTileEntity extends KineticTileEntity {
 		return super.calculateStressApplied();
 	}
 
+	private AxisAlignedBB cachedBoundingBox;
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (!isController())
-			return super.getRenderBoundingBox();
-		return super.getRenderBoundingBox().grow(beltLength + 1);
+		if (cachedBoundingBox == null) {
+			if (!isController())
+				cachedBoundingBox = super.getRenderBoundingBox();
+			else
+				cachedBoundingBox = super.getRenderBoundingBox().grow(beltLength + 1);
+		}
+
+		return cachedBoundingBox;
 	}
 
 	protected void initializeItemHandler() {
@@ -261,6 +267,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public void setController(BlockPos controller) {
 		this.controller = controller;
+		cachedBoundingBox = null;
 	}
 
 	public BlockPos getController() {

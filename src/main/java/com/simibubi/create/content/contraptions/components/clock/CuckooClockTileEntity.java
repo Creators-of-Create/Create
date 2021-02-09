@@ -92,9 +92,9 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 			moveHands(hours, minutes);
 
 			if (animationType == Animation.NONE) {
-				if (AnimationTickHolder.ticks % 32 == 0)
+				if (AnimationTickHolder.getTicks() % 32 == 0)
 					playSound(SoundEvents.BLOCK_NOTE_BLOCK_HAT, 1 / 16f, 2f);
-				else if (AnimationTickHolder.ticks % 16 == 0)
+				else if (AnimationTickHolder.getTicks() % 16 == 0)
 					playSound(SoundEvents.BLOCK_NOTE_BLOCK_HAT, 1 / 16f, 1.5f);
 			} else {
 

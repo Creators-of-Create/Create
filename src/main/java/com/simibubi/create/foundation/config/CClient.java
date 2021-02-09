@@ -40,6 +40,12 @@ public class CClient extends ConfigBase {
 		public Boolean get() {
 			return super.get() && Backend.canUse();
 		}
+
+		@Override
+		public void set(Boolean value) {
+			super.set(value);
+			Backend.enabled = get();
+		}
 	}
 
 }

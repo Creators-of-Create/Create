@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.backend.OptifineHandler;
@@ -59,7 +58,7 @@ public class FastRenderDispatcher {
     }
 
     public static boolean available() {
-        return AllConfigs.CLIENT.experimentalRendering.get();
+        return Backend.enabled;
     }
 
     public static void refresh() {

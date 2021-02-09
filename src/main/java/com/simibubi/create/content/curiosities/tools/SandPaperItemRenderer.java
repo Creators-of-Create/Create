@@ -48,7 +48,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 			// Reverse bobbing
 			float time = (float) (!jeiMode ? player.getItemInUseCount()
-					: (-AnimationTickHolder.ticks) % stack.getUseDuration()) - partialTicks + 1.0F;
+					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration()) - partialTicks + 1.0F;
 			if (time / (float) stack.getUseDuration() < 0.8F) {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 

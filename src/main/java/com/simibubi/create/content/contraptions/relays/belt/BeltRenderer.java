@@ -170,16 +170,17 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 		ms.push();
 
-		Vec3i directionVec = te.getBeltFacing()
-			.getDirectionVec();
+		Direction beltFacing = te.getBeltFacing();
+		Vec3i directionVec = beltFacing
+							   .getDirectionVec();
 		Vec3d beltStartOffset = new Vec3d(directionVec).scale(-.5)
 			.add(.5, 13 / 16f + .125f, .5);
 		ms.translate(beltStartOffset.x, beltStartOffset.y, beltStartOffset.z);
 		BeltSlope slope = te.getBlockState()
 			.get(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
-		boolean slopeAlongX = te.getBeltFacing()
-			.getAxis() == Axis.X;
+		boolean slopeAlongX = beltFacing
+								.getAxis() == Axis.X;
 
 		for (TransportedItemStack transported : te.getInventory()
 			.getTransportedItems()) {
@@ -205,16 +206,16 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				.add(0, verticalMovement, 0);
 			boolean onSlope =
 				slope != BeltSlope.HORIZONTAL && MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
-			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ te.getBeltFacing()
-				.getAxisDirection() == AxisDirection.POSITIVE) == (te.getBeltFacing()
-					.getAxis() == Axis.Z);
+			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ beltFacing
+																   .getAxisDirection() == AxisDirection.POSITIVE) == (beltFacing
+																														.getAxis() == Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;
 
 			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
-			boolean alongX = te.getBeltFacing()
-				.rotateY()
-				.getAxis() == Axis.X;
+			boolean alongX = beltFacing
+							   .rotateY()
+							   .getAxis() == Axis.X;
 			if (!alongX)
 				sideOffset *= -1;
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);

@@ -1,6 +1,10 @@
 package com.simibubi.create.foundation.render.gl.backend;
 
-import com.simibubi.create.foundation.render.gl.shader.*;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.gl.shader.GlProgram;
+import com.simibubi.create.foundation.render.gl.shader.GlShader;
+import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
+import com.simibubi.create.foundation.render.gl.shader.ShaderType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.resources.IReloadableResourceManager;
@@ -34,6 +38,8 @@ public class Backend {
 
     private static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();
     private static final Map<ProgramSpec<?>, GlProgram> programs = new HashMap<>();
+
+    public static boolean enabled;
 
     public static GLCapabilities capabilities;
     private static SystemCapability capability;
@@ -143,6 +149,8 @@ public class Backend {
         } else {
             capability = SystemCapability.INCAPABLE;
         }
+
+        enabled = AllConfigs.CLIENT.experimentalRendering.get();
     }
 
     private static <P extends GlProgram, S extends ProgramSpec<P>> void loadProgram(IResourceManager manager, S programSpec) {
