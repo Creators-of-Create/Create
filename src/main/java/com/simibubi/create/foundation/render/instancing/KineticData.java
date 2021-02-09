@@ -64,11 +64,19 @@ public class KineticData<D extends KineticData<D>> extends InstanceData {
         return (D) this;
     }
 
-    private void setColor(long l) {
+    public D setColor(Long l) {
+        if (l != null)
+            return setColor(l.longValue());
+        else
+            return setColor(0xFF, 0xFF, 0xFF);
+    }
+
+    private D setColor(long l) {
         int color = ColorHelper.colorFromLong(l);
-        r = (byte) ((color >> 16) & 0xFF);
-        g = (byte) ((color >> 8) & 0xFF);
-        b = (byte) (color & 0xFF);
+        byte r = (byte) ((color >> 16) & 0xFF);
+        byte g = (byte) ((color >> 8) & 0xFF);
+        byte b = (byte) (color & 0xFF);
+        return setColor(r, g, b);
     }
 
     public D setColor(int r, int g, int b) {

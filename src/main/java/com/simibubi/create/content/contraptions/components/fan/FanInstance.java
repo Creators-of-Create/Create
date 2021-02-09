@@ -82,7 +82,8 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         updateRotation(shaft, axis);
 
         fan.modifyInstance(data -> {
-            data.setRotationalSpeed(getFanSpeed())
+            data.setColor(tile.network)
+                .setRotationalSpeed(getFanSpeed())
                 .setRotationOffset(getRotationOffset(axis))
                 .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
         });

@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
@@ -95,7 +96,7 @@ public class ContraptionRenderDispatcher {
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
-        structureShader.bind(viewProjection, 0);
+        structureShader.bind(viewProjection, FastRenderDispatcher.getDebugMode());
         for (RenderedContraption renderer : renderers.values()) {
             renderer.doRenderLayer(layer, structureShader);
         }

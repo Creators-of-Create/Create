@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.gl.BasicProgram;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
@@ -64,7 +65,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 
     public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> setup) {
         P program = Backend.getProgram(programSpec);
-        program.bind(viewProjection, 0);
+        program.bind(viewProjection, FastRenderDispatcher.getDebugMode());
 
         if (setup != null) setup.call(program);
 

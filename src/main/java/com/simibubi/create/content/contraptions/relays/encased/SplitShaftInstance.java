@@ -77,7 +77,8 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
         key.modifyInstance(data -> {
             Direction.Axis axis = dir.getAxis();
 
-            data.setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
+            data.setColor(tile.network)
+                .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
                 .setRotationOffset(getRotationOffset(axis))
                 .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
         });

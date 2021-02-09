@@ -83,7 +83,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     @Override
     public void onUpdate() {
         for (InstanceKey<BeltData> key : keys) {
-            key.modifyInstance(data -> data.setRotationalSpeed(getScrollSpeed()));
+            key.modifyInstance(data -> data.setColor(tile.network).setRotationalSpeed(getScrollSpeed()));
         }
 
         if (pulleyKey != null) {

@@ -90,7 +90,8 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
                 Direction direction = key.getKey();
                 Direction.Axis axis = direction.getAxis();
 
-                data.setRotationalSpeed(getSpeed(direction))
+                data.setColor(tile.network)
+                    .setRotationalSpeed(getSpeed(direction))
                     .setRotationOffset(getRotationOffset(axis))
                     .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
             });

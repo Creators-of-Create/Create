@@ -19,7 +19,8 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis) {
         key.modifyInstance(data -> {
-            data.setRotationalSpeed(tile.getSpeed())
+            data.setColor(tile.network)
+                .setRotationalSpeed(tile.getSpeed())
                 .setRotationOffset(getRotationOffset(axis))
                 .setRotationAxis(axis);
         });
