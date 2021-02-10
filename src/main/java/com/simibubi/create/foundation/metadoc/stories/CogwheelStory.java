@@ -23,7 +23,7 @@ public class CogwheelStory extends MetaDocStoryBoard {
 	@Override
 	public void program(SceneBuilder scene, Vec3i worldSize) {
 		scene.showBasePlate()
-			.idle(5)
+			.idle(10)
 			.showSection(BlockPos.ZERO.up(), worldSize, Direction.DOWN);
 	}
 

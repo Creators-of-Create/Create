@@ -42,12 +42,13 @@ public class MetaDocScene {
 	
 	public void begin() {
 		reset();
+		elements.clear();
 		activeSchedule.addAll(schedule);
 	}
 
 	public void fadeOut() {
 		reset();
-		activeSchedule.add(new HideAllInstruction(10, Direction.DOWN));
+		activeSchedule.add(new HideAllInstruction(10, null));
 	}
 
 	public void render(IRenderTypeBuffer buffer, MatrixStack ms) {
@@ -103,11 +104,11 @@ public class MetaDocScene {
 
 		public SceneBuilder showSection(BlockPos origin, Vec3i size, Direction fadeInDirection) {
 			return addInstruction(
-				new DisplayWorldSectionInstruction(20, fadeInDirection, new WorldSectionElement.Cuboid(origin, size)));
+				new DisplayWorldSectionInstruction(15, fadeInDirection, new WorldSectionElement.Cuboid(origin, size)));
 		}
 
 		public SceneBuilder showSection(WorldSectionElement element, Direction fadeInDirection) {
-			return addInstruction(new DisplayWorldSectionInstruction(20, fadeInDirection, element));
+			return addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection, element));
 		}
 
 		public SceneBuilder debugSchematic() {

@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -45,13 +46,13 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 	@Override
 	public void render(MetaDocWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {
 		int light = -1;
-		if (fade != 1) 
-			light = (int) (0xF * fade);
-		
+		if (fade != 1)
+			light = (int) (MathHelper.lerp(fade, 5, 14));
+
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer);
 		world.popLight();
-		
+
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
 		renderStructure(world, ms, buffer, fade);
@@ -104,13 +105,13 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, layer));
 			if (contraptionBuffer.isEmpty())
 				continue;
-			
+
 			int light = 0xF000F0;
 			if (fade != 1) {
 				light = (int) (0xF * fade);
 				light = light << 4 | light << 20;
 			}
-			
+
 			contraptionBuffer.light(light)
 				.renderInto(ms, buffer.getBuffer(layer));
 		}
@@ -136,6 +137,7 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		world.setMask(this);
 
 		all().forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
@@ -152,6 +154,7 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 			ms.pop();
 		});
 
+		world.clearMask();
 		builder.finishDrawing();
 		return new SuperByteBuffer(builder);
 	}

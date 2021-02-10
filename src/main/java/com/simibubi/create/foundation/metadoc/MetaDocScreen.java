@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
+import net.minecraft.client.GameSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -28,7 +30,7 @@ public class MetaDocScreen extends AbstractSimiScreen {
 			.startWithValue(index);
 		fadeIn = LerpedFloat.linear()
 			.startWithValue(0)
-			.chase(1, .5f, Chaser.EXP);
+			.chase(1, .1f, Chaser.EXP);
 	}
 
 	@Override
@@ -45,23 +47,32 @@ public class MetaDocScreen extends AbstractSimiScreen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+		if (scroll(delta > 0))
+			return true;
+		return super.mouseScrolled(mouseX, mouseY, delta);
+	}
+
+	protected boolean scroll(boolean forward) {
 		int prevIndex = index;
-		index = delta > 0 ? index + 1 : index - 1;
+		index = forward ? index + 1 : index - 1;
 		index = MathHelper.clamp(index, 0, stories.size() - 1);
-		if (prevIndex != index && Math.abs(index - lazyIndex.getValue()) < 1.25f) {
+		if (prevIndex != index && Math.abs(index - lazyIndex.getValue()) < 1.5f) {
 			stories.get(prevIndex)
 				.fadeOut();
 			stories.get(index)
 				.begin();
 			lazyIndex.chase(index, 1 / 4f, Chaser.EXP);
 			return true;
-		} else 
+		} else
 			index = prevIndex;
-		return super.mouseScrolled(mouseX, mouseY, delta);
+		return false;
 	}
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+		partialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
+
 		RenderSystem.enableBlend();
 		renderStories(partialTicks);
 		renderWidgets(mouseX, mouseY, partialTicks);
@@ -78,16 +89,15 @@ public class MetaDocScreen extends AbstractSimiScreen {
 		MetaDocScene story = stories.get(i);
 		MatrixStack ms = new MatrixStack();
 		ms.push();
-		
 
 		ms.translate(width / 2, height / 2, 200);
 		MatrixStacker.of(ms)
 			.rotateX(-45)
 			.rotateY(45);
 
-		float value = lazyIndex.getValue(partialTicks);
-		float diff = i - value;
-		float slide = i == index ? 400 : MathHelper.lerp(Math.abs(diff), 0, 400);
+		double value = lazyIndex.getValue(partialTicks);
+		double diff = i - value;
+		double slide = MathHelper.lerp(diff * diff, 200, 600);
 		ms.translate(diff * slide, 0, 0);
 
 		ms.scale(30, -30, 30);
@@ -106,22 +116,68 @@ public class MetaDocScreen extends AbstractSimiScreen {
 
 		RenderSystem.pushMatrix();
 
-		if (fade < 1)
+		if (fade < fadeIn.getChaseTarget())
 			RenderSystem.translated(0, (1 - fade) * 5, 0);
 
 		int closeWidth = 24;
 		int closeHeight = 24;
 		int closeX = (width - closeWidth) / 2;
 		int closeY = height - closeHeight - 31;
-
-		boolean hovered = !(mouseX < closeX || mouseX > closeX + closeWidth);
-		hovered &= !(mouseY < closeY || mouseY > closeY + closeHeight);
+		boolean hovered = isMouseOver(mouseX, mouseY, closeX, closeY, closeWidth, closeHeight);
 
 		renderBox(closeX, closeY, closeWidth, closeHeight, 0xdd000000, hovered ? 0x70ffffff : 0x30eebb00,
 			hovered ? 0x30ffffff : 0x10eebb00);
 		AllIcons.I_CONFIRM.draw(closeX + 4, closeY + 4);
 
 		RenderSystem.popMatrix();
+	}
+
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		int closeWidth = 24;
+		int closeHeight = 24;
+		int closeX = (width - closeWidth) / 2;
+		int closeY = height - closeHeight - 31;
+		if (isMouseOver(x, y, closeX, closeY, closeWidth, closeHeight)) {
+			onClose();
+			return true;
+		}
+
+		return super.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
+		GameSettings settings = Minecraft.getInstance().gameSettings;
+		int sCode = settings.keyBindBack.getKey()
+			.getKeyCode();
+		int aCode = settings.keyBindLeft.getKey()
+			.getKeyCode();
+		int dCode = settings.keyBindRight.getKey()
+			.getKeyCode();
+		
+		if (code == sCode) {
+			onClose();
+			return true;
+		}
+		
+		if (code == aCode) {
+			scroll(false);
+			return true;
+		}
+		
+		if (code == dCode) {
+			scroll(true);
+			return true;
+		}
+
+		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
+	}
+
+	protected boolean isMouseOver(double mouseX, double mouseY, int x, int y, int w, int h) {
+		boolean hovered = !(mouseX < x || mouseX > x + w);
+		hovered &= !(mouseY < y || mouseY > y + h);
+		return hovered;
 	}
 
 	protected void renderBox(int tooltipX, int tooltipY, int tooltipTextWidth, int tooltipHeight, int backgroundColor,

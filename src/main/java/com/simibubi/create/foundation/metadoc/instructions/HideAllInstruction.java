@@ -23,7 +23,8 @@ public class HideAllInstruction extends TickingInstruction {
 				if (element instanceof AnimatedSceneElement) {
 					AnimatedSceneElement animatedSceneElement = (AnimatedSceneElement) element;
 					animatedSceneElement.setFade(1);
-					animatedSceneElement.setFadeVec(new Vec3d(fadeOutTo.getDirectionVec()).scale(.5f));
+					animatedSceneElement
+						.setFadeVec(fadeOutTo == null ? null : new Vec3d(fadeOutTo.getDirectionVec()).scale(.5f));
 				} else
 					element.setVisible(false);
 			});
