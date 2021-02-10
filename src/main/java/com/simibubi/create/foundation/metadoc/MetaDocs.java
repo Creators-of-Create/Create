@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.metadoc;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,8 @@ public class MetaDocs {
 
 	public static void register() {
 
-		addStoryBoard(AllBlocks.COGWHEEL, new CogwheelStory());
+		for (int i = 1; i < 6; i++)
+			addStoryBoard(AllBlocks.COGWHEEL, new CogwheelStory(i));
 
 	}
 
@@ -59,9 +61,12 @@ public class MetaDocs {
 	public static Template loadSchematic(String path) {
 		Template t = new Template();
 		String filepath = "doc/" + path + ".nbt";
+		InputStream resourceAsStream = Create.class.getClassLoader()
+			.getResourceAsStream(filepath);
+		if (resourceAsStream == null)
+			throw new IllegalStateException("Could not find metadoc schematic: " + filepath);
 		try (DataInputStream stream =
-			new DataInputStream(new BufferedInputStream(new GZIPInputStream(Create.class.getClassLoader()
-				.getResourceAsStream(filepath))))) {
+			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceAsStream)))) {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 			t.read(nbt);
 		} catch (IOException e) {

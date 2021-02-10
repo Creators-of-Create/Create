@@ -9,9 +9,15 @@ import net.minecraft.util.math.Vec3i;
 
 public class CogwheelStory extends MetaDocStoryBoard {
 
+	private int index;
+
+	public CogwheelStory(int index) {
+		this.index = index;
+	}
+	
 	@Override
 	public String getSchematicName() {
-		return "cogwheel/test";
+		return "cogwheel/s" + index;
 	}
 
 	@Override

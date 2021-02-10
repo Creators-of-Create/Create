@@ -44,7 +44,14 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 
 	@Override
 	public void render(MetaDocWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {
+		int light = -1;
+		if (fade != 1) 
+			light = (int) (0xF * fade);
+		
+		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer);
+		world.popLight();
+		
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
 		renderStructure(world, ms, buffer, fade);
@@ -87,7 +94,7 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 	protected void renderStructure(MetaDocWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float fade) {
 		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
 		List<RenderType> blockLayers = RenderType.getBlockLayers();
-		int code = hashCode();
+		int code = hashCode() ^ world.hashCode();
 
 		buffer.getBuffer(RenderType.getSolid());
 		for (int i = 0; i < blockLayers.size(); i++) {

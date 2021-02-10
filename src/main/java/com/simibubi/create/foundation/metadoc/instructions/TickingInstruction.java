@@ -14,6 +14,12 @@ public abstract class TickingInstruction extends MetaDocInstruction {
 		remainingTicks = totalTicks = ticks;
 	}
 
+	@Override
+	public void reset(MetaDocScene scene) {
+		super.reset(scene);
+		remainingTicks = totalTicks;
+	}
+	
 	protected void firstTick(MetaDocScene scene) {}
 
 	@Override

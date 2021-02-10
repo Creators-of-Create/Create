@@ -11,6 +11,7 @@ import java.util.Set;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.metadoc.instructions.DelayInstruction;
 import com.simibubi.create.foundation.metadoc.instructions.DisplayWorldSectionInstruction;
+import com.simibubi.create.foundation.metadoc.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.metadoc.instructions.ShowCompleteSchematicInstruction;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -34,9 +35,19 @@ public class MetaDocScene {
 		activeSchedule = new ArrayList<>();
 	}
 
-	public void begin() {
+	public void reset() {
 		activeSchedule.clear();
+		schedule.forEach(mdi -> mdi.reset(this));
+	}
+	
+	public void begin() {
+		reset();
 		activeSchedule.addAll(schedule);
+	}
+
+	public void fadeOut() {
+		reset();
+		activeSchedule.add(new HideAllInstruction(10, Direction.DOWN));
 	}
 
 	public void render(IRenderTypeBuffer buffer, MatrixStack ms) {
@@ -71,6 +82,10 @@ public class MetaDocScene {
 		return world;
 	}
 
+	public Set<MetaDocSceneElement> getElements() {
+		return elements;
+	}
+
 	public MutableBoundingBox getBounds() {
 		return world.getBounds();
 	}
@@ -88,11 +103,11 @@ public class MetaDocScene {
 
 		public SceneBuilder showSection(BlockPos origin, Vec3i size, Direction fadeInDirection) {
 			return addInstruction(
-				new DisplayWorldSectionInstruction(10, fadeInDirection, new WorldSectionElement.Cuboid(origin, size)));
+				new DisplayWorldSectionInstruction(20, fadeInDirection, new WorldSectionElement.Cuboid(origin, size)));
 		}
 
 		public SceneBuilder showSection(WorldSectionElement element, Direction fadeInDirection) {
-			return addInstruction(new DisplayWorldSectionInstruction(10, fadeInDirection, element));
+			return addInstruction(new DisplayWorldSectionInstruction(20, fadeInDirection, element));
 		}
 
 		public SceneBuilder debugSchematic() {

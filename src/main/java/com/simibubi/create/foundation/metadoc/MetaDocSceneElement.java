@@ -10,4 +10,8 @@ public abstract class MetaDocSceneElement {
 
 	public abstract void render(MetaDocWorld world, IRenderTypeBuffer buffer, MatrixStack ms);
 
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
 }
