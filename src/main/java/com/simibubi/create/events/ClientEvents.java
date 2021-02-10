@@ -39,11 +39,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -112,14 +114,20 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		CreateClient.invalidateRenderers();
-		AnimationTickHolder.reset();
+		IWorld world = event.getWorld();
+		if (world.isRemote() && world instanceof ClientWorld) {
+			CreateClient.invalidateRenderers();
+			AnimationTickHolder.reset();
+			((ClientWorld) world).loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+		}
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		CreateClient.invalidateRenderers();
-		AnimationTickHolder.reset();
+		if (event.getWorld().isRemote()) {
+			CreateClient.invalidateRenderers();
+			AnimationTickHolder.reset();
+		}
 	}
 
 	@SubscribeEvent

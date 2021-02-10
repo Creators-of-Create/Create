@@ -59,13 +59,13 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
         return layerPredicate.test(layer);
     }
 
-    public void render(RenderType layer, Matrix4f projection) {
-        render(layer, projection, null);
+    public void render(RenderType layer, Matrix4f projection, float camX, float camY, float camZ) {
+        render(layer, projection, camX, camY, camZ, null);
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> setup) {
+    public void render(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ, ShaderCallback<P> setup) {
         P program = Backend.getProgram(programSpec);
-        program.bind(viewProjection, FastRenderDispatcher.getDebugMode());
+        program.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
 
         if (setup != null) setup.call(program);
 

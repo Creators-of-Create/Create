@@ -108,14 +108,14 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         instances.clear();
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection) {
-        render(layer, viewProjection, null);
+    public void render(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ) {
+        render(layer, viewProjection, camX, camY, camZ, null);
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection, ShaderCallback<P> callback) {
+    public void render(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ, ShaderCallback<P> callback) {
         for (RenderMaterial<P, ?> material : materials.values()) {
             if (material.canRenderInLayer(layer))
-                material.render(layer, viewProjection, callback);
+                material.render(layer, viewProjection, camX, camY, camZ, callback);
         }
 
         GL20.glUseProgram(0);

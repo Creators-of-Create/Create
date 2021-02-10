@@ -31,6 +31,8 @@ uniform float uTime;
 uniform mat4 uViewProjection;
 uniform int uDebug;
 
+uniform vec3 uCameraPos;
+out float FragDistance;
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -79,6 +81,7 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = modelLight;
+    FragDistance = length(worldPos.xyz - uCameraPos);
     gl_Position = uViewProjection * worldPos;
 
     if (uDebug == 2) {

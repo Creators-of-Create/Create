@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.contraption;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -86,7 +87,7 @@ public class ContraptionRenderDispatcher {
         return renderer;
     }
 
-    public static void renderLayer(RenderType layer, Matrix4f viewProjection) {
+    public static void renderLayer(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
@@ -96,13 +97,13 @@ public class ContraptionRenderDispatcher {
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
-        structureShader.bind(viewProjection, FastRenderDispatcher.getDebugMode());
+        structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
         for (RenderedContraption renderer : renderers.values()) {
             renderer.doRenderLayer(layer, structureShader);
         }
 
         for (RenderedContraption renderer : renderers.values()) {
-            renderer.kinetics.render(layer, viewProjection, renderer::setup);
+            renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
             renderer.teardown();
         }
 
