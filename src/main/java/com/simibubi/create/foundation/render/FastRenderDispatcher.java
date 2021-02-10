@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.contraption.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.backend.OptifineHandler;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -60,6 +62,10 @@ public class FastRenderDispatcher {
 
     public static boolean available() {
         return Backend.enabled;
+    }
+
+    public static boolean available(World world) {
+        return Backend.enabled && !(world instanceof SchematicWorld);
     }
 
     public static int getDebugMode() {

@@ -153,7 +153,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		if (!FastRenderDispatcher.available()) {
+		if (!FastRenderDispatcher.available(te.getWorld())) {
 			SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
 			standardKineticRotationTransform(superBuffer, te, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING).getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));

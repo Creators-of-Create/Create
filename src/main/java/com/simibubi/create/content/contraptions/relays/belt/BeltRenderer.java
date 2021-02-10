@@ -50,7 +50,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 							  int light, int overlay) {
 
-		if (!FastRenderDispatcher.available()) {
+		if (!FastRenderDispatcher.available(te.getWorld())) {
 
 			BlockState blockState = te.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;

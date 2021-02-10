@@ -99,6 +99,9 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		initializeItemHandler();
 
+		if (blockLight == -1)
+			updateLight();
+
 		// Move Items
 		if (!isController())
 			return;
@@ -125,9 +128,6 @@ public class BeltTileEntity extends KineticTileEntity {
 			BeltMovementHandler.transportEntity(this, entity, info);
 		});
 		toRemove.forEach(passengers::remove);
-
-		if (blockLight == -1)
-			updateLight();
 	}
 
 	@Override

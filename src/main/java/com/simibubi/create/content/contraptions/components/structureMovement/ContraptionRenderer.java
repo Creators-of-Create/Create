@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.foundation.render.*;
 import net.minecraft.world.lighting.WorldLightManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
@@ -11,10 +12,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.Compartment;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockRenderType;
@@ -77,7 +74,11 @@ public class ContraptionRenderer {
 
 	protected static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, c.specialRenderedTileEntities, ms, msLocal, buffer);
+		if (FastRenderDispatcher.available()) {
+			TileEntityRenderHelper.renderTileEntities(world, c.specialRenderedTileEntities, ms, msLocal, buffer);
+		} else {
+			TileEntityRenderHelper.renderTileEntities(world, c.maybeInstancedTileEntities, ms, msLocal, buffer);
+		}
 	}
 
 	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {

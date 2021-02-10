@@ -38,7 +38,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		if (!FastRenderDispatcher.available()) {
+		if (!FastRenderDispatcher.available(te.getWorld())) {
 			SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
 			standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 		}

@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.gl.BasicProgram;
+import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.Matrix4f;
@@ -37,6 +38,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
+        if (!Backend.enabled) return null;
+
         TileEntityInstance<?> instance = instances.get(tile);
 
         if (instance != null) {

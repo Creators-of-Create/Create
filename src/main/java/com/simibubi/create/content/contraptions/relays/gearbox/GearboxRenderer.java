@@ -26,7 +26,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
-		if (FastRenderDispatcher.available()) return;
+		if (FastRenderDispatcher.available(te.getWorld())) return;
 
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();

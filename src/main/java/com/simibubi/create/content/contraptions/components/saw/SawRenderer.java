@@ -45,7 +45,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available()) return;
+		if (FastRenderDispatcher.available(te.getWorld())) return;
 
 		renderShaft(te, ms, buffer, light, overlay);
 	}
