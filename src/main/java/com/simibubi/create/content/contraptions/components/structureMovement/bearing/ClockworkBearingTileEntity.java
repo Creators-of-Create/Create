@@ -1,13 +1,10 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption.HandType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -17,7 +14,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -27,8 +23,11 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class ClockworkBearingTileEntity extends KineticTileEntity implements IBearingTileEntity {
+import java.util.List;
+
+public class ClockworkBearingTileEntity extends KineticTileEntity implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
 	protected ControlledContraptionEntity hourHand;
 	protected ControlledContraptionEntity minuteHand;
@@ -39,7 +38,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	protected boolean running;
 	protected boolean assembleNextTick;
-	protected ITextComponent lastException;
+	protected AssemblyException lastException;
 
 	protected ScrollOptionBehaviour<ClockHands> operationMode;
 
@@ -106,6 +105,11 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		}
 
 		applyRotations();
+	}
+
+	@Override
+	public AssemblyException getLastAssemblyException() {
+		return lastException;
 	}
 
 	protected void applyRotations() {
@@ -207,7 +211,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 			contraption = ClockworkContraption.assembleClockworkAt(world, pos, direction);
 			lastException = null;
 		} catch (AssemblyException e) {
-			lastException = e.message;
+			lastException = e;
+			sendData();
 			return;
 		}
 		if (contraption == null)
@@ -294,7 +299,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		compound.putFloat("HourAngle", hourAngle);
 		compound.putFloat("MinuteAngle", minuteAngle);
 		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException));
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
 		super.write(compound, clientPacket);
 	}
 
@@ -307,7 +312,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
 		if (compound.contains("LastException"))
-			lastException = ITextComponent.Serializer.fromJson(compound.getString("LastException"));
+			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
 		else
 			lastException = null;
 		super.read(compound, clientPacket);
@@ -406,14 +411,6 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	@Override
 	public BlockPos getBlockPosition() {
 		return pos;
-	}
-
-	@Override
-	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-		if (lastException != null)
-			tooltip.add(lastException.getFormattedText());
-		return lastException != null || added;
 	}
 
 }

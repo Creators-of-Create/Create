@@ -68,7 +68,7 @@ public class PistonContraption extends TranslatingContraption {
 		return true;
 	}
 
-	private boolean collectExtensions(World world, BlockPos pos, Direction direction) {
+	private boolean collectExtensions(World world, BlockPos pos, Direction direction) throws AssemblyException {
 		List<BlockInfo> poles = new ArrayList<>();
 		BlockPos actualStart = pos;
 		BlockState nextBlock = world.getBlockState(actualStart.offset(direction));
@@ -91,7 +91,7 @@ public class PistonContraption extends TranslatingContraption {
 
 				nextBlock = world.getBlockState(actualStart.offset(direction));
 				if (extensionsInFront > MechanicalPistonBlock.maxAllowedPistonPoles())
-					throw new AssemblyException("tooManyPistonPoles");
+					throw AssemblyException.tooManyPistonPoles();
 			}
 		}
 
@@ -114,7 +114,7 @@ public class PistonContraption extends TranslatingContraption {
 			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 
 			if (extensionsInFront + extensionsInBack > MechanicalPistonBlock.maxAllowedPistonPoles())
-				throw new AssemblyException("tooManyPistonPoles");
+				throw AssemblyException.tooManyPistonPoles();
 		}
 
 		anchor = pos.offset(direction, initialExtensionProgress + 1);
@@ -126,7 +126,7 @@ public class PistonContraption extends TranslatingContraption {
 						1, 1);
 
 		if (extensionLength == 0)
-			throw new AssemblyException("noPistonPoles");
+			throw AssemblyException.noPistonPoles();
 
 		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
@@ -146,7 +146,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) {
+	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) throws AssemblyException {
 		frontier.clear();
 		boolean sticky = isStickyPiston(world.getBlockState(pos.offset(orientation, -1)));
 		boolean retracting = direction != orientation;
@@ -159,7 +159,7 @@ public class PistonContraption extends TranslatingContraption {
 			if (retracting && World.isOutsideBuildHeight(currentPos))
 				return true;
 			if (!world.isBlockPresent(currentPos))
-				throw new AssemblyException("chunkNotLoaded");
+				throw AssemblyException.unloadedChunk(currentPos);
 			BlockState state = world.getBlockState(currentPos);
 			if (!BlockMovementTraits.movementNecessary(state, world, currentPos))
 				return true;

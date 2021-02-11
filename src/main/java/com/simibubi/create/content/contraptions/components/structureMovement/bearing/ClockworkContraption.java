@@ -1,21 +1,19 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 public class ClockworkContraption extends Contraption {
 
@@ -88,13 +86,13 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) throws AssemblyException {
 		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), null);
 	}
 
 	@Override
 	protected boolean moveBlock(World world, Direction direction, Queue<BlockPos> frontier,
-		Set<BlockPos> visited) {
+		Set<BlockPos> visited) throws AssemblyException {
 		if (ignoreBlocks.contains(frontier.peek())) {
 			frontier.poll();
 			return true;

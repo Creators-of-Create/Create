@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -192,7 +191,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
 		if (compound.contains("LastException"))
-			lastException = ITextComponent.Serializer.fromJson(compound.getString("LastException"));
+			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
 		else
 			lastException = null;
 		super.read(compound, clientPacket);
@@ -202,7 +201,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
 		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException));
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
 		super.write(compound, clientPacket);
 	}
 

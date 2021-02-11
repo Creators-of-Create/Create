@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 845",
+	"_": "Missing Localizations: 851",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -820,6 +820,12 @@
 	"create.gui.goggles.kinetic_stats": "動力の統計:",
 	"create.gui.goggles.at_current_speed": "現在の速度",
 	"create.gui.goggles.pole_length": "UNLOCALIZED: Pole Length:",
+	"create.gui.assembly.exception": "UNLOCALIZED: This Contraption was unable to assemble:",
+	"create.gui.assembly.exception.unmovableBlock": "UNLOCALIZED: Unmovable Block (%4$s) at [%1$s %2$s %3$s]",
+	"create.gui.assembly.exception.chunkNotLoaded": "UNLOCALIZED: The Block at [%1$s %2$s %3$s] was not in a loaded chunk",
+	"create.gui.assembly.exception.structureTooLarge": "UNLOCALIZED: There are too many Blocks included in the contraption.\nThe configured maximum is: %1$s",
+	"create.gui.assembly.exception.tooManyPistonPoles": "UNLOCALIZED: There are too many extension Poles attached to this Piston.\nThe configured maximum is: %1$s",
+	"create.gui.assembly.exception.noPistonPoles": "UNLOCALIZED: The Piston is missing some extension Poles",
 	"create.gui.gauge.info_header": "計器の情報:",
 	"create.gui.speedometer.title": "回転速度",
 	"create.gui.stressometer.title": "ネットワークの応力",

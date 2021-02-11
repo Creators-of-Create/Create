@@ -1,28 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -52,15 +29,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
@@ -92,6 +61,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
@@ -150,7 +129,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction forcedDirection,
-		Queue<BlockPos> frontier) {
+		Queue<BlockPos> frontier) throws AssemblyException {
 		return true;
 	}
 
@@ -161,7 +140,7 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) {
+	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) throws AssemblyException {
 		initialPassengers.clear();
 		Queue<BlockPos> frontier = new LinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
@@ -180,7 +159,7 @@ public abstract class Contraption {
 			if (!moveBlock(world, forcedDirection, frontier, visited))
 				return false;
 		}
-		throw new AssemblyException("structureTooLarge");
+		throw AssemblyException.structureTooLarge();
 	}
 
 	public void onEntityCreated(AbstractContraptionEntity entity) {
@@ -249,7 +228,7 @@ public abstract class Contraption {
 
 	/** move the first block in frontier queue */
 	protected boolean moveBlock(World world, @Nullable Direction forcedDirection, Queue<BlockPos> frontier,
-		Set<BlockPos> visited) {
+		Set<BlockPos> visited) throws AssemblyException {
 		BlockPos pos = frontier.poll();
 		if (pos == null)
 			return false;
@@ -258,7 +237,7 @@ public abstract class Contraption {
 		if (World.isOutsideBuildHeight(pos))
 			return true;
 		if (!world.isBlockPresent(pos))
-			throw new AssemblyException("chunkNotLoaded");
+			throw AssemblyException.unloadedChunk(pos);
 		if (isAnchoringBlockAt(pos))
 			return true;
 		BlockState state = world.getBlockState(pos);
@@ -348,7 +327,7 @@ public abstract class Contraption {
 		if (blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
 			return true;
 		else
-			throw new AssemblyException("structureTooLarge");
+			throw AssemblyException.structureTooLarge();
 	}
 
 	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
@@ -402,7 +381,7 @@ public abstract class Contraption {
 	}
 
 	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
-		BlockState state) {
+		BlockState state) throws AssemblyException {
 		int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		if (state.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
@@ -424,7 +403,7 @@ public abstract class Contraption {
 				break;
 			}
 			if (limit <= -1)
-				throw new AssemblyException("tooManyPistonPoles");
+				throw AssemblyException.tooManyPistonPoles();
 		}
 
 		BlockPos searchPos = pos;
@@ -443,7 +422,7 @@ public abstract class Contraption {
 		}
 
 		if (limit <= -1)
-			throw new AssemblyException("tooManyPistonPoles");
+			throw AssemblyException.tooManyPistonPoles();
 		return true;
 	}
 

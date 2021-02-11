@@ -237,11 +237,18 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 		MountedContraption contraption = new MountedContraption(mode);
 		try {
-			assembler.ifPresent(te -> te.lastException = null);
 			if (!contraption.assemble(world, pos))
 				return;
+
+			assembler.ifPresent(te -> {
+				te.lastException = null;
+				te.sendData();
+			});
 		} catch (AssemblyException e) {
-			assembler.ifPresent(te -> te.lastException = e.message);
+			assembler.ifPresent(te -> {
+				te.lastException = e;
+				te.sendData();
+			});
 			return;
 		}
 
