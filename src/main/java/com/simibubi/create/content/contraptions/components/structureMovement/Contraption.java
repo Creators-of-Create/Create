@@ -1,26 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -55,15 +34,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
@@ -96,6 +67,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
@@ -139,7 +120,7 @@ public abstract class Contraption {
 		stabilizedSubContraptions = new HashMap<>();
 	}
 
-	public abstract boolean assemble(World world, BlockPos pos);
+	public abstract boolean assemble(World world, BlockPos pos) throws AssemblyException;
 
 	public abstract boolean canBeStabilized(Direction facing, BlockPos localPos);
 
@@ -154,7 +135,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction forcedDirection,
-		List<BlockPos> frontier) {
+		Queue<BlockPos> frontier) throws AssemblyException {
 		return true;
 	}
 
@@ -165,9 +146,9 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) {
+	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) throws AssemblyException {
 		initialPassengers.clear();
-		List<BlockPos> frontier = new ArrayList<>();
+		Queue<BlockPos> frontier = new LinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		anchor = pos;
 
@@ -181,10 +162,10 @@ public abstract class Contraption {
 		for (int limit = 100000; limit > 0; limit--) {
 			if (frontier.isEmpty())
 				return true;
-			if (!moveBlock(world, frontier.remove(0), forcedDirection, frontier, visited))
+			if (!moveBlock(world, forcedDirection, frontier, visited))
 				return false;
 		}
-		return false;
+		throw AssemblyException.structureTooLarge();
 	}
 
 	public void onEntityCreated(AbstractContraptionEntity entity) {
@@ -196,8 +177,12 @@ public abstract class Contraption {
 			StabilizedContraption subContraption = new StabilizedContraption(face);
 			World world = entity.world;
 			BlockPos pos = blockFace.getPos();
-			if (!subContraption.assemble(world, pos))
+			try {
+				if (!subContraption.assemble(world, pos))
+					continue;
+			} catch (AssemblyException e) {
 				continue;
+			}
 			subContraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 			OrientedContraptionEntity movedContraption =
 				OrientedContraptionEntity.create(world, subContraption, Optional.of(face));
@@ -247,20 +232,25 @@ public abstract class Contraption {
 		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
 	}
 
-	protected boolean moveBlock(World world, BlockPos pos, @Nullable Direction forcedDirection, List<BlockPos> frontier,
-		Set<BlockPos> visited) {
-		visited.add(pos);
-		frontier.remove(pos);
-
-		if (!world.isBlockPresent(pos))
+	/** move the first block in frontier queue */
+	protected boolean moveBlock(World world, @Nullable Direction forcedDirection, Queue<BlockPos> frontier,
+		Set<BlockPos> visited) throws AssemblyException {
+		BlockPos pos = frontier.poll();
+		if (pos == null)
 			return false;
+		visited.add(pos);
+
+		if (World.isOutsideBuildHeight(pos))
+			return true;
+		if (!world.isBlockPresent(pos))
+			throw AssemblyException.unloadedChunk(pos);
 		if (isAnchoringBlockAt(pos))
 			return true;
-		if (!BlockMovementTraits.movementNecessary(world, pos))
-			return true;
-		if (!movementAllowed(world, pos))
-			return false;
 		BlockState state = world.getBlockState(pos);
+		if (!BlockMovementTraits.movementNecessary(state, world, pos))
+			return true;
+		if (!movementAllowed(state, world, pos))
+			throw AssemblyException.unmovableBlock(pos, state);
 		if (state.getBlock() instanceof AbstractChassisBlock
 			&& !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
@@ -306,9 +296,10 @@ public abstract class Contraption {
 		}
 
 		// Cart assemblers attach themselves
-		BlockState stateBelow = world.getBlockState(pos.down());
-		if (!visited.contains(pos.down()) && AllBlocks.CART_ASSEMBLER.has(stateBelow))
-			frontier.add(pos.down());
+		BlockPos posDown = pos.down();
+		BlockState stateBelow = world.getBlockState(posDown);
+		if (!visited.contains(posDown) && AllBlocks.CART_ASSEMBLER.has(stateBelow))
+			frontier.add(posDown);
 
 		Map<Direction, SuperGlueEntity> superglue = SuperGlueHandler.gatherGlue(world, pos);
 
@@ -318,9 +309,9 @@ public abstract class Contraption {
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
-			if (!movementAllowed(world, offsetPos)) {
+			if (!movementAllowed(blockState, world, offsetPos)) {
 				if (offset == forcedDirection)
-					return false;
+					throw AssemblyException.unmovableBlock(pos, state);
 				continue;
 			}
 
@@ -349,10 +340,13 @@ public abstract class Contraption {
 		}
 
 		addBlock(pos, capture(world, pos));
-		return blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get();
+		if (blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
+			return true;
+		else
+			throw AssemblyException.structureTooLarge();
 	}
 
-	protected void movePistonHead(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+	protected void movePistonHead(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
 		Direction direction = state.get(MechanicalPistonHeadBlock.FACING);
 		BlockPos offset = pos.offset(direction.getOpposite());
@@ -374,7 +368,7 @@ public abstract class Contraption {
 		}
 	}
 
-	protected void movePistonPole(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+	protected void movePistonPole(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
 		for (Direction d : Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING)
 			.getAxis())) {
@@ -397,7 +391,7 @@ public abstract class Contraption {
 		}
 	}
 
-	protected void moveGantryPinion(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+	protected void moveGantryPinion(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
 		BlockPos offset = pos.offset(state.get(GantryPinionBlock.FACING));
 		if (!visited.contains(offset))
@@ -413,7 +407,7 @@ public abstract class Contraption {
 		}
 	}
 
-	protected void moveGantryShaft(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
+	protected void moveGantryShaft(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
 		for (Direction d : Iterate.directions) {
 			BlockPos offset = pos.offset(d);
@@ -429,7 +423,7 @@ public abstract class Contraption {
 		}
 	}
 
-	private void moveBearing(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
+	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
 		Direction facing = state.get(MechanicalBearingBlock.FACING);
 		if (!canBeStabilized(facing, pos.subtract(anchor))) {
 			BlockPos offset = pos.offset(facing);
@@ -440,7 +434,7 @@ public abstract class Contraption {
 		pendingSubContraptions.add(new BlockFace(pos, facing));
 	}
 
-	private void moveBelt(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
+	private void moveBelt(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
 		BlockPos nextPos = BeltBlock.nextSegmentPosition(state, pos, true);
 		BlockPos prevPos = BeltBlock.nextSegmentPosition(state, pos, false);
 		if (nextPos != null && !visited.contains(nextPos))
@@ -461,7 +455,7 @@ public abstract class Contraption {
 		}
 	}
 
-	private void movePulley(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
+	private void movePulley(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited) {
 		int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
 		BlockPos ropePos = pos;
 		while (limit-- >= 0) {
@@ -479,8 +473,8 @@ public abstract class Contraption {
 		}
 	}
 
-	private boolean moveMechanicalPiston(World world, BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited,
-		BlockState state) {
+	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) throws AssemblyException {
+		int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
@@ -503,7 +497,7 @@ public abstract class Contraption {
 		return true;
 	}
 
-	private boolean moveChassis(World world, BlockPos pos, Direction movementDirection, List<BlockPos> frontier,
+	private boolean moveChassis(World world, BlockPos pos, Direction movementDirection, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) {
 		TileEntity te = world.getTileEntity(pos);
 		if (!(te instanceof ChassisTileEntity))
@@ -588,8 +582,8 @@ public abstract class Contraption {
 		return globalPos.subtract(anchor);
 	}
 
-	protected boolean movementAllowed(World world, BlockPos pos) {
-		return BlockMovementTraits.movementAllowed(world, pos);
+	protected boolean movementAllowed(BlockState state, World world, BlockPos pos) {
+		return BlockMovementTraits.movementAllowed(state, world, pos);
 	}
 
 	protected boolean isAnchoringBlockAt(BlockPos pos) {

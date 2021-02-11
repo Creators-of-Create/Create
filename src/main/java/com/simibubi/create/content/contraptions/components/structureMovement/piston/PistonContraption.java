@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
 import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
@@ -51,7 +53,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		if (!collectExtensions(world, pos, orientation))
 			return false;
 		int count = blocks.size();
@@ -66,7 +68,7 @@ public class PistonContraption extends TranslatingContraption {
 		return true;
 	}
 
-	private boolean collectExtensions(World world, BlockPos pos, Direction direction) {
+	private boolean collectExtensions(World world, BlockPos pos, Direction direction) throws AssemblyException {
 		List<BlockInfo> poles = new ArrayList<>();
 		BlockPos actualStart = pos;
 		BlockState nextBlock = world.getBlockState(actualStart.offset(direction));
@@ -89,7 +91,7 @@ public class PistonContraption extends TranslatingContraption {
 
 				nextBlock = world.getBlockState(actualStart.offset(direction));
 				if (extensionsInFront > MechanicalPistonBlock.maxAllowedPistonPoles())
-					return false;
+					throw AssemblyException.tooManyPistonPoles();
 			}
 		}
 
@@ -112,7 +114,7 @@ public class PistonContraption extends TranslatingContraption {
 			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
 
 			if (extensionsInFront + extensionsInBack > MechanicalPistonBlock.maxAllowedPistonPoles())
-				return false;
+				throw AssemblyException.tooManyPistonPoles();
 		}
 
 		anchor = pos.offset(direction, initialExtensionProgress + 1);
@@ -124,7 +126,7 @@ public class PistonContraption extends TranslatingContraption {
 						1, 1);
 
 		if (extensionLength == 0)
-			return false;
+			throw AssemblyException.noPistonPoles();
 
 		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
@@ -144,7 +146,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
+	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) throws AssemblyException {
 		frontier.clear();
 		boolean sticky = isStickyPiston(world.getBlockState(pos.offset(orientation, -1)));
 		boolean retracting = direction != orientation;
@@ -154,17 +156,22 @@ public class PistonContraption extends TranslatingContraption {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
-			if (!world.isBlockPresent(currentPos))
-				return false;
-			if (!BlockMovementTraits.movementNecessary(world, currentPos))
+			if (retracting && World.isOutsideBuildHeight(currentPos))
 				return true;
+			if (!world.isBlockPresent(currentPos))
+				throw AssemblyException.unloadedChunk(currentPos);
 			BlockState state = world.getBlockState(currentPos);
+			if (!BlockMovementTraits.movementNecessary(state, world, currentPos))
+				return true;
 			if (BlockMovementTraits.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
 				return true;
 			if (isPistonHead(state) && state.get(FACING) == direction.getOpposite())
 				return true;
-			if (!BlockMovementTraits.movementAllowed(world, currentPos))
-				return retracting;
+			if (!BlockMovementTraits.movementAllowed(state, world, currentPos))
+				if (retracting)
+					return true;
+				else
+					throw AssemblyException.unmovableBlock(currentPos, state);
 			if (retracting && state.getPushReaction() == PushReaction.PUSH_ONLY)
 				return true;
 			frontier.add(currentPos);

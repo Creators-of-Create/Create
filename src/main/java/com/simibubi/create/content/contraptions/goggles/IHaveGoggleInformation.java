@@ -9,13 +9,13 @@ import java.util.List;
 public interface IHaveGoggleInformation {
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.##");
-	public static String spacing = "    ";
+	String spacing = "    ";
 
 	/**
 	* this method will be called when looking at a TileEntity that implemented this interface
 	 *
-	 * @return {{@code true}} if the tooltip creation was successful and should be displayed,
-	 * or {{@code false}} if the overlay should not be displayed
+	 * @return {@code true} if the tooltip creation was successful and should be displayed,
+	 * or {@code false} if the overlay should not be displayed
 	* */
 	default boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking){
 		return false;

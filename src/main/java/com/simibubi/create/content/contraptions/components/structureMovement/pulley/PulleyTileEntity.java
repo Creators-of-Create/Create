@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -8,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -22,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
@@ -42,7 +43,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void assemble() {
+	protected void assemble() throws AssemblyException {
 		if (!(world.getBlockState(pos)
 			.getBlock() instanceof PulleyBlock))
 			return;
@@ -176,9 +177,10 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 			return;
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
-		if (!BlockMovementTraits.movementNecessary(world, posBelow))
+		BlockState state = world.getBlockState(posBelow);
+		if (!BlockMovementTraits.movementNecessary(state, world, posBelow))
 			return;
-		if (BlockMovementTraits.isBrittle(world.getBlockState(posBelow)))
+		if (BlockMovementTraits.isBrittle(state))
 			return;
 
 		disassemble();
@@ -188,12 +190,18 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
+		if (compound.contains("LastException"))
+			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
+		else
+			lastException = null;
 		super.read(compound, clientPacket);
 	}
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
+		if (lastException != null)
+			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
 		super.write(compound, clientPacket);
 	}
 
