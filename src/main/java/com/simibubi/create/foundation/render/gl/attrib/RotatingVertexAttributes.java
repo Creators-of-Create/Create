@@ -1,29 +1,20 @@
 package com.simibubi.create.foundation.render.gl.attrib;
 
 public enum RotatingVertexAttributes implements IVertexAttrib {
-    VERTEX_POSITION("aPos", CommonAttributes.VEC3),
-    NORMAL("aNormal", CommonAttributes.VEC3),
-    TEXTURE("aInstancePos", CommonAttributes.VEC3),
-    INSTANCE_POSITION("aInstancePos", CommonAttributes.VEC3, 1),
-    LIGHT("aLight", CommonAttributes.LIGHT, 1),
-    NETWORK_COLOR("aNetworkTint", CommonAttributes.RGB, 1),
-    SPEED("aSpeed", CommonAttributes.FLOAT, 1),
-    OFFSET("aOffset", CommonAttributes.FLOAT, 1),
-    AXIS("aAxis", CommonAttributes.NORMAL, 1),
+    INSTANCE_POSITION("aInstancePos", CommonAttributes.VEC3),
+    LIGHT("aLight", CommonAttributes.LIGHT),
+    NETWORK_COLOR("aNetworkTint", CommonAttributes.RGB),
+    SPEED("aSpeed", CommonAttributes.FLOAT),
+    OFFSET("aOffset", CommonAttributes.FLOAT),
+    AXIS("aAxis", CommonAttributes.NORMAL),
     ;
 
     private final String name;
     private final VertexAttribSpec spec;
-    private final int divisor;
 
     RotatingVertexAttributes(String name, VertexAttribSpec spec) {
-        this(name, spec, 0);
-    }
-
-    RotatingVertexAttributes(String name, VertexAttribSpec spec, int divisor) {
         this.name = name;
         this.spec = spec;
-        this.divisor = divisor;
     }
 
     @Override
@@ -38,6 +29,11 @@ public enum RotatingVertexAttributes implements IVertexAttrib {
 
     @Override
     public int getDivisor() {
-        return divisor;
+        return 1;
+    }
+
+    @Override
+    public int getBufferIndex() {
+        return 1;
     }
 }

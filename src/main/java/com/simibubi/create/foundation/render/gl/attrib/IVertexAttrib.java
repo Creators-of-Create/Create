@@ -7,4 +7,6 @@ public interface IVertexAttrib {
     VertexAttribSpec attribSpec();
 
     int getDivisor();
+
+    int getBufferIndex();
 }
