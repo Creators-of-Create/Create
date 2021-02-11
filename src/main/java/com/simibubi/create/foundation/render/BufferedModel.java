@@ -88,12 +88,12 @@ public abstract class BufferedModel extends TemplateBuffer {
     }
 
     protected void setupAttributes() {
-        getModelFormat().informAttributes(0);
 
         int numAttributes = getTotalShaderAttributeCount();
         for (int i = 0; i <= numAttributes; i++) {
             GL20.glEnableVertexAttribArray(i);
         }
+        getModelFormat().informAttributes(0);
     }
 
     public void delete() {
