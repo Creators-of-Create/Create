@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class AttributeGroup {
     private final int divisor;
 
-    private final ArrayList<VertexAttribute> attributes;
+    private final ArrayList<VertexAttribSpec> attributes;
 
     public AttributeGroup(int divisor) {
         this.divisor = divisor;
         this.attributes = new ArrayList<>();
     }
 
-    public AttributeGroup attrib(VertexAttribute attrib) {
+    public AttributeGroup attrib(VertexAttribSpec attrib) {
         attributes.add(attrib);
         return this;
     }
@@ -21,7 +21,7 @@ public class AttributeGroup {
         return divisor;
     }
 
-    public ArrayList<VertexAttribute> getAttributes() {
+    public ArrayList<VertexAttribSpec> getAttributes() {
         return attributes;
     }
 }

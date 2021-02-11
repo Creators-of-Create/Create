@@ -33,25 +33,6 @@ public class TemplateBuffer {
         ((Buffer)template).rewind();
     }
 
-    protected final GlBuffer createEBO(){
-        GlBuffer ebo = new GlBuffer();
-
-        int indicesSize = vertexCount * VertexFormatElement.Type.USHORT.getSize();
-
-        ebo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
-        Backend.mapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices -> {
-            for (int i = 0; i < vertexCount; i++) {
-                indices.putShort((short) i);
-            }
-        });
-
-        ebo.unbind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-
-        return ebo;
-    }
-
     public boolean isEmpty() {
         return ((Buffer) template).limit() == 0;
     }

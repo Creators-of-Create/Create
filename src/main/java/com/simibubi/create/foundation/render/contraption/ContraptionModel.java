@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL40;
 
 import java.nio.ByteBuffer;
@@ -50,10 +51,5 @@ public class ContraptionModel extends BufferedModel {
     @Override
     protected VertexFormat getModelFormat() {
         return FORMAT;
-    }
-
-    @Override
-    protected void drawCall() {
-        GL40.glDrawElements(GL11.GL_QUADS, vertexCount, GL11.GL_UNSIGNED_SHORT, 0);
     }
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.render.instancing;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
+import org.lwjgl.opengl.GL20;
 
 public abstract class DynamicInstancedModel<S extends InstanceData, D extends InstanceData> extends InstancedModel<S> {
 
@@ -15,9 +16,9 @@ public abstract class DynamicInstancedModel<S extends InstanceData, D extends In
     }
 
     @Override
-    protected void setup() {
-        super.setup();
-        dynamicVBO = new GlBuffer();
+    protected void init() {
+        super.init();
+        dynamicVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
     }
 
     protected abstract VertexFormat getDynamicFormat();
@@ -27,11 +28,6 @@ public abstract class DynamicInstancedModel<S extends InstanceData, D extends In
     @Override
     protected int getTotalShaderAttributeCount() {
         return super.getTotalShaderAttributeCount() + getDynamicFormat().getShaderAttributeCount();
-    }
-
-    @Override
-    protected void preDrawTask() {
-        super.preDrawTask();
     }
 
     @Override

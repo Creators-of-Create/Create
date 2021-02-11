@@ -135,10 +135,13 @@ public class Backend {
 
             refresh();
 
-            programs.values().forEach(GlProgram::delete);
-            programs.clear();
-            for (ProgramSpec<?> shader : registry.values()) {
-                loadProgram(manager, shader);
+            if (isCapable()) {
+
+                programs.values().forEach(GlProgram::delete);
+                programs.clear();
+                for (ProgramSpec<?> shader : registry.values()) {
+                    loadProgram(manager, shader);
+                }
             }
         }
     }

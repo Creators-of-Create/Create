@@ -3,16 +3,20 @@ package com.simibubi.create.foundation.render.gl;
 import org.lwjgl.opengl.GL20;
 
 public class GlBuffer extends GlObject {
-    public GlBuffer() {
+
+    protected final int bufferType;
+
+    public GlBuffer(int bufferType) {
         setHandle(GL20.glGenBuffers());
+        this.bufferType = bufferType;
     }
 
-    public void bind(int target) {
-        GL20.glBindBuffer(target, handle());
+    public void bind() {
+        GL20.glBindBuffer(bufferType, handle());
     }
 
-    public void unbind(int target) {
-        GL20.glBindBuffer(target, 0);
+    public void unbind() {
+        GL20.glBindBuffer(bufferType, 0);
     }
 
     protected void deleteInternal(int handle) {

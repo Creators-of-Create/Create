@@ -1,45 +1,39 @@
 package com.simibubi.create.foundation.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
-import com.simibubi.create.foundation.render.gl.GlVertexArray;
 import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
+import java.util.HashSet;
 
 public abstract class BufferedModel extends TemplateBuffer {
 
-    protected GlVertexArray vao;
-
-    protected GlBuffer ebo;
-    protected GlBuffer invariantVBO;
+    protected GlBuffer modelVBO;
     protected boolean removed;
 
     public BufferedModel(BufferBuilder buf) {
         super(buf);
-        if (vertexCount > 0) setup();
+        if (vertexCount > 0) init();
     }
 
-    protected void setup() {
+    protected void init() {
+
+        modelVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
+
+        modelVBO.bind();
+        initModel();
+        modelVBO.unbind();
+    }
+
+    protected void initModel() {
         int stride = getModelFormat().getStride();
-
         int invariantSize = vertexCount * stride;
-
-        vao = new GlVertexArray();
-        invariantVBO = new GlBuffer();
-        ebo = createEBO();
-
-        vao.bind();
-
-        int numAttributes = getTotalShaderAttributeCount();
-        for (int i = 0; i <= numAttributes; i++) {
-            GL20.glEnableVertexAttribArray(i);
-        }
-
-        invariantVBO.bind(GL15.GL_ARRAY_BUFFER);
 
         // allocate the buffer on the gpu
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
@@ -50,12 +44,6 @@ public abstract class BufferedModel extends TemplateBuffer {
                 copyVertex(buffer, i);
             }
         });
-
-        getModelFormat().informAttributes(0);
-
-        invariantVBO.unbind(GL15.GL_ARRAY_BUFFER);
-        // Deselect (bind to 0) the VAO
-        vao.unbind();
     }
 
     protected abstract void copyVertex(ByteBuffer to, int index);
@@ -66,24 +54,46 @@ public abstract class BufferedModel extends TemplateBuffer {
         return getModelFormat().getShaderAttributeCount();
     }
 
-    protected abstract void drawCall();
-
-    protected void preDrawTask() {
-
-    }
-
-    public void render() {
+    /**
+     * Renders this model, checking first if it should actually be rendered.
+     */
+    public final void render() {
         if (vertexCount == 0 || removed) return;
 
-        vao.bind();
-        preDrawTask();
+        doRender();
+    }
 
-        ebo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+    /**
+     * Override this
+     */
+    protected void doRender() {
+        GL20.glDisableClientState(32884);
+        GL20.glDisableClientState(32885);
+        GL20.glDisableClientState(32886);
+        GL20.glDisableClientState(32888);
+        GL20.glEnable(GL20.GL_VERTEX_ARRAY);
+        modelVBO.bind();
 
-        drawCall();
+        setupAttributes();
+        GL20.glDrawArrays(GL11.GL_QUADS, 0, vertexCount);
 
-        ebo.unbind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-        vao.unbind();
+        modelVBO.unbind();
+
+        int numAttributes = getTotalShaderAttributeCount();
+        for (int i = 0; i <= numAttributes; i++) {
+            GL20.glDisableVertexAttribArray(i);
+        }
+
+        GL20.glDisable(GL20.GL_VERTEX_ARRAY);
+    }
+
+    protected void setupAttributes() {
+        getModelFormat().informAttributes(0);
+
+        int numAttributes = getTotalShaderAttributeCount();
+        for (int i = 0; i <= numAttributes; i++) {
+            GL20.glEnableVertexAttribArray(i);
+        }
     }
 
     public void delete() {
@@ -94,8 +104,6 @@ public abstract class BufferedModel extends TemplateBuffer {
     }
 
     protected void deleteInternal() {
-        invariantVBO.delete();
-        ebo.delete();
-        vao.delete();
+        modelVBO.delete();
     }
 }

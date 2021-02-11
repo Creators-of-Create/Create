@@ -117,7 +117,5 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             if (material.canRenderInLayer(layer))
                 material.render(layer, viewProjection, camX, camY, camZ, callback);
         }
-
-        GL20.glUseProgram(0);
     }
 }

@@ -3,15 +3,13 @@ package com.simibubi.create.foundation.render.instancing;
 
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
+import com.simibubi.create.foundation.render.gl.GlVertexArray;
 import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL31;
-import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -20,6 +18,7 @@ import java.util.function.Consumer;
 public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
     public static final VertexFormat FORMAT = new VertexFormat(CommonAttributes.POSITION, CommonAttributes.NORMAL, CommonAttributes.UV);
 
+    protected GlVertexArray vao;
     protected GlBuffer instanceVBO;
     protected int glBufferSize = -1;
     protected int glInstanceCount = 0;
@@ -34,31 +33,20 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     }
 
     @Override
-    protected void setup() {
-        super.setup();
-        instanceVBO = new GlBuffer();
+    protected void init() {
+        vao = new GlVertexArray();
+        instanceVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
+
+        vao.bind();
+        super.init();
+        vao.unbind();
     }
 
     @Override
-    protected VertexFormat getModelFormat() {
-        return FORMAT;
+    protected void initModel() {
+        super.initModel();
+        setupAttributes();
     }
-
-    @Override
-    protected void copyVertex(ByteBuffer constant, int i) {
-        constant.putFloat(getX(template, i));
-        constant.putFloat(getY(template, i));
-        constant.putFloat(getZ(template, i));
-
-        constant.put(getNX(template, i));
-        constant.put(getNY(template, i));
-        constant.put(getNZ(template, i));
-
-        constant.putFloat(getU(template, i));
-        constant.putFloat(getV(template, i));
-    }
-
-    protected abstract VertexFormat getInstanceFormat();
 
     public int instanceCount() {
         return data.size();
@@ -69,9 +57,11 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     }
 
     protected void deleteInternal() {
-        super.deleteInternal();
-        instanceVBO.delete();
         keys.forEach(InstanceKey::invalidate);
+        super.deleteInternal();
+
+        instanceVBO.delete();
+        vao.delete();
     }
 
     protected abstract D newInstance();
@@ -117,40 +107,14 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         return key;
     }
 
-    protected void markIndexChanged(int index) {
-        if (minIndexChanged < 0) {
-            minIndexChanged = index;
-        } else if (index < minIndexChanged) {
-            minIndexChanged = index;
-        }
-
-        if (maxIndexChanged < 0) {
-            maxIndexChanged = index;
-        } else if (index > maxIndexChanged) {
-            maxIndexChanged = index;
-        }
+    protected void doRender() {
+        vao.bind();
+        renderSetup();
+        GL31.glDrawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
+        vao.unbind();
     }
 
-    protected final void verifyKey(InstanceKey<D> key) {
-        if (key.model != this) throw new IllegalStateException("Provided key does not belong to model.");
-
-        if (!key.isValid()) throw new IllegalStateException("Provided key has been invalidated.");
-
-        if (key.index >= data.size()) throw new IndexOutOfBoundsException("Key points out of bounds. (" + key.index + " > " + (data.size() - 1) + ")");
-
-        if (keys.get(key.index) != key) throw new IllegalStateException("Key desync!!");
-    }
-
-    protected int getTotalShaderAttributeCount() {
-        return getInstanceFormat().getShaderAttributeCount() + super.getTotalShaderAttributeCount();
-    }
-
-    @Override
-    protected void drawCall() {
-        GL31.glDrawElementsInstanced(GL11.GL_QUADS, vertexCount, GL11.GL_UNSIGNED_SHORT, 0, glInstanceCount);
-    }
-
-    protected void preDrawTask() {
+    protected void renderSetup() {
         if (minIndexChanged < 0 || data.isEmpty()) return;
 
         VertexFormat instanceFormat = getInstanceFormat();
@@ -159,7 +123,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         int newInstanceCount = instanceCount();
         int instanceSize = RenderMath.nextPowerOf2((newInstanceCount + 1) * stride);
 
-        instanceVBO.bind(GL15.GL_ARRAY_BUFFER);
+        instanceVBO.bind();
 
         // this probably changes enough that it's not worth reallocating the entire buffer every time.
         if (instanceSize > glBufferSize) {
@@ -197,9 +161,58 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             GL33.glVertexAttribDivisor(i + staticAttributes, 1);
         }
 
-        instanceVBO.unbind(GL15.GL_ARRAY_BUFFER);
+        instanceVBO.unbind();
 
         minIndexChanged = -1;
         maxIndexChanged = -1;
+    }
+
+    protected void markIndexChanged(int index) {
+        if (minIndexChanged < 0) {
+            minIndexChanged = index;
+        } else if (index < minIndexChanged) {
+            minIndexChanged = index;
+        }
+
+        if (maxIndexChanged < 0) {
+            maxIndexChanged = index;
+        } else if (index > maxIndexChanged) {
+            maxIndexChanged = index;
+        }
+    }
+
+    protected final void verifyKey(InstanceKey<D> key) {
+        if (key.model != this) throw new IllegalStateException("Provided key does not belong to model.");
+
+        if (!key.isValid()) throw new IllegalStateException("Provided key has been invalidated.");
+
+        if (key.index >= data.size()) throw new IndexOutOfBoundsException("Key points out of bounds. (" + key.index + " > " + (data.size() - 1) + ")");
+
+        if (keys.get(key.index) != key) throw new IllegalStateException("Key desync!!");
+    }
+
+    @Override
+    protected void copyVertex(ByteBuffer constant, int i) {
+        constant.putFloat(getX(template, i));
+        constant.putFloat(getY(template, i));
+        constant.putFloat(getZ(template, i));
+
+        constant.put(getNX(template, i));
+        constant.put(getNY(template, i));
+        constant.put(getNZ(template, i));
+
+        constant.putFloat(getU(template, i));
+        constant.putFloat(getV(template, i));
+    }
+
+    @Override
+    protected VertexFormat getModelFormat() {
+        return FORMAT;
+    }
+
+    protected abstract VertexFormat getInstanceFormat();
+
+    protected int getTotalShaderAttributeCount() {
+        return getInstanceFormat().getShaderAttributeCount() + super.getTotalShaderAttributeCount();
     }
 }
