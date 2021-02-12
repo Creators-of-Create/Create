@@ -1,17 +1,17 @@
-package com.simibubi.create.foundation.metadoc;
+package com.simibubi.create.foundation.metadoc.elements;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.metadoc.MetaDocWorld;
+import com.simibubi.create.foundation.metadoc.Select;
 import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
@@ -29,25 +29,44 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public abstract class WorldSectionElement extends AnimatedSceneElement implements Predicate<BlockPos> {
+public class WorldSectionElement extends AnimatedSceneElement {
 
 	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
 
 	List<TileEntity> renderedTileEntities;
+	Select section;
+	boolean redraw;
+
+	public WorldSectionElement(Select section) {
+		this.section = section;
+	}
+
+	public void queueRedraw(MetaDocWorld world) {
+		redraw = true;
+	}
+
+	public void tick() {
+		if (renderedTileEntities == null)
+			return;
+		renderedTileEntities.forEach(te -> {
+			if (te instanceof ITickableTileEntity)
+				((ITickableTileEntity) te).tick();
+		});
+	}
 
 	@Override
 	public void render(MetaDocWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {
 		int light = -1;
 		if (fade != 1)
 			light = (int) (MathHelper.lerp(fade, 5, 14));
+		if (redraw)
+			renderedTileEntities = null;
 
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer);
@@ -56,40 +75,7 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
 		renderStructure(world, ms, buffer, fade);
-	}
-
-	@Override
-	public abstract int hashCode();
-
-	public abstract Stream<BlockPos> all();
-
-	public static class Cuboid extends WorldSectionElement {
-
-		MutableBoundingBox bb;
-		Vec3i origin;
-		Vec3i size;
-
-		public Cuboid(BlockPos origin, Vec3i size) {
-			bb = new MutableBoundingBox(origin, origin.add(size));
-			this.origin = origin;
-			this.size = size;
-		}
-
-		@Override
-		public boolean test(BlockPos t) {
-			return bb.isVecInside(t);
-		}
-
-		@Override
-		public Stream<BlockPos> all() {
-			return BlockPos.func_229383_a_(bb);
-		}
-
-		@Override
-		public int hashCode() {
-			return origin.hashCode() ^ size.hashCode();
-		}
-
+		redraw = false;
 	}
 
 	protected void renderStructure(MetaDocWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float fade) {
@@ -101,17 +87,14 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 		for (int i = 0; i < blockLayers.size(); i++) {
 			RenderType layer = blockLayers.get(i);
 			Pair<Integer, Integer> key = Pair.of(code, i);
+			if (redraw)
+				bufferCache.invalidate(DOC_WORLD_SECTION, key);
 			SuperByteBuffer contraptionBuffer =
 				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, layer));
 			if (contraptionBuffer.isEmpty())
 				continue;
 
-			int light = 0xF000F0;
-			if (fade != 1) {
-				light = (int) (0xF * fade);
-				light = light << 4 | light << 20;
-			}
-
+			int light = lightCoordsFromFade(fade);
 			contraptionBuffer.light(light)
 				.renderInto(ms, buffer.getBuffer(layer));
 		}
@@ -120,10 +103,12 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 	private void renderTileEntities(MetaDocWorld world, MatrixStack ms, IRenderTypeBuffer buffer) {
 		if (renderedTileEntities == null) {
 			renderedTileEntities = new ArrayList<>();
-			all().map(world::getTileEntity)
+			section.all()
+				.map(world::getTileEntity)
 				.filter(Objects::nonNull)
 				.forEach(renderedTileEntities::add);
-		}
+		} else
+			renderedTileEntities.removeIf(te -> world.getTileEntity(te.getPos()) != te);
 
 		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer);
 	}
@@ -137,22 +122,23 @@ public abstract class WorldSectionElement extends AnimatedSceneElement implement
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		world.setMask(this);
+		world.setMask(this.section);
 
-		all().forEach(pos -> {
-			BlockState state = world.getBlockState(pos);
-			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
-				return;
-			if (!RenderTypeLookup.canRenderInLayer(state, layer))
-				return;
+		section.all()
+			.forEach(pos -> {
+				BlockState state = world.getBlockState(pos);
+				if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
+					return;
+				if (!RenderTypeLookup.canRenderInLayer(state, layer))
+					return;
 
-			IBakedModel originalModel = dispatcher.getModelForState(state);
-			ms.push();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			blockRenderer.renderModel(world, originalModel, state, pos, ms, builder, true, random, 42,
-				OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
-			ms.pop();
-		});
+				IBakedModel originalModel = dispatcher.getModelForState(state);
+				ms.push();
+				ms.translate(pos.getX(), pos.getY(), pos.getZ());
+				blockRenderer.renderModel(world, originalModel, state, pos, ms, builder, true, random, 42,
+					OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+				ms.pop();
+			});
 
 		world.clearMask();
 		builder.finishDrawing();

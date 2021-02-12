@@ -1,6 +1,7 @@
-package com.simibubi.create.foundation.metadoc;
+package com.simibubi.create.foundation.metadoc.elements;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.metadoc.MetaDocWorld;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -39,5 +40,14 @@ public abstract class AnimatedSceneElement extends MetaDocSceneElement {
 	}
 
 	protected abstract void render(MetaDocWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade);
+
+	protected int lightCoordsFromFade(float fade) {
+		int light = 0xF000F0;
+		if (fade != 1) {
+			light = (int) (0xF * fade);
+			light = light << 4 | light << 20;
+		}
+		return light;
+	}
 
 }

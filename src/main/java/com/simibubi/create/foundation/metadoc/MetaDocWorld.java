@@ -1,20 +1,50 @@
 package com.simibubi.create.foundation.metadoc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.content.schematics.SchematicWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class MetaDocWorld extends SchematicWorld {
 
+	protected Map<BlockPos, BlockState> originalBlocks;
+	protected Map<BlockPos, TileEntity> originalTileEntities;
+
 	int overrideLight;
-	WorldSectionElement mask;
+	Select mask;
 
 	public MetaDocWorld(BlockPos anchor, World original) {
 		super(anchor, original);
+		originalBlocks = new HashMap<>();
+		originalTileEntities = new HashMap<>();
+	}
+
+	public void createBackup() {
+		originalBlocks.clear();
+		originalTileEntities.clear();
+		blocks.forEach((k, v) -> originalBlocks.put(k, v));
+		tileEntities.forEach((k, v) -> originalTileEntities.put(k, TileEntity.create(v.write(new CompoundNBT()))));
+	}
+	
+	public void restore() {
+		blocks.clear();
+		tileEntities.clear();
+		renderedTileEntities.clear();
+		originalBlocks.forEach((k, v) -> blocks.put(k, v));
+		originalTileEntities.forEach((k, v) -> {
+			TileEntity te = TileEntity.create(v.write(new CompoundNBT()));
+			te.setLocation(this, te.getPos());
+			tileEntities.put(k, te);
+			renderedTileEntities.add(te);
+		});
 	}
 
 	public void pushFakeLight(int light) {
@@ -30,7 +60,7 @@ public class MetaDocWorld extends SchematicWorld {
 		return overrideLight == -1 ? 15 : overrideLight;
 	}
 
-	public void setMask(WorldSectionElement mask) {
+	public void setMask(Select mask) {
 		this.mask = mask;
 	}
 

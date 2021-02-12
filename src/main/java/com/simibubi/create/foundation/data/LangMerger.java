@@ -24,7 +24,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.FilesHelper;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -201,14 +200,9 @@ public class LangMerger implements IDataProvider {
 	}
 
 	private void collectEntries() {
-		for (AllLangPartials partial : AllLangPartials.values()) {
-			String fileName = Lang.asId(partial.name());
-			String filepath = "assets/" + Create.ID + "/lang/default/" + fileName + ".json";
-			JsonElement element = FilesHelper.loadJsonResource(filepath);
-			if (element == null)
-				throw new IllegalStateException(String.format("Could not find default lang file: %s", filepath));
-			addAll(partial.getDisplay(), element.getAsJsonObject());
-		}
+		for (AllLangPartials partial : AllLangPartials.values())
+			addAll(partial.getDisplay(), partial.provide()
+				.getAsJsonObject());
 	}
 
 	private void save(DirectoryCache cache, List<Object> dataIn, int missingKeys, Path target, String message)

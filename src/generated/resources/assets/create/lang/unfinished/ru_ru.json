@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 17",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1786,6 +1786,22 @@
 	"create.tooltip.randomWipDescription6": "Используя этот пункт, вы тем самым соглашаетесь с нашим отказом от ответственности и соглашаетесь с его условиями.",
 	"create.tooltip.randomWipDescription7": "Этот, возможно, но не для тебя. Как насчет этого?",
 	"create.tooltip.randomWipDescription8": "Используя его, вы немедленно пожалеете о своем решении.",
+
+
+	"_": "->------------------------]  MetaDoc Text  [------------------------<-",
+
+	"create.metadoc.shared.more_shared": "UNLOCALIZED: This is Shared stuff",
+	"create.metadoc.shared.when_wrenched": "UNLOCALIZED: When Wrenched",
+	"create.metadoc.cogwheel.scene_0.test_text": "UNLOCALIZED: Test text for scene 1",
+	"create.metadoc.cogwheel.scene_0.title": "UNLOCALIZED: My First Metadoc Story, Part 1",
+	"create.metadoc.cogwheel.scene_1.test_text": "UNLOCALIZED: Test text for scene 2",
+	"create.metadoc.cogwheel.scene_1.title": "UNLOCALIZED: My First Metadoc Story, Part 2",
+	"create.metadoc.cogwheel.scene_2.test_text": "UNLOCALIZED: Test text for scene 3",
+	"create.metadoc.cogwheel.scene_2.title": "UNLOCALIZED: My First Metadoc Story, Part 3",
+	"create.metadoc.cogwheel.scene_3.test_text": "UNLOCALIZED: Test text for scene 4",
+	"create.metadoc.cogwheel.scene_3.title": "UNLOCALIZED: My First Metadoc Story, Part 4",
+	"create.metadoc.cogwheel.scene_4.test_text": "UNLOCALIZED: Test text for scene 5",
+	"create.metadoc.cogwheel.scene_4.title": "UNLOCALIZED: My First Metadoc Story, Part 5",
 
 	"_": "Thank you for translating Create!"
 

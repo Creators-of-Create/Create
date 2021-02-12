@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.metadoc.MetaDocs;
-import com.simibubi.create.foundation.metadoc.WorldSectionElement;
+import com.simibubi.create.foundation.metadoc.content.MetaDocIndex;
+import com.simibubi.create.foundation.metadoc.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -76,7 +76,7 @@ public class CreateClient {
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 		AllFluids.assignRenderLayers();
-		MetaDocs.register();
+		MetaDocIndex.register();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();

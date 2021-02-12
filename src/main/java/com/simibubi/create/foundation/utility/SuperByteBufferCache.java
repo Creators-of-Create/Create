@@ -85,6 +85,11 @@ public class SuperByteBufferCache {
 			return null;
 		}
 	}
+	
+	public <T> void invalidate(Compartment<T> compartment, T key) {
+		Cache<Object, SuperByteBuffer> compartmentCache = this.cache.get(compartment);
+		compartmentCache.invalidate(key);
+	}
 
 	public void registerCompartment(Compartment<?> instance) {
 		cache.put(instance, CacheBuilder.newBuilder()

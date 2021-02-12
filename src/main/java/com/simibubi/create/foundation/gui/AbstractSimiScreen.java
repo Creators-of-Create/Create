@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,6 +33,8 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
+		partialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		renderBackground();
 		renderWindow(mouseX, mouseY, partialTicks);
 		for (Widget widget : widgets)
@@ -79,7 +82,7 @@ public abstract class AbstractSimiScreen extends Screen {
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double x, double y, int button) {
 		boolean result = false;
@@ -106,8 +109,9 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets) {
 			if (!widget.isHovered())
 				continue;
-			
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
+
+			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip()
+				.isEmpty()) {
 				renderTooltip(((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
 			}
 		}

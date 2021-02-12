@@ -6,26 +6,28 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.metadoc.content.MetaDocIndex;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class MetaDocScreen extends AbstractSimiScreen {
 
-	private List<MetaDocScene> stories;
+	private List<MetaDocScene> scenes;
 	private LerpedFloat fadeIn;
 
 	private LerpedFloat lazyIndex;
 	private int index = 0;
 
-	public MetaDocScreen(List<MetaDocScene> stories) {
-		this.stories = stories;
+	public MetaDocScreen(List<MetaDocScene> scenes) {
+		this.scenes = scenes;
 		lazyIndex = LerpedFloat.linear()
 			.startWithValue(index);
 		fadeIn = LerpedFloat.linear()
@@ -37,11 +39,11 @@ public class MetaDocScreen extends AbstractSimiScreen {
 	public void tick() {
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
-		stories.get(index)
+		scenes.get(index)
 			.tick();
 		float lazyIndexValue = lazyIndex.getValue();
 		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
-			stories.get(lazyIndexValue < index ? index - 1 : index + 1)
+			scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
 				.tick();
 	}
 
@@ -55,11 +57,11 @@ public class MetaDocScreen extends AbstractSimiScreen {
 	protected boolean scroll(boolean forward) {
 		int prevIndex = index;
 		index = forward ? index + 1 : index - 1;
-		index = MathHelper.clamp(index, 0, stories.size() - 1);
+		index = MathHelper.clamp(index, 0, scenes.size() - 1);
 		if (prevIndex != index && Math.abs(index - lazyIndex.getValue()) < 1.5f) {
-			stories.get(prevIndex)
+			scenes.get(prevIndex)
 				.fadeOut();
-			stories.get(index)
+			scenes.get(index)
 				.begin();
 			lazyIndex.chase(index, 1 / 4f, Chaser.EXP);
 			return true;
@@ -70,9 +72,6 @@ public class MetaDocScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		partialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
-
 		RenderSystem.enableBlend();
 		renderStories(partialTicks);
 		renderWidgets(mouseX, mouseY, partialTicks);
@@ -86,49 +85,65 @@ public class MetaDocScreen extends AbstractSimiScreen {
 	}
 
 	protected void renderStory(int i, float partialTicks) {
-		MetaDocScene story = stories.get(i);
+		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		MetaDocScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
-		ms.push();
-
-		ms.translate(width / 2, height / 2, 200);
-		MatrixStacker.of(ms)
-			.rotateX(-45)
-			.rotateY(45);
-
 		double value = lazyIndex.getValue(partialTicks);
 		double diff = i - value;
-		double slide = MathHelper.lerp(diff * diff, 200, 600);
-		ms.translate(diff * slide, 0, 0);
+		double slide = MathHelper.lerp(diff * diff, 200, 600) * diff;
 
-		ms.scale(30, -30, 30);
-
-		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
-		story.render(buffer, ms);
+		ms.push();
+		story.transform.updateScreenParams(width, height, slide);
+		story.transform.apply(ms);
+		story.renderScene(buffer, ms);
 		buffer.draw();
 		ms.pop();
 	}
 
-	protected void renderWidgets(int mouseX, int mouseY, float pt) {
-		float fade = fadeIn.getValue(pt);
+	protected void renderWidgets(int mouseX, int mouseY, float partialTicks) {
+		float fade = fadeIn.getValue(partialTicks);
+		float lazyIndexValue = lazyIndex.getValue(partialTicks);
+		float indexDiff = Math.abs(lazyIndexValue - index);
 		int textColor = 0xeeeeee;
 
-		drawString(font, "MetaDoc Experimental 0", 50, 50 - 16, textColor);
+		{
+			int y = 34;
+			drawString(font, "MetaDoc Experimental 0", 50, y, textColor);
+			y += 10;
+			drawString(font, "> " + scenes.get(index)
+				.getTitle(), 50, y, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			y += 10;
+			if (MetaDocIndex.EDITOR_MODE)
+				drawString(font, "Mouse: " + mouseX + ", " + mouseY, 50, y, 0x8d8d8d);
+		}
 
+		// Scene overlay
 		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 0, 100);
+		renderOverlay(index, partialTicks);
+		if (indexDiff > 1 / 512f)
+			renderOverlay(lazyIndexValue < index ? index - 1 : index + 1, partialTicks);
+		RenderSystem.popMatrix();
 
+		// Close button
+		RenderSystem.pushMatrix();
 		if (fade < fadeIn.getChaseTarget())
 			RenderSystem.translated(0, (1 - fade) * 5, 0);
-
 		int closeWidth = 24;
 		int closeHeight = 24;
 		int closeX = (width - closeWidth) / 2;
 		int closeY = height - closeHeight - 31;
 		boolean hovered = isMouseOver(mouseX, mouseY, closeX, closeY, closeWidth, closeHeight);
-
-		renderBox(closeX, closeY, closeWidth, closeHeight, 0xdd000000, hovered ? 0x70ffffff : 0x30eebb00,
-			hovered ? 0x30ffffff : 0x10eebb00);
+		renderBox(closeX, closeY, closeWidth, closeHeight, hovered);
 		AllIcons.I_CONFIRM.draw(closeX + 4, closeY + 4);
+		RenderSystem.popMatrix();
+	}
 
+	private void renderOverlay(int i, float partialTicks) {
+		RenderSystem.pushMatrix();
+		MetaDocScene story = scenes.get(i);
+		MatrixStack ms = new MatrixStack();
+		story.renderOverlay(this, ms, partialTicks);
 		RenderSystem.popMatrix();
 	}
 
@@ -155,23 +170,27 @@ public class MetaDocScreen extends AbstractSimiScreen {
 			.getKeyCode();
 		int dCode = settings.keyBindRight.getKey()
 			.getKeyCode();
-		
+
 		if (code == sCode) {
 			onClose();
 			return true;
 		}
-		
+
 		if (code == aCode) {
 			scroll(false);
 			return true;
 		}
-		
+
 		if (code == dCode) {
 			scroll(true);
 			return true;
 		}
 
 		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
+	}
+	
+	public FontRenderer getFontRenderer() {
+		return font;
 	}
 
 	protected boolean isMouseOver(double mouseX, double mouseY, int x, int y, int w, int h) {
@@ -180,27 +199,26 @@ public class MetaDocScreen extends AbstractSimiScreen {
 		return hovered;
 	}
 
-	protected void renderBox(int tooltipX, int tooltipY, int tooltipTextWidth, int tooltipHeight, int backgroundColor,
-		int borderColorStart, int borderColorEnd) {
-		int zLevel = 400;
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
-			backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3,
-			tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3,
-			tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3,
-			backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3,
-			tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1,
-			tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1,
-			tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1,
-			borderColorStart, borderColorStart);
-		GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3,
-			tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+	public void drawString(String s, int x, int y, int color) {
+		drawString(font, s, x, y, color);
+	}
+
+	public void renderBox(int x, int y, int w, int h, boolean highlighted) {
+		renderBox(x, y, w, h, 0xdd000000, highlighted ? 0x70ffffff : 0x30eebb00, highlighted ? 0x30ffffff : 0x10eebb00);
+	}
+
+	public void renderBox(int x, int y, int w, int h, int backgroundColor, int borderColorStart, int borderColorEnd) {
+		int zLevel = 100;
+		GuiUtils.drawGradientRect(zLevel, x - 3, y - 4, x + w + 3, y - 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(zLevel, x - 3, y + h + 3, x + w + 3, y + h + 4, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3, x + w + 3, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(zLevel, x - 4, y - 3, x - 3, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(zLevel, x + w + 3, y - 3, x + w + 4, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart, borderColorEnd);
+		GuiUtils.drawGradientRect(zLevel, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart,
+			borderColorEnd);
+		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3, x + w + 3, y - 3 + 1, borderColorStart, borderColorStart);
+		GuiUtils.drawGradientRect(zLevel, x - 3, y + h + 2, x + w + 3, y + h + 3, borderColorEnd, borderColorEnd);
 	}
 
 }

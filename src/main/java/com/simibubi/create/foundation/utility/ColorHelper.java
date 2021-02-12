@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class ColorHelper {
@@ -28,6 +29,11 @@ public class ColorHelper {
 			return 255;
 		else
 			return 255 - progress;
+	}
+	
+	public static int applyAlpha(int color, float alpha) {
+		int alphaChannel = (int) (0xFF * MathHelper.clamp(alpha, 0, 1));
+		return (color & 0xFFFFFF) | alphaChannel << 24;
 	}
 
 	public static int mixColors(int color1, int color2, float w) {

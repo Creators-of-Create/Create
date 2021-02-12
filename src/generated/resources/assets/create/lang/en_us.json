@@ -1786,6 +1786,22 @@
 	"create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
 	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
 
+
+	"_": "->------------------------]  MetaDoc Text  [------------------------<-",
+
+	"create.metadoc.shared.more_shared": "This is Shared stuff",
+	"create.metadoc.shared.when_wrenched": "When Wrenched",
+	"create.metadoc.cogwheel.scene_0.test_text": "Test text for scene 1",
+	"create.metadoc.cogwheel.scene_0.title": "My First Metadoc Story, Part 1",
+	"create.metadoc.cogwheel.scene_1.test_text": "Test text for scene 2",
+	"create.metadoc.cogwheel.scene_1.title": "My First Metadoc Story, Part 2",
+	"create.metadoc.cogwheel.scene_2.test_text": "Test text for scene 3",
+	"create.metadoc.cogwheel.scene_2.title": "My First Metadoc Story, Part 3",
+	"create.metadoc.cogwheel.scene_3.test_text": "Test text for scene 4",
+	"create.metadoc.cogwheel.scene_3.title": "My First Metadoc Story, Part 4",
+	"create.metadoc.cogwheel.scene_4.test_text": "Test text for scene 5",
+	"create.metadoc.cogwheel.scene_4.title": "My First Metadoc Story, Part 5",
+
 	"_": "Thank you for translating Create!"
 
 }
