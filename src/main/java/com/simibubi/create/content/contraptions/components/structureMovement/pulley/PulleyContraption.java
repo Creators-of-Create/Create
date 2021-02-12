@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.foundation.render.*;
-import net.minecraft.world.lighting.WorldLightManager;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 

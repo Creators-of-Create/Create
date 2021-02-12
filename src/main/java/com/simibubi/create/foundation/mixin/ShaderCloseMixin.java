@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
-import com.simibubi.create.foundation.render.gl.backend.OptifineHandler;
+import com.simibubi.create.foundation.render.backend.OptifineHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.VideoSettingsScreen;

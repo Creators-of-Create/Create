@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.LightType;

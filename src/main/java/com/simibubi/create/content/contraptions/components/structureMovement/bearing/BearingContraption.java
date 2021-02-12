@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;

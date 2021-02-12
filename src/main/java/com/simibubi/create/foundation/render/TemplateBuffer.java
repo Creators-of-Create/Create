@@ -1,11 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.foundation.render.gl.backend.Backend;
-import com.simibubi.create.foundation.render.gl.GlBuffer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import org.lwjgl.opengl.GL15;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;

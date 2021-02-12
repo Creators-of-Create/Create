@@ -5,18 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.render.light.GridAlignedBB;
-import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.lighting.WorldLightManager;
 
 public class PlacementSimulationWorld extends WrappedWorld {

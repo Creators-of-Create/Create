@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.foundation.render.gl.backend.Backend;
+import com.simibubi.create.foundation.render.backend.Backend;
 
 public class CClient extends ConfigBase {
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraftforge.api.distmarker.Dist;

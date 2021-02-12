@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;

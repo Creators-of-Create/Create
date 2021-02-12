@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;

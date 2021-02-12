@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;

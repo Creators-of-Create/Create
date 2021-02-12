@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

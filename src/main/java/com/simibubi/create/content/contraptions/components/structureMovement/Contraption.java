@@ -24,8 +24,7 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.light.EmptyLighter;
+import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;

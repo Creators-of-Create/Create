@@ -5,10 +5,9 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import com.simibubi.create.foundation.render.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.instancing.actors.StaticRotatingActorData;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -41,10 +40,10 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	}
 
 	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-		RenderMaterial<?, InstancedModel<StaticRotatingActorData>> renderMaterial = contraption.getActorMaterial();
+		RenderMaterial<?, InstancedModel<ContraptionActorData>> renderMaterial = contraption.getActorMaterial();
 
 		BlockState state = context.state;
-		InstancedModel<StaticRotatingActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
+		InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
 
 		model.setupInstance(data -> {
 			Direction facing = state.get(HORIZONTAL_FACING);

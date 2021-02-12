@@ -1,14 +1,19 @@
 package com.simibubi.create.foundation.render;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.render.contraption.ContraptionProgram;
-import com.simibubi.create.foundation.render.gl.BasicProgram;
-import com.simibubi.create.foundation.render.gl.attrib.impl.*;
-import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
-import com.simibubi.create.foundation.render.gl.shader.ShaderConstants;
+import com.simibubi.create.content.contraptions.base.KineticVertexAttributes;
+import com.simibubi.create.content.contraptions.base.RotatingVertexAttributes;
+import com.simibubi.create.content.contraptions.components.actors.ActorVertexAttributes;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionVertexAttributes;
+import com.simibubi.create.content.contraptions.relays.belt.BeltVertexAttributes;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
+import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
+import com.simibubi.create.foundation.render.backend.gl.attrib.ModelVertexAttributes;
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
+import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
 import net.minecraft.util.ResourceLocation;
 
-import static com.simibubi.create.foundation.render.gl.backend.Backend.register;
+import static com.simibubi.create.foundation.render.backend.Backend.register;
 
 public class AllProgramSpecs {
     public static final ProgramSpec<BasicProgram> ROTATING = register(ProgramSpec.builder("rotating", BasicProgram::new)

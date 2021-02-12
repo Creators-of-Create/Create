@@ -3,8 +3,7 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.gl.backend.Backend;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;

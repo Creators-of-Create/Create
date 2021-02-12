@@ -11,8 +11,8 @@ import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.render.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;

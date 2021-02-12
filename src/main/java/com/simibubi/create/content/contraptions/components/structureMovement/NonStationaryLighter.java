@@ -1,8 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.foundation.render.contraption.RenderedContraption;
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.light.GridAlignedBB;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 
 public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {
     public NonStationaryLighter(C contraption) {

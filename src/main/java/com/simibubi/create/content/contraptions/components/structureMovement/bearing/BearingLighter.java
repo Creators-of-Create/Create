@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.foundation.render.light.ContraptionLighter;
-import com.simibubi.create.foundation.render.light.GridAlignedBB;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
