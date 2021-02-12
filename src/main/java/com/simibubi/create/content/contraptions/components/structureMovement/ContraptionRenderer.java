@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.*;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.commons.lang3.tuple.Pair;
@@ -75,7 +76,7 @@ public class ContraptionRenderer {
 	protected static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
 		if (FastRenderDispatcher.available()) {
-			TileEntityRenderHelper.renderTileEntities(world, c.specialRenderedTileEntities, ms, msLocal, buffer);
+			ContraptionRenderDispatcher.renderTileEntities(world, c, ms, msLocal, buffer);
 		} else {
 			TileEntityRenderHelper.renderTileEntities(world, c.maybeInstancedTileEntities, ms, msLocal, buffer);
 		}

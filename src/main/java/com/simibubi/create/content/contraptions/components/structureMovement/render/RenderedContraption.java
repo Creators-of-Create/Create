@@ -130,6 +130,7 @@ public class RenderedContraption {
     }
 
     void setup(ContraptionProgram shader) {
+        if (model == null) return;
         shader.bind(model, lighter.lightVolume.getTextureVolume());
         lighter.lightVolume.use();
     }

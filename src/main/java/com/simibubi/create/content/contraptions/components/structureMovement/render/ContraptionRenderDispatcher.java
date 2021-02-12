@@ -6,10 +6,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
+import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -59,6 +61,13 @@ public class ContraptionRenderDispatcher {
                 }
             }
         }
+    }
+
+    public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
+                                          IRenderTypeBuffer buffer) {
+        RenderedContraption renderer = getRenderer(world, c);
+
+        TileEntityRenderHelper.renderTileEntities(world, renderer.renderWorld, c.specialRenderedTileEntities, ms, msLocal, buffer);
     }
 
     private static <C extends AbstractContraptionEntity> void updateTransform(C c, AbstractContraptionEntityRenderer<C> entityRenderer) {

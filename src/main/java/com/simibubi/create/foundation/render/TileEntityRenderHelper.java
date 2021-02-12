@@ -5,16 +5,16 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Vector4f;
-import net.minecraft.client.renderer.WorldRenderer;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.pipeline.LightUtil;
 
 import java.util.Iterator;
 
@@ -22,6 +22,12 @@ public class TileEntityRenderHelper {
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
 		MatrixStack localTransform, IRenderTypeBuffer buffer) {
+
+		renderTileEntities(world, null, customRenderTEs, ms, localTransform, buffer);
+	}
+
+	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
+										  MatrixStack localTransform, IRenderTypeBuffer buffer) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
@@ -45,8 +51,20 @@ public class TileEntityRenderHelper {
 				Vector4f vec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 				vec.transform(matrix);
 				BlockPos lightPos = new BlockPos(vec.getX(), vec.getY(), vec.getZ());
-				renderer.render(tileEntity, pt, ms, buffer, WorldRenderer.getLightmapCoordinates(world, lightPos),
-					OverlayTexture.DEFAULT_UV);
+				int worldLight = WorldRenderer.getLightmapCoordinates(world, lightPos);
+
+				if (renderWorld != null) {
+					int contraptionBlockLight = renderWorld.getLightLevel(LightType.BLOCK, pos);
+
+					int worldBlockLight = LightTexture.getBlockLightCoordinates(worldLight);
+
+					if (contraptionBlockLight > worldBlockLight) {
+						worldLight = (worldLight & 0xFFFF0000) | (contraptionBlockLight << 4);
+					}
+				}
+
+				renderer.render(tileEntity, pt, ms, buffer, worldLight,
+								OverlayTexture.DEFAULT_UV);
 				ms.pop();
 
 			} catch (Exception e) {
