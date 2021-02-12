@@ -1,9 +1,8 @@
-package com.simibubi.create.foundation.render.gl.backend;
+package com.simibubi.create.foundation.render.backend.gl.versioned;
 
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 public enum MapBuffer implements GlVersioned {

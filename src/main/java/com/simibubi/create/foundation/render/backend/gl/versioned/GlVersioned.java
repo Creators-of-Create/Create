@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.gl.backend;
+package com.simibubi.create.foundation.render.backend.gl.versioned;
 
 import org.lwjgl.opengl.GLCapabilities;
 
