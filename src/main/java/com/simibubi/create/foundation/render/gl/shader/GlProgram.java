@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.gl.shader;
 
 import com.simibubi.create.foundation.render.gl.GlObject;
+import com.simibubi.create.foundation.render.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL20;
@@ -67,6 +68,8 @@ public abstract class GlProgram extends GlObject {
         private final ResourceLocation name;
         private final int program;
 
+        private int attributeIndex;
+
         public Builder(ResourceLocation name) {
             this.name = name;
             this.program = GL20.glCreateProgram();
@@ -75,6 +78,12 @@ public abstract class GlProgram extends GlObject {
         public Builder attachShader(GlShader shader) {
             GL20.glAttachShader(this.program, shader.handle());
 
+            return this;
+        }
+
+        public <A extends IVertexAttrib> Builder addAttribute(A attrib) {
+            GL20.glBindAttribLocation(this.program, attributeIndex, attrib.attribName());
+            attributeIndex += attrib.attribSpec().getAttributeCount();
             return this;
         }
 
@@ -104,12 +113,6 @@ public abstract class GlProgram extends GlObject {
 
             return factory.create(this.name, this.program);
         }
-
-//        public Builder bindAttribute(String name, GlVertexAttribute attribute) {
-//            GL20.glBindAttribLocation(this.program, attribute.getIndex(), name);
-//
-//            return this;
-//        }
     }
 
     @FunctionalInterface

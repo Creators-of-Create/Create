@@ -1,12 +1,10 @@
-#version 330 core
+#version 110
 
-in vec2 TexCoords;
-in vec2 Light;
-in float Diffuse;
-in vec4 Color;
-in float FragDistance;
-
-out vec4 fragColor;
+varying vec2 TexCoords;
+varying vec2 Light;
+varying float Diffuse;
+varying vec4 Color;
+varying float FragDistance;
 
 uniform vec2 uFogRange;
 uniform vec4 uFogColor;
@@ -25,8 +23,8 @@ void main() {
     vec4 color = vec4(tex.rgb * light().rgb * Diffuse, tex.a) * Color;
 
     float fog = (uFogRange.y - FragDistance) / (uFogRange.y - uFogRange.x);
-    fog = clamp(fog, 0, 1);
+    fog = clamp(fog, 0., 1.);
 
-    fragColor = mix(uFogColor, color, fog);
-    fragColor.a = color.a;
+    gl_FragColor = mix(uFogColor, color, fog);
+    gl_FragColor.a = color.a;
 }

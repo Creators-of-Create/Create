@@ -1,14 +1,12 @@
-#version 330 core
+#version 110
 
-in vec2 TexCoords;
-in vec4 Color;
-in float Diffuse;
-in vec2 Light;
-in float FragDistance;
+varying vec2 TexCoords;
+varying vec4 Color;
+varying float Diffuse;
+varying vec2 Light;
+varying float FragDistance;
 
-in vec3 BoxCoord;
-
-out vec4 fragColor;
+varying vec3 BoxCoord;
 
 uniform vec2 uFogRange;
 uniform vec4 uFogColor;
@@ -18,7 +16,7 @@ uniform sampler2D uLightMap;
 uniform sampler3D uLightVolume;
 
 vec4 light() {
-    vec2 lm = texture(uLightVolume, BoxCoord).rg * 0.9375 + 0.03125;
+    vec2 lm = texture3D(uLightVolume, BoxCoord).rg * 0.9375 + 0.03125;
     return texture2D(uLightMap, max(lm, Light));
 }
 
@@ -28,8 +26,8 @@ void main() {
     vec4 color = vec4(tex.rgb * light().rgb * Diffuse * Color.rgb, tex.a);
 
     float fog = (uFogRange.y - FragDistance) / (uFogRange.y - uFogRange.x);
-    fog = clamp(fog, 0, 1);
+    fog = clamp(fog, 0., 1.);
 
-    fragColor = mix(uFogColor, color, fog);
-    fragColor.a = color.a;
+    gl_FragColor = mix(uFogColor, color, fog);
+    gl_FragColor.a = color.a;
 }

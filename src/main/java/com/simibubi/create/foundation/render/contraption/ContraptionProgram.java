@@ -27,7 +27,6 @@ public class ContraptionProgram extends BasicProgram {
     }
 
     public void bind(Matrix4f model, GridAlignedBB lightVolume) {
-        bind();
         GL20.glUniform3f(uLightBoxSize, lightVolume.sizeX(), lightVolume.sizeY(), lightVolume.sizeZ());
         GL20.glUniform3f(uLightBoxMin, lightVolume.minX, lightVolume.minY, lightVolume.minZ);
         uploadMatrixUniform(uModel, model);

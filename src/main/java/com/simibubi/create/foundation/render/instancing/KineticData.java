@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.render.instancing;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec;
-import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
@@ -13,11 +12,6 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec.*;
 
 public class KineticData<D extends KineticData<D>> extends InstanceData {
-    public static final VertexAttribSpec ROTATION_CENTER = copy(CommonAttributes.VEC3);
-    public static final VertexAttribSpec SPEED = copy(CommonAttributes.FLOAT);
-    public static final VertexAttribSpec OFFSET = copy(CommonAttributes.FLOAT);
-    public static final VertexFormat FORMAT = new VertexFormat(CommonAttributes.INSTANCE_POSITION, CommonAttributes.LIGHT, CommonAttributes.RGB, SPEED, OFFSET);
-
     private float x;
     private float y;
     private float z;

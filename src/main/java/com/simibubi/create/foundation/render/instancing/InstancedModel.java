@@ -4,10 +4,9 @@ package com.simibubi.create.foundation.render.instancing;
 import com.simibubi.create.foundation.render.BufferedModel;
 import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.gl.GlVertexArray;
-import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
-import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
-import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.impl.ModelVertexAttributes;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.lwjgl.opengl.*;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
-    public static final VertexFormat FORMAT = new VertexFormat(CommonAttributes.POSITION, CommonAttributes.NORMAL, CommonAttributes.UV);
+    public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelVertexAttributes.class).build();
 
     protected GlVertexArray vao;
     protected GlBuffer instanceVBO;
@@ -37,9 +36,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         vao = new GlVertexArray();
         instanceVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
 
-        vao.bind();
-        super.init();
-        vao.unbind();
+        vao.with(vao -> super.init());
     }
 
     @Override
@@ -108,10 +105,10 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     }
 
     protected void doRender() {
-        vao.bind();
-        renderSetup();
-        GL31.glDrawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
-        vao.unbind();
+        vao.with(vao -> {
+            renderSetup();
+            GL31.glDrawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
+        });
     }
 
     protected void renderSetup() {
@@ -123,45 +120,43 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         int newInstanceCount = instanceCount();
         int instanceSize = RenderMath.nextPowerOf2((newInstanceCount + 1) * stride);
 
-        instanceVBO.bind();
-
-        // this probably changes enough that it's not worth reallocating the entire buffer every time.
-        if (instanceSize > glBufferSize) {
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, instanceSize, GL15.GL_STATIC_DRAW);
-            glBufferSize = instanceSize;
-            minIndexChanged = 0;
-            maxIndexChanged = newInstanceCount - 1;
-        }
-
-        int offset = minIndexChanged * stride;
-        int length = (1 + maxIndexChanged - minIndexChanged) * stride;
-
-        Backend.mapBuffer(GL15.GL_ARRAY_BUFFER, offset, length, buffer -> {
-            for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
-                data.get(i).write(buffer);
+        instanceVBO.with(vbo -> {
+            // this probably changes enough that it's not worth reallocating the entire buffer every time.
+            if (instanceSize > glBufferSize) {
+                GL15.glBufferData(vbo.getBufferType(), instanceSize, GL15.GL_STATIC_DRAW);
+                glBufferSize = instanceSize;
+                minIndexChanged = 0;
+                maxIndexChanged = newInstanceCount - 1;
             }
-        });
 
-        if (newInstanceCount < glInstanceCount) {
-            int clearFrom = (maxIndexChanged + 1) * stride;
-            int clearTo = (glInstanceCount) * stride;
-            Backend.mapBuffer(GL15.GL_ARRAY_BUFFER, clearFrom, clearTo - clearFrom, buffer -> {
-                for (int i = clearFrom; i < clearTo; i++) {
-                    buffer.put((byte) 0);
+            int offset = minIndexChanged * stride;
+            int length = (1 + maxIndexChanged - minIndexChanged) * stride;
+
+            vbo.map(offset, length, buffer -> {
+                for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
+                    data.get(i).write(buffer);
                 }
             });
-        }
 
-        glInstanceCount = newInstanceCount;
+            if (newInstanceCount < glInstanceCount) {
+                int clearFrom = (maxIndexChanged + 1) * stride;
+                int clearTo = (glInstanceCount) * stride;
+                vbo.map(clearFrom, clearTo - clearFrom, buffer -> {
+                    for (int i = clearFrom; i < clearTo; i++) {
+                        buffer.put((byte) 0);
+                    }
+                });
+            }
 
-        int staticAttributes = getModelFormat().getShaderAttributeCount();
-        instanceFormat.informAttributes(staticAttributes);
+            glInstanceCount = newInstanceCount;
 
-        for (int i = 0; i < instanceFormat.getShaderAttributeCount(); i++) {
-            GL33.glVertexAttribDivisor(i + staticAttributes, 1);
-        }
+            int staticAttributes = getModelFormat().getShaderAttributeCount();
+            instanceFormat.informAttributes(staticAttributes);
 
-        instanceVBO.unbind();
+            for (int i = 0; i < instanceFormat.getShaderAttributeCount(); i++) {
+                GL33.glVertexAttribDivisor(i + staticAttributes, 1);
+            }
+        });
 
         minIndexChanged = -1;
         maxIndexChanged = -1;

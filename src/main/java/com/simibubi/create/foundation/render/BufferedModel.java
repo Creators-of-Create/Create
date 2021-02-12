@@ -1,19 +1,18 @@
 package com.simibubi.create.foundation.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.render.gl.GlPrimitiveType;
+import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.gl.backend.Backend;
 import com.simibubi.create.foundation.render.gl.GlBuffer;
-import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
 import net.minecraft.client.renderer.BufferBuilder;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.ByteBuffer;
-import java.util.HashSet;
 
 public abstract class BufferedModel extends TemplateBuffer {
 
+    protected GlBuffer ebo;
     protected GlBuffer modelVBO;
     protected boolean removed;
 
@@ -26,9 +25,9 @@ public abstract class BufferedModel extends TemplateBuffer {
 
         modelVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
 
-        modelVBO.bind();
-        initModel();
-        modelVBO.unbind();
+        modelVBO.with(vbo -> initModel());
+
+        ebo = createEBO();
     }
 
     protected void initModel() {
@@ -44,6 +43,25 @@ public abstract class BufferedModel extends TemplateBuffer {
                 copyVertex(buffer, i);
             }
         });
+    }
+
+    protected final GlBuffer createEBO() {
+        GlBuffer ebo = new GlBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
+
+        int indicesSize = vertexCount * GlPrimitiveType.USHORT.getSize();
+
+        ebo.bind();
+
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
+        Backend.mapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices -> {
+            for (int i = 0; i < vertexCount; i++) {
+                indices.putShort((short) i);
+            }
+        });
+
+        ebo.unbind();
+
+        return ebo;
     }
 
     protected abstract void copyVertex(ByteBuffer to, int index);
@@ -64,35 +82,30 @@ public abstract class BufferedModel extends TemplateBuffer {
     }
 
     /**
-     * Override this
+     * Override this.
      */
     protected void doRender() {
-        GL20.glDisableClientState(32884);
-        GL20.glDisableClientState(32885);
-        GL20.glDisableClientState(32886);
-        GL20.glDisableClientState(32888);
-        GL20.glEnable(GL20.GL_VERTEX_ARRAY);
         modelVBO.bind();
+        ebo.bind();
 
         setupAttributes();
-        GL20.glDrawArrays(GL11.GL_QUADS, 0, vertexCount);
-
-        modelVBO.unbind();
+        GL20.glDrawElements(GL20.GL_QUADS, vertexCount, GlPrimitiveType.USHORT.getGlConstant(), 0);
 
         int numAttributes = getTotalShaderAttributeCount();
         for (int i = 0; i <= numAttributes; i++) {
             GL20.glDisableVertexAttribArray(i);
         }
 
-        GL20.glDisable(GL20.GL_VERTEX_ARRAY);
+        ebo.unbind();
+        modelVBO.unbind();
     }
 
     protected void setupAttributes() {
-
         int numAttributes = getTotalShaderAttributeCount();
         for (int i = 0; i <= numAttributes; i++) {
             GL20.glEnableVertexAttribArray(i);
         }
+
         getModelFormat().informAttributes(0);
     }
 

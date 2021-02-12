@@ -1,11 +1,10 @@
-package com.simibubi.create.foundation.render.gl.attrib;
+package com.simibubi.create.foundation.render.gl.attrib.impl;
+
+import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.gl.attrib.IVertexAttrib;
+import com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec;
 
 public enum RotatingVertexAttributes implements IVertexAttrib {
-    INSTANCE_POSITION("aInstancePos", CommonAttributes.VEC3),
-    LIGHT("aLight", CommonAttributes.LIGHT),
-    NETWORK_COLOR("aNetworkTint", CommonAttributes.RGB),
-    SPEED("aSpeed", CommonAttributes.FLOAT),
-    OFFSET("aOffset", CommonAttributes.FLOAT),
     AXIS("aAxis", CommonAttributes.NORMAL),
     ;
 

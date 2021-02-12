@@ -96,26 +96,26 @@ public class FastRenderDispatcher {
         }
     }
 
-    public static void renderLayer(RenderType type, MatrixStack stack, float cameraX, float cameraY, float cameraZ) {
+    public static void renderLayer(RenderType layer, MatrixStack stack, float cameraX, float cameraY, float cameraZ) {
         if (!available()) return;
 
         Matrix4f viewProjection = Matrix4f.translate(-cameraX, -cameraY, -cameraZ);
         viewProjection.multiplyBackward(stack.peek().getModel());
         viewProjection.multiplyBackward(getProjectionMatrix());
 
-        type.startDrawing();
+        layer.startDrawing();
 
         RenderSystem.enableDepthTest();
         RenderSystem.enableCull();
         GL11.glCullFace(GL11.GL_BACK);
-        CreateClient.kineticRenderer.render(type, viewProjection, cameraX, cameraY, cameraZ);
+        CreateClient.kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
         RenderSystem.disableCull();
         //RenderSystem.disableDepthTest();
 
-        ContraptionRenderDispatcher.renderLayer(type, viewProjection, cameraX, cameraY, cameraZ);
+        ContraptionRenderDispatcher.renderLayer(layer, viewProjection, cameraX, cameraY, cameraZ);
         if (!OptifineHandler.usingShaders())
             GL20.glUseProgram(0);
-        type.endDrawing();
+        layer.endDrawing();
     }
 
     public static void notifyLightUpdate(ClientChunkProvider world, LightType type, SectionPos pos) {

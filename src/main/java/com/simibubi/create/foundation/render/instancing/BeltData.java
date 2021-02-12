@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.render.gl.GlPrimitiveType;
 import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec;
 import com.simibubi.create.foundation.render.gl.attrib.VertexFormat;
+import com.simibubi.create.foundation.render.gl.attrib.impl.BeltVertexAttributes;
+import com.simibubi.create.foundation.render.gl.attrib.impl.KineticVertexAttributes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import java.nio.ByteBuffer;
@@ -12,10 +14,10 @@ import java.nio.ByteBuffer;
 import static com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec.*;
 
 public class BeltData extends KineticData<BeltData> {
-    public static final VertexAttribSpec TARGET_UV = copy(CommonAttributes.VEC4);
-    public static final VertexAttribSpec SCROLL_MULT = new VertexAttribSpec(GlPrimitiveType.BYTE, 1, true);
-
-    public static VertexFormat FORMAT = new VertexFormat(KineticData.FORMAT, CommonAttributes.ROTATION, CommonAttributes.UV, TARGET_UV, SCROLL_MULT);
+    public static VertexFormat FORMAT = VertexFormat.builder()
+                                                    .addAttributes(KineticVertexAttributes.class)
+                                                    .addAttributes(BeltVertexAttributes.class)
+                                                    .build();
 
     private float rotX;
     private float rotY;

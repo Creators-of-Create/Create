@@ -20,7 +20,7 @@ public class RenderInLayerMixin {
      * layer-correct custom rendering. RenderWorldLast is not refined enough for rendering world objects.
      * This should probably be a forge event.
      */
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/IProfiler;endSection()V", ordinal = 1), method = "renderLayer")
+    @Inject(at = @At(value = "TAIL"), method = "renderLayer")
     private void renderLayer(RenderType type, MatrixStack stack, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         FastRenderDispatcher.renderLayer(type, stack, (float) cameraX, (float) cameraY, (float) cameraZ);
     }

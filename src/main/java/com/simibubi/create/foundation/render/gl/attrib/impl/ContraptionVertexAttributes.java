@@ -1,15 +1,21 @@
-package com.simibubi.create.foundation.render.gl.attrib;
+package com.simibubi.create.foundation.render.gl.attrib.impl;
 
-public enum ModelVertexAttributes implements IVertexAttrib {
+import com.simibubi.create.foundation.render.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.gl.attrib.IVertexAttrib;
+import com.simibubi.create.foundation.render.gl.attrib.VertexAttribSpec;
+
+public enum ContraptionVertexAttributes implements IVertexAttrib {
     VERTEX_POSITION("aPos", CommonAttributes.VEC3),
     NORMAL("aNormal", CommonAttributes.NORMAL),
     TEXTURE("aTexCoords", CommonAttributes.UV),
+    COLOR("aColor", CommonAttributes.RGBA),
+    MODEL_LIGHT("aModelLight", CommonAttributes.LIGHT),
     ;
 
     private final String name;
     private final VertexAttribSpec spec;
 
-    ModelVertexAttributes(String name, VertexAttribSpec spec) {
+    ContraptionVertexAttributes(String name, VertexAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }

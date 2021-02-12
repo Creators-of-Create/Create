@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.gl.backend;
 
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.gl.shader.GlShader;
 import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
@@ -163,10 +164,11 @@ public class Backend {
             vert = loadShader(manager, programSpec.getVert(), ShaderType.VERTEX, programSpec.defines);
             frag = loadShader(manager, programSpec.getFrag(), ShaderType.FRAGMENT, programSpec.defines);
 
-            P program = GlProgram.builder(programSpec.name)
-                     .attachShader(vert)
-                     .attachShader(frag)
-                     .build(programSpec.factory);
+            GlProgram.Builder builder = GlProgram.builder(programSpec.name).attachShader(vert).attachShader(frag);
+
+            programSpec.attributes.forEach(builder::addAttribute);
+
+            P program = builder.build(programSpec.factory);
 
             programs.put(programSpec, program);
 

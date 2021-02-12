@@ -3,8 +3,7 @@ package com.simibubi.create.foundation.render;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.render.contraption.ContraptionProgram;
 import com.simibubi.create.foundation.render.gl.BasicProgram;
-import com.simibubi.create.foundation.render.gl.backend.Backend;
-import com.simibubi.create.foundation.render.gl.shader.GlProgram;
+import com.simibubi.create.foundation.render.gl.attrib.impl.*;
 import com.simibubi.create.foundation.render.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.gl.shader.ShaderConstants;
 import net.minecraft.util.ResourceLocation;
@@ -12,12 +11,52 @@ import net.minecraft.util.ResourceLocation;
 import static com.simibubi.create.foundation.render.gl.backend.Backend.register;
 
 public class AllProgramSpecs {
-    public static final ProgramSpec<BasicProgram> ROTATING = register(new ProgramSpec<>("rotating", Locations.ROTATING, Locations.INSTANCED, BasicProgram::new));
-    public static final ProgramSpec<BasicProgram> BELT = register(new ProgramSpec<>("belt", Locations.BELT, Locations.INSTANCED, BasicProgram::new));
-    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_STRUCTURE = register(new ProgramSpec<>("contraption_structure", Locations.CONTRAPTION_STRUCTURE, Locations.CONTRAPTION, ContraptionProgram::new));
-    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_ROTATING = register(new ProgramSpec<>("contraption_rotating", Locations.ROTATING, Locations.CONTRAPTION, ContraptionProgram::new, ShaderConstants.define("CONTRAPTION")));
-    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_BELT = register(new ProgramSpec<>("contraption_belt", Locations.BELT, Locations.CONTRAPTION, ContraptionProgram::new, ShaderConstants.define("CONTRAPTION")));
-    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_ACTOR = register(new ProgramSpec<>("contraption_actor", Locations.CONTRAPTION_ACTOR, Locations.CONTRAPTION, ContraptionProgram::new));
+    public static final ProgramSpec<BasicProgram> ROTATING = register(ProgramSpec.builder("rotating", BasicProgram::new)
+                                                                                 .addAttributes(ModelVertexAttributes.class)
+                                                                                 .addAttributes(KineticVertexAttributes.class)
+                                                                                 .addAttributes(RotatingVertexAttributes.class)
+                                                                                 .setVert(Locations.ROTATING)
+                                                                                 .setFrag(Locations.INSTANCED)
+                                                                                 .createProgramSpec());
+
+    public static final ProgramSpec<BasicProgram> BELT = register(ProgramSpec.builder("belt", BasicProgram::new)
+                                                                             .addAttributes(ModelVertexAttributes.class)
+                                                                             .addAttributes(KineticVertexAttributes.class)
+                                                                             .addAttributes(BeltVertexAttributes.class)
+                                                                             .setVert(Locations.BELT)
+                                                                             .setFrag(Locations.INSTANCED)
+                                                                             .createProgramSpec());
+
+    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_STRUCTURE = register(ProgramSpec.builder("contraption_structure", ContraptionProgram::new)
+                                                                                                    .addAttributes(ContraptionVertexAttributes.class)
+                                                                                                    .setVert(Locations.CONTRAPTION_STRUCTURE)
+                                                                                                    .setFrag(Locations.CONTRAPTION)
+                                                                                                    .createProgramSpec());
+
+    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_ROTATING = register(ProgramSpec.builder("contraption_rotating", ContraptionProgram::new)
+                                                                                                   .addAttributes(ModelVertexAttributes.class)
+                                                                                                   .addAttributes(KineticVertexAttributes.class)
+                                                                                                   .addAttributes(RotatingVertexAttributes.class)
+                                                                                                   .setVert(Locations.ROTATING)
+                                                                                                   .setFrag(Locations.CONTRAPTION)
+                                                                                                   .setDefines(ShaderConstants.define("CONTRAPTION"))
+                                                                                                   .createProgramSpec());
+
+    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_BELT = register(ProgramSpec.builder("contraption_belt", ContraptionProgram::new)
+                                                                                               .addAttributes(ModelVertexAttributes.class)
+                                                                                               .addAttributes(KineticVertexAttributes.class)
+                                                                                               .addAttributes(BeltVertexAttributes.class)
+                                                                                               .setVert(Locations.BELT)
+                                                                                               .setFrag(Locations.CONTRAPTION)
+                                                                                               .setDefines(ShaderConstants.define("CONTRAPTION"))
+                                                                                               .createProgramSpec());
+
+    public static final ProgramSpec<ContraptionProgram> CONTRAPTION_ACTOR = register(ProgramSpec.builder("contraption_actor", ContraptionProgram::new)
+                                                                                                .addAttributes(ModelVertexAttributes.class)
+                                                                                                .addAttributes(ActorVertexAttributes.class)
+                                                                                                .setVert(Locations.CONTRAPTION_ACTOR)
+                                                                                                .setFrag(Locations.CONTRAPTION)
+                                                                                                .createProgramSpec());
 
     public static class Locations {
         public static final ResourceLocation INSTANCED = loc("instanced.frag");

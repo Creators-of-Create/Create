@@ -11,18 +11,6 @@ public class VertexAttribSpec {
     private final int attributeCount;
     private final boolean normalized;
 
-    public static VertexAttribSpec copy(VertexAttribSpec other) {
-        return new VertexAttribSpec(other);
-    }
-
-    public VertexAttribSpec(VertexAttribSpec that) {
-        this.type = that.type;
-        this.count = that.count;
-        this.size = that.size;
-        this.attributeCount = that.attributeCount;
-        this.normalized = that.normalized;
-    }
-
     public VertexAttribSpec(GlPrimitiveType type, int count) {
         this(type, count, false);
     }

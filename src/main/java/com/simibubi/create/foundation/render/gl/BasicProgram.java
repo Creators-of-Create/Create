@@ -8,7 +8,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL20;
 
 public class BasicProgram extends GlProgram {
-    protected final int uTicks;
     protected final int uTime;
     protected final int uViewProjection;
     protected final int uDebug;
@@ -21,7 +20,6 @@ public class BasicProgram extends GlProgram {
 
     public BasicProgram(ResourceLocation name, int handle) {
         super(name, handle);
-        uTicks = getUniformLocation("uTicks");
         uTime = getUniformLocation("uTime");
         uViewProjection = getUniformLocation("uViewProjection");
         uDebug = getUniformLocation("uDebug");
@@ -43,7 +41,6 @@ public class BasicProgram extends GlProgram {
         super.bind();
 
         GL20.glUniform1i(uDebug, debugMode);
-        GL20.glUniform1i(uTicks, AnimationTickHolder.getTicks());
         GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTick());
 
         uploadMatrixUniform(uViewProjection, viewProjection);

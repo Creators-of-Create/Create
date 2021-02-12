@@ -1,34 +1,23 @@
 package com.simibubi.create.foundation.render.gl.attrib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class VertexFormat {
 
-    private final VertexAttribSpec[] elements;
+    private final ArrayList<IVertexAttrib> allAttributes;
 
     private final int numAttributes;
     private final int stride;
 
-    public VertexFormat(VertexAttribSpec... elements) {
-        this.elements = elements;
-        int numAttributes = 0, stride = 0;
-        for (VertexAttribSpec element : elements) {
-            numAttributes += element.getAttributeCount();
-            stride += element.getSize();
-        }
-        this.numAttributes = numAttributes;
-        this.stride = stride;
-    }
-
-    public VertexFormat(VertexFormat start, VertexAttribSpec... elements) {
-        int baseLength = start.elements.length;
-        int addedLength = elements.length;
-        this.elements = new VertexAttribSpec[baseLength + addedLength];
-        System.arraycopy(start.elements, 0, this.elements, 0, baseLength);
-        System.arraycopy(elements, 0, this.elements, baseLength, addedLength);
+    public VertexFormat(ArrayList<IVertexAttrib> allAttributes) {
+        this.allAttributes = allAttributes;
 
         int numAttributes = 0, stride = 0;
-        for (VertexAttribSpec element : this.elements) {
-            numAttributes += element.getAttributeCount();
-            stride += element.getSize();
+        for (IVertexAttrib attrib : allAttributes) {
+            VertexAttribSpec spec = attrib.attribSpec();
+            numAttributes += spec.getAttributeCount();
+            stride += spec.getSize();
         }
         this.numAttributes = numAttributes;
         this.stride = stride;
@@ -44,10 +33,33 @@ public class VertexFormat {
 
     public void informAttributes(int index) {
         int offset = 0;
-        for (VertexAttribSpec element : this.elements) {
-            element.registerForBuffer(stride, index, offset);
-            index += element.getAttributeCount();
-            offset += element.getSize();
+        for (IVertexAttrib attrib : this.allAttributes) {
+            VertexAttribSpec spec = attrib.attribSpec();
+            spec.registerForBuffer(stride, index, offset);
+            index += spec.getAttributeCount();
+            offset += spec.getSize();
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+
+    public static class Builder {
+        private final ArrayList<IVertexAttrib> allAttributes;
+
+        public Builder() {
+            allAttributes = new ArrayList<>();
+        }
+
+        public <A extends Enum<A> & IVertexAttrib> Builder addAttributes(Class<A> attribEnum) {
+            allAttributes.addAll(Arrays.asList(attribEnum.getEnumConstants()));
+            return this;
+        }
+
+        public VertexFormat build() {
+            return new VertexFormat(allAttributes);
         }
     }
 }
