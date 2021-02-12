@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.foundation.config.AllConfigs;

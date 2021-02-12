@@ -22,7 +22,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
 
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
@@ -190,18 +189,12 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
-		if (compound.contains("LastException"))
-			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
-		else
-			lastException = null;
 		super.read(compound, clientPacket);
 	}
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
-		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
 		super.write(compound, clientPacket);
 	}
 

@@ -16,7 +16,6 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -50,17 +49,13 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
-		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
+		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
-		if (compound.contains("LastException"))
-			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
-		else
-			lastException = null;
+		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 	}
 

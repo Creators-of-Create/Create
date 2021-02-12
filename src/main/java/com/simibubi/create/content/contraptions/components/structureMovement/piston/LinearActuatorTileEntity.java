@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -158,8 +157,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		compound.putBoolean("Running", running);
 		compound.putBoolean("Waiting", waitingForSpeedChange);
 		compound.putFloat("Offset", offset);
-		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
+		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 
 		if (clientPacket && forceMove) {
@@ -176,10 +174,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		running = compound.getBoolean("Running");
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
-		if (compound.contains("LastException"))
-			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
-		else
-			lastException = null;
+		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 
 		if (!clientPacket)

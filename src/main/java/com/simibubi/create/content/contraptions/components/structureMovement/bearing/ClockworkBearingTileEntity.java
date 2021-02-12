@@ -22,7 +22,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -298,8 +297,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		compound.putBoolean("Running", running);
 		compound.putFloat("HourAngle", hourAngle);
 		compound.putFloat("MinuteAngle", minuteAngle);
-		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
+		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 	}
 
@@ -311,10 +309,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		running = compound.getBoolean("Running");
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
-		if (compound.contains("LastException"))
-			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
-		else
-			lastException = null;
+		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 
 		if (!clientPacket)

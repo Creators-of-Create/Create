@@ -19,7 +19,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -65,8 +64,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
-		if (lastException != null)
-			compound.putString("LastException", ITextComponent.Serializer.toJson(lastException.component));
+		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 	}
 
@@ -75,10 +73,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
-		if (compound.contains("LastException"))
-			lastException = new AssemblyException(ITextComponent.Serializer.fromJson(compound.getString("LastException")));
-		else
-			lastException = null;
+		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 		if (!clientPacket)
 			return;
