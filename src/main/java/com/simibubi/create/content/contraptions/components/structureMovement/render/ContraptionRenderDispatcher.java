@@ -48,6 +48,8 @@ public class ContraptionRenderDispatcher {
             for (WeakReference<AbstractContraptionEntity> weakReference : map.values()) {
                 AbstractContraptionEntity entity = weakReference.get();
 
+                if (entity == null) continue;
+
                 EntityRendererManager renderManager = Minecraft.getInstance().getRenderManager();
 
                 EntityRenderer<?> renderer = renderManager.getRenderer(entity);
