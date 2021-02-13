@@ -30,11 +30,13 @@ import java.util.stream.Stream;
 
 public class WrappedChunk implements IChunk {
 
-    private final PlacementSimulationWorld world;
-    private boolean needsLight;
-    private final int x;
-    private final int z;
-    private final ChunkPos pos;
+    final PlacementSimulationWorld world;
+    boolean needsLight;
+    final int x;
+    final int z;
+    final ChunkPos pos;
+
+    private final ChunkSection[] sections;
 
     public WrappedChunk(PlacementSimulationWorld world, int x, int z) {
         this.world = world;
@@ -42,6 +44,12 @@ public class WrappedChunk implements IChunk {
         this.x = x;
         this.z = z;
         this.pos = new ChunkPos(x, z);
+
+        this.sections = new ChunkSection[16];
+
+        for (int i = 0; i < 16; i++) {
+            sections[i] = new WrappedChunkSection(this, i << 4);
+        }
     }
 
     @Override
@@ -55,6 +63,11 @@ public class WrappedChunk implements IChunk {
                     return chunkContains && it.getValue().getLightValue(world, blockPos) != 0;
                 })
                 .map(Map.Entry::getKey);
+    }
+
+    @Override
+    public ChunkSection[] getSections() {
+        return sections;
     }
 
     @Nullable
@@ -76,11 +89,6 @@ public class WrappedChunk implements IChunk {
     @Override
     public Set<BlockPos> getTileEntitiesPos() {
         return null;
-    }
-
-    @Override
-    public ChunkSection[] getSections() {
-        return new ChunkSection[0];
     }
 
     @Override

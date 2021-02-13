@@ -89,6 +89,10 @@ public class PlacementSimulationWorld extends WrappedWorld {
 		return true;
 	}
 
+	public BlockState getBlockState(int x, int y, int z) {
+		return getBlockState(scratch.setPos(x, y, z));
+	}
+
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
 		BlockState state = blocksAdded.get(pos);

@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RenderedContraption {
-    private HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
+    private final HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
 
     public final PlacementSimulationWorld renderWorld;
 

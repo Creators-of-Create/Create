@@ -10,6 +10,10 @@ import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
@@ -30,9 +34,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ForkJoinPool;
 
 public class ContraptionRenderDispatcher {
-    public static final HashMap<Integer, RenderedContraption> renderers = new HashMap<>();
+    public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
 
     public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
@@ -82,16 +89,15 @@ public class ContraptionRenderDispatcher {
     }
 
     private static RenderedContraption getRenderer(World world, Contraption c) {
-        RenderedContraption renderer;
         int entityId = c.entity.getEntityId();
-        if (renderers.containsKey(entityId)) {
-            renderer = renderers.get(entityId);
-        } else {
-            renderer = new RenderedContraption(world, c);
-            renderers.put(entityId, renderer);
+        RenderedContraption contraption = renderers.get(entityId);
+
+        if (contraption == null) {
+            contraption = new RenderedContraption(world, c);
+            renderers.put(entityId, contraption);
         }
 
-        return renderer;
+        return contraption;
     }
 
     public static void renderLayer(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ) {
