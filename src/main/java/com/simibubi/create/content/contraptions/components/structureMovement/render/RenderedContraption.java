@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.content.contraptions.components.actors.ContraptionActorData;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -52,8 +53,10 @@ public class RenderedContraption {
         this.renderWorld = setupRenderWorld(world, contraption);
 
         buildLayers();
-        buildInstancedTiles();
-        buildActors();
+        if (Backend.canUseInstancing()) {
+            buildInstancedTiles();
+            buildActors();
+        }
     }
 
     public int getEntityId() {

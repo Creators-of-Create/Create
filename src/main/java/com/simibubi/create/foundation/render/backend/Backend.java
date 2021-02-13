@@ -17,7 +17,6 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.ARBVertexProgram;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryUtil;
@@ -42,10 +41,9 @@ public class Backend {
     private static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();
     private static final Map<ProgramSpec<?>, GlProgram> programs = new HashMap<>();
 
-    public static boolean enabled;
+    private static boolean enabled;
 
     public static GLCapabilities capabilities;
-    private static SystemCapability capability;
     private static MapBuffer mapBuffer;
 
     public Backend() {
@@ -102,16 +100,24 @@ public class Backend {
         return Arrays.stream(constants).filter(it -> it.supported(caps)).findFirst().orElse(last);
     }
 
-    public static boolean canUse() {
-        return isCapable() && !OptifineHandler.usingShaders();
+    public static boolean canUseInstancing() {
+        return enabled && gl33();
     }
 
-    public static SystemCapability getCapability() {
-        return capability;
+    public static boolean canUseVBOs() {
+        return enabled && gl20();
     }
 
-    public static boolean isCapable() {
-        return capability.isCapable();
+    public static boolean available() {
+        return enabled && gl20();
+    }
+
+    public static boolean gl33() {
+        return capabilities.OpenGL33;
+    }
+
+    public static boolean gl20() {
+        return capabilities.OpenGL20;
     }
 
     public static void init() {
@@ -132,9 +138,10 @@ public class Backend {
             capabilities = GL.createCapabilities();
             mapBuffer = getLatest(MapBuffer.class);
 
+            OptifineHandler.refresh();
             refresh();
 
-            if (isCapable()) {
+            if (gl20()) {
 
                 programs.values().forEach(GlProgram::delete);
                 programs.clear();
@@ -146,13 +153,7 @@ public class Backend {
     }
 
     public static void refresh() {
-        if (capabilities.OpenGL33) {
-            capability = SystemCapability.CAPABLE;
-        } else {
-            capability = SystemCapability.INCAPABLE;
-        }
-
-        enabled = AllConfigs.CLIENT.experimentalRendering.get();
+        enabled = AllConfigs.CLIENT.experimentalRendering.get() && !OptifineHandler.usingShaders();
     }
 
     private static <P extends GlProgram, S extends ProgramSpec<P>> void loadProgram(IResourceManager manager, S programSpec) {

@@ -84,8 +84,9 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 
 		@OnlyIn(Dist.CLIENT)
 		private static void experimentalRendering(String value) {
-			boolean last = AllConfigs.CLIENT.experimentalRendering.get();
-			AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			if (!"".equals(value)) {
+				AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			}
 			FastRenderDispatcher.refresh();
 		}
 		

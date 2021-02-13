@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -56,10 +57,11 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 		transform(entity, partialTicks, matrixStacks);
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
-			if (!FastRenderDispatcher.available()) {
-				ContraptionRenderer.render(entity.world, contraption, ms, msLocal, buffers);
-			} else {
+			if (Backend.canUseVBOs()) {
 				ContraptionRenderer.renderDynamic(entity.world, contraption, ms, msLocal, buffers);
+			}
+			else {
+				ContraptionRenderer.render(entity.world, contraption, ms, msLocal, buffers);
 			}
 		}
 		ms.pop();

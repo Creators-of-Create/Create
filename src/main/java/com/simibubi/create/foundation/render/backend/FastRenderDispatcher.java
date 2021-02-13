@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import java.util.function.Consumer;
 public class FastRenderDispatcher {
 
     public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
-    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::newKeySet);
+    public static WorldAttached<ConcurrentHashMap<TileEntity, Integer>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::new);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
@@ -55,18 +56,36 @@ public class FastRenderDispatcher {
     public static void tick() {
         ClientWorld world = Minecraft.getInstance().world;
 
-        runQueue(addedLastTick.get(world), CreateClient.kineticRenderer::onLightUpdate);
-        CreateClient.kineticRenderer.clean();
+        // Clean up twice a second. This doesn't have to happen every tick,
+        // but this does need to be run to ensure we don't miss anything.
+        int ticks = AnimationTickHolder.getTicks();
+
+        ConcurrentHashMap<TileEntity, Integer> map = addedLastTick.get(world);
+        map
+                .entrySet()
+                .stream()
+                .filter(it -> ticks - it.getValue() > 10)
+                .map(Map.Entry::getKey)
+                .forEach(te -> {
+                    map.remove(te);
+
+                    CreateClient.kineticRenderer.onLightUpdate(te);
+                });
+
+
+        if (ticks % 10 == 0) {
+            CreateClient.kineticRenderer.clean();
+        }
 
         runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
     }
 
     public static boolean available() {
-        return Backend.enabled;
+        return Backend.canUseInstancing();
     }
 
     public static boolean available(World world) {
-        return Backend.enabled && !(world instanceof SchematicWorld);
+        return Backend.canUseInstancing() && !(world instanceof SchematicWorld);
     }
 
     public static int getDebugMode() {
@@ -77,6 +96,7 @@ public class FastRenderDispatcher {
         RenderWork.enqueue(() -> {
             CreateClient.kineticRenderer.invalidate();
             OptifineHandler.refresh();
+            Backend.refresh();
             Minecraft.getInstance().worldRenderer.loadRenderers();
             ClientWorld world = Minecraft.getInstance().world;
             if (world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
@@ -97,12 +117,8 @@ public class FastRenderDispatcher {
         }
     }
 
-    public static void renderLayer(RenderType layer, MatrixStack stack, float cameraX, float cameraY, float cameraZ) {
-        if (!available()) return;
-
-        Matrix4f viewProjection = Matrix4f.translate(-cameraX, -cameraY, -cameraZ);
-        viewProjection.multiplyBackward(stack.peek().getModel());
-        viewProjection.multiplyBackward(getProjectionMatrix());
+    public static void renderLayer(RenderType layer, Matrix4f viewProjection, float cameraX, float cameraY, float cameraZ) {
+        if (!Backend.canUseInstancing()) return;
 
         layer.startDrawing();
 
@@ -113,29 +129,7 @@ public class FastRenderDispatcher {
         RenderSystem.disableCull();
         //RenderSystem.disableDepthTest();
 
-        ContraptionRenderDispatcher.renderLayer(layer, viewProjection, cameraX, cameraY, cameraZ);
-        if (!OptifineHandler.usingShaders())
-            GL20.glUseProgram(0);
         layer.endDrawing();
-    }
-
-    public static void notifyLightUpdate(ClientChunkProvider world, LightType type, SectionPos pos) {
-        ContraptionRenderDispatcher.notifyLightUpdate((ILightReader) world.getWorld(), type, pos);
-
-        Chunk chunk = world.getChunk(pos.getSectionX(), pos.getSectionZ(), false);
-
-        int sectionY = pos.getSectionY();
-
-        if (chunk != null) {
-            chunk.getTileEntityMap()
-                 .entrySet()
-                 .stream()
-                 .filter(entry -> SectionPos.toChunk(entry.getKey().getY()) == sectionY)
-                 .map(Map.Entry::getValue)
-                 .filter(tile -> tile instanceof ILightListener)
-                 .map(tile -> (ILightListener) tile)
-                 .forEach(ILightListener::onChunkLightUpdate);
-        }
     }
 
     // copied from GameRenderer.renderWorld

@@ -37,7 +37,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (!Backend.enabled) return null;
+        if (!Backend.canUseInstancing()) return null;
 
         TileEntityInstance<?> instance = instances.get(tile);
 
@@ -47,7 +47,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
             if (renderer != null) {
-                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).add(tile);
+                FastRenderDispatcher.addedLastTick.get(tile.getWorld()).put(tile, AnimationTickHolder.getTicks());
                 instances.put(tile, renderer);
             }
 
@@ -93,11 +93,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public void clean() {
-        // Clean up twice a second. This doesn't have to happen every tick,
-        // but this does need to be run to ensure we don't miss anything.
-        if (AnimationTickHolder.getTicks() % 10 == 0) {
-            instances.keySet().stream().filter(TileEntity::isRemoved).forEach(instances::remove);
-        }
+        instances.keySet().stream().filter(TileEntity::isRemoved).forEach(instances::remove);
     }
 
     public void invalidate() {

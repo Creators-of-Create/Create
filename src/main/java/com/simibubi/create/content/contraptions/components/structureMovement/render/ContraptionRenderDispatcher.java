@@ -34,10 +34,6 @@ import java.util.Map;
 public class ContraptionRenderDispatcher {
     public static final HashMap<Integer, RenderedContraption> renderers = new HashMap<>();
 
-    public static void markForRendering(Contraption c, MatrixStack model) {
-        getRenderer(c.entity.world, c).setRenderSettings(model.peek().getModel());
-    }
-
     public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
@@ -73,7 +69,8 @@ public class ContraptionRenderDispatcher {
     private static <C extends AbstractContraptionEntity> void updateTransform(C c, AbstractContraptionEntityRenderer<C> entityRenderer) {
         MatrixStack stack = entityRenderer.makeTransformMatrix(c, AnimationTickHolder.getPartialTicks());
 
-        markForRendering(c.getContraption(), stack);
+        Contraption c1 = c.getContraption();
+        getRenderer(c1.entity.world, c1).setRenderSettings(stack.peek().getModel());
     }
 
     public static void tick() {
@@ -104,15 +101,19 @@ public class ContraptionRenderDispatcher {
         GL11.glEnable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
-        ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
-        structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
-        for (RenderedContraption renderer : renderers.values()) {
-            renderer.doRenderLayer(layer, structureShader);
+        if (Backend.canUseVBOs()) {
+            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
+            structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
+            for (RenderedContraption renderer : renderers.values()) {
+                renderer.doRenderLayer(layer, structureShader);
+            }
         }
 
-        for (RenderedContraption renderer : renderers.values()) {
-            renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
-            renderer.teardown();
+        if (Backend.canUseInstancing()) {
+            for (RenderedContraption renderer : renderers.values()) {
+                renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
+                renderer.teardown();
+            }
         }
 
         layer.endDrawing();
