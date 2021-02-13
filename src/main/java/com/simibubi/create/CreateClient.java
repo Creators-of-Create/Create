@@ -1,7 +1,6 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
@@ -74,7 +73,7 @@ public class CreateClient {
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
+		bufferCache.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();

@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -191,9 +192,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.getModel();
 		for (MatrixStack m : matrixStacks)
 			m.translate(offset.x, offset.y, offset.z);
-		pole.light(lighting)
+		pole.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
-		hand.light(lighting)
+		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
 	}
 

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -52,7 +53,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		}
 
 		render(blockState, progress, lit, sbb -> sbb.light(msLocal.peek()
-			.getModel())
+			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, vb), ms, msLocal);
 	}
 

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -57,7 +58,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		// render
 		superBuffer.light(msLocal.peek()
-			.getModel());
+			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 

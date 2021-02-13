@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
@@ -32,6 +33,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	// Vertex Lighting
 	private boolean shouldLight;
 	private int packedLightCoords;
+	private int otherBlockLight;
 	private Matrix4f lightTransform;
 
 	// Vertex Coloring
@@ -136,7 +138,11 @@ public class SuperByteBuffer extends TemplateBuffer {
 					lightPos.set(((x - f) * 15 / 16f) + f, (y - f) * 15 / 16f + f, (z - f) * 15 / 16f + f, 1F);
 					lightPos.transform(localTransforms);
 					lightPos.transform(lightTransform);
+
 					light = getLight(Minecraft.getInstance().world, lightPos);
+					if (otherBlockLight >= 0) {
+						light = ContraptionRenderDispatcher.getMaxBlockLight(light, otherBlockLight);
+					}
 				}
 				builder.light(light);
 			} else
@@ -150,6 +156,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 		spriteShiftFunc = null;
 		shouldColor = false;
 		shouldLight = false;
+		otherBlockLight = -1;
 	}
 
 	public SuperByteBuffer translate(double x, double y, double z) {
@@ -211,6 +218,13 @@ public class SuperByteBuffer extends TemplateBuffer {
 	public SuperByteBuffer light(Matrix4f lightTransform) {
 		shouldLight = true;
 		this.lightTransform = lightTransform;
+		return this;
+	}
+
+	public SuperByteBuffer light(Matrix4f lightTransform, int otherBlockLight) {
+		shouldLight = true;
+		this.lightTransform = lightTransform;
+		this.otherBlockLight = otherBlockLight;
 		return this;
 	}
 

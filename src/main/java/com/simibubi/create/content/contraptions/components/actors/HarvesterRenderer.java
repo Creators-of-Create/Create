@@ -5,6 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
@@ -79,7 +80,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 			.rotate(Direction.WEST, AngleHelper.rad(angle))
 			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z)
 			.light(msLocal.peek()
-				.getModel())
+				.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
 

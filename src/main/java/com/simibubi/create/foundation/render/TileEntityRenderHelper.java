@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -12,9 +13,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.pipeline.LightUtil;
 
 import java.util.Iterator;
 
@@ -51,17 +50,7 @@ public class TileEntityRenderHelper {
 				Vector4f vec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 				vec.transform(matrix);
 				BlockPos lightPos = new BlockPos(vec.getX(), vec.getY(), vec.getZ());
-				int worldLight = WorldRenderer.getLightmapCoordinates(world, lightPos);
-
-				if (renderWorld != null) {
-					int contraptionBlockLight = renderWorld.getLightLevel(LightType.BLOCK, pos);
-
-					int worldBlockLight = LightTexture.getBlockLightCoordinates(worldLight);
-
-					if (contraptionBlockLight > worldBlockLight) {
-						worldLight = (worldLight & 0xFFFF0000) | (contraptionBlockLight << 4);
-					}
-				}
+				int worldLight = ContraptionRenderDispatcher.getLightOnContraption(world, renderWorld, pos, lightPos);
 
 				renderer.render(tileEntity, pt, ms, buffer, worldLight,
 								OverlayTexture.DEFAULT_UV);
