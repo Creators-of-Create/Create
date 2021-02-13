@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render.backend;
 
-import com.simibubi.create.foundation.render.RenderWork;
 import com.simibubi.create.foundation.render.TemplateBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;

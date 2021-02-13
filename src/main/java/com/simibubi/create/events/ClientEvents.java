@@ -25,7 +25,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.RenderWork;
+import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;

@@ -5,16 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.RenderWork;
-import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.OptifineHandler;
-import com.simibubi.create.foundation.render.backend.light.ILightListener;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
@@ -23,14 +17,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -93,14 +81,7 @@ public class FastRenderDispatcher {
     }
 
     public static void refresh() {
-        RenderWork.enqueue(() -> {
-            CreateClient.kineticRenderer.invalidate();
-            OptifineHandler.refresh();
-            Backend.refresh();
-            Minecraft.getInstance().worldRenderer.loadRenderers();
-            ClientWorld world = Minecraft.getInstance().world;
-            if (world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
-        });
+        RenderWork.enqueue(Minecraft.getInstance().worldRenderer::loadRenderers);
     }
 
     private static <T> void runQueue(@Nullable ConcurrentHashMap.KeySetView<T, Boolean> changed, Consumer<T> action) {

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.render.backend.light;
 
-import com.simibubi.create.foundation.render.RenderWork;
+import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.render.backend.gl.GlTexture;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
