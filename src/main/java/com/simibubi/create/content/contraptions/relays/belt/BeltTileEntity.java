@@ -137,17 +137,12 @@ public class BeltTileEntity extends KineticTileEntity {
 		return super.calculateStressApplied();
 	}
 
-	private AxisAlignedBB cachedBoundingBox;
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
-			if (!isController())
-				cachedBoundingBox = super.getRenderBoundingBox();
-			else
-				cachedBoundingBox = super.getRenderBoundingBox().grow(beltLength + 1);
-		}
-
-		return cachedBoundingBox;
+	public AxisAlignedBB makeRenderBoundingBox() {
+		if (!isController())
+			return super.makeRenderBoundingBox();
+		else
+			return super.makeRenderBoundingBox().grow(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {
@@ -275,7 +270,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public boolean isController() {
-		return pos.equals(controller);
+		return controller != null &&
+				pos.getX() == controller.getX() &&
+				pos.getY() == controller.getY() &&
+				pos.getZ() == controller.getZ();
 	}
 
 	public float getBeltMovementSpeed() {

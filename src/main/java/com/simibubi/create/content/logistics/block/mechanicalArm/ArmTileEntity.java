@@ -139,8 +139,8 @@ public class ArmTileEntity extends KineticTileEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().grow(3);
+	public AxisAlignedBB makeRenderBoundingBox() {
+		return super.makeRenderBoundingBox().grow(3);
 	}
 
 	private boolean checkForMusicAmong(List<ArmInteractionPoint> list) {

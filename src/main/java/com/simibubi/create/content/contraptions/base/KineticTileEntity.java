@@ -26,10 +26,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
@@ -464,7 +466,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	@Override
 	public double getMaxRenderDistanceSquared() {
-		return 16384.0D; // TODO: make this a config option
+		return super.getMaxRenderDistanceSquared();
 	}
 
 	@Override
@@ -491,5 +493,18 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void onChunkLightUpdate() {
 		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
+
+	protected AxisAlignedBB cachedBoundingBox;
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		if (cachedBoundingBox == null) {
+			cachedBoundingBox = makeRenderBoundingBox();
+		}
+		return cachedBoundingBox;
+	}
+
+	protected AxisAlignedBB makeRenderBoundingBox() {
+		return super.getRenderBoundingBox();
 	}
 }
