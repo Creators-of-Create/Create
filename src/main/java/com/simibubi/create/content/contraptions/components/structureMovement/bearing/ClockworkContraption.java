@@ -7,13 +7,18 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 public class ClockworkContraption extends Contraption {
 
@@ -38,7 +43,7 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
-		Direction direction) {
+		Direction direction) throws AssemblyException {
 		int hourArmBlocks = 0;
 
 		ClockworkContraption hourArm = new ClockworkContraption();
@@ -81,21 +86,23 @@ public class ClockworkContraption extends Contraption {
 	}
 	
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		return searchMovedStructure(world, pos, facing);
 	}
 
 	@Override
-	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) {
+	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) throws AssemblyException {
 		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), null);
 	}
 
 	@Override
-	protected boolean moveBlock(World world, BlockPos pos, Direction direction, List<BlockPos> frontier,
-		Set<BlockPos> visited) {
-		if (ignoreBlocks.contains(pos))
+	protected boolean moveBlock(World world, Direction direction, Queue<BlockPos> frontier,
+		Set<BlockPos> visited) throws AssemblyException {
+		if (ignoreBlocks.contains(frontier.peek())) {
+			frontier.poll();
 			return true;
-		return super.moveBlock(world, pos, direction, frontier, visited);
+		}
+		return super.moveBlock(world, direction, frontier, visited);
 	}
 
 	@Override

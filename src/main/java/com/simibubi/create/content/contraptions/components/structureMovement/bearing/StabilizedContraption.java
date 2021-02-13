@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -20,7 +21,7 @@ public class StabilizedContraption extends Contraption {
 	}
 
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		BlockPos offset = pos.offset(facing);
 		if (!searchMovedStructure(world, offset, null))
 			return false;

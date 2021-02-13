@@ -1,23 +1,26 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
+import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
-
 import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
-public class GantryPinionTileEntity extends KineticTileEntity {
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
+public class GantryPinionTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
 
 	boolean assembleNextTick;
+	protected AssemblyException lastException;
 
 	public GantryPinionTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -50,6 +53,11 @@ public class GantryPinionTileEntity extends KineticTileEntity {
 		}
 	}
 
+	@Override
+	public AssemblyException getLastAssemblyException() {
+		return lastException;
+	}
+
 	private void tryAssemble() {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof GantryPinionBlock))
@@ -71,8 +79,17 @@ public class GantryPinionTileEntity extends KineticTileEntity {
 		if (pinionMovementSpeed < 0)
 			movementDirection = movementDirection.getOpposite();
 
-		if (!contraption.assemble(world, pos))
+		try {
+			lastException = null;
+			if (!contraption.assemble(world, pos))
+				return;
+
+			sendData();
+		} catch (AssemblyException e) {
+			lastException = e;
+			sendData();
 			return;
+		}
 		if (ContraptionCollider.isCollidingWithWorld(world, contraption, pos.offset(movementDirection),
 			movementDirection))
 			return;
@@ -83,6 +100,18 @@ public class GantryPinionTileEntity extends KineticTileEntity {
 		BlockPos anchor = pos;
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		world.addEntity(movedContraption);
+	}
+
+	@Override
+	protected void write(CompoundNBT compound, boolean clientPacket) {
+		AssemblyException.write(compound, lastException);
+		super.write(compound, clientPacket);
+	}
+
+	@Override
+	protected void read(CompoundNBT compound, boolean clientPacket) {
+		lastException = AssemblyException.read(compound);
+		super.read(compound, clientPacket);
 	}
 
 	@Override
