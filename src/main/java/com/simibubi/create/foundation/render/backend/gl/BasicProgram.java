@@ -47,8 +47,7 @@ public class BasicProgram extends GlProgram {
         GL20.glUniform3f(uCameraPos, camX, camY, camZ);
 
         GL20.glUniform2f(uFogRange, GlFog.getFogStart(), GlFog.getFogEnd());
-        GL20.glGetFloatv(GL20.GL_FOG_COLOR, Backend.VEC4_BUFFER);
-        GL20.glUniform4fv(uFogColor, Backend.VEC4_BUFFER);
+        GL20.glUniform4fv(uFogColor, GlFog.FOG_COLOR);
     }
 
     protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {
