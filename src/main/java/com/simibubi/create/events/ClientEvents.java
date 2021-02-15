@@ -104,6 +104,7 @@ public class ClientEvents {
 		ArmInteractionPointHandler.tick();
 		PlacementHelpers.tick();
 		CreateClient.outliner.tickOutlines();
+		CreateClient.ghostBlocks.tickGhosts();
 	}
 
 	@SubscribeEvent
@@ -122,6 +123,8 @@ public class ClientEvents {
 
 		CouplingRenderer.renderAll(ms, buffer);
 		CreateClient.schematicHandler.render(ms, buffer);
+		CreateClient.ghostBlocks.renderAll(ms, buffer);
+
 		CreateClient.outliner.renderOutlines(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);
 		buffer.draw();

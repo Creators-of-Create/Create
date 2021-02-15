@@ -24,19 +24,7 @@ public class HighlightCommand {
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("highlight")
 				.requires(cs -> cs.hasPermissionLevel(0))
-				.requires(AllCommands.sourceIsPlayer)
 				.then(Commands.argument("pos", BlockPosArgument.blockPos())
-						.requires(AllCommands.sourceIsPlayer)
-						.executes(ctx -> {
-							BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
-
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
-									new HighlightPacket(pos)
-							);
-
-							return Command.SINGLE_SUCCESS;
-						})
 						.then(Commands.argument("players", EntityArgument.players())
 								.executes(ctx -> {
 									Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(ctx, "players");
@@ -52,7 +40,19 @@ public class HighlightCommand {
 									return players.size();
 								})
 						)
+						//.requires(AllCommands.sourceIsPlayer)
+						.executes(ctx -> {
+							BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
+
+							AllPackets.channel.send(
+									PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
+									new HighlightPacket(pos)
+							);
+
+							return Command.SINGLE_SUCCESS;
+						})
 				)
+				//.requires(AllCommands.sourceIsPlayer)
 				.executes(ctx -> {
 					ServerPlayerEntity player = ctx.getSource().asPlayer();
 					return highlightAssemblyExceptionFor(player, ctx.getSource());

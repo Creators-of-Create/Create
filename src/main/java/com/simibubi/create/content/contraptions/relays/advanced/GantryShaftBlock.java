@@ -279,7 +279,6 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 			return PlacementOffset.success(offset.getPos(), offset.getTransform()
 				.andThen(s -> s.with(POWERED, state.get(POWERED))));
 		}
-
 	}
 
 }
