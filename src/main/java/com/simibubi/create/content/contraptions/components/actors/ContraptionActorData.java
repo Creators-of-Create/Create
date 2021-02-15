@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
@@ -27,6 +28,11 @@ public class ContraptionActorData extends InstanceData {
     private byte rotationCenterX = 64;
     private byte rotationCenterY = 64;
     private byte rotationCenterZ = 64;
+
+    protected ContraptionActorData(InstancedModel<?> owner) {
+        super(owner);
+    }
+
 
     public ContraptionActorData setPosition(BlockPos pos) {
         this.x = pos.getX();

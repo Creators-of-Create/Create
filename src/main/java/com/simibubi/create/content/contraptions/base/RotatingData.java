@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
 
@@ -15,6 +16,10 @@ public class RotatingData extends KineticData<RotatingData> {
     private byte rotationAxisX;
     private byte rotationAxisY;
     private byte rotationAxisZ;
+
+    protected RotatingData(InstancedModel<?> owner) {
+        super(owner);
+    }
 
     public RotatingData setRotationAxis(Direction.Axis axis) {
         Direction orientation = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);

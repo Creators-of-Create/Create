@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.content.contraptions.base.KineticVertexAttributes;
 import com.simibubi.create.content.contraptions.base.KineticData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import java.nio.ByteBuffer;
@@ -25,13 +26,16 @@ public class BeltData extends KineticData<BeltData> {
     private float maxV;
     private byte scrollMult;
 
+    protected BeltData(InstancedModel<?> owner) {
+        super(owner);
+    }
+
     public BeltData setRotation(float rotX, float rotY, float rotZ) {
         this.rotX = rotX;
         this.rotY = rotY;
         this.rotZ = rotZ;
         return this;
     }
-
 
     public BeltData setScrollTexture(SpriteShiftEntry spriteShift) {
         TextureAtlasSprite source = spriteShift.getOriginal();

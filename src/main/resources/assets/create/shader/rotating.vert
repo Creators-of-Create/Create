@@ -65,13 +65,15 @@ void main() {
     vec4 worldPos = kineticRotation * vec4(aPos - .5, 1.) + vec4(aInstancePos + .5, 0.);
 
     #ifdef CONTRAPTION
-
     worldPos = uModel * worldPos;
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
-
     mat4 normalMat = uModel * kineticRotation;
+
+    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+    FragDistance = length(worldPos.xyz);
     #else
     mat4 normalMat = kineticRotation;
+
+    FragDistance = length(worldPos.xyz - uCameraPos);
     #endif
 
     vec3 norm = normalize(normalMat * vec4(aNormal, 0.)).xyz;
@@ -79,7 +81,6 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aLight;
-    FragDistance = length(worldPos.xyz - uCameraPos);
     gl_Position = uViewProjection * worldPos;
 
     #ifdef CONTRAPTION

@@ -4,6 +4,12 @@ import java.nio.ByteBuffer;
 
 public abstract class InstanceData {
 
+    protected final InstancedModel<?> owner;
+
+    protected InstanceData(InstancedModel<?> owner) {
+        this.owner = owner;
+    }
+
     public abstract void write(ByteBuffer buf);
 
     public void putVec4(ByteBuffer buf, float x, float y, float z, float w) {

@@ -212,7 +212,7 @@ public class LightVolume {
         bufferDirty = true;
     }
 
-    public void use() {
+    public void bind() {
         // just in case something goes wrong or we accidentally call this before this volume is properly disposed of.
         if (lightData == null || removed) return;
 
@@ -246,7 +246,7 @@ public class LightVolume {
         }
     }
 
-    public void release() {
+    public void unbind() {
         glTexture.unbind();
     }
 

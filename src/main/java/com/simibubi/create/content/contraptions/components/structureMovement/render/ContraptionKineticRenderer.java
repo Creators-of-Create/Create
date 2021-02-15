@@ -7,13 +7,20 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.content.contraptions.base.RotatingInstancedModel;
 import com.simibubi.create.content.contraptions.components.actors.RotatingActorModel;
+import net.minecraft.util.math.BlockPos;
 
 public class ContraptionKineticRenderer extends InstancedTileRenderer<ContraptionProgram> {
 
     @Override
     public void registerMaterials() {
-        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(AllProgramSpecs.CONTRAPTION_BELT, BeltInstancedModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(AllProgramSpecs.CONTRAPTION_ROTATING, RotatingInstancedModel::new));
-        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(AllProgramSpecs.CONTRAPTION_ACTOR, RotatingActorModel::new));
+        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.CONTRAPTION_BELT, BeltInstancedModel::new));
+        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.CONTRAPTION_ROTATING, RotatingInstancedModel::new));
+        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(this, AllProgramSpecs.CONTRAPTION_ACTOR, RotatingActorModel::new));
+    }
+
+    @Override
+    public BlockPos getOriginCoordinate() {
+        return BlockPos.ZERO;
     }
 }
+

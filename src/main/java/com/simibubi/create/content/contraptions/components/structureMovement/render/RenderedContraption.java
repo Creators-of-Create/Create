@@ -3,23 +3,26 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.*;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.content.contraptions.components.actors.ContraptionActorData;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
@@ -45,6 +48,7 @@ public class RenderedContraption {
     public Contraption contraption;
 
     private Matrix4f model;
+    private AxisAlignedBB lightBox;
 
     public RenderedContraption(World world, Contraption contraption) {
         this.contraption = contraption;
@@ -76,12 +80,53 @@ public class RenderedContraption {
     }
 
     public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
-        ContraptionModel buffer = renderLayers.get(layer);
-        if (buffer != null) {
+        ContraptionModel structure = renderLayers.get(layer);
+        if (structure != null) {
             setup(shader);
-            buffer.render();
+            structure.render();
             teardown();
         }
+    }
+
+    public void beginFrame(double camX, double camY, double camZ) {
+        AbstractContraptionEntity entity = contraption.entity;
+        float pt = AnimationTickHolder.getPartialTicks();
+
+        MatrixStack stack = new MatrixStack();
+
+        double x = MathHelper.lerp(pt, entity.lastTickPosX, entity.getX()) - camX;
+        double y = MathHelper.lerp(pt, entity.lastTickPosY, entity.getY()) - camY;
+        double z = MathHelper.lerp(pt, entity.lastTickPosZ, entity.getZ()) - camZ;
+        stack.translate(x, y, z);
+
+        entity.doLocalTransforms(pt, new MatrixStack[]{ stack });
+
+        model = stack.peek().getModel();
+
+        AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
+
+        this.lightBox = lightBox.offset(-camX, -camY, -camZ);
+    }
+
+    void setup(ContraptionProgram shader) {
+        if (model == null || lightBox == null) return;
+        shader.bind(model, lightBox);
+        lighter.lightVolume.bind();
+    }
+
+    void teardown() {
+        lighter.lightVolume.unbind();
+    }
+
+    void invalidate() {
+        for (ContraptionModel buffer : renderLayers.values()) {
+            buffer.delete();
+        }
+        renderLayers.clear();
+
+        lighter.lightVolume.delete();
+
+        kinetics.invalidate();
     }
 
     private void buildLayers() {
@@ -128,37 +173,12 @@ public class RenderedContraption {
         }
     }
 
-    void setRenderSettings(Matrix4f model) {
-        this.model = model;
-    }
-
-    void setup(ContraptionProgram shader) {
-        if (model == null) return;
-        shader.bind(model, lighter.lightVolume.getTextureVolume());
-        lighter.lightVolume.use();
-    }
-
-    void teardown() {
-        lighter.lightVolume.release();
-    }
-
-    void invalidate() {
-        for (ContraptionModel buffer : renderLayers.values()) {
-            buffer.delete();
-        }
-        renderLayers.clear();
-
-        lighter.lightVolume.delete();
-
-        kinetics.invalidate();
-    }
-
     private static ContraptionModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
         BufferBuilder builder = buildStructure(renderWorld, c, layer);
         return new ContraptionModel(builder);
     }
 
-    public static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
+    private static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
         PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
 
         renderWorld.setTileEntities(c.presentTileEntities.values());
@@ -176,7 +196,7 @@ public class RenderedContraption {
         return renderWorld;
     }
 
-    public static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+    private static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
 
         ForgeHooksClient.setRenderLayer(layer);
         MatrixStack ms = new MatrixStack();

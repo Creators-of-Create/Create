@@ -33,6 +33,7 @@ import static com.simibubi.create.foundation.render.Compartment.PARTIAL;
 
 public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel<?>> {
 
+    protected final InstancedTileRenderer<?> renderer;
     protected final Map<Compartment<?>, Cache<Object, MODEL>> models;
     protected final ModelFactory<MODEL> factory;
     protected final ProgramSpec<P> programSpec;
@@ -41,11 +42,12 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
     /**
      * Creates a material that renders in the default layer (CUTOUT_MIPPED)
      */
-    public RenderMaterial(ProgramSpec<P> programSpec, ModelFactory<MODEL> factory) {
-        this(programSpec, factory, type -> type == RenderType.getCutoutMipped());
+    public RenderMaterial(InstancedTileRenderer<?> renderer, ProgramSpec<P> programSpec, ModelFactory<MODEL> factory) {
+        this(renderer, programSpec, factory, type -> type == RenderType.getCutoutMipped());
     }
 
-    public RenderMaterial(ProgramSpec<P> programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+    public RenderMaterial(InstancedTileRenderer<?> renderer, ProgramSpec<P> programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+        this.renderer = renderer;
         this.models = new HashMap<>();
         this.factory = factory;
         this.programSpec = programSpec;
@@ -59,11 +61,11 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
         return layerPredicate.test(layer);
     }
 
-    public void render(RenderType layer, Matrix4f projection, float camX, float camY, float camZ) {
+    public void render(RenderType layer, Matrix4f projection, double camX, double camY, double camZ) {
         render(layer, projection, camX, camY, camZ, null);
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ, ShaderCallback<P> setup) {
+    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
         P program = Backend.getProgram(programSpec);
         program.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
 
@@ -142,7 +144,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
     private MODEL buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
         BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
 
-        return factory.convert(builder);
+        return factory.makeModel(renderer, builder);
     }
 
 }

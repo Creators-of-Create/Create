@@ -77,7 +77,7 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aModelLight;
-    FragDistance = length(worldPos.xyz - uCameraPos);
+    FragDistance = length(worldPos.xyz);
     gl_Position = uViewProjection * worldPos;
 
     if (uDebug == 2) {

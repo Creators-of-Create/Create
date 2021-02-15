@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL20;
 
 public class ContraptionProgram extends BasicProgram {
@@ -26,9 +27,12 @@ public class ContraptionProgram extends BasicProgram {
         uLightVolume = setSamplerBinding("uLightVolume", 4);
     }
 
-    public void bind(Matrix4f model, GridAlignedBB lightVolume) {
-        GL20.glUniform3f(uLightBoxSize, lightVolume.sizeX(), lightVolume.sizeY(), lightVolume.sizeZ());
-        GL20.glUniform3f(uLightBoxMin, lightVolume.minX, lightVolume.minY, lightVolume.minZ);
+    public void bind(Matrix4f model, AxisAlignedBB lightVolume) {
+        double sizeX = lightVolume.maxX - lightVolume.minX;
+        double sizeY = lightVolume.maxY - lightVolume.minY;
+        double sizeZ = lightVolume.maxZ - lightVolume.minZ;
+        GL20.glUniform3f(uLightBoxSize, (float) sizeX, (float) sizeY, (float) sizeZ);
+        GL20.glUniform3f(uLightBoxMin, (float) lightVolume.minX, (float) lightVolume.minY, (float) lightVolume.minZ);
         uploadMatrixUniform(uModel, model);
     }
 }

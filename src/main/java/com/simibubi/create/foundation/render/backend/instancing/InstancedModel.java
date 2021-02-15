@@ -17,6 +17,8 @@ import java.util.function.Consumer;
 public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
     public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelVertexAttributes.class).build();
 
+    public final InstancedTileRenderer<?> renderer;
+
     protected GlVertexArray vao;
     protected GlBuffer instanceVBO;
     protected int glBufferSize = -1;
@@ -27,8 +29,9 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     protected int minIndexChanged = -1;
     protected int maxIndexChanged = -1;
 
-    public InstancedModel(BufferBuilder buf) {
+    public InstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(buf);
+        this.renderer = renderer;
     }
 
     @Override

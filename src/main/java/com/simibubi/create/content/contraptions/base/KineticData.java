@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,10 @@ public class KineticData<D extends KineticData<D>> extends InstanceData {
     private float rotationalSpeed;
     private float rotationOffset;
 
+    protected KineticData(InstancedModel<?> owner) {
+        super(owner);
+    }
+
     public D setTileEntity(KineticTileEntity te) {
         setPosition(te.getPos());
         if (te.hasSource()) {
@@ -35,6 +40,14 @@ public class KineticData<D extends KineticData<D>> extends InstanceData {
 
     public D setPosition(Vector3f pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public D setPosition(int x, int y, int z) {
+        BlockPos origin = owner.renderer.getOriginCoordinate();
+
+        return setPosition((float) (x - origin.getX()),
+                           (float) (y - origin.getY()),
+                           (float) (z - origin.getZ()));
     }
 
     public D setPosition(float x, float y, float z) {

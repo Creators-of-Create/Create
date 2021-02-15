@@ -67,13 +67,15 @@ void main() {
     vec4 worldPos = localRotation * vec4(aPos - .5, 1.) + vec4(aInstancePos + .5, 0.);
 
     #ifdef CONTRAPTION
-
     worldPos = uModel * worldPos;
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
-
     mat4 normalMat = uModel * localRotation;
+
+    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+    FragDistance = length(worldPos.xyz);
     #else
     mat4 normalMat = localRotation;
+
+    FragDistance = length(worldPos.xyz - uCameraPos);
     #endif
 
     vec3 norm = normalize(normalMat * vec4(aNormal, 0.)).xyz;
@@ -84,7 +86,6 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords - aSourceTexture + aScrollTexture.xy + vec2(0, scroll);
     Light = aLight;
-    FragDistance = length(worldPos.xyz - uCameraPos);
     gl_Position = uViewProjection * worldPos;
 
     #ifdef CONTRAPTION

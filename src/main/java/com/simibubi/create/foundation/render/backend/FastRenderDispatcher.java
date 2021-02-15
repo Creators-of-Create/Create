@@ -29,7 +29,6 @@ import java.util.function.Consumer;
 public class FastRenderDispatcher {
 
     public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
-    public static WorldAttached<ConcurrentHashMap<TileEntity, Integer>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::new);
 
     private static Matrix4f projectionMatrixThisFrame = null;
 
@@ -44,26 +43,7 @@ public class FastRenderDispatcher {
     public static void tick() {
         ClientWorld world = Minecraft.getInstance().world;
 
-        // Clean up twice a second. This doesn't have to happen every tick,
-        // but this does need to be run to ensure we don't miss anything.
-        int ticks = AnimationTickHolder.getTicks();
-
-        ConcurrentHashMap<TileEntity, Integer> map = addedLastTick.get(world);
-        map
-                .entrySet()
-                .stream()
-                .filter(it -> ticks - it.getValue() > 10)
-                .map(Map.Entry::getKey)
-                .forEach(te -> {
-                    map.remove(te);
-
-                    CreateClient.kineticRenderer.onLightUpdate(te);
-                });
-
-
-        if (ticks % 10 == 0) {
-            CreateClient.kineticRenderer.clean();
-        }
+        CreateClient.kineticRenderer.tick();
 
         runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
     }
@@ -98,7 +78,7 @@ public class FastRenderDispatcher {
         }
     }
 
-    public static void renderLayer(RenderType layer, Matrix4f viewProjection, float cameraX, float cameraY, float cameraZ) {
+    public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
         if (!Backend.canUseInstancing()) return;
 
         layer.startDrawing();

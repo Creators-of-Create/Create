@@ -34,8 +34,6 @@ import java.util.function.Predicate;
 
 public class Backend {
     public static final Logger log = LogManager.getLogger(Backend.class);
-    public static final FloatBuffer FLOAT_BUFFER = MemoryUtil.memAllocFloat(1); // TODO: these leak 80 bytes of memory per program launch
-    public static final FloatBuffer VEC4_BUFFER = MemoryUtil.memAllocFloat(4);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
     private static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();

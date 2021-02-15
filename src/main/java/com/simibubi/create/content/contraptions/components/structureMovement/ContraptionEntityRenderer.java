@@ -10,37 +10,26 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class AbstractContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
+public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
 
-	protected AbstractContraptionEntityRenderer(EntityRendererManager p_i46179_1_) {
+	public ContraptionEntityRenderer(EntityRendererManager p_i46179_1_) {
 		super(p_i46179_1_);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(C p_110775_1_) {
+	public ResourceLocation getEntityTexture(C entity) {
 		return null;
 	}
 
-	protected abstract void transform(C contraptionEntity, float partialTicks, MatrixStack[] matrixStacks);
-
-	public MatrixStack makeTransformMatrix(C contraptionEntity, float partialTicks) {
-		MatrixStack stack = getLocalTransform(contraptionEntity, partialTicks);
-
-		transform(contraptionEntity, partialTicks, new MatrixStack[]{ stack });
-
-		return stack;
-	}
-
 	@Override
-	public boolean shouldRender(C entity, ClippingHelperImpl p_225626_2_, double p_225626_3_, double p_225626_5_,
+	public boolean shouldRender(C entity, ClippingHelperImpl clippingHelper, double p_225626_3_, double p_225626_5_,
 		double p_225626_7_) {
-		if (!super.shouldRender(entity, p_225626_2_, p_225626_3_, p_225626_5_, p_225626_7_))
+		if (entity.getContraption() == null)
 			return false;
 		if (!entity.isAlive())
 			return false;
-		if (entity.getContraption() == null)
-			return false;
-		return true;
+
+		return super.shouldRender(entity, clippingHelper, p_225626_3_, p_225626_5_, p_225626_7_);
 	}
 
 	@Override
@@ -49,11 +38,11 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		// Keep a copy of the transforms in order to determine correct lighting
-		MatrixStack msLocal = getLocalTransform(entity, AnimationTickHolder.getRenderTick());
+		MatrixStack msLocal = translateTo(entity, AnimationTickHolder.getRenderTick());
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 
 		ms.push();
-		transform(entity, partialTicks, matrixStacks);
+		entity.doLocalTransforms(partialTicks, matrixStacks);
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
 			ContraptionRenderDispatcher.render(entity, ms, buffers, msLocal, contraption);
@@ -62,7 +51,7 @@ public abstract class AbstractContraptionEntityRenderer<C extends AbstractContra
 
 	}
 
-	protected MatrixStack getLocalTransform(AbstractContraptionEntity entity, float pt) {
+	protected MatrixStack translateTo(AbstractContraptionEntity entity, float pt) {
 		MatrixStack matrixStack = new MatrixStack();
 		double x = MathHelper.lerp(pt, entity.lastTickPosX, entity.getX());
 		double y = MathHelper.lerp(pt, entity.lastTickPosY, entity.getY());

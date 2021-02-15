@@ -38,14 +38,13 @@ import org.lwjgl.opengl.GL40;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ForkJoinPool;
 
 public class ContraptionRenderDispatcher {
     public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
     public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
     protected static PlacementSimulationWorld renderWorld;
+
+    private static boolean firstLayer = true;
 
     public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
@@ -53,45 +52,20 @@ public class ContraptionRenderDispatcher {
         }
     }
 
-    public static void renderTick(TickEvent.RenderTickEvent event) {
-        if (!Backend.canUseVBOs()) return;
-
-        ClientWorld world = Minecraft.getInstance().world;
-        if (event.phase == TickEvent.Phase.START && world != null) {
-            Map<Integer, WeakReference<AbstractContraptionEntity>> map = ContraptionHandler.loadedContraptions.get(world);
-
-            for (WeakReference<AbstractContraptionEntity> weakReference : map.values()) {
-                AbstractContraptionEntity entity = weakReference.get();
-
-                if (entity == null) continue;
-
-                EntityRendererManager renderManager = Minecraft.getInstance().getRenderManager();
-
-                EntityRenderer<?> renderer = renderManager.getRenderer(entity);
-
-                if (renderer instanceof AbstractContraptionEntityRenderer) {
-                    updateTransform(entity, (AbstractContraptionEntityRenderer<? super AbstractContraptionEntity>) renderer);
-                }
-            }
-        }
+    public static void renderTick() {
+        firstLayer = true;
     }
 
     public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
                                              IRenderTypeBuffer buffer) {
-        if (Backend.canUseInstancing()) {
+        PlacementSimulationWorld renderWorld = null;
+        if (Backend.canUseVBOs()) {
             RenderedContraption renderer = getRenderer(world, c);
 
-            TileEntityRenderHelper.renderTileEntities(world, renderer.renderWorld, c.specialRenderedTileEntities, ms, msLocal, buffer);
-        } else {
-            TileEntityRenderHelper.renderTileEntities(world, c.specialRenderedTileEntities, ms, msLocal, buffer);
+            renderWorld = renderer.renderWorld;
         }
-    }
+        TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities, ms, msLocal, buffer);
 
-    private static <C extends AbstractContraptionEntity> void updateTransform(C c, AbstractContraptionEntityRenderer<C> entityRenderer) {
-        MatrixStack stack = entityRenderer.makeTransformMatrix(c, AnimationTickHolder.getPartialTicks());
-
-        Contraption c1 = c.getContraption();
-        getRenderer(c1.entity.world, c1).setRenderSettings(stack.peek().getModel());
     }
 
     public static void tick() {
@@ -112,10 +86,19 @@ public class ContraptionRenderDispatcher {
         return contraption;
     }
 
-    public static void renderLayer(RenderType layer, Matrix4f viewProjection, float camX, float camY, float camZ) {
+    public static void renderLayer(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
+
+        if (firstLayer) {
+
+            for (RenderedContraption renderer : renderers.values()) {
+                renderer.beginFrame(camX, camY, camZ);
+            }
+
+            firstLayer = false;
+        }
 
         layer.startDrawing();
         GL11.glEnable(GL13.GL_TEXTURE_3D);
@@ -142,19 +125,13 @@ public class ContraptionRenderDispatcher {
     }
 
     public static void removeDeadContraptions() {
-        ArrayList<Integer> toRemove = new ArrayList<>();
-
-        for (RenderedContraption renderer : renderers.values()) {
+        renderers.values().removeIf(renderer -> {
             if (renderer.isDead()) {
-                toRemove.add(renderer.getEntityId());
                 renderer.invalidate();
+                return true;
             }
-        }
-
-
-        for (Integer id : toRemove) {
-            renderers.remove(id);
-        }
+            return false;
+        });
     }
 
     public static void invalidateAll() {

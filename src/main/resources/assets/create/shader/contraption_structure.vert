@@ -43,17 +43,17 @@ float diffuse(vec3 normal) {
 }
 
 void main() {
-    vec4 worldPos = uModel * vec4(aPos, 1.);
+    vec4 viewPos = uModel * vec4(aPos, 1.);
 
     vec3 norm = (uModel * vec4(aNormal, 0.)).xyz;
 
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+    BoxCoord = (viewPos.xyz - uLightBoxMin) / uLightBoxSize;
     Diffuse = diffuse(norm);
     Color = aColor / diffuse(aNormal);
     TexCoords = aTexCoords;
     Light = aModelLight;
-    FragDistance = length(worldPos.xyz - uCameraPos);
-    gl_Position = uViewProjection * worldPos;
+    FragDistance = length(viewPos.xyz);
+    gl_Position = uViewProjection * viewPos;
 
     if (uDebug == 2) {
         Color = vec4(norm, 1.);

@@ -1,11 +1,7 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
 import com.simibubi.create.foundation.utility.Lang;
@@ -51,7 +47,7 @@ public class AllEntityTypes {
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
 		RenderingRegistry.registerEntityRenderingHandler(CONTROLLED_CONTRAPTION.get(),
-			ControlledContraptionEntityRenderer::new);
+														 ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ORIENTED_CONTRAPTION.get(),
 			OrientedContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SUPER_GLUE.get(), SuperGlueRenderer::new);

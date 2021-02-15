@@ -37,14 +37,14 @@ public class BasicProgram extends GlProgram {
         uLightMap = setSamplerBinding("uLightMap", 2);
     }
 
-    public void bind(Matrix4f viewProjection, float camX, float camY, float camZ, int debugMode) {
+    public void bind(Matrix4f viewProjection, double camX, double camY, double camZ, int debugMode) {
         super.bind();
 
         GL20.glUniform1i(uDebug, debugMode);
         GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTick());
 
         uploadMatrixUniform(uViewProjection, viewProjection);
-        GL20.glUniform3f(uCameraPos, camX, camY, camZ);
+        GL20.glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
 
         GL20.glUniform2f(uFogRange, GlFog.getFogStart(), GlFog.getFogEnd());
         GL20.glUniform4fv(uFogColor, GlFog.FOG_COLOR);

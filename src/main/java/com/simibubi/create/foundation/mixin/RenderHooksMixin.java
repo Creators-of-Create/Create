@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.Backend;
@@ -38,17 +39,12 @@ public class RenderHooksMixin {
     private void renderLayer(RenderType type, MatrixStack stack, double camX, double camY, double camZ, CallbackInfo ci) {
         if (!Backend.available()) return;
 
-        float cameraX = (float) camX;
-        float cameraY = (float) camY;
-        float cameraZ = (float) camZ;
-
-        Matrix4f viewProjection = Matrix4f.translate(-cameraX, -cameraY, -cameraZ);
-        viewProjection.multiplyBackward(stack.peek().getModel());
+        Matrix4f viewProjection = stack.peek().getModel().copy();
         viewProjection.multiplyBackward(FastRenderDispatcher.getProjectionMatrix());
 
-        FastRenderDispatcher.renderLayer(type, viewProjection, cameraX, cameraY, cameraZ);
+        FastRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 
-        ContraptionRenderDispatcher.renderLayer(type, viewProjection, cameraX, cameraY, cameraZ);
+        ContraptionRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 
         GL20.glUseProgram(0);
     }
@@ -60,6 +56,6 @@ public class RenderHooksMixin {
         OptifineHandler.refresh();
         Backend.refresh();
 
-        if (world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+        if (Backend.canUseInstancing() && world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
     }
 }
