@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1233",
+	"_": "Missing Localizations: 1245",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1790,18 +1790,30 @@
 
 	"_": "->------------------------]  MetaDoc Text  [------------------------<-",
 
-	"create.metadoc.shared.more_shared": "UNLOCALIZED: This is Shared stuff",
-	"create.metadoc.shared.when_wrenched": "UNLOCALIZED: When Wrenched",
-	"create.metadoc.cogwheel.scene_0.test_text": "UNLOCALIZED: Test text for scene 1",
-	"create.metadoc.cogwheel.scene_0.title": "UNLOCALIZED: My First Metadoc Story, Part 1",
-	"create.metadoc.cogwheel.scene_1.test_text": "UNLOCALIZED: Test text for scene 2",
-	"create.metadoc.cogwheel.scene_1.title": "UNLOCALIZED: My First Metadoc Story, Part 2",
-	"create.metadoc.cogwheel.scene_2.test_text": "UNLOCALIZED: Test text for scene 3",
-	"create.metadoc.cogwheel.scene_2.title": "UNLOCALIZED: My First Metadoc Story, Part 3",
-	"create.metadoc.cogwheel.scene_3.test_text": "UNLOCALIZED: Test text for scene 4",
-	"create.metadoc.cogwheel.scene_3.title": "UNLOCALIZED: My First Metadoc Story, Part 4",
-	"create.metadoc.cogwheel.scene_4.test_text": "UNLOCALIZED: Test text for scene 5",
-	"create.metadoc.cogwheel.scene_4.title": "UNLOCALIZED: My First Metadoc Story, Part 5",
+	"create.ponder.hold_to_ponder": "UNLOCALIZED: Hold [%1$s] to Ponder",
+	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
+	"create.ponder.shared.more_shared": "UNLOCALIZED: This is Shared stuff",
+	"create.ponder.shared.when_wrenched": "UNLOCALIZED: When Wrenched",
+	"create.ponder.cogwheel.scene_0.title": "UNLOCALIZED: My First Ponder Story, Parrots",
+	"create.ponder.cogwheel.scene_1.title": "UNLOCALIZED: My First Ponder Story, Parrots",
+	"create.ponder.cogwheel.scene_2.title": "UNLOCALIZED: My First Ponder Story, Parrots",
+	"create.ponder.shaft.scene_0.shaft_relay": "UNLOCALIZED: Shafts seem to relay rotation in a straight line.",
+	"create.ponder.shaft.scene_0.title": "UNLOCALIZED: Relaying rotational force using Shafts",
+	"create.ponder.shaft.scene_1.shaft_can_be_encased": "UNLOCALIZED: I could use Brass or Andesite Casing to hide them.",
+	"create.ponder.shaft.scene_1.title": "UNLOCALIZED: Encasing Shafts",
+	"create.ponder.brass_hand.scene_0.x": "UNLOCALIZED: Das X axis",
+	"create.ponder.brass_hand.scene_0.y": "UNLOCALIZED: Das Y axis",
+	"create.ponder.brass_hand.scene_0.z": "UNLOCALIZED: Das Z axis",
+	"create.ponder.brass_hand.scene_0.title": "UNLOCALIZED: Debug Scene 1: Coordinate Space",
+	"create.ponder.brass_hand.scene_1.change_blocks": "UNLOCALIZED: Blocks can be modified",
+	"create.ponder.brass_hand.scene_1.title": "UNLOCALIZED: Debug Scene 2: Changing Blocks",
+	"create.ponder.brass_hand.scene_2.title": "UNLOCALIZED: Debug Scene 3: Showing Fluids",
+	"create.ponder.brass_hand.scene_2.fluids": "UNLOCALIZED: Fluid rendering test.",
+	"create.ponder.brass_hand.scene_3.outofbounds2": "UNLOCALIZED: Blocks outside of the base plate \n\nIgnored by scaling, thanks to configureBasePlate()",
+	"create.ponder.brass_hand.scene_3.outofbounds": "UNLOCALIZED: Blocks outside of the base plate",
+	"create.ponder.brass_hand.scene_3.title": "UNLOCALIZED: Debug Scene 4: Out of bounds / configureBasePlate",
+	"create.ponder.brass_hand.scene_4.incoming": "UNLOCALIZED: Incoming...",
+	"create.ponder.brass_hand.scene_4.title": "UNLOCALIZED: Debug Scene 5: Emitting particles",
 
 	"_": "Thank you for translating Create!"
 

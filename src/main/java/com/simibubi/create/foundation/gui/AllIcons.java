@@ -115,7 +115,11 @@ public class AllIcons {
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
 		
-		I_SCHEMATIC = newRow();
+		I_SCHEMATIC = newRow(),
+		
+		I_MTD_LEFT = newRow(),
+		I_MTD_CLOSE = next(),
+		I_MTD_RIGHT = next();
 	
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

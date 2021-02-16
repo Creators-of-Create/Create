@@ -187,6 +187,11 @@ public class SchematicWorld extends WrappedWorld {
 				renderedTileEntities.remove(tileEntity);
 			}
 		}
+		
+		TileEntity tileEntity = getTileEntity(pos);
+		if (tileEntity != null)
+			tileEntities.put(pos, tileEntity);
+		
 		return true;
 	}
 

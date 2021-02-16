@@ -84,8 +84,9 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 
 		public Particle makeParticle(RotationIndicatorParticleData data, World worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
-			ClientPlayerEntity player = Minecraft.getInstance().player;
-			boolean visible = player != null && GogglesItem.canSeeParticles(player);
+			Minecraft mc = Minecraft.getInstance();
+			ClientPlayerEntity player = mc.player;
+			boolean visible = worldIn != mc.world || player != null && GogglesItem.canSeeParticles(player);
 			return new RotationIndicatorParticle(worldIn, x, y, z, data.color, data.radius1, data.radius2, data.speed,
 					data.getAxis(), data.lifeSpan, visible, this.spriteSet);
 		}
