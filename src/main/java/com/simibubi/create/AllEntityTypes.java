@@ -3,7 +3,6 @@ package com.simibubi.create;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
 import com.simibubi.create.foundation.utility.Lang;
@@ -62,7 +61,7 @@ public class AllEntityTypes {
 		RenderingRegistry.registerEntityRenderingHandler(ORIENTED_CONTRAPTION.get(),
 			OrientedContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(GANTRY_CONTRAPTION.get(),
-			GantryContraptionEntityRenderer::new);
+			ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SUPER_GLUE.get(), SuperGlueRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SEAT.get(), SeatEntity.Render::new);
 	}

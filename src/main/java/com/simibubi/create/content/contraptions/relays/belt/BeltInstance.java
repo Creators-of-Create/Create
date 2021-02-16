@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRen
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -61,13 +62,14 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         BeltPart part = lastState.get(BeltBlock.PART);
         boolean start = part == BeltPart.START;
         boolean end = part == BeltPart.END;
+        DyeColor color = tile.color.orElse(null);
 
         for (boolean bottom : Iterate.trueAndFalse) {
             AllBlockPartials beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
-            SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(diagonal, bottom);
+            SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
             InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
-            Consumer<BeltData> setupFunc = setupFunc(spriteShift);
+            Consumer<BeltData> setupFunc = setupFunc(bottom, spriteShift);
 
             keys.add(beltModel.setupInstance(setupFunc));
 
@@ -83,8 +85,16 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     public void onUpdate() {
+        DyeColor color = tile.color.orElse(null);
+
+        boolean bottom = true;
         for (InstanceKey<BeltData> key : keys) {
-            key.modifyInstance(data -> data.setColor(tile.network).setRotationalSpeed(getScrollSpeed()));
+
+            SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
+            key.modifyInstance(data -> data.setScrollTexture(spriteShiftEntry)
+                                           .setColor(tile.network)
+                                           .setRotationalSpeed(getScrollSpeed()));
+            bottom = false;
         }
 
         if (pulleyKey != null) {
@@ -152,7 +162,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return dir;
     }
 
-    private Consumer<BeltData> setupFunc(SpriteShiftEntry spriteShift) {
+    private Consumer<BeltData> setupFunc(boolean bottom, SpriteShiftEntry spriteShift) {
         return data -> {
             float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (beltSlope == BeltSlope.DOWNWARD ? 180 : 0);
             float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
@@ -164,7 +174,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
                 .setSkyLight(world.getLightLevel(LightType.SKY, pos))
                 .setRotation(rotX, rotY, rotZ)
                 .setRotationalSpeed(getScrollSpeed())
-                .setRotationOffset(0)
+                .setRotationOffset(bottom ? 0.5f : 0f)
                 .setScrollTexture(spriteShift)
                 .setScrollMult(diagonal ? 3f / 8f : 0.5f);
         };

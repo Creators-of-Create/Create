@@ -10,7 +10,6 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 
     @Override
     protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
-        bounds = bounds.copy();
         bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
         bounds.minY = Math.max(bounds.minY, 0);
         bounds.maxY = Math.min(bounds.maxY, 255);

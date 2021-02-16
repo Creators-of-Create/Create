@@ -164,4 +164,8 @@ public class GantryPinionTileEntity extends KineticTileEntity implements IDispla
 		return te instanceof GantryShaftTileEntity && ((GantryShaftTileEntity) te).canAssembleOn();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

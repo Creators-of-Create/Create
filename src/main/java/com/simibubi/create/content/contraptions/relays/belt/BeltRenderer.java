@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import java.util.Optional;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -11,6 +12,9 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.ShadowRenderHelper;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -83,24 +87,16 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				end = b;
 			}
 
+			DyeColor color = te.color.orElse(null);
+
 			for (boolean bottom : Iterate.trueAndFalse) {
 
 				AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-			SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
-				.light(light);
+				SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
+													.light(light);
 
-			SpriteShiftEntry spriteShift = null;
-			if (te.color.isPresent()) {
-				DyeColor color = te.color.get();
-				spriteShift = (diagonal ? AllSpriteShifts.DYED_DIAGONAL_BELTS
-					: bottom ? AllSpriteShifts.DYED_OFFSET_BELTS : AllSpriteShifts.DYED_BELTS).get(color);
-			} else
-				spriteShift = diagonal ? AllSpriteShifts.BELT_DIAGONAL
-					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
-
-			int cycleLength = diagonal ? 12 : 16;
-			int cycleOffset = bottom ? 8 : 0;
+				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
 
 				// UV shift
 				float speed = te.getSpeed();
@@ -113,7 +109,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 					float spriteSize = spriteShift.getTarget().getMaxV() - spriteShift.getTarget().getMinV();
 
-					double scroll = speed * time / (36 * 16);
+					double scroll = speed * time / (36 * 16) + (bottom ? 0.5 : 0.0);
 					scroll = scroll - Math.floor(scroll);
 					scroll = scroll * spriteSize * scrollMult;
 
@@ -147,10 +143,13 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 	}
 
-	public static SpriteShiftEntry getSpriteShiftEntry(boolean diagonal, boolean bottom) {
-		if (diagonal) return AllSpriteShifts.BELT_DIAGONAL;
-		if (bottom) return AllSpriteShifts.BELT_OFFSET;
-		return AllSpriteShifts.BELT;
+	public static SpriteShiftEntry getSpriteShiftEntry(DyeColor color, boolean diagonal, boolean bottom) {
+		if (color != null) {
+			return (diagonal ? AllSpriteShifts.DYED_DIAGONAL_BELTS
+					: bottom ? AllSpriteShifts.DYED_OFFSET_BELTS : AllSpriteShifts.DYED_BELTS).get(color);
+		} else
+			return diagonal ? AllSpriteShifts.BELT_DIAGONAL
+					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
 	}
 
 	public static AllBlockPartials getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
@@ -158,12 +157,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
 			if (end) return AllBlockPartials.BELT_DIAGONAL_END;
 			return AllBlockPartials.BELT_DIAGONAL_MIDDLE;
+		} else if (bottom) {
+			if (start) return AllBlockPartials.BELT_START_BOTTOM;
+			if (end) return AllBlockPartials.BELT_END_BOTTOM;
+			return AllBlockPartials.BELT_MIDDLE_BOTTOM;
 		} else {
-			if (bottom) {
-				if (start) return AllBlockPartials.BELT_START_BOTTOM;
-				if (end) return AllBlockPartials.BELT_END_BOTTOM;
-				return AllBlockPartials.BELT_MIDDLE_BOTTOM;
-			}
 			if (start) return AllBlockPartials.BELT_START;
 			if (end) return AllBlockPartials.BELT_END;
 			return AllBlockPartials.BELT_MIDDLE;

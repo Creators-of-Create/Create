@@ -30,8 +30,8 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		if (!FastRenderDispatcher.available(tileEntityIn.getWorld())) {
-			IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
 		}
 

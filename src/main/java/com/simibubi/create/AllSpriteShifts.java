@@ -52,7 +52,7 @@ public class AllSpriteShifts {
 		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
 
 	public static final SpriteShiftEntry BELT = SpriteShifter.get("block/belt", "block/belt_scroll"),
-		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_offset_scroll"),
+		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_scroll"),
 		BELT_DIAGONAL = SpriteShifter.get("block/belt_diagonal", "block/belt_diagonal_scroll"),
 		ANDESIDE_BELT_CASING = SpriteShifter.get("block/brass_casing_belt", "block/andesite_casing_belt"),
 		CRAFTER_THINGIES = SpriteShifter.get("block/crafter_thingies", "block/crafter_thingies");
@@ -92,9 +92,9 @@ public class AllSpriteShifts {
 
 		for (DyeColor color : DyeColor.values()) {
 			String id = color.getName();
-			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id));
-			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id));
-			DYED_DIAGONAL_BELTS.put(color, SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal"));
+			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id + "_scroll"));
+			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id + "_scroll"));
+			DYED_DIAGONAL_BELTS.put(color, SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal_scroll"));
 		}
 	}
 

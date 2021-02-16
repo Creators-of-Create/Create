@@ -17,14 +17,13 @@ public abstract class ContraptionLighter<C extends Contraption> {
 
         bounds = getContraptionBounds();
 
-        lightVolume = new LightVolume(contraptionBoundsToVolume(bounds));
+        lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
 
         lightVolume.initialize(contraption.entity.world);
         scheduleRebuild = true;
     }
 
     protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
-        bounds = bounds.copy();
         bounds.grow(1); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
         bounds.minY = Math.max(bounds.minY, 0);
         bounds.maxY = Math.min(bounds.maxY, 255);

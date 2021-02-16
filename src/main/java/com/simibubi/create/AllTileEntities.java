@@ -205,12 +205,14 @@ public class AllTileEntities {
 		.tileEntity("gantry_shaft", GantryShaftTileEntity::new)
 		.validBlocks(AllBlocks.GANTRY_SHAFT)
 		.renderer(() -> KineticTileEntityRenderer::new)
+		.onRegister(SingleRotatingInstance::register)
 		.register();
 	
 	public static final TileEntityEntry<GantryPinionTileEntity> GANTRY_PINION = Create.registrate()
 		.tileEntity("gantry_pinion", GantryPinionTileEntity::new)
 		.validBlocks(AllBlocks.GANTRY_PINION)
 		.renderer(() -> GantryPinionRenderer::new)
+		.onRegister(ShaftInstance::register)
 		.register();
 
 	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP = Create.registrate()
