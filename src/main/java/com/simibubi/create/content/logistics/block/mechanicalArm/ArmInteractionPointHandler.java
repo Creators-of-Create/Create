@@ -48,6 +48,9 @@ public class ArmInteractionPointHandler {
 		World world = event.getWorld();
 		if (!world.isRemote)
 			return;
+		PlayerEntity player = event.getPlayer();
+		if (player != null && player.isSpectator())
+			return;
 
 		ArmInteractionPoint selected = getSelected(pos);
 
@@ -60,7 +63,6 @@ public class ArmInteractionPointHandler {
 		}
 
 		selected.cycleMode();
-		PlayerEntity player = event.getPlayer();
 		if (player != null) {
 			String key = selected.mode == Mode.DEPOSIT ? "mechanical_arm.deposit_to" : "mechanical_arm.extract_from";
 			TextFormatting colour = selected.mode == Mode.DEPOSIT ? TextFormatting.GOLD : TextFormatting.AQUA;

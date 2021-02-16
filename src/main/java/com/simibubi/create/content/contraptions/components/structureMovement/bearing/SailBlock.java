@@ -64,27 +64,9 @@ public class SailBlock extends ProperDirectionalBlock {
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
 		ItemStack heldItem = player.getHeldItem(hand);
 
-		if (AllBlocks.SAIL.isIn(heldItem) || AllBlocks.SAIL_FRAME.isIn(heldItem)) {
-			IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-			PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
-
-			if (!offset.isReplaceable(world))
-				return ActionResultType.PASS;
-
-			offset.placeInWorld(world, ((BlockItem) heldItem.getItem()).getBlock().getDefaultState(), player, heldItem);
-
-			/*BlockState blockState = ((BlockItem) heldItem.getItem()).getBlock()
-					.getDefaultState()
-					.with(FACING, state.get(FACING));
-			BlockPos offsetPos = new BlockPos(offset.getPos());
-			if (!world.isRemote && world.getBlockState(offsetPos).getMaterial().isReplaceable()) {
-				world.setBlockState(offsetPos, blockState);
-				if (!player.isCreative())
-					heldItem.shrink(1);
-			}*/
-
-			return ActionResultType.SUCCESS;
-		}
+		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+		if (placementHelper.matchesItem(heldItem))
+			return placementHelper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		if (heldItem.getItem() instanceof ShearsItem) {
 			if (!world.isRemote)

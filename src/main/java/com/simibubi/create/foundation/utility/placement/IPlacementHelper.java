@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -21,6 +22,11 @@ import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 public interface IPlacementHelper {
+
+	/**
+	 * used as an identifier in SuperGlueHandler to skip blocks placed by helpers
+	 */
+	BlockState ID = new BlockState(Blocks.AIR, null);
 
 	/**
 	 * @return a predicate that gets tested with the items held in the players hands,
@@ -60,24 +66,6 @@ public interface IPlacementHelper {
 		CreateClient.outliner.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1/16f);
 		CreateClient.outliner.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1/16f);
 	}
-
-	/*@OnlyIn(Dist.CLIENT)
-	static void renderArrow(Vec3d center, Direction towards, BlockRayTraceResult ray) {
-		Direction hitFace = ray.getFace();
-
-		if (hitFace.getAxis() == towards.getAxis())
-			return;
-
-		//get the two perpendicular directions to form the arrow
-		Direction[] directions = Arrays.stream(Direction.Axis.values()).filter(axis -> axis != hitFace.getAxis() && axis != towards.getAxis()).map(Iterate::directionsInAxis).findFirst().orElse(new Direction[]{});
-		Vec3d startOffset = new Vec3d(towards.getDirectionVec());
-		Vec3d start = center.add(startOffset);
-		for (Direction dir : directions) {
-			Vec3d arrowOffset = new Vec3d(dir.getDirectionVec()).scale(.25);
-			Vec3d target = center.add(startOffset.scale(0.75)).add(arrowOffset);
-			CreateClient.outliner.showLine("placementArrow" + towards + dir, start, target).lineWidth(1/16f);
-		}
-	}*/
 
 	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vec3d hit, Direction.Axis axis) {
 		return orderedByDistance(pos, hit, dir -> dir.getAxis() == axis);

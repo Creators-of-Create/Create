@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -466,8 +467,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			CompoundNBT data = null;
 			if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 				TileEntity tile = blockReader.getTileEntity(target);
-				if (tile != null && !tile.onlyOpsCanSetNbt()) {
+				if (tile != null) {
 					data = tile.write(new CompoundNBT());
+					data = NBTProcessors.process(tile, data, true);
 				}
 			}
 			launchBlock(target, icon, blockState, data);
