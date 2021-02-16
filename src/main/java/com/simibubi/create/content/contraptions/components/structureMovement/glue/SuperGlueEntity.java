@@ -181,7 +181,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		BlockState state = world.getBlockState(pos);
 		if (BlockMovementTraits.isBlockAttachedTowards(world, pos, state, direction))
 			return true;
-		if (!BlockMovementTraits.movementNecessary(world, pos))
+		if (!BlockMovementTraits.movementNecessary(state, world, pos))
 			return false;
 		if (BlockMovementTraits.notSupportive(state, direction))
 			return false;

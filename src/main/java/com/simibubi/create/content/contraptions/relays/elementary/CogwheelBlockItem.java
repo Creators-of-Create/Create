@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
-
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -16,13 +11,13 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -30,6 +25,11 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.function.Predicate;
+
+import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
 
 public class CogwheelBlockItem extends BlockItem {
 
@@ -47,49 +47,27 @@ public class CogwheelBlockItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType tryPlace(BlockItemUseContext context) {
+	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
 		World world = context.getWorld();
-		BlockPos pos = context.getPos()
-			.offset(context.getFace()
-				.getOpposite());
+		BlockPos pos = context.getPos();
 		BlockState state = world.getBlockState(pos);
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		PlayerEntity player = context.getPlayer();
-
-		if (helper.matchesState(state)) {
-			PlacementOffset offset = helper.getOffset(world, state, pos,
-				new BlockRayTraceResult(context.getHitVec(), context.getFace(), pos, true));
-
-			if (!offset.isReplaceable(world))
-				return super.tryPlace(context);
-
-			offset.placeInWorld(world, this, player, context.getItem());
-			triggerShiftingGearsAdvancement(world, new BlockPos(offset.getPos()), offset.getTransform()
-				.apply(getBlock().getDefaultState()), player);
-
-			return ActionResultType.SUCCESS;
+		BlockRayTraceResult ray = new BlockRayTraceResult(context.getHitVec(), context.getFace(), pos, true);
+		if (helper.matchesState(state) && player != null && !player.isSneaking()) {
+			return helper.getOffset(world, state, pos, ray).placeInWorld(world, this, player, context.getHand(), ray);
 		}
 
 		if (integratedCogHelperId != -1) {
 			helper = PlacementHelpers.get(integratedCogHelperId);
 
-			if (helper.matchesState(state)) {
-				PlacementOffset offset = helper.getOffset(world, state, pos,
-					new BlockRayTraceResult(context.getHitVec(), context.getFace(), pos, true));
-
-				if (!offset.isReplaceable(world))
-					return super.tryPlace(context);
-
-				offset.placeInWorld(world, this, player, context.getItem());
-				triggerShiftingGearsAdvancement(world, new BlockPos(offset.getPos()), offset.getTransform()
-					.apply(getBlock().getDefaultState()), player);
-
-				return ActionResultType.SUCCESS;
+			if (helper.matchesState(state) && player != null && !player.isSneaking()) {
+				return helper.getOffset(world, state, pos, ray).placeInWorld(world, this, player, context.getHand(), ray);
 			}
 		}
 
-		return super.tryPlace(context);
+		return super.onItemUseFirst(stack, context);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
@@ -76,12 +77,12 @@ public class ChassisTileEntity extends SmartTileEntity {
 	}
 
 	public List<ChassisTileEntity> collectChassisGroup() {
-		List<BlockPos> frontier = new ArrayList<>();
+		Queue<BlockPos> frontier = new LinkedList<>();
 		List<ChassisTileEntity> collected = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		frontier.add(pos);
 		while (!frontier.isEmpty()) {
-			BlockPos current = frontier.remove(0);
+			BlockPos current = frontier.poll();
 			if (visited.contains(current))
 				continue;
 			visited.add(current);
@@ -96,7 +97,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 		return collected;
 	}
 
-	public boolean addAttachedChasses(List<BlockPos> frontier, Set<BlockPos> visited) {
+	public boolean addAttachedChasses(Queue<BlockPos> frontier, Set<BlockPos> visited) {
 		BlockState state = getBlockState();
 		if (!(state.getBlock() instanceof AbstractChassisBlock))
 			return false;
@@ -166,7 +167,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 					break;
 
 				// Ignore replaceable Blocks and Air-like
-				if (!BlockMovementTraits.movementNecessary(world, current))
+				if (!BlockMovementTraits.movementNecessary(currentState, world, current))
 					break;
 				if (BlockMovementTraits.isBrittle(currentState))
 					break;
@@ -207,7 +208,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 					continue;
 				if (!searchPos.withinDistance(pos, chassisRange + .5f))
 					continue;
-				if (!BlockMovementTraits.movementNecessary(world, searchPos))
+				if (!BlockMovementTraits.movementNecessary(searchedState, world, searchPos))
 					continue;
 				if (BlockMovementTraits.isBrittle(searchedState))
 					continue;

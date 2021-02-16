@@ -18,8 +18,8 @@ public interface IHaveGoggleInformation {
 	/**
 	* this method will be called when looking at a TileEntity that implemented this interface
 	 *
-	 * @return {{@code true}} if the tooltip creation was successful and should be displayed,
-	 * or {{@code false}} if the overlay should not be displayed
+	 * @return {@code true} if the tooltip creation was successful and should be displayed,
+	 * or {@code false} if the overlay should not be displayed
 	* */
 	default boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking){
 		return false;

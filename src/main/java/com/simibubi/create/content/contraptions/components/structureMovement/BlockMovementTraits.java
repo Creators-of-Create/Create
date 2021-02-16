@@ -54,8 +54,7 @@ import net.minecraft.world.World;
 
 public class BlockMovementTraits {
 
-	public static boolean movementNecessary(World world, BlockPos pos) {
-		BlockState state = world.getBlockState(pos);
+	public static boolean movementNecessary(BlockState state, World world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
 		if (state.getBlock() instanceof FenceGateBlock)
@@ -69,18 +68,17 @@ public class BlockMovementTraits {
 		return true;
 	}
 
-	public static boolean movementAllowed(World world, BlockPos pos) {
-		BlockState blockState = world.getBlockState(pos);
-		Block block = blockState.getBlock();
+	public static boolean movementAllowed(BlockState state, World world, BlockPos pos) {
+		Block block = state.getBlock();
 		if (block instanceof AbstractChassisBlock)
 			return true;
-		if (blockState.getBlockHardness(world, pos) == -1)
+		if (state.getBlockHardness(world, pos) == -1)
 			return false;
-		if (AllBlockTags.NON_MOVABLE.matches(blockState))
+		if (AllBlockTags.NON_MOVABLE.matches(state))
 			return false;
 
 		// Move controllers only when they aren't moving
-		if (block instanceof MechanicalPistonBlock && blockState.get(MechanicalPistonBlock.STATE) != PistonState.MOVING)
+		if (block instanceof MechanicalPistonBlock && state.get(MechanicalPistonBlock.STATE) != PistonState.MOVING)
 			return true;
 		if (block instanceof MechanicalBearingBlock) {
 			TileEntity te = world.getTileEntity(pos);
@@ -98,11 +96,11 @@ public class BlockMovementTraits {
 				return !((PulleyTileEntity) te).running;
 		}
 
-		if (AllBlocks.BELT.has(blockState))
+		if (AllBlocks.BELT.has(state))
 			return true;
-		if (blockState.getBlock() instanceof GrindstoneBlock)
+		if (state.getBlock() instanceof GrindstoneBlock)
 			return true;
-		return blockState.getPushReaction() != PushReaction.BLOCK;
+		return state.getPushReaction() != PushReaction.BLOCK;
 	}
 
 	/**

@@ -11,7 +11,6 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -21,6 +20,7 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer.Builder;
@@ -119,28 +119,9 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 		BlockRayTraceResult ray) {
 		ItemStack heldItem = player.getHeldItem(hand);
 
-        if (AllBlocks.PISTON_EXTENSION_POLE.isIn(heldItem) && !player.isSneaking()) {
-            IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-            PlacementOffset offset = placementHelper.getOffset(world, state, pos, ray);
-
-            if (!offset.isReplaceable(world))
-                return ActionResultType.PASS;
-
-            offset.placeInWorld(world, AllBlocks.PISTON_EXTENSION_POLE.getDefaultState(), player, heldItem);
-
-            /*BlockPos newPos = new BlockPos(offset.getPos());
-			if (!world.getBlockState(newPos).getMaterial().isReplaceable())
-				return ActionResultType.PASS;
-
-			if (world.isRemote)
-				return ActionResultType.SUCCESS;
-
-            world.setBlockState(newPos, offset.getTransform().apply(AllBlocks.PISTON_EXTENSION_POLE.getDefaultState()));
-            if (!player.isCreative())
-                heldItem.shrink(1);*/
-
-			return ActionResultType.SUCCESS;
-		}
+        IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
+        if (placementHelper.matchesItem(heldItem) && !player.isSneaking())
+            return placementHelper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return ActionResultType.PASS;
 	}

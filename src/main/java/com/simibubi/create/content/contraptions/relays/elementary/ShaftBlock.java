@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
@@ -77,26 +76,8 @@ public class ShaftBlock extends AbstractShaftBlock {
 		}
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-		if (helper.getItemPredicate().test(heldItem)) {
-			PlacementOffset offset = helper.getOffset(world, state, pos, ray);
-
-			if (!offset.isReplaceable(world))
-				return ActionResultType.PASS;
-
-			offset.placeInWorld(world, (BlockItem) heldItem.getItem(), player, heldItem);
-
-			/*BlockPos newPos = new BlockPos(offset.getPos());
-
-			if (world.isRemote)
-				return ActionResultType.SUCCESS;
-
-			Block block = ((BlockItem) heldItem.getItem()).getBlock();
-			world.setBlockState(newPos, offset.getTransform().apply(block.getDefaultState()));
-			if (!player.isCreative())
-				heldItem.shrink(1);*/
-
-			return ActionResultType.SUCCESS;
-		}
+		if (helper.matchesItem(heldItem))
+			return helper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return ActionResultType.PASS;
 	}
