@@ -77,10 +77,6 @@ public class AssemblyException extends Exception {
 		return new AssemblyException("noPistonPoles");
 	}
 
-	public String getFormattedText() {
-		return component.getFormattedText();
-	}
-
 	public boolean hasPosition() {
 		return position != null;
 	}

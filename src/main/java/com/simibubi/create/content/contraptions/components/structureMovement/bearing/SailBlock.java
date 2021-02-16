@@ -183,10 +183,10 @@ public class SailBlock extends ProperDirectionalBlock {
 	}
 
 	private void bounce(Entity p_226860_1_) {
-		Vector3d vec3d = p_226860_1_.getMotion();
-		if (vec3d.y < 0.0D) {
+		Vector3d Vector3d = p_226860_1_.getMotion();
+		if (Vector3d.y < 0.0D) {
 			double d0 = p_226860_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226860_1_.setMotion(vec3d.x, -vec3d.y * (double) 0.26F * d0, vec3d.z);
+			p_226860_1_.setMotion(Vector3d.x, -Vector3d.y * (double) 0.26F * d0, Vector3d.z);
 		}
 
 	}

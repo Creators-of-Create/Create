@@ -424,12 +424,12 @@ public class PipeConnection {
 //			if (inbound)
 //				return;
 //
-//			Vec3d directionVec = new Vec3d(side.getDirectionVec());
-//			Vec3d scaleVec = directionVec.scale(-.25f * side.getAxisDirection()
+//			Vector3d directionVec = new Vector3d(side.getDirectionVec());
+//			Vector3d scaleVec = directionVec.scale(-.25f * side.getAxisDirection()
 //				.getOffset());
 //			directionVec = directionVec.scale(inbound ? .35f : .45f);
 //			CreateClient.outliner.chaseAABB("pressure" + pos.toShortString() + side.getName() + String.valueOf(inbound),
-//				FluidPropagator.smallCenter.offset(directionVec.add(new Vec3d(pos)))
+//				FluidPropagator.smallCenter.offset(directionVec.add(new Vector3d(pos)))
 //					.grow(scaleVec.x, scaleVec.y, scaleVec.z)
 //					.expand(0, pressure / 64f, 0)
 //					.grow(1 / 64f));
@@ -440,7 +440,7 @@ public class PipeConnection {
 //		if (!hasFlow())
 //			return;
 //
-//		Vec3d directionVec = new Vec3d(side.getDirectionVec());
+//		Vector3d directionVec = new Vector3d(side.getDirectionVec());
 //		float size = 1 / 4f;
 //		float length = .5f;
 //		Flow flow = this.flow.get();
@@ -450,11 +450,11 @@ public class PipeConnection {
 //		if (flow.progress == null)
 //			return;
 //		float value = flow.progress.getValue();
-//		Vec3d start = directionVec.scale(inbound ? .5 : .5f - length);
-//		Vec3d offset = directionVec.scale(length * (inbound ? -1 : 1))
+//		Vector3d start = directionVec.scale(inbound ? .5 : .5f - length);
+//		Vector3d offset = directionVec.scale(length * (inbound ? -1 : 1))
 //			.scale(value);
 //
-//		Vec3d scale = new Vec3d(1, 1, 1).subtract(directionVec.scale(side.getAxisDirection()
+//		Vector3d scale = new Vector3d(1, 1, 1).subtract(directionVec.scale(side.getAxisDirection()
 //			.getOffset()))
 //			.scale(size);
 //		AxisAlignedBB bb = new AxisAlignedBB(start, start.add(offset)).offset(VecHelper.getCenterOf(pos))

@@ -9,12 +9,13 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.BlockPosArgument;
 import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Collection;
@@ -65,10 +66,10 @@ public class HighlightCommand {
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayerEntity player, CommandSource source) {
-		double distance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
-		Vec3d start = player.getEyePosition(1);
-		Vec3d look = player.getLook(1);
-		Vec3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
+		double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+		Vector3d start = player.getEyePosition(1);
+		Vector3d look = player.getLook(1);
+		Vector3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
 		World world = player.world;
 
 		BlockRayTraceResult ray = world.rayTraceBlocks(new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));

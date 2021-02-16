@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntityType;
@@ -55,9 +56,9 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 //		if (!funnelFacing.getAxis()
 //			.isHorizontal()) {
-//			Vec3d southLocation = VecHelper.voxelSpace(8, funnelFacing == Direction.DOWN ? 3 : 13, 15.5f);
+//			Vector3d southLocation = VecHelper.voxelSpace(8, funnelFacing == Direction.DOWN ? 3 : 13, 15.5f);
 //			return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 //		}
 //
@@ -61,7 +61,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 //		boolean alongX = funnelFacing.getAxis() == Axis.X;
 //		float zRotLast = alongX ^ funnelFacing.getAxisDirection() == AxisDirection.POSITIVE ? 180 : 0;
 //
-//		Vec3d vec = VecHelper.voxelSpace(8, 13, .5f);
+//		Vector3d vec = VecHelper.voxelSpace(8, 13, .5f);
 //		vec = vec.subtract(.5, .5, .5);
 //		vec = VecHelper.rotate(vec, zRotLast, Axis.Z);
 //		vec = VecHelper.rotate(vec, yRot, Axis.Y);

@@ -109,9 +109,9 @@ public class GantryPinionTileEntity extends KineticTileEntity implements IDispla
 	}
 
 	@Override
-	protected void read(CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
-		super.read(compound, clientPacket);
+		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override
