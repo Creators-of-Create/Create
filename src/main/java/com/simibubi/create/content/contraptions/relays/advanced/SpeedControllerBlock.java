@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
-import java.util.function.Predicate;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -13,11 +11,11 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +29,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import java.util.function.Predicate;
 
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
 
@@ -67,19 +67,10 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 
-		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		ItemStack heldItem = player.getHeldItem(hand);
-		if (helper.matchesItem(heldItem)) {
-			PlacementOffset offset = helper.getOffset(world, state, pos, ray);
-
-			if (!offset.isReplaceable(world))
-				return ActionResultType.PASS;
-
-			offset.placeInWorld(world, AllBlocks.LARGE_COGWHEEL.getDefaultState(), player, heldItem);
-
-			return ActionResultType.SUCCESS;
-
-		}
+		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
+		if (helper.matchesItem(heldItem))
+			return helper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return ActionResultType.PASS;
 	}
