@@ -177,8 +177,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (state == State.EXPANDING) {
 			if (boop)
 				triggerBoop();
-			else
-				activate();
+			activate();
 
 			state = State.RETRACTING;
 			timer = 1000;

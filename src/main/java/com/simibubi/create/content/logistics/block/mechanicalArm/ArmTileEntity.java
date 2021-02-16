@@ -100,16 +100,22 @@ public class ArmTileEntity extends KineticTileEntity {
 	public void tick() {
 		super.tick();
 		initInteractionPoints();
-		tickMovementProgress();
+		boolean targetReached = tickMovementProgress();
 
 		if (world.isRemote)
 			return;
 		if (chasedPointProgress < 1)
 			return;
+		
 		if (phase == Phase.MOVE_TO_INPUT)
 			collectItem();
-		if (phase == Phase.MOVE_TO_OUTPUT)
+		else if (phase == Phase.MOVE_TO_OUTPUT)
 			depositItem();
+		else if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING)
+			searchForItem();
+		
+		if (targetReached)
+			lazyTick();
 	}
 
 	@Override
@@ -120,10 +126,8 @@ public class ArmTileEntity extends KineticTileEntity {
 			return;
 		if (chasedPointProgress < .5f)
 			return;
-		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING) {
+		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING) 
 			checkForMusic();
-			searchForItem();
-		}
 		if (phase == Phase.SEARCH_OUTPUTS)
 			searchForDestination();
 	}
@@ -154,12 +158,13 @@ public class ArmTileEntity extends KineticTileEntity {
 		return false;
 	}
 
-	private void tickMovementProgress() {
+	private boolean tickMovementProgress() {
+		boolean targetReachedPreviously = chasedPointProgress >= 1; 
 		chasedPointProgress += Math.min(256, Math.abs(getSpeed())) / 1024f;
 		if (chasedPointProgress > 1)
 			chasedPointProgress = 1;
 		if (!world.isRemote)
-			return;
+			return !targetReachedPreviously && chasedPointProgress >= 1;
 
 		ArmInteractionPoint targetedInteractionPoint = getTargetedInteractionPoint();
 		ArmAngleTarget previousTarget = this.previousTarget;
@@ -180,6 +185,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		upperArmAngle.set(MathHelper.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
 
 		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
+		return false;
 	}
 
 	protected boolean isOnCeiling() {

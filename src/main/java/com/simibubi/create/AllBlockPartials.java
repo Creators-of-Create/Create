@@ -63,7 +63,8 @@ public class AllBlockPartials {
 		HARVESTER_BLADE = get("mechanical_harvester/blade"), DEPLOYER_POLE = get("deployer/pole"),
 		DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"), DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"), ANALOG_LEVER_HANDLE = get("analog_lever/handle"),
-		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), BELT_FUNNEL_FLAP = get("belt_funnel/flap"),
+		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), FUNNEL_FLAP = get("funnel/flap"), 
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"),
 		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), FLEXPEATER_INDICATOR = get("diodes/indicator"),
 		FLYWHEEL = get("flywheel/wheel"), FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
 
@@ -74,6 +75,8 @@ public class AllBlockPartials {
 		CUCKOO_HOUR_HAND = get("cuckoo_clock/hour_hand"), CUCKOO_LEFT_DOOR = get("cuckoo_clock/left_door"),
 		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), CUCKOO_PIG = get("cuckoo_clock/pig"),
 		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), 
+		
+		GANTRY_COGS = get("gantry_pinion/wheels"),
 		
 		ROPE_COIL = get("rope_pulley/rope_coil"),
 		ROPE_HALF = get("rope_pulley/rope_half"), 
@@ -111,6 +114,8 @@ public class AllBlockPartials {
 
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
+		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
+		
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")

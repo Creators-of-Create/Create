@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1150",
+	"_": "Missing Localizations: 1155",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -162,6 +162,8 @@
 	"block.create.gabbro_cobblestone_stairs": "UNLOCALIZED: Gabbro Cobblestone Stairs",
 	"block.create.gabbro_cobblestone_wall": "UNLOCALIZED: Gabbro Cobblestone Wall",
 	"block.create.gabbro_pillar": "UNLOCALIZED: Gabbro Pillar",
+	"block.create.gantry_pinion": "UNLOCALIZED: Gantry Pinion",
+	"block.create.gantry_shaft": "UNLOCALIZED: Gantry Shaft",
 	"block.create.gearbox": "Versnellingsbak",
 	"block.create.gearshift": "Versnellingspook",
 	"block.create.glass_fluid_pipe": "UNLOCALIZED: Glass Fluid Pipe",
@@ -368,6 +370,7 @@
 	"block.create.sequenced_gearshift": "UNLOCALIZED: Sequenced Gearshift",
 	"block.create.shadow_steel_casing": "UNLOCALIZED: Shadow Casing",
 	"block.create.shaft": "Drijfas",
+	"block.create.smart_chute": "UNLOCALIZED: Smart Chute",
 	"block.create.smart_fluid_pipe": "UNLOCALIZED: Smart Fluid Pipe",
 	"block.create.speedometer": "Snelheidsmeter",
 	"block.create.spout": "UNLOCALIZED: Spout",
@@ -404,6 +407,7 @@
 	"block.create.zinc_ore": "UNLOCALIZED: Zinc Ore",
 
 	"entity.create.contraption": "UNLOCALIZED: Contraption",
+	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
 	"entity.create.seat": "UNLOCALIZED: Seat",
 	"entity.create.stationary_contraption": "UNLOCALIZED: Stationary Contraption",
 	"entity.create.super_glue": "UNLOCALIZED: Super Glue",
@@ -1082,6 +1086,7 @@
 	"create.tooltip.chute.fans_push_down": "UNLOCALIZED: Fans push from Above",
 	"create.tooltip.chute.fans_pull_up": "UNLOCALIZED: Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "UNLOCALIZED: Fans pull from Below",
+	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
 
 	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
 	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",

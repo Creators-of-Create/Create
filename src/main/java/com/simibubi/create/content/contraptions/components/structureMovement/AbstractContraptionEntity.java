@@ -74,6 +74,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		contraption.onEntityCreated(this);
 	}
+	
+	public boolean supportsTerrainCollision() {
+		return contraption instanceof TranslatingContraption;
+	}
 
 	protected void contraptionInitialize() {
 		contraption.onEntityInitialize(world, this);
@@ -598,7 +602,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public abstract void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks);
 
 	public static class ContraptionRotationState {
-		static final ContraptionRotationState NONE = new ContraptionRotationState();
+		public static final ContraptionRotationState NONE = new ContraptionRotationState();
 
 		float xRotation = 0;
 		float yRotation = 0;

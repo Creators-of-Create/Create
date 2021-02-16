@@ -48,10 +48,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		return entity;
 	}
 
-	public boolean supportsTerrainCollision() {
-		return contraption instanceof TranslatingContraption;
-	}
-	
 	@Override
 		public Vec3d getContactPointMotion(Vec3d globalContactPoint) {
 			if (contraption instanceof TranslatingContraption)
@@ -153,8 +149,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		Vec3d motion = getMotion();
-		if (motion.length() < 1 / 4098f)
-			setMotion(Vec3d.ZERO);
 		move(motion.x, motion.y, motion.z);
 		if (ContraptionCollider.collideBlocks(this))
 			getController().collided();

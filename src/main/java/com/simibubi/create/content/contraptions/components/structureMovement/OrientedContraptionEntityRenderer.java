@@ -10,11 +10,13 @@ public class OrientedContraptionEntityRenderer extends ContraptionEntityRenderer
 	}
 
 	@Override
-	public boolean shouldRender(OrientedContraptionEntity entity, ClippingHelperImpl clippingHelper, double p_225626_3_,
-		double p_225626_5_, double p_225626_7_) {
-		if (!super.shouldRender(entity, clippingHelper, p_225626_3_, p_225626_5_, p_225626_7_))
+	public boolean shouldRender(OrientedContraptionEntity entity, ClippingHelperImpl p_225626_2_, double p_225626_3_,
+								double p_225626_5_, double p_225626_7_) {
+		if (!super.shouldRender(entity, p_225626_2_, p_225626_3_, p_225626_5_, p_225626_7_))
 			return false;
-
-		return entity.getContraption().getType() != AllContraptionTypes.MOUNTED || entity.getRidingEntity() != null;
+		if (entity.getContraption()
+				  .getType() == ContraptionType.MOUNTED && entity.getRidingEntity() == null)
+			return false;
+		return true;
 	}
 }

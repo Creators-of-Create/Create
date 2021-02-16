@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I",
+    "S",
+    "P"
+  ],
+  "key": {
+    "P": {
+      "item": "create:electron_tube"
+    },
+    "S": {
+      "item": "create:chute"
+    },
+    "I": {
+      "tag": "forge:plates/brass"
+    }
+  },
+  "result": {
+    "item": "create:smart_chute"
+  }
+}

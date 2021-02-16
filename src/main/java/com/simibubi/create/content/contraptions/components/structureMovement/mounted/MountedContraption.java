@@ -1,7 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
+import static com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.RAIL_SHAPE;
+
+import java.util.Queue;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.AllContraptionTypes;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
@@ -9,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
@@ -47,12 +55,12 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	protected AllContraptionTypes getType() {
-		return AllContraptionTypes.MOUNTED;
+	protected ContraptionType getType() {
+		return ContraptionType.MOUNTED;
 	}
 	
 	@Override
-	public boolean assemble(World world, BlockPos pos) {
+	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		BlockState state = world.getBlockState(pos);
 		if (!state.has(RAIL_SHAPE))
 			return false;
@@ -70,7 +78,7 @@ public class MountedContraption extends Contraption {
 	}
 	
 	@Override
-	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, List<BlockPos> frontier) {
+	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) {
 		frontier.clear();
 		frontier.add(pos.up());
 		return true;
@@ -104,11 +112,10 @@ public class MountedContraption extends Contraption {
 	}
 
 	@Override
-	protected boolean movementAllowed(World world, BlockPos pos) {
-		BlockState blockState = world.getBlockState(pos);
-		if (!pos.equals(anchor) && AllBlocks.CART_ASSEMBLER.has(blockState))
-			return testSecondaryCartAssembler(world, blockState, pos);
-		return super.movementAllowed(world, pos);
+	protected boolean movementAllowed(BlockState state, World world, BlockPos pos) {
+		if (!pos.equals(anchor) && AllBlocks.CART_ASSEMBLER.has(state))
+			return testSecondaryCartAssembler(world, state, pos);
+		return super.movementAllowed(state, world, pos);
 	}
 
 	protected boolean testSecondaryCartAssembler(World world, BlockState state, BlockPos pos) {
@@ -149,7 +156,7 @@ public class MountedContraption extends Contraption {
 	}
 	
 	@Override
-	protected boolean canAxisBeStabilized(Axis axis) {
+	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return true;
 	}
 	

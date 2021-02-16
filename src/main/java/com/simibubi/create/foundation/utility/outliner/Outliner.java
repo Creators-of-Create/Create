@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -49,6 +50,13 @@ public class Outliner {
 		((EndChasingLineOutline) entry.outline).setProgress(chasingProgress)
 			.set(start, end);
 		return entry.outline.getParams();
+	}
+
+	public OutlineParams showAABB(Object slot, AxisAlignedBB bb, int ttl) {
+		createAABBOutlineIfMissing(slot, bb);
+		ChasingAABBOutline outline = getAndRefreshAABB(slot, ttl);
+		outline.prevBB = outline.targetBB = bb;
+		return outline.getParams();
 	}
 
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {
@@ -103,6 +111,12 @@ public class Outliner {
 	private ChasingAABBOutline getAndRefreshAABB(Object slot) {
 		OutlineEntry entry = outlines.get(slot);
 		entry.ticksTillRemoval = 1;
+		return (ChasingAABBOutline) entry.getOutline();
+	}
+
+	private ChasingAABBOutline getAndRefreshAABB(Object slot, int ttl) {
+		OutlineEntry entry = outlines.get(slot);
+		entry.ticksTillRemoval = ttl;
 		return (ChasingAABBOutline) entry.getOutline();
 	}
 

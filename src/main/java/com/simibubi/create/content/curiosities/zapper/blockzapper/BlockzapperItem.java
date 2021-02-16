@@ -135,7 +135,7 @@ public class BlockzapperItem extends ZapperItem {
 				blocksnapshot.restore(true, false);
 				return false;
 			}
-			setTileData(world, placed, data);
+			setTileData(world, placed, state, data, player);
 
 			if (player instanceof ServerPlayerEntity && world instanceof ServerWorld) {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;

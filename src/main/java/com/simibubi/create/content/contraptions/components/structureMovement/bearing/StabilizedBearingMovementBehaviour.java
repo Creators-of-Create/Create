@@ -40,7 +40,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 		AbstractContraptionEntity entity = context.contraption.entity;
 		if (entity instanceof ControlledContraptionEntity) {
 			ControlledContraptionEntity controlledCE = (ControlledContraptionEntity) entity;
-			if (controlledCE.getRotationAxis() == axis)
+			if (context.contraption.canBeStabilized(facing, context.localPos))
 				offset = -controlledCE.getAngle(renderPartialTicks);
 
 		} else if (entity instanceof OrientedContraptionEntity) {

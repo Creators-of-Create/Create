@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.DirectionalExtenderScrollOptionSlot;
@@ -41,7 +42,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public void assemble() {
+	public void assemble() throws AssemblyException {
 		if (!(world.getBlockState(pos)
 			.getBlock() instanceof MechanicalPistonBlock))
 			return;
@@ -112,7 +113,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
-		float movementSpeed = getSpeed() / 512f;
+		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f);
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);

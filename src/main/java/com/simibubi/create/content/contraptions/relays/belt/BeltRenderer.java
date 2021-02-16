@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -9,9 +11,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.ShadowRenderHelper;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -26,14 +25,13 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-
-import java.util.Random;
 
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
@@ -48,7 +46,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	@Override
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-							  int light, int overlay) {
+		int light, int overlay) {
 
 		if (!FastRenderDispatcher.available(te.getWorld())) {
 
@@ -89,13 +87,24 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 				AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-				SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState).light(light);
+			SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
+				.light(light);
 
-				SpriteShiftEntry spriteShift = getSpriteShiftEntry(diagonal, bottom);
+			SpriteShiftEntry spriteShift = null;
+			if (te.color.isPresent()) {
+				DyeColor color = te.color.get();
+				spriteShift = (diagonal ? AllSpriteShifts.DYED_DIAGONAL_BELTS
+					: bottom ? AllSpriteShifts.DYED_OFFSET_BELTS : AllSpriteShifts.DYED_BELTS).get(color);
+			} else
+				spriteShift = diagonal ? AllSpriteShifts.BELT_DIAGONAL
+					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
+
+			int cycleLength = diagonal ? 12 : 16;
+			int cycleOffset = bottom ? 8 : 0;
 
 				// UV shift
 				float speed = te.getSpeed();
-				if (speed != 0) {
+				if (speed != 0 || te.color.isPresent()) {
 					float time = renderTick * axisDirection.getOffset();
 					if (diagonal && (downward ^ alongX) || !sideways && !diagonal && alongX || sideways && axisDirection == AxisDirection.NEGATIVE)
 						speed = -speed;
@@ -162,7 +171,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	}
 
 	protected void renderItems(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
-							   int light, int overlay) {
+		int light, int overlay) {
 		if (!te.isController())
 			return;
 		if (te.beltLength == 0)
@@ -190,7 +199,6 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 			float verticalMovement = verticality;
-
 
 			if (te.getSpeed() == 0) {
 				offset = transported.beltPosition;

@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -20,33 +19,38 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
+import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation {
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour invManipulation;
-	private InvManipulationBehaviour autoExtractor;
 	private int extractionCooldown;
+
+	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
 
 	int sendFlap;
 	InterpolatedChasingValue flap;
 
 	static enum Mode {
-		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, HOPPER
+		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 
 	public FunnelTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -63,8 +67,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return Mode.INVALID;
 		if (state.has(BlockStateProperties.POWERED) && state.get(BlockStateProperties.POWERED))
 			return Mode.PAUSED;
-		if (FunnelBlock.getFunnelFacing(state) == Direction.UP && autoExtractor.hasInventory())
-			return Mode.HOPPER;
 		if (state.getBlock() instanceof BeltFunnelBlock) {
 			Shape shape = state.get(BeltFunnelBlock.SHAPE);
 			if (shape == Shape.PULLING)
@@ -76,8 +78,12 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			if (belt != null)
 				return belt.getMovementFacing() == state.get(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
 					: Mode.TAKING_FROM_BELT;
+			return Mode.INVALID;
 		}
-		return Mode.COLLECT;
+		if (state.getBlock() instanceof FunnelBlock)
+			return state.get(FunnelBlock.EXTRACTING) ? Mode.EXTRACT : Mode.COLLECT;
+
+		return Mode.INVALID;
 	}
 
 	@Override
@@ -101,38 +107,85 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 		if (mode == Mode.PUSHING_TO_BELT)
 			activateExtractingBeltFunnel();
-		if (mode == Mode.HOPPER)
-			activateHopper();
+		if (mode == Mode.EXTRACT)
+			activateExtractor();
 	}
 
-	private void activateHopper() {
-		if (!invManipulation.hasInventory())
-			return;
-		int amountToExtract = autoExtractor.getAmountFromFilter();
-		if (!filtering.isActive())
-			amountToExtract = 1;
+	private void activateExtractor() {
+		BlockState blockState = getBlockState();
+		Direction facing = AbstractFunnelBlock.getFunnelFacing(blockState);
 
-		Predicate<ItemStack> filter = s -> !filtering.isActive() || filtering.test(s);
-		Function<ItemStack, Integer> amountThreshold = s -> {
-			int maxStackSize = s.getMaxStackSize();
-			return maxStackSize - invManipulation.simulate()
-				.insert(ItemHandlerHelper.copyStackWithSize(s, maxStackSize))
-				.getCount();
-		};
-
-		if (amountToExtract != -1 && !invManipulation.simulate()
-			.insert(autoExtractor.simulate()
-				.extract(amountToExtract, filter))
-			.isEmpty())
+		if (facing == null)
 			return;
 
-		ItemStack stack = autoExtractor.extract(amountToExtract, filter, amountThreshold);
+		boolean trackingEntityPresent = true;
+		AxisAlignedBB area = getEntityOverflowScanningArea();
+
+		// Check if last item is still blocking the extractor
+		if (lastObserved == null) {
+			trackingEntityPresent = false;
+		} else {
+			ItemEntity lastEntity = lastObserved.get();
+			if (lastEntity == null || !lastEntity.isAlive() || !lastEntity.getBoundingBox()
+				.intersects(area)) {
+				trackingEntityPresent = false;
+				lastObserved = null;
+			}
+		}
+
+		if (trackingEntityPresent)
+			return;
+
+		// Find other entities blocking the extract (only if necessary)
+		int amountToExtract = getAmountToExtract();
+		ItemStack stack = invManipulation.simulate()
+			.extract(amountToExtract);
+		if (stack.isEmpty())
+			return;
+		for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class, area)) {
+			lastObserved = new WeakReference<>(itemEntity);
+			return;
+		}
+
+		// Extract
+		stack = invManipulation.extract(amountToExtract);
 		if (stack.isEmpty())
 			return;
 
+		flap(false);
 		onTransfer(stack);
-		invManipulation.insert(stack);
+
+		Vec3d outputPos = VecHelper.getCenterOf(pos);
+		boolean vertical = facing.getAxis()
+			.isVertical();
+		boolean up = facing == Direction.UP;
+
+		outputPos = outputPos.add(new Vec3d(facing.getDirectionVec()).scale(vertical ? up ? .15f : .5f : .25f));
+		if (!vertical)
+			outputPos = outputPos.subtract(0, .45f, 0);
+
+		Vec3d motion = Vec3d.ZERO;
+		if (up)
+			motion = new Vec3d(0, 4 / 16f, 0);
+
+		ItemEntity item = new ItemEntity(world, outputPos.x, outputPos.y, outputPos.z, stack.copy());
+		item.setDefaultPickupDelay();
+		item.setMotion(motion);
+		world.addEntity(item);
+		lastObserved = new WeakReference<>(item);
+
 		startCooldown();
+	}
+
+	static final AxisAlignedBB coreBB =
+		new AxisAlignedBB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).grow(.75f);
+
+	private AxisAlignedBB getEntityOverflowScanningArea() {
+		Direction facing = AbstractFunnelBlock.getFunnelFacing(getBlockState());
+		AxisAlignedBB bb = coreBB.offset(pos);
+		if (facing == null || facing == Direction.UP)
+			return bb;
+		return bb.expand(0, -1, 0);
 	}
 
 	private void activateExtractingBeltFunnel() {
@@ -172,10 +225,10 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		invManipulation = new InvManipulationBehaviour(this, InterfaceProvider.oppositeOfBlockFacing());
+		invManipulation =
+			new InvManipulationBehaviour(this, (w, p, s) -> new BlockFace(p, AbstractFunnelBlock.getFunnelFacing(s)
+				.getOpposite()));
 		behaviours.add(invManipulation);
-		autoExtractor = InvManipulationBehaviour.forExtraction(this, InterfaceProvider.towardBlockFacing());
-		behaviours.add(autoExtractor);
 
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning());
 		filtering.showCountWhen(this::supportsAmountOnFilter);
@@ -196,10 +249,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			else
 				beltFunnelsupportsAmount = BeltHelper.getSegmentTE(world, pos.down()) != null;
 		}
-		boolean hopper = FunnelBlock.getFunnelFacing(blockState) == Direction.UP && !world.getBlockState(pos.up())
-			.getMaterial()
-			.isReplaceable();
-		return beltFunnelsupportsAmount || hopper;
+		boolean extractor = blockState.getBlock() instanceof FunnelBlock && blockState.get(FunnelBlock.EXTRACTING);
+		return beltFunnelsupportsAmount || extractor;
 	}
 
 	private boolean supportsDirectBeltInput(Direction side) {
@@ -208,8 +259,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 		if (!(blockState.getBlock() instanceof FunnelBlock))
 			return false;
-		Direction direction = blockState.get(FunnelBlock.FACING);
-		return direction == Direction.UP || direction == side.getOpposite();
+		return blockState.get(FunnelBlock.FACE) == AttachFace.FLOOR;
 	}
 
 	private boolean supportsFiltering() {
@@ -237,7 +287,9 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	public boolean hasFlap() {
 		BlockState blockState = getBlockState();
-		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
+		if (!AbstractFunnelBlock.getFunnelFacing(blockState)
+			.getAxis()
+			.isHorizontal())
 			return false;
 		return true;
 	}
@@ -245,7 +297,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	public float getFlapOffset() {
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
-			return 0;
+			return -1 / 16f;
 		switch (blockState.get(BeltFunnelBlock.SHAPE)) {
 		default:
 		case RETRACTED:

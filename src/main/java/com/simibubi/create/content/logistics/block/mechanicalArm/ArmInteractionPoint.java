@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerBloc
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -280,11 +281,15 @@ public abstract class ArmInteractionPoint {
 		@Override
 		ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, true).getResult().isEmpty()) {
+			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, true)
+				.getResult()
+				.isEmpty()) {
 				return stack;
 			}
 			ActionResult<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, simulate);
-			return res.getType() == ActionResultType.SUCCESS ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1) : stack;
+			return res.getType() == ActionResultType.SUCCESS
+				? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1)
+				: stack;
 		}
 
 		@Override
@@ -405,7 +410,7 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
-			return AllBlocks.CHUTE.has(state);
+			return AbstractChuteBlock.isChute(state);
 		}
 	}
 
@@ -415,7 +420,7 @@ public abstract class ArmInteractionPoint {
 		Vec3d getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
 				.add(new Vec3d(FunnelBlock.getFunnelFacing(state)
-					.getDirectionVec()).scale(.5f));
+					.getDirectionVec()).scale(-.15f));
 		}
 
 		@Override
@@ -450,15 +455,19 @@ public abstract class ArmInteractionPoint {
 			ItemStack insert = inserter.insert(stack);
 			if (!simulate && insert.getCount() != stack.getCount()) {
 				TileEntity tileEntity = world.getTileEntity(pos);
-				if (tileEntity instanceof FunnelTileEntity)
-					((FunnelTileEntity) tileEntity).onTransfer(stack);
+				if (tileEntity instanceof FunnelTileEntity) {
+					FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
+					funnelTileEntity.onTransfer(stack);
+					if (funnelTileEntity.hasFlap())
+						funnelTileEntity.flap(true);
+				}
 			}
 			return insert;
 		}
 
 		@Override
 		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
-			return state.getBlock() instanceof FunnelBlock;
+			return state.getBlock() instanceof FunnelBlock && !state.get(FunnelBlock.EXTRACTING);
 		}
 
 		@Override

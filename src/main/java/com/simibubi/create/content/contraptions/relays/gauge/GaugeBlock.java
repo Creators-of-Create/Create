@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.RedstoneParticleData;
@@ -114,6 +113,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		return context.getFace();
 	}
 
+	@Override
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
 		return context.getPlacementHorizontalFacing().getAxis() != Axis.X;
 	}
@@ -127,8 +127,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			return false;
 		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
 			return false;
-		BlockState blockState = world.getBlockState(pos.offset(face));
-		if (Block.hasSolidSide(blockState, world, pos, face.getOpposite()) && blockState.getMaterial() != Material.GLASS
+		if (!Block.shouldSideBeRendered(state, world, pos, face)
 				&& !(world instanceof WrappedWorld))
 			return false;
 		return true;
