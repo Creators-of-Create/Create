@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility.placement;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -35,7 +36,7 @@ public class PlacementHelpers {
 
 	private static final List<IPlacementHelper> helpers = new ArrayList<>();
 	private static int animationTick = 0;
-	private static final InterpolatedChasingValue angle = new InterpolatedChasingAngle().withSpeed(0.15f);
+	private static final InterpolatedChasingValue angle = new InterpolatedChasingAngle().withSpeed(0.25f);
 	private static BlockPos target = null;
 	private static BlockPos lastTarget = null;
 
@@ -163,13 +164,7 @@ public class PlacementHelpers {
 
 			//mc.fontRenderer.drawString(text, x, y, 0xFFFFFF | opacity);
 
-			boolean flag = AllConfigs.CLIENT.smoothPlacementIndicator.get();
-			if (flag)
-				drawDirectionIndicator(event.getPartialTicks(), screenX, screenY, progress);
-
-			else {
-				//TODO find something more in style
-			}
+			drawDirectionIndicator(event.getPartialTicks(), screenX, screenY, progress);
 			//matrix.pop();
 		}
 	}
@@ -184,11 +179,17 @@ public class PlacementHelpers {
 		Vec3d projTarget = VecHelper.projectToPlayerView(VecHelper.getCenterOf(lastTarget), partialTicks);
 
 		Vec3d target = new Vec3d(projTarget.x, projTarget.y, 0);
+		if (projTarget.z > 0) {
+			target = target.inverse();
+		}
+
 		Vec3d norm = target.normalize();
 		Vec3d ref = new Vec3d(0, 1, 0);
 		float targetAngle = AngleHelper.deg(Math.acos(norm.dotProduct(ref)));
 
-		if (norm.x > 0) {
+		angle.withSpeed(0.25f);
+
+		if (norm.x < 0) {
 			targetAngle = 360 - targetAngle;
 		}
 
@@ -198,10 +199,21 @@ public class PlacementHelpers {
 		angle.target(targetAngle);
 		angle.tick();
 
+		float snapSize = 22.5f;
+		float snappedAngle = (snapSize * Math.round(angle.get(0f) / snapSize)) % 360f;
 
 		float length = 10;
 		//TOD O if the target is off screen, use length to show a meaningful distance
 
+		boolean flag = AllConfigs.CLIENT.smoothPlacementIndicator.get();
+		if (flag)
+			fadedArrow(centerX, centerY, r, g, b, a, length, snappedAngle);
+
+		else
+			textured(centerX, centerY, a, snappedAngle);
+	}
+
+	private static void fadedArrow(float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
 		RenderSystem.pushMatrix();
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
@@ -210,8 +222,8 @@ public class PlacementHelpers {
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		RenderSystem.translated(centerX, centerY, 0);
-		RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
-		//RenderSystem.scaled(3, 3, 3);
+		RenderSystem.rotatef(angle.get(0), 0, 0, 1);
+		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -234,4 +246,51 @@ public class PlacementHelpers {
 		RenderSystem.enableTexture();
 		RenderSystem.popMatrix();
 	}
+
+	private static void textured(float centerX, float centerY, float alpha, float snappedAngle) {
+		RenderSystem.pushMatrix();
+		RenderSystem.enableTexture();
+		//RenderSystem.disableTexture();
+		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
+		RenderSystem.enableBlend();
+		//RenderSystem.disableAlphaTest();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.color4f(1f, 1f, 1f, 1f);
+		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+
+		RenderSystem.translated(centerX, centerY, 0);
+		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
+		//RenderSystem.translated(0, 10, 0);
+		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, 1);
+		RenderSystem.scaled(12, 12, 0);
+
+		float index = snappedAngle / 22.5f;
+		float tex_size = 16f/256f;
+
+		float tx = 0;
+		float ty = index * tex_size;
+		float tw = 1f;
+		float th = tex_size;
+
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEXTURE);
+
+
+		buffer.vertex(-1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty).endVertex();
+		buffer.vertex(-1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty + th).endVertex();
+		buffer.vertex(1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty + th).endVertex();
+		buffer.vertex(1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty).endVertex();
+
+		tessellator.draw();
+		RenderSystem.shadeModel(GL11.GL_FLAT);
+
+		//RenderSystem.enableTexture();
+
+		RenderSystem.disableBlend();
+		//RenderSystem.enableAlphaTest();
+		RenderSystem.popMatrix();
+	}
+
 }

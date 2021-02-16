@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility.ghost;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ public class GhostBlocks {
 	public static double getBreathingAlpha() {
 		double period = 2500;
 		double timer = System.currentTimeMillis() % period;
-		double offset = Math.cos((2d/period) * Math.PI * timer);
+		double offset = MathHelper.cos((float) ((2d/period) * Math.PI * timer));
 		return 0.75d - 0.2d * offset;
 	}
 
