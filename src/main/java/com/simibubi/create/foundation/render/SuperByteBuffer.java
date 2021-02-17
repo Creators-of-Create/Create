@@ -25,7 +25,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	}
 
 	// Vertex Position
-	private MatrixStack transforms;
+	private final MatrixStack transforms;
 
 	// Vertex Texture Coords
 	private SpriteShiftFunc spriteShiftFunc;
@@ -152,7 +152,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 				.endVertex();
 		}
 
-		transforms = new MatrixStack();
+		while (!transforms.isEmpty()) transforms.pop();
 		spriteShiftFunc = null;
 		shouldColor = false;
 		shouldLight = false;

@@ -45,7 +45,13 @@ public class FastRenderDispatcher {
 
         CreateClient.kineticRenderer.tick();
 
-        runQueue(queuedUpdates.get(world), CreateClient.kineticRenderer::update);
+        ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
+        map
+                .forEach(te -> {
+                    map.remove(te);
+
+                    CreateClient.kineticRenderer.update(te);
+                });
     }
 
     public static boolean available() {
@@ -62,20 +68,6 @@ public class FastRenderDispatcher {
 
     public static void refresh() {
         RenderWork.enqueue(Minecraft.getInstance().worldRenderer::loadRenderers);
-    }
-
-    private static <T> void runQueue(@Nullable ConcurrentHashMap.KeySetView<T, Boolean> changed, Consumer<T> action) {
-        if (changed == null) return;
-
-        if (available()) {
-            // because of potential concurrency issues, we make a copy of what's in the set at the time we get here
-            ArrayList<T> tiles = new ArrayList<>(changed);
-
-            tiles.forEach(action);
-            changed.removeAll(tiles);
-        } else {
-            changed.clear();
-        }
     }
 
     public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
