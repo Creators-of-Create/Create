@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -30,7 +30,8 @@ public class ToggleDebugCommand {
 
 							ctx.getSource().sendFeedback(new StringTextComponent((value ? "enabled" : "disabled") + " rainbow debug"), true);
 
-							return 1;
-						}));
+							return Command.SINGLE_SUCCESS;
+						})
+				);
 	}
 }

@@ -1,5 +1,10 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
@@ -15,7 +20,9 @@ import com.simibubi.create.foundation.render.backend.OptifineHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -33,11 +40,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
@@ -46,6 +48,7 @@ public class CreateClient {
 	public static SuperByteBufferCache bufferCache;
 	public static KineticRenderer kineticRenderer;
 	public static final Outliner outliner = new Outliner();
+	public static GhostBlocks ghostBlocks;
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
@@ -74,6 +77,8 @@ public class CreateClient {
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		bufferCache.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
+
+		ghostBlocks = new GhostBlocks();
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();

@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
@@ -150,9 +149,11 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)),
-				((CogWheelBlock) state.getBlock()).isLarge ? 1.5D : 0.75D);
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)),
+			//	((CogWheelBlock) state.getBlock()).isLarge ? 1.5D : 0.75D);
+
+			displayGhost(offset);
 		}
 	}
 
@@ -227,8 +228,10 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)), 1D);
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)), 1D);
+
+			displayGhost(offset);
 		}
 
 		protected boolean hitOnShaft(BlockState state, BlockRayTraceResult ray) {
@@ -320,10 +323,12 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, offset.getTransform()
-					.apply(AllBlocks.LARGE_COGWHEEL.getDefaultState())
-					.get(AXIS)));
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, offset.getTransform()
+			//		.apply(AllBlocks.LARGE_COGWHEEL.getDefaultState())
+			//		.get(AXIS)));
+
+			displayGhost(offset);
 		}
 	}
 }

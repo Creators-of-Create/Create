@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
 import com.simibubi.create.Create;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -78,6 +77,9 @@ public enum AllGuiTextures {
 	INDICATOR_GREEN("widgets.png", 36, 18, 18, 6),
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
+
+	// PlacementIndicator
+	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
 
 	;
 

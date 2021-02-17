@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.DoubleNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -12,6 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class VecHelper {
 
@@ -143,6 +148,54 @@ public class VecHelper {
 			return null;
 		double t = -lineDotDiff + MathHelper.sqrt(delta);
 		return origin.add(lineDirection.scale(t));
+	}
+
+	//https://forums.minecraftforge.net/topic/88562-116solved-3d-to-2d-conversion/?do=findComment&comment=413573 slightly modified
+	public static Vec3d projectToPlayerView(Vec3d target, float partialTicks) {
+		/* The (centered) location on the screen of the given 3d point in the world.
+		 * Result is (dist right of center screen, dist up from center screen, if < 0, then in front of view plane) */
+		ActiveRenderInfo ari = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+		Vec3d camera_pos = ari.getProjectedView();
+		Quaternion camera_rotation_conj = ari.getRotation().copy();
+		camera_rotation_conj.conjugate();
+
+		Vector3f result3f = new Vector3f((float) (camera_pos.x - target.x),
+				(float) (camera_pos.y - target.y),
+				(float) (camera_pos.z - target.z));
+		result3f.func_214905_a(camera_rotation_conj);
+
+		// ----- compensate for view bobbing (if active) -----
+		// the following code adapted from GameRenderer::applyBobbing (to invert it)
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.gameSettings.viewBobbing) {
+			Entity renderViewEntity = mc.getRenderViewEntity();
+			if (renderViewEntity instanceof PlayerEntity) {
+				PlayerEntity playerentity = (PlayerEntity) renderViewEntity;
+				float distwalked_modified = playerentity.distanceWalkedModified;
+
+				float f = distwalked_modified - playerentity.prevDistanceWalkedModified;
+				float f1 = -(distwalked_modified + f * partialTicks);
+				float f2 = MathHelper.lerp(partialTicks, playerentity.prevCameraYaw, playerentity.cameraYaw);
+				Quaternion q2 = new Quaternion(Vector3f.POSITIVE_X, Math.abs(MathHelper.cos(f1 * (float) Math.PI - 0.2F) * f2) * 5.0F, true);
+				q2.conjugate();
+				result3f.func_214905_a(q2);
+
+				Quaternion q1 = new Quaternion(Vector3f.POSITIVE_Z, MathHelper.sin(f1 * (float) Math.PI) * f2 * 3.0F, true);
+				q1.conjugate();
+				result3f.func_214905_a(q1);
+
+				Vector3f bob_translation = new Vector3f((MathHelper.sin(f1 * (float) Math.PI) * f2 * 0.5F), (-Math.abs(MathHelper.cos(f1 * (float) Math.PI) * f2)), 0.0f);
+				bob_translation.setY(-bob_translation.getY());  // this is weird but hey, if it works
+				result3f.add(bob_translation);
+			}
+		}
+
+		// ----- adjust for fov -----
+		float fov = (float) mc.gameRenderer.getFOVModifier(ari, partialTicks, true);
+
+		float half_height = (float) mc.getWindow().getScaledHeight() / 2;
+		float scale_factor = half_height / (result3f.getZ() * (float) Math.tan(Math.toRadians(fov / 2)));
+		return new Vec3d(-result3f.getX() * scale_factor, result3f.getY() * scale_factor, result3f.getZ());
 	}
 
 }
