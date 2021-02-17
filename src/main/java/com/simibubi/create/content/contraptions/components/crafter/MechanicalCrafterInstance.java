@@ -23,7 +23,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, MechanicalCrafterInstance::new));
     }
 
-    public MechanicalCrafterInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public MechanicalCrafterInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -33,12 +33,14 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
         Supplier<MatrixStack> ms = () -> {
             MatrixStack stack = new MatrixStack();
-            MatrixStacker.of(stack)
-                         .centre()
-                         .rotateZ(90)
-                         .rotateY(AngleHelper.horizontalAngle(facing))
-                         .rotateX(AngleHelper.verticalAngle(facing))
-                         .unCentre();
+            MatrixStacker stacker = MatrixStacker.of(stack).centre();
+
+            if (facing.getAxis() == Direction.Axis.X)
+                stacker.rotateZ(90);
+            else if (facing.getAxis() == Direction.Axis.Z)
+                stacker.rotateX(90);
+
+            stacker.unCentre();
             return stack;
         };
         return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, lastState, facing, ms);
