@@ -1078,7 +1078,7 @@
 	"create.tunnel.selection_mode.split": "División",
 	"create.tunnel.selection_mode.forced_split": "División forzada",
 	"create.tunnel.selection_mode.round_robin": "Round Robin",
-	"create.tunnel.selection_mode.forced_round_robin": "Round Robin forzado": "Round Robin forzado",
+	"create.tunnel.selection_mode.forced_round_robin": "Round Robin forzado",
 	"create.tunnel.selection_mode.prefer_nearest": "Preferir el más cercano": "Preferir el más cercano",
 	"create.tunnel.selection_mode.randomize": "Aleatorio": "Aleatorizar",
 	"create.tunnel.selection_mode.synchronize": "Sincronizar entradas": "Sincronizar entradas",
