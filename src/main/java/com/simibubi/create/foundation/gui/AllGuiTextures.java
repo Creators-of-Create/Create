@@ -79,7 +79,7 @@ public enum AllGuiTextures {
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
 
 	// PlacementIndicator
-	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 256, 256);
+	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
 
 	;
 

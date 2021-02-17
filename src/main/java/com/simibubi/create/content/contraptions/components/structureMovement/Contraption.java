@@ -28,11 +28,7 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.*;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
@@ -41,6 +37,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -55,6 +52,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.palette.PaletteHashMap;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -67,6 +65,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.registries.GameData;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -595,51 +594,16 @@ public abstract class Contraption {
 		presentTileEntities.clear();
 		renderedTileEntities.clear();
 
-		nbt.getList("Blocks", 10)
-			.forEach(c -> {
-				CompoundNBT comp = (CompoundNBT) c;
-				BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					NBTUtil.readBlockState(comp.getCompound("Block")),
-					comp.contains("Data") ? comp.getCompound("Data") : null);
-				blocks.put(info.pos, info);
-
-				if (world.isRemote) {
-					Block block = info.state.getBlock();
-					CompoundNBT tag = info.nbt;
-					MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-					if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
-						return;
-
-					tag.putInt("x", info.pos.getX());
-					tag.putInt("y", info.pos.getY());
-					tag.putInt("z", info.pos.getZ());
-
-					TileEntity te = TileEntity.create(tag);
-					if (te == null)
-						return;
-					te.setLocation(new WrappedWorld(world) {
-
-						@Override
-						public BlockState getBlockState(BlockPos pos) {
-							if (!pos.equals(te.getPos()))
-								return Blocks.AIR.getDefaultState();
-							return info.state;
-						}
-
-					}, te.getPos());
-					if (te instanceof KineticTileEntity)
-						((KineticTileEntity) te).setSpeed(0);
-					te.getBlockState();
-					presentTileEntities.put(info.pos, te);
-					renderedTileEntities.add(te);
-				}
-			});
+		INBT blocks = nbt.get("Blocks");
+		//used to differentiate between the 'old' and the paletted serialization
+		boolean usePalettedDeserialization = blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
+		readBlocksCompound(blocks, world, usePalettedDeserialization);
 
 		actors.clear();
 		nbt.getList("Actors", 10)
 			.forEach(c -> {
 				CompoundNBT comp = (CompoundNBT) c;
-				BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
+				BlockInfo info = this.blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
@@ -704,15 +668,8 @@ public abstract class Contraption {
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putString("Type", getType().id);
-		ListNBT blocksNBT = new ListNBT();
-		for (BlockInfo block : this.blocks.values()) {
-			CompoundNBT c = new CompoundNBT();
-			c.put("Block", NBTUtil.writeBlockState(block.state));
-			c.put("Pos", NBTUtil.writeBlockPos(block.pos));
-			if (block.nbt != null)
-				c.put("Data", block.nbt);
-			blocksNBT.add(c);
-		}
+
+		CompoundNBT blocksNBT = writeBlocksCompound();
 
 		ListNBT actorsNBT = new ListNBT();
 		for (MutablePair<BlockInfo, MovementContext> actor : getActors()) {
@@ -787,6 +744,100 @@ public abstract class Contraption {
 		}
 
 		return nbt;
+	}
+
+	private CompoundNBT writeBlocksCompound() {
+		CompoundNBT compound = new CompoundNBT();
+		PaletteHashMap<BlockState> palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+		ListNBT blockList = new ListNBT();
+
+		for (BlockInfo block : this.blocks.values()) {
+			int id = palette.idFor(block.state);
+			CompoundNBT c = new CompoundNBT();
+			c.putLong("Pos", block.pos.toLong());
+			c.putInt("State", id);
+			if (block.nbt != null)
+				c.put("Data", block.nbt);
+			blockList.add(c);
+		}
+
+		ListNBT paletteNBT = new ListNBT();
+		palette.writePaletteToList(paletteNBT);
+		compound.put("Palette", paletteNBT);
+		compound.put("BlockList", blockList);
+
+		return compound;
+	}
+
+	private void readBlocksCompound(INBT compound, World world, boolean usePalettedDeserialization) {
+		PaletteHashMap<BlockState> palette = null;
+		ListNBT blockList;
+		if (usePalettedDeserialization) {
+			CompoundNBT c = ((CompoundNBT) compound);
+			palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+			palette.read(c.getList("Palette", 10));
+
+			blockList = c.getList("BlockList", 10);
+		} else {
+			blockList = (ListNBT) compound;
+		}
+
+		PaletteHashMap<BlockState> finalPalette = palette;
+		blockList.forEach(e -> {
+			CompoundNBT c = (CompoundNBT) e;
+
+			BlockInfo info = usePalettedDeserialization ? readBlockInfo(c, finalPalette) : legacyReadBlockInfo(c);
+
+			this.blocks.put(info.pos, info);
+
+			if (world.isRemote) {
+				Block block = info.state.getBlock();
+				CompoundNBT tag = info.nbt;
+				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
+				if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
+					return;
+
+				tag.putInt("x", info.pos.getX());
+				tag.putInt("y", info.pos.getY());
+				tag.putInt("z", info.pos.getZ());
+
+				TileEntity te = TileEntity.create(tag);
+				if (te == null)
+					return;
+				te.setLocation(new WrappedWorld(world) {
+
+					@Override
+					public BlockState getBlockState(BlockPos pos) {
+						if (!pos.equals(te.getPos()))
+							return Blocks.AIR.getDefaultState();
+						return info.state;
+					}
+
+				}, te.getPos());
+				if (te instanceof KineticTileEntity)
+					((KineticTileEntity) te).setSpeed(0);
+				te.getBlockState();
+				presentTileEntities.put(info.pos, te);
+				renderedTileEntities.add(te);
+			}
+
+		});
+	}
+
+	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, PaletteHashMap<BlockState> palette) {
+		return new BlockInfo(
+				BlockPos.fromLong(blockListEntry.getLong("Pos")),
+				Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
+		);
+	}
+
+	private static BlockInfo legacyReadBlockInfo(CompoundNBT blockListEntry) {
+		return new BlockInfo(
+				NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
+				NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
+				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
+		);
 	}
 
 	public void removeBlocksFromWorld(World world, BlockPos offset) {
