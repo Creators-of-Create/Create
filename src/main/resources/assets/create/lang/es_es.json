@@ -1073,7 +1073,7 @@
 
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Round Robin forzado",
-	"create.mechanical_arm.selection_mode.prefer_first": "Preferir el primer objetivo": "Preferir el primer objetivo",
+	"create.mechanical_arm.selection_mode.prefer_first": "Preferir el primer objetivo",
 
 	"create.tunnel.selection_mode.split": "División",
 	"create.tunnel.selection_mode.forced_split": "División forzada",
