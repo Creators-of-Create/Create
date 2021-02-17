@@ -799,7 +799,7 @@ public abstract class Contraption {
 				Block block = info.state.getBlock();
 				CompoundNBT tag = info.nbt;
 				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-				if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
+				if (tag == null)
 					return;
 
 				tag.putInt("x", info.pos.getX());
