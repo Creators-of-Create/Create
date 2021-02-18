@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.nio.ByteBuffer;
+
 import com.simibubi.create.foundation.render.backend.BufferedModel;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
+
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
-
-import java.nio.ByteBuffer;
 
 public class ContraptionModel extends BufferedModel {
     public static final VertexFormat FORMAT = VertexFormat.builder()

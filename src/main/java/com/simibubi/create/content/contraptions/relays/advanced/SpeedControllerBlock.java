@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -10,6 +12,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,8 +30,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import java.util.function.Predicate;
 
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
 

@@ -1,7 +1,11 @@
 package com.simibubi.create;
 
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;

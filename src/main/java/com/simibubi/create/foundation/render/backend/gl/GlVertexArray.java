@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
-import org.lwjgl.opengl.GL30;
-
 import java.util.function.Consumer;
+
+import org.lwjgl.opengl.GL30;
 
 public class GlVertexArray extends GlObject {
     public GlVertexArray() {

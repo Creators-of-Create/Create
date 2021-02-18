@@ -1,5 +1,14 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
+import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -13,6 +22,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -29,14 +39,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-
-import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 public class MechanicalCrafterTileEntity extends KineticTileEntity {
 

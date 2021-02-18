@@ -5,10 +5,10 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

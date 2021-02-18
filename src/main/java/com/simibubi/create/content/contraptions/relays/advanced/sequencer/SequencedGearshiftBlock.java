@@ -93,7 +93,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 				return ActionResultType.PASS;
 		}
 
-		DistExecutor.runWhenOn(Dist.CLIENT,
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
 	}

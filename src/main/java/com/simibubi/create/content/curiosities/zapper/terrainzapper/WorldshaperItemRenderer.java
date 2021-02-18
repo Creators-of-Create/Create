@@ -1,9 +1,13 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
+import static java.lang.Math.max;
+import static net.minecraft.util.math.MathHelper.clamp;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -12,9 +16,6 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
-
-import static java.lang.Math.max;
-import static net.minecraft.util.math.MathHelper.clamp;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
 

@@ -1,21 +1,39 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.components.structureMovement.*;
-import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.content.contraptions.components.actors.ContraptionActorData;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.BlockModelRenderer;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -28,13 +46,6 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 public class RenderedContraption {
     private final HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();

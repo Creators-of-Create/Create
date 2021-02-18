@@ -1,19 +1,20 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 

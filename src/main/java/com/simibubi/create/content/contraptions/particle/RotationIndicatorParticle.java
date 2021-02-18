@@ -5,6 +5,7 @@ import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.particle.IAnimatedSprite;

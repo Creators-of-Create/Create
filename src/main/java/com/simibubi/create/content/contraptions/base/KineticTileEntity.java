@@ -43,12 +43,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
@@ -548,13 +542,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void onLoad() {
 		super.onLoad();
 		if (world != null && world.isRemote)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
 	public void onChunkUnloaded() {
 		if (world != null && world.isRemote)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
 	}
 
 	@Override

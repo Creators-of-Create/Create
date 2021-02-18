@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.util.Direction.Axis;
 
 public class AnimatedPress extends AnimatedKinetics {

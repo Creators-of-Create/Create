@@ -1,25 +1,25 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
-import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.function.Supplier;
-
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
     public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, MechanicalCrafterInstance::new));
     }
 

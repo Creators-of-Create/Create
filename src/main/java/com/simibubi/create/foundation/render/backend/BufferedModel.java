@@ -1,14 +1,16 @@
 package com.simibubi.create.foundation.render.backend;
 
-import com.simibubi.create.foundation.render.TemplateBuffer;
-import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
-import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
-import net.minecraft.client.renderer.BufferBuilder;
+import java.nio.ByteBuffer;
+
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import java.nio.ByteBuffer;
+import com.simibubi.create.foundation.render.TemplateBuffer;
+import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
+import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
+import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
+
+import net.minecraft.client.renderer.BufferBuilder;
 
 public abstract class BufferedModel extends TemplateBuffer {
 

@@ -1,13 +1,28 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
+import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
+import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPiston;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isStickyPiston;
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;
 import net.minecraft.block.material.PushReaction;
@@ -23,16 +38,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
-import static com.simibubi.create.AllBlocks.MECHANICAL_PISTON_HEAD;
-import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class PistonContraption extends TranslatingContraption {
 

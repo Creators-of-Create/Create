@@ -1,9 +1,15 @@
 package com.simibubi.create.content.curiosities.zapper;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -24,11 +30,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ZapperRenderHandler {

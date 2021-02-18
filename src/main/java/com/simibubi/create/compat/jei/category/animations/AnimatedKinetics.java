@@ -3,6 +3,7 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;

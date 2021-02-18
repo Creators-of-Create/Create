@@ -1,15 +1,22 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -18,13 +25,9 @@ import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     public static void register(TileEntityType<? extends BeltTileEntity> type) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, BeltInstance::new));
     }
 

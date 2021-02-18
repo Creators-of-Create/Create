@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;

@@ -3,13 +3,13 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -43,7 +43,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				try {
 					Actions.valueOf(option)
 						.performAction(value);

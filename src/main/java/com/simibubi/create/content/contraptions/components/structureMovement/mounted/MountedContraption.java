@@ -7,12 +7,12 @@ import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -35,11 +35,6 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
-
-import static com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.RAIL_SHAPE;
 
 public class MountedContraption extends Contraption {
 

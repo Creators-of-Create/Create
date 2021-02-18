@@ -1,26 +1,5 @@
 package com.simibubi.create.foundation.render.backend;
 
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
-import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
-import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlVersioned;
-import com.simibubi.create.foundation.render.backend.gl.versioned.MapBuffer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
-import net.minecraftforge.resource.VanillaResourceType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.system.MemoryUtil;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +10,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.system.MemoryUtil;
+
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
+import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlVersioned;
+import com.simibubi.create.foundation.render.backend.gl.versioned.MapBuffer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.resource.IResourceType;
+import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraftforge.resource.VanillaResourceType;
 
 public class Backend {
     public static final Logger log = LogManager.getLogger(Backend.class);

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility.placement;
 
+import java.util.function.Function;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -21,8 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.world.BlockEvent;
-
-import java.util.function.Function;
 
 public class PlacementOffset {
 

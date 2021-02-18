@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.render;
 
+import java.util.Iterator;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -7,15 +9,16 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-import net.minecraft.client.renderer.*;
+
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.Iterator;
 
 public class TileEntityRenderHelper {
 

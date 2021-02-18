@@ -1,13 +1,17 @@
 package com.simibubi.create.content.contraptions.relays.gearbox;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
-import com.simibubi.create.content.contraptions.base.RotatingData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -16,12 +20,9 @@ import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     public static void register(TileEntityType<? extends GearboxTileEntity> type) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, GearboxInstance::new));
     }
 

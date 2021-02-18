@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -11,6 +15,7 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -38,10 +43,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 public class GantryShaftBlock extends DirectionalKineticBlock {
 

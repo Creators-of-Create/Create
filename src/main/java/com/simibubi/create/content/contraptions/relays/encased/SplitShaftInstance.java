@@ -1,25 +1,26 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.ArrayList;
+
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
-import com.simibubi.create.content.contraptions.base.RotatingData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.ArrayList;
-
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
     public static void register(TileEntityType<? extends SplitShaftTileEntity> type) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, SplitShaftInstance::new));
     }
 

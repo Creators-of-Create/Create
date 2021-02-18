@@ -1,10 +1,16 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import java.util.function.Consumer;
+
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
@@ -13,11 +19,9 @@ import net.minecraft.util.Rotation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.function.Consumer;
-
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
     public static void register(TileEntityType<? extends FlywheelTileEntity> type) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, FlyWheelInstance::new));
     }
 

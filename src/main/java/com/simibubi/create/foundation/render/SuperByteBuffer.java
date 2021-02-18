@@ -1,22 +1,27 @@
 package com.simibubi.create.foundation.render;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Matrix3f;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.LightUtil;
-
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 
 public class SuperByteBuffer extends TemplateBuffer {
 
@@ -39,7 +44,6 @@ public class SuperByteBuffer extends TemplateBuffer {
 	// Vertex Coloring
 	private boolean shouldColor;
 	private int r, g, b, a;
-	private float sheetSize;
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		super(buf);
@@ -241,18 +245,9 @@ public class SuperByteBuffer extends TemplateBuffer {
 	private static int getLight(World world, Vector4f lightPos) {
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		double sky = 0, block = 0;
-		float offset = 1 / 8f;
-//		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset) {
-//			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset) {
-//				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
-//					pos.setPos(lightPos.getX() + xOffset, lightPos.getY() + yOffset, lightPos.getZ() + zOffset);
 		pos.setPos(lightPos.getX() + 0, lightPos.getY() + 0, lightPos.getZ() + 0);
 		sky += skyLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.SKY, pos));
 		block += blockLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.BLOCK, pos));
-//				}
-//			}
-//		}
-
 		return ((int) sky) << 20 | ((int) block) << 4;
 	}
 

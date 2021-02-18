@@ -15,7 +15,8 @@ import java.util.function.Function;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.*;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
@@ -263,7 +264,7 @@ public class BeltTileEntity extends KineticTileEntity {
 			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
 		}
 	}
 

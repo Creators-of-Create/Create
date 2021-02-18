@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.Validate;
+
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -10,11 +14,16 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,10 +31,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,9 +53,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.apache.commons.lang3.Validate;
-
-import javax.annotation.Nullable;
 
 public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
 
@@ -234,7 +251,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public boolean processInitialInteract(PlayerEntity player, Hand hand) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
 		return true;

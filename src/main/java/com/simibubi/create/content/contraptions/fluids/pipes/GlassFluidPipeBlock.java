@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
@@ -21,8 +23,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @MethodsReturnNonnullByDefault

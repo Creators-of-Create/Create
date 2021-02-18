@@ -1,5 +1,29 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -29,9 +53,21 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import net.minecraft.block.*;
+
+import net.minecraft.block.AbstractButtonBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluids;
@@ -69,16 +105,6 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.registries.GameData;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
@@ -478,7 +504,6 @@ public abstract class Contraption {
 	}
 
 	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) throws AssemblyException {
-		int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
@@ -978,7 +1003,6 @@ public abstract class Contraption {
 			if (!shouldUpdateAfterMovement(block))
 				continue;
 			BlockPos targetPos = transform.apply(block.pos);
-			BlockState state = world.getBlockState(targetPos);
 			world.markAndNotifyBlock(targetPos, null, block.state, block.state,
 				BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
 		}

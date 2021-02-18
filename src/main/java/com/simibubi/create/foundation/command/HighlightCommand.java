@@ -1,10 +1,13 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.Collection;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.foundation.networking.AllPackets;
+
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.BlockPosArgument;
@@ -12,12 +15,14 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import java.util.Collection;
 
 public class HighlightCommand {
 

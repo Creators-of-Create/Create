@@ -1,11 +1,14 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import java.util.UUID;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -32,8 +35,6 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.UUID;
 
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {

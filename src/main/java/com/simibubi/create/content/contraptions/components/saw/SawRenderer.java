@@ -9,12 +9,12 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;

@@ -33,7 +33,7 @@ public class ArmItem extends BlockItem {
 	protected boolean onBlockPlaced(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
 		if (world.isRemote)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
 		return super.onBlockPlaced(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 

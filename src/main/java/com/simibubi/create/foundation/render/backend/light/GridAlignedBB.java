@@ -1,12 +1,13 @@
 package com.simibubi.create.foundation.render.backend.light;
 
+import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
+
 import com.simibubi.create.foundation.render.RenderMath;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.math.Vec3i;
-
-import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
 
 public class GridAlignedBB {
     public int minX;

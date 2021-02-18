@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
@@ -16,10 +17,9 @@ import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.render.KineticRenderer;
-import com.simibubi.create.foundation.render.backend.OptifineHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.OptifineHandler;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 

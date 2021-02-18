@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public abstract class SafeTileEntityRenderer<T extends TileEntity> extends TileEntityRenderer<T> {
 

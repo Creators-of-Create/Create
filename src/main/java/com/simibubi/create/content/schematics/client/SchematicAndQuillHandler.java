@@ -1,13 +1,31 @@
 package com.simibubi.create.content.schematics.client;
 
-import com.simibubi.create.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
+import org.apache.commons.io.IOUtils;
+
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.FilesHelper;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -18,17 +36,15 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.gen.feature.template.Template;
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 public class SchematicAndQuillHandler {
 

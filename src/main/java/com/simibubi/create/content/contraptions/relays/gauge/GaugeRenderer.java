@@ -6,8 +6,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

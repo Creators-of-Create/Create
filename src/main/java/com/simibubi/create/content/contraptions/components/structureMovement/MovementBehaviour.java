@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
+
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;

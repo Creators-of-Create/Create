@@ -1,8 +1,6 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 
 public class GlFog {
     public static float[] FOG_COLOR = new float[] {0, 0, 0, 0};

@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.render;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -13,6 +13,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

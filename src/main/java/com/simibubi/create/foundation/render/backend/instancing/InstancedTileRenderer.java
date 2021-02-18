@@ -1,23 +1,23 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public static WorldAttached<ConcurrentHashMap<TileEntity, Integer>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::new);

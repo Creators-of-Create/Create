@@ -33,7 +33,7 @@ public class ContraptionDisassemblyPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT,
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 				() -> () -> AbstractContraptionEntity.handleDisassemblyPacket(this)));
 		context.get()
 			.setPacketHandled(true);

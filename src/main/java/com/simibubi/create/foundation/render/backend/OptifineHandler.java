@@ -1,9 +1,12 @@
 package com.simibubi.create.foundation.render.backend;
 
-import net.minecraft.client.Minecraft;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Optional;
+
+import net.minecraft.client.Minecraft;
 
 public class OptifineHandler {
     public static final String OPTIFINE_ROOT_PACKAGE = "net.optifine";

@@ -1,15 +1,19 @@
 package com.simibubi.create.content.contraptions.base;
 
+import java.util.function.Consumer;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
-
-import java.util.function.Consumer;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends TileEntityInstance<T> {
 

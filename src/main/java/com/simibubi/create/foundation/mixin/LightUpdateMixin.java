@@ -1,7 +1,15 @@
 package com.simibubi.create.foundation.mixin;
 
+import java.util.Map;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.light.ILightListener;
+
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
@@ -10,12 +18,6 @@ import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(ClientChunkProvider.class)

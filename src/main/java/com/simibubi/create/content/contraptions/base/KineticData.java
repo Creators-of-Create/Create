@@ -1,12 +1,13 @@
 package com.simibubi.create.content.contraptions.base;
 
+import java.nio.ByteBuffer;
+
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
-
-import java.nio.ByteBuffer;
 
 public class KineticData<D extends KineticData<D>> extends InstanceData {
     private float x;

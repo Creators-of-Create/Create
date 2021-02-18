@@ -1,5 +1,8 @@
 package com.simibubi.create.content.schematics.client;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
@@ -16,6 +19,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -31,9 +35,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
-
-import java.util.List;
-import java.util.Vector;
 
 public class SchematicHandler {
 

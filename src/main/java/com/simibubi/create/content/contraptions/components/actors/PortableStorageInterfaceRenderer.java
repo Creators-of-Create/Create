@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import java.util.function.Consumer;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -11,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -19,8 +22,6 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.function.Consumer;
 
 public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<PortableStorageInterfaceTileEntity> {
 

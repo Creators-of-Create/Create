@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -7,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -14,8 +17,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class GantryPinionTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
 

@@ -1,11 +1,13 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import com.google.common.collect.Maps;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import java.util.Map;
 
 import javax.annotation.Nullable;
-import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 
 public class InstancedTileRenderRegistry {
     public static final InstancedTileRenderRegistry instance = new InstancedTileRenderRegistry();

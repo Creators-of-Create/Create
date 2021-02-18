@@ -1,5 +1,9 @@
 package com.simibubi.create.foundation.render.backend;
 
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
@@ -7,6 +11,7 @@ import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.GameRenderer;
@@ -18,13 +23,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class FastRenderDispatcher {
 

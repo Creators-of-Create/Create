@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
+
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,10 +21,10 @@ public class ToggleDebugCommand {
 				.then(Commands.argument("value", BoolArgumentType.bool())
 						.executes(ctx -> {
 							boolean value = BoolArgumentType.getBool(ctx, "value");
-							//DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> AllConfigs.CLIENT.rainbowDebug.set(value));
-							DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ConfigureConfigPacket.Actions.rainbowDebug.performAction(String.valueOf(value)));
+							//DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> AllConfigs.CLIENT.rainbowDebug.set(value));
+							DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ConfigureConfigPacket.Actions.rainbowDebug.performAction(String.valueOf(value)));
 
-							DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () ->
+							DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 									AllPackets.channel.send(
 											PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
 											new ConfigureConfigPacket(ConfigureConfigPacket.Actions.rainbowDebug.name(), String.valueOf(value))));

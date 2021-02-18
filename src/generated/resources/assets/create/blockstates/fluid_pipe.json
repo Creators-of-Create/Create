@@ -60,9 +60,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "true",
         "down": "false",
+        "up": "true",
+        "south": "false",
         "north": "true"
       },
       "apply": {
@@ -71,9 +71,9 @@
     },
     {
       "when": {
-        "south": "true",
-        "up": "true",
         "down": "false",
+        "up": "true",
+        "south": "true",
         "north": "false"
       },
       "apply": {
@@ -82,9 +82,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "false",
         "down": "true",
+        "up": "false",
+        "south": "false",
         "north": "true"
       },
       "apply": {
@@ -93,9 +93,9 @@
     },
     {
       "when": {
-        "south": "true",
-        "up": "false",
         "down": "true",
+        "up": "false",
+        "south": "true",
         "north": "false"
       },
       "apply": {
@@ -104,9 +104,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "true",
         "down": "true",
+        "up": "true",
+        "south": "false",
         "north": "false"
       },
       "apply": {
@@ -115,20 +115,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "true",
         "down": "false",
-        "north": "false"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/ud_x"
-      }
-    },
-    {
-      "when": {
+        "up": "true",
         "south": "false",
-        "up": "false",
-        "down": "true",
         "north": "false"
       },
       "apply": {
@@ -137,9 +126,20 @@
     },
     {
       "when": {
+        "down": "true",
+        "up": "false",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "create:block/fluid_pipe/ud_x"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
         "south": "true",
-        "up": "false",
-        "down": "false",
         "north": "true"
       },
       "apply": {
@@ -148,9 +148,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "false",
         "down": "false",
+        "up": "false",
+        "south": "false",
         "north": "true"
       },
       "apply": {
@@ -159,9 +159,9 @@
     },
     {
       "when": {
-        "south": "true",
-        "up": "false",
         "down": "false",
+        "up": "false",
+        "south": "true",
         "north": "false"
       },
       "apply": {
@@ -170,9 +170,9 @@
     },
     {
       "when": {
-        "south": "false",
-        "up": "false",
         "down": "false",
+        "up": "false",
+        "south": "false",
         "north": "false"
       },
       "apply": {
@@ -302,8 +302,8 @@
     },
     {
       "when": {
-        "up": "true",
         "down": "false",
+        "up": "true",
         "west": "false",
         "east": "true"
       },
@@ -313,8 +313,8 @@
     },
     {
       "when": {
-        "up": "true",
         "down": "false",
+        "up": "true",
         "west": "true",
         "east": "false"
       },
@@ -324,8 +324,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "true",
+        "up": "false",
         "west": "false",
         "east": "true"
       },
@@ -335,8 +335,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "true",
+        "up": "false",
         "west": "true",
         "east": "false"
       },
@@ -346,19 +346,8 @@
     },
     {
       "when": {
-        "up": "true",
         "down": "true",
-        "west": "false",
-        "east": "false"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/ud_z"
-      }
-    },
-    {
-      "when": {
         "up": "true",
-        "down": "false",
         "west": "false",
         "east": "false"
       },
@@ -368,8 +357,19 @@
     },
     {
       "when": {
-        "up": "false",
+        "down": "false",
+        "up": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "create:block/fluid_pipe/ud_z"
+      }
+    },
+    {
+      "when": {
         "down": "true",
+        "up": "false",
         "west": "false",
         "east": "false"
       },
@@ -379,8 +379,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "false",
+        "up": "false",
         "west": "true",
         "east": "true"
       },
@@ -390,8 +390,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "false",
+        "up": "false",
         "west": "false",
         "east": "true"
       },
@@ -401,8 +401,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "false",
+        "up": "false",
         "west": "true",
         "east": "false"
       },
@@ -412,8 +412,8 @@
     },
     {
       "when": {
-        "up": "false",
         "down": "false",
+        "up": "false",
         "west": "false",
         "east": "false"
       },

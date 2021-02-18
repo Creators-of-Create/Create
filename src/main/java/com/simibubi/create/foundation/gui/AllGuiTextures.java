@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
 import com.simibubi.create.Create;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;

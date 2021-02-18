@@ -1,5 +1,8 @@
 package com.simibubi.create.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -8,6 +11,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandlerClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
@@ -27,7 +31,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -36,6 +39,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -61,9 +65,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {

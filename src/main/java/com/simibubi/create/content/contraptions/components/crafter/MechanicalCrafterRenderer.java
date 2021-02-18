@@ -1,17 +1,21 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
+import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
+import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,9 +29,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-
-import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
-import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 

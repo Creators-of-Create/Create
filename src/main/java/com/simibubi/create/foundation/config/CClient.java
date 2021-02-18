@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.foundation.render.backend.Backend;
-
 public class CClient extends ConfigBase {
 
 	public ConfigGroup client = group(0, "client",

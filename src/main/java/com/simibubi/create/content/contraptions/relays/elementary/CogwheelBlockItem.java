@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
+import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
+
+import java.util.List;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -10,6 +15,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,11 +30,6 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.function.Predicate;
-
-import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
 
 public class CogwheelBlockItem extends BlockItem {
 

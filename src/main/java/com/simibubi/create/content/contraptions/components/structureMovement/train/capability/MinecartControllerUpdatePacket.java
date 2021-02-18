@@ -39,7 +39,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> this::handleCL));
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleCL));
 		context.get()
 			.setPacketHandled(true);
 	}

@@ -1,20 +1,21 @@
 package com.simibubi.create.foundation.render;
 
+import java.util.ArrayList;
+
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.RotatingInstancedModel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.ArrayList;
 
 public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
     public static int MAX_ORIGIN_DISTANCE = 1000;

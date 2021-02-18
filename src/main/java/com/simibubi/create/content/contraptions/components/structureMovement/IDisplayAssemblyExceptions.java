@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
-import com.simibubi.create.foundation.utility.Lang;
-import net.minecraft.util.text.TextFormatting;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.utility.Lang;
+
+import net.minecraft.util.text.TextFormatting;
 
 public interface IDisplayAssemblyExceptions {
 

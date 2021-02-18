@@ -1,7 +1,14 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.block.Block;
@@ -21,12 +28,6 @@ import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 
 public class WrappedChunk implements IChunk {
 

@@ -1,15 +1,21 @@
 package com.simibubi.create.foundation.render.backend.light;
 
+import java.nio.ByteBuffer;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL40;
+import org.lwjgl.system.MemoryUtil;
+
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.render.backend.gl.GlTexture;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
 
 public class LightVolume {
 

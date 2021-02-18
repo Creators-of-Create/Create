@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.render;
 
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.renderer.BufferBuilder;
-
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import com.mojang.datafixers.util.Pair;
+
+import net.minecraft.client.renderer.BufferBuilder;
 
 public class TemplateBuffer {
     protected ByteBuffer template;

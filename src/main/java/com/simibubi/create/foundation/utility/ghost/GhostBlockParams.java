@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.utility.ghost;
 
+import java.util.function.Supplier;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.function.Supplier;
 
 public class GhostBlockParams {
 

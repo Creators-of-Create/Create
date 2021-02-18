@@ -1,12 +1,28 @@
 package com.simibubi.create.foundation.utility.ghost;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.List;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
+import org.lwjgl.system.MemoryStack;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,14 +31,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
-import org.lwjgl.system.MemoryStack;
-
-import javax.annotation.Nullable;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.List;
-import java.util.Random;
 
 public abstract class GhostBlockRenderer {
 
@@ -134,7 +142,6 @@ public abstract class GhostBlockRenderer {
 			Vector3f vector3f = new Vector3f((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
 			Matrix4f matrix4f = p_227890_1_.getModel();
 			vector3f.transform(p_227890_1_.getNormal());
-			int i = 8;
 			int j = aint.length / 8;
 
 			try (MemoryStack memorystack = MemoryStack.stackPush()) {

@@ -1,14 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +14,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BearingContraption extends Contraption {
 

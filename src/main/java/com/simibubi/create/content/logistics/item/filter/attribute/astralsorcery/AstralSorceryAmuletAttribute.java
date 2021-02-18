@@ -52,7 +52,6 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
 
     @Override
     public Object[] getTranslationParameters() {
-        ResourceLocation traitResource = new ResourceLocation(enchName);
         String something = "";
 
         Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(enchName));

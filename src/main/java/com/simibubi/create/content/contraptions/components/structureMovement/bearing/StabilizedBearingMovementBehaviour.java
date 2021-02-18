@@ -2,11 +2,16 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.components.structureMovement.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.properties.BlockStateProperties;

@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;

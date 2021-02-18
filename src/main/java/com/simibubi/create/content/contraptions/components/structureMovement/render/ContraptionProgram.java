@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import org.lwjgl.opengl.GL20;
+
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL20;
 
 public class ContraptionProgram extends BasicProgram {
     protected final int uLightBoxSize;

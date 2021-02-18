@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import java.util.Optional;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
