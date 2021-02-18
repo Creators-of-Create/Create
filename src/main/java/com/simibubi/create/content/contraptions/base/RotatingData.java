@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class RotatingData extends KineticData<RotatingData> {
     public static VertexFormat FORMAT = VertexFormat.builder()

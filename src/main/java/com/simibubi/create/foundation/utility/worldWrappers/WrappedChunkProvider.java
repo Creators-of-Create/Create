@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -64,11 +63,6 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
         }
 
         return chunk;
-    }
-
-    @Override
-    public void tick(BooleanSupplier p_217207_1_) {
-
     }
 
     @Override

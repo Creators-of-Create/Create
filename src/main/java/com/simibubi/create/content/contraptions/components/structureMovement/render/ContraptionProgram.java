@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Matrix4f;
 
 public class ContraptionProgram extends BasicProgram {
     protected final int uLightBoxSize;

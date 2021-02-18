@@ -7,16 +7,22 @@
       "model": "create:block/brass_funnel_floor_push"
     },
     "extracting=false,face=wall,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_wall_pull"
+      "model": "create:block/brass_funnel_wall_pull",
+      "x": 90
     },
     "extracting=true,face=wall,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_wall_push"
+      "model": "create:block/brass_funnel_wall_push",
+      "x": 90
     },
     "extracting=false,face=ceiling,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_ceiling_pull"
+      "model": "create:block/brass_funnel_ceiling_pull",
+      "x": 180,
+      "y": 180
     },
     "extracting=true,face=ceiling,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_ceiling_push"
+      "model": "create:block/brass_funnel_ceiling_push",
+      "x": 180,
+      "y": 180
     },
     "extracting=false,face=floor,facing=south,powered=false": {
       "model": "create:block/brass_funnel_floor_pull",
@@ -28,19 +34,21 @@
     },
     "extracting=false,face=wall,facing=south,powered=false": {
       "model": "create:block/brass_funnel_wall_pull",
+      "x": 90,
       "y": 180
     },
     "extracting=true,face=wall,facing=south,powered=false": {
       "model": "create:block/brass_funnel_wall_push",
+      "x": 90,
       "y": 180
     },
     "extracting=false,face=ceiling,facing=south,powered=false": {
       "model": "create:block/brass_funnel_ceiling_pull",
-      "y": 180
+      "x": 180
     },
     "extracting=true,face=ceiling,facing=south,powered=false": {
       "model": "create:block/brass_funnel_ceiling_push",
-      "y": 180
+      "x": 180
     },
     "extracting=false,face=floor,facing=west,powered=false": {
       "model": "create:block/brass_funnel_floor_pull",
@@ -52,19 +60,23 @@
     },
     "extracting=false,face=wall,facing=west,powered=false": {
       "model": "create:block/brass_funnel_wall_pull",
+      "x": 90,
       "y": 270
     },
     "extracting=true,face=wall,facing=west,powered=false": {
       "model": "create:block/brass_funnel_wall_push",
+      "x": 90,
       "y": 270
     },
     "extracting=false,face=ceiling,facing=west,powered=false": {
       "model": "create:block/brass_funnel_ceiling_pull",
-      "y": 270
+      "x": 180,
+      "y": 90
     },
     "extracting=true,face=ceiling,facing=west,powered=false": {
       "model": "create:block/brass_funnel_ceiling_push",
-      "y": 270
+      "x": 180,
+      "y": 90
     },
     "extracting=false,face=floor,facing=east,powered=false": {
       "model": "create:block/brass_funnel_floor_pull",
@@ -76,19 +88,23 @@
     },
     "extracting=false,face=wall,facing=east,powered=false": {
       "model": "create:block/brass_funnel_wall_pull",
+      "x": 90,
       "y": 90
     },
     "extracting=true,face=wall,facing=east,powered=false": {
       "model": "create:block/brass_funnel_wall_push",
+      "x": 90,
       "y": 90
     },
     "extracting=false,face=ceiling,facing=east,powered=false": {
       "model": "create:block/brass_funnel_ceiling_pull",
-      "y": 90
+      "x": 180,
+      "y": 270
     },
     "extracting=true,face=ceiling,facing=east,powered=false": {
       "model": "create:block/brass_funnel_ceiling_push",
-      "y": 90
+      "x": 180,
+      "y": 270
     },
     "extracting=false,face=floor,facing=north,powered=true": {
       "model": "create:block/brass_funnel_floor_pull_powered"
@@ -97,16 +113,22 @@
       "model": "create:block/brass_funnel_floor_push_powered"
     },
     "extracting=false,face=wall,facing=north,powered=true": {
-      "model": "create:block/brass_funnel_wall_pull_powered"
+      "model": "create:block/brass_funnel_wall_pull_powered",
+      "x": 90
     },
     "extracting=true,face=wall,facing=north,powered=true": {
-      "model": "create:block/brass_funnel_wall_push_powered"
+      "model": "create:block/brass_funnel_wall_push_powered",
+      "x": 90
     },
     "extracting=false,face=ceiling,facing=north,powered=true": {
-      "model": "create:block/brass_funnel_ceiling_pull_powered"
+      "model": "create:block/brass_funnel_ceiling_pull_powered",
+      "x": 180,
+      "y": 180
     },
     "extracting=true,face=ceiling,facing=north,powered=true": {
-      "model": "create:block/brass_funnel_ceiling_push_powered"
+      "model": "create:block/brass_funnel_ceiling_push_powered",
+      "x": 180,
+      "y": 180
     },
     "extracting=false,face=floor,facing=south,powered=true": {
       "model": "create:block/brass_funnel_floor_pull_powered",
@@ -118,19 +140,21 @@
     },
     "extracting=false,face=wall,facing=south,powered=true": {
       "model": "create:block/brass_funnel_wall_pull_powered",
+      "x": 90,
       "y": 180
     },
     "extracting=true,face=wall,facing=south,powered=true": {
       "model": "create:block/brass_funnel_wall_push_powered",
+      "x": 90,
       "y": 180
     },
     "extracting=false,face=ceiling,facing=south,powered=true": {
       "model": "create:block/brass_funnel_ceiling_pull_powered",
-      "y": 180
+      "x": 180
     },
     "extracting=true,face=ceiling,facing=south,powered=true": {
       "model": "create:block/brass_funnel_ceiling_push_powered",
-      "y": 180
+      "x": 180
     },
     "extracting=false,face=floor,facing=west,powered=true": {
       "model": "create:block/brass_funnel_floor_pull_powered",
@@ -142,19 +166,23 @@
     },
     "extracting=false,face=wall,facing=west,powered=true": {
       "model": "create:block/brass_funnel_wall_pull_powered",
+      "x": 90,
       "y": 270
     },
     "extracting=true,face=wall,facing=west,powered=true": {
       "model": "create:block/brass_funnel_wall_push_powered",
+      "x": 90,
       "y": 270
     },
     "extracting=false,face=ceiling,facing=west,powered=true": {
       "model": "create:block/brass_funnel_ceiling_pull_powered",
-      "y": 270
+      "x": 180,
+      "y": 90
     },
     "extracting=true,face=ceiling,facing=west,powered=true": {
       "model": "create:block/brass_funnel_ceiling_push_powered",
-      "y": 270
+      "x": 180,
+      "y": 90
     },
     "extracting=false,face=floor,facing=east,powered=true": {
       "model": "create:block/brass_funnel_floor_pull_powered",
@@ -166,19 +194,23 @@
     },
     "extracting=false,face=wall,facing=east,powered=true": {
       "model": "create:block/brass_funnel_wall_pull_powered",
+      "x": 90,
       "y": 90
     },
     "extracting=true,face=wall,facing=east,powered=true": {
       "model": "create:block/brass_funnel_wall_push_powered",
+      "x": 90,
       "y": 90
     },
     "extracting=false,face=ceiling,facing=east,powered=true": {
       "model": "create:block/brass_funnel_ceiling_pull_powered",
-      "y": 90
+      "x": 180,
+      "y": 270
     },
     "extracting=true,face=ceiling,facing=east,powered=true": {
       "model": "create:block/brass_funnel_ceiling_push_powered",
-      "y": 90
+      "x": 180,
+      "y": 270
     }
   }
 }

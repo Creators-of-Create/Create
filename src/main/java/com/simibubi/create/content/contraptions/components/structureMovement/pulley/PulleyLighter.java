@@ -19,7 +19,7 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
 
         World world = contraption.entity.world;
 
-        BlockPos.Mutable pos = new BlockPos.Mutable(contraption.anchor);
+        BlockPos.Mutable pos = contraption.anchor.mutableCopy();
         while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < 256) {
             pos.move(0, 1, 0);
         }

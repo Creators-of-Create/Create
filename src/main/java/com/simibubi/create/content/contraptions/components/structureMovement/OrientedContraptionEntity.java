@@ -528,7 +528,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@OnlyIn(Dist.CLIENT)
 	private void repositionOnContraption(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
-		Vec3d pos = getContraptionOffset(partialTicks, ridingEntity);
+		Vector3d pos = getContraptionOffset(partialTicks, ridingEntity);
 		for (MatrixStack stack : matrixStacks)
 			stack.translate(pos.x, pos.y, pos.z);
 	}
@@ -537,36 +537,36 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	// has to adjust aswell
 	@OnlyIn(Dist.CLIENT)
 	private void repositionOnCart(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
-		Vec3d cartPos = getCartOffset(partialTicks, ridingEntity);
+		Vector3d cartPos = getCartOffset(partialTicks, ridingEntity);
 
-		if (cartPos == Vec3d.ZERO) return;
+		if (cartPos == Vector3d.ZERO) return;
 
 		for (MatrixStack stack : matrixStacks)
 			stack.translate(cartPos.x, cartPos.y, cartPos.z);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private Vec3d getContraptionOffset(float partialTicks, Entity ridingEntity) {
+	private Vector3d getContraptionOffset(float partialTicks, Entity ridingEntity) {
 		AbstractContraptionEntity parent = (AbstractContraptionEntity) ridingEntity;
-		Vec3d passengerPosition = parent.getPassengerPosition(this, partialTicks);
+		Vector3d passengerPosition = parent.getPassengerPosition(this, partialTicks);
 		double x = passengerPosition.x - MathHelper.lerp(partialTicks, this.lastTickPosX, this.getX());
 		double y = passengerPosition.y - MathHelper.lerp(partialTicks, this.lastTickPosY, this.getY());
 		double z = passengerPosition.z - MathHelper.lerp(partialTicks, this.lastTickPosZ, this.getZ());
 
-		return new Vec3d(x, y, z);
+		return new Vector3d(x, y, z);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private Vec3d getCartOffset(float partialTicks, Entity ridingEntity) {
+	private Vector3d getCartOffset(float partialTicks, Entity ridingEntity) {
 		AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
 		double cartX = MathHelper.lerp(partialTicks, cart.lastTickPosX, cart.getX());
 		double cartY = MathHelper.lerp(partialTicks, cart.lastTickPosY, cart.getY());
 		double cartZ = MathHelper.lerp(partialTicks, cart.lastTickPosZ, cart.getZ());
-		Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
+		Vector3d cartPos = cart.getPos(cartX, cartY, cartZ);
 
 		if (cartPos != null) {
-			Vec3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
-			Vec3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
+			Vector3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
+			Vector3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
 			if (cartPosFront == null)
 				cartPosFront = cartPos;
 			if (cartPosBack == null)
@@ -576,9 +576,9 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			cartY = (cartPosFront.y + cartPosBack.y) / 2.0D - cartY;
 			cartZ = cartPos.z - cartZ;
 
-			return new Vec3d(cartX, cartY, cartZ);
+			return new Vector3d(cartX, cartY, cartZ);
 		}
 
-		return Vec3d.ZERO;
+		return Vector3d.ZERO;
 	}
 }

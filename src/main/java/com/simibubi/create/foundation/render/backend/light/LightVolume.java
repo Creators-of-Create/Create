@@ -14,7 +14,8 @@ import com.simibubi.create.foundation.render.backend.gl.GlTexture;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 
 public class LightVolume {
@@ -97,7 +98,7 @@ public class LightVolume {
         return textureVolume.sizeZ();
     }
 
-    public void move(ILightReader world, GridAlignedBB newSampleVolume) {
+    public void move(IBlockDisplayReader world, GridAlignedBB newSampleVolume) {
         if (textureVolume.contains(newSampleVolume)) {
             if (newSampleVolume.intersects(sampleVolume)) {
                 GridAlignedBB newArea = newSampleVolume.intersect(sampleVolume);
@@ -118,7 +119,7 @@ public class LightVolume {
         }
     }
 
-    public void notifyLightUpdate(ILightReader world, LightType type, SectionPos location) {
+    public void notifyLightUpdate(IBlockDisplayReader world, LightType type, SectionPos location) {
         GridAlignedBB changedVolume = GridAlignedBB.fromSection(location);
         if (!changedVolume.intersects(sampleVolume))
             return;
@@ -132,7 +133,7 @@ public class LightVolume {
      * Completely (re)populate this volume with block and sky lighting data.
      * This is expensive and should be avoided.
      */
-    public void initialize(ILightReader world) {
+    public void initialize(IBlockDisplayReader world) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int shiftX = textureVolume.minX;
@@ -155,7 +156,7 @@ public class LightVolume {
      * Copy block light from the world into this volume.
      * @param worldVolume the region in the world to copy data from.
      */
-    public void copyBlock(ILightReader world, GridAlignedBB worldVolume) {
+    public void copyBlock(IBlockDisplayReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int xShift = textureVolume.minX;
@@ -177,7 +178,7 @@ public class LightVolume {
      * Copy sky light from the world into this volume.
      * @param worldVolume the region in the world to copy data from.
      */
-    public void copySky(ILightReader world, GridAlignedBB worldVolume) {
+    public void copySky(IBlockDisplayReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int xShift = textureVolume.minX;
@@ -199,7 +200,7 @@ public class LightVolume {
      * Copy all light from the world into this volume.
      * @param worldVolume the region in the world to copy data from.
      */
-    public void copyLight(ILightReader world, GridAlignedBB worldVolume) {
+    public void copyLight(IBlockDisplayReader world, GridAlignedBB worldVolume) {
         BlockPos.Mutable pos = new BlockPos.Mutable();
 
         int xShift = textureVolume.minX;

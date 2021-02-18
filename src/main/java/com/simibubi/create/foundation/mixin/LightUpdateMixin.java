@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.render.backend.light.ILightListener;
 
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
@@ -48,6 +48,6 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
                  .forEach(ILightListener::onChunkLightUpdate);
         }
 
-        ContraptionRenderDispatcher.notifyLightUpdate((ILightReader) thi.getWorld(), type, pos);
+        ContraptionRenderDispatcher.notifyLightUpdate((IBlockDisplayReader) thi.getWorld(), type, pos);
     }
 }

@@ -32,7 +32,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
     public GridAlignedBB getContraptionBounds() {
         GridAlignedBB bb = GridAlignedBB.fromAABB(contraption.bounds);
 
-        bb.translate(contraption.entity.getPosition());
+        bb.translate(contraption.entity.getBlockPos());
 
         return bb;
     }

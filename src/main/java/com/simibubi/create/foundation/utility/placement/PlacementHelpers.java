@@ -26,7 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -178,15 +178,15 @@ public class PlacementHelpers {
 		float b = .8f;
 		float a = progress * progress;
 
-		Vec3d projTarget = VecHelper.projectToPlayerView(VecHelper.getCenterOf(lastTarget), partialTicks);
+		Vector3d projTarget = VecHelper.projectToPlayerView(VecHelper.getCenterOf(lastTarget), partialTicks);
 
-		Vec3d target = new Vec3d(projTarget.x, projTarget.y, 0);
+		Vector3d target = new Vector3d(projTarget.x, projTarget.y, 0);
 		if (projTarget.z > 0) {
 			target = target.inverse();
 		}
 
-		Vec3d norm = target.normalize();
-		Vec3d ref = new Vec3d(0, 1, 0);
+		Vector3d norm = target.normalize();
+		Vector3d ref = new Vector3d(0, 1, 0);
 		float targetAngle = AngleHelper.deg(Math.acos(norm.dotProduct(ref)));
 
 		angle.withSpeed(0.25f);

@@ -182,7 +182,7 @@ public class Backend {
 
     private static GlShader loadShader(IResourceManager manager, ResourceLocation name, ShaderType type, GlShader.PreProcessor preProcessor) throws IOException {
         try (InputStream is = new BufferedInputStream(manager.getResource(name).getInputStream())) {
-            String source = TextureUtil.func_225687_b_(is);
+            String source = TextureUtil.readAllToString(is);
 
             if (source == null) {
                 throw new IOException("Could not load program " + name);

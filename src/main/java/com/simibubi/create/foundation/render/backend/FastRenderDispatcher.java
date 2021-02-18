@@ -15,13 +15,13 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
 public class FastRenderDispatcher {
@@ -73,11 +73,11 @@ public class FastRenderDispatcher {
 
         layer.startDrawing();
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableCull();
-        GL11.glCullFace(GL11.GL_BACK);
+//        RenderSystem.enableDepthTest();
+//        RenderSystem.enableCull();
+//        GL11.glCullFace(GL11.GL_BACK);
         CreateClient.kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
-        RenderSystem.disableCull();
+//        RenderSystem.disableCull();
         //RenderSystem.disableDepthTest();
 
         layer.endDrawing();
@@ -93,7 +93,9 @@ public class FastRenderDispatcher {
         ClientPlayerEntity player = mc.player;
 
         MatrixStack matrixstack = new MatrixStack();
-        matrixstack.peek().getModel().multiply(gameRenderer.func_228382_a_(gameRenderer.getActiveRenderInfo(), partialTicks, true));
+		matrixstack.peek()
+			.getModel()
+			.multiply(gameRenderer.getBasicProjectionMatrix(gameRenderer.getActiveRenderInfo(), partialTicks, true));
         gameRenderer.bobViewWhenHurt(matrixstack, partialTicks);
         if (mc.gameSettings.viewBobbing) {
             gameRenderer.bobView(matrixstack, partialTicks);
@@ -116,7 +118,7 @@ public class FastRenderDispatcher {
         }
 
         Matrix4f matrix4f = matrixstack.peek().getModel();
-        gameRenderer.func_228379_a_(matrix4f);
+        gameRenderer.loadProjectionMatrix(matrix4f);
 
         projectionMatrixThisFrame = matrix4f;
         return projectionMatrixThisFrame;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 
 public class PistonLighter extends ContraptionLighter<PistonContraption> {
     public PistonLighter(PistonContraption contraption) {
@@ -16,7 +16,7 @@ public class PistonLighter extends ContraptionLighter<PistonContraption> {
         bounds.translate(contraption.anchor);
 
         int length = contraption.extensionLength;
-        Vec3i direction = contraption.orientation.getDirectionVec();
+        Vector3i direction = contraption.orientation.getDirectionVec();
 
         int shift = length / 2;
         int shiftX = direction.getX() * shift;

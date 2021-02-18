@@ -35,7 +35,6 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -44,7 +43,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.ILightReader;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
@@ -58,7 +58,7 @@ public class ContraptionRenderDispatcher {
 
     private static boolean firstLayer = true;
 
-    public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
+    public static void notifyLightUpdate(IBlockDisplayReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
         }

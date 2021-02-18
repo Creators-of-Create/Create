@@ -6,8 +6,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.DoubleNBT;
@@ -16,7 +14,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 
 public class VecHelper {
@@ -152,11 +152,11 @@ public class VecHelper {
 	}
 
 	//https://forums.minecraftforge.net/topic/88562-116solved-3d-to-2d-conversion/?do=findComment&comment=413573 slightly modified
-	public static Vec3d projectToPlayerView(Vec3d target, float partialTicks) {
+	public static Vector3d projectToPlayerView(Vector3d target, float partialTicks) {
 		/* The (centered) location on the screen of the given 3d point in the world.
 		 * Result is (dist right of center screen, dist up from center screen, if < 0, then in front of view plane) */
 		ActiveRenderInfo ari = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		Vec3d camera_pos = ari.getProjectedView();
+		Vector3d camera_pos = ari.getProjectedView();
 		Quaternion camera_rotation_conj = ari.getRotation().copy();
 		camera_rotation_conj.conjugate();
 
@@ -196,7 +196,7 @@ public class VecHelper {
 
 		float half_height = (float) mc.getWindow().getScaledHeight() / 2;
 		float scale_factor = half_height / (result3f.getZ() * (float) Math.tan(Math.toRadians(fov / 2)));
-		return new Vec3d(-result3f.getX() * scale_factor, result3f.getY() * scale_factor, result3f.getZ());
+		return new Vector3d(-result3f.getX() * scale_factor, result3f.getY() * scale_factor, result3f.getZ());
 	}
 
 }

@@ -18,11 +18,8 @@ import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -30,7 +27,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.math.vector.Vector4f;
 
 public abstract class GhostBlockRenderer {
 
@@ -56,7 +56,7 @@ public abstract class GhostBlockRenderer {
 
 			IBakedModel model = dispatcher.getModelForState(params.state);
 
-			RenderType layer = RenderTypeLookup.getEntityBlockLayer(params.state);
+			RenderType layer = RenderTypeLookup.getEntityBlockLayer(params.state, false);
 			IVertexBuilder vb = buffer.getEarlyBuffer(layer);
 
 			BlockPos pos = params.pos;
@@ -138,7 +138,7 @@ public abstract class GhostBlockRenderer {
 		//IVertexBuilder
 		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry p_227890_1_, BakedQuad p_227890_2_, float[] p_227890_3_, float p_227890_4_, float p_227890_5_, float p_227890_6_, int[] p_227890_7_, int p_227890_8_) {
 			int[] aint = p_227890_2_.getVertexData();
-			Vec3i vec3i = p_227890_2_.getFace().getDirectionVec();
+			Vector3i vec3i = p_227890_2_.getFace().getDirectionVec();
 			Vector3f vector3f = new Vector3f((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
 			Matrix4f matrix4f = p_227890_1_.getModel();
 			vector3f.transform(p_227890_1_.getNormal());
