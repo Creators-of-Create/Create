@@ -1530,7 +1530,7 @@
 	"block.create.mechanical_crafter.tooltip.action2": "Conecta_ el _inventario de entrada_ de los mecanizadores adyacentes. Usa esto para _combinar ranuras_ en la cuadrícula de trabajo y _guardar el la entrada de trabajo_",
 
 	"block.create.furnace_engine.tooltip": "MOTOR DEL HORNO",
-	"block.create.furnace_engine.tooltip.summary": "Una poderosa fuente de _Poder Rotatorio_ que requiere un _horno en funcionamiento_ para funcionar",
+	"block.create.furnace_engine.tooltip.summary": "Una poderosa fuente de _Momento de Fuerza/ Torque_ que requiere un _horno en funcionamiento_ para funcionar",
 	"block.create.furnace_engine.tooltip.condition1": "Cuando se conecta a un horno encendido",
 	"block.create.furnace_engine.tooltip.behaviour1": "_Empieza a alimentar_ un _Horno_ colocado delante de él (a 1m de distancia). Utiliza un Alto Horno para obtener mayores velocidades",
 
