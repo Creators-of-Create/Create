@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 7",
+	"_": "Missing Localizations: 8",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -685,6 +685,7 @@
 	"create.recipe.mechanical_crafting": "Costruzione meccanica",
 	"create.recipe.automatic_shaped": "Costruzione con forma automatizzata",
 	"create.recipe.block_cutting": "Taglio di blocchi",
+	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "Zapper di blocchi portatile",
 	"create.recipe.sandpaper_polishing": "Levigamento da carta vetrata",
 	"create.recipe.mystery_conversion": "Metamorfosi cromatica",

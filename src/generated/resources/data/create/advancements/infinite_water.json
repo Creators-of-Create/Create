@@ -17,7 +17,10 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:infinite_water"
+      "trigger": "create:infinite_fluid",
+      "conditions": {
+        "fluid": "minecraft:water"
+      }
     }
   },
   "requirements": [

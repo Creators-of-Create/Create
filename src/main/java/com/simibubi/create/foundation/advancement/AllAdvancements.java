@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -293,17 +295,20 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement infinite_water =
 			advancement("infinite_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_WATER.instance())
+				// .withCriterion("0", AllTriggers.INFINITE_WATER.instance())
+				.withCriterion("0", isInfinite(Fluids.WATER.getFluid()))
 				.register(t, id + ":infinite_water");
 
 		Advancement infinite_lava =
 			advancement("infinite_lava", Items.LAVA_BUCKET, TaskType.GOAL).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_LAVA.instance())
+				// .withCriterion("0", AllTriggers.INFINITE_LAVA.instance())
+				.withCriterion("0", isInfinite(Fluids.LAVA.getFluid()))
 				.register(t, id + ":infinite_lava");
 
 		Advancement infinite_chocolate = advancement("infinite_chocolate", AllFluids.CHOCOLATE.get()
 			.getFilledBucket(), TaskType.CHALLENGE).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_CHOCOLATE.instance())
+				// .withCriterion("0", AllTriggers.INFINITE_CHOCOLATE.instance())
+				.withCriterion("0", isInfinite(AllFluids.CHOCOLATE.get().getFluid()))
 				.register(t, id + ":infinite_chocolate");
 	}
 
@@ -495,6 +500,10 @@ public class AllAdvancements implements IDataProvider {
 
 	public KineticBlockTrigger.Instance isPowered(Block block) {
 		return AllTriggers.KINETIC_BLOCK.forBlock(block);
+	}
+
+	public CriterionTriggerBase.Instance isInfinite(Fluid fluid) {
+		return AllTriggers.INFINITE_FLUID.forFluid(fluid);
 	}
 
 	public InventoryChangeTrigger.Instance itemGathered(IItemProvider itemprovider) {

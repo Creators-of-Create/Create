@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 14",
+	"_": "Missing Localizations: 15",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -685,6 +685,7 @@
 	"create.recipe.mechanical_crafting": "メカニカルクラフト",
 	"create.recipe.automatic_shaped": "自動定形クラフト",
 	"create.recipe.block_cutting": "自動石切",
+	"create.recipe.wood_cutting": "UNLOCALIZED: Wood Cutting",
 	"create.recipe.blockzapper_upgrade": "携帯型ブロックザッパー",
 	"create.recipe.sandpaper_polishing": "紙やすりでの研磨",
 	"create.recipe.mystery_conversion": "色彩変態",

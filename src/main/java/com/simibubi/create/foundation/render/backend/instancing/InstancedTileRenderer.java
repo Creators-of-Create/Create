@@ -136,7 +136,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public void clean() {
-        instances.keySet().stream().filter(TileEntity::isRemoved).forEach(instances::remove);
+        instances.keySet().removeIf(TileEntity::isRemoved);
     }
 
     public void invalidate() {
