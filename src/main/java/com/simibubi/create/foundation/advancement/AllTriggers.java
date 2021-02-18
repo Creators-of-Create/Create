@@ -16,6 +16,7 @@ public class AllTriggers {
 	private static List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
 	public static KineticBlockTrigger KINETIC_BLOCK = add(new KineticBlockTrigger("kinetic_block"));
+	public static InfiniteFluidTrigger INFINITE_FLUID = add(new InfiniteFluidTrigger("infinite_fluid"));
 
 	public static SimpleTrigger 
 			ROTATION = simple("rotation"), 
