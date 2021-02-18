@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
@@ -28,9 +27,9 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
 		if (leftHand || rightHand)
-			animation = MathHelper.lerp(Minecraft.getInstance()
-				.getRenderPartialTicks(), ExtendoGripRenderHandler.lastMainHandAnimation,
-				ExtendoGripRenderHandler.mainHandAnimation);
+			animation = MathHelper.lerp(AnimationTickHolder.getPartialTicks(),
+										ExtendoGripRenderHandler.lastMainHandAnimation,
+										ExtendoGripRenderHandler.mainHandAnimation);
 
 		animation = animation * animation * animation;
 		float extensionAngle = MathHelper.lerp(animation, 24f, 156f);

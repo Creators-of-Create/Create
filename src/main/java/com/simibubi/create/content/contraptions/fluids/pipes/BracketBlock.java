@@ -5,8 +5,8 @@ import java.util.Optional;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
 

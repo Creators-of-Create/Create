@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
+import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
+
+import java.util.List;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -7,10 +12,10 @@ import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,11 +30,6 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.function.Predicate;
-
-import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
 
 public class CogwheelBlockItem extends BlockItem {
 
@@ -150,9 +150,11 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)),
-				((CogWheelBlock) state.getBlock()).isLarge ? 1.5D : 0.75D);
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)),
+			//	((CogWheelBlock) state.getBlock()).isLarge ? 1.5D : 0.75D);
+
+			displayGhost(offset);
 		}
 	}
 
@@ -227,8 +229,10 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)), 1D);
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, state.get(AXIS)), 1D);
+
+			displayGhost(offset);
 		}
 
 		protected boolean hitOnShaft(BlockState state, BlockRayTraceResult ray) {
@@ -320,10 +324,12 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, offset.getTransform()
-					.apply(AllBlocks.LARGE_COGWHEEL.getDefaultState())
-					.get(AXIS)));
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, offset.getTransform()
+			//		.apply(AllBlocks.LARGE_COGWHEEL.getDefaultState())
+			//		.get(AXIS)));
+
+			displayGhost(offset);
 		}
 	}
 }

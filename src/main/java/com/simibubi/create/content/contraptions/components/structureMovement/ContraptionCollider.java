@@ -311,7 +311,7 @@ public class ContraptionCollider {
 		if (!entity.world.isRemote)
 			return PlayerType.SERVER;
 		MutableBoolean isClient = new MutableBoolean(false);
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
 		return isClient.booleanValue() ? PlayerType.CLIENT : PlayerType.REMOTE;
 	}
 

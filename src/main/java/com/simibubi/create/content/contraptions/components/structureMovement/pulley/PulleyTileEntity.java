@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -32,8 +33,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expand(0, -offset, 0);
+	public AxisAlignedBB makeRenderBoundingBox() {
+		return super.makeRenderBoundingBox().expand(0, -offset, 0);
 	}
 
 	@Override

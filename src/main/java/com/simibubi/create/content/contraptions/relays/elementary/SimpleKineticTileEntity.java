@@ -28,7 +28,7 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AxisAlignedBB makeRenderBoundingBox() {
 		return new AxisAlignedBB(pos).grow(1);
 	}
 

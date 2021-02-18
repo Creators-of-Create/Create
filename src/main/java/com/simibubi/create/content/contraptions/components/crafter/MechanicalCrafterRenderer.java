@@ -9,11 +9,12 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -25,7 +26,6 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -154,12 +154,13 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
-		standardKineticRotationTransform(superBuffer, te, light);
-		superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING)
-			.getAxis() != Axis.X ? 0 : Math.PI / 2));
-		superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
-		superBuffer.renderInto(ms, vb);
+		if (!FastRenderDispatcher.available(te.getWorld())) {
+			SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+			standardKineticRotationTransform(superBuffer, te, light);
+			superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING).getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
+			superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
+			superBuffer.renderInto(ms, vb);
+		}
 
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
 		BlockPos pos = te.getPos();
@@ -177,7 +178,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState, pos);
 
 			if (te.phase == Phase.EXPORTING) {
-				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.ticks));
+				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
 				beltBuffer.shiftUVtoSheet(AllSpriteShifts.CRAFTER_THINGIES, (textureIndex % 4) / 4f, 0, 1);
 			} 
 

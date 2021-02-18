@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -7,10 +9,10 @@ import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +22,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +30,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import java.util.function.Predicate;
 
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
 
@@ -111,9 +110,11 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 		@Override
 		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-				Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE,
-					state.get(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X));
+			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
+			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE,
+			//		state.get(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X));
+
+			displayGhost(offset);
 		}
 	}
 

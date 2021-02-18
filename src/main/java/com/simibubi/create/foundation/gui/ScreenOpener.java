@@ -12,7 +12,7 @@ public class ScreenOpener {
 	private static Screen openedGuiNextTick;
 
 	public static void tick() {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			if (openedGuiNextTick != null) {
 				Minecraft.getInstance().displayGuiScreen(openedGuiNextTick);
 				openedGuiNextTick = null;
@@ -21,7 +21,7 @@ public class ScreenOpener {
 	}
 
 	public static void open(Screen gui) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			openedGuiNextTick = gui;
 		});
 	}

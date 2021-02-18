@@ -1,13 +1,11 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Direction.Axis;
 
 public class AnimatedPress extends AnimatedKinetics {
@@ -50,8 +48,7 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	private float getAnimatedHeadOffset() {
-		float cycle = (ticks + Minecraft.getInstance()
-				.getRenderPartialTicks()) % 30;
+		float cycle = (AnimationTickHolder.getRenderTick()) % 30;
 		if (cycle < 10) {
 			float progress = cycle / 10;
 			return -(progress * progress * progress);

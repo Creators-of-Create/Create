@@ -93,7 +93,7 @@ public abstract class ZapperItem extends Item {
 		if (context.getPlayer() != null && context.getPlayer()
 			.isSneaking()) {
 			if (context.getWorld().isRemote) {
-				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 					openHandgunGUI(context.getItem(), context.getHand() == Hand.OFF_HAND);
 				});
 				applyCooldown(context.getPlayer(), context.getItem(), false);
@@ -111,7 +111,7 @@ public abstract class ZapperItem extends Item {
 		// Shift -> Open GUI
 		if (player.isSneaking()) {
 			if (world.isRemote) {
-				DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 					openHandgunGUI(item, hand == Hand.OFF_HAND);
 				});
 				applyCooldown(player, item, false);

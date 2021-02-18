@@ -39,7 +39,7 @@ public class GlueEffectPacket extends SimplePacketBase {
 
 	@OnlyIn(Dist.CLIENT)
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			Minecraft mc = Minecraft.getInstance();
 			if (!mc.player.getPosition().withinDistance(pos, 100))
 				return;

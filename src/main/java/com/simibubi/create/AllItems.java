@@ -284,6 +284,7 @@ public class AllItems {
 			.register();
 	}
 
+	@SuppressWarnings("unused")
 	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
 		return REGISTRATE.item(name, HiddenIngredientItem::new)
 			.register();

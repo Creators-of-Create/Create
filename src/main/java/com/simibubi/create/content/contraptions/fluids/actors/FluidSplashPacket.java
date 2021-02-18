@@ -36,7 +36,7 @@ public class FluidSplashPacket extends SimplePacketBase {
 
 	public void handle(Supplier<Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				if (Minecraft.getInstance().player.getPositionVector()
 					.distanceTo(new Vec3d(pos)) > 100)
 					return;

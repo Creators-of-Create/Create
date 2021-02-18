@@ -79,6 +79,9 @@ public enum AllGuiTextures {
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
 
+	// PlacementIndicator
+	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
+
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;

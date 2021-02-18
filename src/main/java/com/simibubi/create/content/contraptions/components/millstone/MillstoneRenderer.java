@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 

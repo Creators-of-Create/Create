@@ -1,8 +1,11 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -11,8 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class HighlightPacket extends SimplePacketBase {
 
@@ -33,7 +34,7 @@ public class HighlightPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			performHighlight(pos);
 		}));
 

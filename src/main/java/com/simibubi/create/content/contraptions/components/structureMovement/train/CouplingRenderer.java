@@ -8,10 +8,11 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -115,8 +116,7 @@ public class CouplingRenderer {
 		float y = (((float) (i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F + 0.375F;
 		float z = (((float) (i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 
 		double xIn = lerp(pt, cart.lastTickPosX, cart.getX());
 		double yIn = lerp(pt, cart.lastTickPosY, cart.getY());

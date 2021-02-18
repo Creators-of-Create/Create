@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -171,6 +172,9 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	public ContraptionRotationState getRotationState() {
 		return ContraptionRotationState.NONE;
 	}
+
+	@Override
+	public void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks) { }
 
 	public void updateClientMotion() {
 		float modifier = movementAxis.getAxisDirection()

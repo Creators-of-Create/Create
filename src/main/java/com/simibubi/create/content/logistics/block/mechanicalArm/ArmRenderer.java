@@ -6,11 +6,11 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -30,6 +30,11 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
+	public boolean isGlobalRenderer(KineticTileEntity te) {
+		return true;
+	}
+
+	@Override
 	protected void renderSafe(KineticTileEntity te, float pt, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
@@ -44,14 +49,14 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		float upperArmAngle = arm.upperArmAngle.get(pt) - 90;
 		float headAngle = arm.headAngle.get(pt);
 		
-		boolean rave = te instanceof ArmTileEntity && ((ArmTileEntity) te).phase == Phase.DANCING;
+		boolean rave = arm.phase == Phase.DANCING;
 		float renderTick = AnimationTickHolder.getRenderTick() + (te.hashCode() % 64);
 		if (rave) {
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
-			color = ColorHelper.rainbowColor(AnimationTickHolder.ticks * 100);
+			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
 		}
 		
 		ms.push();

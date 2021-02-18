@@ -358,11 +358,11 @@ public class PipeConnection {
 	public static final Random r = new Random();
 
 	public void spawnSplashOnRim(World world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
 	}
 
 	public void spawnParticles(World world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
 	}
 
 	@OnlyIn(Dist.CLIENT)

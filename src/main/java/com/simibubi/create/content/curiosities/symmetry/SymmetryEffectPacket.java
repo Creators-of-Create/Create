@@ -42,7 +42,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 	}
 
 	public void handle(Supplier<Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.getPositionVector().distanceTo(new Vec3d(mirror)) > 100)
 				return;
 			for (BlockPos to : positions)

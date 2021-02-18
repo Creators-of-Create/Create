@@ -10,8 +10,8 @@ import net.minecraft.particles.ParticleTypes;
 
 public class CampfireMovementBehaviour extends MovementBehaviour {
 	@Override
-	public boolean hasSpecialMovementRenderer() {
-		return false;
+	public boolean renderAsNormalTileEntity() {
+		return true;
 	}
 
 	@Override

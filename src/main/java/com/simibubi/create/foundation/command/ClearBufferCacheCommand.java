@@ -14,7 +14,7 @@ public class ClearBufferCacheCommand {
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("clearRenderBuffers").requires(cs -> cs.hasPermissionLevel(0)).executes(ctx -> {
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
 			ctx.getSource().sendFeedback(new StringTextComponent("Cleared rendering buffers."), true);
 			return 1;
 		});
@@ -22,6 +22,6 @@ public class ClearBufferCacheCommand {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void execute() {
-		CreateClient.bufferCache.invalidate();
+		CreateClient.invalidateRenderers();
 	}
 }

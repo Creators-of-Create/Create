@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 
@@ -54,4 +55,8 @@ public class PulleyContraption extends TranslatingContraption {
 		super.readNBT(world, nbt, spawnData);
 	}
 
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new PulleyLighter(this);
+	}
 }

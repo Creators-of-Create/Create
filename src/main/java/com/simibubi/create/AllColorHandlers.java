@@ -1,7 +1,11 @@
 package com.simibubi.create;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RedstoneWireBlock;
@@ -17,9 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GrassColors;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.biome.BiomeColors;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AllColorHandlers {
 

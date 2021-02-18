@@ -12,6 +12,7 @@ import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.block.BlockState;
@@ -43,8 +44,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -250,7 +251,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public boolean processInitialInteract(PlayerEntity player, Hand hand) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
 		return true;
@@ -266,7 +267,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		ClientPlayerEntity cPlayer = (ClientPlayerEntity) player;
 		Minecraft mc = Minecraft.getInstance();
 		RayTraceResult ray =
-			cPlayer.pick(mc.playerController.getBlockReachDistance(), mc.getRenderPartialTicks(), false);
+			cPlayer.pick(mc.playerController.getBlockReachDistance(), AnimationTickHolder.getPartialTicks(), false);
 
 		if (!(ray instanceof BlockRayTraceResult))
 			return;

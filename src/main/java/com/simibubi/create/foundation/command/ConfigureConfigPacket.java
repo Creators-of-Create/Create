@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -42,7 +43,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				try {
 					Actions.valueOf(option)
 						.performAction(value);
@@ -61,6 +62,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		overlayScreen(() -> Actions::overlayScreen),
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
+		experimentalRendering(() -> Actions::experimentalRendering),
 
 		;
 
@@ -78,6 +80,14 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void rainbowDebug(String value) {
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void experimentalRendering(String value) {
+			if (!"".equals(value)) {
+				AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			}
+			FastRenderDispatcher.refresh();
 		}
 		
 		@OnlyIn(Dist.CLIENT)

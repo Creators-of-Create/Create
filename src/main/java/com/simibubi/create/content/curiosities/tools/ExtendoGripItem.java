@@ -7,6 +7,7 @@ import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -125,7 +126,7 @@ public class ExtendoGripItem extends Item {
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
-		Vec3d vec3d = player.getEyePosition(mc.getRenderPartialTicks());
+		Vec3d vec3d = player.getEyePosition(AnimationTickHolder.getPartialTicks());
 		Vec3d vec3d1 = player.getLook(1.0F);
 		Vec3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
 		AxisAlignedBB axisalignedbb = player.getBoundingBox()

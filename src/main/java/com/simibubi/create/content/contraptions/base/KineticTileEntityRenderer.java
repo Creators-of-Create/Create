@@ -6,11 +6,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -38,6 +39,8 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		for (RenderType type : RenderType.getBlockLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
 				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
