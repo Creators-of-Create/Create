@@ -1,8 +1,13 @@
 package com.simibubi.create.foundation.utility.placement.util;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.Property;
@@ -11,10 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 @MethodsReturnNonnullByDefault
 public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementHelper {
@@ -71,7 +72,9 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 
 	@Override
 	public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-		Vector3d centerOffset = Vector3d.of(ray.getFace().getDirectionVec()).scale(.3);
-		IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos).add(centerOffset), VecHelper.getCenterOf(offset.getPos()).add(centerOffset), ray.getFace(), 0.75D);
+		//Vector3d centerOffset = new Vector3d(ray.getFace().getDirectionVec()).scale(.3);
+		//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos).add(centerOffset), VecHelper.getCenterOf(offset.getPos()).add(centerOffset), ray.getFace(), 0.75D);
+
+		displayGhost(offset);
 	}
 }

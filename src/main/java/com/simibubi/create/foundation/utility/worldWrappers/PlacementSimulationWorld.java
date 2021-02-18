@@ -2,22 +2,42 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Predicate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.World;
+import net.minecraft.world.lighting.WorldLightManager;
 
 public class PlacementSimulationWorld extends WrappedWorld {
 	public HashMap<BlockPos, BlockState> blocksAdded;
 	public HashMap<BlockPos, TileEntity> tesAdded;
 
+	public HashSet<SectionPos> spannedChunks;
+	public WorldLightManager lighter;
+	public WrappedChunkProvider chunkProvider;
+	private final BlockPos.Mutable scratch = new BlockPos.Mutable();
+
 	public PlacementSimulationWorld(World wrapped) {
-		super(wrapped);
+		this(wrapped, new WrappedChunkProvider());
+	}
+
+	public PlacementSimulationWorld(World wrapped, WrappedChunkProvider chunkProvider) {
+		super(wrapped, chunkProvider);
+		this.chunkProvider = chunkProvider.setWorld(this);
+		spannedChunks = new HashSet<>();
+		lighter = new WorldLightManager(chunkProvider, true, false); // blockLight, skyLight
 		blocksAdded = new HashMap<>();
 		tesAdded = new HashMap<>();
+	}
+
+	@Override
+	public WorldLightManager getLightingProvider() {
+		return lighter;
 	}
 
 	public void setTileEntities(Collection<TileEntity> tileEntities) {
@@ -31,6 +51,15 @@ public class PlacementSimulationWorld extends WrappedWorld {
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+
+		SectionPos sectionPos = SectionPos.from(pos);
+
+		if (spannedChunks.add(sectionPos)) {
+			lighter.updateSectionStatus(sectionPos, false);
+		}
+
+		lighter.checkBlock(pos);
+
 		blocksAdded.put(pos, newState);
 		return true;
 	}
@@ -60,11 +89,17 @@ public class PlacementSimulationWorld extends WrappedWorld {
 		return true;
 	}
 
+	public BlockState getBlockState(int x, int y, int z) {
+		return getBlockState(scratch.setPos(x, y, z));
+	}
+
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
-		if (blocksAdded.containsKey(pos))
-			return blocksAdded.get(pos);
-		return Blocks.AIR.getDefaultState();
+		BlockState state = blocksAdded.get(pos);
+		if (state != null)
+			return state;
+		else
+			return Blocks.AIR.getDefaultState();
 	}
 
 }

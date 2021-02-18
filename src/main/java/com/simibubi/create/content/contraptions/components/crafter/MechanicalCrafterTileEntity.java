@@ -485,4 +485,9 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		return inventory;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
+
 }

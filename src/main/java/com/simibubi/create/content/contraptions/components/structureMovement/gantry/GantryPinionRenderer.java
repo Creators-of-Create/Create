@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -59,7 +60,7 @@ public class GantryPinionRenderer extends KineticTileEntityRenderer {
 			.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0);
 
 		ms.translate(0, -9 / 16f, 0);
-		ms.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe / 2f));
+		ms.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe));
 		ms.translate(0, 9 / 16f, 0);
 
 		msr.unCentre();
@@ -68,6 +69,12 @@ public class GantryPinionRenderer extends KineticTileEntityRenderer {
 			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 
 		ms.pop();
+	}
+
+	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
+		float time = AnimationTickHolder.getRenderTick();
+		float offset = getRotationOffsetForPosition(te, pos, axis);
+		return ((time * te.getSpeed() * 3f / 20 + offset) % 360) / 180 * (float) Math.PI;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import static com.simibubi.create.foundation.utility.AnimationTickHolder.ticks;
-
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -9,8 +7,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
 import net.minecraft.client.renderer.Tessellator;
@@ -39,8 +37,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		float cycle = (ticks + Minecraft.getInstance()
-			.getRenderPartialTicks()) % 30;
+		float cycle = AnimationTickHolder.getRenderTick() % 30;
 		float squeeze = cycle < 20 ? MathHelper.sin((float) (cycle / 20f * Math.PI)) : 0;
 		squeeze *= 20;
 

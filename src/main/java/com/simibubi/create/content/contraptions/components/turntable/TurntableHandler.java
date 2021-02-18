@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.turntable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -38,7 +39,7 @@ public class TurntableHandler {
 		if (offset.length() > 1/4f)
 			speed *= MathHelper.clamp((1/2f - offset.length()) * 2, 0, 1);
 
-		mc.player.rotationYaw = mc.player.prevRotationYaw - speed * mc.getRenderPartialTicks();
+		mc.player.rotationYaw = mc.player.prevRotationYaw - speed * AnimationTickHolder.getPartialTicks();
 		mc.player.renderYawOffset = mc.player.rotationYaw;
 	}
 

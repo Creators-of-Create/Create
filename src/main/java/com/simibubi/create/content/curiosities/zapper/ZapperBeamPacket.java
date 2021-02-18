@@ -48,7 +48,7 @@ public class ZapperBeamPacket extends SimplePacketBase {
 	}
 
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.getPositionVec().distanceTo(start) > 100)
 				return;
 			ZapperRenderHandler.addBeam(new LaserBeam(start, target).followPlayer(self, hand == Hand.MAIN_HAND));

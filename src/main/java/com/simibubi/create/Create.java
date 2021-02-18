@@ -99,7 +99,7 @@ public class Create {
 		AllConfigs.register();
 		random = new Random();
 
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

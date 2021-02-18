@@ -192,7 +192,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
-		DistExecutor.runWhenOn(Dist.CLIENT, toRun);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, toRun);
 	}
 
 	@OnlyIn(Dist.CLIENT)

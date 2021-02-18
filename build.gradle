@@ -3,9 +3,11 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+        maven { url='https://dist.creeper.host/Sponge/maven' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 plugins {
@@ -35,6 +37,9 @@ minecraft {
     runs {		
 		client {
             workingDirectory project.file('run')
+            // property 'mixin.env.disableRefMap', 'true'
+            arg '-mixin.config=create.mixins.json'
+//            jvmArgs '-XX:+UnlockCommercialFeatures'
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {
@@ -46,6 +51,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server')
+            // property 'mixin.env.disableRefMap', 'true'
+            arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
             mods {
                 create {
@@ -113,15 +120,17 @@ dependencies {
     shade registrate
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.3-1.6.40")
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.3-3.0.1.24")
+
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 jar {
@@ -134,7 +143,8 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"simibubi",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "create.mixins.json"
         ])
     }
 }
@@ -202,4 +212,10 @@ curseforge {
         	optionalDependency 'jei'
         }
     }
+}
+
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "create.refmap.json"
 }

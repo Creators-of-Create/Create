@@ -17,6 +17,7 @@ import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
@@ -160,8 +161,7 @@ public class SchematicHandler {
 		transformation.applyGLTransformations(ms);
 
 		if (!renderers.isEmpty()) {
-			float pt = Minecraft.getInstance()
-				.getRenderPartialTicks();
+			float pt = AnimationTickHolder.getPartialTicks();
 			boolean lr = transformation.getScaleLR()
 				.get(pt) < 0;
 			boolean fb = transformation.getScaleFB()

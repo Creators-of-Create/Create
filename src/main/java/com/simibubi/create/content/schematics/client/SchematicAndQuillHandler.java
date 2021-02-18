@@ -18,6 +18,7 @@ import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
@@ -139,8 +140,7 @@ public class SchematicAndQuillHandler {
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
-			float pt = Minecraft.getInstance()
-				.getRenderPartialTicks();
+			float pt = AnimationTickHolder.getPartialTicks();
 			Vector3d targetVec = player.getEyePosition(pt)
 				.add(player.getLookVec()
 					.scale(range));

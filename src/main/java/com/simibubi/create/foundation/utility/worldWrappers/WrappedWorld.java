@@ -26,6 +26,7 @@ import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.ISpawnWorldInfo;
 import net.minecraft.world.storage.MapData;
 
@@ -34,19 +35,28 @@ import net.minecraft.world.storage.MapData;
 public class WrappedWorld extends World {
 
 	protected World world;
+	private WrappedChunkProvider provider;
+
+	public WrappedWorld(World world, WrappedChunkProvider provider) {
+		this(world);
+		this.provider = provider;
+	}
 
 	public WrappedWorld(World world) {
-		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(),
-			world::getProfiler, world.isRemote, world.isDebugWorld(), 0);
+		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,
+			world.isRemote, world.isDebugWorld(), 0);
 		this.world = world;
 	}
 
-	// FIXME
-	// @Override
-	public World getWrappedWorld() {
+	public World getWorld() {
 		return world;
 	}
-
+	
+	@Override
+	public WorldLightManager getLightingProvider() {
+		return super.getLightingProvider();
+	}
+	
 	@Override
 	public BlockState getBlockState(@Nullable BlockPos pos) {
 		return world.getBlockState(pos);
@@ -89,7 +99,7 @@ public class WrappedWorld extends World {
 
 	@Override
 	public AbstractChunkProvider getChunkProvider() {
-		return world.getChunkProvider(); // fixme
+		return provider;
 	}
 
 	@Override
@@ -101,12 +111,12 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
-			float volume, float pitch) {}
+	public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn,
+		SoundCategory category, float volume, float pitch) {}
 
 	@Override
 	public void playMovingSound(@Nullable PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
+		SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
 
 	@Override
 	public Entity getEntityByID(int id) {
@@ -120,7 +130,7 @@ public class WrappedWorld extends World {
 
 	@Override
 	public boolean addEntity(@Nullable Entity entityIn) {
-		if(entityIn == null)
+		if (entityIn == null)
 			return false;
 		entityIn.setWorld(world);
 		return world.addEntity(entityIn);

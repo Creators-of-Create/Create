@@ -11,12 +11,14 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -102,7 +104,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
+		if (!FastRenderDispatcher.available(te.getWorld())) {
+			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
+		}
 
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
@@ -178,8 +182,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);
-			factor = .5f - MathHelper.clamp(MathHelper.lerp(Minecraft.getInstance()
-				.getRenderPartialTicks(), distance, nextDistance), 0, 1);
+			factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
 		}
 
 		Vector3d offset = Vector3d.of(blockState.get(FACING)
@@ -189,9 +192,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.getModel();
 		for (MatrixStack m : matrixStacks)
 			m.translate(offset.x, offset.y, offset.z);
-		pole.light(lighting)
+		pole.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
-		hand.light(lighting)
+		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
 	}
 

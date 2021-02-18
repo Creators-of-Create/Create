@@ -4,10 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -43,8 +43,7 @@ public class DeployTool extends PlacementToolBase {
 			return;
 
 		ms.push();
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		double x = MathHelper.lerp(pt, lastChasingSelectedPos.x, chasingSelectedPos.x);
 		double y = MathHelper.lerp(pt, lastChasingSelectedPos.y, chasingSelectedPos.y);
 		double z = MathHelper.lerp(pt, lastChasingSelectedPos.z, chasingSelectedPos.z);

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 

@@ -32,6 +32,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -67,9 +69,14 @@ public class SpoutTileEntity extends SmartTileEntity {
 		processingTicks = -1;
 	}
 
+	protected AxisAlignedBB cachedBoundingBox;
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expand(0, -2, 0);
+		if (cachedBoundingBox == null) {
+			cachedBoundingBox = super.getRenderBoundingBox().expand(0, -2, 0);
+		}
+		return cachedBoundingBox;
 	}
 
 	@Override

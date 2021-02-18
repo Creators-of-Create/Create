@@ -1,5 +1,29 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -28,6 +52,7 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -35,13 +60,22 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import net.minecraft.block.*;
+
+import net.minecraft.block.AbstractButtonBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -56,9 +90,12 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.palette.HashMapPalette;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -68,16 +105,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
+import net.minecraftforge.registries.GameData;
 
 public abstract class Contraption {
 
@@ -103,7 +131,8 @@ public abstract class Contraption {
 
 	// Client
 	public Map<BlockPos, TileEntity> presentTileEntities;
-	public List<TileEntity> renderedTileEntities;
+	public List<TileEntity> maybeInstancedTileEntities;
+	public List<TileEntity> specialRenderedTileEntities;
 
 	public Contraption() {
 		blocks = new HashMap<>();
@@ -116,7 +145,8 @@ public abstract class Contraption {
 		glueToRemove = new ArrayList<>();
 		initialPassengers = new HashMap<>();
 		presentTileEntities = new HashMap<>();
-		renderedTileEntities = new ArrayList<>();
+		maybeInstancedTileEntities = new ArrayList<>();
+		specialRenderedTileEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 	}
@@ -475,7 +505,6 @@ public abstract class Contraption {
 	}
 
 	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) throws AssemblyException {
-		int limit = AllConfigs.SERVER.kinetics.maxPistonPoles.get();
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
@@ -594,53 +623,18 @@ public abstract class Contraption {
 	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
 		blocks.clear();
 		presentTileEntities.clear();
-		renderedTileEntities.clear();
+		specialRenderedTileEntities.clear();
 
-		nbt.getList("Blocks", 10)
-			.forEach(c -> {
-				CompoundNBT comp = (CompoundNBT) c;
-				BlockInfo info = new BlockInfo(NBTUtil.readBlockPos(comp.getCompound("Pos")),
-					NBTUtil.readBlockState(comp.getCompound("Block")),
-					comp.contains("Data") ? comp.getCompound("Data") : null);
-				blocks.put(info.pos, info);
-
-				if (world.isRemote) {
-					Block block = info.state.getBlock();
-					CompoundNBT tag = info.nbt;
-					MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
-					if (tag == null || (movementBehaviour != null && movementBehaviour.hasSpecialMovementRenderer()))
-						return;
-
-					tag.putInt("x", info.pos.getX());
-					tag.putInt("y", info.pos.getY());
-					tag.putInt("z", info.pos.getZ());
-
-					TileEntity te = TileEntity.createFromTag(info.state, tag);
-					if (te == null)
-						return;
-					te.setLocation(new WrappedWorld(world) {
-
-						@Override
-						public BlockState getBlockState(BlockPos pos) {
-							if (!pos.equals(te.getPos()))
-								return Blocks.AIR.getDefaultState();
-							return info.state;
-						}
-
-					}, te.getPos());
-					if (te instanceof KineticTileEntity)
-						((KineticTileEntity) te).setSpeed(0);
-					te.getBlockState();
-					presentTileEntities.put(info.pos, te);
-					renderedTileEntities.add(te);
-				}
-			});
+		INBT blocks = nbt.get("Blocks");
+		//used to differentiate between the 'old' and the paletted serialization
+		boolean usePalettedDeserialization = blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
+		readBlocksCompound(blocks, world, usePalettedDeserialization);
 
 		actors.clear();
 		nbt.getList("Actors", 10)
 			.forEach(c -> {
 				CompoundNBT comp = (CompoundNBT) c;
-				BlockInfo info = blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
+				BlockInfo info = this.blocks.get(NBTUtil.readBlockPos(comp.getCompound("Pos")));
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
@@ -705,15 +699,8 @@ public abstract class Contraption {
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putString("Type", getType().id);
-		ListNBT blocksNBT = new ListNBT();
-		for (BlockInfo block : this.blocks.values()) {
-			CompoundNBT c = new CompoundNBT();
-			c.put("Block", NBTUtil.writeBlockState(block.state));
-			c.put("Pos", NBTUtil.writeBlockPos(block.pos));
-			if (block.nbt != null)
-				c.put("Data", block.nbt);
-			blocksNBT.add(c);
-		}
+
+		CompoundNBT blocksNBT = writeBlocksCompound();
 
 		ListNBT actorsNBT = new ListNBT();
 		for (MutablePair<BlockInfo, MovementContext> actor : getActors()) {
@@ -788,6 +775,107 @@ public abstract class Contraption {
 		}
 
 		return nbt;
+	}
+
+	private CompoundNBT writeBlocksCompound() {
+		CompoundNBT compound = new CompoundNBT();
+		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+		ListNBT blockList = new ListNBT();
+
+		for (BlockInfo block : this.blocks.values()) {
+			int id = palette.idFor(block.state);
+			CompoundNBT c = new CompoundNBT();
+			c.putLong("Pos", block.pos.toLong());
+			c.putInt("State", id);
+			if (block.nbt != null)
+				c.put("Data", block.nbt);
+			blockList.add(c);
+		}
+
+		ListNBT paletteNBT = new ListNBT();
+		palette.writePaletteToList(paletteNBT);
+		compound.put("Palette", paletteNBT);
+		compound.put("BlockList", blockList);
+
+		return compound;
+	}
+
+	private void readBlocksCompound(INBT compound, World world, boolean usePalettedDeserialization) {
+		HashMapPalette<BlockState> palette = null;
+		ListNBT blockList;
+		if (usePalettedDeserialization) {
+			CompoundNBT c = ((CompoundNBT) compound);
+			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+			palette.read(c.getList("Palette", 10));
+
+			blockList = c.getList("BlockList", 10);
+		} else {
+			blockList = (ListNBT) compound;
+		}
+
+		HashMapPalette<BlockState> finalPalette = palette;
+		blockList.forEach(e -> {
+			CompoundNBT c = (CompoundNBT) e;
+
+			BlockInfo info = usePalettedDeserialization ? readBlockInfo(c, finalPalette) : legacyReadBlockInfo(c);
+
+			this.blocks.put(info.pos, info);
+
+			if (world.isRemote) {
+				Block block = info.state.getBlock();
+				CompoundNBT tag = info.nbt;
+				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
+				if (tag == null)
+					return;
+
+				tag.putInt("x", info.pos.getX());
+				tag.putInt("y", info.pos.getY());
+				tag.putInt("z", info.pos.getZ());
+
+				TileEntity te = TileEntity.createFromTag(info.state, tag);
+				if (te == null)
+					return;
+				te.setLocation(new WrappedWorld(world) {
+
+					@Override
+					public BlockState getBlockState(BlockPos pos) {
+						if (!pos.equals(te.getPos()))
+							return Blocks.AIR.getDefaultState();
+						return info.state;
+					}
+
+				}, te.getPos());
+				if (te instanceof KineticTileEntity)
+					((KineticTileEntity) te).setSpeed(0);
+				te.getBlockState();
+
+				if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
+					maybeInstancedTileEntities.add(te);
+
+				if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
+					return;
+
+				presentTileEntities.put(info.pos, te);
+				specialRenderedTileEntities.add(te);
+			}
+
+		});
+	}
+
+	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, HashMapPalette<BlockState> palette) {
+		return new BlockInfo(
+				BlockPos.fromLong(blockListEntry.getLong("Pos")),
+				Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
+		);
+	}
+
+	private static BlockInfo legacyReadBlockInfo(CompoundNBT blockListEntry) {
+		return new BlockInfo(
+				NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
+				NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
+				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
+		);
 	}
 
 	public void removeBlocksFromWorld(World world, BlockPos offset) {
@@ -913,7 +1001,8 @@ public abstract class Contraption {
 			if (!shouldUpdateAfterMovement(block))
 				continue;
 			BlockPos targetPos = transform.apply(block.pos);
-			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state, BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
+			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state,
+				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
 		for (int i = 0; i < inventory.getSlots(); i++)
@@ -1043,6 +1132,11 @@ public abstract class Contraption {
 		MountedFluidStorage mountedFluidStorage = fluidStorage.get(localPos);
 		if (mountedFluidStorage != null)
 			mountedFluidStorage.updateFluid(containedFluid);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public ContraptionLighter<?> makeLighter() {
+		return new EmptyLighter(this);
 	}
 
 }

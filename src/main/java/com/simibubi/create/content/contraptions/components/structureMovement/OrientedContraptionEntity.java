@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
@@ -16,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -39,6 +41,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
 /**
@@ -492,4 +496,89 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		yaw = angle;
 	}
 
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks) {
+		float angleInitialYaw = getInitialYaw();
+		float angleYaw = getYaw(partialTicks);
+		float anglePitch = getPitch(partialTicks);
+
+		for (MatrixStack stack : matrixStacks)
+			stack.translate(-.5f, 0, -.5f);
+
+		Entity ridingEntity = getRidingEntity();
+		if (ridingEntity instanceof AbstractMinecartEntity)
+			repositionOnCart(partialTicks, matrixStacks, ridingEntity);
+		else if (ridingEntity instanceof AbstractContraptionEntity) {
+			if (ridingEntity.getRidingEntity() instanceof AbstractMinecartEntity)
+				repositionOnCart(partialTicks, matrixStacks, ridingEntity.getRidingEntity());
+			else
+				repositionOnContraption(partialTicks, matrixStacks, ridingEntity);
+		}
+
+		for (MatrixStack stack : matrixStacks)
+			MatrixStacker.of(stack)
+						 .nudge(getEntityId())
+						 .centre()
+						 .rotateY(angleYaw)
+						 .rotateZ(anglePitch)
+						 .rotateY(angleInitialYaw)
+						 .unCentre();
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void repositionOnContraption(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
+		Vec3d pos = getContraptionOffset(partialTicks, ridingEntity);
+		for (MatrixStack stack : matrixStacks)
+			stack.translate(pos.x, pos.y, pos.z);
+	}
+
+	// Minecarts do not always render at their exact location, so the contraption
+	// has to adjust aswell
+	@OnlyIn(Dist.CLIENT)
+	private void repositionOnCart(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
+		Vec3d cartPos = getCartOffset(partialTicks, ridingEntity);
+
+		if (cartPos == Vec3d.ZERO) return;
+
+		for (MatrixStack stack : matrixStacks)
+			stack.translate(cartPos.x, cartPos.y, cartPos.z);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private Vec3d getContraptionOffset(float partialTicks, Entity ridingEntity) {
+		AbstractContraptionEntity parent = (AbstractContraptionEntity) ridingEntity;
+		Vec3d passengerPosition = parent.getPassengerPosition(this, partialTicks);
+		double x = passengerPosition.x - MathHelper.lerp(partialTicks, this.lastTickPosX, this.getX());
+		double y = passengerPosition.y - MathHelper.lerp(partialTicks, this.lastTickPosY, this.getY());
+		double z = passengerPosition.z - MathHelper.lerp(partialTicks, this.lastTickPosZ, this.getZ());
+
+		return new Vec3d(x, y, z);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private Vec3d getCartOffset(float partialTicks, Entity ridingEntity) {
+		AbstractMinecartEntity cart = (AbstractMinecartEntity) ridingEntity;
+		double cartX = MathHelper.lerp(partialTicks, cart.lastTickPosX, cart.getX());
+		double cartY = MathHelper.lerp(partialTicks, cart.lastTickPosY, cart.getY());
+		double cartZ = MathHelper.lerp(partialTicks, cart.lastTickPosZ, cart.getZ());
+		Vec3d cartPos = cart.getPos(cartX, cartY, cartZ);
+
+		if (cartPos != null) {
+			Vec3d cartPosFront = cart.getPosOffset(cartX, cartY, cartZ, (double) 0.3F);
+			Vec3d cartPosBack = cart.getPosOffset(cartX, cartY, cartZ, (double) -0.3F);
+			if (cartPosFront == null)
+				cartPosFront = cartPos;
+			if (cartPosBack == null)
+				cartPosBack = cartPos;
+
+			cartX = cartPos.x - cartX;
+			cartY = (cartPosFront.y + cartPosBack.y) / 2.0D - cartY;
+			cartZ = cartPos.z - cartZ;
+
+			return new Vec3d(cartX, cartY, cartZ);
+		}
+
+		return Vec3d.ZERO;
+	}
 }

@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -63,8 +64,7 @@ public class ZapperRenderHandler {
 	}
 
 	public static Vector3d getExactBarrelPos(boolean mainHand) {
-		float partialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float partialTicks = AnimationTickHolder.getPartialTicks();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		float yaw = (float) ((player.getYaw(partialTicks)) / -180 * Math.PI);
 		float pitch = (float) ((player.getPitch(partialTicks)) / -180 * Math.PI);

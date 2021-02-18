@@ -10,8 +10,8 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class BellMovementBehaviour extends MovementBehaviour {
 	@Override
-	public boolean hasSpecialMovementRenderer() {
-		return false;
+	public boolean renderAsNormalTileEntity() {
+		return true;
 	}
 
 	@Override

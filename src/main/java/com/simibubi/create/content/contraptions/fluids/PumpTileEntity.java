@@ -374,4 +374,8 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

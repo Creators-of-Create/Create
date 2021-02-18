@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -596,6 +597,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean isOnePlayerRiding() {
 		return false;
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks);
 
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();

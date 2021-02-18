@@ -4,14 +4,28 @@ import net.minecraft.client.Minecraft;
 
 public class AnimationTickHolder {
 
-	public static int ticks;
+	private static int ticks;
+
+	public static void reset() {
+		ticks = 0;
+	}
 
 	public static void tick() {
-		ticks++;
+		if (!Minecraft.getInstance().isGamePaused()) {
+			ticks = (ticks + 1) % 1_728_000; // wrap around every 24 hours so we maintain enough floating point precision
+		}
 	}
 
 	public static float getRenderTick() {
-		return ticks + Minecraft.getInstance().getRenderPartialTicks();
+		return getTicks() + getPartialTicks();
 	}
 
+	public static float getPartialTicks() {
+		Minecraft mc = Minecraft.getInstance();
+		return (mc.isGamePaused() ? mc.renderPartialTicksPaused : mc.getRenderPartialTicks());
+	}
+
+	public static int getTicks() {
+		return ticks;
+	}
 }

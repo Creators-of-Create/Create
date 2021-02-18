@@ -101,10 +101,14 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		return powered;
 	}
 
+	protected AxisAlignedBB cachedBoundingBox;
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().grow(2);
+		if (cachedBoundingBox == null) {
+			cachedBoundingBox = super.getRenderBoundingBox().grow(2);
+		}
+		return cachedBoundingBox;
 	}
 
 	public boolean isTransferring() {

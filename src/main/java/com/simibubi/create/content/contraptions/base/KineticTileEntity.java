@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
@@ -17,6 +18,8 @@ import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -32,14 +35,18 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation {
+	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -247,6 +254,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
+
+		if (clientPacket)
+			FastRenderDispatcher.enqueueUpdate(this);
 	}
 
 	public float getGeneratedSpeed() {
@@ -459,7 +469,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	/**
 	 * Specify ratio of transferred rotation from this kinetic component to a
 	 * specific other.
-	 * 
+	 *
 	 * @param target           other Kinetic TE to transfer to
 	 * @param stateFrom        this TE's blockstate
 	 * @param stateTo          other TE's blockstate
@@ -480,7 +490,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	 * Specify additional locations the rotation propagator should look for
 	 * potentially connected components. Neighbour list contains offset positions in
 	 * all 6 directions by default.
-	 * 
+	 *
 	 * @param block
 	 * @param state
 	 * @param neighbours
@@ -507,7 +517,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	 * circumstance. Shaft and cogwheel connections are already handled by internal
 	 * logic. Does not have to be specified on both ends, it is assumed that this
 	 * relation is symmetrical.
-	 * 
+	 *
 	 * @param other
 	 * @param state
 	 * @param otherState
@@ -522,4 +532,42 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return block.hasIntegratedCogwheel(world, pos, state);
 	}
 
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		if (world != null && world.isRemote)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
+	}
+
+	@Override
+	public void onChunkUnloaded() {
+		if (world != null && world.isRemote)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
+	}
+
+	@Override
+	public void requestModelDataUpdate() {
+		super.requestModelDataUpdate();
+		if (!this.removed) {
+			FastRenderDispatcher.enqueueUpdate(this);
+		}
+	}
+
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
+
+	protected AxisAlignedBB cachedBoundingBox;
+	@OnlyIn(Dist.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		if (cachedBoundingBox == null) {
+			cachedBoundingBox = makeRenderBoundingBox();
+		}
+		return cachedBoundingBox;
+	}
+
+	protected AxisAlignedBB makeRenderBoundingBox() {
+		return super.getRenderBoundingBox();
+	}
 }
