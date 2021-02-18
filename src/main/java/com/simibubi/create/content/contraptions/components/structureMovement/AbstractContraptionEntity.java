@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -596,6 +597,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean isOnePlayerRiding() {
 		return false;
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks);
 
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();

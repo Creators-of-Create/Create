@@ -1,7 +1,11 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
@@ -11,9 +15,14 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.KineticRenderer;
+import com.simibubi.create.foundation.render.backend.OptifineHandler;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -31,17 +40,13 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 public class CreateClient {
 
 	public static ClientSchematicLoader schematicSender;
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
+	public static KineticRenderer kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 	public static GhostBlocks ghostBlocks;
 
@@ -57,16 +62,21 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
+
+		Backend.init();
+		OptifineHandler.init();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
+		kineticRenderer = new KineticRenderer();
+
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
 		schematicAndQuillHandler = new SchematicAndQuillHandler();
 
 		bufferCache = new SuperByteBufferCache();
 		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		bufferCache.registerCompartment(ContraptionRenderer.CONTRAPTION, 20);
+		bufferCache.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
 
 		ghostBlocks = new GhostBlocks();
 
@@ -174,4 +184,9 @@ public class CreateClient {
 		return casingConnectivity;
 	}
 
+	public static void invalidateRenderers() {
+		CreateClient.bufferCache.invalidate();
+		CreateClient.kineticRenderer.invalidate();
+		ContraptionRenderDispatcher.invalidateAll();
+	}
 }

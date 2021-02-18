@@ -25,6 +25,9 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.RenderWork;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -37,11 +40,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -72,10 +77,11 @@ public class ClientEvents {
 		if (event.phase == Phase.START)
 			return;
 
-		AnimationTickHolder.tick();
-
 		if (!isGameActive())
 			return;
+
+		AnimationTickHolder.tick();
+		FastRenderDispatcher.tick();
 
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
@@ -105,20 +111,34 @@ public class ClientEvents {
 		PlacementHelpers.tick();
 		CreateClient.outliner.tickOutlines();
 		CreateClient.ghostBlocks.tickGhosts();
+		ContraptionRenderDispatcher.tick();
 	}
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		CreateClient.bufferCache.invalidate();
+		IWorld world = event.getWorld();
+		if (world.isRemote() && world instanceof ClientWorld) {
+			CreateClient.invalidateRenderers();
+			AnimationTickHolder.reset();
+			((ClientWorld) world).loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onUnloadWorld(WorldEvent.Unload event) {
+		if (event.getWorld().isRemote()) {
+			CreateClient.invalidateRenderers();
+			AnimationTickHolder.reset();
+		}
 	}
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
+		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+
 		MatrixStack ms = event.getMatrixStack();
-		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		Vec3d view = info.getProjectedView();
 		ms.push();
-		ms.translate(-view.getX(), -view.getY(), -view.getZ());
+		ms.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
 		CouplingRenderer.renderAll(ms, buffer);
@@ -126,11 +146,15 @@ public class ClientEvents {
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
 		CreateClient.outliner.renderOutlines(ms, buffer);
+//		LightVolumeDebugger.render(ms, buffer);
 //		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
 		ms.pop();
+
+		RenderWork.runAll();
+		FastRenderDispatcher.endFrame();
 	}
 
 	@SubscribeEvent
@@ -176,6 +200,7 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
+		ContraptionRenderDispatcher.renderTick();
 	}
 
 	protected static boolean isGameActive() {

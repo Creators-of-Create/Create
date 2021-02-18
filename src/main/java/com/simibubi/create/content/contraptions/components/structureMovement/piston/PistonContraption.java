@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.*;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarpetBlock;
@@ -20,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -236,4 +239,9 @@ public class PistonContraption extends TranslatingContraption {
 		return tag;
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new PistonLighter(this);
+	}
 }

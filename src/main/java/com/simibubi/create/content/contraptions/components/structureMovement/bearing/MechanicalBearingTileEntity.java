@@ -298,4 +298,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
 		return true;
 	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

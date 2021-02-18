@@ -2,8 +2,7 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-
-import net.minecraft.client.Minecraft;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 
@@ -30,8 +29,7 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	@Override
 	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
-		renderBB(ms, buffer, interpolateBBs(prevBB, bb, Minecraft.getInstance()
-			.getRenderPartialTicks()));
+		renderBB(ms, buffer, interpolateBBs(prevBB, bb, AnimationTickHolder.getPartialTicks()));
 	}
 
 	private static AxisAlignedBB interpolateBBs(AxisAlignedBB current, AxisAlignedBB target, float pt) {

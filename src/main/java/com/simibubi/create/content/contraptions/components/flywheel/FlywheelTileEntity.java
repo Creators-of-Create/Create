@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -48,8 +47,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().grow(2);
+	public AxisAlignedBB makeRenderBoundingBox() {
+		return super.makeRenderBoundingBox().grow(2);
 	}
 
 	@Override
@@ -101,4 +100,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		}
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

@@ -14,6 +14,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class EngineTileEntity extends SmartTileEntity {
 
@@ -34,9 +36,14 @@ public class EngineTileEntity extends SmartTileEntity {
 		return true;
 	}
 
+	protected AxisAlignedBB cachedBoundingBox;
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().grow(1.5f);
+		if (cachedBoundingBox == null) {
+			cachedBoundingBox = super.getRenderBoundingBox().grow(1.5f);
+		}
+		return cachedBoundingBox;
 	}
 
 	@Override

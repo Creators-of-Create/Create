@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -15,7 +10,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,19 +18,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
@@ -346,8 +340,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().grow(3);
+	public AxisAlignedBB makeRenderBoundingBox() {
+		return super.makeRenderBoundingBox().grow(3);
 	}
 
 	@Override
@@ -382,4 +376,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		return true;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

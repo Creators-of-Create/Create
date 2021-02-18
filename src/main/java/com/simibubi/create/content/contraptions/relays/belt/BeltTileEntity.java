@@ -15,13 +15,13 @@ import java.util.function.Function;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
+import com.simibubi.create.content.contraptions.relays.belt.transport.*;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -44,11 +44,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.LightType;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -66,6 +69,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected LazyOptional<IItemHandler> itemHandler;
 
 	public CompoundNBT trackerUpdateTag;
+
+	// client
+	public byte blockLight = -1;
+	public byte skyLight = -1;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -99,6 +106,9 @@ public class BeltTileEntity extends KineticTileEntity {
 			return;
 
 		initializeItemHandler();
+
+		if (blockLight == -1)
+			updateLight();
 
 		// Move Items
 		if (!isController())
@@ -136,10 +146,11 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AxisAlignedBB makeRenderBoundingBox() {
 		if (!isController())
-			return super.getRenderBoundingBox();
-		return super.getRenderBoundingBox().grow(beltLength + 1);
+			return super.makeRenderBoundingBox();
+		else
+			return super.makeRenderBoundingBox().grow(beltLength + 1);
 	}
 
 	protected void initializeItemHandler() {
@@ -221,6 +232,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 		if (!clientPacket)
 			return;
+
 		if (casingBefore == casing)
 			return;
 		requestModelDataUpdate();
@@ -251,6 +263,7 @@ public class BeltTileEntity extends KineticTileEntity {
 			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
 		}
 	}
 
@@ -267,6 +280,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	public void setController(BlockPos controller) {
 		this.controller = controller;
+		cachedBoundingBox = null;
 	}
 
 	public BlockPos getController() {
@@ -274,7 +288,10 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	public boolean isController() {
-		return pos.equals(controller);
+		return controller != null &&
+				pos.getX() == controller.getX() &&
+				pos.getY() == controller.getY() &&
+				pos.getZ() == controller.getZ();
 	}
 
 	public float getBeltMovementSpeed() {
@@ -495,4 +512,24 @@ public class BeltTileEntity extends KineticTileEntity {
 		return 0;
 	}
 
+	@Override
+	public void onChunkLightUpdate() {
+		super.onChunkLightUpdate();
+		updateLight();
+	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
+		return isController();
+	}
+
+	private void updateLight() {
+		if (world != null) {
+			skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
+			blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
+		} else {
+			skyLight = -1;
+			blockLight = -1;
+		}
+	}
 }

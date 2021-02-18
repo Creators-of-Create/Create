@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility.outliner;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 import net.minecraft.client.Minecraft;
@@ -150,8 +151,7 @@ public class Outliner {
 				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
-				float alpha = MathHelper.lerp(Minecraft.getInstance()
-					.getRenderPartialTicks(), lastAlpha, currentAlpha);
+				float alpha = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), lastAlpha, currentAlpha);
 
 				outline.params.alpha = alpha * alpha * alpha;
 				if (outline.params.alpha < 1 / 8f)

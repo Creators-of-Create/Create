@@ -1,22 +1,18 @@
 package com.simibubi.create;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.contraptions.relays.belt.BeltData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
@@ -24,6 +20,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class AllBlockPartials {
 
@@ -221,6 +226,32 @@ public class AllBlockPartials {
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.unCentre();
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
+	}
+
+	public InstancedModel<RotatingData> renderOnRotating(InstancedTileRenderer<?> ctx, BlockState referenceState) {
+		return ctx.getMaterial(KineticRenderMaterials.ROTATING).getModel(this, referenceState);
+	}
+
+	public InstancedModel<BeltData> renderOnBelt(InstancedTileRenderer<?> ctx, BlockState referenceState) {
+		return ctx.getMaterial(KineticRenderMaterials.BELTS).getModel(this, referenceState);
+	}
+
+	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer<?> dispatcher, BlockState referenceState) {
+		Direction facing = referenceState.get(FACING);
+		return renderOnDirectionalSouthRotating(dispatcher, referenceState, facing);
+	}
+
+	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer<?> dispatcher, BlockState referenceState, Direction facing) {
+		Supplier<MatrixStack> ms = () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+						 .centre()
+						 .rotateY(AngleHelper.horizontalAngle(facing))
+						 .rotateX(AngleHelper.verticalAngle(facing))
+						 .unCentre();
+			return stack;
+		};
+		return dispatcher.getMaterial(KineticRenderMaterials.ROTATING).getModel(this, referenceState, facing, ms);
 	}
 
 }

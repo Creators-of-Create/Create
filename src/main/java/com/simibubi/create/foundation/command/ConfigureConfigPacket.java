@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.logging.log4j.LogManager;
 
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
@@ -61,6 +62,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		overlayScreen(() -> Actions::overlayScreen),
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
+		experimentalRendering(() -> Actions::experimentalRendering),
 
 		;
 
@@ -78,6 +80,14 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void rainbowDebug(String value) {
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void experimentalRendering(String value) {
+			if (!"".equals(value)) {
+				AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			}
+			FastRenderDispatcher.refresh();
 		}
 		
 		@OnlyIn(Dist.CLIENT)

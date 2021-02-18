@@ -13,8 +13,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.TileEntityRenderHelper;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class SchematicRenderer {
 	private final Set<RenderType> startedBufferBuilders = new HashSet<>(getLayerCount());
 	private boolean active;
 	private boolean changed;
-	private SchematicWorld schematic;
+	protected SchematicWorld schematic;
 	private BlockPos anchor;
 
 	public SchematicRenderer() {
@@ -81,7 +81,7 @@ public class SchematicRenderer {
 			buffer);
 	}
 
-	private void redraw(Minecraft minecraft) {
+	protected void redraw(Minecraft minecraft) {
 		usedBlockRenderLayers.clear();
 		startedBufferBuilders.clear();
 

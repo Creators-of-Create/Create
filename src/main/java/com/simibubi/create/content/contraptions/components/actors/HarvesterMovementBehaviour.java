@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -36,9 +38,20 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Override
+	public void addInstance(RenderedContraption contraption, MovementContext context) {
+		HarvesterRenderer.addInstanceForContraption(contraption, context);
+	}
+
+	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
+		if (!FastRenderDispatcher.available())
+			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 
 	@Override

@@ -5,8 +5,9 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -30,7 +31,9 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
+		if (!FastRenderDispatcher.available(tileEntityIn.getWorld())) {
+			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
+		}
 
 		if (!tileEntityIn.hasBracket)
 			return;

@@ -22,6 +22,6 @@ public class ClearBufferCacheCommand {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void execute() {
-		CreateClient.bufferCache.invalidate();
+		CreateClient.invalidateRenderers();
 	}
 }

@@ -5,7 +5,6 @@ import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.particle.IAnimatedSprite;
@@ -67,7 +66,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	}
 
 	public void move(double x, double y, double z) {
-		float time = AnimationTickHolder.ticks;
+		float time = AnimationTickHolder.getTicks();
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / maxAge));
 		Vec3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
 		posX = position.x;

@@ -8,11 +8,13 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -42,6 +44,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderBlade(te, ms, buffer, light);
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
+
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		renderShaft(te, ms, buffer, light, overlay);
 	}
 
@@ -179,7 +184,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 		superBuffer
 			.light(msLocal.peek()
-			.getModel())
+						  .getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 

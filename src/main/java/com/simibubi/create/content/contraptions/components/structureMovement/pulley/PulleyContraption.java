@@ -4,6 +4,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -54,4 +55,8 @@ public class PulleyContraption extends TranslatingContraption {
 		super.readNBT(world, nbt, spawnData);
 	}
 
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new PulleyLighter(this);
+	}
 }

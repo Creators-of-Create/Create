@@ -40,6 +40,10 @@ public class BeltHelper {
 		return getSegmentTE(world, controllerPos);
 	}
 
+	public static BeltTileEntity getBeltForOffset(BeltTileEntity controller, float offset) {
+		return getBeltAtSegment(controller, (int) Math.floor(offset));
+	}
+
 	public static BeltTileEntity getBeltAtSegment(BeltTileEntity controller, int segment) {
 		BlockPos pos = getPositionForOffset(controller, segment);
 		TileEntity te = controller.getWorld()

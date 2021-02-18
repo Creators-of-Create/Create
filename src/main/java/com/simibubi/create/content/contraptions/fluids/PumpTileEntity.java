@@ -1,28 +1,10 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.*;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
-import com.simibubi.create.foundation.utility.Pair;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -34,6 +16,11 @@ import net.minecraft.world.IWorld;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class PumpTileEntity extends KineticTileEntity {
 
@@ -374,4 +361,8 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

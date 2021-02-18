@@ -1,13 +1,12 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
-import java.util.List;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+
+import java.util.List;
 
 public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
 
@@ -50,4 +49,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 		return true;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }
