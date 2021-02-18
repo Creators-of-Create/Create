@@ -131,6 +131,9 @@ public class PonderWorld extends SchematicWorld {
 
 	public void addBlockDestroyEffects(BlockPos pos, BlockState state) {
 		VoxelShape voxelshape = state.getShape(this, pos);
+		if (voxelshape.isEmpty())
+			return;
+		
 		AxisAlignedBB bb = voxelshape.getBoundingBox();
 		double d1 = Math.min(1.0D, bb.maxX - bb.minX);
 		double d2 = Math.min(1.0D, bb.maxY - bb.minY);

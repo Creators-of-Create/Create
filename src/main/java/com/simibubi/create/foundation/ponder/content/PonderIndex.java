@@ -14,10 +14,6 @@ public class PonderIndex {
 	public static void register() {
 		// Register storyboards here (Requires re-launch)
 
-		PonderRegistry.addStoryBoard(AllBlocks.COGWHEEL, new CogwheelStory());
-		PonderRegistry.addStoryBoard(AllBlocks.COGWHEEL, new CogwheelStory());
-		PonderRegistry.addStoryBoard(AllBlocks.COGWHEEL, new CogwheelStory());
-		
 		PonderRegistry.addStoryBoard(AllBlocks.SHAFT, new ShaftAsRelay());
 		PonderRegistry.addStoryBoard(AllBlocks.SHAFT, new ShaftsCanBeEncased());
 

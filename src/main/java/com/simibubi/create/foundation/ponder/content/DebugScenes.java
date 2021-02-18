@@ -11,14 +11,18 @@ import com.simibubi.create.foundation.ponder.PonderScene.SceneBuilder;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneBuilder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.Select;
+import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
+import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class DebugScenes extends PonderStoryBoard {
@@ -33,6 +37,8 @@ public abstract class DebugScenes extends PonderStoryBoard {
 		PonderRegistry.addStoryBoard(item, new FluidsScene(++i));
 		PonderRegistry.addStoryBoard(item, new OffScreenScene(++i));
 		PonderRegistry.addStoryBoard(item, new ParticlesScene(++i));
+		PonderRegistry.addStoryBoard(item, new ControlsScene(++i));
+		PonderRegistry.addStoryBoard(item, new BirbScene(++i));
 	}
 
 	public DebugScenes(int index) {
@@ -64,7 +70,6 @@ public abstract class DebugScenes extends PonderStoryBoard {
 			scene.showBasePlate();
 			scene.idle(10);
 			scene.showSection(util.layersFrom(1), Direction.DOWN);
-//			scene.showTargetedText(WHITE, new Vec3d(1.5, 1.5, 1.5), "coordinate", "Schematic orientation: ", 40);
 
 			scene.idle(10);
 			scene.showSelectionWithText(PonderPalette.RED, Select.fromTo(2, 1, 1, 4, 1, 1), "x", "Das X axis", 20);
@@ -96,9 +101,10 @@ public abstract class DebugScenes extends PonderStoryBoard {
 			scene.idle(10);
 			scene.showText(WHITE, 10, "change_blocks", "Blocks can be modified", 1000);
 			scene.idle(20);
-			scene.replaceBlocks(Select.fromTo(1, 1, 2, 2, 2, 4), AllBlocks.REFINED_RADIANCE_CASING.getDefaultState());
+			scene.replaceBlocks(Select.fromTo(1, 1, 3, 2, 2, 4), AllBlocks.REFINED_RADIANCE_CASING.getDefaultState());
 			scene.idle(10);
 			scene.replaceBlocks(Select.pos(3, 1, 1), Blocks.GOLD_BLOCK.getDefaultState());
+			scene.rotateCameraY(180);
 			scene.markAsFinished();
 		}
 
@@ -127,6 +133,36 @@ public abstract class DebugScenes extends PonderStoryBoard {
 		@Override
 		protected String getTitle() {
 			return "Showing Fluids";
+		}
+
+	}
+
+	static class OffScreenScene extends DebugScenes {
+
+		public OffScreenScene(int index) {
+			super(index);
+		}
+
+		@Override
+		public void program(SceneBuilder scene, SceneBuildingUtil util) {
+			scene.configureBasePlate(1, 0, 6);
+			scene.showBasePlate();
+			Select out1 = Select.fromTo(7, 0, 0, 8, 0, 5);
+			Select out2 = Select.fromTo(0, 0, 0, 0, 0, 5);
+			scene.idle(10);
+			scene.showSection(Select.compound(util.layersFrom(1), out1, out2), Direction.DOWN);
+			scene.idle(10);
+
+			scene.showSelectionWithText(PonderPalette.BLACK, out1, "outofbounds",
+				"Blocks outside of the base plate do not affect scaling", 100);
+			scene.showSelectionWithText(PonderPalette.BLACK, out2, "thanks_to_configureBasePlate",
+				"configureBasePlate() makes sure of that.", 100);
+			scene.markAsFinished();
+		}
+
+		@Override
+		protected String getTitle() {
+			return "Out of bounds / configureBasePlate";
 		}
 
 	}
@@ -165,34 +201,94 @@ public abstract class DebugScenes extends PonderStoryBoard {
 
 	}
 
-	static class OffScreenScene extends DebugScenes {
+	static class ControlsScene extends DebugScenes {
 
-		public OffScreenScene(int index) {
+		public ControlsScene(int index) {
 			super(index);
 		}
 
 		@Override
 		public void program(SceneBuilder scene, SceneBuildingUtil util) {
-			scene.configureBasePlate(1, 0, 6);
 			scene.showBasePlate();
-			Select out1 = Select.fromTo(7, 0, 0, 8, 0, 5);
-			Select out2 = Select.fromTo(0, 0, 0, 0, 0, 5);
 			scene.idle(10);
-			scene.showSection(Select.compound(util.layersFrom(1), out1, out2), Direction.DOWN);
+			scene.showSection(util.layer(1), Direction.DOWN);
+			scene.idle(4);
+			scene.showSection(util.layer(2), Direction.DOWN);
+			scene.idle(4);
+			scene.showSection(util.layer(3), Direction.DOWN);
 			scene.idle(10);
 
-			scene.showSelectionWithText(PonderPalette.BLACK, out1, "outofbounds",
-				"Blocks outside of the base plate do not affect scaling", 100);
-			scene.showSelectionWithText(PonderPalette.BLACK, out2, "thanks_to_configureBasePlate",
-				"configureBasePlate() makes sure of that.", 100);
-			scene.markAsFinished();
+			scene.showControls(new InputWindowElement(util.topOf(3, 1, 1), Pointing.DOWN).rightClick()
+				.whileSneaking()
+				.withWrench(), 40);
+			scene.idle(8);
+			scene.replaceBlocks(Select.pos(3, 1, 1), AllBlocks.SHAFT.getDefaultState());
+			scene.idle(20);
+
+			scene.showControls(new InputWindowElement(new Vec3d(1, 4.5, 3.5), Pointing.LEFT).rightClick()
+				.withItem(new ItemStack(Blocks.POLISHED_ANDESITE)), 20);
+			scene.idle(4);
+			scene.showSection(util.layer(4), Direction.DOWN);
+			scene.idle(8);
+
+			scene.showControls(new InputWindowElement(new Vec3d(2.5, 1.5, 3), Pointing.UP).whileCTRL()
+				.scroll()
+				.withWrench(), 40);
 		}
 
 		@Override
 		protected String getTitle() {
-			return "Out of bounds / configureBasePlate";
+			return "Basic player interaction";
 		}
 
 	}
 
+	static class BirbScene extends DebugScenes {
+
+		public BirbScene(int index) {
+			super(index);
+		}
+
+		@Override
+		public void program(SceneBuilder scene, SceneBuildingUtil util) {
+			scene.showBasePlate();
+			scene.idle(10);
+			scene.showSection(util.layersFrom(1), Direction.DOWN);
+			scene.idle(10);
+			BlockPos pos = new BlockPos(1, 2, 3);
+			scene.birbOnSpinnyShaft(pos);
+			scene.showTargetedText(PonderPalette.GREEN, util.topOf(1, 2, 3), "birbs_interesting",
+				"More birbs = More interesting", 100);
+			scene.idle(10);
+			scene.birbPartying(util.topOf(0, 1, 2));
+			scene.idle(10);
+
+			scene.movePOI(Vec3d.ZERO);
+			scene.birbLookingAtPOI(util.centerOf(3, 1, 3)
+				.add(0, 0.25f, 0));
+			scene.idle(20);
+
+			scene.replaceBlocks(Select.pos(4, 1, 0), Blocks.GOLD_BLOCK.getDefaultState());
+			scene.movePOI(util.centerOf(4, 1, 0));
+			scene.idle(20);
+
+			scene.replaceBlocks(Select.pos(0, 1, 4), Blocks.GOLD_BLOCK.getDefaultState());
+			scene.movePOI(util.centerOf(0, 1, 4));
+			scene.showTargetedText(PonderPalette.FAST, util.centerOf(0, 1, 4), "poi", "Point of Interest", 20);
+			scene.idle(20);
+
+			scene.replaceBlocks(Select.pos(4, 1, 0), Blocks.AIR.getDefaultState());
+			scene.movePOI(util.centerOf(4, 1, 0));
+			scene.idle(20);
+
+			scene.replaceBlocks(Select.pos(0, 1, 4), Blocks.AIR.getDefaultState());
+			scene.movePOI(util.centerOf(0, 1, 4));
+		}
+
+		@Override
+		protected String getTitle() {
+			return "Birbs";
+		}
+
+	}
 }

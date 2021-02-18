@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.ponder.Select;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 class ShaftAsRelay extends PonderStoryBoard {
 
@@ -26,26 +25,30 @@ class ShaftAsRelay extends PonderStoryBoard {
 
 	@Override
 	public void program(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.showBasePlate();
+		scene.configureBasePlate(0, 0, 5);
+		scene.showSection(util.layer(0), Direction.UP);
 
-		Select encased = util.column(4, 2);
-		Select gauge = util.column(0, 2);
-		Select shafts = Select.cuboid(new BlockPos(1, 1, 2), new Vec3i(2, 0, 0));
-
-		scene.idle(10);
-		scene.showSection(encased, Direction.DOWN);
-		scene.idle(10);
-		scene.showSection(gauge, Direction.DOWN);
+		Select gauge = Select.pos(0, 1, 2);
+		scene.showSection(gauge, Direction.UP);
 		scene.setKineticSpeed(gauge, 0);
 
-		scene.idle(20);
-		scene.showSection(shafts, Direction.DOWN);
-		scene.setKineticSpeed(gauge, -112);
+		scene.idle(5);
+		scene.showSection(Select.pos(5, 1, 2), Direction.DOWN);
+		scene.idle(10);
 
+		for (int i = 4; i >= 1; i--) {
+			if (i == 2)
+				scene.rotateCameraY(70);
+			scene.idle(5);
+			scene.showSection(Select.pos(i, 1, 2), Direction.DOWN);
+		}
+
+		scene.setKineticSpeed(gauge, 64);
+		scene.indicateSuccess(new BlockPos(0, 1, 2));
 		scene.idle(10);
 		scene.showTargetedText(WHITE, new Vec3d(3, 1.5, 2.5), "shaft_relay",
-			"Shafts seem to relay rotation in a straight line.", 1000);
-		
+			"Shafts will relay rotation in a straight line.", 1000);
+
 		scene.idle(20);
 		scene.markAsFinished();
 

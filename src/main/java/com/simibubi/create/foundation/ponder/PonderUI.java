@@ -7,6 +7,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
@@ -15,6 +16,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
@@ -141,43 +143,44 @@ public class PonderUI extends AbstractSimiScreen {
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
-		
+
 		ms.push();
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms);
 		story.renderScene(buffer, ms);
 		buffer.draw();
-		
+
 		// coords for debug
 		if (PonderIndex.EDITOR_MODE) {
 			MutableBoundingBox bounds = story.getBounds();
-			
+
 			RenderSystem.pushMatrix();
-			RenderSystem.multMatrix(ms.peek().getModel());
-			RenderSystem.scaled(-1/16d, -1/16d, 1/16d);
-			RenderSystem.translated(1, -8, -1/64f);
-			
+			RenderSystem.multMatrix(ms.peek()
+				.getModel());
+			RenderSystem.scaled(-1 / 16d, -1 / 16d, 1 / 16d);
+			RenderSystem.translated(1, -8, -1 / 64f);
+
 			RenderSystem.pushMatrix();
 			for (int x = 0; x <= bounds.getXSize(); x++) {
 				RenderSystem.translated(-16, 0, 0);
 				font.drawString(x == bounds.getXSize() ? "x" : "" + x, 0, 0, 0xFFFFFFFF);
 			}
 			RenderSystem.popMatrix();
-			
+
 			RenderSystem.pushMatrix();
 			RenderSystem.scaled(-1, 1, 1);
 			RenderSystem.rotatef(-90, 0, 1, 0);
-			RenderSystem.translated(-8, -2, 2/64f);
+			RenderSystem.translated(-8, -2, 2 / 64f);
 			for (int z = 0; z <= bounds.getZSize(); z++) {
 				RenderSystem.translated(16, 0, 0);
 				font.drawString(z == bounds.getZSize() ? "z" : "" + z, 0, 0, 0xFFFFFFFF);
 			}
 			RenderSystem.popMatrix();
-			
+
 			buffer.draw();
 			RenderSystem.popMatrix();
 		}
-		
+
 		ms.pop();
 	}
 
@@ -229,6 +232,7 @@ public class PonderUI extends AbstractSimiScreen {
 			right.flash();
 		else
 			right.dim();
+
 	}
 
 	protected void lowerButtonGroup(int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
@@ -320,7 +324,72 @@ public class PonderUI extends AbstractSimiScreen {
 	}
 
 	public static void renderBox(int x, int y, int w, int h, boolean highlighted) {
-		renderBox(x, y, w, h, 0xdd000000, highlighted ? 0x70ffffff : 0x30eebb00, highlighted ? 0x30ffffff : 0x10eebb00);
+		renderBox(x, y, w, h, 0xff000000, highlighted ? 0xf0ffeedd : 0x40ffeedd, highlighted ? 0x60ffeedd : 0x20ffeedd);
+	}
+
+	public static void renderSpeechBox(int x, int y, int w, int h, boolean highlighted, Pointing pointing,
+		boolean returnWithLocalTransform) {
+		if (!returnWithLocalTransform)
+			RenderSystem.pushMatrix();
+
+		int boxX = x;
+		int boxY = y;
+		int divotX = x;
+		int divotY = y;
+		int divotRotation = 0;
+		int divotSize = 8;
+		int distance = 1;
+		int divotRadius = divotSize / 2;
+
+		switch (pointing) {
+		default:
+		case DOWN:
+			divotRotation = 0;
+			boxX -= w / 2;
+			boxY -= h + divotSize + 1 + distance;
+			divotX -= divotRadius;
+			divotY -= divotSize + distance;
+			break;
+		case LEFT:
+			divotRotation = 90;
+			boxX += divotSize + 1 + distance;
+			boxY -= h / 2;
+			divotX += distance;
+			divotY -= divotRadius;
+			break;
+		case RIGHT:
+			divotRotation = 270;
+			boxX -= w + divotSize + 1 + distance;
+			boxY -= h / 2;
+			divotX -= divotSize + distance;
+			divotY -= divotRadius;
+			break;
+		case UP:
+			divotRotation = 180;
+			boxX -= w / 2;
+			boxY += divotSize + 1 + distance;
+			divotX -= divotRadius;
+			divotY += distance;
+			break;
+		}
+
+		renderBox(boxX, boxY, w, h, highlighted);
+
+		RenderSystem.pushMatrix();
+		AllGuiTextures toRender = highlighted ? AllGuiTextures.SPEECH_TOOLTIP_HIGHLIGHT : AllGuiTextures.SPEECH_TOOLTIP;
+		RenderSystem.translated(divotX + divotRadius, divotY + divotRadius, 10);
+		RenderSystem.rotatef(divotRotation, 0, 0, 1);
+		RenderSystem.translated(-divotRadius, -divotRadius, 0);
+		toRender.draw(0, 0);
+		RenderSystem.popMatrix();
+
+		if (returnWithLocalTransform) {
+			RenderSystem.translated(boxX, boxY, 0);
+			return;
+		}
+
+		RenderSystem.popMatrix();
+
 	}
 
 	public static void renderBox(int x, int y, int w, int h, int backgroundColor, int borderColorStart,

@@ -119,7 +119,7 @@ public class VecHelper {
 	}
 
 	public static Vec3d lerp(float p, Vec3d from, Vec3d to) {
-		return from.add(from.subtract(to)
+		return from.add(to.subtract(from)
 			.scale(p));
 	}
 

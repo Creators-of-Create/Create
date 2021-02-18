@@ -78,6 +78,9 @@ public enum AllGuiTextures {
 	INDICATOR_GREEN("widgets.png", 36, 18, 18, 6),
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
+	
+	SPEECH_TOOLTIP("widgets.png", 0, 24, 8, 8),
+	SPEECH_TOOLTIP_HIGHLIGHT("widgets.png", 8, 24, 8, 8),
 
 	;
 

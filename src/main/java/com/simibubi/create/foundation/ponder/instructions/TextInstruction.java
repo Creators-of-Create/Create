@@ -9,14 +9,13 @@ import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 
 import net.minecraft.util.math.Vec3d;
 
-public class TextInstruction extends TickingInstruction {
+public class TextInstruction extends FadeInOutInstruction {
 
 	private TextWindowElement element;
 	private OutlinerElement outline;
-	private static final int fadeTime = 5;
 
 	protected TextInstruction(int color, Supplier<String> text, int duration) {
-		super(false, duration + 2 * fadeTime);
+		super(duration);
 	}
 
 	public TextInstruction(int color, Supplier<String> text, int duration, Select selection) {
@@ -41,11 +40,9 @@ public class TextInstruction extends TickingInstruction {
 	}
 
 	@Override
-	protected void firstTick(PonderScene scene) {
-		super.firstTick(scene);
+	protected void show(PonderScene scene) {
 		scene.addElement(element);
 		element.setVisible(true);
-		element.setFade(0);
 		if (outline != null) {
 			scene.addElement(outline);
 			outline.setFade(1);
@@ -54,31 +51,17 @@ public class TextInstruction extends TickingInstruction {
 	}
 
 	@Override
-	public void tick(PonderScene scene) {
-		super.tick(scene);
-		int elapsed = totalTicks - remainingTicks;
-
-		if (elapsed < fadeTime) {
-			float fade = (elapsed / (float) fadeTime);
-			element.setFade(fade * fade);
-
-		} else if (remainingTicks < fadeTime) {
-			float fade = (remainingTicks / (float) fadeTime);
-			element.setFade(fade * fade);
-
-		} else
-			element.setFade(1);
-
-		if (remainingTicks == 0) {
-			element.setFade(0);
-			element.setFade(0);
-			element.setVisible(false);
-			if (outline != null) {
-				outline.setFade(0);
-				outline.setVisible(false);
-			}
+	protected void hide(PonderScene scene) {
+		element.setVisible(false);
+		if (outline != null) {
+			outline.setFade(0);
+			outline.setVisible(false);
 		}
+	}
 
+	@Override
+	protected void applyFade(PonderScene scene, float fade) {
+		element.setFade(fade);
 	}
 
 }

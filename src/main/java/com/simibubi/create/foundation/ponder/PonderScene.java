@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
+import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
@@ -21,12 +22,15 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
 import com.simibubi.create.foundation.ponder.instructions.DelayInstruction;
 import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionInstruction;
+import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
+import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ReplaceBlocksInstruction;
 import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ShowCompleteSchematicInstruction;
+import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
@@ -41,6 +45,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -360,7 +365,7 @@ public class PonderScene {
 		}
 
 		public SceneBuilder replaceBlocks(Select selection, BlockState state) {
-			return addInstruction(new ReplaceBlocksInstruction(selection, state, false));
+			return addInstruction(new ReplaceBlocksInstruction(selection, state, true));
 		}
 
 		public SceneBuilder setKineticSpeed(Select selection, float speed) {
@@ -373,17 +378,11 @@ public class PonderScene {
 
 		public SceneBuilder modifyKineticSpeed(Select selection, UnaryOperator<Float> speedFunc) {
 			addInstruction(new TileEntityDataInstruction(selection, SpeedGaugeTileEntity.class, nbt -> {
-				if (!nbt.contains("Speed"))
-					return nbt;
 				float newSpeed = speedFunc.apply(nbt.getFloat("Speed"));
-				// TODO speed gauge consistency
-				nbt.putFloat("Value", Math.abs(newSpeed) / 256f);
+				nbt.putFloat("Value", SpeedGaugeTileEntity.getDialTarget(newSpeed));
 				return nbt;
 			}, false));
-
 			return addInstruction(new TileEntityDataInstruction(selection, KineticTileEntity.class, nbt -> {
-				if (!nbt.contains("Speed"))
-					return nbt;
 				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloat("Speed")));
 				return nbt;
 			}, false));
@@ -396,17 +395,40 @@ public class PonderScene {
 			}, false));
 		}
 
-		public SceneBuilder createParrotSpinningOn(BlockPos pos, Direction fadeInDirection) {
-			return addInstruction(new CreateParrotInstruction(15, fadeInDirection,
-				ParrotElement.spinOnComponent(new Vec3d(pos).add(.5, 0, .5), pos.down())));
-		}
-
-		public SceneBuilder createParrotLookingAtPOI(Vec3d location, Direction fadeInDirection) {
-			return addInstruction(new CreateParrotInstruction(15, fadeInDirection, ParrotElement.lookAtPOI(location)));
-		}
-
 		public SceneBuilder movePOI(Vec3d location) {
 			return addInstruction(new MovePoiInstruction(location));
+		}
+
+		public SceneBuilder showControls(InputWindowElement element, int duration) {
+			return addInstruction(new ShowInputInstruction(element, duration));
+		}
+
+		public SceneBuilder emitParticles(Vec3d location, Emitter emitter, float amountPerCycle, int cycles) {
+			return addInstruction(new EmitParticlesInstruction(location, emitter, amountPerCycle, cycles));
+		}
+
+		public SceneBuilder indicateSuccess(BlockPos pos) {
+			return addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos),
+				Emitter.withinBlockSpace(new RedstoneParticleData(.5f, 1, .7f, 1), new Vec3d(0, 0, 0)), 20, 2));
+		}
+
+		public SceneBuilder birbOnTurntable(BlockPos pos) {
+			return addInstruction(new CreateParrotInstruction(10, Direction.DOWN,
+				ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos), pos)));
+		}
+
+		public SceneBuilder birbOnSpinnyShaft(BlockPos pos) {
+			return addInstruction(
+				new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos)
+					.add(0, 0.5, 0), pos)));
+		}
+
+		public SceneBuilder birbLookingAtPOI(Vec3d location) {
+			return addInstruction(new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.lookAtPOI(location)));
+		}
+
+		public SceneBuilder birbPartying(Vec3d location) {
+			return addInstruction(new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.dance(location)));
 		}
 
 		public SceneBuilder addInstruction(PonderInstruction instruction) {
@@ -418,6 +440,10 @@ public class PonderScene {
 
 			public Vec3d centerOf(int x, int y, int z) {
 				return VecHelper.getCenterOf(new BlockPos(x, y, z));
+			}
+
+			public Vec3d topOf(int x, int y, int z) {
+				return new Vec3d(x + .5, y + 1, z + .5);
 			}
 
 			public Vec3d vector(double x, double y, double z) {

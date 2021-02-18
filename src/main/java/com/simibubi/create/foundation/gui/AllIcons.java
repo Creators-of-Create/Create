@@ -70,7 +70,10 @@ public class AllIcons {
 		I_REPLACE = next(),
 		I_CLEAR = next(),
 		I_OVERLAY = next(),
-		I_FLATTEN = next();
+		I_FLATTEN = next(),
+		I_LMB = next(),
+		I_SCROLL = next(),
+		I_RMB = next();
 	
 	public static final AllIcons 
 		I_TOOL_DEPLOY = newRow(),

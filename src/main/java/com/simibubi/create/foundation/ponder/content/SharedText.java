@@ -7,8 +7,8 @@ public class SharedText {
 	public static void gatherText() {
 		// Add entries used across several ponder scenes (Safe for hotswap)
 
-		add("when_wrenched", "When Wrenched");
-		add("more_shared", "This is Shared stuff");
+		add("sneak_and", "Sneak +");
+		add("ctrl_and", "Ctrl +");
 
 	}
 	
