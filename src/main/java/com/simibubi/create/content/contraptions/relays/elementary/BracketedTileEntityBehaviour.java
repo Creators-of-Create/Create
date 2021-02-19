@@ -1,17 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.advancement.SimpleTrigger;
+import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,6 +13,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
+
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
@@ -28,10 +26,10 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	private boolean reRender;
 
 	private Predicate<BlockState> pred;
-	private Function<BlockState, SimpleTrigger> trigger;
+	private Function<BlockState, ITriggerable> trigger;
 
 	public BracketedTileEntityBehaviour(SmartTileEntity te) {
-		this(te, Predicates.alwaysTrue());
+		this(te, state -> true);
 	}
 
 	public BracketedTileEntityBehaviour(SmartTileEntity te, Predicate<BlockState> pred) {
@@ -40,7 +38,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		bracket = Optional.empty();
 	}
 	
-	public BracketedTileEntityBehaviour withTrigger(Function<BlockState, SimpleTrigger> trigger) {
+	public BracketedTileEntityBehaviour withTrigger(Function<BlockState, ITriggerable> trigger) {
 		this.trigger = trigger;
 		return this;
 	}

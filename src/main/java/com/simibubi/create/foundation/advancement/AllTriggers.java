@@ -19,6 +19,7 @@ public class AllTriggers {
 
 	public static RegistryTrigger<Block> KINETIC_BLOCK = add(new RegistryTrigger<>("kinetic_block", Block.class));
 	public static RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", Fluid.class));
+	public static RegistryTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", Block.class));
 
 	public static SimpleTrigger 
 			ROTATION = simple("rotation"), 
@@ -40,9 +41,6 @@ public class AllTriggers {
 			MECHANICAL_ARM = simple("mechanical_arm"),
 			MUSICAL_ARM = simple("musical_arm"),
 			CUCKOO = simple("cuckoo"),
-			BRACKET_SHAFT = simple("bracket_shaft"),
-			BRACKET_COG = simple("bracket_cog"),
-			BRACKET_PIPE = simple("bracket_pipe"),
 			CASING_SHAFT = simple("casing_shaft"),
 			CASING_BELT = simple("casing_belt"),
 			CASING_PIPE = simple("casing_pipe"),

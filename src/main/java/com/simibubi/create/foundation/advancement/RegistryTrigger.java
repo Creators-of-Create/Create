@@ -1,13 +1,11 @@
 package com.simibubi.create.foundation.advancement;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.common.collect.Sets;
+import com.google.gson.*;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryManager;
 
@@ -15,7 +13,11 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -27,56 +29,75 @@ public class RegistryTrigger<T extends IForgeRegistryEntry<T>> extends Criterion
 		this.registryType = registryType;
 	}
 
-	public Instance<T> forEntry(@Nullable T registryEntry) {
-		return new Instance<>(getId(), registryEntry);
+	@SafeVarargs
+	public final Instance<T> forEntries(@Nullable T... entries) {
+		return new Instance<>(getId(), entries == null ? null : Sets.newHashSet(entries));
 	}
 
 	public void trigger(ServerPlayerEntity player, T registryEntry) {
 		trigger(player, Collections.singletonList(() -> registryEntry));
 	}
 
-	@Override
-	public Instance<T> deserializeInstance(JsonObject json, JsonDeserializationContext context) {
-		T entry = null;
-		if (json.has("registry_entry")) {
-			ResourceLocation entryLocation = new ResourceLocation(JSONUtils.getString(json, "registry_entry"));
-			entry = RegistryManager.ACTIVE.getRegistry(registryType).getValue(entryLocation);
-
-			if (entry == null)
-				throw new JsonSyntaxException("Unknown registry entry '" + entryLocation + "'");
-		}
-
-		return forEntry(entry);
+	public ITriggerable constructTriggerFor(T entry) {
+		BiConsumer<ServerPlayerEntity, T> trigger = this::trigger;
+		return player -> trigger.accept(player, entry);
 	}
 
+	@Override
+	public Instance<T> deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+		if (json.has("accepted_entries")) {
+			JsonArray elements = json.getAsJsonArray("accepted_entries");
+			IForgeRegistry<T> registry = RegistryManager.ACTIVE.getRegistry(registryType);
+
+			return new Instance<>(getId(),
+				StreamSupport.stream(elements.spliterator(), false).map(JsonElement::getAsString).map(ResourceLocation::new)
+					.map(rl -> {
+						T entry = registry.getValue(rl);
+						if (entry == null)
+							throw new JsonSyntaxException("Unknown registry entry '" + rl + "'");
+						return entry;
+					}).collect(Collectors.toSet()));
+		}
+
+		return forEntries((T) null);
+	}
 
 	public static class Instance<T extends IForgeRegistryEntry<T>> extends CriterionTriggerBase.Instance {
 
 		@Nullable
-		private final T entry;
+		private final Set<T> entries;
 
-		public Instance(ResourceLocation id, @Nullable T registryEntry) {
+		public Instance(ResourceLocation id, @Nullable Set<T> registryEntries) {
 			super(id);
-			entry = registryEntry;
+			entries = registryEntries;
 		}
 
 		@Override
 		protected boolean test(@Nullable List<Supplier<Object>> suppliers) {
-			if (entry == null || suppliers == null || suppliers.isEmpty())
+			if (entries == null || suppliers == null || suppliers.isEmpty())
 				return false;
-			return entry.equals(suppliers.get(0).get());
+			return entries.contains(suppliers.get(0).get());
 		}
 
 		@Override
 		public JsonElement serialize() {
 			JsonObject jsonobject = new JsonObject();
-			if (entry == null)
-				return jsonobject;
+			JsonArray elements = new JsonArray();
 
-			ResourceLocation key = RegistryManager.ACTIVE.getRegistry(entry.getRegistryType()).getKey(entry);
-			if (key != null) {
-				jsonobject.addProperty("registry_entry", key.toString());
+			if (entries == null) {
+				jsonobject.add("accepted_entries", elements);
+				return jsonobject;
 			}
+
+			for (T entry : entries) {
+				if (entry == null)
+					continue;
+				ResourceLocation key = RegistryManager.ACTIVE.getRegistry(entry.getRegistryType()).getKey(entry);
+				if (key != null)
+					elements.add(key.toString());
+			}
+
+			jsonobject.add("accepted_entries", elements);
 			return jsonobject;
 		}
 	}

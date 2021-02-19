@@ -64,9 +64,9 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement aesthetics =
 			advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL).withParent(andesite_alloy)
-				.withCriterion("0", AllTriggers.BRACKET_SHAFT.instance())
-				.withCriterion("1", AllTriggers.BRACKET_COG.instance())
-				.withCriterion("2", AllTriggers.BRACKET_PIPE.instance())
+				.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
+				.withCriterion("1", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
+				.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
 				.register(t, id + ":aesthetics");
 
 		Advancement reinforced =
@@ -497,11 +497,11 @@ public class AllAdvancements implements IDataProvider {
 	}
 
 	public RegistryTrigger.Instance<Block> isPowered(Block block) {
-		return AllTriggers.KINETIC_BLOCK.forEntry(block);
+		return AllTriggers.KINETIC_BLOCK.forEntries(block);
 	}
 
 	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {
-		return AllTriggers.INFINITE_FLUID.forEntry(fluid.getStillFluid());
+		return AllTriggers.INFINITE_FLUID.forEntries(fluid.getStillFluid());
 	}
 
 	public InventoryChangeTrigger.Instance itemGathered(IItemProvider itemprovider) {
