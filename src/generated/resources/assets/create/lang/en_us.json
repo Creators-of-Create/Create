@@ -1824,6 +1824,8 @@
 	"create.ponder.brass_hand.scene_4.incoming": "Incoming...",
 	"create.ponder.brass_hand.scene_4.title": "Debug Scene 5: Emitting particles",
 	"create.ponder.brass_hand.scene_5.title": "Debug Scene 6: Basic player interaction",
+	"create.ponder.brass_hand.scene_6.birbs_interesting": "More birbs = More interesting",
+	"create.ponder.brass_hand.scene_6.poi": "Point of Interest",
 	"create.ponder.brass_hand.scene_6.title": "Debug Scene 7: Birbs",
 
 	"_": "Thank you for translating Create!"

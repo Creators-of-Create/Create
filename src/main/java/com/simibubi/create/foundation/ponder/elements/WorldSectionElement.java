@@ -13,10 +13,10 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Select;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache;
-import com.simibubi.create.foundation.utility.SuperByteBufferCache.Compartment;
-import com.simibubi.create.foundation.utility.TileEntityRenderHelper;
+import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
