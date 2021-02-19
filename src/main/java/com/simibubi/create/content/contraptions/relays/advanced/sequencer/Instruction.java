@@ -41,6 +41,9 @@ public class Instruction {
 		case WAIT:
 			return (int) ((1 - initialProgress) * value + 1);
 
+		case PAUSED:
+			return -1;
+
 		case END:
 		default:
 			break;
@@ -58,11 +61,21 @@ public class Instruction {
 
 		case END:
 		case WAIT:
+		case PAUSED:
 		default:
 			break;
 
 		}
 		return 0;
+	}
+
+	OnIsPoweredResult onIsPowered() {
+		switch (instruction)
+		{
+			case PAUSED:
+				return OnIsPoweredResult.CONTINUE;
+		}
+		return OnIsPoweredResult.NOTHING;
 	}
 
 	public static ListNBT serializeAll(Vector<Instruction> instructions) {
