@@ -31,7 +31,6 @@ public class AllTriggers {
 			LAVA_WHEEL = simple("lava_wheel"), 
 			CHOCOLATE_WHEEL = simple("chocolate_wheel"), 
 			DEPLOYER_BOOP = simple("deployer"),
-			ABSORBED_LIGHT = simple("light_absorbed"), 
 			SPEED_READ = simple("speed_read"), 
 			BASIN_THROW = simple("basin"),
 			PRESS_COMPACT = simple("compact"),
