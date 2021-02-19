@@ -37,6 +37,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		LazyOptional<IFluidHandler> oldcap = capability;
 		capability = createEmptyHandler();
 		oldcap.invalidate();
+		super.stopTransferring();
 	}
 
 	private LazyOptional<IFluidHandler> createEmptyHandler() {
@@ -90,7 +91,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 		@Override
 		public FluidStack drain(FluidStack resource, FluidAction action) {
-			if (!isConnected())
+			if (!canTransfer())
 				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(resource, action);
 			if (!drain.isEmpty() && action.execute())
@@ -100,7 +101,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 		@Override
 		public FluidStack drain(int maxDrain, FluidAction action) {
-			if (!isConnected())
+			if (!canTransfer())
 				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(maxDrain, action);
 			if (!drain.isEmpty() && (action.execute() || drain.getAmount() == 1))
