@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 62",
+	"_": "Missing Localizations: 70",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -846,13 +846,19 @@
 	"create.gui.stockpile_switch.move_to_upper_at": "최소 신호 유지 비율:%1$s%%",
 	"create.gui.sequenced_gearshift.title": "순서 기어쉬프트",
 	"create.gui.sequenced_gearshift.instruction": "설명",
+	"create.gui.sequenced_gearshift.instruction.turn_angle.descriptive": "UNLOCALIZED: Turn by angle",
 	"create.gui.sequenced_gearshift.instruction.turn_angle": "회전",
 	"create.gui.sequenced_gearshift.instruction.turn_angle.angle": "각도",
+	"create.gui.sequenced_gearshift.instruction.turn_distance.descriptive": "UNLOCALIZED: Turn to move Piston/Pulley/Gantry",
 	"create.gui.sequenced_gearshift.instruction.turn_distance": "피스톤",
 	"create.gui.sequenced_gearshift.instruction.turn_distance.distance": "거리",
-	"create.gui.sequenced_gearshift.instruction.wait": "정지",
-	"create.gui.sequenced_gearshift.instruction.wait.duration": "지속시간",
+	"create.gui.sequenced_gearshift.instruction.delay.descriptive": "UNLOCALIZED: Timed Delay",
+	"create.gui.sequenced_gearshift.instruction.delay": "UNLOCALIZED: Delay",
+	"create.gui.sequenced_gearshift.instruction.delay.duration": "UNLOCALIZED: Duration",
+	"create.gui.sequenced_gearshift.instruction.end.descriptive": "UNLOCALIZED: End",
 	"create.gui.sequenced_gearshift.instruction.end": "마침",
+	"create.gui.sequenced_gearshift.instruction.await.descriptive": "UNLOCALIZED: Await new Redstone Pulse",
+	"create.gui.sequenced_gearshift.instruction.await": "UNLOCALIZED: Await",
 	"create.gui.sequenced_gearshift.speed": "속도, 방향",
 	"create.gui.sequenced_gearshift.speed.forward": "입력된 속도, 그대로 회전",
 	"create.gui.sequenced_gearshift.speed.forward_fast": "입력된 속도의 2배, 그대로 회전",

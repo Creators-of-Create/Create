@@ -187,7 +187,6 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		}
 
 		double xMotion = ((pos.getX() + .5f) - processingEntity.getX()) / 2f;
-		double yMotion = ((pos.getY() + .5f) - processingEntity.getY()) / 2f;
 		double zMotion = ((pos.getZ() + .5f) - processingEntity.getZ()) / 2f;
 		if (processingEntity.isSneaking())
 			xMotion = zMotion = 0;

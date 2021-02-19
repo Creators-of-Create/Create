@@ -8,8 +8,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllFluids;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;

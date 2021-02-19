@@ -515,7 +515,7 @@
 	"create.tooltip.holdKey": "Halte [%1$s]",
 	"create.tooltip.holdKeyOrKey": "Halte [%1$s] oder [%2$s]",
 	"create.tooltip.keyShift": "Shift",
-	"create.tooltip.keyCtrl": "Strg"
+	"create.tooltip.keyCtrl": "Strg",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

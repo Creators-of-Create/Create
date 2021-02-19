@@ -15,6 +15,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	int currentInstruction;
 	int currentInstructionDuration;
 	int timer;
+	boolean poweredPreviously;
 
 	public SequencedGearshiftTileEntity(TileEntityType<? extends SequencedGearshiftTileEntity> type) {
 		super(type);
@@ -22,6 +23,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		currentInstruction = -1;
 		currentInstructionDuration = -1;
 		timer = 0;
+		poweredPreviously = false;
 	}
 
 	@Override
@@ -65,10 +67,14 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		return currentInstruction == -1;
 	}
 
-	public void onRedstoneUpdate() {
+	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
+		if (!poweredPreviously && isPowered)
+			risingFlank();
+		poweredPreviously = isPowered;
 		if (!isIdle())
 			return;
-
+		if (isPowered == isRunning)
+			return;
 		if (!world.isBlockPowered(pos)) {
 			world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
 			return;
@@ -78,16 +84,20 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		run(0);
 	}
 
-	public void onIsPowered() {
-
+	public void risingFlank() {
 		Instruction instruction = getInstruction(currentInstruction);
 		if (instruction == null)
 			return;
+		if (poweredPreviously)
+			return;
+		poweredPreviously = true;
 
-		switch (instruction.onIsPowered())
-		{
-			case CONTINUE:
-				run(currentInstruction + 1);
+		switch (instruction.onRedstonePulse()) {
+		case CONTINUE:
+			run(currentInstruction + 1);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -115,7 +125,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 	public Instruction getInstruction(int instructionIndex) {
 		return instructionIndex >= 0 && instructionIndex < instructions.size() ? instructions.get(instructionIndex)
-				: null;
+			: null;
 	}
 
 	@Override
@@ -123,6 +133,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		compound.putInt("InstructionIndex", currentInstruction);
 		compound.putInt("InstructionDuration", currentInstructionDuration);
 		compound.putInt("Timer", timer);
+		compound.putBoolean("PrevPowered", poweredPreviously);
 		compound.put("Instructions", Instruction.serializeAll(instructions));
 		super.write(compound, clientPacket);
 	}
@@ -131,6 +142,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		currentInstruction = compound.getInt("InstructionIndex");
 		currentInstructionDuration = compound.getInt("InstructionDuration");
+		poweredPreviously = compound.getBoolean("PrevPowered");
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));
 		super.read(compound, clientPacket);
@@ -144,7 +156,9 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	public int getModifier() {
 		if (currentInstruction >= instructions.size())
 			return 0;
-		return isIdle() ? 0 : instructions.get(currentInstruction).getSpeedModifier();
+		return isIdle() ? 0
+			: instructions.get(currentInstruction)
+				.getSpeedModifier();
 	}
 
 }

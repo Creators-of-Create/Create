@@ -51,10 +51,10 @@ public enum AllGuiTextures {
 
 	SEQUENCER("sequencer.png", 173, 159),
 	SEQUENCER_INSTRUCTION("sequencer.png", 0, 14, 162, 22),
-	SEQUENCER_WAIT("sequencer.png", 0, 58, 162, 22),
+	SEQUENCER_DELAY("sequencer.png", 0, 58, 162, 22),
 	SEQUENCER_END("sequencer.png", 0, 80, 162, 22),
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
-	SEQUENCER_PAUSED("sequencer.png", 0, 160, 162, 22),
+	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
