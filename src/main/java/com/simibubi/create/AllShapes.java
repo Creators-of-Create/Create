@@ -107,7 +107,10 @@ public class AllShapes {
 			.forHorizontal(Direction.SOUTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
-			.forDirectional(Direction.UP)
+			.forDirectional(Direction.UP),
+		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16)
+			.forDirectional(Direction.DOWN)
+
 
 	;
 
@@ -145,7 +148,8 @@ public class AllShapes {
 		HEATER_BLOCK_SHAPE = shape(2, 0, 2, 14, 14, 14).add(0, 0, 0, 16, 4, 16)
 			.build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
-		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 22, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
+		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16),
+		SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
