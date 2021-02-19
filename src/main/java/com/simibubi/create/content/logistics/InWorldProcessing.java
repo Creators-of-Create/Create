@@ -58,7 +58,7 @@ public class InWorldProcessing {
 	public static SplashingInv splashingInv = new SplashingInv();
 
 	public enum Type {
-		SMOKING, BLASTING, SPLASHING
+		SMOKING, BLASTING, SPLASHING, NONE
 
 		;
 
@@ -74,7 +74,7 @@ public class InWorldProcessing {
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 				return Type.BLASTING;
-			return null;
+			return Type.NONE;
 		}
 	}
 

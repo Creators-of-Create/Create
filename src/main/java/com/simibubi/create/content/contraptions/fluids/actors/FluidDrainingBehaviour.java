@@ -132,16 +132,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getPos(), 8);
 
 			if (infinite) {
-				Fluid stillFluid = FluidHelper.convertToStill(fluid);
-				AllTriggers.getPlayersInRange(world, tileEntity.getPos(), 8)
-					.forEach(p -> AllTriggers.INFINITE_FLUID.trigger(p, FluidHelper.convertToStill(stillFluid)));
-				/*
-				if (FluidHelper.isLava(fluid))
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_LAVA, world, tileEntity.getPos(), 8);
-				if (FluidHelper.isWater(fluid))
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_WATER, world, tileEntity.getPos(), 8);
-				if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get()))
-					AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_CHOCOLATE, world, tileEntity.getPos(), 8);*/
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.INFINITE_FLUID.constructTriggerFor(FluidHelper.convertToStill(fluid)), world, tileEntity.getPos(), 8);
 				return true;
 			}
 

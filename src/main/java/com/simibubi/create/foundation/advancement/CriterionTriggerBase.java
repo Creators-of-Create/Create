@@ -77,7 +77,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		}
 	}
 
-	protected abstract static class Instance extends CriterionInstance {
+	public abstract static class Instance extends CriterionInstance {
 
 		public Instance(ResourceLocation idIn) {
 			super(idIn);

@@ -23,12 +23,6 @@
       }
     },
     "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "registry_entry": "create:mechanical_mixer"
-      }
-    },
-    "2": {
       "trigger": "create:mixer"
     }
   },
@@ -38,9 +32,6 @@
     ],
     [
       "1"
-    ],
-    [
-      "2"
     ]
   ]
 }
