@@ -226,7 +226,7 @@
 	"block.create.magenta_valve_handle": "Asa de válvula magenta",
 	"block.create.mechanical_arm": "Brazo mecánico",
 	"block.create.mechanical_bearing": "Rodamiento mecánico",
-	"block.create.mechanical_crafter": "Mecanizador",
+	"block.create.mechanical_crafter": "Autoensamblador mecánico",
 	"block.create.mechanical_drill": "Taladro mecánico",
 	"block.create.mechanical_harvester": "Cosechadora mecánica",
 	"block.create.mechanical_mixer": "Mezcladora mecánica",
@@ -433,7 +433,7 @@
 	"item.create.copper_ingot": "Lingote de cobre",
 	"item.create.copper_nugget": "Pepita de cobre",
 	"item.create.copper_sheet": "Lámina de cobre",
-	"item.create.crafter_slot_cover": "Tapa de ranura del Mecanizador",
+	"item.create.crafter_slot_cover": "Tapa de ranura del Autoensamblador mecánico",
 	"item.create.crushed_aluminum_ore": "Mineral de aluminio molido",
 	"item.create.crushed_brass": "Latón molido",
 	"item.create.crushed_copper_ore": "Mineral de cobre molido",
@@ -598,7 +598,7 @@
 	"advancement.create.infinite_chocolate": "Ahogándose en la imaginación",
 	"advancement.create.infinite_chocolate.desc": "Bombea desde una masa de chocolate fundido lo suficientemente grande como para ser considerado infinito.",
 	"advancement.create.crafter": "Montaje automatizado",
-	"advancement.create.crafter.desc": "Coloca y alimenta algunos mecanizadores.",
+	"advancement.create.crafter.desc": "Coloca y alimenta algunos autoensambladores.",
 	"advancement.create.clockwork_bearing": "Artilugio a la hora",
 	"advancement.create.clockwork_bearing.desc": "Ensamblar una estructura montada sobre un rodamiento de relojería.",
 	"advancement.create.nixie_tube": "Signos de estilo",
@@ -1295,7 +1295,7 @@
 	"block.create.mechanical_arm.tooltip": "BRAZO MECÁNICO",
 	"block.create.mechanical_arm.tooltip.summary": "Artilugio avanzado para reubicar _elementos_",
 	"block.create.mechanical_arm.tooltip.condition1": "Transferencia de elementos",
-	"block.create.mechanical_arm.tooltip.behaviour1": "Puede tomar o colocar objetos en cualquier _inventario_ accesible_, como _Correas_, _Depósitos_, _Embudos_ y _Mecanizadores_",
+	"block.create.mechanical_arm.tooltip.behaviour1": "Puede tomar o colocar objetos en cualquier _inventario_ accesible_, como _Correas_, _Depósitos_, _Embudos_ y _Autoensambladores_",
 	"block.create.mechanical_arm.tooltip.control1": "Mientras está en la mano",
 	"block.create.mechanical_arm.tooltip.action1": "Haz clic con el botón derecho en un _objeto accesible del inventario_ para establecerlo como _fuente_ para el _brazo mecánico_. Haz clic con el botón derecho del ratón dos veces para establecerlo como _destino_",
 	"block.create.mechanical_arm.tooltip.control2": "Usa la rueda del ratón con la Llave Inglesa",
@@ -1518,16 +1518,16 @@
 	"block.create.mechanical_mixer.tooltip.condition1": "Cuando está por encima de la Cuenca",
 	"block.create.mechanical_mixer.tooltip.behaviour1": "Comienza a mezclar los elementos en la cuenca siempre que estén presentes todos los ingredientes necesarios. Para evitar recetas no deseadas, utilice la ranura del filtro de la cuenca o reduzca la fuerza de rotación hasta que se hayan añadido todos los ingredientes deseados",
 
-	"block.create.mechanical_crafter.tooltip": "MECANIZADOR",
-	"block.create.mechanical_crafter.tooltip.summary": "Un ensamblador cinético para _automatizar_ cualquier receta de _crafteo_ con forma. Coloca _múltiples en una cuadrícula_ correspondiente a tu receta, y _organiza sus correas_ para crear un _flujo_ que salga de la cuadrícula en uno de los Mecanizadores",
+	"block.create.mechanical_crafter.tooltip": "AUTOENSAMBLADOR MECÁNICO",
+	"block.create.mechanical_crafter.tooltip.summary": "Un ensamblador cinético para _automatizar_ cualquier receta de _crafteo_ con forma. Coloca _múltiples en una cuadrícula_ correspondiente a tu receta, y _organiza sus correas_ para crear un _flujo_ que salga de la cuadrícula en uno de los Autoensambladores",
 	"block.create.mechanical_crafter.tooltip.condition1": "Cuando es impulsado por la cinética",
 	"block.create.mechanical_crafter.tooltip.behaviour1": "_Empieza el proceso de creación_ en cuanto _todos los crafters_ de la parrilla hayan recibido un objeto_",
 	"block.create.mechanical_crafter.tooltip.condition2": "Con pulso de Redstone",
 	"block.create.mechanical_crafter.tooltip.behaviour2": "_Fuerza_ el inicio del proceso de _creación_ con todos los _artículos_ dados actualmente en la parrilla",
 	"block.create.mechanical_crafter.tooltip.control1": "Cuando se arranca por delante",
-	"block.create.mechanical_crafter.tooltip.action1": "_Circula la dirección_ hacia la que un mecanizador individual _mueve sus objetos_. Para formar una cuadrícula de trabajo, _organiza las correas en un flujo_ que mueva todos los objetos hacia un mecanizador final.  El mecanizador final debe _apuntar hacia fuera_ de la rejilla",
+	"block.create.mechanical_crafter.tooltip.action1": "_Circula la dirección_ hacia la que un autoensamblador individual _mueve sus objetos_. Para formar una cuadrícula de trabajo, _organiza las correas en un flujo_ que mueva todos los objetos hacia un autoensamblador final.  El autoensamblador final debe _apuntar hacia fuera_ de la rejilla",
 	"block.create.mechanical_crafter.tooltip.control2": "Cuando se arranca hacia atrás",
-	"block.create.mechanical_crafter.tooltip.action2": "Conecta_ el _inventario de entrada_ de los mecanizadores adyacentes. Usa esto para _combinar ranuras_ en la cuadrícula de trabajo y _guardar el la entrada de trabajo_",
+	"block.create.mechanical_crafter.tooltip.action2": "Conecta_ el _inventario de entrada_ de los autoensambladores adyacentes. Usa esto para _combinar ranuras_ en la cuadrícula de trabajo y _guardar el la entrada de trabajo_",
 
 	"block.create.furnace_engine.tooltip": "MOTOR DEL HORNO",
 	"block.create.furnace_engine.tooltip.summary": "Una poderosa fuente de _fuerza de rotación/torque_ que requiere un _horno en funcionamiento_ para funcionar",
@@ -1777,8 +1777,8 @@
 	"item.create.minecart_coupling.tooltip.condition1": "Cuando se utiliza en Vagonetas",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Acopla_ dos Vagonetas, intentando mantenerlas a una _distancia constante_ mientras se mueven",
 
-	"item.create.crafter_slot_cover.tooltip": "TAPA DE RANURA DEL MECANIZADOR",
-	"item.create.crafter_slot_cover.tooltip.summary": "Se utiliza para marcar a un _Mecanizador_ una ranura vacía en una receta. Los mecanizadores no tienen que formar necesariamente una cuadrícula completa. Esto es útil cuando hay recetas en las que los _ingredientes están en diagonal_ entre sí",
+	"item.create.crafter_slot_cover.tooltip": "TAPA DE RANURA DEL AUTOENSAMBLADOR",
+	"item.create.crafter_slot_cover.tooltip.summary": "Se utiliza para marcar a un _Autoensamblador_ una ranura vacía en una receta. Los autoensambladores no tienen que formar necesariamente una cuadrícula completa. Esto es útil cuando hay recetas en las que los _ingredientes están en diagonal_ entre sí",
 
 	"create.tooltip.wip": "WIP",
 	"create.tooltip.workInProgress": "¡Trabajo en curso!",
@@ -1795,3 +1795,4 @@
 	"_": "Gracias por traducir Create!"
 
 }
+
