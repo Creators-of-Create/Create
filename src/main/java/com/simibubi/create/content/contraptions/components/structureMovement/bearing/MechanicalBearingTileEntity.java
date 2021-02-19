@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -12,6 +16,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -19,10 +24,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.List;
-
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
@@ -296,6 +297,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			.isReplaceable())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
+		return true;
+	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
 		return true;
 	}
 }

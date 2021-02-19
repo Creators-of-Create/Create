@@ -23,8 +23,8 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public boolean hasSpecialMovementRenderer() {
-		return false;
+	public boolean renderAsNormalTileEntity() {
+		return true;
 	}
 
 	@Override

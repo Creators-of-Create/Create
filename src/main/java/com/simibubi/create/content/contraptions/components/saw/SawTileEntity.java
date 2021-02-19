@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Predicate;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -45,21 +46,30 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.LazyValue;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private static final Object cuttingRecipesKey = new Object();
+	public static final LazyValue<IRecipeType<?>> woodcuttingRecipeType = new LazyValue<>(() -> Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation("druidcraft", "woodcutting")));
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
-	private LazyOptional<IItemHandler> invProvider = LazyOptional.empty();
+	private final LazyOptional<IItemHandler> invProvider;
 	private FilteringBehaviour filtering;
 
 	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
@@ -251,7 +261,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			List<ItemStack> results = new LinkedList<ItemStack>();
 			if (recipe instanceof CuttingRecipe)
 				results = ((CuttingRecipe) recipe).rollResults();
-			else if (recipe instanceof StonecuttingRecipe)
+			else if (recipe instanceof StonecuttingRecipe || recipe.getType() == woodcuttingRecipeType.getValue())
 				results.add(recipe.getRecipeOutput()
 					.copy());
 
@@ -266,10 +276,20 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	private List<? extends IRecipe<?>> getRecipes() {
+		/*
 		Predicate<IRecipe<?>> types = AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get()
 			? RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType())
 			: RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
-		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world, types);
+
+		 */
+
+		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(
+			AllRecipeTypes.CUTTING.getType(),
+			AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ? IRecipeType.STONECUTTING : null,
+			AllConfigs.SERVER.recipes.allowWoodcuttingOnSaw.get() ?  woodcuttingRecipeType.getValue() : null
+			);
+
+			List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world, types);
 		return startedSearch.stream()
 			.filter(RecipeConditions.outputMatchesFilter(filtering))
 			.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))
@@ -391,6 +411,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (block instanceof ChorusPlantBlock)
 			return true;
 		return false;
+	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
 	}
 
 }

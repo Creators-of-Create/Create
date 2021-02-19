@@ -24,8 +24,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		super.render(stack, model, renderer, ms, buffer, light, overlay);
 
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float pt = AnimationTickHolder.getPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTick() / 20;
 
 		renderer.renderSolid(model.getBakedModel(), light);

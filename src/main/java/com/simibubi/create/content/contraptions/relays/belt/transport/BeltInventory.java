@@ -151,6 +151,10 @@ public class BeltInventory {
 			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
 				continue;
 
+			// Horizontal Crushing Wheels
+			if (BeltCrusherInteractionHandler.checkForCrushers(this, currentItem, nextOffset))
+				continue;
+
 			// Apply Movement
 			currentItem.beltPosition += limitedMovement;
 			currentItem.sideOffset +=
@@ -286,9 +290,7 @@ public class BeltInventory {
 	}
 
 	private Ending resolveEnding() {
-		int lastOffset = beltMovementPositive ? belt.beltLength - 1 : 0;
 		World world = belt.getWorld();
-		BlockPos lastPosition = BeltHelper.getPositionForOffset(belt, lastOffset);
 		BlockPos nextPosition = BeltHelper.getPositionForOffset(belt, beltMovementPositive ? belt.beltLength : -1);
 
 //		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))

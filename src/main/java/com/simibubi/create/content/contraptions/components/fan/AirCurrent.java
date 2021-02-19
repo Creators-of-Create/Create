@@ -114,9 +114,10 @@ public class AirCurrent {
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
-			if (processingType == null) {
-				if (entity instanceof ServerPlayerEntity)
-					AllTriggers.triggerFor(AllTriggers.FAN, (PlayerEntity) entity);
+			if (entity instanceof ServerPlayerEntity)
+				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (PlayerEntity) entity);
+
+			if (processingType == null || processingType == Type.NONE) {
 				continue;
 			}
 
@@ -139,24 +140,18 @@ public class AirCurrent {
 					entity.setFire(10);
 					entity.attackEntityFrom(damageSourceLava, 4);
 				}
-				if (entity instanceof ServerPlayerEntity)
-					AllTriggers.triggerFor(AllTriggers.FAN_LAVA, (PlayerEntity) entity);
 				break;
 			case SMOKING:
 				if (!entity.isImmuneToFire()) {
 					entity.setFire(2);
 					entity.attackEntityFrom(damageSourceFire, 2);
 				}
-				if (entity instanceof ServerPlayerEntity)
-					AllTriggers.triggerFor(AllTriggers.FAN_SMOKE, (PlayerEntity) entity);
 				break;
 			case SPLASHING:
 				if (entity instanceof EndermanEntity || entity.getType() == EntityType.SNOW_GOLEM
 					|| entity.getType() == EntityType.BLAZE) {
 					entity.attackEntityFrom(DamageSource.DROWN, 2);
 				}
-				if (entity instanceof ServerPlayerEntity)
-					AllTriggers.triggerFor(AllTriggers.FAN_WATER, (PlayerEntity) entity);
 				if (!entity.isBurning())
 					break;
 				entity.extinguish();
@@ -193,7 +188,7 @@ public class AirCurrent {
 		AirCurrentSegment currentSegment = new AirCurrentSegment();
 		segments.clear();
 		currentSegment.startOffset = 0;
-		InWorldProcessing.Type type = null;
+		InWorldProcessing.Type type = Type.NONE;
 
 		int limit = (int) (maxDistance + .5f);
 		int searchStart = pushing ? 0 : limit;
@@ -203,7 +198,7 @@ public class AirCurrent {
 		for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
 			BlockPos currentPos = start.offset(direction, i);
 			InWorldProcessing.Type newType = InWorldProcessing.Type.byBlock(world, currentPos);
-			if (newType != null)
+			if (newType != Type.NONE)
 				type = newType;
 			if (currentSegment.type != type || currentSegment.startOffset == 0) {
 				currentSegment.endOffset = i;
@@ -341,7 +336,7 @@ public class AirCurrent {
 				continue;
 			return airCurrentSegment.type;
 		}
-		return null;
+		return InWorldProcessing.Type.NONE;
 	}
 
 	public static class AirCurrentSegment {

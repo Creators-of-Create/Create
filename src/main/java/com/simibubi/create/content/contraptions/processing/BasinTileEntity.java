@@ -571,7 +571,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		Vec3d pointer = new Vec3d(1, 0, 0).scale(1 / 16f);
 		float interval = 360f / segments;
 		Vec3d centerOf = VecHelper.getCenterOf(pos);
-		float intervalOffset = (AnimationTickHolder.ticks * 18) % 360;
+		float intervalOffset = (AnimationTickHolder.getTicks() * 18) % 360;
 
 		int currentSegment = 0;
 		for (SmartFluidTankBehaviour behaviour : getTanks()) {

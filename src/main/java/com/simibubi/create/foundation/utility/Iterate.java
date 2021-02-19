@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.BlockPos;
 
 public class Iterate {
 

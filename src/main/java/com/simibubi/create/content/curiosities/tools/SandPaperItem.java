@@ -77,6 +77,8 @@ public class SandPaperItem extends Item {
 		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).grow(1f);
 		ItemEntity pickUp = null;
 		for (ItemEntity itemEntity : worldIn.getEntitiesWithinAABB(ItemEntity.class, bb)) {
+			if (!itemEntity.isAlive())
+				continue;
 			if (itemEntity.getPositionVec()
 				.distanceTo(playerIn.getPositionVec()) > 3)
 				continue;

@@ -109,7 +109,7 @@ public class BlockzapperItem extends ZapperItem {
 				continue;
 			if (!selectedState.isValidPosition(world, placed))
 				continue;
-			if (!player.isCreative() && !canBreak(stack, world.getBlockState(placed), world, placed))
+			if (!player.isCreative() && !canBreak(stack, world.getBlockState(placed), world, placed,player))
 				continue;
 			if (!player.isCreative() && BlockHelper.findAndRemoveInInventory(selectedState, player, 1) == 0) {
 				player.getCooldownTracker()
@@ -278,10 +278,13 @@ public class BlockzapperItem extends ZapperItem {
 		return list;
 	}
 
-	public static boolean canBreak(ItemStack stack, BlockState state, World world, BlockPos pos) {
+	public static boolean canBreak(ItemStack stack, BlockState state, World world, BlockPos pos,PlayerEntity player) {
 		ComponentTier tier = getTier(Components.Body, stack);
 		float blockHardness = state.getBlockHardness(world, pos);
-
+		//If we can't change the block (e.g chunk protection)
+		if (!isAllowedToPlace(world,pos,player)){
+			return false;
+		}
 		if (blockHardness == -1)
 			return false;
 		if (tier == ComponentTier.None)
@@ -292,6 +295,14 @@ public class BlockzapperItem extends ZapperItem {
 			return true;
 
 		return false;
+	}
+
+	public static boolean isAllowedToPlace(World world, BlockPos pos,PlayerEntity player){
+		BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, pos);
+		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
+			return false;
+		}
+		return true;
 	}
 
 	public static int getMaxAoe(ItemStack stack) {

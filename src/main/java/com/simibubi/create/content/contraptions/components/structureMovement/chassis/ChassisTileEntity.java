@@ -49,7 +49,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 		range.between(1, max);
 		range
 				.withClientCallback(
-						i -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
+						i -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
 		range.value = max / 2;
 		behaviours.add(range);
 	}

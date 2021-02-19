@@ -17,7 +17,12 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan_lava"
+      "trigger": "create:fan_processing",
+      "conditions": {
+        "accepted_entries": [
+          "BLASTING"
+        ]
+      }
     }
   },
   "requirements": [

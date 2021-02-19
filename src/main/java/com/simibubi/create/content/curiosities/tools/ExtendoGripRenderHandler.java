@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.tools;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
@@ -79,9 +80,9 @@ public class ExtendoGripRenderHandler {
 
 			if (1 - swingProgress > mainHandAnimation && swingProgress > 0)
 				mainHandAnimation = 0.95f;
-			float animation = MathHelper.lerp(Minecraft.getInstance()
-				.getRenderPartialTicks(), ExtendoGripRenderHandler.lastMainHandAnimation,
-				ExtendoGripRenderHandler.mainHandAnimation);
+			float animation = MathHelper.lerp(AnimationTickHolder.getPartialTicks(),
+											  ExtendoGripRenderHandler.lastMainHandAnimation,
+											  ExtendoGripRenderHandler.mainHandAnimation);
 			animation = animation * animation * animation;
 
 			ms.translate(flip * (0.64000005F - .1f), -0.4F + equipProgress * -0.6F, -0.71999997F + .3f);

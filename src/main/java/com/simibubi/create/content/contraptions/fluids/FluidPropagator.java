@@ -182,7 +182,7 @@ public class FluidPropagator {
 //	@Deprecated 
 //	public static OutlineParams showBlockFace(BlockFace face) {
 //		MutableObject<OutlineParams> params = new MutableObject<>(new OutlineParams());
-//		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+//		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 //			Vec3d directionVec = new Vec3d(face.getFace()
 //				.getDirectionVec());
 //			Vec3d scaleVec = directionVec.scale(-.25f * face.getFace()

@@ -38,7 +38,7 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(
-				() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
+				() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
 		context.get()
 			.setPacketHandled(true);
 	}

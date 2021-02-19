@@ -73,4 +73,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		return AllBlocks.HAND_CRANK.get();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

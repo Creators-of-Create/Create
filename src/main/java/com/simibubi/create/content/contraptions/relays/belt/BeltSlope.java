@@ -11,4 +11,8 @@ public enum BeltSlope implements IStringSerializable {
 	public String getName() {
 		return Lang.asId(name());
 	}
+
+	public boolean isDiagonal() {
+		return this == UPWARD || this == DOWNWARD;
+	}
 }

@@ -7,10 +7,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -28,8 +29,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 		Direction facing = context.state.get(BlockStateProperties.FACING);
 		AllBlockPartials top = AllBlockPartials.BEARING_TOP;
 		SuperByteBuffer superBuffer = top.renderOn(context.state);
-		float renderPartialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
 		Axis axis = facing.getAxis();
@@ -63,7 +63,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		// render
 		superBuffer.light(msLocal.peek()
-			.getModel());
+			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 

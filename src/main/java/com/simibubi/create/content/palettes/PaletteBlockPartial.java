@@ -10,6 +10,7 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
@@ -185,7 +186,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
 				BlockBuilder<SlabBlock, CreateRegistrate> builder,
 				String variantName, PaletteBlockPatterns pattern) {
-			builder.loot((lt, block) -> lt.registerLootTable(block, lt.droppingSlab(block)));
+			builder.loot((lt, block) -> lt.registerLootTable(block, RegistrateBlockLootTables.droppingSlab(block)));
 			return super.transformBlock(builder, variantName, pattern);
 		}
 

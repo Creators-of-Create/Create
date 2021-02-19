@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.utility.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -17,6 +17,11 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 
 	public MechanicalPressRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
+	}
+
+	@Override
+	public boolean isGlobalRenderer(KineticTileEntity te) {
+		return true;
 	}
 
 	@Override

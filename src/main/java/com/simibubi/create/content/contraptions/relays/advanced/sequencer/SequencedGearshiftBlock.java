@@ -64,15 +64,15 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 			return;
 
 		boolean previouslyPowered = state.get(STATE) != 0;
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			withTileEntityDo(worldIn, pos, SequencedGearshiftTileEntity::onRedstoneUpdate);
+		boolean isPowered = worldIn.isBlockPowered(pos);
+		withTileEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));
 	}
 
 	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (state.get(VERTICAL))
@@ -93,7 +93,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 				return ActionResultType.PASS;
 		}
 
-		DistExecutor.runWhenOn(Dist.CLIENT,
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return ActionResultType.SUCCESS;
 	}
@@ -146,15 +146,16 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
-		return state.get(STATE).intValue();
+		return state.get(STATE)
+			.intValue();
 	}
 
 }

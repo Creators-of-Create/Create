@@ -104,7 +104,10 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	public boolean isController() {
-		return controller == null || controller.equals(pos);
+		return controller == null ||
+				pos.getX() == controller.getX() &&
+				pos.getY() == controller.getY() &&
+				pos.getZ() == controller.getZ();
 	}
 
 	@Override
@@ -281,12 +284,17 @@ public class FluidTankTileEntity extends SmartTileEntity {
 		return isController() ? pos : controller;
 	}
 
+	private AxisAlignedBB cachedBoundingBox;
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (isController())
-			return super.getRenderBoundingBox().expand(width - 1, height - 1, width - 1);
-		return super.getRenderBoundingBox();
+		if (cachedBoundingBox == null) {
+			if (isController())
+				cachedBoundingBox = super.getRenderBoundingBox().expand(width - 1, height - 1, width - 1);
+			else
+				cachedBoundingBox = super.getRenderBoundingBox();
+		}
+		return cachedBoundingBox;
 	}
 
 	@Override

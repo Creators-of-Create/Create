@@ -408,10 +408,10 @@ public class AllBlocks {
 		REGISTRATE.block("crushing_wheel_controller", CrushingWheelControllerBlock::new)
 			.initialProperties(() -> Blocks.AIR)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
-				.forAllStates(state -> ConfiguredModel.builder()
+				.forAllStatesExcept(state -> ConfiguredModel.builder()
 					.modelFile(p.models()
 						.getExistingFile(p.mcLoc("block/air")))
-					.build()))
+					.build(), CrushingWheelControllerBlock.FACING))
 			.register();
 
 	public static final BlockEntry<MechanicalPressBlock> MECHANICAL_PRESS =

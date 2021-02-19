@@ -51,9 +51,10 @@ public enum AllGuiTextures {
 
 	SEQUENCER("sequencer.png", 173, 159),
 	SEQUENCER_INSTRUCTION("sequencer.png", 0, 14, 162, 22),
-	SEQUENCER_WAIT("sequencer.png", 0, 58, 162, 22),
+	SEQUENCER_DELAY("sequencer.png", 0, 58, 162, 22),
 	SEQUENCER_END("sequencer.png", 0, 80, 162, 22),
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
+	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
@@ -81,6 +82,9 @@ public enum AllGuiTextures {
 	
 	SPEECH_TOOLTIP("widgets.png", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_HIGHLIGHT("widgets.png", 8, 24, 8, 8),
+
+	// PlacementIndicator
+	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
 
 	;
 

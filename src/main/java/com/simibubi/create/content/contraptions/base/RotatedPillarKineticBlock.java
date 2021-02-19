@@ -27,7 +27,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 		switch (rot) {
 		case COUNTERCLOCKWISE_90:
 		case CLOCKWISE_90:
-			switch ((Direction.Axis) state.get(AXIS)) {
+			switch (state.get(AXIS)) {
 			case X:
 				return state.with(AXIS, Direction.Axis.Z);
 			case Z:

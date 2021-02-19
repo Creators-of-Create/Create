@@ -50,4 +50,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 		return true;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

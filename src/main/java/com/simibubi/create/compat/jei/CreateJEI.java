@@ -35,6 +35,7 @@ import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
@@ -54,6 +55,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -61,8 +63,10 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModList;
 
 @JeiPlugin
+@SuppressWarnings("unused")
 public class CreateJEI implements IModPlugin {
 
 	private static final ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
@@ -132,10 +136,16 @@ public class CreateJEI implements IModPlugin {
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.build(),
 
-		blockCutting = register("block_cutting", BlockCuttingCategory::new)
+		blockCutting = register("block_cutting", () -> new BlockCuttingCategory(Items.STONE_BRICK_STAIRS))
 			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(IRecipeType.STONECUTTING)))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.enableWhen(c -> c.allowStonecuttingOnSaw)
+			.build(),
+
+		woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
+			.recipeList(() -> CondensedBlockCuttingRecipe.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.getValue())))
+			.catalyst(AllBlocks.MECHANICAL_SAW::get)
+			.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get().isLoaded("druidcraft"))
 			.build(),
 
 		packing = register("packing", PackingCategory::standard).recipes(AllRecipeTypes.COMPACTING)
@@ -293,8 +303,12 @@ public class CreateJEI implements IModPlugin {
 
 		CategoryBuilder<T> enableWhen(Function<CRecipes, ConfigBool> configValue) {
 			this.pred = c -> configValue.apply(c)
-				.get()
-				.booleanValue();
+				.get();
+			return this;
+		}
+
+		CategoryBuilder<T> enableWhenBool(Function<CRecipes, Boolean> configValue) {
+			this.pred = configValue::apply;
 			return this;
 		}
 

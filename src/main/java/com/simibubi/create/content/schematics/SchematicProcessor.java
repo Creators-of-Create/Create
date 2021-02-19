@@ -1,5 +1,9 @@
 package com.simibubi.create.content.schematics;
 
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 import com.simibubi.create.foundation.utility.NBTProcessors;
@@ -15,9 +19,6 @@ import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class SchematicProcessor extends StructureProcessor {
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();

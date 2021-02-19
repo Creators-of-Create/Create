@@ -1,14 +1,15 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.Collections;
+import java.util.function.Predicate;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.Collections;
-import java.util.function.Predicate;
 
 public class AllCommands {
 
@@ -23,6 +24,7 @@ public class AllCommands {
 						.then(FixLightingCommand.register())
 						.then(ReplaceInCommandBlocksCommand.register())
 						.then(HighlightCommand.register())
+					    .then(ToggleExperimentalRenderingCommand.register())
 
 						//dev-util
 						//Comment out for release

@@ -66,7 +66,7 @@ public class MinecartCouplingItem extends Item {
 			return true;
 		}
 		if (world != null && world.isRemote)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> cartClicked(player, minecart));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> cartClicked(player, minecart));
 		return true;
 	}
 

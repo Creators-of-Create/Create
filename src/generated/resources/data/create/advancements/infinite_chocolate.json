@@ -17,7 +17,12 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:infinite_chocolate"
+      "trigger": "create:infinite_fluid",
+      "conditions": {
+        "accepted_entries": [
+          "create:chocolate"
+        ]
+      }
     }
   },
   "requirements": [

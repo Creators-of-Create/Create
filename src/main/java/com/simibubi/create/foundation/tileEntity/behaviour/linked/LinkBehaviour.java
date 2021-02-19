@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
