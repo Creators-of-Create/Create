@@ -25,7 +25,7 @@
     "1": {
       "trigger": "create:kinetic_block",
       "conditions": {
-        "block": "create:mechanical_mixer"
+        "registry_entry": "create:mechanical_mixer"
       }
     },
     "2": {

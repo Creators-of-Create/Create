@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import org.apache.logging.log4j.LogManager;
@@ -295,20 +296,17 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement infinite_water =
 			advancement("infinite_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(hose_pulley)
-				// .withCriterion("0", AllTriggers.INFINITE_WATER.instance())
-				.withCriterion("0", isInfinite(Fluids.WATER.getFluid()))
+				.withCriterion("0", isInfinite(Fluids.WATER))
 				.register(t, id + ":infinite_water");
 
 		Advancement infinite_lava =
 			advancement("infinite_lava", Items.LAVA_BUCKET, TaskType.GOAL).withParent(hose_pulley)
-				// .withCriterion("0", AllTriggers.INFINITE_LAVA.instance())
-				.withCriterion("0", isInfinite(Fluids.LAVA.getFluid()))
+				.withCriterion("0", isInfinite(Fluids.LAVA))
 				.register(t, id + ":infinite_lava");
 
 		Advancement infinite_chocolate = advancement("infinite_chocolate", AllFluids.CHOCOLATE.get()
 			.getFilledBucket(), TaskType.CHALLENGE).withParent(hose_pulley)
-				// .withCriterion("0", AllTriggers.INFINITE_CHOCOLATE.instance())
-				.withCriterion("0", isInfinite(AllFluids.CHOCOLATE.get().getFluid()))
+				.withCriterion("0", isInfinite(AllFluids.CHOCOLATE.get()))
 				.register(t, id + ":infinite_chocolate");
 	}
 
@@ -498,12 +496,12 @@ public class AllAdvancements implements IDataProvider {
 		return PlacedBlockTrigger.Instance.placedBlock(block);
 	}
 
-	public KineticBlockTrigger.Instance isPowered(Block block) {
-		return AllTriggers.KINETIC_BLOCK.forBlock(block);
+	public RegistryTrigger.Instance<Block> isPowered(Block block) {
+		return AllTriggers.KINETIC_BLOCK.forEntry(block);
 	}
 
-	public CriterionTriggerBase.Instance isInfinite(Fluid fluid) {
-		return AllTriggers.INFINITE_FLUID.forFluid(fluid);
+	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {
+		return AllTriggers.INFINITE_FLUID.forEntry(fluid.getStillFluid());
 	}
 
 	public InventoryChangeTrigger.Instance itemGathered(IItemProvider itemprovider) {

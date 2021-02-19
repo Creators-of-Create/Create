@@ -176,7 +176,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (fromOrToZero && previousSpeed == 0 && !world.isRemote)
 			AllTriggers.getPlayersInRange(world, pos, 4)
-				.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState()));
+				.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState().getBlock()));
 	}
 
 	@Override

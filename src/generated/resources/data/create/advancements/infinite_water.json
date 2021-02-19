@@ -19,7 +19,7 @@
     "0": {
       "trigger": "create:infinite_fluid",
       "conditions": {
-        "fluid": "minecraft:water"
+        "registry_entry": "minecraft:water"
       }
     }
   },

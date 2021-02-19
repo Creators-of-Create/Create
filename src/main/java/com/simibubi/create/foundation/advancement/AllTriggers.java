@@ -5,18 +5,20 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class AllTriggers {
 
-	private static List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
+	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
-	public static KineticBlockTrigger KINETIC_BLOCK = add(new KineticBlockTrigger("kinetic_block"));
-	public static InfiniteFluidTrigger INFINITE_FLUID = add(new InfiniteFluidTrigger("infinite_fluid"));
+	public static RegistryTrigger<Block> KINETIC_BLOCK = add(new RegistryTrigger<>("kinetic_block", Block.class));
+	public static RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", Fluid.class));
 
 	public static SimpleTrigger 
 			ROTATION = simple("rotation"), 
@@ -68,9 +70,6 @@ public class AllTriggers {
 			PIPE_COLLISION = simple("pipe_collision"),
 			PIPE_SPILL = simple("pipe_spill"),
 			HOSE_PULLEY = simple("hose_pulley"),
-			INFINITE_WATER = simple("infinite_water"),
-			INFINITE_LAVA = simple("infinite_lava"),
-			INFINITE_CHOCOLATE = simple("infinite_chocolate"),
 			MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {
