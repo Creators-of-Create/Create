@@ -17,7 +17,12 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan"
+      "trigger": "create:fan_processing",
+      "conditions": {
+        "accepted_entries": [
+          "NONE"
+        ]
+      }
     }
   },
   "requirements": [

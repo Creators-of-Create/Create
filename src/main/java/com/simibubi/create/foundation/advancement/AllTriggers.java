@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.logistics.InWorldProcessing;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +20,7 @@ public class AllTriggers {
 
 	public static RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", Fluid.class));
 	public static RegistryTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", Block.class));
+	public static EnumTrigger<InWorldProcessing.Type> FAN_PROCESSING = add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
 
 	public static SimpleTrigger 
 			ROTATION = simple("rotation"), 
@@ -47,10 +49,6 @@ public class AllTriggers {
 			PLACE_TUNNEL = simple("place_tunnel"),
 			CONNECT_TUNNEL = simple("connect_tunnel"),
 			UPWARD_CHUTE = simple("upward_chute"),
-			FAN = simple("fan"),
-			FAN_LAVA = simple("fan_lava"),
-			FAN_SMOKE = simple("fan_smoke"),
-			FAN_WATER = simple("fan_water"),
 			BELT_FUNNEL = simple("belt_funnel"),
 			BELT_FUNNEL_KISS = simple("belt_funnel_kiss"),
 			CLOCKWORK_BEARING = simple("clockwork_bearing"),

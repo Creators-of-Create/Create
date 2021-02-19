@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.logistics.InWorldProcessing;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -125,19 +126,19 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":press");
 
 		Advancement fan = advancement("fan", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).withParent(press)
-			.withCriterion("0", AllTriggers.FAN.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.NONE))
 			.register(t, id + ":fan");
 
 		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_LAVA.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.BLASTING))
 			.register(t, id + ":fan_lava");
 
 		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_SMOKE.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SMOKING))
 			.register(t, id + ":fan_smoke");
 
 		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_WATER.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SPLASHING))
 			.register(t, id + ":fan_water");
 
 		Advancement rose_quartz =

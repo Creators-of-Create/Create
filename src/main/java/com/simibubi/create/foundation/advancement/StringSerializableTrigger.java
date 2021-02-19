@@ -27,11 +27,11 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		return new Instance<>(this, entries == null ? null : Sets.newHashSet(entries));
 	}
 
-	public void trigger(ServerPlayerEntity player, T registryEntry) {
+	public void trigger(ServerPlayerEntity player, @Nullable T registryEntry) {
 		trigger(player, Collections.singletonList(() -> registryEntry));
 	}
 
-	public ITriggerable constructTriggerFor(T entry) {
+	public ITriggerable constructTriggerFor(@Nullable T entry) {
 		BiConsumer<ServerPlayerEntity, T> trigger = this::trigger;
 		return player -> trigger.accept(player, entry);
 	}
