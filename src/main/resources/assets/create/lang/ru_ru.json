@@ -773,7 +773,7 @@
 	"create.gui.terrainzapper.tool.overlay": "Наложение",
 	"create.gui.terrainzapper.tool.flatten": "Выравнивание",
 
-	"create.terrainzapper.shiftRightClickToSet": "ПКМ крадясь, чтобы выбрать форму",
+	"create.terrainzapper.shiftRightClickToSet": "ПКМ крадучись, чтобы выбрать форму",
 
 	"create.blockzapper.usingBlock": "С помощью: %1$s",
 	"create.blockzapper.componentUpgrades": "Обновления компонентов:",
@@ -1304,7 +1304,7 @@
 	"item.create.wand_of_symmetry.tooltip.action1": "_Создаёт_ или _Перемещает_ зеркало",
 	"item.create.wand_of_symmetry.tooltip.control2": "ПКМ в воздух",
 	"item.create.wand_of_symmetry.tooltip.action2": "_Убирает_ зеркало",
-	"item.create.wand_of_symmetry.tooltip.control3": "ПКМ крадясь",
+	"item.create.wand_of_symmetry.tooltip.control3": "ПКМ крадучись",
 	"item.create.wand_of_symmetry.tooltip.action3": "Открывает _интерфейс_ _конфигурации_",
 
 	"item.create.handheld_blockzapper.tooltip": "BLOCKZAPPER",
@@ -1313,7 +1313,7 @@
 	"item.create.handheld_blockzapper.tooltip.action1": "Устанавливает выбранный блок как материал.",
 	"item.create.handheld_blockzapper.tooltip.control2": "ПКМ на блок",
 	"item.create.handheld_blockzapper.tooltip.action2": "_Размещает_ или _Замещает_ блок.",
-	"item.create.handheld_blockzapper.tooltip.control3": "ПКМ крадясь",
+	"item.create.handheld_blockzapper.tooltip.control3": "ПКМ крадучись",
 	"item.create.handheld_blockzapper.tooltip.action3": "Открывает _интерфейс_ _конфигурации_",
 
 	"item.create.handheld_worldshaper.tooltip": "HANDHELD WORLDSHAPER",
@@ -1322,7 +1322,7 @@
 	"item.create.handheld_worldshaper.tooltip.action1": "Устанавливает блоки, помещенные инструментом, в целевой блок.",
 	"item.create.handheld_worldshaper.tooltip.control2": "ПКМ на блок",
 	"item.create.handheld_worldshaper.tooltip.action2": "Применяет выбранную _кисть_ и _инструмент_ в выбранном месте.",
-	"item.create.handheld_worldshaper.tooltip.control3": "ПКМ крадясь",
+	"item.create.handheld_worldshaper.tooltip.control3": "ПКМ крадучись",
 	"item.create.handheld_worldshaper.tooltip.action3": "Открывает _интерфейс_ _конфигурации_",
 
 	"item.create.tree_fertilizer.tooltip": "TREE FERTILIZER",
@@ -1359,7 +1359,7 @@
 	"item.create.schematic.tooltip.summary": "Содержит структуру, которая будет позиционироваться и помещаться в мир. Расположите голограмму по своему усмотрению и используйте _схематичную пушку_ для ее построения.",
 	"item.create.schematic.tooltip.condition1": "При удерживании",
 	"item.create.schematic.tooltip.behaviour1": "Может быть позиционирован с помощью инструментов на экране.",
-	"item.create.schematic.tooltip.control1": "ПКМ крадясь",
+	"item.create.schematic.tooltip.control1": "ПКМ крадучись",
 	"item.create.schematic.tooltip.action1": "Открывает _интерфейс_ для ввода _точных_ _координат_.",
 
 	"item.create.schematic_and_quill.tooltip": "SCHEMATIC AND QUILL",
@@ -1372,7 +1372,7 @@
 	"item.create.schematic_and_quill.tooltip.action1": "Выберите угловые точки / подтвердите сохранение.",
 	"item.create.schematic_and_quill.tooltip.control2": "Удержание Ctrl",
 	"item.create.schematic_and_quill.tooltip.action2": "Выберите точки в воздухе. Прокрутка для настройки расстояния.",
-	"item.create.schematic_and_quill.tooltip.control3": "ПКМ крадясь",
+	"item.create.schematic_and_quill.tooltip.control3": "ПКМ крадучись",
 	"item.create.schematic_and_quill.tooltip.action3": "_Сбрасывает_ и _удаляет_ выделение.",
 
 	"block.create.schematicannon.tooltip": "SCHEMATICANNON",
@@ -1424,7 +1424,7 @@
 	"item.create.belt_connector.tooltip.summary": "Соединяет _2_ _Вала_ с помощью _механического_ _ремня_._ Соединённые валы будут иметь одинаковые _скорость_ и _направление_ _вращения._ Лента может служить как _конвейер_ для _транспортировки._",
 	"item.create.belt_connector.tooltip.control1": "ПКМ по валу",
 	"item.create.belt_connector.tooltip.action1": "Выбирает вал в качестве одного шкива конвейера. Оба выбранных вала должны быть _на_ _одной_ _линии_ _вертикально,_ _горизонтально_ либо _диагонально_ по направлению конвейера.",
-	"item.create.belt_connector.tooltip.control2": "ПКМ крадясь",
+	"item.create.belt_connector.tooltip.control2": "ПКМ крадучись",
 	"item.create.belt_connector.tooltip.action2": "_Сбрасывает_ первый выбранный шкив для конвейера.",
 
 	"item.create.goggles.tooltip": "GOGGLES",
@@ -1438,7 +1438,7 @@
 	"item.create.wrench.tooltip.summary": "Полезный _инструмент_ для работы с _кинетическими_ штуковинами. Может использоваться для _поворота_, _демонтажа_ и _настройки_ компонентов.",
 	"item.create.wrench.tooltip.control1": "ПКМ по кинетическому блоку",
 	"item.create.wrench.tooltip.action1": "_Поворачивает_ _компонент_ с которым вы взаимодействуете _к_ _лицу_ или _от_ _лица_.",
-	"item.create.wrench.tooltip.control2": "ПКМ крадясь",
+	"item.create.wrench.tooltip.control2": "ПКМ крадучись",
 	"item.create.wrench.tooltip.action2": "Разбирает кинетические компоненты и помещает их обратно в ваш инвентарь.",
 
 	"block.create.creative_motor.tooltip": "CREATIVE MOTOR",
@@ -1674,7 +1674,7 @@
 	"block.create.redstone_link.tooltip.behaviour1": "Приняв сигнал той-же _частоты_ выдаёт сигнал красного камня или наоборот.",
 	"block.create.redstone_link.tooltip.control1": "При ПКМ предметом",
 	"block.create.redstone_link.tooltip.action1": "Устанавливает частоту для этого предмета. Всего _два_ разных предмета могут быть использованы в комбинации для определения частоты.",
-	"block.create.redstone_link.tooltip.control2": "ПКМ крадясь",
+	"block.create.redstone_link.tooltip.control2": "ПКМ крадучись",
 	"block.create.redstone_link.tooltip.action2": "Переключение между режимом _приемника_ и _передатчика_.",
 
 	"block.create.nixie_tube.tooltip": "NIXIE TUBE",
