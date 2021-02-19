@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +25,7 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -34,7 +36,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class CrushingWheelControllerBlock extends Block
+public class CrushingWheelControllerBlock extends DirectionalBlock
 		implements ITE<CrushingWheelControllerTileEntity> {
 
 	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
@@ -66,27 +68,40 @@ public class CrushingWheelControllerBlock extends Block
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(VALID);
+		builder.add(FACING);
 		super.fillStateContainer(builder);
 	}
 
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (!state.get(VALID))
 			return;
+
+		Direction facing = state.get(FACING);
+		Axis axis = facing.getAxis();
+
+		checkEntityForProcessing(worldIn, pos, entityIn);
+
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.processingEntity == entityIn)
-				entityIn.setMotionMultiplier(state, new Vec3d(0.25D, (double) 0.05F, 0.25D));
+
+				entityIn.setMotionMultiplier(state, new Vec3d(axis == Axis.X ? (double) 0.05F : 0.25D
+						, axis == Axis.Y ? (double) 0.05F : 0.25D
+						, axis == Axis.Z ? (double) 0.05F : 0.25D));
 		});
 	}
 
-	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void checkEntityForProcessing(World worldIn, BlockPos pos, Entity entityIn){
 		try {
-			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, entityIn.getPosition().down());
+			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
 			if (te.crushingspeed == 0)
 				return;
 			if (entityIn instanceof ItemEntity)
 				((ItemEntity) entityIn).setPickupDelay(10);
+			CompoundNBT data = entityIn.getPersistentData();
+			if (data.contains("BypassCrushingWheel")) {
+				if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
+					return;
+			}
 			if (te.isOccupied())
 				return;
 			boolean isPlayer = entityIn instanceof PlayerEntity;
@@ -97,6 +112,12 @@ public class CrushingWheelControllerBlock extends Block
 
 			te.startCrushing(entityIn);
 		} catch (TileEntityException e) {}
+	}
+
+	@Override
+	public void onLanded(IBlockReader worldIn, Entity entityIn) {
+		super.onLanded(worldIn, entityIn);
+		//Moved to onEntityCollision to allow for omnidirectional input
 	}
 
 	@Override
@@ -128,7 +149,7 @@ public class CrushingWheelControllerBlock extends Block
 				return;
 			}
 
-			for (Direction d : Iterate.horizontalDirections) {
+			for (Direction d : Iterate.directions) {
 				BlockState neighbour = world.getBlockState(pos.offset(d));
 				if (!AllBlocks.CRUSHING_WHEEL.has(neighbour))
 					continue;
@@ -144,22 +165,19 @@ public class CrushingWheelControllerBlock extends Block
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-			ISelectionContext context) {
+										ISelectionContext context) {
 		if (!state.get(VALID))
-			return VoxelShapes.fullCube();
+			return AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
 
 		Entity entity = context.getEntity();
 		if (entity != null) {
-			if (entity != null) {
-				CompoundNBT data = entity.getPersistentData();
-				if (data.contains("BypassCrushingWheel")) {
-					if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
-						return VoxelShapes.empty();
-				}
-			}
 
-			if (new AxisAlignedBB(pos).contains(entity.getPositionVec()))
-				return VoxelShapes.empty();
+			CompoundNBT data = entity.getPersistentData();
+			if (data.contains("BypassCrushingWheel")) {
+				if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
+					if (state.get(FACING) != Direction.UP) //Allow output items to land on top of the block rather than falling back through.
+						return VoxelShapes.empty();
+			}
 
 			try {
 				CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
@@ -167,7 +185,7 @@ public class CrushingWheelControllerBlock extends Block
 					return VoxelShapes.empty();
 			} catch (TileEntityException e) {}
 		}
-		return VoxelShapes.fullCube();
+		return AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
 	}
 
 	@Override

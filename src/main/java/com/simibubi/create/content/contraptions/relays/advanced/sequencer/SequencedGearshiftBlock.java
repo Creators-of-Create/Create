@@ -64,8 +64,11 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 			return;
 
 		boolean previouslyPowered = state.get(STATE) != 0;
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
+		boolean isPowered = worldIn.isBlockPowered(pos);
+		if (previouslyPowered != isPowered)
 			withTileEntityDo(worldIn, pos, SequencedGearshiftTileEntity::onRedstoneUpdate);
+		else if (isPowered)
+			withTileEntityDo(worldIn, pos, SequencedGearshiftTileEntity::onIsPowered);
 	}
 
 	@Override

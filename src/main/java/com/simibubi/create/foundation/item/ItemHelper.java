@@ -174,7 +174,7 @@ public class ItemHelper {
 				if (!simulate && hasEnoughItems)
 					inv.extractItem(slot, stack.getCount(), false);
 
-				if (extracting.getCount() >= maxExtractionCount) {
+				if (extracting.getCount() >= maxExtractionCount || extracting.getCount() >= extracting.getMaxStackSize()) {
 					if (checkHasEnoughItems) {
 						hasEnoughItems = true;
 						checkHasEnoughItems = false;
@@ -234,7 +234,7 @@ public class ItemHelper {
 
 			if (!simulate)
 				inv.extractItem(slot, stack.getCount(), false);
-			if (extracting.getCount() == maxExtractionCount)
+			if (extracting.getCount() >= maxExtractionCount || extracting.getCount() >= extracting.getMaxStackSize())
 				break;
 		}
 
