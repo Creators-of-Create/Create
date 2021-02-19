@@ -1671,7 +1671,7 @@
 	"block.create.redstone_link.tooltip": "REDSTONE LINK",
 	"block.create.redstone_link.tooltip.summary": "_Беспроводной_ _передатчик_ сигнала красного камня. Можно выбрать _частоты_ с помощью любого предмета. Диапазон сигнала ограничен, но достаточно далёк.",
 	"block.create.redstone_link.tooltip.condition1": "Когда приведен в действие",
-	"block.create.redstone_link.tooltip.behaviour1": "Приняв сигнал той-же _частоты_ выдаёт сигнал красного камня или наоборот.",
+	"block.create.redstone_link.tooltip.behaviour1": "Приняв сигнал той же _частоты_ выдаёт сигнал красного камня или наоборот.",
 	"block.create.redstone_link.tooltip.control1": "При ПКМ предметом",
 	"block.create.redstone_link.tooltip.action1": "Устанавливает частоту для этого предмета. Всего _два_ разных предмета могут быть использованы в комбинации для определения частоты.",
 	"block.create.redstone_link.tooltip.control2": "ПКМ крадясь",
