@@ -160,8 +160,7 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement mixer = advancement("mixer", AllBlocks.MECHANICAL_MIXER.get(), TaskType.MILESTONE)
 			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_MIXER.get()))
-			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_MIXER.get()))
-			.withCriterion("2", AllTriggers.MIXER_MIX.instance())
+			.withCriterion("1", AllTriggers.MIXER_MIX.instance())
 			.withParent(basin)
 			.register(t, id + ":mixer");
 
@@ -494,10 +493,6 @@ public class AllAdvancements implements IDataProvider {
 
 	public PlacedBlockTrigger.Instance placeBlock(Block block) {
 		return PlacedBlockTrigger.Instance.placedBlock(block);
-	}
-
-	public RegistryTrigger.Instance<Block> isPowered(Block block) {
-		return AllTriggers.KINETIC_BLOCK.forEntries(block);
 	}
 
 	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {

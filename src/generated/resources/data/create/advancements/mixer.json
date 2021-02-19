@@ -23,14 +23,6 @@
       }
     },
     "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {
-        "accepted_entries": [
-          "create:mechanical_mixer"
-        ]
-      }
-    },
-    "2": {
       "trigger": "create:mixer"
     }
   },
@@ -40,9 +32,6 @@
     ],
     [
       "1"
-    ],
-    [
-      "2"
     ]
   ]
 }

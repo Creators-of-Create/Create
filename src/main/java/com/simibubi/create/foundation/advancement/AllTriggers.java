@@ -17,7 +17,6 @@ public class AllTriggers {
 
 	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
-	public static RegistryTrigger<Block> KINETIC_BLOCK = add(new RegistryTrigger<>("kinetic_block", Block.class));
 	public static RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", Fluid.class));
 	public static RegistryTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", Block.class));
 
