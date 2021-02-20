@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -50,14 +49,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	public static void crushingIsFortunate(LootingLevelEvent event) {
 		if (event.getDamageSource() != damageSource)
 			return;
-		event.setLootingLevel(2);
-	}
-
-	@SubscribeEvent
-	public static void crushingTeleportsEntities(LivingDeathEvent event) {
-		if (event.getSource() != damageSource)
-			return;
-		event.getEntity().setPos(event.getEntity().getX(), Math.floor(event.getEntity().getY()) - .5f, event.getEntity().getZ());
+		event.setLootingLevel(2);		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
 }
