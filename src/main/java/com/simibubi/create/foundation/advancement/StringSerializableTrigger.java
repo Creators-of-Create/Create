@@ -10,7 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,7 +17,12 @@ import java.util.stream.StreamSupport;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<StringSerializableTrigger.Instance<T>> {
-	public StringSerializableTrigger(String id) {
+
+	protected String getJsonKey() {
+		return "accepted_entries";
+	}
+
+	protected StringSerializableTrigger(String id) {
 		super(id);
 	}
 
@@ -32,32 +36,30 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 	}
 
 	public ITriggerable constructTriggerFor(@Nullable T entry) {
-		BiConsumer<ServerPlayerEntity, T> trigger = this::trigger;
-		return player -> trigger.accept(player, entry);
+		return player -> trigger(player, entry);
 	}
 
 	@Override
 	public Instance<T> deserializeInstance(JsonObject json, JsonDeserializationContext context) {
-		if (json.has("accepted_entries")) {
-			JsonArray elements = json.getAsJsonArray("accepted_entries");
+		if (json.has(getJsonKey())) {
+			JsonArray elements = json.getAsJsonArray(getJsonKey());
 			return new Instance<>(this,
 				StreamSupport.stream(elements.spliterator(), false).map(JsonElement::getAsString)
-					.map(rl -> {
-						T entry = getValue(rl);
+					.map(key -> {
+						T entry = getValue(key);
 						if (entry == null)
-							throw new JsonSyntaxException("Unknown entry '" + rl + "'");
+							throw new JsonSyntaxException("Unknown entry '" + key + "'");
 						return entry;
 					}).collect(Collectors.toSet()));
 		}
-
-		return forEntries((T) null);
+		return new Instance<>(this, null);
 	}
 
 	@Nullable
-	abstract protected T getValue(String key);
+	protected abstract T getValue(String key);
 
 	@Nullable
-	abstract protected String getKey(T value);
+	protected abstract String getKey(T value);
 
 	public static class Instance<T> extends CriterionTriggerBase.Instance {
 
@@ -84,7 +86,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 			JsonArray elements = new JsonArray();
 
 			if (entries == null) {
-				jsonobject.add("accepted_entries", elements);
+				jsonobject.add(trigger.getJsonKey(), elements);
 				return jsonobject;
 			}
 
@@ -96,7 +98,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 					elements.add(key);
 			}
 
-			jsonobject.add("accepted_entries", elements);
+			jsonobject.add(trigger.getJsonKey(), elements);
 			return jsonobject;
 		}
 	}
