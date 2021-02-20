@@ -73,12 +73,7 @@ public class FastRenderDispatcher {
 
         layer.startDrawing();
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableCull();
-        GL11.glCullFace(GL11.GL_BACK);
         CreateClient.kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
-        RenderSystem.disableCull();
-        //RenderSystem.disableDepthTest();
 
         layer.endDrawing();
     }

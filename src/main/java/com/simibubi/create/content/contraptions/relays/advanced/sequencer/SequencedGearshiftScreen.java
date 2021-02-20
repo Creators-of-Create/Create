@@ -101,7 +101,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				.withShiftStep(def.shiftStep)
 				.setState(instruction.value)
 				.onChanged();
-		if (def == SequencerInstructions.WAIT) {
+		if (def == SequencerInstructions.DELAY) {
 			value.withStepFunction(context -> {
 				int v = context.currentValue;
 				if (!context.forward)

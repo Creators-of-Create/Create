@@ -18,7 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
-    public static int MAX_ORIGIN_DISTANCE = 1000;
+    public static int MAX_ORIGIN_DISTANCE = 100;
 
     public BlockPos originCoordinate = BlockPos.ZERO;
 
