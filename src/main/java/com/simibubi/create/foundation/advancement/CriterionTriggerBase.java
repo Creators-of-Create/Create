@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
@@ -17,13 +18,18 @@ import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
 
 	public CriterionTriggerBase(String id) {
 		this.ID = new ResourceLocation(Create.ID, id);
 	}
 
-	private ResourceLocation ID;
+	private final ResourceLocation ID;
 	protected final Map<PlayerAdvancements, Set<Listener<T>>> listeners = Maps.newHashMap();
 
 	@Override
@@ -54,7 +60,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		return ID;
 	}
 
-	protected void trigger(ServerPlayerEntity player, List<Supplier<Object>> suppliers){
+	protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers){
 		PlayerAdvancements playerAdvancements = player.getAdvancements();
 		Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancements);
 		if (playerListeners != null){
@@ -72,13 +78,13 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		}
 	}
 
-	protected abstract static class Instance extends CriterionInstance {
+	public abstract static class Instance extends CriterionInstance {
 
 		public Instance(ResourceLocation idIn, EntityPredicate.AndPredicate p_i231464_2_) {
 			super(idIn, p_i231464_2_);
 		}
 
-		protected abstract boolean test(List<Supplier<Object>> suppliers);
+		protected abstract boolean test(@Nullable List<Supplier<Object>> suppliers);
 	}
 
 

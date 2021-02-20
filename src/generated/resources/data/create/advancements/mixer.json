@@ -23,10 +23,6 @@
       }
     },
     "1": {
-      "trigger": "create:kinetic_block",
-      "conditions": {}
-    },
-    "2": {
       "trigger": "create:mixer",
       "conditions": {}
     }
@@ -37,9 +33,6 @@
     ],
     [
       "1"
-    ],
-    [
-      "2"
     ]
   ]
 }

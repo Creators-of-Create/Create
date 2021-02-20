@@ -25,7 +25,7 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new StandardPipeFluidTransportBehaviour(this));
 		behaviours.add(new BracketedTileEntityBehaviour(this, this::canHaveBracket)
-			.withTrigger(state -> AllTriggers.BRACKET_PIPE));
+			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
 	}
 
 	private boolean canHaveBracket(BlockState state) {

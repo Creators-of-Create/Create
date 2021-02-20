@@ -47,6 +47,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		if (!(world.getBlockState(pos)
 			.getBlock() instanceof MechanicalPistonBlock))
 			return;
+		if (getMovementSpeed() == 0)
+			return;
 
 		Direction direction = getBlockState().get(BlockStateProperties.FACING);
 

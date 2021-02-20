@@ -38,8 +38,11 @@ public class Instruction {
 		case TURN_DISTANCE:
 			return (int) ((1 - initialProgress) * value / metersPerTick + offset);
 
-		case WAIT:
+		case DELAY:
 			return (int) ((1 - initialProgress) * value + 1);
+
+		case AWAIT:
+			return -1;
 
 		case END:
 		default:
@@ -57,12 +60,17 @@ public class Instruction {
 			return speedModifier.value;
 
 		case END:
-		case WAIT:
+		case DELAY:
+		case AWAIT:
 		default:
 			break;
 
 		}
 		return 0;
+	}
+
+	OnIsPoweredResult onRedstonePulse() {
+		return instruction == SequencerInstructions.AWAIT ? OnIsPoweredResult.CONTINUE : OnIsPoweredResult.NOTHING;
 	}
 
 	public static ListNBT serializeAll(Vector<Instruction> instructions) {
@@ -95,8 +103,7 @@ public class Instruction {
 	}
 
 	static Instruction deserialize(CompoundNBT tag) {
-		Instruction instruction =
-			new Instruction(NBTHelper.readEnum(tag, "Type", SequencerInstructions.class));
+		Instruction instruction = new Instruction(NBTHelper.readEnum(tag, "Type", SequencerInstructions.class));
 		instruction.speedModifier = NBTHelper.readEnum(tag, "Modifier", InstructionSpeedModifiers.class);
 		instruction.value = tag.getInt("Value");
 		return instruction;

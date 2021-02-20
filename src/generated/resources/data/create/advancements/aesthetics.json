@@ -17,16 +17,29 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:bracket_shaft",
-      "conditions": {}
+      "trigger": "create:bracket_apply",
+      "conditions": {
+        "accepted_entries": [
+          "create:shaft"
+        ]
+      }
     },
     "1": {
-      "trigger": "create:bracket_cog",
-      "conditions": {}
+      "trigger": "create:bracket_apply",
+      "conditions": {
+        "accepted_entries": [
+          "create:large_cogwheel",
+          "create:cogwheel"
+        ]
+      }
     },
     "2": {
-      "trigger": "create:bracket_pipe",
-      "conditions": {}
+      "trigger": "create:bracket_apply",
+      "conditions": {
+        "accepted_entries": [
+          "create:fluid_pipe"
+        ]
+      }
     }
   },
   "requirements": [

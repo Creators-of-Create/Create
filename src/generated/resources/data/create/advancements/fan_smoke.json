@@ -17,8 +17,12 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:fan_smoke",
-      "conditions": {}
+      "trigger": "create:fan_processing",
+      "conditions": {
+        "accepted_entries": [
+          "SMOKING"
+        ]
+      }
     }
   },
   "requirements": [

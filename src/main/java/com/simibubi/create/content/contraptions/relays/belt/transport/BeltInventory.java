@@ -151,6 +151,10 @@ public class BeltInventory {
 			if (BeltFunnelInteractionHandler.checkForFunnels(this, currentItem, nextOffset))
 				continue;
 
+			// Horizontal Crushing Wheels
+			if (BeltCrusherInteractionHandler.checkForCrushers(this, currentItem, nextOffset))
+				continue;
+
 			// Apply Movement
 			currentItem.beltPosition += limitedMovement;
 			currentItem.sideOffset +=

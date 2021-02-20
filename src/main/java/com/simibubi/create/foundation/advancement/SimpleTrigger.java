@@ -6,10 +6,16 @@ import java.util.function.Supplier;
 import com.google.gson.JsonObject;
 
 import net.minecraft.advancements.criterion.EntityPredicate;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> implements ITriggerable {
 
 	public SimpleTrigger(String id) {
@@ -36,7 +42,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 		}
 
 		@Override
-		protected boolean test(List<Supplier<Object>> suppliers) {
+		protected boolean test(@Nullable List<Supplier<Object>> suppliers) {
 			return true;
 		}
 	}

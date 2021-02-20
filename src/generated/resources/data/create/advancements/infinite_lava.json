@@ -17,8 +17,12 @@
   },
   "criteria": {
     "0": {
-      "trigger": "create:infinite_lava",
-      "conditions": {}
+      "trigger": "create:infinite_fluid",
+      "conditions": {
+        "accepted_entries": [
+          "minecraft:lava"
+        ]
+      }
     }
   },
   "requirements": [

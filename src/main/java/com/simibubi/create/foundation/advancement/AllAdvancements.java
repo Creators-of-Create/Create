@@ -6,6 +6,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.logistics.InWorldProcessing;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,9 +65,9 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement aesthetics =
 			advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL).withParent(andesite_alloy)
-				.withCriterion("0", AllTriggers.BRACKET_SHAFT.instance())
-				.withCriterion("1", AllTriggers.BRACKET_COG.instance())
-				.withCriterion("2", AllTriggers.BRACKET_PIPE.instance())
+				.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
+				.withCriterion("1", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
+				.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
 				.register(t, id + ":aesthetics");
 
 		Advancement reinforced =
@@ -122,19 +126,19 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":press");
 
 		Advancement fan = advancement("fan", AllBlocks.ENCASED_FAN.get(), TaskType.NORMAL).withParent(press)
-			.withCriterion("0", AllTriggers.FAN.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.NONE))
 			.register(t, id + ":fan");
 
 		Advancement fan_lava = advancement("fan_lava", Items.LAVA_BUCKET, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_LAVA.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.BLASTING))
 			.register(t, id + ":fan_lava");
 
 		Advancement fan_smoke = advancement("fan_smoke", Items.CAMPFIRE, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_SMOKE.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SMOKING))
 			.register(t, id + ":fan_smoke");
 
 		Advancement fan_water = advancement("fan_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(fan)
-			.withCriterion("0", AllTriggers.FAN_WATER.instance())
+			.withCriterion("0", AllTriggers.FAN_PROCESSING.forEntries(InWorldProcessing.Type.SPLASHING))
 			.register(t, id + ":fan_water");
 
 		Advancement rose_quartz =
@@ -157,8 +161,7 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement mixer = advancement("mixer", AllBlocks.MECHANICAL_MIXER.get(), TaskType.MILESTONE)
 			.withCriterion("0", placeBlock(AllBlocks.MECHANICAL_MIXER.get()))
-			.withCriterion("1", isPowered(AllBlocks.MECHANICAL_MIXER.get()))
-			.withCriterion("2", AllTriggers.MIXER_MIX.instance())
+			.withCriterion("1", AllTriggers.MIXER_MIX.instance())
 			.withParent(basin)
 			.register(t, id + ":mixer");
 
@@ -293,17 +296,17 @@ public class AllAdvancements implements IDataProvider {
 
 		Advancement infinite_water =
 			advancement("infinite_water", Items.WATER_BUCKET, TaskType.NORMAL).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_WATER.instance())
+				.withCriterion("0", isInfinite(Fluids.WATER))
 				.register(t, id + ":infinite_water");
 
 		Advancement infinite_lava =
 			advancement("infinite_lava", Items.LAVA_BUCKET, TaskType.GOAL).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_LAVA.instance())
+				.withCriterion("0", isInfinite(Fluids.LAVA))
 				.register(t, id + ":infinite_lava");
 
 		Advancement infinite_chocolate = advancement("infinite_chocolate", AllFluids.CHOCOLATE.get()
 			.getFilledBucket(), TaskType.CHALLENGE).withParent(hose_pulley)
-				.withCriterion("0", AllTriggers.INFINITE_CHOCOLATE.instance())
+				.withCriterion("0", isInfinite(AllFluids.CHOCOLATE.get()))
 				.register(t, id + ":infinite_chocolate");
 	}
 
@@ -493,8 +496,8 @@ public class AllAdvancements implements IDataProvider {
 		return PlacedBlockTrigger.Instance.placedBlock(block);
 	}
 
-	public KineticBlockTrigger.Instance isPowered(Block block) {
-		return AllTriggers.KINETIC_BLOCK.forBlock(block);
+	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {
+		return AllTriggers.INFINITE_FLUID.forEntries(fluid.getStillFluid());
 	}
 
 	public InventoryChangeTrigger.Instance itemGathered(IItemProvider itemprovider) {

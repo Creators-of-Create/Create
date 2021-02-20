@@ -15,8 +15,8 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.StonecuttingRecipe;
@@ -26,8 +26,8 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 	private AnimatedSaw saw = new AnimatedSaw();
 
-	public BlockCuttingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS), emptyBackground(177, 70));
+	public BlockCuttingCategory(Item symbol) {
+		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), symbol), emptyBackground(177, 70)); // Items.STONE_BRICK_STAIRS
 	}
 
 	@Override

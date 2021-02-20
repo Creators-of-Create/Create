@@ -1,10 +1,8 @@
 package com.simibubi.create.content.curiosities;
 
-import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -13,7 +11,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,7 +18,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
@@ -151,11 +147,6 @@ public class ChromaticCompoundItem extends Item {
 			newStack.setCount(stack.getCount());
 			data.putBoolean("FromLight", true);
 			entity.setItem(newStack);
-
-			List<ServerPlayerEntity> players =
-				world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(entity.getBlockPos()).grow(8));
-			players.forEach(AllTriggers.ABSORBED_LIGHT::trigger);
-
 			return false;
 		}
 

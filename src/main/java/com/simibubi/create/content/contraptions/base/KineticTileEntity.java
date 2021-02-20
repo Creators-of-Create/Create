@@ -175,10 +175,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean directionSwap = !fromOrToZero && Math.signum(previousSpeed) != Math.signum(getSpeed());
 		if (fromOrToZero || directionSwap)
 			flickerTally = getFlickerScore() + 5;
-
-		if (fromOrToZero && previousSpeed == 0 && !world.isRemote)
-			AllTriggers.getPlayersInRange(world, pos, 4)
-				.forEach(p -> AllTriggers.KINETIC_BLOCK.trigger(p, getBlockState()));
 	}
 
 	@Override

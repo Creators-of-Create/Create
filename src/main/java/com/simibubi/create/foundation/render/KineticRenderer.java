@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
-    public static int MAX_ORIGIN_DISTANCE = 1000;
+    public static int MAX_ORIGIN_DISTANCE = 100;
 
     public BlockPos originCoordinate = BlockPos.ZERO;
 
