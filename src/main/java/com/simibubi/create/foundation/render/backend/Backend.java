@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlFunctions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
@@ -44,14 +45,10 @@ public class Backend {
     private static boolean enabled;
 
     public static GLCapabilities capabilities;
-    private static MapBuffer mapBuffer;
+    public static GlFunctions functions;
 
     public Backend() {
         throw new IllegalStateException();
-    }
-
-    public static void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload) {
-        mapBuffer.mapBuffer(target, offset, length, upload);
     }
 
     /**
@@ -71,44 +68,18 @@ public class Backend {
         return (P) programs.get(spec);
     }
 
-    /**
-     * Get the most compatible version of a specific OpenGL feature by iterating over enum constants in order.
-     *
-     * @param clazz The class of the versioning enum.
-     * @param <V> The type of the versioning enum.
-     * @return The first defined enum variant to return true.
-     */
-    public static <V extends Enum<V> & GlVersioned> V getLatest(Class<V> clazz) {
-        return getLatest(clazz, capabilities);
-    }
-
-    /**
-     * Get the most compatible version of a specific OpenGL feature by iterating over enum constants in order.
-     *
-     * @param clazz The class of the versioning enum.
-     * @param caps The current system's supported features.
-     * @param <V> The type of the versioning enum.
-     * @return The first defined enum variant to return true.
-     */
-    public static <V extends Enum<V> & GlVersioned> V getLatest(Class<V> clazz, GLCapabilities caps) {
-        V[] constants = clazz.getEnumConstants();
-        V last = constants[constants.length - 1];
-        if (!last.supported(caps)) {
-            throw new IllegalStateException("");
-        }
-
-        return Arrays.stream(constants).filter(it -> it.supported(caps)).findFirst().orElse(last);
+    public static boolean available() {
+        return canUseVBOs();
     }
 
     public static boolean canUseInstancing() {
-        return enabled && gl33();
+        return enabled &&
+                functions.vertexArrayObjectsSupported() &&
+                functions.drawInstancedSupported() &&
+                functions.instancedArraysSupported();
     }
 
     public static boolean canUseVBOs() {
-        return enabled && gl20();
-    }
-
-    public static boolean available() {
         return enabled && gl20();
     }
 
@@ -136,7 +107,7 @@ public class Backend {
     private static void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
         if (predicate.test(VanillaResourceType.SHADERS)) {
             capabilities = GL.createCapabilities();
-            mapBuffer = getLatest(MapBuffer.class);
+            functions = new GlFunctions(capabilities);
 
             OptifineHandler.refresh();
             refresh();
