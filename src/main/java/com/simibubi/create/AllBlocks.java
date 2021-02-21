@@ -133,6 +133,8 @@ import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelGenerator;
+import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
@@ -1081,7 +1083,10 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.andesite()))
-			.transform(BuilderTransformers.funnel("andesite", Create.asResource("block/andesite_casing")))
+			.blockstate(new FunnelGenerator("andesite")::generate)
+			.item(FunnelItem::new)
+			.model(FunnelGenerator.itemModel("andesite"))
+			.build()
 			.register();
 
 	public static final BlockEntry<BeltFunnelBlock> ANDESITE_BELT_FUNNEL =
@@ -1097,7 +1102,10 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::softMetal)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.brass()))
-			.transform(BuilderTransformers.funnel("brass", Create.asResource("block/brass_casing")))
+			.blockstate(new FunnelGenerator("brass")::generate)
+			.item(FunnelItem::new)
+			.model(FunnelGenerator.itemModel("brass"))
+			.build()
 			.register();
 
 	public static final BlockEntry<BeltFunnelBlock> BRASS_BELT_FUNNEL =
