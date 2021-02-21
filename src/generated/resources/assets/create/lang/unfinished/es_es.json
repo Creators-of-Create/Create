@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 11",
+	"_": "Missing Localizations: 12",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -830,6 +830,7 @@
 	"create.gui.assembly.exception.structureTooLarge": "Hay demasiados bloques incluídos en el artilugio.\nEl máximo configurado es: %1$s",
 	"create.gui.assembly.exception.tooManyPistonPoles": "Hay demasiadas Pértigas de extensión conectadas a este Pistón.\nEl máximo configurado es: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "Faltan pértigas de extensión para el Pistón",
+	"create.gui.assembly.exception.not_enough_sails": "UNLOCALIZED: Attached structure does not include enough sail-like blocks: %1$s\nA minimum of %2$s are required",
 	"create.gui.gauge.info_header": "Información sobre el medidor:",
 	"create.gui.speedometer.title": "Velocidad de rotación",
 	"create.gui.stressometer.title": "Estrés de la red",

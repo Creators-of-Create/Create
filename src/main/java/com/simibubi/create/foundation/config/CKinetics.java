@@ -14,6 +14,7 @@ public class CKinetics extends ConfigBase {
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
 	public ConfigInt kineticValidationFrequency = i(60, 5, "kineticValidationFrequency", Comments.kineticValidationFrequency);
 	public ConfigFloat crankHungerMultiplier = f(.01f, 0, 1, "crankHungerMultiplier", Comments.crankHungerMultiplier);
+	public ConfigInt minimumWindmillSails = i(8, 0, "minimumWindmillSails", Comments.minimumWindmillSails);
 
 	public ConfigGroup fan = group(1, "encasedFan", "Encased Fan");
 	public ConfigInt fanPushDistance = i(20, 5, "fanPushDistance", Comments.fanPushDistance);
@@ -79,6 +80,7 @@ public class CKinetics extends ConfigBase {
 		static String furnaceEngineSpeed = "Base rotation speed for the furnace engine generator";
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency = "Game ticks between Kinetic Blocks checking whether their source is still valid.";
+		static String minimumWindmillSails = "Amount of sail-type blocks required for a windmill to assemble successfully.";
 	}
 
 	public static enum DeployerAggroSetting {
