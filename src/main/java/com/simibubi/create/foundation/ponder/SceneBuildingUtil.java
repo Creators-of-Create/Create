@@ -8,12 +8,15 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
+/**
+ * Helpful shortcuts for marking boundaries, points or sections inside the scene
+ */
 public class SceneBuildingUtil {
 
 	public final SelectionUtil select;
 	public final VectorUtil vector;
 	public final PositionUtil grid;
-	
+
 	private final MutableBoundingBox sceneBounds;
 
 	SceneBuildingUtil(MutableBoundingBox sceneBounds) {
@@ -48,11 +51,11 @@ public class SceneBuildingUtil {
 		public Vec3d topOf(int x, int y, int z) {
 			return blockSurface(grid.at(x, y, z), Direction.UP);
 		}
-		
+
 		public Vec3d topOf(BlockPos pos) {
 			return blockSurface(pos, Direction.UP);
 		}
-		
+
 		public Vec3d blockSurface(BlockPos pos, Direction face) {
 			return blockSurface(pos, face, 0);
 		}

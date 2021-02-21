@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec2f;
@@ -126,6 +127,7 @@ public class PonderScene {
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms));
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms));
 		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
+		world.renderEntities(ms, buffer, info);
 		world.renderParticles(ms, buffer, info);
 		outliner.renderOutlines(ms, buffer);
 		ms.pop();
@@ -152,7 +154,7 @@ public class PonderScene {
 			pointOfInterest = VecHelper.lerp(.25f, pointOfInterest, chasingPointOfInterest);
 
 		outliner.tickOutlines();
-		world.tickParticles();
+		world.tick();
 		transform.tick();
 		forEach(e -> e.tick(this));
 
@@ -202,6 +204,12 @@ public class PonderScene {
 	public void forEach(Consumer<? super PonderElement> function) {
 		for (PonderElement elemtent : elements)
 			function.accept(elemtent);
+	}
+	
+	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
+		for (Entity element : world.getEntities())
+			if (type.isInstance(element))
+				function.accept(type.cast(element));
 	}
 
 	public <T extends PonderElement> void forEach(Class<T> type, Consumer<T> function) {

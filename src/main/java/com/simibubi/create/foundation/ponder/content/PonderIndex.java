@@ -4,11 +4,13 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 public class PonderIndex {
-	
+
 	public static final boolean EDITOR_MODE = true;
 
 	public static void register() {
-		// Register storyboards here (Changes require re-launch)
+		// Register storyboards here
+		// (!) Added entries require re-launch
+		// (!) Modifications inside storyboard methods only require re-opening the ui
 
 		PonderRegistry.forComponent(AllBlocks.SHAFT)
 			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay)

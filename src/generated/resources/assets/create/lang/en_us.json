@@ -1816,6 +1816,7 @@
 	"create.ponder.brass_hand.scene_0.title": "Coordinate Space",
 	"create.ponder.brass_hand.scene_1.change_blocks": "Blocks can be modified",
 	"create.ponder.brass_hand.scene_1.title": "Changing Blocks",
+	"create.ponder.brass_hand.scene_2.wut": "wut?",
 	"create.ponder.brass_hand.scene_2.title": "Showing Fluids",
 	"create.ponder.brass_hand.scene_2.fluids": "Fluid rendering test.",
 	"create.ponder.brass_hand.scene_3.outofbounds": "Blocks outside of the base plate do not affect scaling",
@@ -1832,6 +1833,7 @@
 	"create.ponder.brass_hand.scene_7.independent": "This Section renders independently.",
 	"create.ponder.brass_hand.scene_7.merged": "This Section got merged to base.",
 	"create.ponder.brass_hand.scene_7.title": "Sections",
+	"create.ponder.brass_hand.scene_8.title": "Manipulating Items",
 
 	"_": "Thank you for translating Create!"
 

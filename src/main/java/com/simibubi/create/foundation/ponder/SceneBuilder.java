@@ -2,9 +2,11 @@ package com.simibubi.create.foundation.ponder;
 
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
@@ -24,27 +26,56 @@ import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
 import com.simibubi.create.foundation.ponder.instructions.OutlineSelectionInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ReplaceBlocksInstruction;
 import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ShowCompleteSchematicInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 
+/**
+ * Enqueue instructions to the schedule via this object's methods.
+ */
 public class SceneBuilder {
 
+	/**
+	 * Ponder's toolkit for showing information on top of the scene world, such as
+	 * highlighted bounding boxes, texts, icons and keybindings.
+	 */
 	public final OverlayInstructions overlay;
-	public final SpecialInstructions special;
+
+	/**
+	 * Instructions for manipulating the schematic and its currently visible areas.
+	 * Allows to show, hide and modify blocks as the scene plays out.
+	 */
 	public final WorldInstructions world;
+
+	/**
+	 * Additional tools for debugging ponder and bypassing the facade
+	 */
 	public final DebugInstructions debug;
+
+	/**
+	 * Special effects to embellish and communicate with
+	 */
 	public final EffectInstructions effects;
+
+	/**
+	 * Random other instructions that might come in handy
+	 */
+	public final SpecialInstructions special;
 
 	private final PonderScene scene;
 
@@ -59,33 +90,85 @@ public class SceneBuilder {
 
 	// General
 
+	/**
+	 * Assign the standard english translation for this scene's title using this
+	 * method, anywhere inside the program function.
+	 * 
+	 * @param title
+	 */
 	public void title(String title) {
 		PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, "title", title);
 	}
 
+	/**
+	 * Communicates to the ponder UI which parts of the schematic make up the base
+	 * horizontally. Use of this is encouraged whenever there are components outside
+	 * the the base plate. <br>
+	 * As a result, showBasePlate() will only show the configured size, and the
+	 * scene's scaling inside the UI will be consistent with its base size.
+	 * 
+	 * @param xOffset       Block spaces between the base plate and the schematic
+	 *                      boundary on the Western side.
+	 * @param zOffset       Block spaces between the base plate and the schematic
+	 *                      boundary on the Northern side.
+	 * @param basePlateSize Length in blocks of the base plate itself. Ponder
+	 *                      assumes it to be square
+	 */
 	public void configureBasePlate(int xOffset, int zOffset, int basePlateSize) {
 		scene.offsetX = xOffset;
 		scene.offsetZ = zOffset;
 		scene.size = basePlateSize;
 	}
 
+	/**
+	 * Fade the layer of blocks into the scene ponder assumes to be the base plate
+	 * of the schematic's structure. Makes for a nice opener
+	 */
 	public void showBasePlate() {
 		world.showSection(scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.offsetX, 0, scene.offsetZ),
 			new Vec3i(scene.size, 0, scene.size)), Direction.UP);
 	}
 
+	/**
+	 * Before running the upcoming instructions, wait for a duration to let previous
+	 * actions play out. <br>
+	 * Idle does not stall any animations, only schedules a time gap between
+	 * instructions.
+	 * 
+	 * @param ticks Duration to wait for
+	 */
 	public void idle(int ticks) {
 		addInstruction(new DelayInstruction(ticks));
 	}
 
+	/**
+	 * Before running the upcoming instructions, wait for a duration to let previous
+	 * actions play out. <br>
+	 * Idle does not stall any animations, only schedules a time gap between
+	 * instructions.
+	 * 
+	 * @param seconds Duration to wait for
+	 */
 	public void idleSeconds(int seconds) {
 		idle(seconds * 20);
 	}
 
+	/**
+	 * Once the scene reaches this instruction in the timeline, mark it as
+	 * "finished". This happens automatically when the end of a storyboard is
+	 * reached, but can be desirable to do earlier, in order to bypass the wait for
+	 * any residual text windows to time out. <br>
+	 * So far this event only affects the "next scene" button in the UI to flash.
+	 */
 	public void markAsFinished() {
 		addInstruction(new MarkAsFinishedInstruction());
 	}
 
+	/**
+	 * Pans the scene's camera view around the vertical axis by the given amount
+	 * 
+	 * @param degrees
+	 */
 	public void rotateCameraY(float degrees) {
 		addInstruction(new RotateSceneInstruction(0, degrees, true));
 	}
@@ -125,11 +208,11 @@ public class SceneBuilder {
 		public void showControls(InputWindowElement element, int duration) {
 			addInstruction(new ShowInputInstruction(element, duration));
 		}
-		
+
 		public void chaseBoundingBoxOutline(PonderPalette color, Object slot, AxisAlignedBB boundingBox, int duration) {
 			addInstruction(new ChaseAABBInstruction(color, slot, boundingBox, duration));
 		}
-		
+
 		public void showOutline(PonderPalette color, Object slot, Selection selection, int duration) {
 			addInstruction(new OutlineSelectionInstruction(color, slot, selection, duration));
 		}
@@ -240,6 +323,36 @@ public class SceneBuilder {
 			addInstruction(new ReplaceBlocksInstruction(selection, state, false, spawnParticles));
 		}
 
+		public <T extends Entity> void modifyEntities(Class<T> entityClass, Consumer<T> entityCallBack) {
+			addInstruction(scene -> scene.forEachWorldEntity(entityClass, entityCallBack));
+		}
+
+		public void createEntity(Function<World, Entity> factory) {
+			addInstruction(scene -> scene.getWorld()
+				.addEntity(factory.apply(scene.getWorld())));
+		}
+
+		public void createItemEntity(Vec3d location, Vec3d motion, ItemStack stack) {
+			createEntity(world -> {
+				ItemEntity itemEntity = new ItemEntity(world, location.x, location.y, location.z, stack);
+				itemEntity.setMotion(motion);
+				return itemEntity;
+			});
+		}
+
+		public void createItemOnBelt(BlockPos beltLocation, Direction insertionSide, ItemStack stack) {
+			addInstruction(scene -> {
+				TileEntity tileEntity = scene.getWorld()
+					.getTileEntity(beltLocation);
+				if (!(tileEntity instanceof BeltTileEntity))
+					return;
+				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
+				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
+			});
+			flapFunnels(scene.getSceneBuildingUtil().select.position(beltLocation.up()), true);
+		}
+
 		public void setKineticSpeed(Selection selection, float speed) {
 			modifyKineticSpeed(selection, f -> speed);
 		}
@@ -272,11 +385,16 @@ public class SceneBuilder {
 	public class DebugInstructions {
 
 		public void debugSchematic() {
-			addInstruction(new ShowCompleteSchematicInstruction());
+			addInstruction(
+				scene -> scene.addElement(new WorldSectionElement(scene.getSceneBuildingUtil().select.everywhere())));
 		}
 
 		public void addInstructionInstance(PonderInstruction instruction) {
 			addInstruction(instruction);
+		}
+
+		public void enqueueCallback(Consumer<PonderScene> callback) {
+			addInstruction(callback);
 		}
 
 	}

@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -41,6 +43,7 @@ public class DebugScenes {
 		add(DebugScenes::controlsScene);
 		add(DebugScenes::birbScene);
 		add(DebugScenes::sectionsScene);
+		add(DebugScenes::itemScene);
 	}
 
 	private static void add(PonderStoryBoard sb) {
@@ -116,7 +119,7 @@ public class DebugScenes {
 
 		scene.idle(12);
 		scene.special.movePointOfInterest(util.grid.at(-4, 5, 4));
-		scene.overlay.showTargetedText(PonderPalette.RED, parrotPos.add(-.25f, 0.25f, .25f), "wut", "dafuq?", 40);
+		scene.overlay.showTargetedText(PonderPalette.RED, parrotPos.add(-.25f, 0.25f, .25f), "wut", "wut?", 40);
 
 	}
 
@@ -201,7 +204,7 @@ public class DebugScenes {
 
 		AxisAlignedBB point = new AxisAlignedBB(chassisSurface, chassisSurface);
 		AxisAlignedBB expanded = point.grow(1 / 4f, 1 / 4f, 1 / 16f);
-		
+
 		Selection singleBlock = util.select.position(1, 2, 3);
 		Selection twoBlocks = util.select.fromTo(1, 2, 3, 1, 3, 3);
 		Selection threeBlocks = util.select.fromTo(1, 2, 3, 1, 4, 3);
@@ -233,7 +236,7 @@ public class DebugScenes {
 		scene.overlay.showControls(new InputWindowElement(chassisSurface, Pointing.UP).whileCTRL()
 			.scroll()
 			.withWrench(), 40);
-		
+
 		scene.overlay.showOutline(white, chassisEffectHighlight, singleRow, 10);
 		scene.idle(10);
 		scene.overlay.showOutline(white, chassisEffectHighlight, twoRows, 10);
@@ -244,7 +247,7 @@ public class DebugScenes {
 		scene.idle(10);
 		scene.overlay.showOutline(white, chassisEffectHighlight, singleRow, 10);
 		scene.idle(10);
-		
+
 		scene.markAsFinished();
 	}
 
@@ -345,6 +348,43 @@ public class DebugScenes {
 		scene.idle(40);
 		scene.world.hideIndependentSection(helicopter, Direction.UP);
 
+	}
+
+	public static void itemScene(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.configureBasePlate(0, 0, 6);
+		scene.title("Manipulating Items");
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(10);
+		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
+
+		ItemStack brassItem = AllItems.BRASS_INGOT.asStack();
+		ItemStack copperItem = AllItems.COPPER_INGOT.asStack();
+
+		for (int z = 4; z >= 2; z--) {
+			scene.world.createItemEntity(util.vector.centerOf(0, 4, z), Vec3d.ZERO, brassItem.copy());
+			scene.idle(10);
+		}
+
+		BlockPos beltPos = util.grid.at(2, 1, 3);
+		scene.world.createItemOnBelt(beltPos, Direction.EAST, copperItem.copy());
+
+		scene.idle(35);
+
+		scene.world.modifyEntities(ItemEntity.class, entity -> {
+			if (copperItem.isItemEqual(entity.getItem()))
+				entity.setNoGravity(true);
+		});
+
+		scene.idle(20);
+
+		scene.world.modifyEntities(ItemEntity.class, entity -> {
+			if (brassItem.isItemEqual(entity.getItem()))
+				entity.setMotion(util.vector.at(-.15f, .5f, 0));
+		});
+
+		scene.idle(27);
+
+		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
 	}
 
 }

@@ -38,6 +38,7 @@ public class BeltInventory {
 	final List<TransportedItemStack> toInsert;
 	final List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
+	boolean virtualMode;
 	final float SEGMENT_WINDOW = .75f;
 
 	public BeltInventory(BeltTileEntity te) {
@@ -45,6 +46,7 @@ public class BeltInventory {
 		items = new LinkedList<>();
 		toInsert = new LinkedList<>();
 		toRemove = new LinkedList<>();
+		virtualMode = false;
 	}
 
 	public void tick() {
@@ -82,7 +84,7 @@ public class BeltInventory {
 			.get(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
 		float spacing = 1;
 		World world = belt.getWorld();
-		boolean onClient = world.isRemote;
+		boolean onClient = world.isRemote && !virtualMode;
 
 		// resolve ending only when items will reach it this tick
 		Ending ending = Ending.UNRESOLVED;
@@ -435,6 +437,11 @@ public class BeltInventory {
 
 	public List<TransportedItemStack> getTransportedItems() {
 		return items;
+	}
+	
+	// Simulating belt interactions in a client-only world
+	public void enableVirtualMode() {
+		virtualMode = true;
 	}
 
 }

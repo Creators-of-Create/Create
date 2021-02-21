@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 711",
+	"_": "Missing Localizations: 713",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1817,6 +1817,7 @@
 	"create.ponder.brass_hand.scene_0.title": "UNLOCALIZED: Coordinate Space",
 	"create.ponder.brass_hand.scene_1.change_blocks": "UNLOCALIZED: Blocks can be modified",
 	"create.ponder.brass_hand.scene_1.title": "UNLOCALIZED: Changing Blocks",
+	"create.ponder.brass_hand.scene_2.wut": "UNLOCALIZED: wut?",
 	"create.ponder.brass_hand.scene_2.title": "UNLOCALIZED: Showing Fluids",
 	"create.ponder.brass_hand.scene_2.fluids": "UNLOCALIZED: Fluid rendering test.",
 	"create.ponder.brass_hand.scene_3.outofbounds": "UNLOCALIZED: Blocks outside of the base plate do not affect scaling",
@@ -1833,6 +1834,7 @@
 	"create.ponder.brass_hand.scene_7.independent": "UNLOCALIZED: This Section renders independently.",
 	"create.ponder.brass_hand.scene_7.merged": "UNLOCALIZED: This Section got merged to base.",
 	"create.ponder.brass_hand.scene_7.title": "UNLOCALIZED: Sections",
+	"create.ponder.brass_hand.scene_8.title": "UNLOCALIZED: Manipulating Items",
 
 	"_": "Thank you for translating Create!"
 
