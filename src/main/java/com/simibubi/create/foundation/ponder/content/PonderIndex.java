@@ -4,20 +4,19 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 public class PonderIndex {
-
-	/**
-	 * When true, lang files are bypassed and any text in ponder can be hot-swapped
-	 * without the need of runData
-	 */
+	
 	public static final boolean EDITOR_MODE = true;
 
 	public static void register() {
-		// Register storyboards here (Requires re-launch)
+		// Register storyboards here (Changes require re-launch)
 
-		PonderRegistry.addStoryBoard(AllBlocks.SHAFT, new ShaftAsRelay());
-		PonderRegistry.addStoryBoard(AllBlocks.SHAFT, new ShaftsCanBeEncased());
+		PonderRegistry.forComponent(AllBlocks.SHAFT)
+			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay)
+			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
-		DebugScenes.registerAll();
+		// Debug scenes, can be found in game via the Brass Hand
+		if (EDITOR_MODE)
+			DebugScenes.registerAll();
 	}
 
 }

@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.instructions;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.ponder.PonderScene;
-import com.simibubi.create.foundation.ponder.Select;
+import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.OutlinerElement;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 
@@ -18,7 +18,7 @@ public class TextInstruction extends FadeInOutInstruction {
 		super(duration);
 	}
 
-	public TextInstruction(int color, Supplier<String> text, int duration, Select selection) {
+	public TextInstruction(int color, Supplier<String> text, int duration, Selection selection) {
 		this(color, text, duration);
 		element = new TextWindowElement(text).pointAt(selection.getCenter());
 		element.colored(color);

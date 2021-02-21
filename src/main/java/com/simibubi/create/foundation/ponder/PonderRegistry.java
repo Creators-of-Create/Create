@@ -12,7 +12,7 @@ import java.util.zip.GZIPInputStream;
 
 import com.google.gson.JsonElement;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.PonderScene.SceneBuilder;
+import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.SharedText;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -28,12 +28,16 @@ import net.minecraft.world.gen.feature.template.Template;
 
 public class PonderRegistry {
 
-	static Map<ResourceLocation, List<PonderStoryBoard>> all = new HashMap<>();
+	static Map<ResourceLocation, List<PonderStoryBoardEntry>> all = new HashMap<>();
 
-	public static void addStoryBoard(ItemProviderEntry<?> component, PonderStoryBoard storyBoard) {
+	public static void addStoryBoard(ItemProviderEntry<?> component, String schematic, PonderStoryBoard storyBoard) {
 		ResourceLocation id = component.getId();
 		all.computeIfAbsent(id, $ -> new ArrayList<>())
-			.add(storyBoard);
+			.add(new PonderStoryBoardEntry(storyBoard, schematic));
+	}
+	
+	public static MultiSceneBuilder forComponent(ItemProviderEntry<?> component) {
+		return new MultiSceneBuilder(component);
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
@@ -44,26 +48,29 @@ public class PonderRegistry {
 			SharedText.gatherText();
 		}
 
-		List<PonderStoryBoard> list = all.get(id);
+		List<PonderStoryBoardEntry> list = all.get(id);
 		List<PonderScene> scenes = new ArrayList<>();
+		
 		for (int i = 0; i < list.size(); i++) {
-			
-			PonderStoryBoard sb = list.get(i);
+			PonderStoryBoardEntry sb = list.get(i);
 			Template activeTemplate = loadSchematic(sb.getSchematicName());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().world);
 			activeTemplate.addBlocksToWorld(world, BlockPos.ZERO, new PlacementSettings());
 			world.createBackup();
-			
-			PonderScene scene = new PonderScene(world, id, i);
-			PonderLocalization.registerSpecific(id, i, "title", sb.getStoryTitle());
-			SceneBuilder builder = scene.builder();
-			sb.program(builder, builder.getSceneBuildingUtil());
+			PonderScene scene = compileScene(id, i, sb, world);
 			scene.begin();
 			scenes.add(scene);
-			
 		}
 
 		return scenes;
+	}
+
+	public static PonderScene compileScene(ResourceLocation id, int i, PonderStoryBoardEntry sb, PonderWorld world) {
+		PonderScene scene = new PonderScene(world, id, i);
+		SceneBuilder builder = scene.builder();
+		sb.getBoard()
+			.program(builder, scene.getSceneBuildingUtil());
+		return scene;
 	}
 
 	public static Template loadSchematic(String path) {
@@ -87,15 +94,25 @@ public class PonderRegistry {
 		PonderIndex.register();
 		SharedText.gatherText();
 		all.forEach((id, list) -> {
-			for (int i = 0; i < list.size(); i++) {
-				PonderStoryBoard sb = list.get(i);
-				PonderScene scene = new PonderScene(null, id, i);
-				PonderLocalization.registerSpecific(id, i, "title", sb.getStoryTitle());
-				SceneBuilder builder = scene.builder();
-				sb.program(builder, builder.getSceneBuildingUtil());
-			}
+			for (int i = 0; i < list.size(); i++)
+				compileScene(id, i, list.get(i), null);
 		});
 		return PonderLocalization.record();
+	}
+	
+	public static class MultiSceneBuilder {
+
+		private ItemProviderEntry<?> component;
+
+		MultiSceneBuilder(ItemProviderEntry<?> component) {
+			this.component = component;
+		}
+		
+		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard) {
+			PonderRegistry.addStoryBoard(component, schematicPath, storyBoard);
+			return this;
+		}
+		
 	}
 
 }

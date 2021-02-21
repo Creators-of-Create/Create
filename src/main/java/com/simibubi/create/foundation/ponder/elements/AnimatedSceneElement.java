@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public abstract class AnimatedSceneElement extends PonderSceneElement {
@@ -20,6 +21,10 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 			.startWithValue(0);
 	}
 
+	public void forceApplyFade(float fade) {
+		this.fade.startWithValue(fade);
+	}
+	
 	public void setFade(float fade) {
 		this.fade.setValue(fade);
 	}
@@ -71,7 +76,7 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 	protected int lightCoordsFromFade(float fade) {
 		int light = 0xF000F0;
 		if (fade != 1) {
-			light = (int) (0xF * fade);
+			light = (int) (MathHelper.lerp(fade, 5, 0xF));
 			light = light << 4 | light << 20;
 		}
 		return light;

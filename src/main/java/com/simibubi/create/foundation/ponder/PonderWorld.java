@@ -38,7 +38,7 @@ public class PonderWorld extends SchematicWorld {
 	protected PonderWorldParticles particles;
 
 	int overrideLight;
-	Select mask;
+	Selection mask;
 
 	public PonderWorld(BlockPos anchor, World original) {
 		super(anchor, original);
@@ -81,7 +81,7 @@ public class PonderWorld extends SchematicWorld {
 		return overrideLight == -1 ? 15 : overrideLight;
 	}
 
-	public void setMask(Select mask) {
+	public void setMask(Selection mask) {
 		this.mask = mask;
 	}
 

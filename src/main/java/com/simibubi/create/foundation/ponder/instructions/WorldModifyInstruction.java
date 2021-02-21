@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.ponder.instructions;
 
 import com.simibubi.create.foundation.ponder.PonderInstruction;
 import com.simibubi.create.foundation.ponder.PonderScene;
-import com.simibubi.create.foundation.ponder.Select;
+import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 
 public abstract class WorldModifyInstruction extends PonderInstruction {
 
-	private Select selection;
+	private Selection selection;
 
-	public WorldModifyInstruction(Select selection) {
+	public WorldModifyInstruction(Selection selection) {
 		this.selection = selection;
 	}
 
@@ -22,10 +22,10 @@ public abstract class WorldModifyInstruction extends PonderInstruction {
 	public void tick(PonderScene scene) {
 		runModification(selection, scene);
 		if (needsRedraw())
-			scene.forEach(WorldSectionElement.class, wse -> wse.queueRedraw(scene.getWorld()));
+			scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 	}
 
-	protected abstract void runModification(Select selection, PonderScene scene);
+	protected abstract void runModification(Selection selection, PonderScene scene);
 
 	protected abstract boolean needsRedraw();
 

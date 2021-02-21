@@ -60,14 +60,14 @@ public class Outliner {
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb, int ttl) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot, ttl);
-		outline.prevBB = outline.targetBB = bb;
+		outline.prevBB = outline.targetBB = outline.bb = bb;
 		return outline.getParams();
 	}
 
 	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot);
-		outline.prevBB = outline.targetBB = bb;
+		outline.prevBB = outline.targetBB = outline.bb = bb;
 		return outline.getParams();
 	}
 
@@ -107,7 +107,7 @@ public class Outliner {
 	// Utility
 
 	private void createAABBOutlineIfMissing(Object slot, AxisAlignedBB bb) {
-		if (!outlines.containsKey(slot)) {
+		if (!outlines.containsKey(slot) || !(outlines.get(slot).outline instanceof AABBOutline)) {
 			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
 			outlines.put(slot, new OutlineEntry(outline));
 		}

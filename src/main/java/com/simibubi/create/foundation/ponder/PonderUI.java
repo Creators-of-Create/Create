@@ -106,7 +106,7 @@ public class PonderUI extends AbstractSimiScreen {
 		int prevIndex = index;
 		index = forward ? index + 1 : index - 1;
 		index = MathHelper.clamp(index, 0, scenes.size() - 1);
-		if (prevIndex != index && Math.abs(index - lazyIndex.getValue()) < 1.5f) {
+		if (prevIndex != index) {// && Math.abs(index - lazyIndex.getValue()) < 1.5f) {
 			scenes.get(prevIndex)
 				.fadeOut();
 			scenes.get(index)
@@ -228,7 +228,7 @@ public class PonderUI extends AbstractSimiScreen {
 		if (index == scenes.size() - 1 || index == scenes.size() - 2 && lazyIndexValue > index)
 			right.fade(scenes.size() - lazyIndexValue - 1);
 
-		if (scenes.get(index).finished)
+		if (scenes.get(index).isFinished())
 			right.flash();
 		else
 			right.dim();

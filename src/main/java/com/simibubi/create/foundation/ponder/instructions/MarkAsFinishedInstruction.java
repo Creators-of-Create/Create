@@ -12,7 +12,7 @@ public class MarkAsFinishedInstruction extends PonderInstruction {
 
 	@Override
 	public void tick(PonderScene scene) {
-		scene.finished = true;
+		scene.setFinished(true);
 	}
 
 }
