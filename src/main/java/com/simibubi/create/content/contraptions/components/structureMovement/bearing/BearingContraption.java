@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +22,7 @@ public class BearingContraption extends Contraption {
 
 	protected int sailBlocks;
 	protected Direction facing;
-	
+
 	private boolean isWindmill;
 
 	public BearingContraption() {}
@@ -38,8 +39,8 @@ public class BearingContraption extends Contraption {
 			return false;
 		startMoving(world);
 		expandBoundsAroundAxis(facing.getAxis());
-		if (isWindmill && sailBlocks == 0)
-			return false;
+		if (isWindmill && sailBlocks < AllConfigs.SERVER.kinetics.minimumWindmillSails.get())
+			throw AssemblyException.notEnoughSails(sailBlocks);
 		if (blocks.isEmpty())
 			return false;
 		return true;
