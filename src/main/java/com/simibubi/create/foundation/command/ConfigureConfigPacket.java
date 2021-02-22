@@ -1,23 +1,25 @@
 package com.simibubi.create.foundation.command;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ConfigureConfigPacket extends SimplePacketBase {
 
@@ -79,23 +81,44 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 
 		@OnlyIn(Dist.CLIENT)
 		private static void rainbowDebug(String value) {
+			ClientPlayerEntity player = Minecraft.getInstance().player;
+			if (player == null || "".equals(value)) return;
+
+			if (value.equals("info")) {
+				ITextComponent text = new StringTextComponent("Rainbow Debug Utility is currently: ").appendSibling(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
+				player.sendStatusMessage(text, false);
+				return;
+			}
+
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
+			ITextComponent text = boolToText(AllConfigs.CLIENT.rainbowDebug.get()).appendSibling(new StringTextComponent(" Rainbow Debug Utility").applyTextStyle(TextFormatting.WHITE));
+			player.sendStatusMessage(text, false);
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		private static void experimentalRendering(String value) {
-			if (!"".equals(value)) {
-				AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			ClientPlayerEntity player = Minecraft.getInstance().player;
+			if (player == null || "".equals(value)) return;
+
+			if (value.equals("info")) {
+				ITextComponent text = new StringTextComponent("Experimental Rendering is currently: ").appendSibling(boolToText(AllConfigs.CLIENT.experimentalRendering.get()));
+				player.sendStatusMessage(text, false);
+				return;
 			}
+
+			AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
+			ITextComponent text = boolToText(AllConfigs.CLIENT.experimentalRendering.get()).appendSibling(new StringTextComponent(" Experimental Rendering").applyTextStyle(TextFormatting.WHITE));
+			player.sendStatusMessage(text, false);
+
 			FastRenderDispatcher.refresh();
 		}
-		
+
 		@OnlyIn(Dist.CLIENT)
 		private static void overlayReset(String value) {
 			AllConfigs.CLIENT.overlayOffsetX.set(0);
 			AllConfigs.CLIENT.overlayOffsetY.set(0);
 		}
-		
+
 		@OnlyIn(Dist.CLIENT)
 		private static void overlayScreen(String value) {
 			ScreenOpener.open(new GoggleConfigScreen());
@@ -105,6 +128,12 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		private static void experimentalLighting(String value) {
 			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 			Minecraft.getInstance().worldRenderer.loadRenderers();
+		}
+
+		private static ITextComponent boolToText(boolean b) {
+			return b
+					? new StringTextComponent("enabled").applyTextStyle(TextFormatting.DARK_GREEN)
+					: new StringTextComponent("disabled").applyTextStyle(TextFormatting.RED);
 		}
 	}
 }
