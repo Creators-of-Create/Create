@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,10 +37,12 @@ public class FunnelItem extends BlockItem {
 			return state;
 		if (!(state.getBlock() instanceof FunnelBlock))
 			return state;
-		if (state.get(FunnelBlock.FACE) != AttachFace.WALL)
+		if (state.get(FunnelBlock.FACING)
+			.getAxis()
+			.isVertical())
 			return state;
 
-		Direction direction = state.get(FunnelBlock.HORIZONTAL_FACING);
+		Direction direction = state.get(FunnelBlock.FACING);
 		FunnelBlock block = (FunnelBlock) getBlock();
 		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
 			.getBlock();

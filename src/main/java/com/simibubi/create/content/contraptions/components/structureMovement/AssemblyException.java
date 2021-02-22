@@ -9,7 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class AssemblyException extends Exception {
-	
+
 	private static final long serialVersionUID = 1L;
 	public final ITextComponent component;
 	private BlockPos position = null;
@@ -21,7 +21,8 @@ public class AssemblyException extends Exception {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putString("Component", ITextComponent.Serializer.toJson(exception.component));
 		if (exception.hasPosition())
-			nbt.putLong("Position", exception.getPosition().toLong());
+			nbt.putLong("Position", exception.getPosition()
+				.toLong());
 
 		compound.put("LastException", nbt);
 	}
@@ -48,36 +49,33 @@ public class AssemblyException extends Exception {
 	}
 
 	public static AssemblyException unmovableBlock(BlockPos pos, BlockState state) {
-		AssemblyException e = new AssemblyException("unmovableBlock",
-				pos.getX(),
-				pos.getY(),
-				pos.getZ(),
-				new TranslationTextComponent(state.getBlock().getTranslationKey()));
+		AssemblyException e = new AssemblyException("unmovableBlock", pos.getX(), pos.getY(), pos.getZ(),
+			new TranslationTextComponent(state.getBlock()
+				.getTranslationKey()));
 		e.position = pos;
 		return e;
 	}
 
 	public static AssemblyException unloadedChunk(BlockPos pos) {
-		AssemblyException e = new AssemblyException("chunkNotLoaded",
-				pos.getX(),
-				pos.getY(),
-				pos.getZ());
+		AssemblyException e = new AssemblyException("chunkNotLoaded", pos.getX(), pos.getY(), pos.getZ());
 		e.position = pos;
 		return e;
 	}
 
 	public static AssemblyException structureTooLarge() {
-		return new AssemblyException("structureTooLarge",
-				AllConfigs.SERVER.kinetics.maxBlocksMoved.get());
+		return new AssemblyException("structureTooLarge", AllConfigs.SERVER.kinetics.maxBlocksMoved.get());
 	}
 
 	public static AssemblyException tooManyPistonPoles() {
-		return new AssemblyException("tooManyPistonPoles",
-				AllConfigs.SERVER.kinetics.maxPistonPoles.get());
+		return new AssemblyException("tooManyPistonPoles", AllConfigs.SERVER.kinetics.maxPistonPoles.get());
 	}
 
 	public static AssemblyException noPistonPoles() {
 		return new AssemblyException("noPistonPoles");
+	}
+
+	public static AssemblyException notEnoughSails(int sails) {
+		return new AssemblyException("not_enough_sails", sails, AllConfigs.SERVER.kinetics.minimumWindmillSails.get());
 	}
 
 	public String getFormattedText() {

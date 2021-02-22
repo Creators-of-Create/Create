@@ -26,7 +26,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -259,7 +258,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 		if (!(blockState.getBlock() instanceof FunnelBlock))
 			return false;
-		return blockState.get(FunnelBlock.FACE) == AttachFace.FLOOR;
+		return FunnelBlock.getFunnelFacing(blockState) == Direction.UP;
 	}
 
 	private boolean supportsFiltering() {
