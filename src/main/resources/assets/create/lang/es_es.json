@@ -829,6 +829,7 @@
 	"create.gui.assembly.exception.structureTooLarge": "Hay demasiados bloques incluídos en el artilugio.\nEl máximo configurado es: %1$s",
 	"create.gui.assembly.exception.tooManyPistonPoles": "Hay demasiadas Pértigas de extensión conectadas a este Pistón.\nEl máximo configurado es: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "Faltan pértigas de extensión para el Pistón",
+	"create.gui.assembly.exception.not_enough_sails": "La estructura adjunta no incluye suficientes bloques tipo vela: %1$s\nSe requiere un mínimo de %2$s",
 	"create.gui.gauge.info_header": "Información sobre el medidor:",
 	"create.gui.speedometer.title": "Velocidad de rotación",
 	"create.gui.stressometer.title": "Estrés de la red",
