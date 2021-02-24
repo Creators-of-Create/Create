@@ -712,16 +712,15 @@ public abstract class Contraption {
 		}
 
 		ListNBT superglueNBT = new ListNBT();
-		for (Pair<BlockPos, Direction> glueEntry : superglue) {
-			CompoundNBT c = new CompoundNBT();
-			c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
-			c.putByte("Direction", (byte) glueEntry.getValue()
-				.getIndex());
-			superglueNBT.add(c);
-		}
-
 		ListNBT storageNBT = new ListNBT();
 		if (!spawnPacket) {
+			for (Pair<BlockPos, Direction> glueEntry : superglue) {
+				CompoundNBT c = new CompoundNBT();
+				c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
+				c.putByte("Direction", (byte) glueEntry.getValue().getIndex());
+				superglueNBT.add(c);
+			}
+
 			for (BlockPos pos : storage.keySet()) {
 				CompoundNBT c = new CompoundNBT();
 				MountedStorage mountedStorage = storage.get(pos);
