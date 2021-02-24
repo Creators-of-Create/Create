@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlFunctions;
 import org.lwjgl.opengl.GL20;
 
 public class GlBuffer extends GlObject {
@@ -35,11 +34,11 @@ public class GlBuffer extends GlObject {
     }
 
     public void map(int length, Consumer<ByteBuffer> upload) {
-        Backend.functions.mapBuffer(bufferType, 0, length, upload);
+        Backend.compat.mapBuffer(bufferType, 0, length, upload);
     }
 
     public void map(int offset, int length, Consumer<ByteBuffer> upload) {
-        Backend.functions.mapBuffer(bufferType, offset, length, upload);
+        Backend.compat.mapBuffer(bufferType, offset, length, upload);
     }
 
     protected void deleteInternal(int handle) {

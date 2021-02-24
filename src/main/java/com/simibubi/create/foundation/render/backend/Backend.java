@@ -3,15 +3,12 @@ package com.simibubi.create.foundation.render.backend;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlFunctions;
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlFeatureCompat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
@@ -23,8 +20,6 @@ import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlVersioned;
-import com.simibubi.create.foundation.render.backend.gl.versioned.MapBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -45,7 +40,7 @@ public class Backend {
     private static boolean enabled;
 
     public static GLCapabilities capabilities;
-    public static GlFunctions functions;
+    public static GlFeatureCompat compat;
 
     public Backend() {
         throw new IllegalStateException();
@@ -74,9 +69,9 @@ public class Backend {
 
     public static boolean canUseInstancing() {
         return enabled &&
-                functions.vertexArrayObjectsSupported() &&
-                functions.drawInstancedSupported() &&
-                functions.instancedArraysSupported();
+                compat.vertexArrayObjectsSupported() &&
+                compat.drawInstancedSupported() &&
+                compat.instancedArraysSupported();
     }
 
     public static boolean canUseVBOs() {
@@ -107,7 +102,7 @@ public class Backend {
     private static void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
         if (predicate.test(VanillaResourceType.SHADERS)) {
             capabilities = GL.createCapabilities();
-            functions = new GlFunctions(capabilities);
+            compat = new GlFeatureCompat(capabilities);
 
             OptifineHandler.refresh();
             refresh();
