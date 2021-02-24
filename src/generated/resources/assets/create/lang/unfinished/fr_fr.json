@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 713",
+	"_": "Missing Localizations: 715",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -825,11 +825,12 @@
 	"create.gui.goggles.at_current_speed": "À la vitesse actuelle",
 	"create.gui.goggles.pole_length": "Longueur de la barre",
 	"create.gui.assembly.exception": "UNLOCALIZED: This Contraption was unable to assemble:",
-	"create.gui.assembly.exception.unmovableBlock": "UNLOCALIZED: Unmovable Block (%4$s) at [%1$s %2$s %3$s]",
-	"create.gui.assembly.exception.chunkNotLoaded": "UNLOCALIZED: The Block at [%1$s %2$s %3$s] was not in a loaded chunk",
+	"create.gui.assembly.exception.unmovableBlock": "UNLOCALIZED: Unmovable Block (%4$s) at [%1$s,%2$s,%3$s]",
+	"create.gui.assembly.exception.chunkNotLoaded": "UNLOCALIZED: The Block at [%1$s,%2$s,%3$s] was not in a loaded chunk",
 	"create.gui.assembly.exception.structureTooLarge": "UNLOCALIZED: There are too many Blocks included in the contraption.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.tooManyPistonPoles": "UNLOCALIZED: There are too many extension Poles attached to this Piston.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "UNLOCALIZED: The Piston is missing some extension Poles",
+	"create.gui.assembly.exception.not_enough_sails": "UNLOCALIZED: Attached structure does not include enough sail-like blocks: %1$s\nA minimum of %2$s are required",
 	"create.gui.gauge.info_header": "Informations sur la jauge:",
 	"create.gui.speedometer.title": "Vitesse de rotation",
 	"create.gui.stressometer.title": "Stress du réseau",
@@ -1834,6 +1835,7 @@
 	"create.ponder.brass_hand.scene_7.independent": "UNLOCALIZED: This Section renders independently.",
 	"create.ponder.brass_hand.scene_7.merged": "UNLOCALIZED: This Section got merged to base.",
 	"create.ponder.brass_hand.scene_7.title": "UNLOCALIZED: Sections",
+	"create.ponder.brass_hand.scene_8.stalling": "UNLOCALIZED: Belt Items can only be force-stalled on the belt they were created on.",
 	"create.ponder.brass_hand.scene_8.title": "UNLOCALIZED: Manipulating Items",
 
 	"_": "Thank you for translating Create!"

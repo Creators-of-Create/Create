@@ -35,7 +35,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class BeltFunnelBlock extends AbstractFunnelBlock implements ISpecialBlockItemRequirement {
+public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements ISpecialBlockItemRequirement {
 
 	private BlockEntry<? extends FunnelBlock> parent;
 	public static final IProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
@@ -124,7 +124,7 @@ public class BeltFunnelBlock extends AbstractFunnelBlock implements ISpecialBloc
 				parentState = parentState.with(POWERED, true);
 			if (state.get(SHAPE) == Shape.PUSHING)
 				parentState = parentState.with(FunnelBlock.EXTRACTING, true);
-			return parentState.with(FunnelBlock.HORIZONTAL_FACING, state.get(HORIZONTAL_FACING));
+			return parentState.with(FunnelBlock.FACING, state.get(HORIZONTAL_FACING));
 		}
 		Shape updatedShape =
 			getShapeForPosition(world, pos, state.get(HORIZONTAL_FACING), state.get(SHAPE) == Shape.PUSHING);
