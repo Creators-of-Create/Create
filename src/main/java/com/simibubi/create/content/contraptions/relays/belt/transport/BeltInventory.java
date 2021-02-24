@@ -107,7 +107,7 @@ public class BeltInventory {
 				movement *= ServerSpeedProvider.get();
 
 			// Don't move if held by processing (client)
-			if (onClient && currentItem.locked)
+			if (world.isRemote && currentItem.locked)
 				continue;
 
 			// Don't move if other items are waiting in front

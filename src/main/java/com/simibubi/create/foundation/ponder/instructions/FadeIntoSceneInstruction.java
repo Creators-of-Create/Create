@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.ponder.instructions;
 
-import java.util.UUID;
-
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
@@ -41,7 +39,7 @@ public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> e
 	}
 
 	public ElementLink<T> createLink(PonderScene scene) {
-		elementLink = new ElementLink<>(getElementClass(), UUID.randomUUID());
+		elementLink = new ElementLink<>(getElementClass());
 		scene.linkElement(element, elementLink);
 		return elementLink;
 	}

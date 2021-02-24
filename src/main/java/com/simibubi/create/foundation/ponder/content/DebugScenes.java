@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBo
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
@@ -366,9 +367,17 @@ public class DebugScenes {
 		}
 
 		BlockPos beltPos = util.grid.at(2, 1, 3);
-		scene.world.createItemOnBelt(beltPos, Direction.EAST, copperItem.copy());
+		ElementLink<BeltItemElement> itemOnBelt =
+			scene.world.createItemOnBelt(beltPos, Direction.EAST, copperItem.copy());
 
-		scene.idle(35);
+		scene.idle(10);
+		scene.world.stallBeltItem(itemOnBelt, true);
+		scene.idle(5);
+		scene.overlay.showTargetedText(PonderPalette.FAST, util.vector.topOf(2, 1, 2), "stalling",
+			"Belt Items can only be force-stalled on the belt they were created on.", 40);
+		scene.idle(45);
+		scene.world.stallBeltItem(itemOnBelt, false);
+		scene.idle(20);
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
 			if (copperItem.isItemEqual(entity.getItem()))

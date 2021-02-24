@@ -10,6 +10,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
+import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
+import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
@@ -30,6 +32,8 @@ import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -265,8 +269,7 @@ public class SceneBuilder {
 
 		public void hideSection(Selection selection, Direction fadeOutDirection) {
 			WorldSectionElement worldSectionElement = new WorldSectionElement(selection);
-			ElementLink<WorldSectionElement> elementLink =
-				new ElementLink<>(WorldSectionElement.class, UUID.randomUUID());
+			ElementLink<WorldSectionElement> elementLink = new ElementLink<>(WorldSectionElement.class);
 
 			addInstruction(scene -> {
 				scene.getBaseWorldSection()
@@ -285,8 +288,7 @@ public class SceneBuilder {
 
 		public ElementLink<WorldSectionElement> makeSectionIndependent(Selection selection) {
 			WorldSectionElement worldSectionElement = new WorldSectionElement(selection);
-			ElementLink<WorldSectionElement> elementLink =
-				new ElementLink<>(WorldSectionElement.class, UUID.randomUUID());
+			ElementLink<WorldSectionElement> elementLink = new ElementLink<>(WorldSectionElement.class);
 
 			addInstruction(scene -> {
 				scene.getBaseWorldSection()
@@ -327,30 +329,64 @@ public class SceneBuilder {
 			addInstruction(scene -> scene.forEachWorldEntity(entityClass, entityCallBack));
 		}
 
-		public void createEntity(Function<World, Entity> factory) {
-			addInstruction(scene -> scene.getWorld()
-				.addEntity(factory.apply(scene.getWorld())));
+		public ElementLink<EntityElement> createEntity(Function<World, Entity> factory) {
+			ElementLink<EntityElement> link = new ElementLink<>(EntityElement.class, UUID.randomUUID());
+			addInstruction(scene -> {
+				PonderWorld world = scene.getWorld();
+				Entity entity = factory.apply(world);
+				EntityElement handle = new EntityElement(entity);
+				scene.addElement(handle);
+				scene.linkElement(handle, link);
+				world.addEntity(entity);
+			});
+			return link;
 		}
 
-		public void createItemEntity(Vec3d location, Vec3d motion, ItemStack stack) {
-			createEntity(world -> {
+		public ElementLink<EntityElement> createItemEntity(Vec3d location, Vec3d motion, ItemStack stack) {
+			return createEntity(world -> {
 				ItemEntity itemEntity = new ItemEntity(world, location.x, location.y, location.z, stack);
 				itemEntity.setMotion(motion);
 				return itemEntity;
 			});
 		}
 
-		public void createItemOnBelt(BlockPos beltLocation, Direction insertionSide, ItemStack stack) {
+		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
+			ItemStack stack) {
+			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
 			addInstruction(scene -> {
-				TileEntity tileEntity = scene.getWorld()
-					.getTileEntity(beltLocation);
+				PonderWorld world = scene.getWorld();
+				TileEntity tileEntity = world.getTileEntity(beltLocation);
 				if (!(tileEntity instanceof BeltTileEntity))
 					return;
+
 				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
 				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
+				
+				BeltTileEntity controllerTE = beltTileEntity.getControllerTE();
+				if (controllerTE != null)
+					controllerTE.tick();
+
+				TransportedItemStackHandlerBehaviour transporter =
+					beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				transporter.handleProcessingOnAllItems(tis -> {
+					BeltItemElement tracker = new BeltItemElement(tis);
+					scene.addElement(tracker);
+					scene.linkElement(tracker, link);
+					return TransportedResult.doNothing();
+				});
+
 			});
 			flapFunnels(scene.getSceneBuildingUtil().select.position(beltLocation.up()), true);
+			return link;
+		}
+
+		public void stallBeltItem(ElementLink<BeltItemElement> link, boolean stalled) {
+			addInstruction(scene -> {
+				BeltItemElement resolve = scene.resolve(link);
+				if (resolve != null)
+					resolve.ifPresent(tis -> tis.locked = stalled);
+			});
 		}
 
 		public void setKineticSpeed(Selection selection, float speed) {
