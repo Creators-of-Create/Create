@@ -64,6 +64,12 @@ public class ContraptionRenderDispatcher {
         }
     }
 
+    public static void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.getLighter().lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+        }
+    }
+
     public static void renderTick() {
         firstLayer = true;
     }

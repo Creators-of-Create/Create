@@ -20,8 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
-    public static WorldAttached<ConcurrentHashMap<TileEntity, Integer>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::new);
-
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
@@ -35,22 +33,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public abstract void registerMaterials();
 
     public void tick() {
-        ClientWorld world = Minecraft.getInstance().world;
-
         int ticks = AnimationTickHolder.getTicks();
-
-        ConcurrentHashMap<TileEntity, Integer> map = addedLastTick.get(world);
-        map
-                .entrySet()
-                .stream()
-                .filter(it -> ticks - it.getValue() > 10)
-                .map(Map.Entry::getKey)
-                .forEach(te -> {
-                    map.remove(te);
-
-                    onLightUpdate(te);
-                });
-
 
         // Clean up twice a second. This doesn't have to happen every tick,
         // but this does need to be run to ensure we don't miss anything.
@@ -82,7 +65,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
             if (renderer != null) {
-                addedLastTick.get(tile.getWorld()).put(tile, AnimationTickHolder.getTicks());
                 instances.put(tile, renderer);
             }
 

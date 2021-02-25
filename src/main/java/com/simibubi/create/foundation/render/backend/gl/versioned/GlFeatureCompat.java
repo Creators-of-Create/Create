@@ -13,19 +13,23 @@ import java.util.function.Consumer;
  * Each field stores an enum variant that provides access to the
  * most appropriate version of a feature for the current system.
  */
-public class GlFunctions {
+public class GlFeatureCompat {
     public final MapBuffer mapBuffer;
 
     public final VertexArrayObject vertexArrayObject;
     public final InstancedArrays instancedArrays;
     public final DrawInstanced drawInstanced;
 
-    public GlFunctions(GLCapabilities caps) {
+    public final RGPixelFormat pixelFormat;
+
+    public GlFeatureCompat(GLCapabilities caps) {
         mapBuffer = getLatest(MapBuffer.class, caps);
 
         vertexArrayObject = getLatest(VertexArrayObject.class, caps);
         instancedArrays = getLatest(InstancedArrays.class, caps);
         drawInstanced = getLatest(DrawInstanced.class, caps);
+
+        pixelFormat = getLatest(RGPixelFormat.class, caps);
     }
 
     public void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload) {

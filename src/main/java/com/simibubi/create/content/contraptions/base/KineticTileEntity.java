@@ -81,6 +81,9 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		}
 
 		super.initialize();
+
+		if (world != null && world.isRemote)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
@@ -532,13 +535,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {
 		return block.hasIntegratedCogwheel(world, pos, state);
-	}
-
-	@Override
-	public void onLoad() {
-		super.onLoad();
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override

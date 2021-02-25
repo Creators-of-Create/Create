@@ -9,7 +9,8 @@
         "CancelTileEntityRenderMixin",
         "LightUpdateMixin",
         "RenderHooksMixin",
-        "FogColorTrackerMixin"
+        "FogColorTrackerMixin",
+        "NetworkLightUpdateMixin"
     ],
     "injectors": {
         "defaultRequire": 1
