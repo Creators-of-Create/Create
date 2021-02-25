@@ -28,6 +28,7 @@ public class AllCommands {
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())
+				.then(CloneCommand.register())
 
 				//utility
 				.then(util)
@@ -47,10 +48,10 @@ public class AllCommands {
 	private static LiteralCommandNode<CommandSource> buildUtilityCommands() {
 
 		return Commands.literal("util")
-				.then(FlySpeedCommand.register())
 				.then(ReplaceInCommandBlocksCommand.register())
 				.then(ClearBufferCacheCommand.register())
 				.then(ChunkUtilCommand.register())
+				.then(FlySpeedCommand.register())
 				//.then(KillTPSCommand.register())
 				.build();
 
