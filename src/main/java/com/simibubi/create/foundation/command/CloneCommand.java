@@ -37,7 +37,10 @@ public class CloneCommand {
 				.then(Commands.argument("begin", BlockPosArgument.blockPos())
 						.then(Commands.argument("end", BlockPosArgument.blockPos())
 								.then(Commands.argument("destination", BlockPosArgument.blockPos())
-										.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"), BlockPosArgument.getLoadedBlockPos(ctx, "end"), BlockPosArgument.getLoadedBlockPos(ctx, "destination")))
+										.then(Commands.literal("skipBlocks")
+												.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"), BlockPosArgument.getLoadedBlockPos(ctx, "end"), BlockPosArgument.getLoadedBlockPos(ctx, "destination"), false))
+										)
+										.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"), BlockPosArgument.getLoadedBlockPos(ctx, "end"), BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true))
 								)
 						)
 				)
@@ -50,7 +53,7 @@ public class CloneCommand {
 
 	}
 
-	private static int doClone(CommandSource source, BlockPos begin, BlockPos end, BlockPos destination) throws CommandSyntaxException {
+	private static int doClone(CommandSource source, BlockPos begin, BlockPos end, BlockPos destination, boolean cloneBlocks) throws CommandSyntaxException {
 		MutableBoundingBox sourceArea = new MutableBoundingBox(begin, end);
 		BlockPos destinationEnd = destination.add(sourceArea.getLength());
 		MutableBoundingBox destinationArea = new MutableBoundingBox(destination, destinationEnd);
@@ -64,12 +67,47 @@ public class CloneCommand {
 		if (!world.isAreaLoaded(begin, end) || !world.isAreaLoaded(destination, destinationEnd))
 			throw BlockPosArgument.POS_UNLOADED.create();
 
-		List<Template.BlockInfo> blocks = Lists.newArrayList();
-		List<Template.BlockInfo> tileBlocks = Lists.newArrayList();
 		BlockPos diffToTarget = new BlockPos(destinationArea.minX - sourceArea.minX, destinationArea.minY - sourceArea.minY, destinationArea.minZ - sourceArea.minZ);
 
+		int blockPastes = cloneBlocks ? cloneBlocks(sourceArea, world, diffToTarget) : 0;
+		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
 
-		//gather info
+		if (cloneBlocks)
+			source.sendFeedback(new StringTextComponent("Successfully cloned " + blockPastes + " Blocks"), true);
+
+		source.sendFeedback(new StringTextComponent("Successfully applied glue " + gluePastes + " times"), true);
+		return blockPastes + gluePastes;
+
+	}
+
+	private static int cloneGlue(MutableBoundingBox sourceArea, ServerWorld world, BlockPos diffToTarget) {
+		int gluePastes = 0;
+
+		List<SuperGlueEntity> glue = world.getEntitiesWithinAABB(SuperGlueEntity.class, AxisAlignedBB.func_216363_a(sourceArea));
+		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
+
+		for (SuperGlueEntity g : glue) {
+			BlockPos pos = g.getHangingPosition();
+			Direction direction = g.getFacingDirection();
+			newGlue.add(Pair.of(pos.add(diffToTarget), direction));
+		}
+
+		for (Pair<BlockPos, Direction> p : newGlue) {
+			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
+			if (g.onValidSurface()){
+				world.addEntity(g);
+				gluePastes++;
+			}
+		}
+		return gluePastes;
+	}
+
+	private static int cloneBlocks(MutableBoundingBox sourceArea, ServerWorld world, BlockPos diffToTarget) {
+		int blockPastes = 0;
+
+		List<Template.BlockInfo> blocks = Lists.newArrayList();
+		List<Template.BlockInfo> tileBlocks = Lists.newArrayList();
+
 		for (int z = sourceArea.minZ; z <= sourceArea.maxZ; ++z) {
 			for (int y = sourceArea.minY; y <= sourceArea.maxY; ++y) {
 				for (int x = sourceArea.minX; x <= sourceArea.maxX; ++x) {
@@ -88,16 +126,6 @@ public class CloneCommand {
 			}
 		}
 
-		List<SuperGlueEntity> glue = world.getEntitiesWithinAABB(SuperGlueEntity.class, AxisAlignedBB.func_216363_a(sourceArea));
-		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
-
-		for (SuperGlueEntity g : glue) {
-			BlockPos pos = g.getHangingPosition();
-			Direction direction = g.getFacingDirection();
-			newGlue.add(Pair.of(pos.add(diffToTarget), direction));
-		}
-
-		//paste
 		List<Template.BlockInfo> allBlocks = Lists.newArrayList();
 		allBlocks.addAll(blocks);
 		allBlocks.addAll(tileBlocks);
@@ -109,9 +137,6 @@ public class CloneCommand {
 			IClearable.clearObj(te);
 			world.setBlockState(info.pos, Blocks.BARRIER.getDefaultState(), 2);
 		}
-
-		int blockPastes = 0;
-		int gluePastes = 0;
 
 		for (Template.BlockInfo info : allBlocks) {
 			if (world.setBlockState(info.pos, info.state, 2))
@@ -136,19 +161,10 @@ public class CloneCommand {
 			world.notifyNeighbors(info.pos, info.state.getBlock());
 		}
 
-		for (Pair<BlockPos, Direction> p : newGlue) {
-			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
-			if (g.onValidSurface()){
-				world.addEntity(g);
-				gluePastes++;
-			}
-		}
 
 		world.getPendingBlockTicks().copyTicks(sourceArea, diffToTarget);
 
-		source.sendFeedback(new StringTextComponent("Successfully cloned " + blockPastes + " Blocks and applied Glue " + gluePastes + " times"), true);
-		return blockPastes + gluePastes;
-
+		return blockPastes;
 	}
 
 }
