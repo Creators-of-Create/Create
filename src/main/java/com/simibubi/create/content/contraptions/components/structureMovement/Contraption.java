@@ -901,7 +901,7 @@ public abstract class Contraption {
 				world.getWorld()
 					.removeTileEntity(add);
 				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS
-					| BlockFlags.BLOCK_UPDATE;
+					| BlockFlags.BLOCK_UPDATE | BlockFlags.RERENDER_MAIN_THREAD;
 				if (blockIn instanceof IWaterLoggable && oldState.has(BlockStateProperties.WATERLOGGED)
 					&& oldState.get(BlockStateProperties.WATERLOGGED)
 						.booleanValue()) {

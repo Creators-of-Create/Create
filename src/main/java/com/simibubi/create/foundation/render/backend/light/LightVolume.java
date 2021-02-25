@@ -133,6 +133,15 @@ public class LightVolume {
         else if (type == LightType.SKY) copySky(world, changedVolume);
     }
 
+    public void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
+        GridAlignedBB changedVolume = GridAlignedBB.fromChunk(chunkX, chunkZ);
+        if (!changedVolume.intersects(sampleVolume))
+            return;
+        changedVolume.intersectAssign(sampleVolume); // compute the region contained by us that has dirty lighting data.
+
+        copyLight(world, changedVolume);
+    }
+
     /**
      * Completely (re)populate this volume with block and sky lighting data.
      * This is expensive and should be avoided.

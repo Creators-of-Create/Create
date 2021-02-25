@@ -39,7 +39,7 @@ minecraft {
             workingDirectory project.file('run')
             // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
-//            jvmArgs '-XX:+UnlockCommercialFeatures'
+            jvmArgs '-XX:+UnlockCommercialFeatures'
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {
@@ -132,7 +132,7 @@ dependencies {
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    //annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 jar {

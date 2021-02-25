@@ -53,6 +53,17 @@ public class GridAlignedBB {
                                  pos.getWorldEndZ() + 1);
     }
 
+    public static GridAlignedBB fromChunk(int sectionX, int sectionZ) {
+        int startX = sectionX << 4;
+        int startZ = sectionZ << 4;
+        return new GridAlignedBB(startX,
+                                 0,
+                                 startZ,
+                                 startX + 16,
+                                 256,
+                                 startZ + 16);
+    }
+
     public static AxisAlignedBB toAABB(GridAlignedBB bb) {
         return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
     }
