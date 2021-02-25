@@ -132,7 +132,7 @@ dependencies {
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
 
-    //annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
 
 jar {
