@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.render.backend.instancing;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -10,14 +9,13 @@ import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
@@ -42,6 +40,17 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
+    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
+        render(layer, viewProjection, camX, camY, camZ, null);
+    }
+
+    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
+        for (RenderMaterial<P, ?> material : materials.values()) {
+            if (material.canRenderInLayer(layer))
+                material.render(layer, viewProjection, camX, camY, camZ, callback);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialType<M> materialType) {
         return (RenderMaterial<P, M>) materials.get(materialType);
@@ -55,7 +64,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (!Backend.canUseInstancing()) return null;
+        if (!Backend.canUseInstancing() || isTileUnloaded(tile)) return null;
 
         TileEntityInstance<?> instance = instances.get(tile);
 
@@ -128,14 +137,17 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         instances.clear();
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
-        render(layer, viewProjection, camX, camY, camZ, null);
-    }
+    public boolean isTileUnloaded(TileEntity tile) {
+        if (tile.isRemoved()) return true;
 
-    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
-        for (RenderMaterial<P, ?> material : materials.values()) {
-            if (material.canRenderInLayer(layer))
-                material.render(layer, viewProjection, camX, camY, camZ, callback);
-        }
+        World world = tile.getWorld();
+
+        if (world == null) return true;
+
+        BlockPos pos = tile.getPos();
+
+        IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
+
+        return existingChunk == null;
     }
 }
