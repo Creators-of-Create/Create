@@ -35,9 +35,9 @@ public class PonderRegistry {
 		all.computeIfAbsent(id, $ -> new ArrayList<>())
 			.add(new PonderStoryBoardEntry(storyBoard, schematic));
 	}
-	
-	public static MultiSceneBuilder forComponent(ItemProviderEntry<?> component) {
-		return new MultiSceneBuilder(component);
+
+	public static MultiSceneBuilder forComponents(ItemProviderEntry<?> component, ItemProviderEntry<?>... additional) {
+		return new MultiSceneBuilder(component, additional);
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
@@ -50,7 +50,7 @@ public class PonderRegistry {
 
 		List<PonderStoryBoardEntry> list = all.get(id);
 		List<PonderScene> scenes = new ArrayList<>();
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			PonderStoryBoardEntry sb = list.get(i);
 			Template activeTemplate = loadSchematic(sb.getSchematicName());
@@ -99,20 +99,24 @@ public class PonderRegistry {
 		});
 		return PonderLocalization.record();
 	}
-	
+
 	public static class MultiSceneBuilder {
 
 		private ItemProviderEntry<?> component;
+		private ItemProviderEntry<?>[] additional;
 
-		MultiSceneBuilder(ItemProviderEntry<?> component) {
+		MultiSceneBuilder(ItemProviderEntry<?> component, ItemProviderEntry<?>[] additional) {
 			this.component = component;
+			this.additional = additional;
 		}
-		
+
 		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard) {
 			PonderRegistry.addStoryBoard(component, schematicPath, storyBoard);
+			for (ItemProviderEntry<?> itemProviderEntry : additional) 
+				PonderRegistry.addStoryBoard(itemProviderEntry, schematicPath, storyBoard);
 			return this;
 		}
-		
+
 	}
 
 }

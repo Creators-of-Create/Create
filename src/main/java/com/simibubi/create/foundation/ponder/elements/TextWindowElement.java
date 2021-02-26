@@ -23,6 +23,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 	int y;
 
 	Vec3d vec;
+	boolean nearScene;
 	int color;
 
 	public TextWindowElement(Supplier<String> textGetter) {
@@ -42,6 +43,11 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		this.y = y;
 		return this;
 	}
+	
+	public TextWindowElement placeNearTarget() {
+		this.nearScene = true;
+		return this;
+	}
 
 	@Override
 	protected void render(PonderScene scene, PonderUI screen, MatrixStack ms, float partialTicks, float fade) {
@@ -54,7 +60,11 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		float yDiff = (screen.height / 2 - sceneToScreen.y - 10) / 100f;
 		int targetX = (int) (screen.width * MathHelper.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
-		int textWidth = screen.width - targetX;
+		
+		if (nearScene)
+			targetX = (int) Math.min(targetX, sceneToScreen.x + 50);
+		
+		int textWidth = Math.min(screen.width - targetX, 180);
 
 		List<String> list = screen.getFontRenderer()
 			.listFormattedStringToWidth(bakedText, textWidth);

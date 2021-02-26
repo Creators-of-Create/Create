@@ -12,6 +12,8 @@ public abstract class PonderInstruction {
 
 	public abstract boolean isComplete();
 
+	public void onScheduled(PonderScene scene) {}
+	
 	public abstract void tick(PonderScene scene);
 
 	public static PonderInstruction simple(Consumer<PonderScene> callback) {

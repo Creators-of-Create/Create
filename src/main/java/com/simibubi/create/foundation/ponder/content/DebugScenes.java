@@ -59,7 +59,7 @@ public class DebugScenes {
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
-
+		
 		Selection xAxis = util.select.fromTo(2, 1, 1, 4, 1, 1);
 		Selection yAxis = util.select.fromTo(1, 2, 1, 1, 4, 1);
 		Selection zAxis = util.select.fromTo(1, 1, 2, 1, 1, 4);
@@ -153,11 +153,11 @@ public class DebugScenes {
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 		scene.idle(10);
 
-		Vec3d emitterPos = util.vector.at(2.5, 2.25, 2.5);
-		Emitter emitter = Emitter.simple(ParticleTypes.LAVA, util.vector.at(0, .1, 0));
+		Vec3d emitterPos = util.vector.of(2.5, 2.25, 2.5);
+		Emitter emitter = Emitter.simple(ParticleTypes.LAVA, util.vector.of(0, .1, 0));
 		Emitter rotation =
 			Emitter.simple(new RotationIndicatorParticleData(SpeedLevel.MEDIUM.getColor(), 12, 1, 1, 20, 'Y'),
-				util.vector.at(0, .1, 0));
+				util.vector.of(0, .1, 0));
 
 		scene.overlay.showTargetedText(WHITE, emitterPos, "incoming", "Incoming...", 20);
 		scene.idle(30);
@@ -191,7 +191,7 @@ public class DebugScenes {
 
 		scene.idle(20);
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.at(1, 4.5, 3.5), Pointing.LEFT).rightClick()
+		scene.overlay.showControls(new InputWindowElement(util.vector.of(1, 4.5, 3.5), Pointing.LEFT).rightClick()
 			.withItem(new ItemStack(Blocks.POLISHED_ANDESITE)), 20);
 		scene.world.showSection(util.select.layer(4), Direction.DOWN);
 
@@ -343,7 +343,7 @@ public class DebugScenes {
 
 		ElementLink<WorldSectionElement> helicopter = scene.world.makeSectionIndependent(hiddenReplaceArea);
 		scene.world.rotateSection(helicopter, 50, 5 * 360, 0, 60);
-		scene.world.moveSection(helicopter, util.vector.at(0, 4, 5), 50);
+		scene.world.moveSection(helicopter, util.vector.of(0, 4, 5), 50);
 		scene.overlay.showText(PonderPalette.BLUE, 30, "blast_off", "Up, up and away.", 30);
 
 		scene.idle(40);
@@ -388,7 +388,7 @@ public class DebugScenes {
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
 			if (brassItem.isItemEqual(entity.getItem()))
-				entity.setMotion(util.vector.at(-.15f, .5f, 0));
+				entity.setMotion(util.vector.of(-.15f, .5f, 0));
 		});
 
 		scene.idle(27);

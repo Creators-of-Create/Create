@@ -27,10 +27,12 @@ public class TextInstruction extends FadeInOutInstruction {
 			.colored(color));
 	}
 
-	public TextInstruction(int color, Supplier<String> text, int duration, Vec3d position) {
+	public TextInstruction(int color, Supplier<String> text, int duration, Vec3d position, boolean near) {
 		this(color, text, duration);
 		element = new TextWindowElement(text).pointAt(position);
 		element.colored(color);
+		if (near)
+			element.placeNearTarget();
 	}
 
 	public TextInstruction(int color, Supplier<String> text, int duration, int y) {

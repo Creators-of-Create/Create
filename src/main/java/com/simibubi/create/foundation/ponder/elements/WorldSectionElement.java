@@ -172,6 +172,18 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			light = (int) (MathHelper.lerp(fade, 5, 14));
 		if (redraw)
 			renderedTileEntities = null;
+		
+		//TODO: extract method
+		float pt = AnimationTickHolder.getPartialTicks();
+		MatrixStacker.of(ms)
+			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
+		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO))
+			MatrixStacker.of(ms)
+				.translate(centerOfRotation)
+				.rotateX(MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x))
+				.rotateZ(MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z))
+				.rotateY(MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y))
+				.translateBack(centerOfRotation);
 
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer);

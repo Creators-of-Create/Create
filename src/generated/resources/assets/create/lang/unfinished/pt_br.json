@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1268",
+	"_": "Missing Localizations: 1282",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1808,6 +1808,13 @@
 	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
 	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
+	"create.ponder.brass_funnel.scene_0.funnels_transfer": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",
+	"create.ponder.brass_funnel.scene_0.title": "UNLOCALIZED: Using funnels",
+	"create.ponder.brass_funnel.scene_1.same_for_other": "UNLOCALIZED: Same rules will apply for most orientations.",
+	"create.ponder.brass_funnel.scene_1.wrench_reverse": "UNLOCALIZED: Using a wrench, the funnel can be flipped after placement.",
+	"create.ponder.brass_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels in line with a belt will adjust their direction based it.",
+	"create.ponder.brass_funnel.scene_1.title": "UNLOCALIZED: Direction of Transfer",
+	"create.ponder.brass_funnel.scene_2.title": "UNLOCALIZED: Funnel compatibility",
 	"create.ponder.shaft.scene_0.shaft_relay": "UNLOCALIZED: Shafts will relay rotation in a straight line.",
 	"create.ponder.shaft.scene_0.title": "UNLOCALIZED: Relaying rotational force using Shafts",
 	"create.ponder.shaft.scene_1.shaft_can_be_encased": "UNLOCALIZED: Andesite or Brass Casing can be used to encase them.",
@@ -1837,6 +1844,13 @@
 	"create.ponder.brass_hand.scene_7.title": "UNLOCALIZED: Sections",
 	"create.ponder.brass_hand.scene_8.stalling": "UNLOCALIZED: Belt Items can only be force-stalled on the belt they were created on.",
 	"create.ponder.brass_hand.scene_8.title": "UNLOCALIZED: Manipulating Items",
+	"create.ponder.andesite_funnel.scene_0.funnels_transfer": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",
+	"create.ponder.andesite_funnel.scene_0.title": "UNLOCALIZED: Using funnels",
+	"create.ponder.andesite_funnel.scene_1.same_for_other": "UNLOCALIZED: Same rules will apply for most orientations.",
+	"create.ponder.andesite_funnel.scene_1.wrench_reverse": "UNLOCALIZED: Using a wrench, the funnel can be flipped after placement.",
+	"create.ponder.andesite_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels in line with a belt will adjust their direction based it.",
+	"create.ponder.andesite_funnel.scene_1.title": "UNLOCALIZED: Direction of Transfer",
+	"create.ponder.andesite_funnel.scene_2.title": "UNLOCALIZED: Funnel compatibility",
 
 	"_": "Thank you for translating Create!"
 

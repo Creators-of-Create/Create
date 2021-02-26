@@ -20,12 +20,18 @@ import net.minecraft.util.math.Vec3d;
 public class InputWindowElement extends AnimatedOverlayElement {
 
 	private Pointing direction;
-
 	String key;
 	AllIcons icon;
 	ItemStack item = ItemStack.EMPTY;
-
 	private Vec3d sceneSpace;
+	
+	public InputWindowElement clone() {
+		InputWindowElement inputWindowElement = new InputWindowElement(sceneSpace, direction);
+		inputWindowElement.key = key;
+		inputWindowElement.icon = icon;
+		inputWindowElement.item = item.copy();
+		return inputWindowElement;
+	}
 
 	public InputWindowElement(Vec3d sceneSpace, Pointing direction) {
 		this.sceneSpace = sceneSpace;

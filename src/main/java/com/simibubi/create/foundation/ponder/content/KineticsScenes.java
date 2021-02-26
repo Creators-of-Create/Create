@@ -52,7 +52,7 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(gauge, 64);
 		scene.effects.indicateSuccess(gaugePos);
 		scene.idle(10);
-		scene.overlay.showTargetedText(WHITE, util.vector.at(3, 1.5, 2.5), "shaft_relay",
+		scene.overlay.showTargetedText(WHITE, util.vector.of(3, 1.5, 2.5), "shaft_relay",
 			"Shafts will relay rotation in a straight line.", 1000);
 
 		scene.idle(20);
@@ -92,7 +92,7 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(shaft, -112);
 
 		scene.idle(10);
-		scene.overlay.showTargetedText(WHITE, util.vector.at(1.5, 2, 2.5), "shaft_can_be_encased",
+		scene.overlay.showTargetedText(WHITE, util.vector.of(1.5, 2, 2.5), "shaft_can_be_encased",
 			"Andesite or Brass Casing can be used to encase them.", 1000);
 	}
 

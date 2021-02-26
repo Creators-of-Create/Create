@@ -64,7 +64,7 @@ public class SceneBuildingUtil {
 			return centerOf(pos).add(new Vec3d(face.getDirectionVec()).scale(.5f + margin));
 		}
 
-		public Vec3d at(double x, double y, double z) {
+		public Vec3d of(double x, double y, double z) {
 			return new Vec3d(x, y, z);
 		}
 

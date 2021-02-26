@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
@@ -23,6 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -34,17 +36,21 @@ public class PonderUI extends AbstractSimiScreen {
 	public static final String PONDERING = PonderLocalization.LANG_PREFIX + "pondering";
 	private List<PonderScene> scenes;
 	private LerpedFloat fadeIn;
+	private LerpedFloat sceneProgress;
 	ItemStack stack;
+	private boolean identifyMode;
 
 	private LerpedFloat lazyIndex;
 	private int index = 0;
 
-	private PonderButton left, right, icon;
+	private PonderButton left, right, icon, refresh, scan;
 
 	public PonderUI(List<PonderScene> scenes) {
 		this.scenes = scenes;
 		lazyIndex = LerpedFloat.linear()
 			.startWithValue(index);
+		sceneProgress = LerpedFloat.linear()
+			.startWithValue(0);
 		fadeIn = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(1, .1f, Chaser.EXP);
@@ -66,29 +72,46 @@ public class PonderUI extends AbstractSimiScreen {
 		}).showing(stack)
 			.fade(0, -1));
 
-		int spacing = 8;
-		int bX = (width - 20) / 2 - (20 + spacing);
 		GameSettings bindings = minecraft.gameSettings;
+		int spacing = 8;
+		int bX = (width - 20) / 2 - (70 + 2 * spacing);
+
+		widgets.add(scan = new PonderButton(bX, bY, () -> identifyMode = !identifyMode).showing(AllIcons.I_MTD_SCAN)
+			.shortcut(bindings.keyBindDrop)
+			.fade(0, -1));
+
+		bX += 50 + spacing;
 		widgets.add(left = new PonderButton(bX, bY, () -> this.scroll(false)).showing(AllIcons.I_MTD_LEFT)
 			.shortcut(bindings.keyBindLeft)
 			.fade(0, -1));
+
 		bX += 20 + spacing;
 		widgets.add(new PonderButton(bX, bY, this::onClose).showing(AllIcons.I_MTD_CLOSE)
 			.shortcut(bindings.keyBindInventory)
 			.fade(0, -1));
+
 		bX += 20 + spacing;
 		widgets.add(right = new PonderButton(bX, bY, () -> this.scroll(true)).showing(AllIcons.I_MTD_RIGHT)
 			.shortcut(bindings.keyBindRight)
+			.fade(0, -1));
+
+		bX += 50 + spacing;
+		widgets.add(refresh = new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
+			.shortcut(bindings.keyBindBack)
 			.fade(0, -1));
 
 	}
 
 	@Override
 	public void tick() {
+		PonderScene activeScene = scenes.get(index);
+		activeScene.tick();
+		sceneProgress.chase(activeScene.getSceneProgress(), .5f, Chaser.EXP);
+
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
-		scenes.get(index)
-			.tick();
+		sceneProgress.tickChaser();
+
 		float lazyIndexValue = lazyIndex.getValue();
 		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
 			scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
@@ -100,6 +123,11 @@ public class PonderUI extends AbstractSimiScreen {
 		if (scroll(delta > 0))
 			return true;
 		return super.mouseScrolled(mouseX, mouseY, delta);
+	}
+
+	protected void replay() {
+		scenes.get(index)
+			.begin();
 	}
 
 	protected boolean scroll(boolean forward) {
@@ -121,18 +149,18 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.enableBlend();
-		renderVisibleScenes(partialTicks);
+		renderVisibleScenes(mouseX, mouseY, partialTicks);
 		renderWidgets(mouseX, mouseY, partialTicks);
 	}
 
-	protected void renderVisibleScenes(float partialTicks) {
-		renderScene(index, partialTicks);
+	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
+		renderScene(mouseX, mouseY, index, partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
-			renderScene(lazyIndexValue < index ? index - 1 : index + 1, partialTicks);
+			renderScene(mouseX, mouseY, lazyIndexValue < index ? index - 1 : index + 1, partialTicks);
 	}
 
-	protected void renderScene(int i, float partialTicks) {
+	protected void renderScene(int mouseX, int mouseY, int i, float partialTicks) {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
@@ -157,23 +185,45 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.pushMatrix();
 			RenderSystem.multMatrix(ms.peek()
 				.getModel());
+
 			RenderSystem.scaled(-1 / 16d, -1 / 16d, 1 / 16d);
 			RenderSystem.translated(1, -8, -1 / 64f);
 
+			// X AXIS
 			RenderSystem.pushMatrix();
+			RenderSystem.translated(4, -3, 0);
 			for (int x = 0; x <= bounds.getXSize(); x++) {
 				RenderSystem.translated(-16, 0, 0);
 				font.drawString(x == bounds.getXSize() ? "x" : "" + x, 0, 0, 0xFFFFFFFF);
 			}
 			RenderSystem.popMatrix();
 
+			// Z AXIS
 			RenderSystem.pushMatrix();
 			RenderSystem.scaled(-1, 1, 1);
+			RenderSystem.translated(0, -3, -4);
 			RenderSystem.rotatef(-90, 0, 1, 0);
 			RenderSystem.translated(-8, -2, 2 / 64f);
 			for (int z = 0; z <= bounds.getZSize(); z++) {
 				RenderSystem.translated(16, 0, 0);
 				font.drawString(z == bounds.getZSize() ? "z" : "" + z, 0, 0, 0xFFFFFFFF);
+			}
+			RenderSystem.popMatrix();
+
+			// DIRECTIONS
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(bounds.getXSize() * -8, 0, bounds.getZSize() * 8);
+			RenderSystem.rotatef(-90, 0, 1, 0);
+			for (Direction d : Iterate.horizontalDirections) {
+				RenderSystem.rotatef(90, 0, 1, 0);
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(0, 0, bounds.getZSize() * 16);
+				RenderSystem.rotatef(-90, 1, 0, 0);
+				font.drawString(d.name()
+					.substring(0, 1), 0, 0, 0x66FFFFFF);
+				font.drawString("|", 2, 10, 0x44FFFFFF);
+				font.drawString(".", 2, 14, 0x22FFFFFF);
+				RenderSystem.popMatrix();
 			}
 			RenderSystem.popMatrix();
 
@@ -205,6 +255,16 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.popMatrix();
 		}
 
+		if (identifyMode) {
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(mouseX, mouseY, 800);
+			drawString(font, "?", 6, 2, 0xddffffff);
+			RenderSystem.popMatrix();
+			scan.flash();
+		} else {
+			scan.dim();
+		}
+
 		{
 			// Scene overlay
 			RenderSystem.pushMatrix();
@@ -228,11 +288,24 @@ public class PonderUI extends AbstractSimiScreen {
 		if (index == scenes.size() - 1 || index == scenes.size() - 2 && lazyIndexValue > index)
 			right.fade(scenes.size() - lazyIndexValue - 1);
 
-		if (scenes.get(index).isFinished())
+		boolean finished = scenes.get(index)
+			.isFinished();
+		if (finished)
 			right.flash();
 		else
 			right.dim();
 
+		{
+			int x = (width / 2) - 110;
+			int y = right.y + right.getHeight() + 4;
+			int w = width - 2 * x;
+			renderBox(x, y, w, 1, false);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(x - 2, y - 2, 0);
+			RenderSystem.scaled((w + 4) * sceneProgress.getValue(partialTicks), 1, 1);
+			GuiUtils.drawGradientRect(200, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
+			RenderSystem.popMatrix();
+		}
 	}
 
 	protected void lowerButtonGroup(int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
@@ -290,9 +363,11 @@ public class PonderUI extends AbstractSimiScreen {
 			.getKeyCode();
 		int dCode = settings.keyBindRight.getKey()
 			.getKeyCode();
+		int qCode = settings.keyBindDrop.getKey()
+			.getKeyCode();
 
 		if (code == sCode) {
-			onClose();
+			replay();
 			return true;
 		}
 
@@ -303,6 +378,11 @@ public class PonderUI extends AbstractSimiScreen {
 
 		if (code == dCode) {
 			scroll(true);
+			return true;
+		}
+
+		if (code == qCode) {
+			identifyMode = !identifyMode;
 			return true;
 		}
 

@@ -5,7 +5,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
+import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -34,6 +37,7 @@ import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruct
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -43,6 +47,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -183,9 +188,55 @@ public class SceneBuilder {
 			addInstruction(new EmitParticlesInstruction(location, emitter, amountPerCycle, cycles));
 		}
 
+		private void rotationIndicator(BlockPos pos, boolean direction) {
+			addInstruction(scene -> {
+				BlockState blockState = scene.world.getBlockState(pos);
+				TileEntity tileEntity = scene.world.getTileEntity(pos);
+
+				if (!(blockState.getBlock() instanceof KineticBlock))
+					return;
+				if (!(tileEntity instanceof KineticTileEntity))
+					return;
+
+				KineticTileEntity kte = (KineticTileEntity) tileEntity;
+				KineticBlock kb = (KineticBlock) blockState.getBlock();
+				Axis rotationAxis = kb.getRotationAxis(blockState);
+
+				float speed = kte.getTheoreticalSpeed();
+				int color = direction ? speed > 0 ? 0xeb5e0b : 0x1687a7
+					: SpeedLevel.of(speed)
+						.getColor();
+
+				Vec3d location = VecHelper.getCenterOf(pos);
+				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, speed,
+					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
+						.charAt(0));
+
+				for (int i = 0; i < 20; i++)
+					scene.world.addParticle(particleData, location.x, location.y, location.z, 0, 0, 0);
+			});
+		}
+
+		public void rotationSpeedIndicator(BlockPos pos) {
+			rotationIndicator(pos, false);
+		}
+
+		public void rotationDirectionIndicator(BlockPos pos) {
+			rotationIndicator(pos, true);
+		}
+
+		public void indicateRedstone(BlockPos pos) {
+			createRedstoneParticles(pos, 0xFF0000, 10);
+		}
+		
 		public void indicateSuccess(BlockPos pos) {
-			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos),
-				Emitter.withinBlockSpace(new RedstoneParticleData(.5f, 1, .7f, 1), new Vec3d(0, 0, 0)), 20, 2));
+			createRedstoneParticles(pos, 0x80FFaa, 10);
+		}
+
+		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
+			Vec3d rgb = ColorHelper.getRGB(color);
+			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
+				new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), Vec3d.ZERO), amount, 2));
 		}
 
 	}
@@ -195,7 +246,13 @@ public class SceneBuilder {
 		public void showTargetedText(PonderPalette color, Vec3d position, String key, String defaultText,
 			int duration) {
 			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position));
+			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, false));
+		}
+
+		public void showTargetedTextNearScene(PonderPalette color, Vec3d position, String key, String defaultText,
+			int duration) {
+			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
+			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, true));
 		}
 
 		public void showSelectionWithText(PonderPalette color, Selection selection, String key, String defaultText,
@@ -210,7 +267,7 @@ public class SceneBuilder {
 		}
 
 		public void showControls(InputWindowElement element, int duration) {
-			addInstruction(new ShowInputInstruction(element, duration));
+			addInstruction(new ShowInputInstruction(element.clone(), duration));
 		}
 
 		public void chaseBoundingBoxOutline(PonderPalette color, Object slot, AxisAlignedBB boundingBox, int duration) {
@@ -314,7 +371,7 @@ public class SceneBuilder {
 		}
 
 		public void setBlocks(Selection selection, BlockState state, boolean spawnParticles) {
-			addInstruction(new ReplaceBlocksInstruction(selection, state, true, spawnParticles));
+			addInstruction(new ReplaceBlocksInstruction(selection, $ -> state, true, spawnParticles));
 		}
 
 		public void setBlock(BlockPos pos, BlockState state) {
@@ -322,11 +379,35 @@ public class SceneBuilder {
 		}
 
 		public void replaceBlocks(Selection selection, BlockState state, boolean spawnParticles) {
-			addInstruction(new ReplaceBlocksInstruction(selection, state, false, spawnParticles));
+			modifyBlocks(selection, $ -> state, spawnParticles);
+		}
+
+		public void modifyBlock(BlockPos pos, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
+			modifyBlocks(scene.getSceneBuildingUtil().select.position(pos), stateFunc, spawnParticles);
+		}
+
+		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
+			addInstruction(new ReplaceBlocksInstruction(selection, stateFunc, false, spawnParticles));
 		}
 
 		public <T extends Entity> void modifyEntities(Class<T> entityClass, Consumer<T> entityCallBack) {
 			addInstruction(scene -> scene.forEachWorldEntity(entityClass, entityCallBack));
+		}
+
+		public <T extends Entity> void modifyEntitiesInside(Class<T> entityClass, Selection area,
+			Consumer<T> entityCallBack) {
+			addInstruction(scene -> scene.forEachWorldEntity(entityClass, e -> {
+				if (area.test(e.getPosition()))
+					entityCallBack.accept(e);
+			}));
+		}
+
+		public void modifyEntity(ElementLink<EntityElement> link, Consumer<Entity> entityCallBack) {
+			addInstruction(scene -> {
+				EntityElement resolve = scene.resolve(link);
+				if (resolve != null)
+					resolve.ifPresent(entityCallBack::accept);
+			});
 		}
 
 		public ElementLink<EntityElement> createEntity(Function<World, Entity> factory) {
@@ -362,7 +443,7 @@ public class SceneBuilder {
 				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
 				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
-				
+
 				BeltTileEntity controllerTE = beltTileEntity.getControllerTE();
 				if (controllerTE != null)
 					controllerTE.tick();
@@ -379,6 +460,19 @@ public class SceneBuilder {
 			});
 			flapFunnels(scene.getSceneBuildingUtil().select.position(beltLocation.up()), true);
 			return link;
+		}
+
+		public void removeItemsFromBelt(BlockPos beltLocation) {
+			addInstruction(scene -> {
+				PonderWorld world = scene.getWorld();
+				TileEntity tileEntity = world.getTileEntity(beltLocation);
+				if (!(tileEntity instanceof BeltTileEntity))
+					return;
+				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				TransportedItemStackHandlerBehaviour transporter =
+					beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				transporter.handleProcessingOnAllItems(tis -> TransportedResult.removeItem());
+			});
 		}
 
 		public void stallBeltItem(ElementLink<BeltItemElement> link, boolean stalled) {

@@ -122,7 +122,9 @@ public class AllIcons {
 		
 		I_MTD_LEFT = newRow(),
 		I_MTD_CLOSE = next(),
-		I_MTD_RIGHT = next();
+		I_MTD_RIGHT = next(),
+		I_MTD_SCAN = next(),
+		I_MTD_REPLAY = next();
 	
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -30,6 +31,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
@@ -38,11 +40,11 @@ public class PonderScene {
 
 	boolean finished;
 	int sceneIndex;
-	
+
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
 	Set<PonderElement> elements;
-	
+
 	PonderWorld world;
 	ResourceLocation component;
 	SceneTransform transform;
@@ -57,6 +59,9 @@ public class PonderScene {
 	int offsetX;
 	int offsetZ;
 	int size;
+
+	int totalTime;
+	int currentTime;
 
 	public PonderScene(PonderWorld world, ResourceLocation component, int sceneIndex) {
 		pointOfInterest = Vec3d.ZERO;
@@ -88,28 +93,38 @@ public class PonderScene {
 	}
 
 	public void reset() {
+		currentTime = 0;
 		activeSchedule.clear();
 		schedule.forEach(mdi -> mdi.reset(this));
 	}
 
 	public void begin() {
 		reset();
+		forEach(pe -> pe.reset(this));
+
 		world.restore();
+		elements.clear();
+		linkedElements.clear();
+
 		transform = new SceneTransform();
 		finished = false;
 		setPointOfInterest(new Vec3d(0, 4, 0));
-		forEach(pe -> pe.reset(this));
-		elements.clear();
-		linkedElements.clear();
-		activeSchedule.addAll(schedule);
-		
+
 		baseWorldSection.setEmpty();
 		baseWorldSection.forceApplyFade(1);
 		elements.add(baseWorldSection);
+
+		totalTime = 0;
+		activeSchedule.addAll(schedule);
+		activeSchedule.forEach(i -> i.onScheduled(this));
 	}
 
 	public WorldSectionElement getBaseWorldSection() {
 		return baseWorldSection;
+	}
+
+	public float getSceneProgress() {
+		return totalTime == 0 ? 0 : currentTime / (float) totalTime;
 	}
 
 	public void fadeOut() {
@@ -158,6 +173,9 @@ public class PonderScene {
 		transform.tick();
 		forEach(e -> e.tick(this));
 
+		if (currentTime < totalTime)
+			currentTime++;
+
 		for (Iterator<PonderInstruction> iterator = activeSchedule.iterator(); iterator.hasNext();) {
 			PonderInstruction instruction = iterator.next();
 			instruction.tick(this);
@@ -171,6 +189,10 @@ public class PonderScene {
 
 		if (activeSchedule.isEmpty())
 			finished = true;
+	}
+
+	public void addToSceneTime(int time) {
+		totalTime += time;
 	}
 
 	public void addElement(PonderElement e) {
@@ -205,7 +227,7 @@ public class PonderScene {
 		for (PonderElement elemtent : elements)
 			function.accept(elemtent);
 	}
-	
+
 	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
 		for (Entity element : world.getEntities())
 			if (type.isInstance(element))
@@ -289,19 +311,18 @@ public class PonderScene {
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 			ms.scale(30, -30, 30);
-			ms.translate((size + offsetX) / -2f, -.5f, (size + offsetZ) / -2f);
+			ms.translate((size + offsetX) / -2f, -1f, (size + offsetZ) / -2f);
 
 			return ms;
 		}
 
-		public Vec3d screenToScene(float x, float y) {
-			refreshMatrix();
-			Vector4f vec = new Vector4f(x, y, 0, 1);
-			cachedMat.invert();
-			vec.transform(cachedMat);
-			cachedMat.invert();
-			MutableBoundingBox bounds = getBounds();
-			return new Vec3d(vec.getX() + bounds.getXSize() / -2f, vec.getY(), vec.getZ() + bounds.getZSize() / -2f);
+		public Vec3d screenToScene(float x, float y, int depth) {
+			float pt = AnimationTickHolder.getPartialTicks();
+			Vec3d vec = new Vec3d(x, y, depth);
+			
+			// wut
+			
+			return vec;
 		}
 
 		public Vec2f sceneToScreen(Vec3d vec) {

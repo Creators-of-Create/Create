@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.ponder.instructions;
 
+import java.util.function.UnaryOperator;
+
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
@@ -9,11 +11,11 @@ import net.minecraft.block.Blocks;
 
 public class ReplaceBlocksInstruction extends WorldModifyInstruction {
 
-	private BlockState stateToUse;
+	private UnaryOperator<BlockState> stateToUse;
 	private boolean replaceAir;
 	private boolean spawnParticles;
 
-	public ReplaceBlocksInstruction(Selection selection, BlockState stateToUse, boolean replaceAir,
+	public ReplaceBlocksInstruction(Selection selection, UnaryOperator<BlockState> stateToUse, boolean replaceAir,
 		boolean spawnParticles) {
 		super(selection);
 		this.stateToUse = stateToUse;
@@ -33,7 +35,7 @@ public class ReplaceBlocksInstruction extends WorldModifyInstruction {
 				return;
 			if (spawnParticles)
 				world.addBlockDestroyEffects(pos, prevState);
-			world.setBlockState(pos, stateToUse);
+			world.setBlockState(pos, stateToUse.apply(prevState));
 		});
 	}
 
