@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public class SpoutBlock extends Block implements IWrenchable {
 
@@ -32,6 +33,21 @@ public class SpoutBlock extends Block implements IWrenchable {
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.SPOUT.create();
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te == null)
+			return 0;
+		if (te instanceof SpoutTileEntity)
+			return ((SpoutTileEntity) te).getComparatorOutput();
+		return 0;
 	}
 
 }

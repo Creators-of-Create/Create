@@ -5,8 +5,13 @@ import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProce
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -16,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBe
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.item.ItemStack;
@@ -26,7 +32,10 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -34,13 +43,14 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class SpoutTileEntity extends SmartTileEntity {
+public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	public static final int FILLING_TIME = 20;
 
 	protected BeltProcessingBehaviour beltProcessing;
 	protected int processingTicks;
 	protected boolean sendSplash;
+	protected int lastRedstoneLevel;
 
 	SmartFluidTankBehaviour tank;
 
@@ -168,6 +178,12 @@ public class SpoutTileEntity extends SmartTileEntity {
 		if (processingTicks >= 8 && world.isRemote)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
+
+		if (lastRedstoneLevel != getComparatorOutput()) {
+			lastRedstoneLevel = getComparatorOutput();
+			if (world != null)
+				world.updateComparatorOutputLevel(getPos(), getBlockState().getBlock());
+		}
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
@@ -188,6 +204,45 @@ public class SpoutTileEntity extends SmartTileEntity {
 			m = new Vec3d(m.x, Math.abs(m.y), m.z);
 			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
+	}
+
+	public int getComparatorOutput() {
+		SpoutTileEntity te = this;
+		double fillFraction = (double) te.getCurrentFluidInTank().getAmount() / te.tank.getPrimaryHandler().getCapacity();
+		return MathHelper.floor(MathHelper.clamp(fillFraction * 14 + (fillFraction > 0 ? 1  : 0), 0, 15));
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		SpoutTileEntity te = this;
+
+		int fluidAmount = te.tank.getPrimaryHandler().getFluidAmount();
+		int fluidCapacity = te.tank.getPrimaryHandler().getCapacity();
+		double fillFraction = (double) fluidAmount / fluidCapacity;
+		FluidStack fluidType = te.tank.getPrimaryHandler().getFluid();
+
+		tooltip.add(spacing + Lang.translate("gui.spout.info_header"));
+
+		if (isPlayerSneaking && AllFluids.POTION.get().getFluid().isEquivalentTo(fluidType.getFluid())) {
+			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.effectsTitle"));
+
+			ArrayList<ITextComponent> potionTooltip = new ArrayList<>();
+			PotionFluidHandler.addPotionTooltip(fluidType, potionTooltip, 1);
+			tooltip.addAll(2, potionTooltip.stream()
+					.map(c -> spacing + " " + c.getFormattedText())
+					.collect(Collectors.toList()));
+			return true;
+		}
+
+		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.title"));
+
+		if (fluidAmount != 0)
+			tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedFluidTypeText(fluidType, fillFraction));
+
+		tooltip.add(spacing + FluidFullnessOverlay.getFormattedFullnessText(fillFraction));
+		tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedCapacityText(fluidAmount, fluidCapacity));
+
+		return true;
 	}
 
 }

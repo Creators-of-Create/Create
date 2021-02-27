@@ -99,4 +99,19 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		return ItemDrainTileEntity.class;
 	}
 
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te == null)
+			return 0;
+		if (te instanceof ItemDrainTileEntity)
+			return ((ItemDrainTileEntity) te).getComparatorOutput();
+		return 0;
+	}
+
 }

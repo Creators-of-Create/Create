@@ -310,4 +310,22 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return SILENCED_METAL;
 		return soundType;
 	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof FluidTankTileEntity) {
+			FluidTankTileEntity fluidTankTileEntity = ((FluidTankTileEntity) te).getControllerTE();
+			if (fluidTankTileEntity == null)
+				return 0;
+			return fluidTankTileEntity.getComparatorOutput();
+		}
+		return 0;
+	}
+
 }
