@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 900",
+	"_": "Missing Localizations: 915",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -839,6 +839,15 @@
 	"create.gui.stressometer.no_rotation": "UNLOCALIZED: No Rotation",
 	"create.gui.contraptions.not_fast_enough": "UNLOCALIZED: It appears that this %1$s is _not_ rotating with _enough_ _speed_.",
 	"create.gui.contraptions.network_overstressed": "UNLOCALIZED: It appears that this contraption is _overstressed_. Add more sources or _slow_ _down_ the components with a high _stress_ _impact_.",
+	"create.gui.stores_fluid.title": "UNLOCALIZED: Fluid Contained",
+	"create.gui.stores_fluid.effectsTitle": "UNLOCALIZED: Potion Effects",
+	"create.gui.stores_fluid.empty": "UNLOCALIZED: Empty",
+	"create.gui.input_tanks.title": "UNLOCALIZED: Input Tanks",
+	"create.gui.output_tanks.title": "UNLOCALIZED: Output Tanks",
+	"create.gui.tank.info_header": "UNLOCALIZED: Tank Information:",
+	"create.gui.spout.info_header": "UNLOCALIZED: Spout Information:",
+	"create.gui.drain.info_header": "UNLOCALIZED: Drain Information:",
+	"create.gui.basin.info_header": "UNLOCALIZED: Basin Information:",
 	"create.gui.adjustable_crate.title": "UNLOCALIZED: Adjustable Crate",
 	"create.gui.adjustable_crate.storageSpace": "UNLOCALIZED: Storage Space",
 	"create.gui.stockpile_switch.title": "UNLOCALIZED: Stockpile Switch",
@@ -1065,6 +1074,10 @@
 	"create.tooltip.stressImpact.medium": "UNLOCALIZED: Moderate",
 	"create.tooltip.stressImpact.high": "UNLOCALIZED: High",
 	"create.tooltip.stressImpact.overstressed": "UNLOCALIZED: Overstressed",
+	"create.tooltip.fluidFullness.low": "UNLOCALIZED: Low",
+	"create.tooltip.fluidFullness.medium": "UNLOCALIZED: Moderate",
+	"create.tooltip.fluidFullness.high": "UNLOCALIZED: High",
+	"create.tooltip.fluidFullness.full": "UNLOCALIZED: Full",
 	"create.tooltip.capacityProvided": "UNLOCALIZED: Stress Capacity: %1$s",
 	"create.tooltip.capacityProvided.low": "UNLOCALIZED: Small",
 	"create.tooltip.capacityProvided.medium": "UNLOCALIZED: Medium",
@@ -1447,6 +1460,8 @@
 	"item.create.goggles.tooltip.behaviour1": "Muestra _indicadores_ _con_ _colores_ correspondientes al _Nivel_ _de_ _Velocidad_ de un componente cinético colocado, así como _Impacto_ _de_ _Estrés_ y _Capacidad_ de los componentes individuales.",
 	"item.create.goggles.tooltip.condition2": "Al mirar el medidor",
 	"item.create.goggles.tooltip.behaviour2": "Muestra información detallada sobre la _velocidad_ o el _estrés_ de la red a la que está conectado el medidor.",
+	"item.create.goggles.tooltip.condition3": "UNLOCALIZED: When looking at fluid containers",
+	"item.create.goggles.tooltip.behaviour3": "UNLOCALIZED: Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
 
 	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "Una herramienta útil para trabajar en artefactos cinéticos. Se puede utilizar para _Rotar,_ _Desmantelar_ y  _Configurar_ componentes.",

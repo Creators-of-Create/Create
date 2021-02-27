@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 71",
+	"_": "Missing Localizations: 86",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -839,6 +839,15 @@
 	"create.gui.stressometer.no_rotation": "회전없음",
 	"create.gui.contraptions.not_fast_enough": "이 %1$s은(는) 작동하기에 _회전 속도_가 _부족합니다_",
 	"create.gui.contraptions.network_overstressed": "_과부하!_ _높은 피로도_ _용량_을 가진 발전기를 추가로 설치하거나 _장치 속도_를 _늦추세요_.",
+	"create.gui.stores_fluid.title": "UNLOCALIZED: Fluid Contained",
+	"create.gui.stores_fluid.effectsTitle": "UNLOCALIZED: Potion Effects",
+	"create.gui.stores_fluid.empty": "UNLOCALIZED: Empty",
+	"create.gui.input_tanks.title": "UNLOCALIZED: Input Tanks",
+	"create.gui.output_tanks.title": "UNLOCALIZED: Output Tanks",
+	"create.gui.tank.info_header": "UNLOCALIZED: Tank Information:",
+	"create.gui.spout.info_header": "UNLOCALIZED: Spout Information:",
+	"create.gui.drain.info_header": "UNLOCALIZED: Drain Information:",
+	"create.gui.basin.info_header": "UNLOCALIZED: Basin Information:",
 	"create.gui.adjustable_crate.title": "가변 창고 ",
 	"create.gui.adjustable_crate.storageSpace": "저장 공간",
 	"create.gui.stockpile_switch.title": "수량 스위치",
@@ -1065,6 +1074,10 @@
 	"create.tooltip.stressImpact.medium": "보통",
 	"create.tooltip.stressImpact.high": "높음",
 	"create.tooltip.stressImpact.overstressed": "과부하됨",
+	"create.tooltip.fluidFullness.low": "UNLOCALIZED: Low",
+	"create.tooltip.fluidFullness.medium": "UNLOCALIZED: Moderate",
+	"create.tooltip.fluidFullness.high": "UNLOCALIZED: High",
+	"create.tooltip.fluidFullness.full": "UNLOCALIZED: Full",
 	"create.tooltip.capacityProvided": "피로도 용량: %1$s",
 	"create.tooltip.capacityProvided.low": "적음",
 	"create.tooltip.capacityProvided.medium": "보통",
@@ -1447,6 +1460,8 @@
 	"item.create.goggles.tooltip.behaviour1": "해당 장치의 _속도_, _피로도_, _용량_을 레벨에 따라 에 따라 색상 UI를 보여줍니다.",
 	"item.create.goggles.tooltip.condition2": "계측기를 바라볼 때",
 	"item.create.goggles.tooltip.behaviour2": "계측기가 연결된 네트워크의 _속도_나 _스트레스_의 자세한 정보를 보여줍니다.",
+	"item.create.goggles.tooltip.condition3": "UNLOCALIZED: When looking at fluid containers",
+	"item.create.goggles.tooltip.behaviour3": "UNLOCALIZED: Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
 
 	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "장치 구성에 유용한 도구입니다. 장치를 _회전_, _설정_, _해체_하는 데 쓰입니다.",

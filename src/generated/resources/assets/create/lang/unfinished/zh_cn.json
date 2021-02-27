@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 19",
+	"_": "Missing Localizations: 34",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -839,6 +839,15 @@
 	"create.gui.stressometer.no_rotation": "无旋转",
 	"create.gui.contraptions.not_fast_enough": "显然%1$s没有达到足够的工作转速。",
 	"create.gui.contraptions.network_overstressed": "显然装置过载，减速网络中的高应力消耗装置或者添加更多的应力发生装置",
+	"create.gui.stores_fluid.title": "UNLOCALIZED: Fluid Contained",
+	"create.gui.stores_fluid.effectsTitle": "UNLOCALIZED: Potion Effects",
+	"create.gui.stores_fluid.empty": "UNLOCALIZED: Empty",
+	"create.gui.input_tanks.title": "UNLOCALIZED: Input Tanks",
+	"create.gui.output_tanks.title": "UNLOCALIZED: Output Tanks",
+	"create.gui.tank.info_header": "UNLOCALIZED: Tank Information:",
+	"create.gui.spout.info_header": "UNLOCALIZED: Spout Information:",
+	"create.gui.drain.info_header": "UNLOCALIZED: Drain Information:",
+	"create.gui.basin.info_header": "UNLOCALIZED: Basin Information:",
 	"create.gui.adjustable_crate.title": "板条箱",
 	"create.gui.adjustable_crate.storageSpace": "储存空间",
 	"create.gui.stockpile_switch.title": "储存开关",
@@ -1065,6 +1074,10 @@
 	"create.tooltip.stressImpact.medium": "中",
 	"create.tooltip.stressImpact.high": "高",
 	"create.tooltip.stressImpact.overstressed": "过载",
+	"create.tooltip.fluidFullness.low": "UNLOCALIZED: Low",
+	"create.tooltip.fluidFullness.medium": "UNLOCALIZED: Moderate",
+	"create.tooltip.fluidFullness.high": "UNLOCALIZED: High",
+	"create.tooltip.fluidFullness.full": "UNLOCALIZED: Full",
 	"create.tooltip.capacityProvided": "应力量：%1$s",
 	"create.tooltip.capacityProvided.low": "小",
 	"create.tooltip.capacityProvided.medium": "中",
@@ -1447,6 +1460,8 @@
 	"item.create.goggles.tooltip.behaviour1": "根据对应动力组件的_转速等级_，显示它的_颜色指示器_，也会显示这个组件的_应力影响_以及_应力量_。",
 	"item.create.goggles.tooltip.condition2": "当看向仪表时",
 	"item.create.goggles.tooltip.behaviour2": "将会显示与仪表相连的网络的_转速_、_应力_等详细信息。",
+	"item.create.goggles.tooltip.condition3": "UNLOCALIZED: When looking at fluid containers",
+	"item.create.goggles.tooltip.behaviour3": "UNLOCALIZED: Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
 
 	"item.create.wrench.tooltip": "扳手",
 	"item.create.wrench.tooltip.summary": "操控动力组件的使用工具。可用于_旋转_，_拆除_以及_配置_组件。",

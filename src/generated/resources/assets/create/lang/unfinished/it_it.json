@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 17",
+	"_": "Missing Localizations: 32",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -839,6 +839,15 @@
 	"create.gui.stressometer.no_rotation": "Nessuna rotazione",
 	"create.gui.contraptions.not_fast_enough": "Sembra che questo %1$s _non_ stia girando con una _velocità_ _sufficiente_.",
 	"create.gui.contraptions.network_overstressed": "Sembra che questo marchingegno sia _sovraccarico_. Aggiungi più fonti o _rallenta_ i componenti con un forte _impatto_ _di_ _stress_.",
+	"create.gui.stores_fluid.title": "UNLOCALIZED: Fluid Contained",
+	"create.gui.stores_fluid.effectsTitle": "UNLOCALIZED: Potion Effects",
+	"create.gui.stores_fluid.empty": "UNLOCALIZED: Empty",
+	"create.gui.input_tanks.title": "UNLOCALIZED: Input Tanks",
+	"create.gui.output_tanks.title": "UNLOCALIZED: Output Tanks",
+	"create.gui.tank.info_header": "UNLOCALIZED: Tank Information:",
+	"create.gui.spout.info_header": "UNLOCALIZED: Spout Information:",
+	"create.gui.drain.info_header": "UNLOCALIZED: Drain Information:",
+	"create.gui.basin.info_header": "UNLOCALIZED: Basin Information:",
 	"create.gui.adjustable_crate.title": "Baule regolabile",
 	"create.gui.adjustable_crate.storageSpace": "Spazio di immagazzinamento",
 	"create.gui.stockpile_switch.title": "Interruttore accumulatore",
@@ -1065,6 +1074,10 @@
 	"create.tooltip.stressImpact.medium": "Moderato",
 	"create.tooltip.stressImpact.high": "Alto",
 	"create.tooltip.stressImpact.overstressed": "Sovrastressato",
+	"create.tooltip.fluidFullness.low": "UNLOCALIZED: Low",
+	"create.tooltip.fluidFullness.medium": "UNLOCALIZED: Moderate",
+	"create.tooltip.fluidFullness.high": "UNLOCALIZED: High",
+	"create.tooltip.fluidFullness.full": "UNLOCALIZED: Full",
 	"create.tooltip.capacityProvided": "Capacità dello stress: %1$s",
 	"create.tooltip.capacityProvided.low": "Piccola",
 	"create.tooltip.capacityProvided.medium": "Media",
@@ -1447,6 +1460,8 @@
 	"item.create.goggles.tooltip.behaviour1": "Mostra gli _indicatori_ _colorati_ corrispondenti al _livello_ _di_ _velocità_ di un componente cinetico posizionato, nonché all'_impatto_ _dello_ _stress_ e la capacità dei singoli componenti.",
 	"item.create.goggles.tooltip.condition2": "Quando si guarda il calibro",
 	"item.create.goggles.tooltip.behaviour2": "Mostra informazioni dettagliate sulla _velocità_ o lo _stress_ della rete a cui è collegato il misuratore.",
+	"item.create.goggles.tooltip.condition3": "UNLOCALIZED: When looking at fluid containers",
+	"item.create.goggles.tooltip.behaviour3": "UNLOCALIZED: Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
 
 	"item.create.wrench.tooltip": "CHIAVE INGLESE",
 	"item.create.wrench.tooltip.summary": "Uno strumento utile per lavorare su congegni cinetici. Può essere usato per _ruotare_, _smontare_ e _configurare_ i componenti.",
