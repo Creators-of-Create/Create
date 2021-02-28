@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -161,16 +162,16 @@ public class PonderWorld extends SchematicWorld {
 
 	public void tick() {
 		particles.tick();
-		
+
 		for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			
+
 			entity.ticksExisted++;
 			entity.lastTickPosX = entity.getX();
 			entity.lastTickPosY = entity.getY();
 			entity.lastTickPosZ = entity.getZ();
 			entity.tick();
-			
+
 			if (!entity.isAlive())
 				iterator.remove();
 		}
@@ -198,14 +199,17 @@ public class PonderWorld extends SchematicWorld {
 
 	public void fixVirtualTileEntities() {
 		for (TileEntity tileEntity : tileEntities.values()) {
-			if (!(tileEntity instanceof BeltTileEntity))
+			if (!(tileEntity instanceof SmartTileEntity))
 				continue;
-			BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+			SmartTileEntity smartTileEntity = (SmartTileEntity) tileEntity;
+			smartTileEntity.markVirtual();
+
+			if (!(smartTileEntity instanceof BeltTileEntity))
+				continue;
+			BeltTileEntity beltTileEntity = (BeltTileEntity) smartTileEntity;
 			if (!beltTileEntity.isController())
 				continue;
 			BlockPos controllerPos = tileEntity.getPos();
-			beltTileEntity.getInventory()
-				.enableVirtualMode();
 			for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
 				TileEntity tileEntity2 = getTileEntity(blockPos);
 				if (!(tileEntity2 instanceof BeltTileEntity))

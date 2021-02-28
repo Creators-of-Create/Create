@@ -1,7 +1,10 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -12,12 +15,18 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.block.LeverBlock;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FunnelScenes {
 
@@ -120,7 +129,7 @@ public class FunnelScenes {
 		// Placing funnels without sneak
 		scene.world.showSection(topFunnelSelection, Direction.DOWN);
 		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, topCenter, "regular_place",
-			"Placed normally, it pull items from the inventory.", 80);
+			"Placed normally, it pulls items from the inventory.", 80);
 		scene.idle(45);
 
 		ElementLink<EntityElement> itemLink =
@@ -138,7 +147,7 @@ public class FunnelScenes {
 		scene.world.showSection(topFunnelSelection, Direction.DOWN);
 		scene.overlay.showControls(controlsSneak, 35);
 		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, topCenter, "sneak_place",
-			"Placed while sneaking, it will put items into the inventory.", 80);
+			"Placed while sneaking, it puts items into the inventory.", 80);
 		scene.idle(45);
 
 		itemLink = scene.world.createItemEntity(topCenter.add(0, 3, 0), util.vector.of(0, -0.2, 0), itemStack);
@@ -197,7 +206,7 @@ public class FunnelScenes {
 		BlockPos cogPos = util.grid.at(1, 1, 3);
 
 		scene.world.showSection(beltFunnelSetup, Direction.DOWN);
-		scene.overlay.showTargetedText(PonderPalette.WHITE, topOfBeltFunnel, "belt_funnel",
+		scene.overlay.showTargetedText(PonderPalette.WHITE, topOfBeltFunnel, "belt_funnel_direction",
 			"Funnels on belts will extract/insert depending on its movement direction.", 140);
 		scene.idle(15);
 
@@ -224,11 +233,238 @@ public class FunnelScenes {
 		}
 	}
 
-	public static void mounting(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void compat(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("Funnel compatibility");
 		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
 
+		BlockPos sawFunnel = util.grid.at(4, 2, 1);
+		BlockPos depotFunnel = util.grid.at(2, 2, 2);
+		BlockPos drainFunnel = util.grid.at(0, 2, 3);
+
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		Selection firstShow = util.select.layer(1)
+			.add(util.select.position(sawFunnel.south()))
+			.add(util.select.position(depotFunnel.south()))
+			.add(util.select.position(drainFunnel.south()));
+		scene.idle(5);
+
+		scene.world.showSection(firstShow, Direction.DOWN);
+
+		scene.idle(8);
+		scene.overlay.showText(PonderPalette.WHITE, 0, "funnels_compat",
+			"Funnels should also interact nicely with a handful of other components.", 360);
+		scene.idle(40);
+
+		scene.world.showSection(util.select.position(sawFunnel), Direction.DOWN);
+		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(sawFunnel.down()), "saws",
+			"Vertical Saws", 40);
+		scene.idle(8);
+		scene.world.createItemOnBeltLike(sawFunnel.down(), Direction.SOUTH, new ItemStack(Blocks.OAK_LOG));
+		scene.idle(40);
+
+		scene.world.showSection(util.select.position(depotFunnel), Direction.DOWN);
+		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(depotFunnel.down()), "depots",
+			"Depots", 40);
+		scene.idle(8);
+		scene.world.createItemOnBeltLike(depotFunnel.down(), Direction.SOUTH, new ItemStack(Items.GOLDEN_PICKAXE));
+		scene.idle(40);
+
+		scene.world.showSection(util.select.position(drainFunnel), Direction.DOWN);
+		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(drainFunnel.down()), "drains",
+			"Item Drains", 40);
+		scene.idle(8);
+		scene.world.createItemOnBeltLike(drainFunnel.down(), Direction.SOUTH, new ItemStack(Items.WATER_BUCKET));
+		scene.idle(40);
+
+		scene.markAsFinished();
+	}
+
+	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("Redstone control");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
+
+		ItemStack itemStack = AllBlocks.BRASS_BLOCK.asStack();
+		Vec3d topItemSpawn = util.vector.centerOf(3, 6, 2);
+		ElementLink<EntityElement> lastItemEntity = null;
+
+		BlockPos lever = util.grid.at(1, 2, 2);
+		BlockPos redstone = util.grid.at(2, 2, 2);
+		BlockPos funnel = util.grid.at(3, 2, 2);
+
+		AxisAlignedBB redstoneBB = new AxisAlignedBB(funnel).grow(-1 / 16f, -6 / 16f, -1 / 16f)
+			.offset(0, -5 / 16f, 0);
+
+		for (int i = 0; i < 4; i++) {
+			if (lastItemEntity != null)
+				scene.world.modifyEntity(lastItemEntity, Entity::remove);
+			lastItemEntity = scene.world.createItemEntity(topItemSpawn, util.vector.of(0, -0.2, 0), itemStack);
+			scene.idle(8);
+
+			if (i == 3) {
+				scene.world.modifyBlock(lever, s -> s.cycle(LeverBlock.POWERED), false);
+				scene.world.modifyBlock(redstone, s -> s.with(RedstoneWireBlock.POWER, 15), false);
+				scene.world.modifyBlock(funnel, s -> s.cycle(FunnelBlock.POWERED), false);
+				scene.effects.indicateRedstone(lever);
+				scene.idle(4);
+				scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, funnel, redstoneBB, 80);
+				scene.overlay.showTargetedText(PonderPalette.RED, util.vector.blockSurface(funnel, Direction.DOWN),
+					"redstone_prevents", "Redstone power will prevent any funnel from acting.", 80);
+			} else {
+				scene.idle(4);
+			}
+		}
+
+	}
+
+	public static void brass(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("The Brass Funnel");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		BlockPos firstDepot = util.grid.at(3, 1, 1);
+		BlockPos secondDepot = util.grid.at(1, 1, 1);
+		Selection depots = util.select.fromTo(firstDepot, secondDepot);
+		Selection beltAndStuff = util.select.fromTo(0, 1, 2, 4, 1, 2)
+			.add(util.select.fromTo(0, 1, 3, 0, 2, 5));
+		Selection withoutBelt = util.select.layersFrom(1)
+			.substract(beltAndStuff)
+			.substract(depots);
+
+		scene.world.showSection(withoutBelt, Direction.DOWN);
+		ElementLink<WorldSectionElement> independentSection =
+			scene.world.showIndependentSection(depots, Direction.DOWN);
+		scene.world.moveSection(independentSection, util.vector.of(0, 0, 1), 0);
+
+		BlockPos andesiteFunnel = util.grid.at(3, 2, 2);
+		BlockPos brassFunnel = util.grid.at(1, 2, 2);
+		ItemStack itemStack = AllItems.BRASS_INGOT.asStack();
+		scene.idle(10);
+
+		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, util.vector.topOf(andesiteFunnel), "andesite",
+			"Andesite Funnels can only ever extract single items.", 60);
+		scene.idle(10);
+		scene.world.createItemOnBeltLike(andesiteFunnel.down()
+			.north(), Direction.SOUTH, itemStack);
+		scene.world.flapFunnels(util.select.position(andesiteFunnel), true);
+		scene.idle(60);
+
+		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, util.vector.topOf(brassFunnel), "brass",
+			"Brass Funnels can extract up to a full stack.", 60);
+		scene.idle(10);
+		scene.world.createItemOnBeltLike(brassFunnel.down()
+			.north(), Direction.SOUTH, ItemHandlerHelper.copyStackWithSize(itemStack, 64));
+		scene.world.flapFunnels(util.select.position(brassFunnel), true);
+		scene.idle(60);
+
+		AxisAlignedBB filterSlot = new AxisAlignedBB(brassFunnel).grow(-.35, -.35, -.35)
+			.offset(0, 0.2, 0);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, filterSlot, filterSlot, 80);
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).scroll(), 60);
+		scene.idle(10);
+		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, filterSlot.getCenter(), "scroll_filter",
+			"Scrolling on the filter slot allows for precise control over the extracted stack size.", 80);
+		scene.idle(90);
+
+		// belt
+		scene.world.hideIndependentSection(independentSection, Direction.NORTH);
+		scene.world.hideSection(util.select.position(brassFunnel), Direction.UP);
+		scene.idle(20);
+
+		scene.world.modifyBlock(brassFunnel, s -> s.cycle(BeltFunnelBlock.SHAPE), false);
+		scene.world.showSection(util.select.position(brassFunnel), Direction.DOWN);
+		scene.world.showSection(beltAndStuff, Direction.SOUTH);
+		scene.idle(10);
+
+		ItemStack dirt = new ItemStack(Items.DIRT);
+		ItemStack gravel = new ItemStack(Items.GRAVEL);
+		ItemStack emerald = new ItemStack(Items.EMERALD);
+
+		for (int i = 0; i < 14; i++) {
+
+			if (i < 12)
+				scene.world.createItemOnBelt(andesiteFunnel.down(), Direction.SOUTH,
+					i % 3 == 0 ? dirt : i % 3 == 1 ? gravel : emerald);
+			scene.idle(10);
+
+			if (i > 0 && (i < 3 || i % 3 == 0)) {
+				scene.world.removeItemsFromBelt(brassFunnel.down());
+				scene.world.flapFunnels(util.select.position(brassFunnel), false);
+			}
+
+			scene.world.modifyEntities(ItemEntity.class, e -> {
+				if (e.getY() < 1)
+					e.remove();
+			});
+
+			if (i == 2) {
+				scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, filterSlot, filterSlot, 80);
+				scene.overlay
+					.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).rightClick()
+						.withItem(emerald), 60);
+				scene.idle(10);
+				scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, filterSlot.getCenter(), "item_filter",
+					"Using items on the filter slot will restrict the funnel to only transfer matching stacks.", 80);
+				scene.world.setFilterData(util.select.position(brassFunnel), FunnelTileEntity.class, emerald);
+			} else
+				scene.idle(10);
+
+			if (i == 8)
+				scene.markAsFinished();
+		}
+	}
+
+	public static void transposer(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("Direct transfer");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		BlockPos funnelPos = util.grid.at(2, 2, 2);
+		Selection funnelSelect = util.select.position(funnelPos);
+
+		ElementLink<WorldSectionElement> rightChest =
+			scene.world.showIndependentSection(util.select.position(0, 2, 2), Direction.DOWN);
+		ElementLink<WorldSectionElement> leftChest =
+			scene.world.showIndependentSection(util.select.position(4, 2, 2), Direction.DOWN);
+		scene.world.moveSection(rightChest, util.vector.of(2, 1, 0), 0);
+		scene.world.moveSection(leftChest, util.vector.of(-2, -1, 0), 0);
+		scene.idle(5);
+
+		scene.world.showSection(funnelSelect, Direction.DOWN);
+		scene.idle(20);
+
+		scene.overlay.showSelectionWithTextNearScene(PonderPalette.RED, funnelSelect, "cant_transpose",
+			"Funnels cannot ever transfer between closed inventories directly.", 40);
+		scene.idle(50);
+
+		scene.world.hideSection(funnelSelect, Direction.SOUTH);
+		scene.idle(20);
+
+		scene.world.setBlocks(funnelSelect, AllBlocks.CHUTE.getDefaultState(), false);
+		scene.world.showSection(funnelSelect, Direction.NORTH);
+		scene.idle(10);
+
+		scene.overlay.showTargetedTextNearScene(PonderPalette.GREEN, util.vector.centerOf(funnelPos), "chute_is_better",
+			"Chutes or Smart chutes might be more suitable for such purposes.", 40);
+		scene.idle(50);
+
+		scene.world.hideSection(funnelSelect, Direction.UP);
+		scene.world.hideIndependentSection(leftChest, Direction.UP);
+		scene.world.hideIndependentSection(rightChest, Direction.UP);
+		scene.idle(20);
+
+		Selection belt = util.select.layer(1);
+		scene.world.setBlocks(funnelSelect, Blocks.AIR.getDefaultState(), false);
+		scene.world.showSection(belt, Direction.DOWN);
+		scene.world.showSection(util.select.fromTo(0, 2, 2, 4, 2, 2), Direction.DOWN);
+		scene.overlay.showTargetedTextNearScene(PonderPalette.GREEN, util.vector.topOf(1, 2, 2), "belt_is_better",
+			"Same applies for horizontal movement.\nA mechanical belt should help here.", 120);
+
+		scene.markAsFinished();
 	}
 
 }

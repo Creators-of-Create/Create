@@ -16,14 +16,16 @@ public class PonderIndex {
 			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
+		// Funnels
+		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
 			.addStoryBoard("funnels/intro", FunnelScenes::intro)
 			.addStoryBoard("funnels/direction", FunnelScenes::directionality)
-			.addStoryBoard("funnels/mounting", FunnelScenes::mounting);
-		// redstone
-		// brass vs andesite
-		// arm compat?
-		
+			.addStoryBoard("funnels/compat", FunnelScenes::compat)
+			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
+			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
+		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
+
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
 			DebugScenes.registerAll();

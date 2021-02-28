@@ -22,12 +22,12 @@ public class AnimateWorldSectionInstruction extends TickingInstruction {
 
 	public static AnimateWorldSectionInstruction rotate(ElementLink<WorldSectionElement> link, Vec3d rotation,
 		int ticks) {
-		return new AnimateWorldSectionInstruction(link, rotation, ticks, WorldSectionElement::setAnimatedRotation,
-			WorldSectionElement::getAnimatedRotation);
+		return new AnimateWorldSectionInstruction(link, rotation, ticks,
+			(wse, v) -> wse.setAnimatedRotation(v, ticks == 0), WorldSectionElement::getAnimatedRotation);
 	}
 
 	public static AnimateWorldSectionInstruction move(ElementLink<WorldSectionElement> link, Vec3d offset, int ticks) {
-		return new AnimateWorldSectionInstruction(link, offset, ticks, WorldSectionElement::setAnimatedOffset,
+		return new AnimateWorldSectionInstruction(link, offset, ticks, (wse, v) -> wse.setAnimatedOffset(v, ticks == 0),
 			WorldSectionElement::getAnimatedOffset);
 	}
 

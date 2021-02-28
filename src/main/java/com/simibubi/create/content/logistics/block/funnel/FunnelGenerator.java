@@ -19,9 +19,11 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 
 	private String type;
 	private ResourceLocation particleTexture;
+	private boolean hasFilter;
 
-	public FunnelGenerator(String type) {
+	public FunnelGenerator(String type, boolean hasFilter) {
 		this.type = type;
+		this.hasFilter = hasFilter;
 		this.particleTexture = Create.asResource("block/" + type + "_casing");
 	}
 
@@ -44,7 +46,7 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 		Direction facing = s.get(FunnelBlock.FACING);
 		boolean horizontal = facing.getAxis()
 			.isHorizontal();
-		String parent = horizontal ? "horizontal" : "vertical";
+		String parent = horizontal ? "horizontal" : hasFilter ? "vertical" : "vertical_filterless";
 
 		BlockModelBuilder model = p.models()
 			.withExistingParent("block/" + type + "_funnel_" + parent + extracting + powered,

@@ -18,13 +18,15 @@ public class TextInstruction extends FadeInOutInstruction {
 		super(duration);
 	}
 
-	public TextInstruction(int color, Supplier<String> text, int duration, Selection selection) {
+	public TextInstruction(int color, Supplier<String> text, int duration, Selection selection, boolean near) {
 		this(color, text, duration);
 		element = new TextWindowElement(text).pointAt(selection.getCenter());
 		element.colored(color);
 		outline = new OutlinerElement(o -> selection.makeOutline(o)
 			.lineWidth(1 / 16f)
 			.colored(color));
+		if (near)
+			element.placeNearTarget();
 	}
 
 	public TextInstruction(int color, Supplier<String> text, int duration, Vec3d position, boolean near) {

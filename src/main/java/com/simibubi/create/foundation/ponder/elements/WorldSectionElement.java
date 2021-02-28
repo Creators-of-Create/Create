@@ -134,16 +134,20 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		section = null;
 	}
 
-	public void setAnimatedRotation(Vec3d eulerAngles) {
+	public void setAnimatedRotation(Vec3d eulerAngles, boolean force) {
 		this.animatedRotation = eulerAngles;
+		if (force)
+			prevAnimatedRotation = animatedRotation;
 	}
 
 	public Vec3d getAnimatedRotation() {
 		return animatedRotation;
 	}
 
-	public void setAnimatedOffset(Vec3d offset) {
+	public void setAnimatedOffset(Vec3d offset, boolean force) {
 		this.animatedOffset = offset;
+		if (force)
+			prevAnimatedOffset = animatedOffset;
 	}
 
 	public Vec3d getAnimatedOffset() {

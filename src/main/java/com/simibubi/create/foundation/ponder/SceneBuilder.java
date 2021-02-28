@@ -34,6 +34,7 @@ import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction
 import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
 import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -44,6 +45,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -228,7 +230,7 @@ public class SceneBuilder {
 		public void indicateRedstone(BlockPos pos) {
 			createRedstoneParticles(pos, 0xFF0000, 10);
 		}
-		
+
 		public void indicateSuccess(BlockPos pos) {
 			createRedstoneParticles(pos, 0x80FFaa, 10);
 		}
@@ -245,25 +247,35 @@ public class SceneBuilder {
 
 		public void showTargetedText(PonderPalette color, Vec3d position, String key, String defaultText,
 			int duration) {
-			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
+			registerText(key, defaultText);
 			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, false));
 		}
 
 		public void showTargetedTextNearScene(PonderPalette color, Vec3d position, String key, String defaultText,
 			int duration) {
-			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
+			registerText(key, defaultText);
 			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, true));
 		}
 
 		public void showSelectionWithText(PonderPalette color, Selection selection, String key, String defaultText,
 			int duration) {
-			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, selection));
+			registerText(key, defaultText);
+			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, selection, false));
+		}
+
+		public void showSelectionWithTextNearScene(PonderPalette color, Selection selection, String key,
+			String defaultText, int duration) {
+			registerText(key, defaultText);
+			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, selection, true));
 		}
 
 		public void showText(PonderPalette color, int y, String key, String defaultText, int duration) {
-			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
+			registerText(key, defaultText);
 			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, y));
+		}
+
+		private void registerText(String key, String defaultText) {
+			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
 		}
 
 		public void showControls(InputWindowElement element, int duration) {
@@ -431,6 +443,21 @@ public class SceneBuilder {
 			});
 		}
 
+		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {
+			addInstruction(scene -> {
+				PonderWorld world = scene.getWorld();
+				TileEntity tileEntity = world.getTileEntity(location);
+				if (!(tileEntity instanceof SmartTileEntity))
+					return;
+				SmartTileEntity beltTileEntity = (SmartTileEntity) tileEntity;
+				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
+				if (behaviour == null)
+					return;
+				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
+			});
+			flapFunnels(scene.getSceneBuildingUtil().select.position(location.up()), true);
+		}
+
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
 			ItemStack stack) {
 			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
@@ -492,15 +519,32 @@ public class SceneBuilder {
 		}
 
 		public void modifyKineticSpeed(Selection selection, UnaryOperator<Float> speedFunc) {
-			addInstruction(new TileEntityDataInstruction(selection, SpeedGaugeTileEntity.class, nbt -> {
+			modifyTileNBT(selection, SpeedGaugeTileEntity.class, nbt -> {
 				float newSpeed = speedFunc.apply(nbt.getFloat("Speed"));
 				nbt.putFloat("Value", SpeedGaugeTileEntity.getDialTarget(newSpeed));
-				return nbt;
-			}, false));
-			addInstruction(new TileEntityDataInstruction(selection, KineticTileEntity.class, nbt -> {
+			});
+			modifyTileNBT(selection, KineticTileEntity.class, nbt -> {
 				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloat("Speed")));
+			});
+		}
+
+		public void setFilterData(Selection selection, Class<? extends TileEntity> teType, ItemStack filter) {
+			modifyTileNBT(selection, teType, nbt -> {
+				nbt.put("Filter", filter.serializeNBT());
+			});
+		}
+
+		public void modifyTileNBT(Selection selection, Class<? extends TileEntity> teType,
+			Consumer<CompoundNBT> consumer) {
+			modifyTileNBT(selection, teType, consumer, false);
+		}
+
+		public void modifyTileNBT(Selection selection, Class<? extends TileEntity> teType,
+			Consumer<CompoundNBT> consumer, boolean reDrawBlocks) {
+			addInstruction(new TileEntityDataInstruction(selection, teType, nbt -> {
+				consumer.accept(nbt);
 				return nbt;
-			}, false));
+			}, reDrawBlocks));
 		}
 
 		public void flapFunnels(Selection selection, boolean outward) {

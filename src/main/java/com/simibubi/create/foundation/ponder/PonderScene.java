@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -66,6 +67,7 @@ public class PonderScene {
 	Vec3d pointOfInterest;
 	Vec3d chasingPointOfInterest;
 	WorldSectionElement baseWorldSection;
+	Entity renderViewEntity;
 
 	int offsetX;
 	int offsetZ;
@@ -90,6 +92,7 @@ public class PonderScene {
 		size = getBounds().getXSize();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
+		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
 
 		PonderLocalization.registerSpecific(component, sceneIndex, "title", "Untitled Scene");
 		setPointOfInterest(new Vec3d(0, 4, 0));
@@ -198,7 +201,13 @@ public class PonderScene {
 
 	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms, float pt) {
 		ms.push();
+		Minecraft mc = Minecraft.getInstance();
+		Entity prevRVE = mc.renderViewEntity;
+
+		mc.renderViewEntity = this.renderViewEntity;
 		forEachVisible(PonderSceneElement.class, e -> e.renderFirst(world, buffer, ms, pt));
+		mc.renderViewEntity = prevRVE;
+
 		for (RenderType type : RenderType.getBlockLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
@@ -377,6 +386,11 @@ public class PonderScene {
 			ms.translate((size + offsetX) / -2f, -1f, (size + offsetZ) / -2f);
 
 			return ms;
+		}
+
+		public void updateSceneRVE() {
+			Vec3d v = screenToScene(width / 2, height / 2, 500);
+			renderViewEntity.setPosition(v.x, v.y, v.z);
 		}
 
 		public Vec3d screenToScene(double x, double y, int depth) {

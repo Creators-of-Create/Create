@@ -15,7 +15,6 @@ import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;

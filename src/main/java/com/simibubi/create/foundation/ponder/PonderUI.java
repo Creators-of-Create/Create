@@ -221,6 +221,7 @@ public class PonderUI extends AbstractSimiScreen {
 		ms.push();
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms, partialTicks);
+		story.transform.updateSceneRVE();
 		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 

@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/funnel/block_vertical",
+  "parent": "create:block/funnel/block_vertical_filterless",
   "textures": {
     "particle": "create:block/andesite_casing",
     "7": "create:block/andesite_funnel_plating",
