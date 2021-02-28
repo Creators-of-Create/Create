@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 59",
+	"_": "Missing Localizations: 65",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1805,15 +1805,19 @@
 	"_": "->------------------------]  MetaDoc Text  [------------------------<-",
 
 	"create.ponder.hold_to_ponder": "UNLOCALIZED: Hold [%1$s] to Ponder",
+	"create.ponder.subject": "UNLOCALIZED: Subject of this scene",
 	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
+	"create.ponder.identify_mode": "UNLOCALIZED: Identify mode active.\nUnpause with [%1$s]",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
 	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
 	"create.ponder.brass_funnel.scene_0.funnels_transfer": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",
 	"create.ponder.brass_funnel.scene_0.title": "UNLOCALIZED: Using funnels",
+	"create.ponder.brass_funnel.scene_1.regular_place": "UNLOCALIZED: Placed normally, it pull items from the inventory.",
 	"create.ponder.brass_funnel.scene_1.same_for_other": "UNLOCALIZED: Same rules will apply for most orientations.",
 	"create.ponder.brass_funnel.scene_1.wrench_reverse": "UNLOCALIZED: Using a wrench, the funnel can be flipped after placement.",
-	"create.ponder.brass_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels in line with a belt will adjust their direction based it.",
+	"create.ponder.brass_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels on belts will extract/insert depending on its movement direction.",
 	"create.ponder.brass_funnel.scene_1.title": "UNLOCALIZED: Direction of Transfer",
+	"create.ponder.brass_funnel.scene_1.sneak_place": "UNLOCALIZED: Placed while sneaking, it will put items into the inventory.",
 	"create.ponder.brass_funnel.scene_2.title": "UNLOCALIZED: Funnel compatibility",
 	"create.ponder.shaft.scene_0.shaft_relay": "UNLOCALIZED: Shafts will relay rotation in a straight line.",
 	"create.ponder.shaft.scene_0.title": "UNLOCALIZED: Relaying rotational force using Shafts",
@@ -1846,10 +1850,12 @@
 	"create.ponder.brass_hand.scene_8.title": "UNLOCALIZED: Manipulating Items",
 	"create.ponder.andesite_funnel.scene_0.funnels_transfer": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",
 	"create.ponder.andesite_funnel.scene_0.title": "UNLOCALIZED: Using funnels",
+	"create.ponder.andesite_funnel.scene_1.regular_place": "UNLOCALIZED: Placed normally, it pull items from the inventory.",
 	"create.ponder.andesite_funnel.scene_1.same_for_other": "UNLOCALIZED: Same rules will apply for most orientations.",
 	"create.ponder.andesite_funnel.scene_1.wrench_reverse": "UNLOCALIZED: Using a wrench, the funnel can be flipped after placement.",
-	"create.ponder.andesite_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels in line with a belt will adjust their direction based it.",
+	"create.ponder.andesite_funnel.scene_1.belt_funnel": "UNLOCALIZED: Funnels on belts will extract/insert depending on its movement direction.",
 	"create.ponder.andesite_funnel.scene_1.title": "UNLOCALIZED: Direction of Transfer",
+	"create.ponder.andesite_funnel.scene_1.sneak_place": "UNLOCALIZED: Placed while sneaking, it will put items into the inventory.",
 	"create.ponder.andesite_funnel.scene_2.title": "UNLOCALIZED: Funnel compatibility",
 
 	"_": "Thank you for translating Create!"

@@ -59,10 +59,9 @@ public class PonderWorldParticles {
 		}
 	}
 
-	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo p_228345_4_) {
+	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo p_228345_4_, float p_228345_5_) {
 		Minecraft mc = Minecraft.getInstance();
 		LightTexture p_228345_3_ = mc.gameRenderer.getLightmapTextureManager();
-		float p_228345_5_ = mc.getRenderPartialTicks();
 
 		p_228345_3_.enableLightmap();
 		Runnable enable = () -> {

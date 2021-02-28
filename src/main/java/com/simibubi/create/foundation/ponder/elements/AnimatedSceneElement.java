@@ -5,7 +5,6 @@ import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.math.MathHelper;
@@ -24,7 +23,7 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 	public void forceApplyFade(float fade) {
 		this.fade.startWithValue(fade);
 	}
-	
+
 	public void setFade(float fade) {
 		this.fade.setValue(fade);
 	}
@@ -32,46 +31,46 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 	public void setFadeVec(Vec3d fadeVec) {
 		this.fadeVec = fadeVec;
 	}
-	
+
 	@Override
-	public final void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms) {
+	public final void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {
 		ms.push();
-		float currentFade = applyFade(ms);
-		renderFirst(world, buffer, ms, currentFade);
+		float currentFade = applyFade(ms, pt);
+		renderFirst(world, buffer, ms, currentFade, pt);
 		ms.pop();
 	}
 
 	@Override
-	public final void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms) {
+	public final void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms,
+		float pt) {
 		ms.push();
-		float currentFade = applyFade(ms);
-		renderLayer(world, buffer, type, ms, currentFade);
-		ms.pop();
-	}
-	
-	@Override
-	public final void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms) {
-		ms.push();
-		float currentFade = applyFade(ms);
-		renderLast(world, buffer, ms, currentFade);
+		float currentFade = applyFade(ms, pt);
+		renderLayer(world, buffer, type, ms, currentFade, pt);
 		ms.pop();
 	}
 
-	protected float applyFade(MatrixStack ms) {
-		float currentFade = fade.getValue(Minecraft.getInstance()
-			.getRenderPartialTicks());
+	@Override
+	public final void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {
+		ms.push();
+		float currentFade = applyFade(ms, pt);
+		renderLast(world, buffer, ms, currentFade, pt);
+		ms.pop();
+	}
+
+	protected float applyFade(MatrixStack ms, float pt) {
+		float currentFade = fade.getValue(pt);
 		if (fadeVec != null)
 			MatrixStacker.of(ms)
 				.translate(fadeVec.scale(-1 + currentFade));
 		return currentFade;
 	}
 
-	protected void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms,
-		float fade) {}
+	protected void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms, float fade,
+		float pt) {}
 
-	protected void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {}
+	protected void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {}
 
-	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {}
+	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {}
 
 	protected int lightCoordsFromFade(float fade) {
 		int light = 0xF000F0;

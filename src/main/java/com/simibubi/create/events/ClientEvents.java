@@ -139,6 +139,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
 		ms.push();
@@ -149,9 +150,8 @@ public class ClientEvents {
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
-		CreateClient.outliner.renderOutlines(ms, buffer);
+		CreateClient.outliner.renderOutlines(ms, buffer, pt);
 //		LightVolumeDebugger.render(ms, buffer);
-//		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 

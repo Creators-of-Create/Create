@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
@@ -25,29 +26,41 @@ public class PonderTooltipHandler {
 
 	static LerpedFloat holdWProgress = LerpedFloat.linear()
 		.startWithValue(0);
-	static ItemStack lastHoveredStack = null;
+	static ItemStack lastHoveredStack = ItemStack.EMPTY;
+	static boolean subject = false;
+
 	public static final String HOLD_TO_PONDER = PonderLocalization.LANG_PREFIX + "hold_to_ponder";
+	public static final String SUBJECT = PonderLocalization.LANG_PREFIX + "subject";
 
 	public static void tick() {
 		Minecraft instance = Minecraft.getInstance();
 		Screen currentScreen = instance.currentScreen;
-		if (!(currentScreen instanceof ContainerScreen))
-			return;
-		ContainerScreen<?> cs = (ContainerScreen<?>) currentScreen;
-
+		ItemStack stack = ItemStack.EMPTY;
 		ItemStack prevStack = lastHoveredStack;
-		lastHoveredStack = null;
-		Slot slotUnderMouse = cs.getSlotUnderMouse();
-		if (slotUnderMouse == null || !slotUnderMouse.getHasStack())
+		lastHoveredStack = ItemStack.EMPTY;
+		subject = false;
+
+		if (currentScreen instanceof ContainerScreen) {
+			ContainerScreen<?> cs = (ContainerScreen<?>) currentScreen;
+			Slot slotUnderMouse = cs.getSlotUnderMouse();
+			if (slotUnderMouse == null || !slotUnderMouse.getHasStack())
+				return;
+			stack = slotUnderMouse.getStack();
+		} else if (currentScreen instanceof PonderUI) {
+			PonderUI ponderUI = (PonderUI) currentScreen;
+			stack = ponderUI.getHoveredTooltipItem();
+			if (stack.isItemEqual(ponderUI.getSubject()))
+				subject = true;
+		} else
 			return;
 
-		ItemStack stack = slotUnderMouse.getStack();
-
+		if (stack.isEmpty())
+			return;
 		if (!PonderRegistry.all.containsKey(stack.getItem()
 			.getRegistryName()))
 			return;
 
-		if (prevStack != stack)
+		if (prevStack.isEmpty() || !prevStack.isItemEqual(stack))
 			holdWProgress.startWithValue(0);
 
 		float value = holdWProgress.getValue();
@@ -56,10 +69,13 @@ public class PonderTooltipHandler {
 		long window = instance.getWindow()
 			.getHandle();
 
-		if (InputMappings.isKeyDown(window, keyCode)) {
-			if (value >= 1)
+		if (!subject && InputMappings.isKeyDown(window, keyCode)) {
+			if (value >= 1) {
 				ScreenOpener.open(new PonderUI(PonderRegistry.compile(stack.getItem()
 					.getRegistryName())));
+				holdWProgress.startWithValue(0);
+				return;
+			}
 			holdWProgress.setValue(Math.min(1, value + Math.max(.25f, value) * .25f));
 		} else
 			holdWProgress.setValue(Math.max(0, value - .05f));
@@ -68,10 +84,14 @@ public class PonderTooltipHandler {
 	}
 
 	public static void addToTooltip(List<ITextComponent> toolTip, ItemStack stack) {
+		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 		if (lastHoveredStack != stack)
 			return;
-		float renderPartialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
+		if (subject) {
+			toolTip.set(1, Lang.createTranslationTextComponent(SUBJECT)
+				.applyTextStyle(TextFormatting.GREEN));
+			return;
+		}
 		toolTip.set(1, makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f)));
 	}
 

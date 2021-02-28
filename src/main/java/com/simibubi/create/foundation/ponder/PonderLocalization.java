@@ -52,7 +52,9 @@ public class PonderLocalization {
 		JsonObject object = new JsonObject();
 
 		addGeneral(object, PonderTooltipHandler.HOLD_TO_PONDER, "Hold [%1$s] to Ponder");
+		addGeneral(object, PonderTooltipHandler.SUBJECT, "Subject of this scene");
 		addGeneral(object, PonderUI.PONDERING, "Pondering about...");
+		addGeneral(object, PonderUI.IDENTIFY_MODE, "Identify mode active.\nUnpause with [%1$s]");
 
 		shared.forEach((k, v) -> object.addProperty(Create.ID + "." + langKeyForShared(k), v));
 		specific.forEach((rl, map) -> {

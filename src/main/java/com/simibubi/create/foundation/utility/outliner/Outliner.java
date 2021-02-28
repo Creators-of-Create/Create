@@ -10,7 +10,6 @@ import java.util.Set;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
@@ -146,7 +145,7 @@ public class Outliner {
 		toClear.forEach(outlines::remove);
 	}
 
-	public void renderOutlines(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void renderOutlines(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
 			outline.params.alpha = 1;
@@ -156,13 +155,13 @@ public class Outliner {
 				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
-				float alpha = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), lastAlpha, currentAlpha);
+				float alpha = MathHelper.lerp(pt, lastAlpha, currentAlpha);
 
 				outline.params.alpha = alpha * alpha * alpha;
 				if (outline.params.alpha < 1 / 8f)
 					return;
 			}
-			outline.render(ms, buffer);
+			outline.render(ms, buffer, pt);
 		});
 	}
 

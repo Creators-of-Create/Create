@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.util.Direction;
@@ -74,7 +75,7 @@ public class FlipTool extends PlacementToolBase {
 			.disableNormals()
 			.colored(0xdddddd)
 			.withFaceTextures(tex, tex);
-		outline.render(ms, buffer);
+		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
 		
 		super.renderOnSchematic(ms, buffer);
 	}

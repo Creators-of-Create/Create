@@ -9,41 +9,58 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import net.minecraft.client.ClipboardHelper;
 import net.minecraft.client.GameSettings;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends AbstractSimiScreen {
 
 	public static final String PONDERING = PonderLocalization.LANG_PREFIX + "pondering";
+	public static final String IDENTIFY_MODE = PonderLocalization.LANG_PREFIX + "identify_mode";
+
 	private List<PonderScene> scenes;
 	private LerpedFloat fadeIn;
 	private LerpedFloat sceneProgress;
 	ItemStack stack;
+
 	private boolean identifyMode;
+	private ItemStack hoveredTooltipItem;
+	private BlockPos hoveredBlockPos;
+
+	private ClipboardHelper clipboardHelper;
+	private BlockPos copiedBlockPos;
 
 	private LerpedFloat lazyIndex;
 	private int index = 0;
 
-	private PonderButton left, right, icon, refresh, scan;
+	private PonderButton left, right, icon, scan;
 
 	public PonderUI(List<PonderScene> scenes) {
 		this.scenes = scenes;
@@ -54,6 +71,7 @@ public class PonderUI extends AbstractSimiScreen {
 		fadeIn = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(1, .1f, Chaser.EXP);
+		clipboardHelper = new ClipboardHelper();
 	}
 
 	@Override
@@ -76,7 +94,12 @@ public class PonderUI extends AbstractSimiScreen {
 		int spacing = 8;
 		int bX = (width - 20) / 2 - (70 + 2 * spacing);
 
-		widgets.add(scan = new PonderButton(bX, bY, () -> identifyMode = !identifyMode).showing(AllIcons.I_MTD_SCAN)
+		widgets.add(scan = new PonderButton(bX, bY, () -> {
+			identifyMode = !identifyMode;
+			if (!identifyMode)
+				scenes.get(index)
+					.deselect();
+		}).showing(AllIcons.I_MTD_SCAN)
 			.shortcut(bindings.keyBindDrop)
 			.fade(0, -1));
 
@@ -96,7 +119,7 @@ public class PonderUI extends AbstractSimiScreen {
 			.fade(0, -1));
 
 		bX += 50 + spacing;
-		widgets.add(refresh = new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
+		widgets.add(new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
 			.shortcut(bindings.keyBindBack)
 			.fade(0, -1));
 
@@ -105,17 +128,38 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		PonderScene activeScene = scenes.get(index);
-		activeScene.tick();
+		if (!identifyMode)
+			activeScene.tick();
 		sceneProgress.chase(activeScene.getSceneProgress(), .5f, Chaser.EXP);
-
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
 		sceneProgress.tickChaser();
 
-		float lazyIndexValue = lazyIndex.getValue();
-		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
-			scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
-				.tick();
+		if (!identifyMode) {
+			float lazyIndexValue = lazyIndex.getValue();
+			if (Math.abs(lazyIndexValue - index) > 1 / 512f)
+				scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
+					.tick();
+		}
+
+		updateIdentifiedItem(activeScene);
+	}
+
+	public void updateIdentifiedItem(PonderScene activeScene) {
+		hoveredTooltipItem = ItemStack.EMPTY;
+		hoveredBlockPos = null;
+		if (!identifyMode)
+			return;
+
+		MainWindow w = minecraft.getWindow();
+		double mouseX = minecraft.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
+		double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
+		SceneTransform t = activeScene.getTransform();
+		Vec3d vec1 = t.screenToScene(mouseX, mouseY, 1000);
+		Vec3d vec2 = t.screenToScene(mouseX, mouseY, -100);
+		Pair<ItemStack, BlockPos> pair = activeScene.rayTraceScene(vec1, vec2);
+		hoveredTooltipItem = pair.getFirst();
+		hoveredBlockPos = pair.getSecond();
 	}
 
 	@Override
@@ -126,6 +170,7 @@ public class PonderUI extends AbstractSimiScreen {
 	}
 
 	protected void replay() {
+		identifyMode = false;
 		scenes.get(index)
 			.begin();
 	}
@@ -140,6 +185,7 @@ public class PonderUI extends AbstractSimiScreen {
 			scenes.get(index)
 				.begin();
 			lazyIndex.chase(index, 1 / 4f, Chaser.EXP);
+			identifyMode = false;
 			return true;
 		} else
 			index = prevIndex;
@@ -149,8 +195,8 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.enableBlend();
-		renderVisibleScenes(mouseX, mouseY, partialTicks);
-		renderWidgets(mouseX, mouseY, partialTicks);
+		renderVisibleScenes(mouseX, mouseY, identifyMode ? 0 : partialTicks);
+		renderWidgets(mouseX, mouseY, identifyMode ? 0 : partialTicks);
 	}
 
 	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
@@ -164,7 +210,7 @@ public class PonderUI extends AbstractSimiScreen {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
-		double value = lazyIndex.getValue(partialTicks);
+		double value = lazyIndex.getValue(AnimationTickHolder.getPartialTicks());
 		double diff = i - value;
 		double slide = MathHelper.lerp(diff * diff, 200, 600) * diff;
 
@@ -174,8 +220,8 @@ public class PonderUI extends AbstractSimiScreen {
 
 		ms.push();
 		story.transform.updateScreenParams(width, height, slide);
-		story.transform.apply(ms);
-		story.renderScene(buffer, ms);
+		story.transform.apply(ms, partialTicks);
+		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
 		// coords for debug
@@ -238,6 +284,7 @@ public class PonderUI extends AbstractSimiScreen {
 		float fade = fadeIn.getValue(partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		float indexDiff = Math.abs(lazyIndexValue - index);
+		PonderScene activeScene = scenes.get(index);
 		int textColor = 0xeeeeee;
 
 		{
@@ -250,16 +297,35 @@ public class PonderUI extends AbstractSimiScreen {
 			y += 12;
 			x += 0;
 			RenderSystem.translated(0, 3 * (indexDiff), 0);
-			font.drawSplitString(scenes.get(index)
-				.getTitle(), x, y, left.x - x, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			font.drawSplitString(activeScene.getTitle(), x, y, left.x - x,
+				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 		}
 
 		if (identifyMode) {
 			RenderSystem.pushMatrix();
-			RenderSystem.translated(mouseX, mouseY, 800);
-			drawString(font, "?", 6, 2, 0xddffffff);
+			RenderSystem.translated(mouseX, mouseY, 100);
+			if (hoveredTooltipItem.isEmpty()) {
+				String tooltip = Lang
+					.createTranslationTextComponent(IDENTIFY_MODE,
+						new StringTextComponent(minecraft.gameSettings.keyBindDrop.getKeyBinding()
+							.getLocalizedName()).applyTextStyle(TextFormatting.WHITE))
+					.applyTextStyle(TextFormatting.GRAY)
+					.getFormattedText();
+				renderTooltip(font.listFormattedStringToWidth(tooltip, width / 3), 0, 0);
+			} else
+				renderTooltip(hoveredTooltipItem, 0, 0);
+			if (hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
+				RenderSystem.translated(0, -15, 0);
+				boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
+				String coords = new StringTextComponent(
+					hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
+						.applyTextStyles(copied ? TextFormatting.GREEN : TextFormatting.GOLD)
+						.getFormattedText();
+				renderTooltip(coords, 0, 0);
+			}
 			RenderSystem.popMatrix();
+
 			scan.flash();
 		} else {
 			scan.dim();
@@ -288,8 +354,7 @@ public class PonderUI extends AbstractSimiScreen {
 		if (index == scenes.size() - 1 || index == scenes.size() - 2 && lazyIndexValue > index)
 			right.fade(scenes.size() - lazyIndexValue - 1);
 
-		boolean finished = scenes.get(index)
-			.isFinished();
+		boolean finished = activeScene.isFinished();
 		if (finished)
 			right.flash();
 		else
@@ -325,6 +390,8 @@ public class PonderUI extends AbstractSimiScreen {
 	}
 
 	private void renderOverlay(int i, float partialTicks) {
+		if (identifyMode)
+			return;
 		RenderSystem.pushMatrix();
 		PonderScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
@@ -350,6 +417,15 @@ public class PonderUI extends AbstractSimiScreen {
 
 		if (handled.booleanValue())
 			return true;
+
+		if (identifyMode && hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
+			clipboardHelper.setClipboardString(minecraft.getWindow()
+				.getHandle(),
+				"BlockPos copied = util.grid.at(" + hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", "
+					+ hoveredBlockPos.getZ() + ");");
+			copiedBlockPos = hoveredBlockPos;
+			return true;
+		}
 
 		return super.mouseClicked(x, y, button);
 	}
@@ -383,6 +459,9 @@ public class PonderUI extends AbstractSimiScreen {
 
 		if (code == qCode) {
 			identifyMode = !identifyMode;
+			if (!identifyMode)
+				scenes.get(index)
+					.deselect();
 			return true;
 		}
 
@@ -474,17 +553,24 @@ public class PonderUI extends AbstractSimiScreen {
 
 	public static void renderBox(int x, int y, int w, int h, int backgroundColor, int borderColorStart,
 		int borderColorEnd) {
-		int zLevel = 100;
-		GuiUtils.drawGradientRect(zLevel, x - 3, y - 4, x + w + 3, y - 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, x - 3, y + h + 3, x + w + 3, y + h + 4, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3, x + w + 3, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, x - 4, y - 3, x - 3, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, x + w + 3, y - 3, x + w + 4, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(zLevel, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart,
-			borderColorEnd);
-		GuiUtils.drawGradientRect(zLevel, x - 3, y - 3, x + w + 3, y - 3 + 1, borderColorStart, borderColorStart);
-		GuiUtils.drawGradientRect(zLevel, x - 3, y + h + 2, x + w + 3, y + h + 3, borderColorEnd, borderColorEnd);
+		int z = 100;
+		GuiUtils.drawGradientRect(z, x - 3, y - 4, x + w + 3, y - 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(z, x - 3, y + h + 3, x + w + 3, y + h + 4, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(z, x - 3, y - 3, x + w + 3, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(z, x - 4, y - 3, x - 3, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(z, x + w + 3, y - 3, x + w + 4, y + h + 3, backgroundColor, backgroundColor);
+		GuiUtils.drawGradientRect(z, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart, borderColorEnd);
+		GuiUtils.drawGradientRect(z, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart, borderColorEnd);
+		GuiUtils.drawGradientRect(z, x - 3, y - 3, x + w + 3, y - 3 + 1, borderColorStart, borderColorStart);
+		GuiUtils.drawGradientRect(z, x - 3, y + h + 2, x + w + 3, y + h + 3, borderColorEnd, borderColorEnd);
+	}
+
+	public ItemStack getHoveredTooltipItem() {
+		return hoveredTooltipItem;
+	}
+
+	public ItemStack getSubject() {
+		return stack;
 	}
 
 }

@@ -31,12 +31,12 @@ public abstract class TrackedElement<T> extends PonderSceneElement {
 	}
 	
 	@Override
-	public void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms) {}
+	public void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {}
 
 	@Override
-	public void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms) {}
+	public void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms, float pt) {}
 
 	@Override
-	public void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms) {}
+	public void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {}
 
 }

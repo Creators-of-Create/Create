@@ -62,11 +62,9 @@ public class ParrotElement extends AnimatedSceneElement {
 	}
 
 	@Override
-	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade) {
+	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
 		EntityRendererManager entityrenderermanager = Minecraft.getInstance()
 			.getRenderManager();
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
 
 		if (entity == null)
 			pose.create(world);

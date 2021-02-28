@@ -13,7 +13,6 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -122,9 +121,8 @@ public class PonderWorld extends SchematicWorld {
 		return this;
 	}
 
-	public void renderEntities(MatrixStack ms, SuperRenderTypeBuffer buffer, ActiveRenderInfo ari) {
+	public void renderEntities(MatrixStack ms, SuperRenderTypeBuffer buffer, ActiveRenderInfo ari, float pt) {
 		Vec3d vec3d = ari.getProjectedView();
-		float pt = AnimationTickHolder.getPartialTicks();
 		double d0 = vec3d.getX();
 		double d1 = vec3d.getY();
 		double d2 = vec3d.getZ();
@@ -157,8 +155,8 @@ public class PonderWorld extends SchematicWorld {
 		renderManager.render(entity, d0 - x, d1 - y, d2 - z, f, pt, ms, buffer, light);
 	}
 
-	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo ari) {
-		particles.renderParticles(ms, buffer, ari);
+	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo ari, float pt) {
+		particles.renderParticles(ms, buffer, ari, pt);
 	}
 
 	public void tick() {

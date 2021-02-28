@@ -12,7 +12,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.mutable.MutableDouble;
+import org.apache.commons.lang3.mutable.MutableObject;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
@@ -21,20 +25,27 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class PonderScene {
 
@@ -82,6 +93,59 @@ public class PonderScene {
 
 		PonderLocalization.registerSpecific(component, sceneIndex, "title", "Untitled Scene");
 		setPointOfInterest(new Vec3d(0, 4, 0));
+	}
+
+	public void deselect() {
+		forEach(WorldSectionElement.class, WorldSectionElement::resetSelectedBlock);
+	}
+
+	public Pair<ItemStack, BlockPos> rayTraceScene(Vec3d from, Vec3d to) {
+		MutableObject<Pair<WorldSectionElement, BlockPos>> nearestHit = new MutableObject<>();
+		MutableDouble bestDistance = new MutableDouble(0);
+
+		forEach(WorldSectionElement.class, wse -> {
+			wse.resetSelectedBlock();
+			if (!wse.isVisible())
+				return;
+			Pair<Vec3d, BlockPos> rayTrace = wse.rayTrace(world, from, to);
+			if (rayTrace == null)
+				return;
+			double distanceTo = rayTrace.getFirst()
+				.distanceTo(from);
+			if (nearestHit.getValue() != null && distanceTo >= bestDistance.getValue())
+				return;
+
+			nearestHit.setValue(Pair.of(wse, rayTrace.getSecond()));
+			bestDistance.setValue(distanceTo);
+		});
+
+		if (nearestHit.getValue() == null)
+			return Pair.of(ItemStack.EMPTY, null);
+
+		BlockPos selectedPos = nearestHit.getValue()
+			.getSecond();
+
+		BlockPos origin = new BlockPos(offsetX, 0, offsetZ);
+		if (!world.getBounds()
+			.isVecInside(selectedPos))
+			return Pair.of(ItemStack.EMPTY, null);
+		if (new MutableBoundingBox(origin, origin.add(new Vec3i(size - 1, 0, size - 1))).isVecInside(selectedPos)) {
+			if (PonderIndex.EDITOR_MODE)
+				nearestHit.getValue()
+					.getFirst()
+					.selectBlock(selectedPos);
+			return Pair.of(ItemStack.EMPTY, selectedPos);
+		}
+
+		nearestHit.getValue()
+			.getFirst()
+			.selectBlock(selectedPos);
+		BlockState blockState = world.getBlockState(selectedPos);
+		ItemStack pickBlock = blockState.getPickBlock(
+			new BlockRayTraceResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world,
+			selectedPos, Minecraft.getInstance().player);
+
+		return Pair.of(pickBlock, selectedPos);
 	}
 
 	public String getTitle() {
@@ -132,19 +196,16 @@ public class PonderScene {
 		activeSchedule.add(new HideAllInstruction(10, null));
 	}
 
-	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms) {
-		float pt = Minecraft.getInstance()
-			.getRenderPartialTicks();
-
+	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms, float pt) {
 		ms.push();
-		forEachVisible(PonderSceneElement.class, e -> e.renderFirst(world, buffer, ms));
+		forEachVisible(PonderSceneElement.class, e -> e.renderFirst(world, buffer, ms, pt));
 		for (RenderType type : RenderType.getBlockLayers())
-			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms));
-		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms));
+			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
+		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
 		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
-		world.renderEntities(ms, buffer, info);
-		world.renderParticles(ms, buffer, info);
-		outliner.renderOutlines(ms, buffer);
+		world.renderEntities(ms, buffer, info, pt);
+		world.renderParticles(ms, buffer, info, pt);
+		outliner.renderOutlines(ms, buffer, pt);
 		ms.pop();
 	}
 
@@ -295,8 +356,10 @@ public class PonderScene {
 		}
 
 		public MatrixStack apply(MatrixStack ms) {
-			float pt = Minecraft.getInstance()
-				.getRenderPartialTicks();
+			return apply(ms, AnimationTickHolder.getPartialTicks());
+		}
+
+		public MatrixStack apply(MatrixStack ms, float pt) {
 			ms.translate(width / 2, height / 2, 200);
 
 			MatrixStacker.of(ms)
@@ -316,12 +379,22 @@ public class PonderScene {
 			return ms;
 		}
 
-		public Vec3d screenToScene(float x, float y, int depth) {
+		public Vec3d screenToScene(double x, double y, int depth) {
+			refreshMatrix();
 			float pt = AnimationTickHolder.getPartialTicks();
 			Vec3d vec = new Vec3d(x, y, depth);
-			
-			// wut
-			
+
+			vec = vec.subtract(width / 2, height / 2, 200);
+			vec = VecHelper.rotate(vec, 35, Axis.X);
+			vec = VecHelper.rotate(vec, -55, Axis.Y);
+			vec = vec.subtract(offset, 0, 0);
+			vec = VecHelper.rotate(vec, 55, Axis.Y);
+			vec = VecHelper.rotate(vec, -35, Axis.X);
+			vec = VecHelper.rotate(vec, -xRotation.getValue(pt), Axis.X);
+			vec = VecHelper.rotate(vec, -yRotation.getValue(pt), Axis.Y);
+			vec = vec.mul(1f / 30, 1f / -30, 1f / 30);
+			vec = vec.subtract((size + offsetX) / -2f, -1f, (size + offsetZ) / -2f);
+
 			return vec;
 		}
 

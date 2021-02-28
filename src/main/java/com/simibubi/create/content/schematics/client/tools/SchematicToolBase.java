@@ -143,7 +143,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			.colored(0x6886c5)
 			.withFaceTexture(AllSpecialTextures.CHECKERED)
 			.lineWidth(1 / 16f);
-		outline.render(ms, buffer);
+		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
 		outline.getParams()
 			.clearTextures();
 		ms.pop();
