@@ -50,14 +50,14 @@ public abstract class BufferedModel extends TemplateBuffer {
     protected final GlBuffer createEBO() {
         GlBuffer ebo = new GlBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
 
-        int indicesSize = vertexCount * GlPrimitiveType.USHORT.getSize();
+        int indicesSize = vertexCount * GlPrimitiveType.UINT.getSize();
 
         ebo.bind();
 
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
         ebo.map(indicesSize, indices -> {
             for (int i = 0; i < vertexCount; i++) {
-                indices.putShort((short) i);
+                indices.putInt(i);
             }
         });
 
@@ -91,7 +91,7 @@ public abstract class BufferedModel extends TemplateBuffer {
         ebo.bind();
 
         setupAttributes();
-        GL20.glDrawElements(GL20.GL_QUADS, vertexCount, GlPrimitiveType.USHORT.getGlConstant(), 0);
+        GL20.glDrawElements(GL20.GL_QUADS, vertexCount, GlPrimitiveType.UINT.getGlConstant(), 0);
 
         int numAttributes = getTotalShaderAttributeCount();
         for (int i = 0; i <= numAttributes; i++) {
