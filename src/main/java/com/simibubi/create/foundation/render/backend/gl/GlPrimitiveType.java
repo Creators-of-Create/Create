@@ -2,25 +2,27 @@ package com.simibubi.create.foundation.render.backend.gl;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 @OnlyIn(Dist.CLIENT)
 public enum GlPrimitiveType {
-    FLOAT(4, "float", 5126),
-    UBYTE(1, "ubyte", 5121),
-    BYTE(1, "byte", 5120),
-    USHORT(2, "ushort", 5123),
-    SHORT(2, "short", 5122),
-    UINT(4, "uint", 5125),
-    INT(4, "int", 5124);
+    FLOAT(4, "float", GL11.GL_FLOAT),
+    UBYTE(1, "ubyte", GL11.GL_UNSIGNED_BYTE),
+    BYTE(1, "byte", GL11.GL_BYTE),
+    USHORT(2, "ushort", GL11.GL_UNSIGNED_SHORT),
+    SHORT(2, "short", GL11.GL_SHORT),
+    UINT(4, "uint", GL11.GL_UNSIGNED_INT),
+    INT(4, "int", GL11.GL_INT);
 
     private final int size;
     private final String displayName;
     private final int glConstant;
 
-    GlPrimitiveType(int p_i46095_3_, String p_i46095_4_, int p_i46095_5_) {
-        this.size = p_i46095_3_;
-        this.displayName = p_i46095_4_;
-        this.glConstant = p_i46095_5_;
+    GlPrimitiveType(int bytes, String name, int glEnum) {
+        this.size = bytes;
+        this.displayName = name;
+        this.glConstant = glEnum;
     }
 
     public int getSize() {

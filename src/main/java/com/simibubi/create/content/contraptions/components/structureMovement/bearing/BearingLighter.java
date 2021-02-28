@@ -19,25 +19,13 @@ public class BearingLighter extends ContraptionLighter<BearingContraption> {
         Set<BlockPos> blocks = contraption.getBlocks().keySet();
 
         Direction orientation = contraption.facing;
-
-        float maxDistanceSq = -1;
-        for (BlockPos pos : blocks) {
-            float x = pos.getX();
-            float y = pos.getY();
-            float z = pos.getZ();
-
-            float distSq = x * x + y * y + z * z;
-
-            if (distSq > maxDistanceSq) maxDistanceSq = distSq;
-        }
-
-        int radius = (int) (Math.ceil(Math.sqrt(maxDistanceSq)));
-
-        GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
-        GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(contraption.bounds);
-
         Direction.Axis axis = orientation.getAxis();
 
+        int radius = (int) (Math.ceil(Math.sqrt(getRadius(blocks, axis))));
+
+        GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
+
+        GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(contraption.bounds);
         if (axis == Direction.Axis.X) {
             betterBounds.maxX = contraptionBounds.maxX;
             betterBounds.minX = contraptionBounds.minX;
@@ -51,5 +39,37 @@ public class BearingLighter extends ContraptionLighter<BearingContraption> {
 
         betterBounds.translate(contraption.anchor);
         return betterBounds;
+    }
+
+    private static float getRadius(Set<BlockPos> blocks, Direction.Axis axis) {
+        switch (axis) {
+        case X:
+            return getMaxDistSqr(blocks, BlockPos::getY, BlockPos::getZ);
+        case Y:
+            return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
+        case Z:
+            return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
+        }
+
+        throw new IllegalStateException("Impossible axis");
+    }
+
+    private static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+        float maxDistSq = -1;
+        for (BlockPos pos : blocks) {
+            float a = one.get(pos);
+            float b = other.get(pos);
+
+            float distSq = a * a + b * b;
+
+
+            if (distSq > maxDistSq) maxDistSq = distSq;
+        }
+
+        return maxDistSq;
+    }
+
+    private interface Coordinate {
+        float get(BlockPos from);
     }
 }
