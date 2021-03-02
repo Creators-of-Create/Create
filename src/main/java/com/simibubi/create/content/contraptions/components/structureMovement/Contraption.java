@@ -34,7 +34,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
@@ -291,7 +291,7 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.GANTRY_PINION.has(state))
+		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);
 
 		if (AllBlocks.GANTRY_SHAFT.has(state))
@@ -423,7 +423,7 @@ public abstract class Contraption {
 
 	protected void moveGantryPinion(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		BlockPos offset = pos.offset(state.get(GantryPinionBlock.FACING));
+		BlockPos offset = pos.offset(state.get(GantryCarriageBlock.FACING));
 		if (!visited.contains(offset))
 			frontier.add(offset);
 		Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
@@ -447,7 +447,7 @@ public abstract class Contraption {
 				if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState)
 					&& offsetState.get(GantryShaftBlock.FACING) == facing)
 					frontier.add(offset);
-				else if (AllBlocks.GANTRY_PINION.has(offsetState) && offsetState.get(GantryPinionBlock.FACING) == d)
+				else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState) && offsetState.get(GantryCarriageBlock.FACING) == d)
 					frontier.add(offset);
 			}
 		}

@@ -25,6 +25,14 @@ public class PonderIndex {
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
+		
+		// Gantries
+		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft);
+		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion);
+		PonderRegistry.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
+			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
+			.addStoryBoard("gantry/direction", GantryScenes::direction)
+			.addStoryBoard("gantry/subgantry", GantryScenes::subgantry);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)

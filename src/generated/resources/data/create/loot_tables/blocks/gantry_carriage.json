@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:gantry_pinion"
+          "name": "create:gantry_carriage"
         }
       ],
       "conditions": [

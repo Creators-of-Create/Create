@@ -24,9 +24,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class GantryPinionBlock extends DirectionalAxisKineticBlock implements ITE<GantryPinionTileEntity> {
+public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements ITE<GantryCarriageTileEntity> {
 
-	public GantryPinionBlock(Properties properties) {
+	public GantryCarriageBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -41,7 +41,7 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	@Override
 	public void updateNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags) {
 		super.updateNeighbors(stateIn, worldIn, pos, flags);
-		withTileEntityDo(worldIn, pos, GantryPinionTileEntity::checkValidGantryShaft);
+		withTileEntityDo(worldIn, pos, GantryCarriageTileEntity::checkValidGantryShaft);
 	}
 	
 	@Override
@@ -113,7 +113,7 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	}
 
 	public static Axis getValidGantryShaftAxis(BlockState state) {
-		if (!(state.getBlock() instanceof GantryPinionBlock))
+		if (!(state.getBlock() instanceof GantryCarriageBlock))
 			return Axis.Y;
 		IRotate block = (IRotate) state.getBlock();
 		Axis rotationAxis = block.getRotationAxis(state);
@@ -135,8 +135,8 @@ public class GantryPinionBlock extends DirectionalAxisKineticBlock implements IT
 	}
 
 	@Override
-	public Class<GantryPinionTileEntity> getTileEntityClass() {
-		return GantryPinionTileEntity.class;
+	public Class<GantryCarriageTileEntity> getTileEntityClass() {
+		return GantryCarriageTileEntity.class;
 	}
 
 }

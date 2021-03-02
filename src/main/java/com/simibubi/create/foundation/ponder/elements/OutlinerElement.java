@@ -1,16 +1,19 @@
 package com.simibubi.create.foundation.ponder.elements;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.simibubi.create.foundation.ponder.PonderScene;
+import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 public class OutlinerElement extends AnimatedSceneElement {
 	
-	private Consumer<Outliner> outlinerCall;
+	private Function<Outliner, OutlineParams> outlinerCall;
+	private int overrideColor;
 
-	public OutlinerElement(Consumer<Outliner> outlinerCall) {
+	public OutlinerElement(Function<Outliner, OutlineParams> outlinerCall) {
 		this.outlinerCall = outlinerCall;
+		this.overrideColor = -1;
 	}
 	
 	@Override
@@ -20,7 +23,13 @@ public class OutlinerElement extends AnimatedSceneElement {
 			return;
 		if (fade.getValue(0) > fade.getValue(1))
 			return;
-		outlinerCall.accept(scene.getOutliner());
+		OutlineParams params = outlinerCall.apply(scene.getOutliner());
+		if (overrideColor != -1)
+			params.colored(overrideColor);
+	}
+	
+	public void setColor(int overrideColor) {
+		this.overrideColor = overrideColor;
 	}
 	
 }

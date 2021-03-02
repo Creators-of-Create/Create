@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import static com.simibubi.create.foundation.ponder.content.PonderPalette.WHITE;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -52,8 +50,9 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(gauge, 64);
 		scene.effects.indicateSuccess(gaugePos);
 		scene.idle(10);
-		scene.overlay.showTargetedText(WHITE, util.vector.of(3, 1.5, 2.5), "shaft_relay",
-			"Shafts will relay rotation in a straight line.", 1000);
+		scene.overlay.showText(1000)
+			.text("Shafts will relay rotation in a straight line.")
+			.pointAt(util.vector.of(3, 1.5, 2.5));
 
 		scene.idle(20);
 		scene.markAsFinished();
@@ -92,8 +91,9 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(shaft, -112);
 
 		scene.idle(10);
-		scene.overlay.showTargetedText(WHITE, util.vector.of(1.5, 2, 2.5), "shaft_can_be_encased",
-			"Andesite or Brass Casing can be used to encase them.", 1000);
+		scene.overlay.showText(1000)
+			.text("Andesite or Brass Casing can be used to encase them.")
+			.pointAt(util.vector.topOf(1, 1, 2));
 	}
 
 }

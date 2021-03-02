@@ -99,8 +99,9 @@ public class FunnelScenes {
 		}
 
 		scene.idle(8);
-		scene.overlay.showText(PonderPalette.WHITE, 0, "funnels_transfer",
-			"Funnels are ideal for transferring items from and to inventories.", 360);
+		scene.overlay.showText(360)
+			.text("Funnels are ideal for transferring items from and to inventories.")
+			.independent();
 		scene.markAsFinished();
 	}
 
@@ -128,8 +129,10 @@ public class FunnelScenes {
 
 		// Placing funnels without sneak
 		scene.world.showSection(topFunnelSelection, Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, topCenter, "regular_place",
-			"Placed normally, it pulls items from the inventory.", 80);
+		scene.overlay.showText(80)
+			.text("Placed normally, it pulls items from the inventory.")
+			.pointAt(topCenter)
+			.placeNearTarget();
 		scene.idle(45);
 
 		ElementLink<EntityElement> itemLink =
@@ -146,8 +149,10 @@ public class FunnelScenes {
 
 		scene.world.showSection(topFunnelSelection, Direction.DOWN);
 		scene.overlay.showControls(controlsSneak, 35);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, topCenter, "sneak_place",
-			"Placed while sneaking, it puts items into the inventory.", 80);
+		scene.overlay.showText(80)
+			.text("Placed while sneaking, it puts items into the inventory.")
+			.pointAt(topCenter)
+			.placeNearTarget();
 		scene.idle(45);
 
 		itemLink = scene.world.createItemEntity(topCenter.add(0, 3, 0), util.vector.of(0, -0.2, 0), itemStack);
@@ -163,8 +168,10 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.world.modifyBlock(topFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), true);
 		scene.idle(10);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, topCenter, "wrench_reverse",
-			"Using a wrench, the funnel can be flipped after placement.", 80);
+		scene.overlay.showText(80)
+			.text("Using a wrench, the funnel can be flipped after placement.")
+			.pointAt(topCenter)
+			.placeNearTarget();
 
 		itemLink = scene.world.createItemEntity(topCenter, util.vector.of(0, 4 / 16f, 0), itemStack);
 		scene.idle(30);
@@ -184,8 +191,10 @@ public class FunnelScenes {
 
 		scene.world.modifyBlock(sideFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), false);
 		scene.world.showSection(sideFunnelSelection, Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, sideCenter, "same_for_other",
-			"Same rules will apply for most orientations.", 70);
+		scene.overlay.showText(70)
+			.text("Same rules will apply for most orientations.")
+			.pointAt(sideCenter)
+			.placeNearTarget();
 
 		scene.idle(20);
 
@@ -206,8 +215,10 @@ public class FunnelScenes {
 		BlockPos cogPos = util.grid.at(1, 1, 3);
 
 		scene.world.showSection(beltFunnelSetup, Direction.DOWN);
-		scene.overlay.showTargetedText(PonderPalette.WHITE, topOfBeltFunnel, "belt_funnel_direction",
-			"Funnels on belts will extract/insert depending on its movement direction.", 140);
+		scene.overlay.showText(140)
+			.text("Funnels on belts will extract/insert depending on its movement direction.")
+			.pointAt(topOfBeltFunnel);
+
 		scene.idle(15);
 
 		for (int i = 0; i < 2; i++) {
@@ -251,27 +262,37 @@ public class FunnelScenes {
 		scene.world.showSection(firstShow, Direction.DOWN);
 
 		scene.idle(8);
-		scene.overlay.showText(PonderPalette.WHITE, 0, "funnels_compat",
-			"Funnels should also interact nicely with a handful of other components.", 360);
+		scene.overlay.showText(360)
+			.text("Funnels should also interact nicely with a handful of other components.")
+			.independent(0);
 		scene.idle(40);
 
 		scene.world.showSection(util.select.position(sawFunnel), Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(sawFunnel.down()), "saws",
-			"Vertical Saws", 40);
+		scene.overlay.showText(40)
+			.text("Vertical Saws")
+			.colored(PonderPalette.BLUE)
+			.placeNearTarget()
+			.pointAt(util.vector.centerOf(sawFunnel.down()));
 		scene.idle(8);
 		scene.world.createItemOnBeltLike(sawFunnel.down(), Direction.SOUTH, new ItemStack(Blocks.OAK_LOG));
 		scene.idle(40);
 
 		scene.world.showSection(util.select.position(depotFunnel), Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(depotFunnel.down()), "depots",
-			"Depots", 40);
+		scene.overlay.showText(40)
+			.text("Depots")
+			.colored(PonderPalette.BLUE)
+			.placeNearTarget()
+			.pointAt(util.vector.centerOf(depotFunnel.down()));
 		scene.idle(8);
 		scene.world.createItemOnBeltLike(depotFunnel.down(), Direction.SOUTH, new ItemStack(Items.GOLDEN_PICKAXE));
 		scene.idle(40);
 
 		scene.world.showSection(util.select.position(drainFunnel), Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.BLUE, util.vector.centerOf(drainFunnel.down()), "drains",
-			"Item Drains", 40);
+		scene.overlay.showText(40)
+			.text("Item Drains")
+			.colored(PonderPalette.BLUE)
+			.placeNearTarget()
+			.pointAt(util.vector.centerOf(drainFunnel.down()));
 		scene.idle(8);
 		scene.world.createItemOnBeltLike(drainFunnel.down(), Direction.SOUTH, new ItemStack(Items.WATER_BUCKET));
 		scene.idle(40);
@@ -310,8 +331,10 @@ public class FunnelScenes {
 				scene.effects.indicateRedstone(lever);
 				scene.idle(4);
 				scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, funnel, redstoneBB, 80);
-				scene.overlay.showTargetedText(PonderPalette.RED, util.vector.blockSurface(funnel, Direction.DOWN),
-					"redstone_prevents", "Redstone power will prevent any funnel from acting.", 80);
+				scene.overlay.showText(80)
+					.colored(PonderPalette.RED)
+					.text("Redstone power will prevent any funnel from acting.")
+					.pointAt(util.vector.blockSurface(funnel, Direction.DOWN));
 			} else {
 				scene.idle(4);
 			}
@@ -344,16 +367,20 @@ public class FunnelScenes {
 		ItemStack itemStack = AllItems.BRASS_INGOT.asStack();
 		scene.idle(10);
 
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, util.vector.topOf(andesiteFunnel), "andesite",
-			"Andesite Funnels can only ever extract single items.", 60);
+		scene.overlay.showText(60)
+			.text("Andesite Funnels can only ever extract single items.")
+			.pointAt(util.vector.topOf(andesiteFunnel))
+			.placeNearTarget();
 		scene.idle(10);
 		scene.world.createItemOnBeltLike(andesiteFunnel.down()
 			.north(), Direction.SOUTH, itemStack);
 		scene.world.flapFunnels(util.select.position(andesiteFunnel), true);
 		scene.idle(60);
 
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, util.vector.topOf(brassFunnel), "brass",
-			"Brass Funnels can extract up to a full stack.", 60);
+		scene.overlay.showText(60)
+			.text("Brass Funnels can extract up to a full stack.")
+			.pointAt(util.vector.topOf(brassFunnel))
+			.placeNearTarget();
 		scene.idle(10);
 		scene.world.createItemOnBeltLike(brassFunnel.down()
 			.north(), Direction.SOUTH, ItemHandlerHelper.copyStackWithSize(itemStack, 64));
@@ -365,8 +392,10 @@ public class FunnelScenes {
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, filterSlot, filterSlot, 80);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).scroll(), 60);
 		scene.idle(10);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, filterSlot.getCenter(), "scroll_filter",
-			"Scrolling on the filter slot allows for precise control over the extracted stack size.", 80);
+		scene.overlay.showText(80)
+			.text("Scrolling on the filter slot allows for precise control over the extracted stack size.")
+			.pointAt(filterSlot.getCenter())
+			.placeNearTarget();
 		scene.idle(90);
 
 		// belt
@@ -406,8 +435,10 @@ public class FunnelScenes {
 					.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).rightClick()
 						.withItem(emerald), 60);
 				scene.idle(10);
-				scene.overlay.showTargetedTextNearScene(PonderPalette.WHITE, filterSlot.getCenter(), "item_filter",
-					"Using items on the filter slot will restrict the funnel to only transfer matching stacks.", 80);
+				scene.overlay.showText(80)
+					.text("Using items on the filter slot will restrict the funnel to only transfer matching stacks.")
+					.pointAt(filterSlot.getCenter())
+					.placeNearTarget();
 				scene.world.setFilterData(util.select.position(brassFunnel), FunnelTileEntity.class, emerald);
 			} else
 				scene.idle(10);
@@ -437,8 +468,10 @@ public class FunnelScenes {
 		scene.world.showSection(funnelSelect, Direction.DOWN);
 		scene.idle(20);
 
-		scene.overlay.showSelectionWithTextNearScene(PonderPalette.RED, funnelSelect, "cant_transpose",
-			"Funnels cannot ever transfer between closed inventories directly.", 40);
+		scene.overlay.showSelectionWithText(funnelSelect, 40)
+			.colored(PonderPalette.RED)
+			.text("Funnels cannot ever transfer between closed inventories directly.")
+			.placeNearTarget();
 		scene.idle(50);
 
 		scene.world.hideSection(funnelSelect, Direction.SOUTH);
@@ -448,8 +481,11 @@ public class FunnelScenes {
 		scene.world.showSection(funnelSelect, Direction.NORTH);
 		scene.idle(10);
 
-		scene.overlay.showTargetedTextNearScene(PonderPalette.GREEN, util.vector.centerOf(funnelPos), "chute_is_better",
-			"Chutes or Smart chutes might be more suitable for such purposes.", 40);
+		scene.overlay.showText(40)
+			.colored(PonderPalette.GREEN)
+			.text("Chutes or Smart chutes might be more suitable for such purposes.")
+			.pointAt(util.vector.centerOf(funnelPos))
+			.placeNearTarget();
 		scene.idle(50);
 
 		scene.world.hideSection(funnelSelect, Direction.UP);
@@ -461,8 +497,11 @@ public class FunnelScenes {
 		scene.world.setBlocks(funnelSelect, Blocks.AIR.getDefaultState(), false);
 		scene.world.showSection(belt, Direction.DOWN);
 		scene.world.showSection(util.select.fromTo(0, 2, 2, 4, 2, 2), Direction.DOWN);
-		scene.overlay.showTargetedTextNearScene(PonderPalette.GREEN, util.vector.topOf(1, 2, 2), "belt_is_better",
-			"Same applies for horizontal movement.\nA mechanical belt should help here.", 120);
+		scene.overlay.showText(120)
+			.colored(PonderPalette.GREEN)
+			.text("Same applies for horizontal movement.\nA mechanical belt should help here.")
+			.pointAt(util.vector.topOf(1, 2, 2))
+			.placeNearTarget();
 
 		scene.markAsFinished();
 	}

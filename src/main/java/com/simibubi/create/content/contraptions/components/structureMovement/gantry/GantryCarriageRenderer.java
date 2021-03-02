@@ -19,9 +19,9 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 
-public class GantryPinionRenderer extends KineticTileEntityRenderer {
+public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 
-	public GantryPinionRenderer(TileEntityRendererDispatcher dispatcher) {
+	public GantryCarriageRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
@@ -30,8 +30,8 @@ public class GantryPinionRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState state = te.getBlockState();
-		Direction facing = state.get(GantryPinionBlock.FACING);
-		Boolean alongFirst = state.get(GantryPinionBlock.AXIS_ALONG_FIRST_COORDINATE);
+		Direction facing = state.get(GantryCarriageBlock.FACING);
+		Boolean alongFirst = state.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
 		Axis rotationAxis = getRotationAxisOf(te);
 		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? te.getPos()
 			: te.getPos()

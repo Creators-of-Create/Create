@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import static com.simibubi.create.foundation.ponder.content.PonderPalette.WHITE;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
@@ -59,17 +57,23 @@ public class DebugScenes {
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
-		
+
 		Selection xAxis = util.select.fromTo(2, 1, 1, 4, 1, 1);
 		Selection yAxis = util.select.fromTo(1, 2, 1, 1, 4, 1);
 		Selection zAxis = util.select.fromTo(1, 1, 2, 1, 1, 4);
 
 		scene.idle(10);
-		scene.overlay.showSelectionWithText(PonderPalette.RED, xAxis, "x", "Das X axis", 20);
+		scene.overlay.showSelectionWithText(xAxis, 20)
+			.colored(PonderPalette.RED)
+			.text("Das X axis");
 		scene.idle(20);
-		scene.overlay.showSelectionWithText(PonderPalette.GREEN, yAxis, "y", "Das Y axis", 20);
+		scene.overlay.showSelectionWithText(yAxis, 20)
+			.colored(PonderPalette.GREEN)
+			.text("Das Y axis");
 		scene.idle(20);
-		scene.overlay.showSelectionWithText(PonderPalette.BLUE, zAxis, "z", "Das Z axis", 20);
+		scene.overlay.showSelectionWithText(zAxis, 20)
+			.colored(PonderPalette.BLUE)
+			.text("Das Z axis");
 		scene.idle(10);
 	}
 
@@ -79,7 +83,9 @@ public class DebugScenes {
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 		scene.idle(10);
-		scene.overlay.showText(WHITE, 10, "change_blocks", "Blocks can be modified", 1000);
+		scene.overlay.showText(1000)
+			.independent(10)
+			.text("Blocks can be modified");
 		scene.idle(20);
 		scene.world.replaceBlocks(util.select.fromTo(1, 1, 3, 2, 2, 4),
 			AllBlocks.REFINED_RADIANCE_CASING.getDefaultState(), true);
@@ -96,7 +102,9 @@ public class DebugScenes {
 		Vec3d parrotPos = util.vector.topOf(1, 0, 1);
 		scene.special.birbLookingAtPOI(parrotPos);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
-		scene.overlay.showTargetedText(WHITE, new Vec3d(1, 2.5, 4.5), "fluids", "Fluid rendering test.", 1000);
+		scene.overlay.showText(1000)
+			.text("Fluid rendering test.")
+			.pointAt(new Vec3d(1, 2.5, 4.5));
 		scene.markAsFinished();
 
 		Object outlineSlot = new Object();
@@ -120,7 +128,10 @@ public class DebugScenes {
 
 		scene.idle(12);
 		scene.special.movePointOfInterest(util.grid.at(-4, 5, 4));
-		scene.overlay.showTargetedText(PonderPalette.RED, parrotPos.add(-.25f, 0.25f, .25f), "wut", "wut?", 40);
+		scene.overlay.showText(40)
+			.colored(PonderPalette.RED)
+			.text("wut?")
+			.pointAt(parrotPos.add(-.25f, 0.25f, .25f));
 
 	}
 
@@ -139,10 +150,12 @@ public class DebugScenes {
 		scene.world.showSection(blocksExceptBasePlate, Direction.DOWN);
 		scene.idle(10);
 
-		scene.overlay.showSelectionWithText(PonderPalette.BLACK, out1, "outofbounds",
-			"Blocks outside of the base plate do not affect scaling", 100);
-		scene.overlay.showSelectionWithText(PonderPalette.BLACK, out2, "thanks_to_configureBasePlate",
-			"configureBasePlate() makes sure of that.", 100);
+		scene.overlay.showSelectionWithText(out1, 100)
+			.colored(PonderPalette.BLACK)
+			.text("Blocks outside of the base plate do not affect scaling");
+		scene.overlay.showSelectionWithText(out2, 100)
+			.colored(PonderPalette.BLACK)
+			.text("configureBasePlate() makes sure of that.");
 		scene.markAsFinished();
 	}
 
@@ -159,7 +172,9 @@ public class DebugScenes {
 			Emitter.simple(new RotationIndicatorParticleData(SpeedLevel.MEDIUM.getColor(), 12, 1, 1, 20, 'Y'),
 				util.vector.of(0, .1, 0));
 
-		scene.overlay.showTargetedText(WHITE, emitterPos, "incoming", "Incoming...", 20);
+		scene.overlay.showText(20)
+			.text("Incoming...")
+			.pointAt(emitterPos);
 		scene.idle(30);
 		scene.effects.emitParticles(emitterPos, emitter, 1, 60);
 		scene.effects.emitParticles(emitterPos, rotation, 20, 1);
@@ -261,8 +276,10 @@ public class DebugScenes {
 
 		BlockPos pos = new BlockPos(1, 2, 3);
 		scene.special.birbOnSpinnyShaft(pos);
-		scene.overlay.showTargetedText(PonderPalette.GREEN, util.vector.topOf(pos), "birbs_interesting",
-			"More birbs = More interesting", 100);
+		scene.overlay.showText(100)
+			.colored(PonderPalette.GREEN)
+			.text("More birbs = More interesting")
+			.pointAt(util.vector.topOf(pos));
 
 		scene.idle(10);
 		scene.special.birbPartying(util.vector.topOf(0, 1, 2));
@@ -281,7 +298,9 @@ public class DebugScenes {
 
 		scene.world.setBlock(poi2, Blocks.GOLD_BLOCK.getDefaultState());
 		scene.special.movePointOfInterest(poi2);
-		scene.overlay.showTargetedText(PonderPalette.FAST, util.vector.centerOf(poi2), "poi", "Point of Interest", 20);
+		scene.overlay.showText(20)
+			.text("Point of Interest")
+			.pointAt(util.vector.centerOf(poi2));
 		scene.idle(20);
 
 		scene.world.setBlock(poi1, Blocks.AIR.getDefaultState());
@@ -314,11 +333,15 @@ public class DebugScenes {
 
 		scene.idle(20);
 
-		scene.overlay.showTargetedText(PonderPalette.GREEN, util.vector.topOf(mergePos), "merged",
-			"This Section got merged to base.", 40);
+		scene.overlay.showText(40)
+			.colored(PonderPalette.GREEN)
+			.text("This Section got merged to base.")
+			.pointAt(util.vector.topOf(mergePos));
 		scene.idle(10);
-		scene.overlay.showTargetedText(PonderPalette.RED, util.vector.topOf(independentPos), "independent",
-			"This Section renders independently.", 40);
+		scene.overlay.showText(40)
+			.colored(PonderPalette.RED)
+			.text("This Section renders independently.")
+			.pointAt(util.vector.topOf(independentPos));
 
 		scene.idle(40);
 
@@ -336,15 +359,19 @@ public class DebugScenes {
 		scene.world.setBlocks(hiddenReplaceArea, AllBlocks.REFINED_RADIANCE_CASING.getDefaultState(), false);
 		scene.world.showSection(hiddenReplaceArea, Direction.DOWN);
 		scene.idle(20);
-		scene.overlay.showSelectionWithText(PonderPalette.BLUE, hiddenReplaceArea, "seamless",
-			"Seamless substitution of blocks", 30);
+		scene.overlay.showSelectionWithText(hiddenReplaceArea, 30)
+			.colored(PonderPalette.BLUE)
+			.text("Seamless substitution of blocks");
 
 		scene.idle(40);
 
 		ElementLink<WorldSectionElement> helicopter = scene.world.makeSectionIndependent(hiddenReplaceArea);
 		scene.world.rotateSection(helicopter, 50, 5 * 360, 0, 60);
 		scene.world.moveSection(helicopter, util.vector.of(0, 4, 5), 50);
-		scene.overlay.showText(PonderPalette.BLUE, 30, "blast_off", "Up, up and away.", 30);
+		scene.overlay.showText(30)
+			.colored(PonderPalette.BLUE)
+			.text("Up, up and away.")
+			.independent(30);
 
 		scene.idle(40);
 		scene.world.hideIndependentSection(helicopter, Direction.UP);
@@ -373,8 +400,10 @@ public class DebugScenes {
 		scene.idle(10);
 		scene.world.stallBeltItem(itemOnBelt, true);
 		scene.idle(5);
-		scene.overlay.showTargetedText(PonderPalette.FAST, util.vector.topOf(2, 1, 2), "stalling",
-			"Belt Items can only be force-stalled on the belt they were created on.", 40);
+		scene.overlay.showText(40)
+			.colored(PonderPalette.FAST)
+			.text("Belt Items can only be force-stalled on the belt they were created on.")
+			.pointAt(util.vector.topOf(2, 1, 2));
 		scene.idle(45);
 		scene.world.stallBeltItem(itemOnBelt, false);
 		scene.idle(20);

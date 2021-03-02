@@ -32,7 +32,7 @@ public class PonderLocalization {
 
 	public static String getShared(String key) {
 		if (PonderIndex.EDITOR_MODE)
-			return shared.get(key);
+			return shared.containsKey(key) ? shared.get(key) : ("unregistered shared entry:" + key);
 		return Lang.translate(langKeyForShared(key));
 	}
 
@@ -62,13 +62,16 @@ public class PonderLocalization {
 			for (int i = 0; i < map.size(); i++) {
 				final int scene = i;
 				Map<String, String> sceneMap = map.get(i);
-				sceneMap.forEach(
-					(k, v) -> object.addProperty(Create.ID + "." + langKeyForSpecific(component, scene, k), v));
+				sceneMap.entrySet()
+					.stream()
+					.sorted(Map.Entry.comparingByKey())
+					.forEach(e -> object.addProperty(Create.ID + "." + langKeyForSpecific(component, scene, e.getKey()),
+						e.getValue()));
 			}
 		});
 		return object;
 	}
-	
+
 	private static void addGeneral(JsonObject json, String key, String enUS) {
 		json.addProperty(Create.ID + "." + key, enUS);
 	}

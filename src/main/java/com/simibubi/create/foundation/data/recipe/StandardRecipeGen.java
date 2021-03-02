@@ -318,7 +318,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("A")
 				.patternLine("P")),
 			
-		GANTRY_PINION = create(AllBlocks.GANTRY_PINION).unlockedBy(I::andesiteCasing)
+		GANTRY_PINION = create(AllBlocks.GANTRY_CARRIAGE).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
 				.key('S', I.cog())
 				.key('C', I.andesiteCasing())

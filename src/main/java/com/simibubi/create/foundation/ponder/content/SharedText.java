@@ -9,6 +9,8 @@ public class SharedText {
 
 		add("sneak_and", "Sneak +");
 		add("ctrl_and", "Ctrl +");
+		
+		add("movement_anchors", "With the help of Chassis or Super Glue, larger structures can be moved.");
 
 	}
 	

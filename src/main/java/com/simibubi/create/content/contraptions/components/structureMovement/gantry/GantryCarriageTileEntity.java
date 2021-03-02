@@ -18,12 +18,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 
-public class GantryPinionTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
+public class GantryCarriageTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
 
 	boolean assembleNextTick;
 	protected AssemblyException lastException;
 
-	public GantryPinionTileEntity(TileEntityType<?> typeIn) {
+	public GantryCarriageTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
 	}
 
@@ -61,7 +61,7 @@ public class GantryPinionTileEntity extends KineticTileEntity implements IDispla
 
 	private void tryAssemble() {
 		BlockState blockState = getBlockState();
-		if (!(blockState.getBlock() instanceof GantryPinionBlock))
+		if (!(blockState.getBlock() instanceof GantryCarriageBlock))
 			return;
 
 		Direction direction = blockState.get(FACING);
@@ -129,9 +129,9 @@ public class GantryPinionTileEntity extends KineticTileEntity implements IDispla
 			return defaultModifier;
 
 		Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
-		if (stateFrom.get(GantryPinionBlock.FACING) != direction.getOpposite())
+		if (stateFrom.get(GantryCarriageBlock.FACING) != direction.getOpposite())
 			return defaultModifier;
-		return getGantryPinionModifier(stateTo.get(GantryShaftBlock.FACING), stateFrom.get(GantryPinionBlock.FACING));
+		return getGantryPinionModifier(stateTo.get(GantryShaftBlock.FACING), stateFrom.get(GantryCarriageBlock.FACING));
 	}
 
 	public static float getGantryPinionModifier(Direction shaft, Direction pinionDirection) {
@@ -152,9 +152,9 @@ public class GantryPinionTileEntity extends KineticTileEntity implements IDispla
 
 	private boolean shouldAssemble() {
 		BlockState blockState = getBlockState();
-		if (!(blockState.getBlock() instanceof GantryPinionBlock))
+		if (!(blockState.getBlock() instanceof GantryCarriageBlock))
 			return false;
-		Direction facing = blockState.get(GantryPinionBlock.FACING)
+		Direction facing = blockState.get(GantryCarriageBlock.FACING)
 			.getOpposite();
 		BlockState shaftState = world.getBlockState(pos.offset(facing));
 		if (!(shaftState.getBlock() instanceof GantryShaftBlock))

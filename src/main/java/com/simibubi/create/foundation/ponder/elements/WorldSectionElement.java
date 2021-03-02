@@ -291,8 +291,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			renderedTileEntities = new ArrayList<>();
 			section.forEach(pos -> {
 				TileEntity tileEntity = world.getTileEntity(pos);
-				if (tileEntity != null)
-					renderedTileEntities.add(tileEntity);
+				if (tileEntity == null)
+					return;
+				renderedTileEntities.add(tileEntity);
+				tileEntity.updateContainingBlockInfo();
 			});
 		} else
 			renderedTileEntities.removeIf(te -> world.getTileEntity(te.getPos()) != te);

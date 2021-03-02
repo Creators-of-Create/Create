@@ -1,46 +1,31 @@
 package com.simibubi.create.foundation.ponder.instructions;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.OutlinerElement;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
-
-import net.minecraft.util.math.Vec3d;
 
 public class TextInstruction extends FadeInOutInstruction {
 
 	private TextWindowElement element;
 	private OutlinerElement outline;
 
-	protected TextInstruction(int color, Supplier<String> text, int duration) {
+	public TextInstruction(TextWindowElement element, int duration) {
 		super(duration);
+		this.element = element;
 	}
 
-	public TextInstruction(int color, Supplier<String> text, int duration, Selection selection, boolean near) {
-		this(color, text, duration);
-		element = new TextWindowElement(text).pointAt(selection.getCenter());
-		element.colored(color);
+	public TextInstruction(TextWindowElement element, int duration, Selection selection) {
+		this(element, duration);
 		outline = new OutlinerElement(o -> selection.makeOutline(o)
-			.lineWidth(1 / 16f)
-			.colored(color));
-		if (near)
-			element.placeNearTarget();
+			.lineWidth(1 / 16f));
 	}
 
-	public TextInstruction(int color, Supplier<String> text, int duration, Vec3d position, boolean near) {
-		this(color, text, duration);
-		element = new TextWindowElement(text).pointAt(position);
-		element.colored(color);
-		if (near)
-			element.placeNearTarget();
-	}
-
-	public TextInstruction(int color, Supplier<String> text, int duration, int y) {
-		this(color, text, duration);
-		element = new TextWindowElement(text).setY(y);
-		element.colored(color);
+	@Override
+	public void tick(PonderScene scene) {
+		super.tick(scene);
+		if (outline != null)
+			outline.setColor(element.getColor());
 	}
 
 	@Override

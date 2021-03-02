@@ -12,7 +12,7 @@ public enum AllLangPartials {
 	ADVANCEMENTS("Advancements"),
 	MESSAGES("UI & Messages"),
 	TOOLTIPS("Item Descriptions"),
-	METADOC("MetaDoc Text", PonderRegistry::provideLangEntries),
+	PONDER("Ponder Content", PonderRegistry::provideLangEntries),
 
 	;
 

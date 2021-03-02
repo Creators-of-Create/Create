@@ -50,8 +50,11 @@ import net.minecraft.util.math.Vec3i;
 
 public class PonderScene {
 
+	public static final String TITLE_KEY = "header";
+	
 	boolean finished;
 	int sceneIndex;
+	int textIndex;
 
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
@@ -78,6 +81,7 @@ public class PonderScene {
 
 	public PonderScene(PonderWorld world, ResourceLocation component, int sceneIndex) {
 		pointOfInterest = Vec3d.ZERO;
+		textIndex = 1;
 
 		this.world = world;
 		this.component = component;
@@ -94,7 +98,7 @@ public class PonderScene {
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
 
-		PonderLocalization.registerSpecific(component, sceneIndex, "title", "Untitled Scene");
+		PonderLocalization.registerSpecific(component, sceneIndex, TITLE_KEY, "Untitled Scene");
 		setPointOfInterest(new Vec3d(0, 4, 0));
 	}
 
@@ -152,7 +156,7 @@ public class PonderScene {
 	}
 
 	public String getTitle() {
-		return getString("title");
+		return getString(TITLE_KEY);
 	}
 
 	public String getString(String key) {
@@ -320,16 +324,20 @@ public class PonderScene {
 		return world == null ? new MutableBoundingBox() : world.getBounds();
 	}
 
+	public Supplier<String> registerText(String defaultText) {
+		final String key = "text_" + textIndex;
+		PonderLocalization.registerSpecific(component, sceneIndex, key, defaultText);
+		Supplier<String> supplier = () -> PonderLocalization.getSpecific(component, sceneIndex, key);
+		textIndex++;
+		return supplier;
+	}
+
 	public SceneBuilder builder() {
 		return new SceneBuilder(this);
 	}
 
 	public SceneBuildingUtil getSceneBuildingUtil() {
 		return new SceneBuildingUtil(getBounds());
-	}
-
-	Supplier<String> textGetter(String key) {
-		return () -> PonderLocalization.getSpecific(component, sceneIndex, key);
 	}
 
 	public SceneTransform getTransform() {

@@ -37,6 +37,8 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -171,8 +173,21 @@ public class PonderUI extends AbstractSimiScreen {
 
 	protected void replay() {
 		identifyMode = false;
-		scenes.get(index)
-			.begin();
+		PonderScene scene = scenes.get(index);
+
+		if (hasShiftDown()) {
+			List<PonderStoryBoardEntry> list = PonderRegistry.all.get(scene.component);
+			PonderStoryBoardEntry sb = list.get(index);
+			Template activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicName());
+			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().world);
+			activeTemplate.addBlocksToWorld(world, BlockPos.ZERO, new PlacementSettings());
+			world.createBackup();
+			scene = PonderRegistry.compileScene(scene.component, index, sb, world);
+			scene.begin();
+			scenes.set(index, scene);
+		}
+
+		scene.begin();
 	}
 
 	protected boolean scroll(boolean forward) {

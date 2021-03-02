@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -8,6 +9,7 @@ import java.util.function.UnaryOperator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
@@ -17,6 +19,7 @@ import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
+import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
@@ -47,6 +50,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -108,7 +112,7 @@ public class SceneBuilder {
 	 * @param title
 	 */
 	public void title(String title) {
-		PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, "title", title);
+		PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, PonderScene.TITLE_KEY, title);
 	}
 
 	/**
@@ -190,6 +194,10 @@ public class SceneBuilder {
 			addInstruction(new EmitParticlesInstruction(location, emitter, amountPerCycle, cycles));
 		}
 
+		public void superGlue(BlockPos pos, Direction side, boolean fullBlock) {
+			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.world, pos, side, fullBlock));
+		}
+
 		private void rotationIndicator(BlockPos pos, boolean direction) {
 			addInstruction(scene -> {
 				BlockState blockState = scene.world.getBlockState(pos);
@@ -205,12 +213,13 @@ public class SceneBuilder {
 				Axis rotationAxis = kb.getRotationAxis(blockState);
 
 				float speed = kte.getTheoreticalSpeed();
-				int color = direction ? speed > 0 ? 0xeb5e0b : 0x1687a7
-					: SpeedLevel.of(speed)
-						.getColor();
+				SpeedLevel speedLevel = SpeedLevel.of(speed);
+				int color = direction ? speed > 0 ? 0xeb5e0b : 0x1687a7 : speedLevel.getColor();
+				int particleSpeed = speedLevel.getParticleSpeed();
+				particleSpeed *= Math.signum(speed);
 
 				Vec3d location = VecHelper.getCenterOf(pos);
-				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, speed,
+				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
 					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
 						.charAt(0));
 
@@ -245,37 +254,16 @@ public class SceneBuilder {
 
 	public class OverlayInstructions {
 
-		public void showTargetedText(PonderPalette color, Vec3d position, String key, String defaultText,
-			int duration) {
-			registerText(key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, false));
+		public TextWindowElement.Builder showText(int duration) {
+			TextWindowElement textWindowElement = new TextWindowElement();
+			addInstruction(new TextInstruction(textWindowElement, duration));
+			return textWindowElement.new Builder(scene);
 		}
 
-		public void showTargetedTextNearScene(PonderPalette color, Vec3d position, String key, String defaultText,
-			int duration) {
-			registerText(key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, position, true));
-		}
-
-		public void showSelectionWithText(PonderPalette color, Selection selection, String key, String defaultText,
-			int duration) {
-			registerText(key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, selection, false));
-		}
-
-		public void showSelectionWithTextNearScene(PonderPalette color, Selection selection, String key,
-			String defaultText, int duration) {
-			registerText(key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, selection, true));
-		}
-
-		public void showText(PonderPalette color, int y, String key, String defaultText, int duration) {
-			registerText(key, defaultText);
-			addInstruction(new TextInstruction(color.getColor(), scene.textGetter(key), duration, y));
-		}
-
-		private void registerText(String key, String defaultText) {
-			PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, key, defaultText);
+		public TextWindowElement.Builder showSelectionWithText(Selection selection, int duration) {
+			TextWindowElement textWindowElement = new TextWindowElement();
+			addInstruction(new TextInstruction(textWindowElement, duration, selection));
+			return textWindowElement.new Builder(scene).pointAt(selection.getCenter());
 		}
 
 		public void showControls(InputWindowElement element, int duration) {
@@ -326,12 +314,19 @@ public class SceneBuilder {
 	public class WorldInstructions {
 
 		public void showSection(Selection selection, Direction fadeInDirection) {
-			addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection, selection, true));
+			addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection, selection,
+				Optional.of(scene::getBaseWorldSection)));
+		}
+
+		public void showSectionAndMerge(Selection selection, Direction fadeInDirection,
+			ElementLink<WorldSectionElement> link) {
+			addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection, selection,
+				Optional.of(() -> scene.resolve(link))));
 		}
 
 		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection) {
 			DisplayWorldSectionInstruction instruction =
-				new DisplayWorldSectionInstruction(15, fadeInDirection, selection, false);
+				new DisplayWorldSectionInstruction(15, fadeInDirection, selection, Optional.empty());
 			addInstruction(instruction);
 			return instruction.createLink(scene);
 		}
@@ -400,6 +395,16 @@ public class SceneBuilder {
 
 		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
 			addInstruction(new ReplaceBlocksInstruction(selection, stateFunc, false, spawnParticles));
+		}
+
+		public void toggleRedstonePower(Selection selection) {
+			modifyBlocks(selection, s -> {
+				if (s.has(BlockStateProperties.POWER_0_15))
+					s = s.with(BlockStateProperties.POWER_0_15, s.get(BlockStateProperties.POWER_0_15) == 0 ? 15 : 0);
+				if (s.has(BlockStateProperties.POWERED))
+					s = s.cycle(BlockStateProperties.POWERED);
+				return s;
+			}, false);
 		}
 
 		public <T extends Entity> void modifyEntities(Class<T> entityClass, Consumer<T> entityCallBack) {

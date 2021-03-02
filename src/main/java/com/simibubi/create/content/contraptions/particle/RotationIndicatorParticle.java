@@ -69,6 +69,8 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	public void move(double x, double y, double z) {
 		float time = AnimationTickHolder.getTicks();
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / maxAge));
+		if (speed < 0)
+			angle += 180;
 		Vec3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
 		posX = position.x;
 		posY = position.y;

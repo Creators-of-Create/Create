@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/gantry_pinion"
+      "create:crafting/kinetics/gantry_carriage"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/gantry_pinion"
+        "recipe": "create:crafting/kinetics/gantry_carriage"
       }
     }
   },

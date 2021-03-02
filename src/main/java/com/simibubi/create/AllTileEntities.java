@@ -51,8 +51,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
@@ -242,10 +242,10 @@ public class AllTileEntities {
 		.onRegister(SingleRotatingInstance::register)
 		.register();
 	
-	public static final TileEntityEntry<GantryPinionTileEntity> GANTRY_PINION = Create.registrate()
-		.tileEntity("gantry_pinion", GantryPinionTileEntity::new)
-		.validBlocks(AllBlocks.GANTRY_PINION)
-		.renderer(() -> GantryPinionRenderer::new)
+	public static final TileEntityEntry<GantryCarriageTileEntity> GANTRY_PINION = Create.registrate()
+		.tileEntity("gantry_pinion", GantryCarriageTileEntity::new)
+		.validBlocks(AllBlocks.GANTRY_CARRIAGE)
+		.renderer(() -> GantryCarriageRenderer::new)
 		.onRegister(ShaftInstance::register)
 		.register();
 

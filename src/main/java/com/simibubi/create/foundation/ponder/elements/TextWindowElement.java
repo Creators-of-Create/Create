@@ -5,8 +5,10 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
+import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.util.math.MathHelper;
@@ -16,37 +18,59 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class TextWindowElement extends AnimatedOverlayElement {
 
-	Supplier<String> textGetter;
+	Supplier<String> textGetter = () -> "(?) No text was provided";
 	String bakedText;
 
 	// from 0 to 200
 	int y;
-
-	Vec3d vec;
-	boolean nearScene;
-	int color;
-
-	public TextWindowElement(Supplier<String> textGetter) {
-		this.textGetter = textGetter;
-	}
-
-	public void colored(int color) {
-		this.color = color;
-	}
-
-	public TextWindowElement pointAt(Vec3d vec) {
-		this.vec = vec;
-		return this;
-	}
-
-	public TextWindowElement setY(int y) {
-		this.y = y;
-		return this;
-	}
 	
-	public TextWindowElement placeNearTarget() {
-		this.nearScene = true;
-		return this;
+	Vec3d vec;
+	
+	boolean nearScene = false;
+	int color = PonderPalette.WHITE.getColor();
+
+	public class Builder {
+
+		private PonderScene scene;
+
+		public Builder(PonderScene scene) {
+			this.scene = scene;
+		}
+
+		public Builder colored(PonderPalette color) {
+			TextWindowElement.this.color = color.getColor();
+			return this;
+		}
+
+		public Builder pointAt(Vec3d vec) {
+			TextWindowElement.this.vec = vec;
+			return this;
+		}
+
+		public Builder independent(int y) {
+			TextWindowElement.this.y = y;
+			return this;
+		}
+		
+		public Builder independent() {
+			return independent(0);
+		}
+
+		public Builder text(String defaultText) {
+			textGetter = scene.registerText(defaultText);
+			return this;
+		}
+
+		public Builder sharedText(String key) {
+			textGetter = () -> PonderLocalization.getShared(key);
+			return this;
+		}
+
+		public Builder placeNearTarget() {
+			TextWindowElement.this.nearScene = true;
+			return this;
+		}
+		
 	}
 
 	@Override
@@ -60,10 +84,10 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		float yDiff = (screen.height / 2 - sceneToScreen.y - 10) / 100f;
 		int targetX = (int) (screen.width * MathHelper.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
-		
+
 		if (nearScene)
 			targetX = (int) Math.min(targetX, sceneToScreen.x + 50);
-		
+
 		int textWidth = Math.min(screen.width - targetX, 180);
 
 		List<String> list = screen.getFontRenderer()
@@ -94,6 +118,10 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		screen.getFontRenderer()
 			.drawSplitString(bakedText, targetX - 10, 3, textWidth, ColorHelper.applyAlpha(brighterColor, fade));
 		RenderSystem.popMatrix();
+	}
+
+	public int getColor() {
+		return color;
 	}
 
 }

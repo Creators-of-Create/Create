@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -31,13 +31,13 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 				continue;
 			BlockPos offset = pos.offset(d);
 			BlockState pinionState = world.getBlockState(offset);
-			if (!AllBlocks.GANTRY_PINION.has(pinionState))
+			if (!AllBlocks.GANTRY_CARRIAGE.has(pinionState))
 				continue;
-			if (pinionState.get(GantryPinionBlock.FACING) != d)
+			if (pinionState.get(GantryCarriageBlock.FACING) != d)
 				continue;
 			TileEntity tileEntity = world.getTileEntity(offset);
-			if (tileEntity instanceof GantryPinionTileEntity)
-				((GantryPinionTileEntity) tileEntity).queueAssembly();
+			if (tileEntity instanceof GantryCarriageTileEntity)
+				((GantryCarriageTileEntity) tileEntity).queueAssembly();
 		}
 
 	}
@@ -52,24 +52,24 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			return defaultModifier;
 		if (!stateFrom.get(GantryShaftBlock.POWERED))
 			return defaultModifier;
-		if (!AllBlocks.GANTRY_PINION.has(stateTo))
+		if (!AllBlocks.GANTRY_CARRIAGE.has(stateTo))
 			return defaultModifier;
 
 		Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
-		if (stateTo.get(GantryPinionBlock.FACING) != direction)
+		if (stateTo.get(GantryCarriageBlock.FACING) != direction)
 			return defaultModifier;
-		return GantryPinionTileEntity.getGantryPinionModifier(stateFrom.get(GantryShaftBlock.FACING),
-			stateTo.get(GantryPinionBlock.FACING));
+		return GantryCarriageTileEntity.getGantryPinionModifier(stateFrom.get(GantryShaftBlock.FACING),
+			stateTo.get(GantryCarriageBlock.FACING));
 	}
 
 	@Override
 	public boolean isCustomConnection(KineticTileEntity other, BlockState state, BlockState otherState) {
-		if (!AllBlocks.GANTRY_PINION.has(otherState))
+		if (!AllBlocks.GANTRY_CARRIAGE.has(otherState))
 			return false;
 		final BlockPos diff = other.getPos()
 			.subtract(pos);
 		Direction direction = Direction.getFacingFromVector(diff.getX(), diff.getY(), diff.getZ());
-		return otherState.get(GantryPinionBlock.FACING) == direction;
+		return otherState.get(GantryCarriageBlock.FACING) == direction;
 	}
 
 	public boolean canAssembleOn() {
