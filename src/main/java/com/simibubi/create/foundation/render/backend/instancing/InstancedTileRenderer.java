@@ -40,6 +40,10 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
+    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+        instances.values().forEach(TileEntityInstance::tick);
+    }
+
     public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
         render(layer, viewProjection, camX, camY, camZ, null);
     }

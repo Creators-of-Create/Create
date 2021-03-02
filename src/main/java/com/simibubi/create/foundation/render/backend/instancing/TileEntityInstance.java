@@ -34,6 +34,11 @@ public abstract class TileEntityInstance<T extends TileEntity> {
     }
 
     /**
+     * Called every frame, this can be used to make more dynamic animations.
+     */
+    public void tick() { }
+
+    /**
      * Acquire all {@link InstanceKey}s and initialize any data you may need to calculate the instance properties.
      */
     protected abstract void init();
@@ -42,7 +47,7 @@ public abstract class TileEntityInstance<T extends TileEntity> {
      * Update changed instance data using the {@link InstanceKey}s you got in {@link #init()}.
      * You don't have to update light data. That should be done in {@link #updateLight()}
      */
-    protected abstract void onUpdate();
+    protected void onUpdate() { }
 
     /**
      * Called when a light update occurs in the world. If your model needs it, update light here.
