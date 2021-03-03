@@ -9,14 +9,11 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
@@ -29,8 +26,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -46,7 +49,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -436,7 +438,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
 			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
-				.isItemEqual(itemStack)) 
+				.isItemEqual(itemStack))
 				continue;
 
 			if (simulate || direction == Direction.DOWN) {
@@ -601,62 +603,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-
-		tooltip.add(spacing + Lang.translate("gui.basin.info_header"));
-
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.input_tanks.title"));
-
-		String mb = Lang.translate("generic.unit.millibuckets");
-
-		LazyOptional<IFluidHandler> capability = this.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
-		IFluidHandler tank = capability.orElse(null);
-
-		if (tank == null)
-			return false;
-
-		for (int i = 0; i < tank.getTanks(); i += 2) {
-			Couple<FluidStack> fluids = Couple.create(tank.getFluidInTank(i), tank.getFluidInTank(i + 1));
-
-			if (i > 1)
-				tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.output_tanks.title"));
-
-			if (fluids.getFirst().getAmount() == 0 && fluids.getSecond().getAmount() == 0) {
-				tooltip.add(spacing + " " + TextFormatting.DARK_GRAY + "2x0" + mb);
-				continue;
-			}
-
-			for (FluidStack fluid : fluids) {
-				String fluidName;
-
-				if (fluid.getAmount() == 0) {
-					tooltip.add(spacing + " " + TextFormatting.DARK_GRAY + IHaveGoggleInformation.format(0) + mb);
-				} else {
-					if (AllFluids.POTION.get().getFluid().isEquivalentTo(fluid.getFluid())) {
-						fluidName = PotionFluidHandler.getPotionName(fluid).getFormattedText();
-					} else {
-						fluidName = fluid.getDisplayName().getFormattedText();
-					}
-					double fillFraction = (double) fluid.getAmount() / (double) this.inputTank.getPrimaryHandler().getCapacity();
-					if (fluidName.length() > 15) {
-						tooltip.add(spacing + " " + FluidFullnessOverlay.of(fillFraction).getRelativeColor()
-								+ fluidName);
-						tooltip.add(spacing + " " + FluidFullnessOverlay.of(fillFraction).getRelativeColor()
-								+ IHaveGoggleInformation.format(fluid.getAmount()) + mb);
-						continue;
-					}
-
-					tooltip.add(spacing + " " + FluidFullnessOverlay.of(fillFraction).getRelativeColor()
-							+ fluidName + " "
-							+ IHaveGoggleInformation.format(fluid.getAmount()) + mb);
-
-				}
-			}
-
-
-
-
-		}
-		return true;
+		return containedFluidTooltip(tooltip, isPlayerSneaking,
+			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

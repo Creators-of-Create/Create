@@ -27,6 +27,7 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
@@ -103,11 +104,11 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			ProcessingOutput output = results.get(slotIndex - 1);
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1,
-					TextFormatting.GOLD + Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100)));
+				tooltip.add(1, TextFormatting.GOLD
+					+ Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100)));
 		});
 	}
-	
+
 	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
 			.map(this::withImprovedVisibility)
@@ -130,8 +131,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
 			if (fluid.getFluid()
 				.isEquivalentTo(AllFluids.POTION.get())) {
-				String name = PotionFluidHandler.getPotionName(fluid)
-					.getFormattedText();
+				String name = new TranslationTextComponent(fluid.getTranslationKey()).getFormattedText();
 				if (tooltip.isEmpty())
 					tooltip.add(0, name);
 				else

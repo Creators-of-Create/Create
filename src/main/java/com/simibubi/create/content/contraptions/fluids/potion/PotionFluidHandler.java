@@ -92,14 +92,6 @@ public class PotionFluidHandler {
 		return potionStack;
 	}
 
-	public static ITextComponent getPotionName(FluidStack fs) {
-		CompoundNBT tag = fs.getOrCreateTag();
-		IItemProvider itemFromBottleType = itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
-		return new TranslationTextComponent(PotionUtils.getPotionTypeFromNBT(tag)
-			.getNamePrefixed(itemFromBottleType.asItem()
-				.getTranslationKey() + ".effect."));
-	}
-
 	// Modified version of PotionUtils#addPotionTooltip
 	@OnlyIn(Dist.CLIENT)
 	public static void addPotionTooltip(FluidStack fs, List<ITextComponent> tooltip, float p_185182_2_) {

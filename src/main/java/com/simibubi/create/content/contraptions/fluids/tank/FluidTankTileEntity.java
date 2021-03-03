@@ -2,16 +2,11 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 
 import static java.lang.Math.abs;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllFluids;
-import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -19,7 +14,6 @@ import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,8 +23,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -113,10 +105,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	public boolean isController() {
-		return controller == null ||
-				pos.getX() == controller.getX() &&
-				pos.getY() == controller.getY() &&
-				pos.getZ() == controller.getZ();
+		return controller == null
+			|| pos.getX() == controller.getX() && pos.getY() == controller.getY() && pos.getZ() == controller.getZ();
 	}
 
 	@Override
@@ -324,36 +314,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
-		FluidTankTileEntity controllerTE = getControllerTE();
-		if (controllerTE == null)
-			return false;
-		int fluidAmount = controllerTE.getTankInventory().getFluidAmount();
-		int fluidCapacity = controllerTE.getTankInventory().getCapacity();
-		double fillFraction = controllerTE.getFillState();
-		FluidStack fluidType = controllerTE.getTankInventory().getFluid();
-
-		tooltip.add(spacing + Lang.translate("gui.tank.info_header"));
-
-		if (isPlayerSneaking && AllFluids.POTION.get().getFluid().isEquivalentTo(fluidType.getFluid())) {
-			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.effectsTitle"));
-
-			ArrayList<ITextComponent> potionTooltip = new ArrayList<>();
-			PotionFluidHandler.addPotionTooltip(fluidType, potionTooltip, 1);
-			tooltip.addAll(2, potionTooltip.stream()
-					.map(c -> spacing + " " + c.getFormattedText())
-					.collect(Collectors.toList()));
-			return true;
-		}
-
-		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.title"));
-
-		if (fluidAmount != 0)
-			tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedFluidTypeText(fluidType, fillFraction));
-
-		tooltip.add(spacing + FluidFullnessOverlay.getFormattedFullnessText(fillFraction));
-		tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedCapacityText(fluidAmount, fluidCapacity));
-
-		return true;
+		return containedFluidTooltip(tooltip, isPlayerSneaking,
+			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 	@Override
@@ -482,11 +444,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public static int getMaxHeight() {
 		return AllConfigs.SERVER.fluids.fluidTankMaxHeight.get();
 	}
-	
+
 	public InterpolatedChasingValue getFluidLevel() {
 		return fluidLevel;
 	}
-	
+
 	public void setFluidLevel(InterpolatedChasingValue fluidLevel) {
 		this.fluidLevel = fluidLevel;
 	}
