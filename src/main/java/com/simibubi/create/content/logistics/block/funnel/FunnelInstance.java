@@ -13,7 +13,7 @@ import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
 
-public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> {
+public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements ITickableInstance {
     public static void register(TileEntityType<? extends FunnelTileEntity> type) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, FunnelInstance::new));

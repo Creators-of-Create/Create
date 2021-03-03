@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> {
+public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements ITickableInstance {
     public static void register(TileEntityType<? extends BeltTunnelTileEntity> type) {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, BeltTunnelInstance::new));

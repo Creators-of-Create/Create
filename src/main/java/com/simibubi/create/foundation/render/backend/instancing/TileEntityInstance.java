@@ -34,11 +34,6 @@ public abstract class TileEntityInstance<T extends TileEntity> {
     }
 
     /**
-     * Called every frame, this can be used to make more dynamic animations.
-     */
-    public void tick() { }
-
-    /**
      * Acquire all {@link InstanceKey}s and initialize any data you may need to calculate the instance properties.
      */
     protected abstract void init();

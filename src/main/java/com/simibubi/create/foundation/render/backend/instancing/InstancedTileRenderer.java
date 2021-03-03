@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +18,8 @@ import net.minecraft.world.World;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
+
+    protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
@@ -41,7 +42,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        instances.values().forEach(TileEntityInstance::tick);
+        tickableInstances.values().forEach(ITickableInstance::tick);
     }
 
     public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
@@ -79,6 +80,9 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
             if (renderer != null) {
                 instances.put(tile, renderer);
+
+                if (renderer instanceof ITickableInstance)
+                    tickableInstances.put(tile, (ITickableInstance) renderer);
             }
 
             return renderer;
@@ -126,6 +130,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             if (instance != null) {
                 instance.remove();
                 instances.remove(tile);
+                tickableInstances.remove(tile);
             }
         }
     }
