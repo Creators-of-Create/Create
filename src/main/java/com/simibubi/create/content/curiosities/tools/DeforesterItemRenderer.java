@@ -15,7 +15,7 @@ public class DeforesterItemRenderer extends CustomRenderedItemModelRenderer<Defo
 	protected void render(ItemStack stack, DeforesterModel model, PartialItemModelRenderer renderer,
 		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		int maxLight = 0xF000F0;
-		float worldTime = AnimationTickHolder.getRenderTick();
+		float worldTime = AnimationTickHolder.getRenderTime();
 		
 		renderer.renderSolid(model.getBakedModel(), light);
 		renderer.renderSolidGlowing(model.getPartial("core"), maxLight);

@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.*;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,6 +33,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
@@ -54,6 +53,12 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
+import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.UniqueLinkedList;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.AbstractButtonBlock;
@@ -172,7 +177,8 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) throws AssemblyException {
+	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection)
+		throws AssemblyException {
 		initialPassengers.clear();
 		Queue<BlockPos> frontier = new UniqueLinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
@@ -293,6 +299,14 @@ public abstract class Contraption {
 		if (AllBlocks.GANTRY_SHAFT.has(state))
 			moveGantryShaft(world, pos, frontier, visited, state);
 
+		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
+			Direction offset = state.get(StickerBlock.FACING);
+			BlockPos attached = pos.offset(offset);
+			if (!visited.contains(attached)
+				&& !BlockMovementTraits.notSupportive(world.getBlockState(attached), offset.getOpposite()))
+				frontier.add(attached);
+		}
+
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
@@ -348,7 +362,8 @@ public abstract class Contraption {
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
 			if (canStick) {
-				if (state.getPushReaction() == PushReaction.PUSH_ONLY || blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+				if (state.getPushReaction() == PushReaction.PUSH_ONLY
+					|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
 					canStick = false;
 				}
 				if (BlockMovementTraits.notSupportive(state, offset)) {
@@ -359,7 +374,8 @@ public abstract class Contraption {
 				}
 			}
 
-			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue || (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
+			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue
+				|| (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -499,7 +515,8 @@ public abstract class Contraption {
 		}
 	}
 
-	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) throws AssemblyException {
+	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) throws AssemblyException {
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
@@ -621,8 +638,9 @@ public abstract class Contraption {
 		specialRenderedTileEntities.clear();
 
 		INBT blocks = nbt.get("Blocks");
-		//used to differentiate between the 'old' and the paletted serialization
-		boolean usePalettedDeserialization = blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
+		// used to differentiate between the 'old' and the paletted serialization
+		boolean usePalettedDeserialization =
+			blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
 		readBlocksCompound(blocks, world, usePalettedDeserialization);
 
 		actors.clear();
@@ -713,7 +731,8 @@ public abstract class Contraption {
 			for (Pair<BlockPos, Direction> glueEntry : superglue) {
 				CompoundNBT c = new CompoundNBT();
 				c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
-				c.putByte("Direction", (byte) glueEntry.getValue().getIndex());
+				c.putByte("Direction", (byte) glueEntry.getValue()
+					.getIndex());
 				superglueNBT.add(c);
 			}
 
@@ -773,7 +792,9 @@ public abstract class Contraption {
 
 	private CompoundNBT writeBlocksCompound() {
 		CompoundNBT compound = new CompoundNBT();
-		PaletteHashMap<BlockState> palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+		PaletteHashMap<BlockState> palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+			throw new IllegalStateException("Palette Map index exceeded maximum");
+		}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 		ListNBT blockList = new ListNBT();
 
 		for (BlockInfo block : this.blocks.values()) {
@@ -799,7 +820,9 @@ public abstract class Contraption {
 		ListNBT blockList;
 		if (usePalettedDeserialization) {
 			CompoundNBT c = ((CompoundNBT) compound);
-			palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+			palette = new PaletteHashMap<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+				throw new IllegalStateException("Palette Map index exceeded maximum");
+			}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 			palette.read(c.getList("Palette", 10));
 
 			blockList = c.getList("BlockList", 10);
@@ -857,19 +880,15 @@ public abstract class Contraption {
 	}
 
 	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, PaletteHashMap<BlockState> palette) {
-		return new BlockInfo(
-				BlockPos.fromLong(blockListEntry.getLong("Pos")),
-				Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(BlockPos.fromLong(blockListEntry.getLong("Pos")),
+			Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	private static BlockInfo legacyReadBlockInfo(CompoundNBT blockListEntry) {
-		return new BlockInfo(
-				NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
-				NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
+			NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	public void removeBlocksFromWorld(World world, BlockPos offset) {

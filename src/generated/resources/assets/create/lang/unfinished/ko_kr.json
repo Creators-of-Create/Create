@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 74",
+	"_": "Missing Localizations: 75",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "수도꼭지",
 	"block.create.spruce_window": "가문비나무 유리창",
 	"block.create.spruce_window_pane": "가문비나무 유리판",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "끈끈이 기계식 피스톤",
 	"block.create.stockpile_switch": "수량 스위치",
 	"block.create.stressometer": "피로도 계측기",

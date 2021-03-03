@@ -317,7 +317,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P")
 				.patternLine("A")
 				.patternLine("P")),
-			
+
 		GANTRY_PINION = create(AllBlocks.GANTRY_PINION).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
 				.key('S', I.cog())
@@ -668,6 +668,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		LINEAR_CHASSIS_CYCLE =
 			conversionCycle(ImmutableList.of(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)),
+
+		STICKER = create(AllBlocks.STICKER).returns(1)
+			.unlockedBy(I::andesite)
+			.viaShaped(b -> b.key('I', I.andesite())
+				.key('C', Tags.Items.COBBLESTONE)
+				.key('R', I.redstone())
+				.key('S', Tags.Items.SLIMEBALLS)
+				.patternLine("ISI")
+				.patternLine("CRC")),
 
 		MINECART = create(() -> Items.MINECART).withSuffix("_from_contraption_cart")
 			.unlockedBy(AllBlocks.CART_ASSEMBLER::get)

@@ -54,6 +54,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
@@ -845,6 +846,15 @@ public class AllBlocks {
 			})
 			.build()
 			.register();
+
+	public static final BlockEntry<StickerBlock> STICKER = REGISTRATE.block("sticker", StickerBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(Block.Properties::nonOpaque)
+		.addLayer(() -> RenderType::getCutoutMipped)
+		.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
+		.item()
+		.transform(customItemModel())
+		.register();
 
 	public static final BlockEntry<DrillBlock> MECHANICAL_DRILL = REGISTRATE.block("mechanical_drill", DrillBlock::new)
 		.initialProperties(SharedProperties::stone)

@@ -16,7 +16,7 @@ public class WrenchItemRenderer extends CustomRenderedItemModelRenderer<WrenchMo
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		renderer.render(model.getBakedModel(), light);
 
-		float worldTime = AnimationTickHolder.getRenderTick();
+		float worldTime = AnimationTickHolder.getRenderTime();
 		float angle = worldTime * -.5f % 360;
 		float xOffset = -1/16f;
 		ms.translate(-xOffset, 0, 0);

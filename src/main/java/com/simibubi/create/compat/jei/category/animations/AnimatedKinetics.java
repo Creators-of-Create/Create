@@ -12,7 +12,7 @@ import net.minecraft.util.Direction.Axis;
 public abstract class AnimatedKinetics implements IDrawable {
 
 	public static float getCurrentAngle() {
-		return ((AnimationTickHolder.getRenderTick()) * 4f) % 360;
+		return ((AnimationTickHolder.getRenderTime()) * 4f) % 360;
 	}
 	
 	protected BlockState shaft(Axis axis) {

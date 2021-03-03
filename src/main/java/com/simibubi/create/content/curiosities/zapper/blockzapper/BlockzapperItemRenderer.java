@@ -33,7 +33,7 @@ public class BlockzapperItemRenderer extends ZapperItemRenderer<BlockzapperModel
 		super.render(stack, model, renderer, ms, buffer, light, overlay);
 
 		float pt = AnimationTickHolder.getPartialTicks();
-		float worldTime = AnimationTickHolder.getRenderTick() / 20;
+		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 
 		renderer.render(model.getBakedModel(), light);
 		renderComponent(stack, model, Body, renderer, light);

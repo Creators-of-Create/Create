@@ -15,7 +15,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 	@Override
 	protected void render(ItemStack stack, SymmetryWandModel model, PartialItemModelRenderer renderer, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
-		float worldTime = AnimationTickHolder.getRenderTick() / 20;
+		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 		int maxLight = 0xF000F0;
 
 		renderer.render(model.getBakedModel(), light);

@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/sticker/block",
+    "textures": {
+        "4": "create:block/sticker_side_powered"
+    }
+}

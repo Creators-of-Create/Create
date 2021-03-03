@@ -25,7 +25,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		super.render(stack, model, renderer, ms, buffer, light, overlay);
 
 		float pt = AnimationTickHolder.getPartialTicks();
-		float worldTime = AnimationTickHolder.getRenderTick() / 20;
+		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 
 		renderer.renderSolid(model.getBakedModel(), light);
 

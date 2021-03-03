@@ -72,7 +72,7 @@ public class GantryPinionRenderer extends KineticTileEntityRenderer {
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTick();
+		float time = AnimationTickHolder.getRenderTime();
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		return ((time * te.getSpeed() * 3f / 20 + offset) % 360) / 180 * (float) Math.PI;
 	}

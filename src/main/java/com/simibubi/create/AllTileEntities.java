@@ -51,6 +51,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
@@ -397,6 +399,12 @@ public class AllTileEntities {
 		.tileEntity("chassis", ChassisTileEntity::new)
 		.validBlocks(AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
 		// .renderer(() -> renderer)
+		.register();
+	
+	public static final TileEntityEntry<StickerTileEntity> STICKER = Create.registrate()
+		.tileEntity("sticker", StickerTileEntity::new)
+		.validBlocks(AllBlocks.STICKER)
+		.renderer(() -> StickerRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<DrillTileEntity> DRILL = Create.registrate()

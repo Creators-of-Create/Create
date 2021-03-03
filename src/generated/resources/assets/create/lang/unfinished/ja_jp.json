@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 27",
+	"_": "Missing Localizations: 28",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "アイテム注液口",
 	"block.create.spruce_window": "マツの窓",
 	"block.create.spruce_window_pane": "マツの窓パネル",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "粘着メカニカルピストン",
 	"block.create.stockpile_switch": "在庫スイッチ",
 	"block.create.stressometer": "応力メーター",

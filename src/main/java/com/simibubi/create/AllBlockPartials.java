@@ -93,6 +93,8 @@ public class AllBlockPartials {
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
+		
+		STICKER_HEAD = get("sticker/head"),
 
 		PORTABLE_STORAGE_INTERFACE_MIDDLE = get("portable_storage_interface/block_middle"),
 		PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = get("portable_storage_interface/block_middle_powered"),

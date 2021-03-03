@@ -1,0 +1,41 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "block/piston_side",
+		"3": "create:block/sticker",
+		"particle": "block/piston_bottom"
+	},
+	"elements": [
+		{
+			"from": [1, 8, 1],
+			"to": [15, 13, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 16, 9]},
+			"faces": {
+				"north": {"uv": [8.5, 0, 15.5, 2.5], "texture": "#3"},
+				"east": {"uv": [8.5, 0, 15.5, 2.5], "texture": "#3"},
+				"south": {"uv": [8.5, 0, 15.5, 2.5], "texture": "#3"},
+				"west": {"uv": [8.5, 0, 15.5, 2.5], "texture": "#3"},
+				"up": {"uv": [8.5, 8.5, 15.5, 15.5], "texture": "#3"},
+				"down": {"uv": [0.5, 8.5, 7.5, 15.5], "texture": "#3"}
+			}
+		},
+		{
+			"from": [6, 3, 6],
+			"to": [10, 8, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [14, 11, 14]},
+			"faces": {
+				"north": {"uv": [0, 0, 5, 4], "rotation": 90, "texture": "#2"},
+				"east": {"uv": [0, 0, 5, 4], "rotation": 90, "texture": "#2"},
+				"south": {"uv": [0, 0, 5, 4], "rotation": 90, "texture": "#2"},
+				"west": {"uv": [0, 0, 5, 4], "rotation": 90, "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Piston Head",
+			"origin": [14, 28, 14],
+			"children": [0, 1]
+		}
+	]
+}

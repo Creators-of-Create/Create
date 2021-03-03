@@ -100,7 +100,7 @@ public class SymmetryHandler {
 
 			float yShift = 0;
 			double speed = 1 / 16d;
-			yShift = MathHelper.sin((float) (AnimationTickHolder.getRenderTick() * speed)) / 5f;
+			yShift = MathHelper.sin((float) (AnimationTickHolder.getRenderTime() * speed)) / 5f;
 
 			IRenderTypeBuffer.Impl buffer = Minecraft.getInstance()
 				.getBufferBuilders()

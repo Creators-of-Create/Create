@@ -50,7 +50,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		float headAngle = arm.headAngle.get(pt);
 		
 		boolean rave = arm.phase == Phase.DANCING;
-		float renderTick = AnimationTickHolder.getRenderTick() + (te.hashCode() % 64);
+		float renderTick = AnimationTickHolder.getRenderTime() + (te.hashCode() % 64);
 		if (rave) {
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
