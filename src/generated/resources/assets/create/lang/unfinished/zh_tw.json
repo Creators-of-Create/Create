@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 24",
+	"_": "Missing Localizations: 27",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -429,6 +429,7 @@
 	"item.create.builders_tea": "工人茶",
 	"item.create.chest_minecart_contraption": "裝修過的機械礦車",
 	"item.create.chocolate_bucket": "巧克力桶",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "異彩化合物",
 	"item.create.cinder_flour": "地獄麵粉",
 	"item.create.copper_ingot": "銅錠",
@@ -462,6 +463,7 @@
 	"item.create.handheld_blockzapper": "方塊放置器",
 	"item.create.handheld_worldshaper": "地形雕塑器",
 	"item.create.honey_bucket": "蜂蜜桶",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "IC板",
 	"item.create.iron_sheet": "鐵板",
 	"item.create.lapis_sheet": "青金石板",
@@ -478,6 +480,7 @@
 	"item.create.schematic_and_quill": "藍圖與筆",
 	"item.create.shadow_steel": "暗影鋼",
 	"item.create.super_glue": "強力膠",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "樹木肥料",
 	"item.create.vertical_gearbox": "豎直齒輪箱",
 	"item.create.wand_of_symmetry": "對稱杖",

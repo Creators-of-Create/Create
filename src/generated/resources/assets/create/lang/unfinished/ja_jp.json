@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 24",
+	"_": "Missing Localizations: 27",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -429,6 +429,7 @@
 	"item.create.builders_tea": "建築家のお茶",
 	"item.create.chest_minecart_contraption": "からくりチェストトロッコ",
 	"item.create.chocolate_bucket": "チョコレート入りバケツ",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "色彩の化合物",
 	"item.create.cinder_flour": "ネザーラックの粉",
 	"item.create.copper_ingot": "銅インゴット",
@@ -462,6 +463,7 @@
 	"item.create.handheld_blockzapper": "携帯ブロックザッパー",
 	"item.create.handheld_worldshaper": "携帯ワールドシェーパー",
 	"item.create.honey_bucket": "ハチミツ入りバケツ",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "集積回路",
 	"item.create.iron_sheet": "鉄板",
 	"item.create.lapis_sheet": "ラピスラズリ板",
@@ -478,6 +480,7 @@
 	"item.create.schematic_and_quill": "概略図と羽根ペン",
 	"item.create.shadow_steel": "シャドウスチール",
 	"item.create.super_glue": "接着剤",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "樹木の肥料",
 	"item.create.vertical_gearbox": "垂直ギアボックス",
 	"item.create.wand_of_symmetry": "対称の杖",

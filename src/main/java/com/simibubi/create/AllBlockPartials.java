@@ -117,6 +117,8 @@ public class AllBlockPartials {
 
 		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
 		
+		GOGGLES = get("goggles"),
+		
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
