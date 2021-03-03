@@ -1,9 +1,15 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
+import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -12,6 +18,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -22,20 +29,24 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemDrainTileEntity extends SmartTileEntity {
+public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	public static final int FILLING_TIME = 20;
 
 	SmartFluidTankBehaviour internalTank;
 	TransportedItemStack heldItem;
 	protected int processingTicks;
+	protected int lastRedstoneLevel;
 	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
 
 	public ItemDrainTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -90,6 +101,13 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+
+		if (lastRedstoneLevel != getComparatorOutput()) {
+			lastRedstoneLevel = getComparatorOutput();
+			if (world != null)
+				world.updateComparatorOutputLevel(getPos(), getBlockState().getBlock());
+		}
+
 		if (heldItem == null) {
 			processingTicks = 0;
 			return;
@@ -276,6 +294,45 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 				.cast();
 
 		return super.getCapability(cap, side);
+	}
+
+	public int getComparatorOutput() {
+		ItemDrainTileEntity te = this;
+		double fillFraction = (double) te.internalTank.getPrimaryHandler().getFluidAmount() / te.internalTank.getPrimaryHandler().getCapacity();
+		return MathHelper.floor(MathHelper.clamp(fillFraction * 14 + (fillFraction > 0 ? 1  : 0), 0, 15));
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<String> tooltip, boolean isPlayerSneaking) {
+		ItemDrainTileEntity te = this;
+
+		int fluidAmount = te.internalTank.getPrimaryHandler().getFluidAmount();
+		int fluidCapacity = te.internalTank.getPrimaryHandler().getCapacity();
+		double fillFraction = (double) fluidAmount / fluidCapacity;
+		FluidStack fluidType = te.internalTank.getPrimaryHandler().getFluid();
+
+		tooltip.add(spacing + Lang.translate("gui.drain.info_header"));
+
+		if (isPlayerSneaking && AllFluids.POTION.get().getFluid().isEquivalentTo(fluidType.getFluid())) {
+			tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.effectsTitle"));
+
+			ArrayList<ITextComponent> potionTooltip = new ArrayList<>();
+			PotionFluidHandler.addPotionTooltip(fluidType, potionTooltip, 1);
+			tooltip.addAll(2, potionTooltip.stream()
+					.map(c -> spacing + " " + c.getFormattedText())
+					.collect(Collectors.toList()));
+			return true;
+		}
+
+		tooltip.add(spacing + TextFormatting.GRAY + Lang.translate("gui.stores_fluid.title"));
+
+		if (fluidAmount != 0)
+			tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedFluidTypeText(fluidType, fillFraction));
+
+		tooltip.add(spacing + FluidFullnessOverlay.getFormattedFullnessText(fillFraction));
+		tooltip.add(spacing + " " + FluidFullnessOverlay.getFormattedCapacityText(fluidAmount, fluidCapacity));
+
+		return true;
 	}
 
 }

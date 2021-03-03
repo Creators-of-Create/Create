@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 28",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -843,6 +843,15 @@
 	"create.gui.stressometer.no_rotation": "回転なし",
 	"create.gui.contraptions.not_fast_enough": "この %1$s は_十分な_回転を_していない_ようです。",
 	"create.gui.contraptions.network_overstressed": "この仕掛けは_超過応力_のようです。さらに原動機を追加するか、_応力_の影響が大きい機械の速度を_下げて_ください。",
+	"create.gui.stores_fluid.title": "UNLOCALIZED: Fluid Contained",
+	"create.gui.stores_fluid.effectsTitle": "UNLOCALIZED: Potion Effects",
+	"create.gui.stores_fluid.empty": "UNLOCALIZED: Empty",
+	"create.gui.input_tanks.title": "UNLOCALIZED: Input Tanks",
+	"create.gui.output_tanks.title": "UNLOCALIZED: Output Tanks",
+	"create.gui.tank.info_header": "UNLOCALIZED: Tank Information:",
+	"create.gui.spout.info_header": "UNLOCALIZED: Spout Information:",
+	"create.gui.drain.info_header": "UNLOCALIZED: Drain Information:",
+	"create.gui.basin.info_header": "UNLOCALIZED: Basin Information:",
 	"create.gui.adjustable_crate.title": "可変クレート",
 	"create.gui.adjustable_crate.storageSpace": "収納スペース",
 	"create.gui.stockpile_switch.title": "在庫スイッチ",
@@ -1069,6 +1078,10 @@
 	"create.tooltip.stressImpact.medium": "中",
 	"create.tooltip.stressImpact.high": "高",
 	"create.tooltip.stressImpact.overstressed": "超過応力",
+	"create.tooltip.fluidFullness.low": "UNLOCALIZED: Low",
+	"create.tooltip.fluidFullness.medium": "UNLOCALIZED: Moderate",
+	"create.tooltip.fluidFullness.high": "UNLOCALIZED: High",
+	"create.tooltip.fluidFullness.full": "UNLOCALIZED: Full",
 	"create.tooltip.capacityProvided": "応力の容量: %1$s",
 	"create.tooltip.capacityProvided.low": "小",
 	"create.tooltip.capacityProvided.medium": "中",
@@ -1451,6 +1464,8 @@
 	"item.create.goggles.tooltip.behaviour1": "設置された機械の_速度レベル_および、_機械_の_応力の影響_と_容量_を_色付きのインジケーター_で表示します。",
 	"item.create.goggles.tooltip.condition2": "計器を見たとき",
 	"item.create.goggles.tooltip.behaviour2": "計器が接続されているネットワークの_速度_または_応力_に関する詳細情報を表示します。",
+	"item.create.goggles.tooltip.condition3": "UNLOCALIZED: When looking at fluid containers",
+	"item.create.goggles.tooltip.behaviour3": "UNLOCALIZED: Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
 
 	"item.create.wrench.tooltip": "レンチ",
 	"item.create.wrench.tooltip.summary": "動的からくりに取り組むための便利なツール。コンポーネントの_回転_、_解体_、_設定_に使用できます。",
