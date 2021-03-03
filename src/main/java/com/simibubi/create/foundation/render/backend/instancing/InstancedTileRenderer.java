@@ -144,6 +144,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             material.delete();
         }
         instances.clear();
+        tickableInstances.clear();
     }
 
     public boolean isTileUnloaded(TileEntity tile) {
