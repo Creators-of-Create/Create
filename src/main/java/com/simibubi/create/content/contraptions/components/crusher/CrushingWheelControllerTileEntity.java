@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -199,12 +200,25 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			return;
 
 		if (!(processingEntity instanceof ItemEntity)) {
+			Vec3d entityOutPos = outPos.add(facing.getAxis() == Axis.X ? .5f * offset : 0f
+					, facing.getAxis() == Axis.Y ? .5f * offset : 0f
+					, facing.getAxis() == Axis.Z ? .5f * offset : 0f);
+			int crusherDamage = AllConfigs.SERVER.kinetics.crushingDamage.get();
+
+			if (processingEntity instanceof LivingEntity) {
+				if ((((LivingEntity) processingEntity).getHealth() - crusherDamage <= 0)	//Takes LivingEntity instances as exception, so it can move them before it would kill them.
+						&& (((LivingEntity) processingEntity).hurtTime <= 0)) {				//This way it can actually output the items to the right spot.
+					processingEntity.setPosition(entityOutPos.x
+							, entityOutPos.y
+							, entityOutPos.z);
+				}
+			}
 			processingEntity.attackEntityFrom(CrushingWheelTileEntity.damageSource,
-					AllConfigs.SERVER.kinetics.crushingDamage.get());
+					crusherDamage);
 			if (!processingEntity.isAlive()) {
-				processingEntity.setPosition(outPos.x + (facing.getAxis() == Axis.X ? .75f * offset : 0f)	//This is supposed to move the mobs to the output location
-						, outPos.y + (facing.getAxis() == Axis.Y ? .75f * offset : 0f)						//So the item drops end up on the other end
-						, outPos.z + (facing.getAxis() == Axis.Z ? .75f * offset : 0f));						//This, however, does not currently work consistently for non-downwards crushers.
+				processingEntity.setPosition(entityOutPos.x
+						, entityOutPos.y
+						, entityOutPos.z);
 			}
 			return;
 		}
