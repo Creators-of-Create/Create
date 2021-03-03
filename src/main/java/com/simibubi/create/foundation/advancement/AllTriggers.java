@@ -19,9 +19,9 @@ public class AllTriggers {
 
 	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
-	public static final RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
-	public static final RegistryTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
-	public static final EnumTrigger<InWorldProcessing.Type> FAN_PROCESSING = add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
+	public static final StringSerializableTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
+	public static final StringSerializableTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
+	public static final StringSerializableTrigger<InWorldProcessing.Type> FAN_PROCESSING = add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
 
 	public static final SimpleTrigger
 			ROTATION = simple("rotation"), 

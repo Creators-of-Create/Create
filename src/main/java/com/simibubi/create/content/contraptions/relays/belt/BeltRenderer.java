@@ -72,7 +72,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			MatrixStacker msr = MatrixStacker.of(ms);
 			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-			float renderTick = AnimationTickHolder.getRenderTick();
+			float renderTick = AnimationTickHolder.getRenderTime();
 
 			ms.push();
 			msr.centre();

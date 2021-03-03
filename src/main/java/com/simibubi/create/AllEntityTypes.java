@@ -31,9 +31,9 @@ public class AllEntityTypes {
 		contraption("gantry_contraption", GantryContraptionEntity::new, 10, 40, false);
 
 	public static final RegistryEntry<EntityType<SuperGlueEntity>> SUPER_GLUE = register("super_glue",
-		SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, SuperGlueEntity::build);
+		SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, true, SuperGlueEntity::build);
 	public static final RegistryEntry<EntityType<SeatEntity>> SEAT =
-		register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, SeatEntity::build);
+		register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build);
 
 	//
 
@@ -41,12 +41,12 @@ public class AllEntityTypes {
 
 	private static <T extends Entity> RegistryEntry<EntityType<T>> contraption(String name, IFactory<T> factory,
 		int range, int updateFrequency, boolean sendVelocity) {
-		return register(name, factory, EntityClassification.MISC, range, updateFrequency, sendVelocity,
+		return register(name, factory, EntityClassification.MISC, range, updateFrequency, sendVelocity, true,
 			AbstractContraptionEntity::build);
 	}
 
 	private static <T extends Entity> RegistryEntry<EntityType<T>> register(String name, IFactory<T> factory,
-		EntityClassification group, int range, int updateFrequency, boolean sendVelocity,
+		EntityClassification group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
 		NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
 		return Create.registrate()
@@ -55,6 +55,10 @@ public class AllEntityTypes {
 				.setUpdateInterval(updateFrequency)
 				.setShouldReceiveVelocityUpdates(sendVelocity))
 			.properties(propertyBuilder)
+			.properties(b -> {
+				if (immuneToFire)
+					b.immuneToFire();
+			})
 			.register();
 	}
 

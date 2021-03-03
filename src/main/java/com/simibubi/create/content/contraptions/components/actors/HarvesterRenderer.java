@@ -70,7 +70,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 
 		if (context.contraption.stalled)
 			speed = 0;
-		float time = AnimationTickHolder.getRenderTick() / 20;
+		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (time * speed) % 360;
 		float originOffset = 1 / 16f;
 		Vec3d rotOffset = new Vec3d(0, -2 * originOffset, originOffset).add(VecHelper.getCenterOf(BlockPos.ZERO));

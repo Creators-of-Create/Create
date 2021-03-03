@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 697",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "UNLOCALIZED: Spout",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",
 	"block.create.spruce_window_pane": "UNLOCALIZED: Spruce Window Pane",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "Piston mécanique collant",
 	"block.create.stockpile_switch": "Détecteur de stockage",
 	"block.create.stressometer": "Stressomètre",
@@ -429,6 +430,7 @@
 	"item.create.builders_tea": "Thé du constructeur",
 	"item.create.chest_minecart_contraption": "Engin de wagonnet avec coffre",
 	"item.create.chocolate_bucket": "Seau de chocolat",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Composé chromatique",
 	"item.create.cinder_flour": "Farine de braise",
 	"item.create.copper_ingot": "Lingot de cuivre",
@@ -462,6 +464,7 @@
 	"item.create.handheld_blockzapper": "Blockzappeur portable",
 	"item.create.handheld_worldshaper": "Térraformeur portable",
 	"item.create.honey_bucket": "Seau de miel",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "Circuit intégré",
 	"item.create.iron_sheet": "Plaque de Fer",
 	"item.create.lapis_sheet": "Feuille de lapis",
@@ -478,6 +481,7 @@
 	"item.create.schematic_and_quill": "Schéma et plume",
 	"item.create.shadow_steel": "Acier sombre",
 	"item.create.super_glue": "Colle extra-forte",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "Engrais pour arbres",
 	"item.create.vertical_gearbox": "Boîte de transfert verticale",
 	"item.create.wand_of_symmetry": "Bâton de symétrie",

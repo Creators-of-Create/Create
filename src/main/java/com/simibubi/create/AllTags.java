@@ -176,7 +176,8 @@ public class AllTags {
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.INGOTS);
 
-		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION);
+		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
+			Items.field_226638_pX_);
 
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 		

@@ -97,7 +97,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 
 		// cog
 		ms.push();
-		float angle = AnimationTickHolder.getRenderTick() * -2;
+		float angle = AnimationTickHolder.getRenderTime() * -2;
 		if (leftHand || rightHand)
 			angle += 360 * animation;
 		angle %= 360;

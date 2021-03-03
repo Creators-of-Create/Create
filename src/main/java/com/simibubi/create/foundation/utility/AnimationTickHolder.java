@@ -16,7 +16,7 @@ public class AnimationTickHolder {
 		}
 	}
 
-	public static float getRenderTick() {
+	public static float getRenderTime() {
 		return getTicks() + getPartialTicks();
 	}
 

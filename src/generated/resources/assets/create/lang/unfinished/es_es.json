@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 27",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "Surtidor",
 	"block.create.spruce_window": "Ventana de abeto",
 	"block.create.spruce_window_pane": "Panel de ventana de abeto",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "Pistón mecánico pegajoso",
 	"block.create.stockpile_switch": "Interruptor de acopio",
 	"block.create.stressometer": "Estresómetro",
@@ -429,6 +430,7 @@
 	"item.create.builders_tea": "Té del Constructor",
 	"item.create.chest_minecart_contraption": "Artilugio de vagoneta con cofre",
 	"item.create.chocolate_bucket": "Cubo de chocolate",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Compuesto cromático",
 	"item.create.cinder_flour": "Harina de ceniza",
 	"item.create.copper_ingot": "Lingote de cobre",
@@ -462,6 +464,7 @@
 	"item.create.handheld_blockzapper": "Blockzapper",
 	"item.create.handheld_worldshaper": "Worldshaper",
 	"item.create.honey_bucket": "Cubo de miel",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "Chip de circuito integrado",
 	"item.create.iron_sheet": "Lámina de hierro",
 	"item.create.lapis_sheet": "Lámina de lapislázuli",
@@ -478,6 +481,7 @@
 	"item.create.schematic_and_quill": "Esquema y Pluma",
 	"item.create.shadow_steel": "Acero sombrío",
 	"item.create.super_glue": "Super Pegamento",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "Fertilizador de árboles",
 	"item.create.vertical_gearbox": "Caja de transmisión vertical",
 	"item.create.wand_of_symmetry": "Varita de simetría",

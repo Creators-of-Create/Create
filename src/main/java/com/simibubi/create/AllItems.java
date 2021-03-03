@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.contraptions.goggles.GogglesModel;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
@@ -117,6 +118,24 @@ public class AllItems {
 		.lang("Bar of Chocolate")
 		.register();
 
+	public static final ItemEntry<Item> SWEET_ROLL = REGISTRATE.item("sweet_roll", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(6)
+			.saturation(1.0F)
+			.build()))
+		.register();
+
+	public static final ItemEntry<Item> CHOCOLATE_BERRIES = REGISTRATE.item("chocolate_glazed_berries", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(7)
+			.saturation(0.7F)
+			.build()))
+		.register();
+
+	public static final ItemEntry<Item> HONEYED_APPLE = REGISTRATE.item("honeyed_apple", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(8)
+			.saturation(0.6F)
+			.build()))
+		.register();
+
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 		.properties(p -> p.maxStackSize(16))
@@ -189,7 +208,7 @@ public class AllItems {
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
 		.properties(p -> p.maxStackSize(1))
-		.model(AssetLookup.existingItemModel())
+		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
 		.lang("Engineer's Goggles")
 		.register();
 

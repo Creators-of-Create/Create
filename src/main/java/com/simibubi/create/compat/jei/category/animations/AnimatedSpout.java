@@ -37,7 +37,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 
-		float cycle = AnimationTickHolder.getRenderTick() % 30;
+		float cycle = AnimationTickHolder.getRenderTime() % 30;
 		float squeeze = cycle < 20 ? MathHelper.sin((float) (cycle / 20f * Math.PI)) : 0;
 		squeeze *= 20;
 

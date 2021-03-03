@@ -72,7 +72,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 			if (fluidLevel > 0) {
 				ms.translate(0,
-					(MathHelper.sin(AnimationTickHolder.getRenderTick() / 12f + anglePartition * itemCount) + 1.5f) * 1
+					(MathHelper.sin(AnimationTickHolder.getRenderTime() / 12f + anglePartition * itemCount) + 1.5f) * 1
 						/ 32f,
 					0);
 			}

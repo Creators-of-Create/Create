@@ -1,7 +1,9 @@
 package com.simibubi.create.foundation.command;
 
+import com.google.common.collect.Lists;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
@@ -16,12 +18,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 public class CouplingCommand {
 
 	public static final SimpleCommandExceptionType ONLY_MINECARTS_ALLOWED = new SimpleCommandExceptionType(new StringTextComponent("Only Minecarts can be coupled"));
 	public static final SimpleCommandExceptionType SAME_DIMENSION = new SimpleCommandExceptionType(new StringTextComponent("Minecarts have to be in the same Dimension"));
+	public static final DynamicCommandExceptionType TWO_CARTS = new DynamicCommandExceptionType(a -> new StringTextComponent("Your selector targeted " + a + " entities. You can only couple 2 Minecarts at a time."));
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 
@@ -49,6 +54,31 @@ public class CouplingCommand {
 											return Command.SINGLE_SUCCESS;
 										})
 								)
+						)
+						.then(Commands.argument("carts", EntityArgument.entities())
+								.executes(ctx -> {
+									Collection<? extends Entity> entities = EntityArgument.getEntities(ctx, "carts");
+									if (entities.size() != 2)
+										throw TWO_CARTS.create(entities.size());
+
+									ArrayList<? extends Entity> eList = Lists.newArrayList(entities);
+									Entity cart1 =  eList.get(0);
+									if (!(cart1 instanceof AbstractMinecartEntity))
+										throw ONLY_MINECARTS_ALLOWED.create();
+
+									Entity cart2 = eList.get(1);
+									if (!(cart2 instanceof AbstractMinecartEntity))
+										throw ONLY_MINECARTS_ALLOWED.create();
+
+									if (!cart1.getEntityWorld().equals(cart2.getEntityWorld()))
+										throw SAME_DIMENSION.create();
+
+									Entity source = ctx.getSource().getEntity();
+
+									CouplingHandler.tryToCoupleCarts(source instanceof PlayerEntity ? (PlayerEntity) source : null, cart1.getEntityWorld(), cart1.getEntityId(), cart2.getEntityId());
+
+									return Command.SINGLE_SUCCESS;
+								})
 						)
 				)
 				.then(Commands.literal("remove")

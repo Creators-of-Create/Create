@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "Дозатор",
 	"block.create.spruce_window": "Еловое окно",
 	"block.create.spruce_window_pane": "Панель из елового окна",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "Липкий механический поршень",
 	"block.create.stockpile_switch": "Настраиваемый компаратор",
 	"block.create.stressometer": "Динамометр",
@@ -429,6 +430,7 @@
 	"item.create.builders_tea": "Чай Строителя",
 	"item.create.chest_minecart_contraption": "Сундуко-вагонеточная штуковина",
 	"item.create.chocolate_bucket": "Ведро шоколада",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "Незераковая пыль",
 	"item.create.copper_ingot": "Медный слиток",
@@ -462,6 +464,7 @@
 	"item.create.handheld_blockzapper": "Ручная блоковая пушка",
 	"item.create.handheld_worldshaper": "Ручной редактор мира",
 	"item.create.honey_bucket": "Ведро мёда",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "Интегральная схема",
 	"item.create.iron_sheet": "Железный лист",
 	"item.create.lapis_sheet": "Лазуритовый лист",
@@ -478,6 +481,7 @@
 	"item.create.schematic_and_quill": "Схематика и перо",
 	"item.create.shadow_steel": "Призрачная сталь",
 	"item.create.super_glue": "Супер-клей",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "Удобрение для деревьев",
 	"item.create.vertical_gearbox": "Вертикальная коробка передач",
 	"item.create.wand_of_symmetry": "Жезл симметрии",

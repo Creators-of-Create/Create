@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -14,6 +15,7 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -33,11 +35,13 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation {
+public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour invManipulation;
@@ -381,4 +385,15 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		return true;
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
+		if (world != null && world.isRemote)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
+	}
+
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
 }

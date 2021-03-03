@@ -93,6 +93,8 @@ public class AllBlockPartials {
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
+		
+		STICKER_HEAD = get("sticker/head"),
 
 		PORTABLE_STORAGE_INTERFACE_MIDDLE = get("portable_storage_interface/block_middle"),
 		PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = get("portable_storage_interface/block_middle_powered"),
@@ -116,6 +118,8 @@ public class AllBlockPartials {
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
 		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
+		
+		GOGGLES = get("goggles"),
 		
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),

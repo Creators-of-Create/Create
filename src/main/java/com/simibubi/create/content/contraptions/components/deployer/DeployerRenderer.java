@@ -89,7 +89,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
 			transform = TransformType.GROUND;
-			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AnimationTickHolder.getRenderTick()));
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AnimationTickHolder.getRenderTime()));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
@@ -176,7 +176,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
-			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
+			factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
 		} else {
 			Vec3d center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);

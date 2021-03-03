@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
@@ -198,6 +199,10 @@ public class BlockMovementTraits {
 				.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(direction));
+		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
+			return direction == state.get(StickerBlock.FACING)
+				&& !notSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
+		}
 		return false;
 	}
 
@@ -231,6 +236,8 @@ public class BlockMovementTraits {
 		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
 				.getAxis();
+		if (AllBlocks.STICKER.has(state) && !state.get(StickerBlock.EXTENDED))
+			return facing == state.get(StickerBlock.FACING);
 		return isBrittle(state);
 	}
 

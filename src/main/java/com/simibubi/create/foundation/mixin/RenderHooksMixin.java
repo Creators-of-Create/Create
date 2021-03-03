@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
+import net.minecraft.client.renderer.*;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL20;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,9 +16,6 @@ import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.OptifineHandler;
 
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -32,7 +31,7 @@ public class RenderHooksMixin {
      * layer-correct custom rendering. RenderWorldLast is not refined enough for rendering world objects.
      * This should probably be a forge event.
      */
-    @Inject(at = @At(value = "TAIL"), method = "renderLayer")
+    @Inject(at = @At("TAIL"), method = "renderLayer")
     private void renderLayer(RenderType type, MatrixStack stack, double camX, double camY, double camZ, CallbackInfo ci) {
         if (!Backend.available()) return;
 
@@ -46,7 +45,18 @@ public class RenderHooksMixin {
         GL20.glUseProgram(0);
     }
 
-    @Inject(at = @At(value = "TAIL"), method = "loadRenderers")
+    @Inject(at = @At(value = "INVOKE", target = "updateChunks(J)V"), method = "render")
+    private void setupFrame(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo info, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
+        Vec3d cameraPos = info.getProjectedView();
+        double camX = cameraPos.getX();
+        double camY = cameraPos.getY();
+        double camZ = cameraPos.getZ();
+
+        CreateClient.kineticRenderer.beginFrame(camX, camY, camZ);
+        ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
+    }
+
+    @Inject(at = @At("TAIL"), method = "loadRenderers")
     private void refresh(CallbackInfo ci) {
         CreateClient.kineticRenderer.invalidate();
         ContraptionRenderDispatcher.invalidateAll();

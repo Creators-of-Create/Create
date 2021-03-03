@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -33,9 +33,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTunnelTileEntity extends SmartTileEntity {
+public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
 
-	public HashMap<Direction, InterpolatedChasingValue> flaps;
+	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
 	
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
@@ -43,7 +43,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
-		flaps = new HashMap<>();
+		flaps = new EnumMap<>(Direction.class);
 		sides = new HashSet<>();
 		flapsToSend = new LinkedList<>();
 	}
@@ -174,7 +174,9 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-//		updateTunnelConnections();
+		updateTunnelConnections();
+		if (world != null && world.isRemote)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
@@ -212,4 +214,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		return this.cap.cast();
 	}
 
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
 }

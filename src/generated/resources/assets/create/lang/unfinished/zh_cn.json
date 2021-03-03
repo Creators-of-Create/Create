@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 34",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "注液器",
 	"block.create.spruce_window": "云杉窗户",
 	"block.create.spruce_window_pane": "云杉窗户板",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "黏性动力活塞",
 	"block.create.stockpile_switch": "存量转换器",
 	"block.create.stressometer": "应力表",
@@ -429,6 +430,7 @@
 	"item.create.builders_tea": "建造工茶饮",
 	"item.create.chest_minecart_contraption": "装配过的动力矿车",
 	"item.create.chocolate_bucket": "巧克力桶",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "异彩化合物",
 	"item.create.cinder_flour": "下界面粉",
 	"item.create.copper_ingot": "铜锭",
@@ -462,6 +464,7 @@
 	"item.create.handheld_blockzapper": "手持式方块放置器",
 	"item.create.handheld_worldshaper": "手持式环境塑形器",
 	"item.create.honey_bucket": "蜂蜜桶",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "集成电路板",
 	"item.create.iron_sheet": "铁板",
 	"item.create.lapis_sheet": "青金石板",
@@ -478,6 +481,7 @@
 	"item.create.schematic_and_quill": "蓝图与笔",
 	"item.create.shadow_steel": "暗影钢",
 	"item.create.super_glue": "强力胶",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "树木肥料",
 	"item.create.vertical_gearbox": "竖直十字齿轮箱",
 	"item.create.wand_of_symmetry": "对称之杖",

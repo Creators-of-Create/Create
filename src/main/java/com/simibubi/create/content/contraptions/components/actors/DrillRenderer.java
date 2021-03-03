@@ -44,7 +44,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float speed = (float) (context.contraption.stalled
 			|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING)
 				.getOpposite()) ? context.getAnimationSpeed() : 0);
-		float time = AnimationTickHolder.getRenderTick() / 20;
+		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
 		for (MatrixStack m : matrixStacks)

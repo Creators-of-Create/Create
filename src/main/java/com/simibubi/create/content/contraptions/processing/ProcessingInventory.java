@@ -55,6 +55,8 @@ public class ProcessingInventory extends ItemStackHandler {
 		recipeDuration = nbt.getFloat("RecipeTime");
 		appliedRecipe = nbt.getBoolean("AppliedRecipe");
 		super.deserializeNBT(nbt);
+		if(isEmpty())
+			appliedRecipe = false;
 	}
 
 	@Override

@@ -51,6 +51,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
@@ -104,6 +106,7 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxInstance;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
@@ -116,6 +119,7 @@ import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
@@ -339,12 +343,14 @@ public class AllTileEntities {
 		.tileEntity("andesite_tunnel", BeltTunnelTileEntity::new)
 		.validBlocks(AllBlocks.ANDESITE_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
+		.onRegister(BeltTunnelInstance::register)
 		.register();
 
 	public static final TileEntityEntry<BrassTunnelTileEntity> BRASS_TUNNEL = Create.registrate()
 		.tileEntity("brass_tunnel", BrassTunnelTileEntity::new)
 		.validBlocks(AllBlocks.BRASS_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
+		.onRegister(BeltTunnelInstance::register)
 		.register();
 
 	public static final TileEntityEntry<ArmTileEntity> MECHANICAL_ARM = Create.registrate()
@@ -393,6 +399,12 @@ public class AllTileEntities {
 		.tileEntity("chassis", ChassisTileEntity::new)
 		.validBlocks(AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
 		// .renderer(() -> renderer)
+		.register();
+	
+	public static final TileEntityEntry<StickerTileEntity> STICKER = Create.registrate()
+		.tileEntity("sticker", StickerTileEntity::new)
+		.validBlocks(AllBlocks.STICKER)
+		.renderer(() -> StickerRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<DrillTileEntity> DRILL = Create.registrate()
@@ -591,6 +603,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
 			AllBlocks.ANDESITE_BELT_FUNNEL)
 		.renderer(() -> FunnelRenderer::new)
+	    .onRegister(FunnelInstance::register)
 		.register();
 
 	public static final TileEntityEntry<ContentObserverTileEntity> CONTENT_OBSERVER = Create.registrate()

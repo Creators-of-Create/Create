@@ -1,0 +1,71 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/piston_bottom",
+		"1": "block/piston_inner",
+		"3": "create:block/sticker",
+		"4": "create:block/sticker_side",
+		"particle": "block/piston_bottom"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 8, 16],
+			"faces": {
+				"north": {"uv": [0, 8, 16, 16], "texture": "#4"},
+				"east": {"uv": [0, 8, 16, 16], "texture": "#4"},
+				"south": {"uv": [0, 8, 16, 16], "texture": "#4"},
+				"west": {"uv": [0, 8, 16, 16], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "texture": "#4"},
+				"east": {"uv": [0, 0, 16, 8], "texture": "#4"},
+				"south": {"uv": [0, 0, 16, 8], "texture": "#4"},
+				"west": {"uv": [0, 0, 16, 8], "texture": "#4"},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#3"}
+			}
+		},
+		{
+			"from": [0, 8, -0.95],
+			"to": [16, 16, 0.05],
+			"faces": {
+				"south": {"uv": [0, 0, 16, 8], "texture": "#4"}
+			}
+		},
+		{
+			"from": [0, 8, 15.95],
+			"to": [16, 16, 16.95],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "texture": "#4"}
+			}
+		},
+		{
+			"from": [15.95, 8, 0],
+			"to": [16.95, 16, 16],
+			"faces": {
+				"west": {"uv": [0, 0, 16, 8], "texture": "#4"}
+			}
+		},
+		{
+			"from": [-0.95, 8, 0],
+			"to": [0.05, 16, 16],
+			"faces": {
+				"east": {"uv": [16, 0, 0, 8], "texture": "#4"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Piston Block",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5]
+		}
+	]
+}

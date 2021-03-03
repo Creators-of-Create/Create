@@ -39,7 +39,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		// Keep a copy of the transforms in order to determine correct lighting
-		MatrixStack msLocal = translateTo(entity, AnimationTickHolder.getRenderTick());
+		MatrixStack msLocal = translateTo(entity, AnimationTickHolder.getPartialTicks());
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 
 		ms.push();

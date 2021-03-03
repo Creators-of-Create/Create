@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1184",
+
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -376,6 +376,7 @@
 	"block.create.spout": "UNLOCALIZED: Spout",
 	"block.create.spruce_window": "UNLOCALIZED: Spruce Window",
 	"block.create.spruce_window_pane": "UNLOCALIZED: Spruce Window Pane",
+	"block.create.sticker": "UNLOCALIZED: Sticker",
 	"block.create.sticky_mechanical_piston": "Mechanische Zuiger",
 	"block.create.stockpile_switch": "Voorraad Schakelaar",
 	"block.create.stressometer": "Stressmeter",
@@ -429,6 +430,7 @@
 	"item.create.builders_tea": "UNLOCALIZED: Builder's Tea",
 	"item.create.chest_minecart_contraption": "UNLOCALIZED: Chest Minecart Contraption",
 	"item.create.chocolate_bucket": "UNLOCALIZED: Chocolate Bucket",
+	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_ingot": "Koperstaaf",
@@ -462,6 +464,7 @@
 	"item.create.handheld_blockzapper": "Blokzapper",
 	"item.create.handheld_worldshaper": "UNLOCALIZED: Handheld Worldshaper",
 	"item.create.honey_bucket": "UNLOCALIZED: Honey Bucket",
+	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.integrated_circuit": "UNLOCALIZED: Integrated Circuit",
 	"item.create.iron_sheet": "IJzeren Platen",
 	"item.create.lapis_sheet": "UNLOCALIZED: Lapis Sheet",
@@ -478,6 +481,7 @@
 	"item.create.schematic_and_quill": "Bouwtekening en Veer",
 	"item.create.shadow_steel": "UNLOCALIZED: Shadow Steel",
 	"item.create.super_glue": "UNLOCALIZED: Super Glue",
+	"item.create.sweet_roll": "UNLOCALIZED: Sweet Roll",
 	"item.create.tree_fertilizer": "Boom mest",
 	"item.create.vertical_gearbox": "UNLOCALIZED: Vertical Gearbox",
 	"item.create.wand_of_symmetry": "Symmetrie Staf",

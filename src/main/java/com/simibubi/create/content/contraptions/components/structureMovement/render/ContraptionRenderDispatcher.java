@@ -64,6 +64,12 @@ public class ContraptionRenderDispatcher {
         }
     }
 
+    public static void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.getLighter().lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+        }
+    }
+
     public static void renderTick() {
         firstLayer = true;
     }
@@ -98,19 +104,16 @@ public class ContraptionRenderDispatcher {
         return contraption;
     }
 
+    public static void beginFrame(double camX, double camY, double camZ) {
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.beginFrame(camX, camY, camZ);
+        }
+    }
+
     public static void renderLayer(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
-
-        if (firstLayer) {
-
-            for (RenderedContraption renderer : renderers.values()) {
-                renderer.beginFrame(camX, camY, camZ);
-            }
-
-            firstLayer = false;
-        }
 
         layer.startDrawing();
         GL11.glEnable(GL13.GL_TEXTURE_3D);

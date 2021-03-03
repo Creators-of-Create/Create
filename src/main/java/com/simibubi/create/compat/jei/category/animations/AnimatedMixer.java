@@ -29,7 +29,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 			.scale(scale)
 			.render();
 
-		float animation = ((MathHelper.sin(AnimationTickHolder.getRenderTick() / 32f) + 1) / 5) + .5f;
+		float animation = ((MathHelper.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
 		GuiGameElement.of(AllBlockPartials.MECHANICAL_MIXER_POLE)
 			.atLocal(0, animation, 0)

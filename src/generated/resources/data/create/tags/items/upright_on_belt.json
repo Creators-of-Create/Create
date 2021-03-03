@@ -7,6 +7,7 @@
     "minecraft:glass_bottle",
     "minecraft:potion",
     "minecraft:splash_potion",
-    "minecraft:lingering_potion"
+    "minecraft:lingering_potion",
+    "minecraft:honey_bottle"
   ]
 }

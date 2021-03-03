@@ -43,7 +43,7 @@ public class BasicProgram extends GlProgram {
         super.bind();
 
         GL20.glUniform1i(uDebug, debugMode);
-        GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTick());
+        GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTime());
 
         uploadMatrixUniform(uViewProjection, viewProjection);
         GL20.glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
