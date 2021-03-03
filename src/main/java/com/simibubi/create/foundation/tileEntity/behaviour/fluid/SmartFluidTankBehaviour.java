@@ -132,6 +132,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	protected void updateFluids() {
 		fluidUpdateCallback.run();
 		tileEntity.sendData();
+		tileEntity.markDirty();
 	}
 
 	@Override

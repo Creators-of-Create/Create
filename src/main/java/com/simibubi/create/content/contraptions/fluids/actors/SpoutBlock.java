@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,12 +43,7 @@ public class SpoutBlock extends Block implements IWrenchable {
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te == null)
-			return 0;
-		if (te instanceof SpoutTileEntity)
-			return ((SpoutTileEntity) te).getComparatorOutput();
-		return 0;
+		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
 
 }

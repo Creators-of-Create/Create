@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.FluidFullnessOverlay;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -32,7 +32,6 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -50,7 +49,6 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected BeltProcessingBehaviour beltProcessing;
 	protected int processingTicks;
 	protected boolean sendSplash;
-	protected int lastRedstoneLevel;
 
 	SmartFluidTankBehaviour tank;
 
@@ -60,12 +58,12 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
+		if (cachedBoundingBox == null)
 			cachedBoundingBox = super.getRenderBoundingBox().expand(0, -2, 0);
-		}
 		return cachedBoundingBox;
 	}
 
@@ -126,9 +124,10 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, world, pos, 5);
-		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out).isEmpty())
+		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out)
+			.isEmpty())
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, world, pos, 5);
-		
+
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
 		sendSplash = true;
@@ -178,12 +177,6 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (processingTicks >= 8 && world.isRemote)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
-
-		if (lastRedstoneLevel != getComparatorOutput()) {
-			lastRedstoneLevel = getComparatorOutput();
-			if (world != null)
-				world.updateComparatorOutputLevel(getPos(), getBlockState().getBlock());
-		}
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
@@ -204,12 +197,6 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			m = new Vec3d(m.x, Math.abs(m.y), m.z);
 			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
-	}
-
-	public int getComparatorOutput() {
-		SpoutTileEntity te = this;
-		double fillFraction = (double) te.getCurrentFluidInTank().getAmount() / te.tank.getPrimaryHandler().getCapacity();
-		return MathHelper.floor(MathHelper.clamp(fillFraction * 14 + (fillFraction > 0 ? 1  : 0), 0, 15));
 	}
 
 	@Override

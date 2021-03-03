@@ -29,7 +29,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -58,7 +57,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	protected int luminosity;
 	protected int width;
 	protected int height;
-	protected int lastRedstoneLevel;
 
 	private static final int SYNC_RATE = 8;
 	protected int syncCooldown;
@@ -100,24 +98,18 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			if (syncCooldown == 0 && queuedSync)
 				sendData();
 		}
-		
+
 		if (lastKnownPos == null)
 			lastKnownPos = getPos();
 		else if (!lastKnownPos.equals(pos) && pos != null) {
 			onPositionChanged();
 			return;
 		}
-		
+
 		if (updateConnectivity)
 			updateConnectivity();
 		if (fluidLevel != null)
 			fluidLevel.tick();
-
-		if (lastRedstoneLevel != getComparatorOutput()) {
-			lastRedstoneLevel = getComparatorOutput();
-			if (world != null)
-				world.updateComparatorOutputLevel(getPos(), getBlockState().getBlock());
-		}
 	}
 
 	public boolean isController() {
@@ -302,6 +294,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	private AxisAlignedBB cachedBoundingBox;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
@@ -327,13 +320,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (otherTE instanceof FluidTankTileEntity)
 			return (FluidTankTileEntity) otherTE;
 		return null;
-	}
-
-	public int getComparatorOutput() {
-		FluidTankTileEntity te = getControllerTE();
-		if (te == null)
-			return 0;
-		return MathHelper.floor(MathHelper.clamp(te.getFillState() * 14 + (te.getFillState() > 0 ? 1  : 0), 0, 15));
 	}
 
 	@Override

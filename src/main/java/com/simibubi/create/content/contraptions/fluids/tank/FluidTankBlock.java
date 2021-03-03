@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
+import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
@@ -318,14 +319,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te instanceof FluidTankTileEntity) {
-			FluidTankTileEntity fluidTankTileEntity = ((FluidTankTileEntity) te).getControllerTE();
-			if (fluidTankTileEntity == null)
-				return 0;
-			return fluidTankTileEntity.getComparatorOutput();
-		}
-		return 0;
+		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
+			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
+			.orElse(0);
 	}
 
 }

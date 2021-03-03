@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -106,12 +107,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
-		if (te == null)
-			return 0;
-		if (te instanceof ItemDrainTileEntity)
-			return ((ItemDrainTileEntity) te).getComparatorOutput();
-		return 0;
+		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
 
 }

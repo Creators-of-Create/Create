@@ -29,7 +29,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,7 +45,6 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	SmartFluidTankBehaviour internalTank;
 	TransportedItemStack heldItem;
 	protected int processingTicks;
-	protected int lastRedstoneLevel;
 	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
 
 	public ItemDrainTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -73,12 +71,12 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 		if (!getHeldItemStack().isEmpty())
 			return inserted;
-		
+
 		if (inserted.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(world, inserted)) {
 			returned = ItemHandlerHelper.copyStackWithSize(inserted, inserted.getCount() - 1);
 			inserted = ItemHandlerHelper.copyStackWithSize(inserted, 1);
 		}
-		
+
 		if (simulate)
 			return returned;
 
@@ -101,12 +99,6 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public void tick() {
 		super.tick();
-
-		if (lastRedstoneLevel != getComparatorOutput()) {
-			lastRedstoneLevel = getComparatorOutput();
-			if (world != null)
-				world.updateComparatorOutputLevel(getPos(), getBlockState().getBlock());
-		}
 
 		if (heldItem == null) {
 			processingTicks = 0;
@@ -294,12 +286,6 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 				.cast();
 
 		return super.getCapability(cap, side);
-	}
-
-	public int getComparatorOutput() {
-		ItemDrainTileEntity te = this;
-		double fillFraction = (double) te.internalTank.getPrimaryHandler().getFluidAmount() / te.internalTank.getPrimaryHandler().getCapacity();
-		return MathHelper.floor(MathHelper.clamp(fillFraction * 14 + (fillFraction > 0 ? 1  : 0), 0, 15));
 	}
 
 	@Override
