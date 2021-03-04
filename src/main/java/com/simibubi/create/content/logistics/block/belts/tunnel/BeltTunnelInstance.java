@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.tileentity.TileEntityType;
@@ -73,7 +73,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
     @Override
     public void tick() {
         tunnelFlaps.forEach((direction, keys) -> {
-            InterpolatedChasingValue flapValue = tile.flaps.get(direction);
+            InterpolatedValue flapValue = tile.flaps.get(direction);
             if (flapValue == null) {
                 return;
             }

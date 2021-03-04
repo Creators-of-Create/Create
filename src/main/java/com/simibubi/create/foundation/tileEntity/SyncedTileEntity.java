@@ -5,6 +5,9 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.SectionPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public abstract class SyncedTileEntity extends TileEntity {
 
@@ -60,4 +63,12 @@ public abstract class SyncedTileEntity extends TileEntity {
 		sendData();
 	}
 
+	public PacketDistributor.PacketTarget packetTarget() {
+		return PacketDistributor.TRACKING_CHUNK.with(this::containedChunk);
+	}
+
+	public Chunk containedChunk() {
+		SectionPos sectionPos = SectionPos.from(pos);
+		return world.getChunk(sectionPos.getSectionX(), sectionPos.getSectionZ());
+	}
 }

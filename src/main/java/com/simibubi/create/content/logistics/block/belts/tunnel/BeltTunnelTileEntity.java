@@ -3,6 +3,9 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import java.util.*;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -68,22 +70,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		compound.put("Sides", sidesNBT);
 		
 		super.write(compound, clientPacket);
-
-		if (!clientPacket)
-			return;
-
-		flapsNBT = new ListNBT();
-		if (!flapsToSend.isEmpty()) {
-			for (Pair<Direction, Boolean> pair : flapsToSend) {
-				CompoundNBT flap = new CompoundNBT();
-				flap.putInt("Flap", pair.getKey()
-					.getIndex());
-				flap.putBoolean("FlapInward", pair.getValue());
-				flapsNBT.add(flap);
-			}
-			compound.put("TriggerFlaps", flapsNBT);
-			flapsToSend.clear();
-		}
 	}
 
 	@Override
@@ -116,17 +102,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 
 		if (clientPacket)
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
-
-		if (!clientPacket)
-			return;
-		if (!compound.contains("TriggerFlaps"))
-			return;
-		flapsNBT = compound.getList("TriggerFlaps", NBT.TAG_COMPOUND);
-		for (INBT inbt : flapsNBT) {
-			CompoundNBT flap = (CompoundNBT) inbt;
-			Direction side = Direction.byIndex(flap.getInt("Flap"));
-			flap(side, flap.getBoolean("FlapInward"));
-		}
 	}
 
 	public void updateTunnelConnections() {
@@ -158,8 +133,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 					continue;
 
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
-				.target(0)
-				.withSpeed(.05f));
+															   .target(0)
+															   .withSpeed(.05f));
 		}
 		sendData();
 	}
@@ -188,10 +163,16 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		super.tick();
 		if (!world.isRemote) {
 			if (!flapsToSend.isEmpty())
-				sendData();
+				sendFlaps();
 			return;
 		}
 		flaps.forEach((d, value) -> value.tick());
+	}
+
+	private void sendFlaps() {
+		AllPackets.channel.send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
+
+		flapsToSend.clear();
 	}
 
 	@Override

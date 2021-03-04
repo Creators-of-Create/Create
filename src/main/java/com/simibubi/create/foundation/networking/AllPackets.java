@@ -28,6 +28,8 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmPlacementPac
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
+import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
+import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
@@ -86,7 +88,9 @@ public enum AllPackets {
 	FLUID_SPLASH(FluidSplashPacket.class, FluidSplashPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_FLUID(ContraptionFluidPacket.class, ContraptionFluidPacket::new, PLAY_TO_CLIENT),
 	GANTRY_UPDATE(GantryContraptionUpdatePacket.class, GantryContraptionUpdatePacket::new, PLAY_TO_CLIENT),
-	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket::new, PLAY_TO_CLIENT)
+	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket::new, PLAY_TO_CLIENT),
+	TUNNEL_FLAP(TunnelFlapPacket.class, TunnelFlapPacket::new, PLAY_TO_CLIENT),
+	FUNNEL_FLAP(FunnelFlapPacket.class, FunnelFlapPacket::new, PLAY_TO_CLIENT),
 
 	;
 

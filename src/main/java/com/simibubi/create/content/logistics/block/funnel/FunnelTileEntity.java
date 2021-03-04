@@ -12,9 +12,12 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
+import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -39,6 +42,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -50,7 +54,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
 
-	int sendFlap;
 	InterpolatedChasingValue flap;
 
 	static enum Mode {
@@ -285,8 +288,11 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	public void flap(boolean inward) {
-		sendFlap = inward ? 1 : -1;
-		sendData();
+		if (!world.isRemote) {
+			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
+		} else {
+			flap.set(inward ? 1 : -1);
+		}
 	}
 
 	public boolean hasFlap() {
@@ -318,20 +324,12 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.putInt("TransferCooldown", extractionCooldown);
-		if (clientPacket && sendFlap != 0) {
-			compound.putInt("Flap", sendFlap);
-			sendFlap = 0;
-		}
 	}
 
 	@Override
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		super.read(compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
-		if (clientPacket && compound.contains("Flap")) {
-			int direction = compound.getInt("Flap");
-			flap.set(direction);
-		}
 
 		if (clientPacket)
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
