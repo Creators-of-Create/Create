@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render.backend.instancing;
 
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.render.backend.Backend;
@@ -74,18 +74,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     public synchronized void deleteInstance(InstanceKey<D> key) {
         verifyKey(key);
 
-        int index = key.index;
-
-        keys.remove(index);
-        data.remove(index);
-
-        for (int i = index; i < keys.size(); i++) {
-            keys.get(i).index--;
-        }
-
-        maxIndexChanged = keys.size() - 1;
-        markIndexChanged(Math.min(maxIndexChanged, index));
-
         key.invalidate();
     }
 
@@ -120,7 +108,9 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     }
 
     protected void renderSetup() {
-        if (minIndexChanged < 0 || data.isEmpty()) return;
+        boolean anyRemoved = doRemoval();
+
+        if (!anyRemoved && (minIndexChanged < 0 || data.isEmpty())) return;
 
         VertexFormat instanceFormat = getInstanceFormat();
 
@@ -140,11 +130,13 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             int offset = minIndexChanged * stride;
             int length = (1 + maxIndexChanged - minIndexChanged) * stride;
 
-            vbo.map(offset, length, buffer -> {
-                for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
-                    data.get(i).write(buffer);
-                }
-            });
+            if (length > 0) {
+                vbo.map(offset, length, buffer -> {
+                    for (int i = minIndexChanged; i <= maxIndexChanged; i++) {
+                        data.get(i).write(buffer);
+                    }
+                });
+            }
 
             if (newInstanceCount < glInstanceCount) {
                 int clearFrom = (maxIndexChanged + 1) * stride;
@@ -168,6 +160,48 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
         minIndexChanged = -1;
         maxIndexChanged = -1;
+    }
+
+    // copied from ArrayList#removeIf
+    protected boolean doRemoval() {
+        // figure out which elements are to be removed
+        // any exception thrown from the filter predicate at this stage
+        // will leave the collection unmodified
+        int removeCount = 0;
+        final int size = this.keys.size();
+        final BitSet removeSet = new BitSet(size);
+        for (int i=0; i < size; i++) {
+            final InstanceKey<D> element = this.keys.get(i);
+            if (!element.isValid()) {
+                removeSet.set(i);
+                removeCount++;
+            }
+        }
+
+        // shift surviving elements left over the spaces left by removed elements
+        final boolean anyToRemove = removeCount > 0;
+        if (anyToRemove) {
+            final int newSize = size - removeCount;
+            for (int i = 0, j = 0; (i < size) && (j < newSize); i++, j++) {
+                i = removeSet.nextClearBit(i);
+                keys.set(j, keys.get(i));
+                data.set(j, data.get(i));
+            }
+
+            keys.subList(newSize, size).clear();
+            data.subList(newSize, size).clear();
+
+            int firstChanged = removeSet.nextSetBit(0);
+
+            for (int i = firstChanged; i < newSize; i++) {
+                keys.get(i).index = i;
+            }
+
+            minIndexChanged = 0;
+            maxIndexChanged = newSize - 1;
+        }
+
+        return anyToRemove;
     }
 
     protected void markIndexChanged(int index) {
