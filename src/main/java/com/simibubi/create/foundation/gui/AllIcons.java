@@ -5,10 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.ColorHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AllIcons {
+public class AllIcons implements IScreenRenderable {
 
 	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
 	private static int x = 0, y = -1;
@@ -146,16 +144,11 @@ public class AllIcons {
 			.bindTexture(ICON_ATLAS);
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
 		screen.blit(x, y, iconX, iconY, 16, 16);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void draw(int x, int y) {
-		draw(new Screen(null) {
-		}, x, y);
 	}
 
 	@OnlyIn(Dist.CLIENT)

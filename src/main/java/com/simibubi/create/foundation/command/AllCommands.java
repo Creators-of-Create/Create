@@ -28,6 +28,7 @@ public class AllCommands {
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())
+				.then(PonderCommand.register())
 
 				//utility
 				.then(util)

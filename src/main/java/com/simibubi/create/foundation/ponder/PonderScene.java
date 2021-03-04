@@ -1,34 +1,15 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import org.apache.commons.lang3.mutable.MutableDouble;
-import org.apache.commons.lang3.mutable.MutableObject;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.*;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -41,12 +22,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
+import org.apache.commons.lang3.mutable.MutableDouble;
+import org.apache.commons.lang3.mutable.MutableObject;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class PonderScene {
 
@@ -59,6 +42,7 @@ public class PonderScene {
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
 	Set<PonderElement> elements;
+	List<PonderTag> tags;
 
 	PonderWorld world;
 	ResourceLocation component;
@@ -79,7 +63,7 @@ public class PonderScene {
 	int totalTime;
 	int currentTime;
 
-	public PonderScene(PonderWorld world, ResourceLocation component, int sceneIndex) {
+	public PonderScene(PonderWorld world, ResourceLocation component, int sceneIndex, Collection<PonderTag> tags) {
 		pointOfInterest = Vec3d.ZERO;
 		textIndex = 1;
 
@@ -90,6 +74,7 @@ public class PonderScene {
 		outliner = new Outliner();
 		elements = new HashSet<>();
 		linkedElements = new HashMap<>();
+		this.tags = new ArrayList<>(tags);
 		schedule = new ArrayList<>();
 		activeSchedule = new ArrayList<>();
 		transform = new SceneTransform();

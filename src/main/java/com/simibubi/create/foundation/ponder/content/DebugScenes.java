@@ -4,19 +4,14 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.ItemEntry;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -48,8 +43,16 @@ public class DebugScenes {
 	private static void add(PonderStoryBoard sb) {
 		ItemEntry<Item> item = AllItems.BRASS_HAND;
 		String schematicPath = "debug/scene_" + index;
-		PonderRegistry.addStoryBoard(item, schematicPath, sb);
+		PonderRegistry.addStoryBoard(item, schematicPath, sb)
+			.highlightAllTags()
+			.chapter(PonderChapter.of("debug"));
 		index++;
+	}
+
+	public static void empty(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("Missing Content");
+		scene.showBasePlate();
+		scene.idle(5);
 	}
 
 	public static void coordinateScene(SceneBuilder scene, SceneBuildingUtil util) {

@@ -1,10 +1,5 @@
 package com.simibubi.create;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
@@ -14,6 +9,7 @@ import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
@@ -24,7 +20,6 @@ import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.OptifineHandler;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -41,6 +36,11 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class CreateClient {
 
@@ -90,6 +90,9 @@ public class CreateClient {
 		getColorHandler().init();
 		AllFluids.assignRenderLayers();
 		PonderIndex.register();
+		PonderIndex.registerTags();
+
+		UIRenderHelper.init();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();

@@ -1,21 +1,20 @@
 package com.simibubi.create.foundation.ponder.ui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 
 public class PonderButton extends AbstractSimiWidget {
 
-	private AllIcons icon;
+	private IScreenRenderable icon;
 	private ItemStack item;
 	protected boolean pressed;
 	private Runnable onClick;
@@ -27,14 +26,17 @@ public class PonderButton extends AbstractSimiWidget {
 
 	public static final int SIZE = 20;
 
-	public PonderButton(int x, int y, Runnable onClick) {
-		super(x, y, SIZE, SIZE);
+	public PonderButton(int x, int y, Runnable onClick, int width, int height) {
+		super(x, y, width, height);
 		this.onClick = onClick;
-		flash = LerpedFloat.linear()
-			.startWithValue(0);
+		flash = LerpedFloat.linear().startWithValue(0);
 	}
 
-	public PonderButton showing(AllIcons icon) {
+	public PonderButton(int x, int y, Runnable onClick) {
+		this(x, y, onClick, SIZE, SIZE);
+	}
+
+	public PonderButton showing(IScreenRenderable icon) {
 		this.icon = icon;
 		return this;
 	}
@@ -97,17 +99,24 @@ public class PonderButton extends AbstractSimiWidget {
 		if (icon != null) {
 			RenderSystem.enableBlend();
 			RenderSystem.color4f(1, 1, 1, fade);
-			icon.draw(this, x + 2, y + 2);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(x + 2, y + 2, 0);
+			RenderSystem.scaled((width - 4) / 16d, (height - 4) / 16d, 1);
+			icon.draw(this, 0, 0);
+			RenderSystem.popMatrix();
 		}
 		if (item != null) {
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(0, 0, -800);
 			GuiGameElement.of(item)
 				.at(x - 2, y - 2)
 				.scale(1.5f)
 				.render();
+			RenderSystem.popMatrix();
 		}
 		if (shortcut != null)
-			drawCenteredString(Minecraft.getInstance().fontRenderer, shortcut.getLocalizedName(), x + SIZE / 2 + 8,
-				y + SIZE - 6, ColorHelper.applyAlpha(0xff606060, fade));
+			drawCenteredString(Minecraft.getInstance().fontRenderer, shortcut.getLocalizedName(), x + width / 2 + 8,
+				y + height - 6, ColorHelper.applyAlpha(0xff606060, fade));
 
 		RenderSystem.popMatrix();
 	}
@@ -133,4 +142,7 @@ public class PonderButton extends AbstractSimiWidget {
 		toolTip.add(text);
 	}
 
+	public ItemStack getItem() {
+		return item;
+	}
 }

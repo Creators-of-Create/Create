@@ -1,14 +1,13 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.util.List;
-
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
+import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,6 +20,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+
+import java.util.List;
 
 public class PonderTooltipHandler {
 
@@ -51,6 +52,12 @@ public class PonderTooltipHandler {
 			stack = ponderUI.getHoveredTooltipItem();
 			if (stack.isItemEqual(ponderUI.getSubject()))
 				subject = true;
+		} else if (currentScreen instanceof PonderTagScreen) {
+			PonderTagScreen tagScreen = (PonderTagScreen) currentScreen;
+			stack = tagScreen.getHoveredTooltipItem();
+		} else if (currentScreen instanceof PonderIndexScreen) {
+			PonderIndexScreen indexScreen = (PonderIndexScreen) currentScreen;
+			stack = indexScreen.getHoveredTooltipItem();
 		} else
 			return;
 
@@ -71,8 +78,7 @@ public class PonderTooltipHandler {
 
 		if (!subject && InputMappings.isKeyDown(window, keyCode)) {
 			if (value >= 1) {
-				ScreenOpener.open(new PonderUI(PonderRegistry.compile(stack.getItem()
-					.getRegistryName())));
+				ScreenOpener.transitionTo(PonderUI.of(stack));
 				holdWProgress.startWithValue(0);
 				return;
 			}

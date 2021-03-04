@@ -1,15 +1,13 @@
 package com.simibubi.create.foundation.gui;
 
 import com.simibubi.create.Create;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public enum AllGuiTextures {
+public enum AllGuiTextures implements IScreenRenderable {
 
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
@@ -117,16 +115,10 @@ public enum AllGuiTextures {
 			.bindTexture(location);
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
 		screen.blit(x, y, startX, startY, width, height);
 	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void draw(int x, int y) {
-		draw(new Screen(null) {
-		}, x, y);
-	}
-
 }

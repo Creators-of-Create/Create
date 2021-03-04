@@ -1,22 +1,10 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
-
 import com.google.gson.JsonElement;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.SharedText;
+import com.simibubi.create.foundation.ponder.content.*;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -26,38 +14,66 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+
 public class PonderRegistry {
 
-	static Map<ResourceLocation, List<PonderStoryBoardEntry>> all = new HashMap<>();
+	public static final PonderTagRegistry tags = new PonderTagRegistry();
+	public static final PonderChapterRegistry chapters = new PonderChapterRegistry();
+	public static Map<ResourceLocation, List<PonderStoryBoardEntry>> all = new HashMap<>();
 
-	public static void addStoryBoard(ItemProviderEntry<?> component, String schematic, PonderStoryBoard storyBoard) {
+	public static PonderSceneBuilder addStoryBoard(ItemProviderEntry<?> component, String schematic, PonderStoryBoard storyBoard) {
 		ResourceLocation id = component.getId();
-		all.computeIfAbsent(id, $ -> new ArrayList<>())
-			.add(new PonderStoryBoardEntry(storyBoard, schematic));
+		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, schematic, id);
+		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
+		all.computeIfAbsent(id, _$ -> new ArrayList<>()).add(entry);
+		return builder;
 	}
 
-	public static MultiSceneBuilder forComponents(ItemProviderEntry<?> component, ItemProviderEntry<?>... additional) {
-		return new MultiSceneBuilder(component, additional);
+	public static PonderSceneBuilder addStoryBoard(PonderChapter chapter, ResourceLocation component, String schematic, PonderStoryBoard storyBoard) {
+		if (component == null)
+			component = new ResourceLocation("minecraft", "stick");
+
+		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, schematic, component);
+		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
+		chapters.addStoriesToChapter(chapter, entry);
+		return builder;
+	}
+
+	public static MultiSceneBuilder forComponents(ItemProviderEntry<?>... components) {
+		return new MultiSceneBuilder(Arrays.asList(components));
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
+		return compile(all.get(id));
+	}
 
+	public static List<PonderScene> compile(PonderChapter chapter) {
+		return compile(chapters.getStories(chapter));
+	}
+
+	public static List<PonderScene> compile(List<PonderStoryBoardEntry> entries) {
 		if (PonderIndex.EDITOR_MODE) {
-			PonderLocalization.shared.clear();
-			PonderLocalization.specific.clear();
-			SharedText.gatherText();
+			//PonderLocalization.shared.clear();
+			//PonderLocalization.specific.clear();
+			//SharedText.gatherText();
 		}
 
-		List<PonderStoryBoardEntry> list = all.get(id);
 		List<PonderScene> scenes = new ArrayList<>();
 
-		for (int i = 0; i < list.size(); i++) {
-			PonderStoryBoardEntry sb = list.get(i);
+		for (int i = 0; i < entries.size(); i++) {
+			PonderStoryBoardEntry sb = entries.get(i);
 			Template activeTemplate = loadSchematic(sb.getSchematicName());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().world);
 			activeTemplate.addBlocksToWorld(world, BlockPos.ZERO, new PlacementSettings());
 			world.createBackup();
-			PonderScene scene = compileScene(id, i, sb, world);
+			PonderScene scene = compileScene(i, sb, world);
 			scene.begin();
 			scenes.add(scene);
 		}
@@ -65,11 +81,10 @@ public class PonderRegistry {
 		return scenes;
 	}
 
-	public static PonderScene compileScene(ResourceLocation id, int i, PonderStoryBoardEntry sb, PonderWorld world) {
-		PonderScene scene = new PonderScene(world, id, i);
+	public static PonderScene compileScene(int i, PonderStoryBoardEntry sb, PonderWorld world) {
+		PonderScene scene = new PonderScene(world, sb.getComponent(), i, sb.getTags());
 		SceneBuilder builder = scene.builder();
-		sb.getBoard()
-			.program(builder, scene.getSceneBuildingUtil());
+		sb.getBoard().program(builder, scene.getSceneBuildingUtil());
 		return scene;
 	}
 
@@ -95,28 +110,58 @@ public class PonderRegistry {
 		SharedText.gatherText();
 		all.forEach((id, list) -> {
 			for (int i = 0; i < list.size(); i++)
-				compileScene(id, i, list.get(i), null);
+				compileScene(i, list.get(i), null);
 		});
 		return PonderLocalization.record();
 	}
 
 	public static class MultiSceneBuilder {
 
-		private ItemProviderEntry<?> component;
-		private ItemProviderEntry<?>[] additional;
+		private final Collection<ItemProviderEntry<?>> components;
 
-		MultiSceneBuilder(ItemProviderEntry<?> component, ItemProviderEntry<?>[] additional) {
-			this.component = component;
-			this.additional = additional;
+		MultiSceneBuilder(Collection<ItemProviderEntry<?>> components) {
+			this.components = components;
 		}
 
 		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard) {
-			PonderRegistry.addStoryBoard(component, schematicPath, storyBoard);
-			for (ItemProviderEntry<?> itemProviderEntry : additional) 
-				PonderRegistry.addStoryBoard(itemProviderEntry, schematicPath, storyBoard);
+			return addStoryBoard(schematicPath, storyBoard, PonderSceneBuilder::highlightAllTags);
+		}
+
+		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard, Consumer<PonderSceneBuilder> extras) {
+			components.forEach(c -> extras.accept(PonderRegistry.addStoryBoard(c, schematicPath, storyBoard)));
 			return this;
 		}
 
+	}
+
+	public static class PonderSceneBuilder {
+
+		private final PonderStoryBoardEntry entry;
+
+		PonderSceneBuilder(PonderStoryBoardEntry entry) {
+			this.entry = entry;
+		}
+
+		public PonderSceneBuilder highlightAllTags() {
+			entry.getTags().add(PonderTag.Highlight.ALL);
+			return this;
+		}
+
+		public PonderSceneBuilder highlightTags(PonderTag... tags) {
+			entry.getTags().addAll(Arrays.asList(tags));
+			return this;
+		}
+
+		public PonderSceneBuilder chapter(PonderChapter chapter) {
+			PonderRegistry.chapters.addStoriesToChapter(chapter, entry);
+			return this;
+		}
+
+		public PonderSceneBuilder chapters(PonderChapter... chapters) {
+			for (PonderChapter c : chapters)
+				chapter(c);
+			return this;
+		}
 	}
 
 }

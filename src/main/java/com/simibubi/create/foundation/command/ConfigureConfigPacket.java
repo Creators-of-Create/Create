@@ -4,6 +4,7 @@ import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -65,6 +66,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
 		experimentalRendering(() -> Actions::experimentalRendering),
+		ponderIndex(() -> Actions::ponderIndex),
 
 		;
 
@@ -128,6 +130,11 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		private static void experimentalLighting(String value) {
 			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 			Minecraft.getInstance().worldRenderer.loadRenderers();
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void ponderIndex(String value) {
+			ScreenOpener.transitionTo(new PonderIndexScreen());
 		}
 
 		private static ITextComponent boolToText(boolean b) {
