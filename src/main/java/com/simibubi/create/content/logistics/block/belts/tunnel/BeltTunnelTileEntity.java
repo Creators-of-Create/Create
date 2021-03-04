@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import java.util.*;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -112,6 +113,9 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 			sides.addAll(flaps.keySet());
 
 		super.read(compound, clientPacket);
+
+		if (clientPacket)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 
 		if (!clientPacket)
 			return;
