@@ -19,7 +19,9 @@ public class GlShader extends GlObject {
 
         if (preProcessor != null) {
             source = preProcessor.process(source);
-            Backend.log.info("Preprocessor run on " + name);// + ":\n" + source);
+
+            if (Backend.SHADER_DEBUG_OUTPUT)
+                Backend.log.info("Preprocessor run on " + name);// + ":\n" + source);
         }
 
         GL20.glShaderSource(handle, source);

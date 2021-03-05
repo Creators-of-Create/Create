@@ -4,10 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import com.simibubi.create.foundation.render.backend.gl.GlFog;
+import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
+import com.simibubi.create.foundation.render.backend.gl.shader.*;
 import com.simibubi.create.foundation.render.backend.gl.versioned.GlFeatureCompat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +20,6 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryUtil;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
-import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
-import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -31,11 +31,13 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 
 public class Backend {
+    public static final Boolean SHADER_DEBUG_OUTPUT = false;
+
     public static final Logger log = LogManager.getLogger(Backend.class);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);
 
     private static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();
-    private static final Map<ProgramSpec<?>, GlProgram> programs = new HashMap<>();
+    private static final Map<ProgramSpec<?>, ProgramGroup<?>> programs = new HashMap<>();
 
     private static boolean enabled;
 
@@ -60,7 +62,7 @@ public class Backend {
 
     @SuppressWarnings("unchecked")
     public static <P extends GlProgram, S extends ProgramSpec<P>> P getProgram(S spec) {
-        return (P) programs.get(spec);
+        return (P) programs.get(spec).get(GlFog.getFogMode());
     }
 
     public static boolean available() {
@@ -109,7 +111,7 @@ public class Backend {
 
             if (gl20()) {
 
-                programs.values().forEach(GlProgram::delete);
+                programs.values().forEach(ProgramGroup::delete);
                 programs.clear();
                 for (ProgramSpec<?> shader : registry.values()) {
                     loadProgram(manager, shader);
@@ -123,23 +125,39 @@ public class Backend {
     }
 
     private static <P extends GlProgram, S extends ProgramSpec<P>> void loadProgram(IResourceManager manager, S programSpec) {
-        GlShader vert = null;
-        GlShader frag = null;
         try {
-            vert = loadShader(manager, programSpec.getVert(), ShaderType.VERTEX, programSpec.defines);
-            frag = loadShader(manager, programSpec.getFrag(), ShaderType.FRAGMENT, programSpec.defines);
+            Map<GlFogMode, P> programGroup = new EnumMap<>(GlFogMode.class);
 
-            GlProgram.Builder builder = GlProgram.builder(programSpec.name).attachShader(vert).attachShader(frag);
+            for (GlFogMode fogMode : GlFogMode.values()) {
+                programGroup.put(fogMode, loadProgram(manager, programSpec, fogMode));
+            }
 
-            programSpec.attributes.forEach(builder::addAttribute);
-
-            P program = builder.build(programSpec.factory);
-
-            programs.put(programSpec, program);
+            programs.put(programSpec, new ProgramGroup<>(programGroup));
 
             log.info("Loaded program {}", programSpec.name);
         } catch (IOException ex) {
             log.error("Failed to load program {}", programSpec.name, ex);
+            return;
+        }
+    }
+
+    private static <P extends GlProgram, S extends ProgramSpec<P>> P loadProgram(IResourceManager manager, S programSpec, GlFogMode fogMode) throws IOException {
+        GlShader vert = null;
+        GlShader frag = null;
+        try {
+            ShaderConstants defines = new ShaderConstants(programSpec.defines);
+
+            defines.defineAll(fogMode.getDefines());
+
+            vert = loadShader(manager, programSpec.getVert(), ShaderType.VERTEX, defines);
+            frag = loadShader(manager, programSpec.getFrag(), ShaderType.FRAGMENT, defines);
+
+            GlProgram.Builder builder = GlProgram.builder(programSpec.name, fogMode).attachShader(vert).attachShader(frag);
+
+            programSpec.attributes.forEach(builder::addAttribute);
+
+            return builder.build(programSpec.factory);
+
         } finally {
             if (vert != null) vert.delete();
             if (frag != null) frag.delete();

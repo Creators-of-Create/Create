@@ -29,7 +29,10 @@ uniform mat4 uViewProjection;
 uniform int uDebug;
 
 uniform vec3 uCameraPos;
+
+#if defined(USE_FOG)
 varying float FragDistance;
+#endif
 
 mat4 rotate(vec3 axis, float angle) {
     float s = sin(angle);
@@ -77,8 +80,11 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aModelLight;
-    FragDistance = length(worldPos.xyz);
     gl_Position = uViewProjection * worldPos;
+
+    #if defined(USE_FOG)
+    FragDistance = length(worldPos.xyz);
+    #endif
 
     if (uDebug == 2) {
         Color = vec4(norm, 1.);

@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
 import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.Backend;
@@ -14,20 +15,20 @@ public class BasicProgram extends GlProgram {
     protected final int uViewProjection;
     protected final int uDebug;
     protected final int uCameraPos;
-    protected final int uFogRange;
-    protected final int uFogColor;
+
+    protected final ProgramFogMode fogMode;
 
     protected int uBlockAtlas;
     protected int uLightMap;
 
-    public BasicProgram(ResourceLocation name, int handle) {
+    public BasicProgram(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory) {
         super(name, handle);
         uTime = getUniformLocation("uTime");
         uViewProjection = getUniformLocation("uViewProjection");
         uDebug = getUniformLocation("uDebug");
         uCameraPos = getUniformLocation("uCameraPos");
-        uFogRange = getUniformLocation("uFogRange");
-        uFogColor = getUniformLocation("uFogColor");
+
+        fogMode = fogFactory.create(this);
 
         bind();
         registerSamplers();
@@ -48,8 +49,7 @@ public class BasicProgram extends GlProgram {
         uploadMatrixUniform(uViewProjection, viewProjection);
         GL20.glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
 
-        GL20.glUniform2f(uFogRange, GlFog.getFogStart(), GlFog.getFogEnd());
-        GL20.glUniform4fv(uFogColor, GlFog.FOG_COLOR);
+        fogMode.bind();
     }
 
     protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {

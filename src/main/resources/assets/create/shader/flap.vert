@@ -35,7 +35,10 @@ uniform mat4 uViewProjection;
 uniform int uDebug;
 
 uniform vec3 uCameraPos;
+
+#if defined(USE_FOG)
 varying float FragDistance;
+#endif
 
 float diffuse(vec3 normal) {
     float x = normal.x;
@@ -86,11 +89,15 @@ void main() {
     mat4 normalMat = uModel * orientation * flapRotation;
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+    #if defined(USE_FOG)
     FragDistance = length(worldPos.xyz);
+    #endif
     #else
     mat4 normalMat = orientation * flapRotation;
 
+    #if defined(USE_FOG)
     FragDistance = length(worldPos.xyz - uCameraPos);
+    #endif
     #endif
 
     vec3 norm = normalize(normalMat * vec4(aNormal, 0.)).xyz;

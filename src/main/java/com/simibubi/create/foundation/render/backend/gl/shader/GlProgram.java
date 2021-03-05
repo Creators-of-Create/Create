@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
+import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
 import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.Backend;
@@ -17,8 +18,8 @@ public abstract class GlProgram extends GlObject {
         this.name = name;
     }
 
-    public static Builder builder(ResourceLocation name) {
-        return new Builder(name);
+    public static Builder builder(ResourceLocation name, GlFogMode fogMode) {
+        return new Builder(name, fogMode);
     }
 
     public void bind() {
@@ -37,7 +38,7 @@ public abstract class GlProgram extends GlObject {
     public int getUniformLocation(String uniform) {
         int index = GL20.glGetUniformLocation(this.handle(), uniform);
 
-        if (index < 0) {
+        if (index < 0 && Backend.SHADER_DEBUG_OUTPUT) {
             Backend.log.warn("No active uniform '{}' exists in program '{}'. Could be unused.", uniform, this.name);
         }
 
@@ -69,12 +70,14 @@ public abstract class GlProgram extends GlObject {
     public static class Builder {
         private final ResourceLocation name;
         private final int program;
+        private final GlFogMode fogMode;
 
         private int attributeIndex;
 
-        public Builder(ResourceLocation name) {
+        public Builder(ResourceLocation name, GlFogMode fogMode) {
             this.name = name;
             this.program = GL20.glCreateProgram();
+            this.fogMode = fogMode;
         }
 
         public Builder attachShader(GlShader shader) {
@@ -113,12 +116,12 @@ public abstract class GlProgram extends GlObject {
                 throw new RuntimeException("Shader program linking failed, see log for details");
             }
 
-            return factory.create(this.name, this.program);
+            return factory.create(this.name, this.program, this.fogMode.getFogFactory());
         }
     }
 
     @FunctionalInterface
     public interface ProgramFactory<P extends GlProgram> {
-        P create(ResourceLocation name, int handle);
+        P create(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory);
     }
 }
