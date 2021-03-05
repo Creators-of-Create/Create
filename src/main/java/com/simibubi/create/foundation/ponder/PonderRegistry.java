@@ -107,6 +107,7 @@ public class PonderRegistry {
 
 	public static JsonElement provideLangEntries() {
 		PonderIndex.register();
+		PonderTag.register();
 		SharedText.gatherText();
 		all.forEach((id, list) -> {
 			for (int i = 0; i < list.size(); i++)

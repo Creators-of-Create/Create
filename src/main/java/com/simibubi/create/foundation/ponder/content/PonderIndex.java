@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 
@@ -16,8 +17,10 @@ public class PonderIndex {
 		// (!) Modifications inside storyboard methods only require re-opening the ui
 
 		PonderRegistry.forComponents(AllBlocks.SHAFT)
-			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, b -> b.highlightAllTags().chapter(PonderChapter.of("basic_kinetics")))
-			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased, b -> b.chapter(PonderChapter.of("encasing")));
+			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, b -> b.highlightAllTags()
+				.chapter(PonderChapter.of("basic_kinetics")))
+			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased,
+				b -> b.chapter(PonderChapter.of("encasing")));
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
@@ -28,7 +31,7 @@ public class PonderIndex {
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
-		
+
 		// Gantries
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft);
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion);
@@ -36,6 +39,11 @@ public class PonderIndex {
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
 			.addStoryBoard("gantry/subgantry", GantryScenes::subgantry);
+
+		// Movement Actors
+		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
+			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer)
+			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
@@ -45,26 +53,22 @@ public class PonderIndex {
 	public static void registerTags() {
 
 		PonderRegistry.tags.forItems(AllBlocks.SHAFT.getId())
-				.add(PonderTag.Create.KINETICS);
+			.add(PonderTag.KINETICS);
 
 		PonderRegistry.tags.forItems(AllBlocks.ANDESITE_FUNNEL.getId(), AllBlocks.BRASS_FUNNEL.getId())
-				.add(PonderTag.Create.ARM_ACCESS)
-				.add(PonderTag.Vanilla.ITEM_TRANSFER)
-				.add(PonderTag.Vanilla.REDSTONE_CONTROL);
+			.add(PonderTag.ARM_ACCESS)
+			.add(PonderTag.ITEM_TRANSFER)
+			.add(PonderTag.REDSTONE_CONTROL);
 
-		PonderRegistry.tags.forTag(PonderTag.Vanilla.REDSTONE_CONTROL)
-				.add(Items.REDSTONE.getRegistryName())
-				.add(Blocks.LEVER.getRegistryName());
+		PonderRegistry.tags.forTag(PonderTag.REDSTONE_CONTROL)
+			.add(Items.REDSTONE.getRegistryName())
+			.add(Blocks.LEVER.getRegistryName());
 
-		PonderRegistry.tags.forTag(PonderTag.Create.KINETICS)
-				.add(AllBlocks.COGWHEEL.getId())
-				.add(AllBlocks.LARGE_COGWHEEL.getId())
-				.add(AllItems.BELT_CONNECTOR.getId())
-				.add(AllBlocks.ENCASED_CHAIN_DRIVE.getId());
-
-		PonderChapter.of("basic_kinetics").addTagsToChapter(
-				PonderTag.Create.KINETICS
-		);
+		PonderRegistry.tags.forTag(PonderTag.KINETICS)
+			.add(AllBlocks.COGWHEEL.getId())
+			.add(AllBlocks.LARGE_COGWHEEL.getId())
+			.add(AllItems.BELT_CONNECTOR.getId())
+			.add(AllBlocks.ENCASED_CHAIN_DRIVE.getId());
 
 	}
 

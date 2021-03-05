@@ -1,7 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -9,7 +12,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import org.lwjgl.opengl.GL11;
 
 public class UIRenderHelper {
 
@@ -30,12 +32,14 @@ public class UIRenderHelper {
 		}
 	}
 
-	public static void drawFramebuffer(int width, int height, float alpha) {
-		float vx = (float) width;
-		float vy = (float) height;
+	public static void drawFramebuffer(float alpha) {
+		MainWindow window = Minecraft.getInstance()
+			.getWindow();
+		
+		float vx = (float) window.getScaledWidth();
+		float vy = (float) window.getScaledHeight();
 		float tx = (float) framebuffer.framebufferWidth / (float) framebuffer.framebufferTextureWidth;
 		float ty = (float) framebuffer.framebufferHeight / (float) framebuffer.framebufferTextureHeight;
-
 
 		RenderSystem.enableTexture();
 		RenderSystem.enableBlend();

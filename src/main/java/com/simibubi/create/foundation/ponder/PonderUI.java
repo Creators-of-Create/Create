@@ -1,14 +1,38 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.*;
+import com.simibubi.create.foundation.gui.AbstractSimiScreen;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
-import com.simibubi.create.foundation.ponder.content.*;
+import com.simibubi.create.foundation.ponder.content.DebugScenes;
+import com.simibubi.create.foundation.ponder.content.PonderChapter;
+import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.ponder.content.PonderTag;
+import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.Pointing;
+
 import net.minecraft.client.ClipboardHelper;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
@@ -28,13 +52,6 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class PonderUI extends AbstractSimiScreen {
 
@@ -61,10 +78,11 @@ public class PonderUI extends AbstractSimiScreen {
 	private LerpedFloat lazyIndex;
 	private int index = 0;
 
-	private PonderButton left, right, icon, scan, chap;
+	private PonderButton left, right, scan, chap;
 
 	public static PonderUI of(ItemStack item) {
-		return new PonderUI(PonderRegistry.compile(item.getItem().getRegistryName()));
+		return new PonderUI(PonderRegistry.compile(item.getItem()
+			.getRegistryName()));
 	}
 
 	public static PonderUI of(PonderChapter chapter) {
@@ -74,9 +92,17 @@ public class PonderUI extends AbstractSimiScreen {
 	}
 
 	public PonderUI(List<PonderScene> scenes) {
+		ResourceLocation component = scenes.get(0).component;
+		if (ForgeRegistries.ITEMS.containsKey(component))
+			stack = new ItemStack(ForgeRegistries.ITEMS.getValue(component));
+		else
+			stack = new ItemStack(ForgeRegistries.BLOCKS.getValue(component));
+		
+		tags = new ArrayList<>(PonderRegistry.tags.getTags(component));
 		this.scenes = scenes;
 		if (scenes.isEmpty()) {
-			List<PonderStoryBoardEntry> l = Collections.singletonList(new PonderStoryBoardEntry(DebugScenes::empty, "debug/scene_1", new ResourceLocation("minecraft", "stick")));
+			List<PonderStoryBoardEntry> l = Collections.singletonList(new PonderStoryBoardEntry(DebugScenes::empty,
+				"debug/scene_1", new ResourceLocation("minecraft", "stick")));
 			scenes.addAll(PonderRegistry.compile(l));
 		}
 		lazyIndex = LerpedFloat.linear()
@@ -94,43 +120,31 @@ public class PonderUI extends AbstractSimiScreen {
 		super.init();
 		widgets.clear();
 
-		ResourceLocation component = scenes.get(0).component;
-		if (ForgeRegistries.ITEMS.containsKey(component))
-			stack = new ItemStack(ForgeRegistries.ITEMS.getValue(component));
-		else
-			stack = new ItemStack(ForgeRegistries.BLOCKS.getValue(component));
-
-		tags = new ArrayList<>(PonderRegistry.tags.getTags(component));
 		tagButtons = new ArrayList<>();
 		tagFades = new ArrayList<>();
-
 
 		tags.forEach(t -> {
 			int i = tagButtons.size();
 			int x = 31;
-			int y = 91 + i * 40;
-			PonderButton b = new PonderButton(x, y, () -> {
+			int y = 71 + i * 30;
+			PonderButton b = new PonderButton(x, y, (mouseX, mouseY) -> {
+				centerScalingOn(mouseX, mouseY);
 				ScreenOpener.transitionTo(new PonderTagScreen(t));
-			})
-					.showing(t)
-					.fade(0, -1);
+			}).showing(t);
 
 			widgets.add(b);
 			tagButtons.add(b);
 
 			LerpedFloat chase = LerpedFloat.linear()
-					.startWithValue(0)
-					.chase(0, .05f, Chaser.exp(.1));
+				.startWithValue(0)
+				.chase(0, .05f, Chaser.exp(.1));
 			tagFades.add(chase);
 
 		});
 
-		widgets.add(icon = new PonderButton(31, 31, () -> {
-		}).showing(stack).fade(0, -1));
-
 		if (chapter != null) {
 			widgets.add(chap = new PonderButton(width - 31 - 24, 31, () -> {
-			}).showing(chapter).fade(0, -1));
+			}).showing(chapter));
 		}
 
 		GameSettings bindings = minecraft.gameSettings;
@@ -350,19 +364,30 @@ public class PonderUI extends AbstractSimiScreen {
 			// Chapter title
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(0, 0, 800);
-			int x = icon.x + icon.getWidth() + 8;
-			int y = icon.y;
+			int x = 31 + 20 + 8;
+			int y = 31;
 
-			UIRenderHelper.streak(0, x - 4, y + 10, 26, (int) (150 * fade), 0x101010);
+			String title = activeScene.getTitle();
+			int wordWrappedHeight = font.getWordWrappedHeight(title, left.x);
 
-			drawString(font, Lang.translate(PONDERING), x, y, 0xffa3a3a3);
-			y += 12;
+			int streakHeight = 35 - 9 + wordWrappedHeight;
+			UIRenderHelper.streak(0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade), 0x101010);
+			UIRenderHelper.streak(180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade), 0x101010);
+			renderBox(21, 21, 30, 30, false);
+
+			GuiGameElement.of(stack)
+				.at(x - 39, y - 11)
+				.scale(2)
+				.render();
+
+			drawString(font, Lang.translate(PONDERING), x, y - 6, 0xffa3a3a3);
+			y += 8;
 			x += 0;
-			//RenderSystem.translated(0, 3 * (indexDiff), 0);
+			// RenderSystem.translated(0, 3 * (indexDiff), 0);
 			RenderSystem.translated(x, y, 0);
 			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
 			RenderSystem.translated(0, 0, 5);
-			font.drawSplitString(activeScene.getTitle(), 0, 0, left.x, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			font.drawSplitString(title, 0, 0, left.x, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 
 			if (chapter != null) {
@@ -372,7 +397,8 @@ public class PonderUI extends AbstractSimiScreen {
 				UIRenderHelper.streak(180, 4, 10, 26, (int) (150 * fade), 0x101010);
 
 				drawRightAlignedString(font, Lang.translate(IN_CHAPTER), 0, 0, 0xffa3a3a3);
-				drawRightAlignedString(font, Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId()), 0, 12, 0xffeeeeee);
+				drawRightAlignedString(font,
+					Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId()), 0, 12, 0xffeeeeee);
 
 				RenderSystem.popMatrix();
 			}
@@ -448,43 +474,47 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.popMatrix();
 		}
 
-		//Tags
+		// Tags
 		List<PonderTag> sceneTags = activeScene.tags;
 		boolean highlightAll = sceneTags.contains(PonderTag.Highlight.ALL);
-		double s = Minecraft.getInstance().getWindow().getGuiScaleFactor();
-		IntStream.range(0, tagButtons.size()).forEach(i -> {
-			RenderSystem.pushMatrix();
-			LerpedFloat chase = tagFades.get(i);
-			PonderButton button = tagButtons.get(i);
-			if (button.isMouseOver(mouseX, mouseY)) {
-				chase.updateChaseTarget(1);
-			} else
-				chase.updateChaseTarget(0);
+		double s = Minecraft.getInstance()
+			.getWindow()
+			.getGuiScaleFactor();
+		IntStream.range(0, tagButtons.size())
+			.forEach(i -> {
+				RenderSystem.pushMatrix();
+				LerpedFloat chase = tagFades.get(i);
+				PonderButton button = tagButtons.get(i);
+				if (button.isMouseOver(mouseX, mouseY)) {
+					chase.updateChaseTarget(1);
+				} else
+					chase.updateChaseTarget(0);
 
-			chase.tickChaser();
+				chase.tickChaser();
 
-			if (highlightAll || sceneTags.contains(this.tags.get(i)))
-				button.flash();
-			else
-				button.dim();
+				if (highlightAll || sceneTags.contains(this.tags.get(i)))
+					button.flash();
+				else
+					button.dim();
 
-			int x = button.x + button.getWidth() + 4;
-			int y = button.y - 2;
-			RenderSystem.translated(x, y + 5 * (1 - fade), 0);
+				int x = button.x + button.getWidth() + 4;
+				int y = button.y - 2;
+				RenderSystem.translated(x, y + 5 * (1 - fade), 800);
 
-			float fadedWidth = 200 * chase.getValue(partialTicks);
-			UIRenderHelper.streak(0, 0, 12, 26, (int) fadedWidth, 0x101010);
+				float fadedWidth = 200 * chase.getValue(partialTicks);
+				UIRenderHelper.streak(0, 0, 12, 26, (int) fadedWidth, 0x101010);
 
-			GL11.glScissor((int) (x * s), 0, (int) (fadedWidth * s), (int) (height * s));
-			GL11.glEnable(GL11.GL_SCISSOR_TEST);
+				GL11.glScissor((int) (x * s), 0, (int) (fadedWidth * s), (int) (height * s));
+				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-			String tagName = Lang.translate("ponder.tag." + this.tags.get(i).getId());
-			drawString(tagName, 3, 8, 0xffeedd);
+				String tagName = this.tags.get(i)
+					.getTitle();
+				drawString(tagName, 3, 8, 0xffeedd);
 
-			GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-			RenderSystem.popMatrix();
-		});
+				RenderSystem.popMatrix();
+			});
 	}
 
 	protected void lowerButtonGroup(int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
@@ -523,7 +553,7 @@ public class PonderUI extends AbstractSimiScreen {
 				return;
 			if (w instanceof PonderButton) {
 				PonderButton mtdButton = (PonderButton) w;
-				mtdButton.runCallback();
+				mtdButton.runCallback(x, y);
 				handled.setTrue();
 				return;
 			}
@@ -587,7 +617,9 @@ public class PonderUI extends AbstractSimiScreen {
 		if (chapter != null)
 			return Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId());
 
-		return stack.getItem().getName().getFormattedText();
+		return stack.getItem()
+			.getName()
+			.getFormattedText();
 	}
 
 	public FontRenderer getFontRenderer() {

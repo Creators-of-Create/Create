@@ -63,9 +63,11 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 
 		//todo at some point pagination or horizontal scrolling may be needed for chapters/items
 		for (PonderChapter chapter : chapters) {
-			ChapterLabel label = new ChapterLabel(chapter, chapterCenterX + layout.getX(), chapterCenterY + layout.getY(), () -> {
-				ScreenOpener.transitionTo(PonderUI.of(chapter));
-			});
+			ChapterLabel label = new ChapterLabel(chapter, chapterCenterX + layout.getX(),
+				chapterCenterY + layout.getY(), (mouseX, mouseY) -> {
+					centerScalingOn(mouseX, mouseY);
+					ScreenOpener.transitionTo(PonderUI.of(chapter));
+				});
 
 			widgets.add(label);
 			layout.next();
@@ -98,7 +100,7 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 		int itemCenterY = (int) (height * itemYmult);
 
 		for (Item item : items) {
-			PonderButton button = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, () -> {})
+			PonderButton button = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {})
 					.showing(new ItemStack(item));
 
 			button.fade(1);

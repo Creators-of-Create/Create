@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.ponder.ui;
 
+import java.util.function.BiConsumer;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
@@ -8,6 +10,7 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
@@ -17,7 +20,7 @@ public class PonderButton extends AbstractSimiWidget {
 	private IScreenRenderable icon;
 	private ItemStack item;
 	protected boolean pressed;
-	private Runnable onClick;
+	private BiConsumer<Integer, Integer> onClick;
 	private int xFadeModifier;
 	private int yFadeModifier;
 	private float fade;
@@ -26,14 +29,19 @@ public class PonderButton extends AbstractSimiWidget {
 
 	public static final int SIZE = 20;
 
-	public PonderButton(int x, int y, Runnable onClick, int width, int height) {
+	public PonderButton(int x, int y, BiConsumer<Integer, Integer> onClick, int width, int height) {
 		super(x, y, width, height);
 		this.onClick = onClick;
-		flash = LerpedFloat.linear().startWithValue(0);
+		flash = LerpedFloat.linear()
+			.startWithValue(0);
+	}
+
+	public PonderButton(int x, int y, BiConsumer<Integer, Integer> onClick) {
+		this(x, y, onClick, SIZE, SIZE);
 	}
 
 	public PonderButton(int x, int y, Runnable onClick) {
-		this(x, y, onClick, SIZE, SIZE);
+		this(x, y, ($, $$) -> onClick.run());
 	}
 
 	public PonderButton showing(IScreenRenderable icon) {
@@ -121,8 +129,8 @@ public class PonderButton extends AbstractSimiWidget {
 		RenderSystem.popMatrix();
 	}
 
-	public void runCallback() {
-		onClick.run();
+	public void runCallback(double mouseX, double mouseY) {
+		onClick.accept((int) mouseX, (int) mouseY);
 	}
 
 	@Override

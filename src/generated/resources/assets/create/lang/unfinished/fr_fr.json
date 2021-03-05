@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 771",
+	"_": "Missing Localizations: 778",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1808,9 +1808,14 @@
 	"create.ponder.subject": "UNLOCALIZED: Subject of this scene",
 	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
 	"create.ponder.identify_mode": "UNLOCALIZED: Identify mode active.\nUnpause with [%1$s]",
+	"create.ponder.associated": "UNLOCALIZED: Associated Entries",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
 	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
+	"create.ponder.tag.arm_access": "UNLOCALIZED: Targets for Mechanical Arms",
+	"create.ponder.tag.arm_access.description": "UNLOCALIZED: Components which can be selected as inputs or outputs to the Mechanical Arm",
+	"create.ponder.tag.kinetics": "UNLOCALIZED: Kinetic Blocks",
+	"create.ponder.tag.kinetics.description": "UNLOCALIZED: Components which help generating, relaying and making use of Rotational Force",
 
 	"create.ponder.brass_funnel.scene_0.header": "UNLOCALIZED: The Brass Funnel",
 	"create.ponder.brass_funnel.scene_0.text_1": "UNLOCALIZED: Andesite Funnels can only ever extract single items.",
@@ -1866,6 +1871,10 @@
 
 	"create.ponder.shaft.scene_1.header": "UNLOCALIZED: Encasing Shafts",
 	"create.ponder.shaft.scene_1.text_1": "UNLOCALIZED: Andesite or Brass Casing can be used to encase them.",
+
+	"create.ponder.portable_storage_interface.scene_0.header": "UNLOCALIZED: Contraption Storage Exchange",
+
+	"create.ponder.portable_storage_interface.scene_1.header": "UNLOCALIZED: Redstone Control",
 
 	"create.ponder.andesite_funnel.scene_0.header": "UNLOCALIZED: Using funnels",
 	"create.ponder.andesite_funnel.scene_0.text_1": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",

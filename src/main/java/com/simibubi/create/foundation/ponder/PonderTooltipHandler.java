@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.List;
+
 import com.google.common.base.Strings;
+import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
@@ -8,6 +11,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LerpedFloat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,8 +24,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-
-import java.util.List;
 
 public class PonderTooltipHandler {
 
@@ -78,6 +80,9 @@ public class PonderTooltipHandler {
 
 		if (!subject && InputMappings.isKeyDown(window, keyCode)) {
 			if (value >= 1) {
+				if (currentScreen instanceof AbstractSimiScreen)
+					((AbstractSimiScreen) currentScreen).centerScalingOnMouse();
+
 				ScreenOpener.transitionTo(PonderUI.of(stack));
 				holdWProgress.startWithValue(0);
 				return;
