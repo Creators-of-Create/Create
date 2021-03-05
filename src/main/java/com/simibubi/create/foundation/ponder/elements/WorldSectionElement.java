@@ -96,8 +96,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private void applyNewSelection(Selection selection) {
 		this.section = selection;
-		centerOfRotation = this.section.getCenter();
 		queueRedraw();
+	}
+
+	public void setCenterOfRotation(Vec3d center) {
+		centerOfRotation = center;
 	}
 
 	@Override
@@ -189,6 +192,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		float pt = AnimationTickHolder.getPartialTicks();
 		in = in.subtract(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO)) {
+			if (centerOfRotation == null)
+				centerOfRotation = section.getCenter();
 			in = in.subtract(centerOfRotation);
 			in = VecHelper.rotate(in, -MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x), Axis.X);
 			in = VecHelper.rotate(in, -MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z), Axis.Z);
@@ -201,13 +206,16 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public void transformMS(MatrixStack ms, float pt) {
 		MatrixStacker.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
-		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO))
+		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO)) {
+			if (centerOfRotation == null)
+				centerOfRotation = section.getCenter();
 			MatrixStacker.of(ms)
 				.translate(centerOfRotation)
 				.rotateX(MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x))
 				.rotateZ(MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z))
 				.rotateY(MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y))
 				.translateBack(centerOfRotation);
+		}
 	}
 
 	public void tick(PonderScene scene) {

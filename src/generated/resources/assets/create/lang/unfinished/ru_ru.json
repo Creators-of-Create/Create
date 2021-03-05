@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 117",
+	"_": "Missing Localizations: 138",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1812,10 +1812,22 @@
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
 	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
-	"create.ponder.tag.arm_access": "UNLOCALIZED: Targets for Mechanical Arms",
-	"create.ponder.tag.arm_access.description": "UNLOCALIZED: Components which can be selected as inputs or outputs to the Mechanical Arm",
-	"create.ponder.tag.kinetics": "UNLOCALIZED: Kinetic Blocks",
-	"create.ponder.tag.kinetics.description": "UNLOCALIZED: Components which help generating, relaying and making use of Rotational Force",
+	"create.ponder.tag.kinetic_sources": "UNLOCALIZED: Kinetic Sources",
+	"create.ponder.tag.kinetic_sources.description": "UNLOCALIZED: Components which generate Rotational Force",
+	"create.ponder.tag.contraption_actor": "UNLOCALIZED: Contraption Actors",
+	"create.ponder.tag.contraption_actor.description": "UNLOCALIZED: Components which expose special behaviour when attached to a moving contraption",
+	"create.ponder.tag.arm_targets": "UNLOCALIZED: Targets for Mechanical Arms",
+	"create.ponder.tag.arm_targets.description": "UNLOCALIZED: Components which can be selected as inputs or outputs to the Mechanical Arm",
+	"create.ponder.tag.logistics": "UNLOCALIZED: Item Transportation",
+	"create.ponder.tag.logistics.description": "UNLOCALIZED: Components which help moving items around",
+	"create.ponder.tag.movement_anchor": "UNLOCALIZED: Movement Anchors",
+	"create.ponder.tag.movement_anchor.description": "UNLOCALIZED: Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways",
+	"create.ponder.tag.kinetic_appliances": "UNLOCALIZED: Kinetic Appliances",
+	"create.ponder.tag.kinetic_appliances.description": "UNLOCALIZED: Components which make use of Rotational Force",
+	"create.ponder.tag.kinetic_relays": "UNLOCALIZED: Kinetic Blocks",
+	"create.ponder.tag.kinetic_relays.description": "UNLOCALIZED: Components which help relaying Rotational Force elsewhere",
+	"create.ponder.tag.fluids": "UNLOCALIZED: Fluid Manipulators",
+	"create.ponder.tag.fluids.description": "UNLOCALIZED: Components which help relaying and making use of Fluids",
 
 	"create.ponder.brass_funnel.scene_0.header": "UNLOCALIZED: The Brass Funnel",
 	"create.ponder.brass_funnel.scene_0.text_1": "UNLOCALIZED: Andesite Funnels can only ever extract single items.",
@@ -1873,8 +1885,17 @@
 	"create.ponder.shaft.scene_1.text_1": "UNLOCALIZED: Andesite or Brass Casing can be used to encase them.",
 
 	"create.ponder.portable_storage_interface.scene_0.header": "UNLOCALIZED: Contraption Storage Exchange",
+	"create.ponder.portable_storage_interface.scene_0.text_1": "UNLOCALIZED: Inventories on moving contraptions cannot be accessed by players.",
+	"create.ponder.portable_storage_interface.scene_0.text_2": "UNLOCALIZED: This component can interact with storage without the need to stop the contraption.",
+	"create.ponder.portable_storage_interface.scene_0.text_3": "UNLOCALIZED: Place a second one with a gap of 1 or 2 blocks inbetween",
+	"create.ponder.portable_storage_interface.scene_0.text_4": "UNLOCALIZED: Whenever they pass by each other, they will engage in a connection",
+	"create.ponder.portable_storage_interface.scene_0.text_5": "UNLOCALIZED: While engaged, the stationary interface will represent ALL inventories on the contraption",
+	"create.ponder.portable_storage_interface.scene_0.text_6": "UNLOCALIZED: Items can now be inserted...",
+	"create.ponder.portable_storage_interface.scene_0.text_7": "UNLOCALIZED: ...or extracted from the contraption",
+	"create.ponder.portable_storage_interface.scene_0.text_8": "UNLOCALIZED: After no items have been exchanged for a while, the contraption will continue on its way",
 
 	"create.ponder.portable_storage_interface.scene_1.header": "UNLOCALIZED: Redstone Control",
+	"create.ponder.portable_storage_interface.scene_1.text_1": "UNLOCALIZED: Redstone power will prevent the stationary interface from engaging",
 
 	"create.ponder.andesite_funnel.scene_0.header": "UNLOCALIZED: Using funnels",
 	"create.ponder.andesite_funnel.scene_0.text_1": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",

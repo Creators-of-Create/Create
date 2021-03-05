@@ -5,7 +5,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
 
 public class PonderIndex {
 
@@ -17,10 +16,8 @@ public class PonderIndex {
 		// (!) Modifications inside storyboard methods only require re-opening the ui
 
 		PonderRegistry.forComponents(AllBlocks.SHAFT)
-			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, b -> b.highlightAllTags()
-				.chapter(PonderChapter.of("basic_kinetics")))
-			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased,
-				b -> b.chapter(PonderChapter.of("encasing")));
+			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay)
+			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
@@ -51,24 +48,102 @@ public class PonderIndex {
 	}
 
 	public static void registerTags() {
+		// Add items to tags here
 
-		PonderRegistry.tags.forItems(AllBlocks.SHAFT.getId())
-			.add(PonderTag.KINETICS);
+		PonderRegistry.tags.forTag(PonderTag.KINETIC_RELAYS)
+			.add(AllBlocks.SHAFT)
+			.add(AllBlocks.COGWHEEL)
+			.add(AllBlocks.LARGE_COGWHEEL)
+			.add(AllItems.BELT_CONNECTOR)
+			.add(AllBlocks.ENCASED_CHAIN_DRIVE);
 
-		PonderRegistry.tags.forItems(AllBlocks.ANDESITE_FUNNEL.getId(), AllBlocks.BRASS_FUNNEL.getId())
-			.add(PonderTag.ARM_ACCESS)
-			.add(PonderTag.ITEM_TRANSFER)
-			.add(PonderTag.REDSTONE_CONTROL);
+		PonderRegistry.tags.forTag(PonderTag.KINETIC_SOURCES)
+			.add(AllBlocks.HAND_CRANK)
+			.add(AllBlocks.COPPER_VALVE_HANDLE)
+			.add(AllBlocks.WATER_WHEEL)
+			.add(AllBlocks.ENCASED_FAN)
+			.add(AllBlocks.WINDMILL_BEARING)
+			.add(AllBlocks.FURNACE_ENGINE);
 
-		PonderRegistry.tags.forTag(PonderTag.REDSTONE_CONTROL)
-			.add(Items.REDSTONE.getRegistryName())
-			.add(Blocks.LEVER.getRegistryName());
+		PonderRegistry.tags.forTag(PonderTag.KINETIC_APPLIANCES)
+			.add(AllBlocks.MILLSTONE)
+			.add(AllBlocks.TURNTABLE)
+			.add(AllBlocks.MECHANICAL_PRESS)
+			.add(AllBlocks.MECHANICAL_MIXER)
+			.add(AllBlocks.MECHANICAL_CRAFTER)
+			.add(AllBlocks.MECHANICAL_DRILL)
+			.add(AllBlocks.MECHANICAL_SAW)
+			.add(AllBlocks.MECHANICAL_PUMP)
+			.add(AllBlocks.MECHANICAL_ARM)
+			.add(AllBlocks.MECHANICAL_PISTON)
+			.add(AllBlocks.ROPE_PULLEY)
+			.add(AllBlocks.MECHANICAL_BEARING)
+			.add(AllBlocks.GANTRY_SHAFT)
+			.add(AllBlocks.GANTRY_CARRIAGE)
+			.add(AllBlocks.CLOCKWORK_BEARING)
+			.add(AllBlocks.CRUSHING_WHEEL);
 
-		PonderRegistry.tags.forTag(PonderTag.KINETICS)
-			.add(AllBlocks.COGWHEEL.getId())
-			.add(AllBlocks.LARGE_COGWHEEL.getId())
-			.add(AllItems.BELT_CONNECTOR.getId())
-			.add(AllBlocks.ENCASED_CHAIN_DRIVE.getId());
+		PonderRegistry.tags.forTag(PonderTag.FLUIDS)
+			.add(AllBlocks.FLUID_PIPE)
+			.add(AllBlocks.MECHANICAL_PUMP)
+			.add(AllBlocks.FLUID_VALVE)
+			.add(AllBlocks.SMART_FLUID_PIPE)
+			.add(AllBlocks.FLUID_TANK)
+			.add(AllBlocks.ITEM_DRAIN)
+			.add(AllBlocks.HOSE_PULLEY);
+
+		PonderRegistry.tags.forTag(PonderTag.ARM_TARGETS)
+			.add(AllItems.BELT_CONNECTOR)
+			.add(AllBlocks.CHUTE)
+			.add(AllBlocks.DEPOT)
+			.add(AllBlocks.BASIN)
+			.add(AllBlocks.ANDESITE_FUNNEL)
+			.add(AllBlocks.BRASS_FUNNEL)
+			.add(AllBlocks.MECHANICAL_CRAFTER)
+			.add(AllBlocks.MILLSTONE)
+			.add(AllBlocks.DEPLOYER)
+			.add(AllBlocks.MECHANICAL_SAW)
+			.add(Blocks.COMPOSTER)
+			.add(AllBlocks.BLAZE_BURNER)
+			.add(Blocks.JUKEBOX)
+			.add(AllBlocks.CRUSHING_WHEEL);
+
+		PonderRegistry.tags.forTag(PonderTag.LOGISTICS)
+			.add(AllItems.BELT_CONNECTOR)
+			.add(AllBlocks.CHUTE)
+			.add(AllBlocks.SMART_CHUTE)
+			.add(AllBlocks.DEPOT)
+			.add(AllBlocks.MECHANICAL_ARM)
+			.add(AllBlocks.ANDESITE_FUNNEL)
+			.add(AllBlocks.BRASS_FUNNEL)
+			.add(AllBlocks.ANDESITE_TUNNEL)
+			.add(AllBlocks.BRASS_TUNNEL);
+
+		PonderRegistry.tags.forTag(PonderTag.MOVEMENT_ANCHOR)
+			.add(AllBlocks.MECHANICAL_PISTON)
+			.add(AllBlocks.WINDMILL_BEARING)
+			.add(AllBlocks.MECHANICAL_BEARING)
+			.add(AllBlocks.CLOCKWORK_BEARING)
+			.add(AllBlocks.ROPE_PULLEY)
+			.add(AllBlocks.GANTRY_CARRIAGE)
+			.add(AllBlocks.CART_ASSEMBLER);
+
+		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ACTOR)
+			.add(AllBlocks.MECHANICAL_HARVESTER)
+			.add(AllBlocks.MECHANICAL_PLOUGH)
+			.add(AllBlocks.MECHANICAL_DRILL)
+			.add(AllBlocks.MECHANICAL_SAW)
+			.add(AllBlocks.DEPLOYER)
+			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE)
+			.add(AllBlocks.PORTABLE_FLUID_INTERFACE)
+			.add(AllBlocks.MECHANICAL_BEARING)
+			.add(AllBlocks.ANDESITE_FUNNEL)
+			.add(AllBlocks.BRASS_FUNNEL)
+			.add(AllBlocks.SEATS[0])
+			.add(AllBlocks.REDSTONE_CONTACT)
+			.add(Blocks.BELL)
+			.add(Blocks.DISPENSER)
+			.add(Blocks.DROPPER);
 
 	}
 

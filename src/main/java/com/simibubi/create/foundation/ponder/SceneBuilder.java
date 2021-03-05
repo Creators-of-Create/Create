@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
 import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
@@ -373,8 +374,21 @@ public class SceneBuilder {
 				AnimateWorldSectionInstruction.rotate(link, new Vec3d(xRotation, yRotation, zRotation), duration));
 		}
 
+		public void configureCenterOfRotation(ElementLink<WorldSectionElement> link, Vec3d anchor) {
+			addInstruction(scene -> scene.resolve(link)
+				.setCenterOfRotation(anchor));
+		}
+
 		public void moveSection(ElementLink<WorldSectionElement> link, Vec3d offset, int duration) {
 			addInstruction(AnimateWorldSectionInstruction.move(link, offset, duration));
+		}
+
+		public void rotateBearing(BlockPos pos, float angle, int duration) {
+			addInstruction(AnimateTileEntityInstruction.bearing(pos, angle, duration));
+		}
+
+		public void movePulley(BlockPos pos, float distance, int duration) {
+			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
 		}
 
 		public void setBlocks(Selection selection, BlockState state, boolean spawnParticles) {

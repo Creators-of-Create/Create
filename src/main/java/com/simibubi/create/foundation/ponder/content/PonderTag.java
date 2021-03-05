@@ -6,11 +6,11 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,18 +21,41 @@ public class PonderTag implements IScreenRenderable {
 
 	public static final PonderTag
 
-	KINETICS = new PonderTag("kinetics").item(AllBlocks.COGWHEEL.get()
-		.asItem(), true, false)
-		.defaultLang("Kinetic Blocks", "Components which help generating, relaying and making use of Rotational Force"),
-		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
-		OPEN_INVENTORY = new PonderTag("open_inventory").item(AllBlocks.BASIN.get()
-			.asItem()),
-		ARM_ACCESS = new PonderTag("arm_access").item(AllBlocks.MECHANICAL_ARM.get()
-			.asItem())
+	KINETIC_RELAYS = new PonderTag("kinetic_relays").item(AllBlocks.COGWHEEL.get(), true, false)
+		.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere"),
+
+		KINETIC_SOURCES = new PonderTag("kinetic_sources").item(AllBlocks.WATER_WHEEL.get(), true, false)
+			.defaultLang("Kinetic Sources", "Components which generate Rotational Force"),
+
+		KINETIC_APPLIANCES = new PonderTag("kinetic_appliances").item(AllBlocks.MECHANICAL_PRESS.get(), true, false)
+			.defaultLang("Kinetic Appliances", "Components which make use of Rotational Force"),
+
+		FLUIDS = new PonderTag("fluids").item(AllBlocks.FLUID_PIPE.get(), true, false)
+			.defaultLang("Fluid Manipulators", "Components which help relaying and making use of Fluids"),
+
+		LOGISTICS = new PonderTag("logistics").item(Blocks.CHEST, true, false)
+			.defaultLang("Item Transportation", "Components which help moving items around"),
+
+		MOVEMENT_ANCHOR = new PonderTag("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
+			.defaultLang("Movement Anchors",
+				"Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways"),
+
+		CONTRAPTION_ACTOR = new PonderTag("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
+			.defaultLang("Contraption Actors",
+				"Components which expose special behaviour when attached to a moving contraption"),
+
+//		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
+//
+//		OPEN_INVENTORY = new PonderTag("open_inventory").item(AllBlocks.BASIN.get()
+//			.asItem()),
+//			
+//		REDSTONE_CONTROL = new PonderTag("redstone_control").item(Items.REDSTONE, true, false),
+//
+//		ITEM_TRANSFER = new PonderTag("item_transfer").idAsIcon(),
+
+		ARM_TARGETS = new PonderTag("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
 			.defaultLang("Targets for Mechanical Arms",
-				"Components which can be selected as inputs or outputs to the Mechanical Arm"),
-		REDSTONE_CONTROL = new PonderTag("redstone_control").item(Items.REDSTONE, true, false),
-		ITEM_TRANSFER = new PonderTag("item_transfer").idAsIcon();
+				"Components which can be selected as inputs or outputs to the Mechanical Arm");
 
 	public static class Highlight {
 		public static final PonderTag ALL = new PonderTag("_all");
@@ -81,11 +104,11 @@ public class PonderTag implements IScreenRenderable {
 		return this;
 	}
 
-	public PonderTag item(Item item) {
+	public PonderTag item(IItemProvider item) {
 		return this.item(item, true, true);
 	}
 
-	public PonderTag item(Item item, boolean useAsIcon, boolean useAsMainItem) {
+	public PonderTag item(IItemProvider item, boolean useAsIcon, boolean useAsMainItem) {
 		if (useAsIcon)
 			this.itemIcon = new ItemStack(item);
 		if (useAsMainItem)

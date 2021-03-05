@@ -24,7 +24,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 	AllIcons icon;
 	ItemStack item = ItemStack.EMPTY;
 	private Vec3d sceneSpace;
-	
+
 	public InputWindowElement clone() {
 		InputWindowElement inputWindowElement = new InputWindowElement(sceneSpace, direction);
 		inputWindowElement.key = key;
@@ -129,7 +129,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 
 		if (hasItem) {
 			GuiGameElement.of(item)
-				.at(keyWidth + 24, 0)
+				.at(keyWidth + (hasIcon ? 24 : 0), 0)
 				.scale(1.5)
 				.render();
 			RenderSystem.disableDepthTest();

@@ -1,10 +1,29 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+
 import com.google.gson.JsonElement;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
-import com.simibubi.create.foundation.ponder.content.*;
+import com.simibubi.create.foundation.ponder.content.PonderChapter;
+import com.simibubi.create.foundation.ponder.content.PonderChapterRegistry;
+import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.ponder.content.PonderTag;
+import com.simibubi.create.foundation.ponder.content.PonderTagRegistry;
+import com.simibubi.create.foundation.ponder.content.SharedText;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -13,14 +32,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.zip.GZIPInputStream;
 
 public class PonderRegistry {
 
@@ -60,9 +71,8 @@ public class PonderRegistry {
 
 	public static List<PonderScene> compile(List<PonderStoryBoardEntry> entries) {
 		if (PonderIndex.EDITOR_MODE) {
-			//PonderLocalization.shared.clear();
-			//PonderLocalization.specific.clear();
-			//SharedText.gatherText();
+			PonderLocalization.shared.clear();
+			SharedText.gatherText();
 		}
 
 		List<PonderScene> scenes = new ArrayList<>();

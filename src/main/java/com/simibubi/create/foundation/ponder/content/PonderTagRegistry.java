@@ -1,15 +1,18 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import net.minecraft.util.ResourceLocation;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.tterrag.registrate.util.entry.ItemProviderEntry;
+
+import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 
 public class PonderTagRegistry {
 
@@ -30,21 +33,19 @@ public class PonderTagRegistry {
 	}
 
 	public Set<ResourceLocation> getItems(PonderTag tag) {
-		return tags
-				.entries()
-				.stream()
-				.filter(e -> e.getValue() == tag)
-				.map(Map.Entry::getKey)
-				.collect(ImmutableSet.toImmutableSet());
+		return tags.entries()
+			.stream()
+			.filter(e -> e.getValue() == tag)
+			.map(Map.Entry::getKey)
+			.collect(ImmutableSet.toImmutableSet());
 	}
 
 	public Set<PonderChapter> getChapters(PonderTag tag) {
-		return chapterTags
-				.entries()
-				.stream()
-				.filter(e -> e.getValue() == tag)
-				.map(Map.Entry::getKey)
-				.collect(ImmutableSet.toImmutableSet());
+		return chapterTags.entries()
+			.stream()
+			.filter(e -> e.getValue() == tag)
+			.map(Map.Entry::getKey)
+			.collect(ImmutableSet.toImmutableSet());
 	}
 
 	public void add(PonderTag tag, ResourceLocation item) {
@@ -89,6 +90,15 @@ public class PonderTagRegistry {
 		public TagBuilder add(ResourceLocation item) {
 			PonderRegistry.tags.add(tag, item);
 			return this;
+		}
+
+		public TagBuilder add(IItemProvider item) {
+			return add(item.asItem()
+				.getRegistryName());
+		}
+
+		public TagBuilder add(ItemProviderEntry<?> entry) {
+			return add(entry.get());
 		}
 	}
 }

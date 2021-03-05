@@ -34,13 +34,11 @@ public class PonderTagScreen extends AbstractSimiScreen {
 	protected final PonderTag tag;
 	protected final List<Item> items;
 	private final double itemXmult = 0.5;
-	private final double itemYmult = 0.4;
 	protected Rectangle2d itemArea;
 	protected final List<PonderChapter> chapters;
 	private final double chapterXmult = 0.5;
 	private final double chapterYmult = 0.75;
 	protected Rectangle2d chapterArea;
-//	private final double mainXmult = 0.5;
 	private final double mainYmult = 0.15;
 
 	private ItemStack hoveredItem = ItemStack.EMPTY;
@@ -76,7 +74,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		LayoutHelper layout = LayoutHelper.centeredHorizontal(items.size(), rowCount, 28, 28, 8);
 		itemArea = layout.getArea();
 		int itemCenterX = (int) (width * itemXmult);
-		int itemCenterY = (int) (height * itemYmult);
+		int itemCenterY = getItemsY();
 
 		for (Item i : items) {
 			PonderButton button =
@@ -90,6 +88,23 @@ public class PonderTagScreen extends AbstractSimiScreen {
 			button.fade(1);
 			widgets.add(button);
 			layout.next();
+		}
+
+		if (!tag.getMainItem()
+			.isEmpty()) {
+			PonderButton button =
+				new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
+					if (!PonderRegistry.all.containsKey(tag.getMainItem()
+						.getItem()
+						.getRegistryName()))
+						return;
+					centerScalingOn(mouseX, mouseY);
+					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem()));
+				}).showing(tag.getMainItem());
+
+			button.fade(1);
+//			button.flash();
+			widgets.add(button);
 		}
 
 		// chapters
@@ -137,48 +152,6 @@ public class PonderTagScreen extends AbstractSimiScreen {
 
 		renderChapters(mouseX, mouseY, partialTicks);
 
-		//
-//		int x = (int) (width * mainXmult);
-//		int y = (int) (height * mainYmult);
-//
-//		RenderSystem.pushMatrix();
-//		RenderSystem.translated(x, y, 0);
-//		RenderSystem.translated(-150, 0, 0);
-//
-//		if (!tag.getMainItem()
-//			.isEmpty()) {
-//			RenderSystem.translated(-25, 0, 0);
-//			PonderUI.renderBox(0, -10, 20, 20, false);
-//			RenderSystem.pushMatrix();
-//			RenderSystem.translated(-2, -12, 0);
-//			RenderSystem.scaled(1.5, 1.5, 1);
-//			GuiGameElement.of(tag.getMainItem())
-//				.render();
-//
-//			RenderSystem.popMatrix();
-//
-//			RenderSystem.translated(75, 0, 0);
-//
-//		}
-//
-//		RenderSystem.pushMatrix();
-////		RenderSystem.scaled(1.5, 1.5, 1);
-//
-//		// render icon & box
-//		PonderUI.renderBox(-8, -20, 40, 40, false);
-//		RenderSystem.translated(0, -10, 100);
-//		RenderSystem.scaled(1.5, 1.5, 1);
-//		tag.draw(this, 0, 0);
-//
-//		RenderSystem.popMatrix();
-//
-//		// tag name & description
-//		UIRenderHelper.streak(0, 36, 0, 39, 350, 0x101010);
-//		drawString(font, Lang.translate("ponder.tag." + tag.getId()), 41, -16, 0xffff_ffff);
-//		drawString(font, Lang.translate("ponder.tag." + tag.getId() + ".desc"), 41, -4, 0xffff_ffff);
-//
-//		RenderSystem.popMatrix();
-
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(width / 2 - 120, height * mainYmult - 40, 0);
 
@@ -196,7 +169,6 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		drawString(font, Lang.translate(PonderUI.PONDERING), x, y - 6, 0xffa3a3a3);
 		y += 8;
 		x += 0;
-		// RenderSystem.translated(0, 3 * (indexDiff), 0);
 		RenderSystem.translated(x, y, 0);
 		RenderSystem.translated(0, 0, 5);
 		font.drawString(title, 0, 0, 0xeeeeee);
@@ -212,7 +184,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		RenderSystem.pushMatrix();
 		int w = (int) (width * .45);
 		x = (width - w) / 2;
-		y = (int) (height * itemYmult + itemArea.getHeight() + 20);
+		y = getItemsY() - 10 + Math.max(itemArea.getHeight(), 48);
 
 		String desc = tag.getDescription();
 		int h = font.getWordWrappedHeight(desc, w);
@@ -228,7 +200,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 			return;
 
 		int x = (int) (width * itemXmult);
-		int y = (int) (height * itemYmult);
+		int y = getItemsY();
 
 		String relatedTitle = Lang.translate(ASSOCIATED);
 		int stringWidth = font.getStringWidth(relatedTitle);
@@ -246,6 +218,10 @@ public class PonderTagScreen extends AbstractSimiScreen {
 
 		RenderSystem.popMatrix();
 
+	}
+
+	public int getItemsY() {
+		return (int) (mainYmult * height + 85);
 	}
 
 	protected void renderChapters(int mouseX, int mouseY, float partialTicks) {

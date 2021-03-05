@@ -21,12 +21,7 @@ public interface LayoutHelper {
 	default Rectangle2d getArea() {
 		int lWidth = getTotalWidth();
 		int lHeight = getTotalHeight();
-		return new Rectangle2d(
-				-lWidth/2,
-				-lHeight/2,
-				lWidth,
-				lHeight
-		);
+		return new Rectangle2d(-lWidth / 2, -lHeight / 2, lWidth, lHeight);
 	}
 
 	class CenteredHorizontalLayoutHelper implements LayoutHelper {
@@ -77,7 +72,7 @@ public interface LayoutHelper {
 		public void next() {
 			currentColumn++;
 			if (currentColumn >= rowCounts[currentRow]) {
-				//nextRow
+				// nextRow
 				if (++currentRow >= rows) {
 					x = 0;
 					y = 0;
@@ -96,9 +91,7 @@ public interface LayoutHelper {
 		private void init() {
 			prepareX();
 			prepareY();
-
 		}
-
 
 		private void prepareX() {
 			int rowWidth = rowCounts[currentRow] * width + (rowCounts[currentRow] - 1) * spacing;
@@ -119,7 +112,6 @@ public interface LayoutHelper {
 		public int getTotalHeight() {
 			return rows * height + (rows > 1 ? ((rows - 1) * spacing) : 0);
 		}
-
 
 	}
 
