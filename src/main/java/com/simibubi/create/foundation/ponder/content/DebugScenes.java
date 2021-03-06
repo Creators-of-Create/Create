@@ -4,14 +4,19 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.foundation.ponder.*;
+import com.simibubi.create.foundation.ponder.ElementLink;
+import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
+import com.simibubi.create.foundation.ponder.SceneBuilder;
+import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
+import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.ItemEntry;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -295,22 +300,22 @@ public class DebugScenes {
 		BlockPos poi1 = util.grid.at(4, 1, 0);
 		BlockPos poi2 = util.grid.at(0, 1, 4);
 
-		scene.world.setBlock(poi1, Blocks.GOLD_BLOCK.getDefaultState());
+		scene.world.setBlock(poi1, Blocks.GOLD_BLOCK.getDefaultState(), true);
 		scene.special.movePointOfInterest(poi1);
 		scene.idle(20);
 
-		scene.world.setBlock(poi2, Blocks.GOLD_BLOCK.getDefaultState());
+		scene.world.setBlock(poi2, Blocks.GOLD_BLOCK.getDefaultState(), true);
 		scene.special.movePointOfInterest(poi2);
 		scene.overlay.showText(20)
 			.text("Point of Interest")
 			.pointAt(util.vector.centerOf(poi2));
 		scene.idle(20);
 
-		scene.world.setBlock(poi1, Blocks.AIR.getDefaultState());
+		scene.world.destroyBlock(poi1);
 		scene.special.movePointOfInterest(poi1);
 		scene.idle(20);
 
-		scene.world.setBlock(poi2, Blocks.AIR.getDefaultState());
+		scene.world.destroyBlock(poi2);
 		scene.special.movePointOfInterest(poi2);
 	}
 

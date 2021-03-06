@@ -35,6 +35,7 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	public static float getDialTarget(float speed) {
+		speed = Math.abs(speed);
 		float medium = AllConfigs.SERVER.kinetics.mediumSpeed.get()
 			.floatValue();
 		float fast = AllConfigs.SERVER.kinetics.fastSpeed.get()

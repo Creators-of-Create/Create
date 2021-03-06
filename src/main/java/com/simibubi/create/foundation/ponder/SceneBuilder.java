@@ -46,6 +46,7 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -360,6 +361,7 @@ public class SceneBuilder {
 					.erase(selection);
 				scene.linkElement(worldSectionElement, elementLink);
 				scene.addElement(worldSectionElement);
+				worldSectionElement.queueRedraw();
 				worldSectionElement.resetAnimatedTransform();
 				worldSectionElement.setVisible(true);
 				worldSectionElement.forceApplyFade(1);
@@ -395,8 +397,12 @@ public class SceneBuilder {
 			addInstruction(new ReplaceBlocksInstruction(selection, $ -> state, true, spawnParticles));
 		}
 
-		public void setBlock(BlockPos pos, BlockState state) {
-			setBlocks(scene.getSceneBuildingUtil().select.position(pos), state, true);
+		public void destroyBlock(BlockPos pos) {
+			setBlock(pos, Blocks.AIR.getDefaultState(), true);
+		}
+		
+		public void setBlock(BlockPos pos, BlockState state, boolean spawnParticles) {
+			setBlocks(scene.getSceneBuildingUtil().select.position(pos), state, spawnParticles);
 		}
 
 		public void replaceBlocks(Selection selection, BlockState state, boolean spawnParticles) {

@@ -328,9 +328,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 			if (state.getRenderType() != BlockRenderType.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
-				&& RenderTypeLookup.canRenderInLayer(state, layer))
+				&& RenderTypeLookup.canRenderInLayer(state, layer)) {
+				TileEntity tileEntity = world.getTileEntity(pos);
 				blockRenderer.renderModel(world, dispatcher.getModelForState(state), state, pos, ms, builder, true,
-					random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+					random, 42, OverlayTexture.DEFAULT_UV,
+					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+			}
 
 			if (!ifluidstate.isEmpty() && RenderTypeLookup.canRenderInLayer(ifluidstate, layer))
 				dispatcher.renderFluid(pos, world, builder, ifluidstate);

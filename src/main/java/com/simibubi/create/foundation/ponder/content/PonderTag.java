@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +36,15 @@ public class PonderTag implements IScreenRenderable {
 
 		LOGISTICS = new PonderTag("logistics").item(Blocks.CHEST, true, false)
 			.defaultLang("Item Transportation", "Components which help moving items around"),
+			
+		REDSTONE = new PonderTag("redstone").item(Items.REDSTONE, true, false)
+			.defaultLang("Logic Components", "Components which help with redstone engineering"),
+
+		DECORATION = new PonderTag("decoration").item(Items.ROSE_BUSH, true, false)
+			.defaultLang("Aesthetics", "Components used mostly for decorative purposes"),
+
+		CREATIVE = new PonderTag("creative").item(AllBlocks.CREATIVE_CRATE.get(), true, false)
+			.defaultLang("Creative Mode", "Components not usually available for Survival Mode"),
 
 		MOVEMENT_ANCHOR = new PonderTag("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
 			.defaultLang("Movement Anchors",

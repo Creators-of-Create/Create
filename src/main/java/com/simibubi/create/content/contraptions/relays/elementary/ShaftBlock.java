@@ -45,12 +45,12 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 	@Override
 	public float getParticleTargetRadius() {
-		return .25f;
+		return .35f;
 	}
 
 	@Override
 	public float getParticleInitialRadius() {
-		return 0f;
+		return .125f;
 	}
 
 	@Override

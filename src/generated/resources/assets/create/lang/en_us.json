@@ -1809,8 +1809,11 @@
 	"create.ponder.identify_mode": "Identify mode active.\nUnpause with [%1$s]",
 	"create.ponder.associated": "Associated Entries",
 	"create.ponder.shared.movement_anchors": "With the help of Chassis or Super Glue, larger structures can be moved.",
+	"create.ponder.shared.rpm32": "32 RPM",
 	"create.ponder.shared.sneak_and": "Sneak +",
+	"create.ponder.shared.rpm8": "8 RPM",
 	"create.ponder.shared.ctrl_and": "Ctrl +",
+	"create.ponder.shared.rpm16": "16 RPM",
 	"create.ponder.tag.kinetic_sources": "Kinetic Sources",
 	"create.ponder.tag.kinetic_sources.description": "Components which generate Rotational Force",
 	"create.ponder.tag.contraption_actor": "Contraption Actors",
@@ -1821,12 +1824,36 @@
 	"create.ponder.tag.logistics.description": "Components which help moving items around",
 	"create.ponder.tag.movement_anchor": "Movement Anchors",
 	"create.ponder.tag.movement_anchor.description": "Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways",
+	"create.ponder.tag.decoration": "Aesthetics",
+	"create.ponder.tag.decoration.description": "Components used mostly for decorative purposes",
 	"create.ponder.tag.kinetic_appliances": "Kinetic Appliances",
 	"create.ponder.tag.kinetic_appliances.description": "Components which make use of Rotational Force",
+	"create.ponder.tag.redstone": "Logic Components",
+	"create.ponder.tag.redstone.description": "Components which help with redstone engineering",
+	"create.ponder.tag.creative": "Creative Mode",
+	"create.ponder.tag.creative.description": "Components not usually available for Survival Mode",
 	"create.ponder.tag.kinetic_relays": "Kinetic Blocks",
 	"create.ponder.tag.kinetic_relays.description": "Components which help relaying Rotational Force elsewhere",
 	"create.ponder.tag.fluids": "Fluid Manipulators",
 	"create.ponder.tag.fluids.description": "Components which help relaying and making use of Fluids",
+
+	"create.ponder.andesite_encased_shaft.scene_0.header": "Encasing Shafts",
+	"create.ponder.andesite_encased_shaft.scene_0.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.vertical_gearbox.scene_0.header": "Relaying rotational force using Gearboxes",
+	"create.ponder.vertical_gearbox.scene_0.text_1": "Jumping between axes of rotation can get bulky quickly",
+	"create.ponder.vertical_gearbox.scene_0.text_2": "A gearbox is the more compact equivalent of this setup",
+	"create.ponder.vertical_gearbox.scene_0.text_3": "Shafts around corners rotate in mirrored directions",
+	"create.ponder.vertical_gearbox.scene_0.text_4": "Straight connections will be reversed",
+
+	"create.ponder.large_cogwheel.scene_0.header": "Gearshifting with Cogs",
+	"create.ponder.large_cogwheel.scene_0.text_1": "Large and Small cogs can be connected diagonally",
+	"create.ponder.large_cogwheel.scene_0.text_2": "Shifting from large to small cogs, the conveyed speed will be doubled",
+	"create.ponder.large_cogwheel.scene_0.text_3": "Shifting the opposite way, the conveyed speed will be halved",
+
+	"create.ponder.large_cogwheel.scene_1.header": "Relaying rotational force using Large Cogwheels",
+	"create.ponder.large_cogwheel.scene_1.text_1": "Large cogwheels can connect to each other at right angles",
+	"create.ponder.large_cogwheel.scene_1.text_2": "It will help relaying conveyed speed to other axes of rotation",
 
 	"create.ponder.brass_funnel.scene_0.header": "The Brass Funnel",
 	"create.ponder.brass_funnel.scene_0.text_1": "Andesite Funnels can only ever extract single items.",
@@ -1858,6 +1885,58 @@
 	"create.ponder.brass_funnel.scene_5.text_2": "Chutes or Smart chutes might be more suitable for such purposes.",
 	"create.ponder.brass_funnel.scene_5.text_3": "Same applies for horizontal movement.\nA mechanical belt should help here.",
 
+	"create.ponder.shaft.scene_0.header": "Relaying rotational force using Shafts",
+	"create.ponder.shaft.scene_0.text_1": "Shafts will relay rotation in a straight line.",
+
+	"create.ponder.shaft.scene_1.header": "Encasing Shafts",
+	"create.ponder.shaft.scene_1.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.brass_encased_shaft.scene_0.header": "Encasing Shafts",
+	"create.ponder.brass_encased_shaft.scene_0.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.portable_storage_interface.scene_0.header": "Contraption Storage Exchange",
+	"create.ponder.portable_storage_interface.scene_0.text_1": "Inventories on moving contraptions cannot be accessed by players.",
+	"create.ponder.portable_storage_interface.scene_0.text_2": "This component can interact with storage without the need to stop the contraption.",
+	"create.ponder.portable_storage_interface.scene_0.text_3": "Place a second one with a gap of 1 or 2 blocks inbetween",
+	"create.ponder.portable_storage_interface.scene_0.text_4": "Whenever they pass by each other, they will engage in a connection",
+	"create.ponder.portable_storage_interface.scene_0.text_5": "While engaged, the stationary interface will represent ALL inventories on the contraption",
+	"create.ponder.portable_storage_interface.scene_0.text_6": "Items can now be inserted...",
+	"create.ponder.portable_storage_interface.scene_0.text_7": "...or extracted from the contraption",
+	"create.ponder.portable_storage_interface.scene_0.text_8": "After no items have been exchanged for a while, the contraption will continue on its way",
+
+	"create.ponder.portable_storage_interface.scene_1.header": "Redstone Control",
+	"create.ponder.portable_storage_interface.scene_1.text_1": "Redstone power will prevent the stationary interface from engaging",
+
+	"create.ponder.gearshift.scene_0.header": "Controlling rotational force using a Gearshift",
+	"create.ponder.gearshift.scene_0.text_1": "Gearshifts will relay rotation in a straight line",
+	"create.ponder.gearshift.scene_0.text_2": "When powered by Redstone, it reverses the transmission",
+
+	"create.ponder.cogwheel.scene_0.header": "Relaying rotational force using Cogwheels",
+	"create.ponder.cogwheel.scene_0.text_1": "Cogwheels will relay rotation to other adjacent cogwheels",
+	"create.ponder.cogwheel.scene_0.text_2": "Neighbouring shafts connected like this will rotate in opposite directions",
+
+	"create.ponder.cogwheel.scene_1.header": "Gearshifting with Cogs",
+	"create.ponder.cogwheel.scene_1.text_1": "Large and Small cogs can be connected diagonally",
+	"create.ponder.cogwheel.scene_1.text_2": "Shifting from large to small cogs, the conveyed speed will be doubled",
+	"create.ponder.cogwheel.scene_1.text_3": "Shifting the opposite way, the conveyed speed will be halved",
+
+	"create.ponder.brass_casing.scene_0.header": "Encasing Shafts",
+	"create.ponder.brass_casing.scene_0.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.brass_casing.scene_1.header": "Encasing Belts",
+	"create.ponder.brass_casing.scene_1.text_1": "Brass or Andesite Casing can be used to decorate Mechanical Belts",
+	"create.ponder.brass_casing.scene_1.text_2": "A wrench can be used to remove it again",
+
+	"create.ponder.gearbox.scene_0.header": "Relaying rotational force using Gearboxes",
+	"create.ponder.gearbox.scene_0.text_1": "Jumping between axes of rotation can get bulky quickly",
+	"create.ponder.gearbox.scene_0.text_2": "A gearbox is the more compact equivalent of this setup",
+	"create.ponder.gearbox.scene_0.text_3": "Shafts around corners rotate in mirrored directions",
+	"create.ponder.gearbox.scene_0.text_4": "Straight connections will be reversed",
+
+	"create.ponder.clutch.scene_0.header": "Controlling rotational force using a Clutch",
+	"create.ponder.clutch.scene_0.text_1": "Clutches will relay rotation in a straight line",
+	"create.ponder.clutch.scene_0.text_2": "When powered by Redstone, it breaks the connection",
+
 	"create.ponder.gantry_shaft.scene_0.header": "Using Gantry Shafts",
 	"create.ponder.gantry_shaft.scene_0.text_1": "Gantry Shafts form the basis of a gantry setup. Attached Carriages will move along them.",
 	"create.ponder.gantry_shaft.scene_0.text_2": "Gantry setups can move attached Blocks.",
@@ -1876,25 +1955,6 @@
 	"create.ponder.gantry_shaft.scene_3.text_1": "Gantry shafts attach to a carriage without the need of super glue",
 	"create.ponder.gantry_shaft.scene_3.text_2": "Same applies for carriages on moved Gantry Shafts",
 	"create.ponder.gantry_shaft.scene_3.text_3": "Thus, a gantry system can be cascaded to cover multiple axes of movement",
-
-	"create.ponder.shaft.scene_0.header": "Relaying rotational force using Shafts",
-	"create.ponder.shaft.scene_0.text_1": "Shafts will relay rotation in a straight line.",
-
-	"create.ponder.shaft.scene_1.header": "Encasing Shafts",
-	"create.ponder.shaft.scene_1.text_1": "Andesite or Brass Casing can be used to encase them.",
-
-	"create.ponder.portable_storage_interface.scene_0.header": "Contraption Storage Exchange",
-	"create.ponder.portable_storage_interface.scene_0.text_1": "Inventories on moving contraptions cannot be accessed by players.",
-	"create.ponder.portable_storage_interface.scene_0.text_2": "This component can interact with storage without the need to stop the contraption.",
-	"create.ponder.portable_storage_interface.scene_0.text_3": "Place a second one with a gap of 1 or 2 blocks inbetween",
-	"create.ponder.portable_storage_interface.scene_0.text_4": "Whenever they pass by each other, they will engage in a connection",
-	"create.ponder.portable_storage_interface.scene_0.text_5": "While engaged, the stationary interface will represent ALL inventories on the contraption",
-	"create.ponder.portable_storage_interface.scene_0.text_6": "Items can now be inserted...",
-	"create.ponder.portable_storage_interface.scene_0.text_7": "...or extracted from the contraption",
-	"create.ponder.portable_storage_interface.scene_0.text_8": "After no items have been exchanged for a while, the contraption will continue on its way",
-
-	"create.ponder.portable_storage_interface.scene_1.header": "Redstone Control",
-	"create.ponder.portable_storage_interface.scene_1.text_1": "Redstone power will prevent the stationary interface from engaging",
 
 	"create.ponder.andesite_funnel.scene_0.header": "Using funnels",
 	"create.ponder.andesite_funnel.scene_0.text_1": "Funnels are ideal for transferring items from and to inventories.",
@@ -1925,6 +1985,13 @@
 	"create.ponder.andesite_funnel.scene_5.text_2": "Brass Funnels can extract up to a full stack.",
 	"create.ponder.andesite_funnel.scene_5.text_3": "Scrolling on the filter slot allows for precise control over the extracted stack size.",
 	"create.ponder.andesite_funnel.scene_5.text_4": "Using items on the filter slot will restrict the funnel to only transfer matching stacks.",
+
+	"create.ponder.andesite_casing.scene_0.header": "Encasing Shafts",
+	"create.ponder.andesite_casing.scene_0.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.andesite_casing.scene_1.header": "Encasing Belts",
+	"create.ponder.andesite_casing.scene_1.text_1": "Brass or Andesite Casing can be used to decorate Mechanical Belts",
+	"create.ponder.andesite_casing.scene_1.text_2": "A wrench can be used to remove it again",
 
 	"create.ponder.gantry_carriage.scene_0.header": "Using Gantry Carriages",
 	"create.ponder.gantry_carriage.scene_0.text_1": "Gantry Carriages can mount to and slide along a Gantry Shaft.",
