@@ -108,13 +108,16 @@ public class SceneBuilder {
 	// General
 
 	/**
-	 * Assign the standard english translation for this scene's title using this
-	 * method, anywhere inside the program function.
+	 * Assign a unique translation key, as well as the standard english translation
+	 * for this scene's title using this method, anywhere inside the program
+	 * function.
 	 * 
+	 * @param sceneId
 	 * @param title
 	 */
-	public void title(String title) {
-		PonderLocalization.registerSpecific(scene.component, scene.sceneIndex, PonderScene.TITLE_KEY, title);
+	public void title(String sceneId, String title) {
+		scene.sceneId = sceneId;
+		PonderLocalization.registerSpecific(sceneId, PonderScene.TITLE_KEY, title);
 	}
 
 	/**
@@ -400,7 +403,7 @@ public class SceneBuilder {
 		public void destroyBlock(BlockPos pos) {
 			setBlock(pos, Blocks.AIR.getDefaultState(), true);
 		}
-		
+
 		public void setBlock(BlockPos pos, BlockState state, boolean spawnParticles) {
 			setBlocks(scene.getSceneBuildingUtil().select.position(pos), state, spawnParticles);
 		}

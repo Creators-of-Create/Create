@@ -11,13 +11,11 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.util.ResourceLocation;
-
 public class PonderLocalization {
 
 	static Map<String, String> shared = new HashMap<>();
 	static Map<String, Couple<String>> tag = new HashMap<>();
-	static Map<ResourceLocation, Map<Integer, Map<String, String>>> specific = new HashMap<>();
+	static Map<String, Map<String, String>> specific = new HashMap<>();
 
 	//
 
@@ -29,9 +27,8 @@ public class PonderLocalization {
 		shared.put(key, enUS);
 	}
 
-	public static void registerSpecific(ResourceLocation component, int scene, String key, String enUS) {
-		specific.computeIfAbsent(component, $ -> new HashMap<>())
-			.computeIfAbsent(scene, $ -> new HashMap<>())
+	public static void registerSpecific(String sceneId, String key, String enUS) {
+		specific.computeIfAbsent(sceneId, $ -> new HashMap<>())
 			.put(key, enUS);
 	}
 
@@ -43,12 +40,11 @@ public class PonderLocalization {
 		return Lang.translate(langKeyForShared(key));
 	}
 
-	public static String getSpecific(ResourceLocation component, int scene, String k) {
+	public static String getSpecific(String sceneId, String k) {
 		if (PonderIndex.EDITOR_MODE)
-			return specific.get(component)
-				.get(scene)
+			return specific.get(sceneId)
 				.get(k);
-		return Lang.translate(langKeyForSpecific(component.getPath(), scene, k));
+		return Lang.translate(langKeyForSpecific(sceneId, k));
 	}
 
 	public static String getTag(String key) {
@@ -83,19 +79,18 @@ public class PonderLocalization {
 			object.addProperty(Create.ID + "." + langKeyForTag(k), v.getFirst());
 			object.addProperty(Create.ID + "." + langKeyForTagDescription(k), v.getSecond());
 		});
-		
-		specific.forEach((rl, map) -> {
-			String component = rl.getPath();
-			for (int i = 0; i < map.size(); i++) {
-				final int scene = i;
-				Map<String, String> sceneMap = map.get(i);
-				sceneMap.entrySet()
+
+		specific.entrySet()
+			.stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEach(entry -> {
+				entry.getValue()
+					.entrySet()
 					.stream()
 					.sorted(Map.Entry.comparingByKey())
-					.forEach(e -> object.addProperty(Create.ID + "." + langKeyForSpecific(component, scene, e.getKey()),
-						e.getValue()));
-			}
-		});
+					.forEach(subEntry -> object.addProperty(Create.ID + "." + langKeyForSpecific(entry.getKey(), subEntry.getKey()),
+						subEntry.getValue()));
+			});
 		return object;
 	}
 
@@ -103,8 +98,8 @@ public class PonderLocalization {
 		json.addProperty(Create.ID + "." + key, enUS);
 	}
 
-	protected static String langKeyForSpecific(String component, int scene, String k) {
-		return LANG_PREFIX + component + ".scene_" + scene + "." + k;
+	protected static String langKeyForSpecific(String sceneId, String k) {
+		return LANG_PREFIX + sceneId + "." + k;
 	}
 
 	protected static String langKeyForShared(String k) {

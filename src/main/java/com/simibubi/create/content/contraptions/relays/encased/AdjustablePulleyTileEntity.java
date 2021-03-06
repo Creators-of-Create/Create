@@ -49,6 +49,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (world.isRemote)
+			return;
 		if (signalChanged) {
 			signalChanged = false;
 			analogSignalChanged(world.getRedstonePowerFromNeighbors(pos));

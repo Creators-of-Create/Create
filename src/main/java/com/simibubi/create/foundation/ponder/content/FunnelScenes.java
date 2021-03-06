@@ -31,7 +31,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class FunnelScenes {
 
 	public static void intro(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Using funnels");
+		scene.title("funnel_intro", "Using funnels");
 		scene.configureBasePlate(0, 1, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> f / 2f);
@@ -106,7 +106,7 @@ public class FunnelScenes {
 	}
 
 	public static void directionality(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Direction of Transfer");
+		scene.title("funnel_direction", "Direction of Transfer");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> f / 2f);
@@ -245,7 +245,7 @@ public class FunnelScenes {
 	}
 
 	public static void compat(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Funnel compatibility");
+		scene.title("funnel_compat", "Funnel compatibility");
 		scene.configureBasePlate(0, 0, 5);
 
 		BlockPos sawFunnel = util.grid.at(4, 2, 1);
@@ -301,7 +301,7 @@ public class FunnelScenes {
 	}
 
 	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Redstone control");
+		scene.title("funnel_redstone", "Redstone control");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -343,7 +343,7 @@ public class FunnelScenes {
 	}
 
 	public static void brass(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("The Brass Funnel");
+		scene.title("brass_funnel", "The Brass Funnel");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -449,7 +449,7 @@ public class FunnelScenes {
 	}
 
 	public static void transposer(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Direct transfer");
+		scene.title("funnel_transfer", "Direct transfer");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);

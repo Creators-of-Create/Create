@@ -92,7 +92,7 @@ public class PonderRegistry {
 	}
 
 	public static PonderScene compileScene(int i, PonderStoryBoardEntry sb, PonderWorld world) {
-		PonderScene scene = new PonderScene(world, sb.getComponent(), i, sb.getTags());
+		PonderScene scene = new PonderScene(world, sb.getComponent(), sb.getTags());
 		SceneBuilder builder = scene.builder();
 		sb.getBoard().program(builder, scene.getSceneBuildingUtil());
 		return scene;

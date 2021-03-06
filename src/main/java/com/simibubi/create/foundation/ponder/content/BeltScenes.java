@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 public class BeltScenes {
 
 	public static void beltsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Encasing Belts");
+		scene.title("belt_casing", "Encasing Belts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
 		scene.idle(5);

@@ -24,7 +24,10 @@ public class GantryScenes {
 	}
 
 	private static void intro(SceneBuilder scene, SceneBuildingUtil util, boolean pinion) {
-		scene.title("Using Gantry " + (pinion ? "Carriages" : "Shafts"));
+		String id = "gantry_" + (pinion ? "carriage" : "shaft");
+		String title = "Using Gantry " + (pinion ? "Carriages" : "Shafts");
+		scene.title(id, title);
+		
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -2 * f);
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -83,7 +86,7 @@ public class GantryScenes {
 	}
 
 	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Gantry Power Propagation");
+		scene.title("gantry_redstone", "Gantry Power Propagation");
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
 
 		Selection leverRedstone = util.select.fromTo(3, 1, 0, 3, 1, 1);
@@ -136,7 +139,7 @@ public class GantryScenes {
 	}
 
 	public static void direction(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Gantry Movement Direction");
+		scene.title("gantry_direction", "Gantry Movement Direction");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -236,7 +239,7 @@ public class GantryScenes {
 	}
 
 	public static void subgantry(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Cascaded Gantries");
+		scene.title("gantry_cascaded", "Cascaded Gantries");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -2 * f);
 		scene.world.showSection(util.select.layer(0)

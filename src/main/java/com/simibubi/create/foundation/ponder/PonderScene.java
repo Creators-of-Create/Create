@@ -1,5 +1,21 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.mutable.MutableDouble;
+import org.apache.commons.lang3.mutable.MutableObject;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
@@ -8,8 +24,13 @@ import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -22,22 +43,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
-import org.apache.commons.lang3.mutable.MutableDouble;
-import org.apache.commons.lang3.mutable.MutableObject;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 public class PonderScene {
 
 	public static final String TITLE_KEY = "header";
-	
+
 	boolean finished;
 	int sceneIndex;
 	int textIndex;
+	String sceneId;
 
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
@@ -63,13 +83,12 @@ public class PonderScene {
 	int totalTime;
 	int currentTime;
 
-	public PonderScene(PonderWorld world, ResourceLocation component, int sceneIndex, Collection<PonderTag> tags) {
+	public PonderScene(PonderWorld world, ResourceLocation component, Collection<PonderTag> tags) {
 		pointOfInterest = Vec3d.ZERO;
 		textIndex = 1;
 
 		this.world = world;
 		this.component = component;
-		this.sceneIndex = sceneIndex;
 
 		outliner = new Outliner();
 		elements = new HashSet<>();
@@ -83,7 +102,6 @@ public class PonderScene {
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
 
-		PonderLocalization.registerSpecific(component, sceneIndex, TITLE_KEY, "Untitled Scene");
 		setPointOfInterest(new Vec3d(0, 4, 0));
 	}
 
@@ -145,7 +163,7 @@ public class PonderScene {
 	}
 
 	public String getString(String key) {
-		return PonderLocalization.getSpecific(component, sceneIndex, key);
+		return PonderLocalization.getSpecific(sceneId, key);
 	}
 
 	public void reset() {
@@ -311,8 +329,8 @@ public class PonderScene {
 
 	public Supplier<String> registerText(String defaultText) {
 		final String key = "text_" + textIndex;
-		PonderLocalization.registerSpecific(component, sceneIndex, key, defaultText);
-		Supplier<String> supplier = () -> PonderLocalization.getSpecific(component, sceneIndex, key);
+		PonderLocalization.registerSpecific(sceneId, key, defaultText);
+		Supplier<String> supplier = () -> PonderLocalization.getSpecific(sceneId, key);
 		textIndex++;
 		return supplier;
 	}

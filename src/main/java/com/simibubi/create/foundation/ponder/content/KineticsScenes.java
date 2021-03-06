@@ -22,17 +22,8 @@ import net.minecraft.util.math.Vec3i;
 
 public class KineticsScenes {
 
-	public static void template(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("This is a template");
-		scene.showBasePlate();
-		scene.idle(10);
-		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
-	}
-
-	//
-
 	public static void shaftAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Relaying rotational force using Shafts");
+		scene.title("shaft", "Relaying rotational force using Shafts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
@@ -64,7 +55,7 @@ public class KineticsScenes {
 	}
 
 	public static void shaftsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Encasing Shafts");
+		scene.title("shaft_casing", "Encasing Shafts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
 
@@ -103,7 +94,7 @@ public class KineticsScenes {
 	}
 
 	public static void cogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Relaying rotational force using Cogwheels");
+		scene.title("cogwheel", "Relaying rotational force using Cogwheels");
 		scene.configureBasePlate(0, 0, 5);
 		BlockPos gauge = util.grid.at(4, 1, 1);
 		Selection gaugeSelect = util.select.position(gauge);
@@ -142,7 +133,7 @@ public class KineticsScenes {
 	}
 
 	public static void largeCogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Relaying rotational force using Large Cogwheels");
+		scene.title("large_cogwheel", "Relaying rotational force using Large Cogwheels");
 		scene.configureBasePlate(1, 1, 5);
 		scene.world.setBlock(util.grid.at(4, 2, 3), AllBlocks.LARGE_COGWHEEL.getDefaultState()
 			.with(CogWheelBlock.AXIS, Axis.X), false);
@@ -190,7 +181,7 @@ public class KineticsScenes {
 	}
 
 	public static void cogsSpeedUp(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Gearshifting with Cogs");
+		scene.title("cog_speedup", "Gearshifting with Cogs");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -281,7 +272,7 @@ public class KineticsScenes {
 	}
 
 	public static void gearbox(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Relaying rotational force using Gearboxes");
+		scene.title("gearbox", "Relaying rotational force using Gearboxes");
 		scene.configureBasePlate(1, 1, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.world.showSection(util.select.fromTo(4, 1, 6, 3, 2, 5), Direction.UP);
@@ -360,7 +351,7 @@ public class KineticsScenes {
 	}
 
 	public static void clutch(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Controlling rotational force using a Clutch");
+		scene.title("clutch", "Controlling rotational force using a Clutch");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		BlockPos leverPos = util.grid.at(3, 1, 0);
@@ -411,7 +402,7 @@ public class KineticsScenes {
 	}
 
 	public static void gearshift(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Controlling rotational force using a Gearshift");
+		scene.title("gearshift", "Controlling rotational force using a Gearshift");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		BlockPos leverPos = util.grid.at(3, 1, 0);

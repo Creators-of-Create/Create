@@ -55,13 +55,13 @@ public class DebugScenes {
 	}
 
 	public static void empty(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Missing Content");
+		scene.title("debug_empty", "Missing Content");
 		scene.showBasePlate();
 		scene.idle(5);
 	}
 
 	public static void coordinateScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Coordinate Space");
+		scene.title("debug_coords", "Coordinate Space");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
@@ -86,7 +86,7 @@ public class DebugScenes {
 	}
 
 	public static void blocksScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Changing Blocks");
+		scene.title("debug_blocks", "Changing Blocks");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
@@ -104,7 +104,7 @@ public class DebugScenes {
 	}
 
 	public static void fluidsScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Showing Fluids");
+		scene.title("debug_fluids", "Showing Fluids");
 		scene.showBasePlate();
 		scene.idle(10);
 		Vec3d parrotPos = util.vector.topOf(1, 0, 1);
@@ -144,7 +144,7 @@ public class DebugScenes {
 	}
 
 	public static void offScreenScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Out of bounds / configureBasePlate");
+		scene.title("debug_baseplate", "Out of bounds / configureBasePlate");
 		scene.configureBasePlate(1, 0, 6);
 		scene.showBasePlate();
 
@@ -168,7 +168,7 @@ public class DebugScenes {
 	}
 
 	public static void particleScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Emitting particles");
+		scene.title("debug_particles", "Emitting particles");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
@@ -191,7 +191,7 @@ public class DebugScenes {
 	}
 
 	public static void controlsScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Basic player interaction");
+		scene.title("debug_controls", "Basic player interaction");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layer(1), Direction.DOWN);
@@ -276,7 +276,7 @@ public class DebugScenes {
 	}
 
 	public static void birbScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Birbs");
+		scene.title("debug_birbs", "Birbs");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
@@ -320,7 +320,7 @@ public class DebugScenes {
 	}
 
 	public static void sectionsScene(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Sections");
+		scene.title("debug_sections", "Sections");
 		scene.showBasePlate();
 		scene.idle(10);
 		scene.rotateCameraY(95);
@@ -387,8 +387,8 @@ public class DebugScenes {
 	}
 
 	public static void itemScene(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("debug_items", "Manipulating Items");
 		scene.configureBasePlate(0, 0, 6);
-		scene.title("Manipulating Items");
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);

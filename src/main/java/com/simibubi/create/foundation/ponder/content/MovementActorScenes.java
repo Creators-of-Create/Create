@@ -21,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 public class MovementActorScenes {
 
 	public static void psiTransfer(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Contraption Storage Exchange");
+		scene.title("portable_storage_interface", "Contraption Storage Exchange");
 		scene.configureBasePlate(0, 0, 8);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -147,7 +147,7 @@ public class MovementActorScenes {
 	}
 
 	public static void psiRedstone(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("Redstone Control");
+		scene.title("portable_storage_interface_redstone", "Redstone Control");
 		scene.configureBasePlate(0, 0, 6);
 
 		Class<PortableItemInterfaceTileEntity> psiClass = PortableItemInterfaceTileEntity.class;
