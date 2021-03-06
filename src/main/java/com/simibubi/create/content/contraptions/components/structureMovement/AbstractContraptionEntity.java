@@ -253,6 +253,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			BlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
 
+			Vec3d oldMotion = context.motion;
 			Vec3d actorPosition = toGlobalVector(VecHelper.getCenterOf(blockInfo.pos)
 				.add(actor.getActiveAreaOffset(context)), 1);
 			BlockPos gridPosition = new BlockPos(actorPosition);
@@ -261,8 +262,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
-
-			Vec3d oldMotion = context.motion;
 			if (!actor.isActive(context))
 				continue;
 			if (newPosVisited && !context.stall) {
