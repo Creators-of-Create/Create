@@ -521,7 +521,7 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public boolean shouldRenderAsTE() {
-		return BeltBlock.canTransportObjects(getBlockState());
+		return isController();
 	}
 
 	private void updateLight() {

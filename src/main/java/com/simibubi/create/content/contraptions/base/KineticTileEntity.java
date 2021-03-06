@@ -225,6 +225,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
+		cachedBoundingBox = null;
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
 			super.read(compound, clientPacket);

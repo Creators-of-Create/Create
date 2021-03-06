@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -45,7 +46,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	@Override
 	public boolean isGlobalRenderer(BeltTileEntity te) {
-		return BeltBlock.canTransportObjects(te.getBlockState());
+		return te.isController();
 	}
 
 	@Override
@@ -189,6 +190,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
+		boolean onContraption = te.getWorld() instanceof WrappedWorld;
+
 		for (TransportedItemStack transported : te.getInventory()
 			.getTransportedItems()) {
 			ms.push();
@@ -203,7 +206,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				sideOffset = transported.sideOffset;
 			}
 
-			int stackLight = getPackedLight(te, offset);
+			int stackLight = onContraption ? light : getPackedLight(te, offset);
 
 			if (offset < .5)
 				verticalMovement = 0;
