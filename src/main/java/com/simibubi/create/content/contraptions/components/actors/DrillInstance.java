@@ -24,7 +24,7 @@ public class DrillInstance extends SingleRotatingInstance {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, DrillInstance::new));    }
 
-    public DrillInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public DrillInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

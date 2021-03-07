@@ -201,7 +201,6 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
-		ContraptionRenderDispatcher.renderTick();
 	}
 
 	protected static boolean isGameActive() {

@@ -71,11 +71,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
 			boolean alongX = facing.getAxis() == Axis.X;
 
-			MatrixStacker msr = MatrixStacker.of(ms);
+			MatrixStack localTransforms = new MatrixStack();
+			MatrixStacker msr = MatrixStacker.of(localTransforms);
 			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 			float renderTick = AnimationTickHolder.getRenderTime();
 
-			ms.push();
 			msr.centre();
 			msr.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0));
 			msr.rotateZ(sideways ? 90 : 0);
@@ -117,12 +117,13 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					beltBuffer.shiftUVScrolling(spriteShift, (float) scroll);
 				}
 
-				beltBuffer.renderInto(ms, vb);
+				beltBuffer
+						.transform(localTransforms)
+						.renderInto(ms, vb);
 
 				// Diagonal belt do not have a separate bottom model
 				if (diagonal) break;
 			}
-			ms.pop();
 
 			if (te.hasPulley()) {
 				// TODO 1.15 find a way to cache this model matrix computation

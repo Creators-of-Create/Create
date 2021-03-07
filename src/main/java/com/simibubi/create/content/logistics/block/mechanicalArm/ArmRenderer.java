@@ -41,7 +41,9 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		ArmTileEntity arm = (ArmTileEntity) te;
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = te.getBlockState();
-		MatrixStacker msr = MatrixStacker.of(ms);
+
+		MatrixStack msLocal = new MatrixStack();
+		MatrixStacker msr = MatrixStacker.of(msLocal);
 		int color = 0xFFFFFF;
 
 		float baseAngle = arm.baseAngle.get(pt);
@@ -58,8 +60,6 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			headAngle = -lowerArmAngle;
 			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
 		}
-		
-		ms.push();
 
 		SuperByteBuffer base = AllBlockPartials.ARM_BASE.renderOn(blockState).light(light);
 		SuperByteBuffer lowerBody = AllBlockPartials.ARM_LOWER_BODY.renderOn(blockState).light(light);
@@ -73,27 +73,32 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		if (blockState.get(ArmBlock.CEILING))
 			msr.rotateX(180);
 
-		ms.translate(0, 4 / 16d, 0);
+		msLocal.translate(0, 4 / 16d, 0);
 		msr.rotateY(baseAngle);
-		base.renderInto(ms, builder);
-
-		ms.translate(0, 1 / 16d, -2 / 16d);
-		msr.rotateX(lowerArmAngle);
-		ms.translate(0, -1 / 16d, 0);
-		lowerBody.color(color)
+		base.transform(msLocal)
 			.renderInto(ms, builder);
 
-		ms.translate(0, 12 / 16d, 12 / 16d);
+		msLocal.translate(0, 1 / 16d, -2 / 16d);
+		msr.rotateX(lowerArmAngle);
+		msLocal.translate(0, -1 / 16d, 0);
+		lowerBody.color(color)
+				 .transform(msLocal)
+				 .renderInto(ms, builder);
+
+		msLocal.translate(0, 12 / 16d, 12 / 16d);
 		msr.rotateX(upperArmAngle);
 		upperBody.color(color)
+				 .transform(msLocal)
+				 .renderInto(ms, builder);
+
+		msLocal.translate(0, 11 / 16d, -11 / 16d);
+		msr.rotateX(headAngle);
+		head.transform(msLocal)
 			.renderInto(ms, builder);
 
-		ms.translate(0, 11 / 16d, -11 / 16d);
-		msr.rotateX(headAngle);
-		head.renderInto(ms, builder);
-
-		ms.translate(0, 0, -4 / 16d);
-		claw.renderInto(ms, builder);
+		msLocal.translate(0, 0, -4 / 16d);
+		claw.transform(msLocal)
+			.renderInto(ms, builder);
 		ItemStack item = arm.heldItem;
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
@@ -103,23 +108,27 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 				.isGui3d();
 		
 		for (int flip : Iterate.positiveAndNegative) {
-			ms.push();
-			ms.translate(0, flip * 3 / 16d, -1 / 16d);
+			msLocal.push();
+			msLocal.translate(0, flip * 3 / 16d, -1 / 16d);
 			msr.rotateX(flip * (hasItem ? isBlockItem ? 0 : -35 : 0));
-			clawGrip.light(light).renderInto(ms, builder);
-			ms.pop();
+			clawGrip.light(light).transform(msLocal).renderInto(ms, builder);
+			msLocal.pop();
 		}
 
 		if (hasItem) {
+			ms.push();
 			float itemScale = isBlockItem ? .5f : .625f;
 			msr.rotateX(90);
-			ms.translate(0, -4 / 16f, 0);
-			ms.scale(itemScale, itemScale, itemScale);
+			msLocal.translate(0, -4 / 16f, 0);
+			msLocal.scale(itemScale, itemScale, itemScale);
+
+			ms.peek().getModel().multiply(msLocal.peek().getModel());
+
 			itemRenderer
 				.renderItem(item, TransformType.FIXED, light, overlay, ms, buffer);
+			ms.pop();
 		}
 
-		ms.pop();
 	}
 
 	@Override

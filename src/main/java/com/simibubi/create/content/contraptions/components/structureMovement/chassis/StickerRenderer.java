@@ -32,17 +32,16 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 			offset = state.get(StickerBlock.EXTENDED) ? 1 : 0;
 
 		Direction facing = state.get(StickerBlock.FACING);
-		ms.push();
-		MatrixStacker.of(ms)
+		head.matrixStacker()
 			.nudge(te.hashCode())
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)
-			.unCentre();
-		ms.translate(0, (offset * offset) * 4 / 16f, 0);
+			.unCentre()
+			.translate(0, (offset * offset) * 4 / 16f, 0);
+
 		head.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-		ms.pop();
 	}
 
 }

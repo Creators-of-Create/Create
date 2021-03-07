@@ -77,6 +77,14 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         key.invalidate();
     }
 
+    public D getInstance(InstanceKey<D> key) {
+        verifyKey(key);
+
+        markIndexChanged(key.index);
+
+        return this.data.get(key.index);
+    }
+
     public synchronized void modifyInstance(InstanceKey<D> key, Consumer<D> edit) {
         verifyKey(key);
 

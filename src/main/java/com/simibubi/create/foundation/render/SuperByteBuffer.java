@@ -8,17 +8,15 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import com.simibubi.create.foundation.utility.MatrixStacker;
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Matrix3f;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.LightUtil;
@@ -107,13 +105,16 @@ public class SuperByteBuffer extends TemplateBuffer {
 			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
 			normal.set(normalX, normalY, normalZ);
 			normal.transform(normalMat);
-			float instanceDiffuse = LightUtil.diffuseLight(normal.getX(), normal.getY(), normal.getZ());
+			float nx = normal.getX();
+			float ny = normal.getY();
+			float nz = normal.getZ();
+			float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
 
 			pos.set(x, y, z, 1F);
 			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
-			//builder.color((byte) Math.max(0, normal.getX() * 255), (byte) Math.max(0, normal.getY() * 255), (byte) Math.max(0, normal.getZ() * 255), a);
+			//builder.color((byte) Math.max(0, nx * 255), (byte) Math.max(0, ny * 255), (byte) Math.max(0, nz * 255), a);
 			if (shouldColor) {
 				//float lum = (r < 0 ? 255 + r : r) / 256f;
 				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
@@ -152,7 +153,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 			} else
 				builder.light(getLight(buffer, i));
 
-			builder.normal(normal.getX(), normal.getY(), normal.getZ())
+			builder.normal(nx, ny, nz)
 				.endVertex();
 		}
 
@@ -164,12 +165,26 @@ public class SuperByteBuffer extends TemplateBuffer {
 		otherBlockLight = -1;
 	}
 
+	public MatrixStacker matrixStacker() {
+		return MatrixStacker.of(transforms);
+	}
+
+	public SuperByteBuffer translate(Vec3d vec) {
+		return translate(vec.x, vec.y, vec.z);
+	}
+
 	public SuperByteBuffer translate(double x, double y, double z) {
 		return translate((float) x, (float) y, (float) z);
 	}
 
 	public SuperByteBuffer translate(float x, float y, float z) {
 		transforms.translate(x, y, z);
+		return this;
+	}
+
+	public SuperByteBuffer transform(MatrixStack stack) {
+		transforms.peek().getModel().multiply(stack.peek().getModel());
+		transforms.peek().getNormal().multiply(stack.peek().getNormal());
 		return this;
 	}
 

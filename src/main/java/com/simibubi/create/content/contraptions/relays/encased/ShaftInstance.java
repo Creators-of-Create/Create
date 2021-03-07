@@ -17,7 +17,7 @@ public class ShaftInstance extends SingleRotatingInstance {
 				InstancedTileRenderRegistry.instance.register(type, ShaftInstance::new));
 	}
 
-	public ShaftInstance(InstancedTileRenderer dispatcher, KineticTileEntity tile) {
+	public ShaftInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 	}
 

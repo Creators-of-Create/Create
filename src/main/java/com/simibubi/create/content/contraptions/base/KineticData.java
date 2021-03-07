@@ -58,6 +58,13 @@ public class KineticData<D extends KineticData<D>> extends InstanceData {
         return (D) this;
     }
 
+    public D nudge(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return (D) this;
+    }
+
     public D setBlockLight(int blockLight) {
         this.blockLight = (byte) ((blockLight & 0xF) << 4);
         return (D) this;

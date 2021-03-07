@@ -21,7 +21,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     protected InstanceKey<RotatingData> rotatingModelKey;
 
-    public SingleRotatingInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

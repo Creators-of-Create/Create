@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -50,25 +51,20 @@ public class GantryPinionRenderer extends KineticTileEntityRenderer {
 			if (facing == Direction.NORTH || facing == Direction.EAST)
 				angleForTe *= -1;
 
-		ms.push();
-
-		MatrixStacker msr = MatrixStacker.of(ms);
-
-		msr.centre()
+		SuperByteBuffer cogs = AllBlockPartials.GANTRY_COGS.renderOn(state);
+		cogs.matrixStacker()
+			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0);
+			.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0)
+			.translate(0, -9 / 16f, 0)
+			.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe))
+			.translate(0, 9 / 16f, 0)
+			.unCentre();
 
-		ms.translate(0, -9 / 16f, 0);
-		ms.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe));
-		ms.translate(0, 9 / 16f, 0);
-
-		msr.unCentre();
-		AllBlockPartials.GANTRY_COGS.renderOn(state)
-			.light(light)
+		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 
-		ms.pop();
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {

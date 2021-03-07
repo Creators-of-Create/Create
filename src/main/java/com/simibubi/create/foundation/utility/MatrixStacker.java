@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +11,7 @@ import net.minecraft.util.math.Vec3i;
 
 public class MatrixStacker {
 
-	static Vec3d center = VecHelper.getCenterOf(BlockPos.ZERO);
+	public static final Vec3d center = VecHelper.getCenterOf(BlockPos.ZERO);
 	static MatrixStacker instance;
 
 	MatrixStack ms;
@@ -60,6 +61,16 @@ public class MatrixStacker {
 
 	public MatrixStacker translateBack(Vec3d vec) {
 		ms.translate(-vec.x, -vec.y, -vec.z);
+		return this;
+	}
+
+	public MatrixStacker translate(double x, double y, double z) {
+		ms.translate(x, y, z);
+		return this;
+	}
+
+	public MatrixStacker multiply(Quaternion quaternion) {
+		ms.multiply(quaternion);
 		return this;
 	}
 
