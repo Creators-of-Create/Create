@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
@@ -30,6 +31,7 @@ import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionIns
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.ponder.instructions.FadeOutOfSceneInstruction;
+import com.simibubi.create.foundation.ponder.instructions.LineInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
 import com.simibubi.create.foundation.ponder.instructions.OutlineSelectionInstruction;
@@ -279,6 +281,10 @@ public class SceneBuilder {
 			addInstruction(new ChaseAABBInstruction(color, slot, boundingBox, duration));
 		}
 
+		public void showLine(PonderPalette color, Vec3d start, Vec3d end, int duration) {
+			addInstruction(new LineInstruction(color, start, end, duration));
+		}
+
 		public void showOutline(PonderPalette color, Object slot, Selection selection, int duration) {
 			addInstruction(new OutlineSelectionInstruction(color, slot, selection, duration));
 		}
@@ -287,23 +293,37 @@ public class SceneBuilder {
 
 	public class SpecialInstructions {
 
-		public void birbOnTurntable(BlockPos pos) {
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN,
-				ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos), pos)));
+		public ElementLink<ParrotElement> birbOnTurntable(BlockPos pos) {
+			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+			ParrotElement parrot = ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos), pos);
+			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
+			addInstruction(scene -> scene.linkElement(parrot, link));
+			return link;
 		}
 
-		public void birbOnSpinnyShaft(BlockPos pos) {
-			addInstruction(
-				new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos)
-					.add(0, 0.5, 0), pos)));
+		public ElementLink<ParrotElement> birbOnSpinnyShaft(BlockPos pos) {
+			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+			ParrotElement parrot = ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos)
+				.add(0, 0.5, 0), pos);
+			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
+			addInstruction(scene -> scene.linkElement(parrot, link));
+			return link;
 		}
 
-		public void birbLookingAtPOI(Vec3d location) {
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.lookAtPOI(location)));
+		public ElementLink<ParrotElement> birbLookingAtPOI(Vec3d location) {
+			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+			ParrotElement parrot = ParrotElement.lookAtPOI(location);
+			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
+			addInstruction(scene -> scene.linkElement(parrot, link));
+			return link;
 		}
 
-		public void birbPartying(Vec3d location) {
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, ParrotElement.dance(location)));
+		public ElementLink<ParrotElement> birbPartying(Vec3d location) {
+			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+			ParrotElement parrot = ParrotElement.dance(location);
+			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
+			addInstruction(scene -> scene.linkElement(parrot, link));
+			return link;
 		}
 
 		public void movePointOfInterest(Vec3d location) {
@@ -312,6 +332,15 @@ public class SceneBuilder {
 
 		public void movePointOfInterest(BlockPos location) {
 			movePointOfInterest(VecHelper.getCenterOf(location));
+		}
+
+		public void rotateParrot(ElementLink<ParrotElement> link, double xRotation, double yRotation, double zRotation,
+			int duration) {
+			addInstruction(AnimateParrotInstruction.rotate(link, new Vec3d(xRotation, yRotation, zRotation), duration));
+		}
+
+		public void moveParrot(ElementLink<ParrotElement> link, Vec3d offset, int duration) {
+			addInstruction(AnimateParrotInstruction.move(link, offset, duration));
 		}
 
 	}

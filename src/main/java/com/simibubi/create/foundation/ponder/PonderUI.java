@@ -563,10 +563,19 @@ public class PonderUI extends AbstractSimiScreen {
 			return true;
 
 		if (identifyMode && hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
-			clipboardHelper.setClipboardString(minecraft.getWindow()
-				.getHandle(),
-				"BlockPos copied = util.grid.at(" + hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", "
-					+ hoveredBlockPos.getZ() + ");");
+			long handle = minecraft.getWindow()
+				.getHandle();
+			if (copiedBlockPos != null && button == 1) {
+				clipboardHelper.setClipboardString(handle,
+					"util.select.fromTo(" + copiedBlockPos.getX() + ", " + copiedBlockPos.getY() + ", "
+						+ copiedBlockPos.getZ() + ", " + hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", "
+						+ hoveredBlockPos.getZ() + ")");
+				copiedBlockPos = hoveredBlockPos;
+				return true;
+			}
+
+			clipboardHelper.setClipboardString(handle, "util.grid.at(" + hoveredBlockPos.getX() + ", "
+				+ hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ() + ")");
 			copiedBlockPos = hoveredBlockPos;
 			return true;
 		}

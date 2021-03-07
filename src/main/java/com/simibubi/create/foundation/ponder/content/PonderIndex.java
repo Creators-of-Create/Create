@@ -26,6 +26,11 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.LARGE_COGWHEEL)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
 			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay);
+		PonderRegistry.forComponents(AllItems.BELT_CONNECTOR)
+			.addStoryBoard("belt/connect", BeltScenes::beltConnector)
+			.addStoryBoard("belt/directions", BeltScenes::directions)
+			.addStoryBoard("belt/transport", BeltScenes::transport)
+			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_CASING, AllBlocks.BRASS_CASING)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased)

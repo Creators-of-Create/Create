@@ -1840,7 +1840,27 @@
 
 	"create.ponder.belt_casing.header": "Encasing Belts",
 	"create.ponder.belt_casing.text_1": "Brass or Andesite Casing can be used to decorate Mechanical Belts",
-	"create.ponder.belt_casing.text_2": "A wrench can be used to remove it again",
+	"create.ponder.belt_casing.text_2": "A wrench can be used to remove the casing",
+
+	"create.ponder.belt_connector.header": "Using Mechanical Belts",
+	"create.ponder.belt_connector.text_1": "Right-Clicking two shafts with a belt item will connect them together",
+	"create.ponder.belt_connector.text_2": "Accidental selections can be canceled with Right-Click while Sneaking",
+	"create.ponder.belt_connector.text_3": "Additional Shafts can be added throughout the Belt",
+	"create.ponder.belt_connector.text_4": "Shafts connected via Belts will rotate with Identical Speed and Direction",
+	"create.ponder.belt_connector.text_5": "Added shafts can be removed using the wrench",
+	"create.ponder.belt_connector.text_6": "Mechanical Belts can be dyed for aesthetic purposes",
+
+	"create.ponder.belt_directions.header": "Valid Orientations for Mechanical Belts",
+	"create.ponder.belt_directions.text_1": "Belts cannot connect in arbitrary directions",
+	"create.ponder.belt_directions.text_2": "1. They can connect horizontally",
+	"create.ponder.belt_directions.text_3": "2. They can connect diagonally",
+	"create.ponder.belt_directions.text_4": "3. They can connect vertically",
+	"create.ponder.belt_directions.text_5": "4. And they can connect vertical shafts horizontally",
+	"create.ponder.belt_directions.text_6": "These are all possible directions.\nBelts can span any Length between 2 and 20 blocks",
+
+	"create.ponder.belt_transport.header": "Using Mechanical Belts for Logistics",
+	"create.ponder.belt_transport.text_1": "Moving belts will transport Items and other Entities",
+	"create.ponder.belt_transport.text_2": "Right-Click with an empty hand to take items off a belt",
 
 	"create.ponder.brass_funnel.header": "The Brass Funnel",
 	"create.ponder.brass_funnel.text_1": "Andesite Funnels can only ever extract single items.",
@@ -1873,6 +1893,10 @@
 	"create.ponder.cogwheel.header": "Relaying rotational force using Cogwheels",
 	"create.ponder.cogwheel.text_1": "Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "Neighbouring shafts connected like this will rotate in opposite directions",
+
+	"create.ponder.creative_motor.header": "Generating Rotational Force using Creative Motors",
+	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
+	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
 	"create.ponder.funnel_compat.header": "Funnel compatibility",
 	"create.ponder.funnel_compat.text_1": "Funnels should also interact nicely with a handful of other components.",
@@ -1931,6 +1955,12 @@
 	"create.ponder.gearshift.text_1": "Gearshifts will relay rotation in a straight line",
 	"create.ponder.gearshift.text_2": "When powered by Redstone, it reverses the transmission",
 
+	"create.ponder.hand_crank.header": "Generating Rotational Force using Hand Cranks",
+	"create.ponder.hand_crank.text_1": "Hand Cranks can be used by players to apply rotational force manually",
+	"create.ponder.hand_crank.text_2": "Hold Right-Click to rotate it Counter-Clockwise",
+	"create.ponder.hand_crank.text_3": "Its conveyed speed is relatively high",
+	"create.ponder.hand_crank.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
+
 	"create.ponder.large_cogwheel.header": "Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "Large cogwheels can connect to each other at right angles",
 	"create.ponder.large_cogwheel.text_2": "It will help relaying conveyed speed to other axes of rotation",
@@ -1953,6 +1983,19 @@
 
 	"create.ponder.shaft_casing.header": "Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.valve_handle.header": "Generating Rotational Force using Valve Handles",
+	"create.ponder.valve_handle.text_1": "Valve Handles can be used by players to apply rotational force manually",
+	"create.ponder.valve_handle.text_2": "Hold Right-Click to rotate it Counter-Clockwise",
+	"create.ponder.valve_handle.text_3": "Its conveyed speed is slow and precise",
+	"create.ponder.valve_handle.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
+	"create.ponder.valve_handle.text_5": "Valve handles can be dyed for aesthetic purposes",
+
+	"create.ponder.water_wheel.header": "Generating Rotational Force using Water Wheels",
+	"create.ponder.water_wheel.text_1": "Water Wheels draw force from adjacent Water Currents",
+	"create.ponder.water_wheel.text_2": "The more faces are powered, the faster the Water Wheel will rotate",
+	"create.ponder.water_wheel.text_3": "The Wheels' blades should be oriented against the flow",
+	"create.ponder.water_wheel.text_4": "Facing the opposite way, they will not be as effective",
 
 	"_": "Thank you for translating Create!"
 

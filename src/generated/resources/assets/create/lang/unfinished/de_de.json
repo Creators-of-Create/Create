@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1096",
+	"_": "Missing Localizations: 1132",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1841,7 +1841,27 @@
 
 	"create.ponder.belt_casing.header": "UNLOCALIZED: Encasing Belts",
 	"create.ponder.belt_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Mechanical Belts",
-	"create.ponder.belt_casing.text_2": "UNLOCALIZED: A wrench can be used to remove it again",
+	"create.ponder.belt_casing.text_2": "UNLOCALIZED: A wrench can be used to remove the casing",
+
+	"create.ponder.belt_connector.header": "UNLOCALIZED: Using Mechanical Belts",
+	"create.ponder.belt_connector.text_1": "UNLOCALIZED: Right-Clicking two shafts with a belt item will connect them together",
+	"create.ponder.belt_connector.text_2": "UNLOCALIZED: Accidental selections can be canceled with Right-Click while Sneaking",
+	"create.ponder.belt_connector.text_3": "UNLOCALIZED: Additional Shafts can be added throughout the Belt",
+	"create.ponder.belt_connector.text_4": "UNLOCALIZED: Shafts connected via Belts will rotate with Identical Speed and Direction",
+	"create.ponder.belt_connector.text_5": "UNLOCALIZED: Added shafts can be removed using the wrench",
+	"create.ponder.belt_connector.text_6": "UNLOCALIZED: Mechanical Belts can be dyed for aesthetic purposes",
+
+	"create.ponder.belt_directions.header": "UNLOCALIZED: Valid Orientations for Mechanical Belts",
+	"create.ponder.belt_directions.text_1": "UNLOCALIZED: Belts cannot connect in arbitrary directions",
+	"create.ponder.belt_directions.text_2": "UNLOCALIZED: 1. They can connect horizontally",
+	"create.ponder.belt_directions.text_3": "UNLOCALIZED: 2. They can connect diagonally",
+	"create.ponder.belt_directions.text_4": "UNLOCALIZED: 3. They can connect vertically",
+	"create.ponder.belt_directions.text_5": "UNLOCALIZED: 4. And they can connect vertical shafts horizontally",
+	"create.ponder.belt_directions.text_6": "UNLOCALIZED: These are all possible directions.\nBelts can span any Length between 2 and 20 blocks",
+
+	"create.ponder.belt_transport.header": "UNLOCALIZED: Using Mechanical Belts for Logistics",
+	"create.ponder.belt_transport.text_1": "UNLOCALIZED: Moving belts will transport Items and other Entities",
+	"create.ponder.belt_transport.text_2": "UNLOCALIZED: Right-Click with an empty hand to take items off a belt",
 
 	"create.ponder.brass_funnel.header": "UNLOCALIZED: The Brass Funnel",
 	"create.ponder.brass_funnel.text_1": "UNLOCALIZED: Andesite Funnels can only ever extract single items.",
@@ -1874,6 +1894,10 @@
 	"create.ponder.cogwheel.header": "UNLOCALIZED: Relaying rotational force using Cogwheels",
 	"create.ponder.cogwheel.text_1": "UNLOCALIZED: Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "UNLOCALIZED: Neighbouring shafts connected like this will rotate in opposite directions",
+
+	"create.ponder.creative_motor.header": "UNLOCALIZED: Generating Rotational Force using Creative Motors",
+	"create.ponder.creative_motor.text_1": "UNLOCALIZED: Creative motors are a compact and configurable source of Rotational Force",
+	"create.ponder.creative_motor.text_2": "UNLOCALIZED: Scrolling on the back panel changes the RPM of the motors' rotational output",
 
 	"create.ponder.funnel_compat.header": "UNLOCALIZED: Funnel compatibility",
 	"create.ponder.funnel_compat.text_1": "UNLOCALIZED: Funnels should also interact nicely with a handful of other components.",
@@ -1932,6 +1956,12 @@
 	"create.ponder.gearshift.text_1": "UNLOCALIZED: Gearshifts will relay rotation in a straight line",
 	"create.ponder.gearshift.text_2": "UNLOCALIZED: When powered by Redstone, it reverses the transmission",
 
+	"create.ponder.hand_crank.header": "UNLOCALIZED: Generating Rotational Force using Hand Cranks",
+	"create.ponder.hand_crank.text_1": "UNLOCALIZED: Hand Cranks can be used by players to apply rotational force manually",
+	"create.ponder.hand_crank.text_2": "UNLOCALIZED: Hold Right-Click to rotate it Counter-Clockwise",
+	"create.ponder.hand_crank.text_3": "UNLOCALIZED: Its conveyed speed is relatively high",
+	"create.ponder.hand_crank.text_4": "UNLOCALIZED: Sneak and Hold Right-Click to rotate it Clockwise",
+
 	"create.ponder.large_cogwheel.header": "UNLOCALIZED: Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "UNLOCALIZED: Large cogwheels can connect to each other at right angles",
 	"create.ponder.large_cogwheel.text_2": "UNLOCALIZED: It will help relaying conveyed speed to other axes of rotation",
@@ -1954,6 +1984,19 @@
 
 	"create.ponder.shaft_casing.header": "UNLOCALIZED: Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.valve_handle.header": "UNLOCALIZED: Generating Rotational Force using Valve Handles",
+	"create.ponder.valve_handle.text_1": "UNLOCALIZED: Valve Handles can be used by players to apply rotational force manually",
+	"create.ponder.valve_handle.text_2": "UNLOCALIZED: Hold Right-Click to rotate it Counter-Clockwise",
+	"create.ponder.valve_handle.text_3": "UNLOCALIZED: Its conveyed speed is slow and precise",
+	"create.ponder.valve_handle.text_4": "UNLOCALIZED: Sneak and Hold Right-Click to rotate it Clockwise",
+	"create.ponder.valve_handle.text_5": "UNLOCALIZED: Valve handles can be dyed for aesthetic purposes",
+
+	"create.ponder.water_wheel.header": "UNLOCALIZED: Generating Rotational Force using Water Wheels",
+	"create.ponder.water_wheel.text_1": "UNLOCALIZED: Water Wheels draw force from adjacent Water Currents",
+	"create.ponder.water_wheel.text_2": "UNLOCALIZED: The more faces are powered, the faster the Water Wheel will rotate",
+	"create.ponder.water_wheel.text_3": "UNLOCALIZED: The Wheels' blades should be oriented against the flow",
+	"create.ponder.water_wheel.text_4": "UNLOCALIZED: Facing the opposite way, they will not be as effective",
 
 	"_": "Thank you for translating Create!"
 
