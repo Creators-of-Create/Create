@@ -36,6 +36,13 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch);
 		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift);
 
+		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor);
+		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel);
+		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank);
+		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle);
+		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES)
+			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
+
 		PonderRegistry.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
 			ChainDriveScenes::chainDriveAsRelay);
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)

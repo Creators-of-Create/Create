@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
@@ -15,9 +17,12 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 public class KineticsScenes {
@@ -431,7 +436,7 @@ public class KineticsScenes {
 		scene.effects.rotationDirectionIndicator(gearshift.east(2));
 		scene.effects.rotationDirectionIndicator(gearshift.west(2));
 		scene.idle(30);
-		
+
 		scene.overlay.showText(50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
@@ -446,6 +451,240 @@ public class KineticsScenes {
 			scene.effects.rotationDirectionIndicator(gearshift.east(2));
 			scene.effects.rotationDirectionIndicator(gearshift.west(2));
 		}
+	}
+
+	public static void creativeMotor(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("creative_motor", "Generating Rotational Force using Creative Motors");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+
+		BlockPos motor = util.grid.at(3, 1, 2);
+
+		for (int i = 0; i < 3; i++) {
+			scene.idle(5);
+			scene.world.showSection(util.select.position(1 + i, 1, 2), Direction.DOWN);
+		}
+
+		scene.idle(10);
+		scene.effects.rotationSpeedIndicator(motor);
+		scene.overlay.showText(50)
+			.text("Creative motors are a compact and configurable source of Rotational Force")
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(motor));
+		scene.idle(50);
+
+		scene.rotateCameraY(90);
+		scene.idle(20);
+
+		Vec3d blockSurface = util.vector.blockSurface(motor, Direction.EAST);
+		AxisAlignedBB point = new AxisAlignedBB(blockSurface, blockSurface);
+		AxisAlignedBB expanded = point.grow(1 / 16f, 1 / 5f, 1 / 5f);
+
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, point, 1);
+		scene.idle(1);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, expanded, 60);
+		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll(), 60);
+		scene.idle(20);
+
+		scene.overlay.showText(50)
+			.text("Scrolling on the back panel changes the RPM of the motors' rotational output")
+			.placeNearTarget()
+			.pointAt(blockSurface);
+		scene.idle(10);
+		scene.world.modifyKineticSpeed(util.select.fromTo(1, 1, 2, 3, 1, 2), f -> 4 * f);
+		scene.idle(50);
+
+		scene.effects.rotationSpeedIndicator(motor);
+		scene.rotateCameraY(-90);
+	}
+
+	public static void waterWheel(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("water_wheel", "Generating Rotational Force using Water Wheels");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(util.select.fromTo(4, 1, 1, 4, 3, 3)
+			.add(util.select.fromTo(3, 1, 3, 3, 2, 3)), Direction.DOWN);
+		scene.world.setKineticSpeed(util.select.everywhere(), 0);
+
+		BlockPos gaugePos = util.grid.at(0, 2, 2);
+
+		for (int i = 0; i < 4; i++) {
+			scene.idle(5);
+			scene.world.showSection(util.select.fromTo(gaugePos.east(i)
+				.down(), gaugePos.east(i)), Direction.DOWN);
+		}
+
+		scene.idle(10);
+
+		for (int i = 0; i < 3; i++) {
+			scene.idle(5);
+			scene.world.showSection(util.select.position(3, 3, 3 - i), Direction.DOWN);
+		}
+		scene.world.setKineticSpeed(util.select.everywhere(), -12);
+		scene.effects.indicateSuccess(gaugePos);
+		for (int i = 0; i < 2; i++) {
+			scene.idle(5);
+			scene.world.showSection(util.select.position(3, 2 - i, 1), Direction.DOWN);
+		}
+
+		BlockPos wheel = util.grid.at(3, 2, 2);
+		scene.effects.rotationSpeedIndicator(wheel);
+		scene.overlay.showText(50)
+			.text("Water Wheels draw force from adjacent Water Currents")
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(wheel));
+		scene.idle(50);
+
+		AxisAlignedBB bb = new AxisAlignedBB(wheel).grow(.125f, 0, 0);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 1.2, 0)
+			.contract(0, .75, 0), 80);
+		scene.idle(5);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 0, 1.2)
+			.contract(0, 0, .75), 80);
+		scene.idle(5);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, -1.2, 0)
+			.contract(0, -.75, 0), 80);
+		scene.idle(5);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 0, -1.2)
+			.contract(0, 0, -.75), 80);
+		scene.idle(5);
+		scene.overlay.showText(50)
+			.text("The more faces are powered, the faster the Water Wheel will rotate")
+			.colored(PonderPalette.MEDIUM)
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(wheel));
+
+		scene.idle(80);
+		scene.rotateCameraY(-30);
+		scene.overlay.showText(70)
+			.text("The Wheels' blades should be oriented against the flow")
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(wheel));
+		scene.idle(80);
+
+		ElementLink<WorldSectionElement> water = scene.world.makeSectionIndependent(util.select.fromTo(3, 1, 1, 3, 3, 1)
+			.add(util.select.fromTo(3, 3, 2, 3, 3, 3)));
+		ElementLink<WorldSectionElement> wheelElement = scene.world.makeSectionIndependent(util.select.position(wheel));
+
+		scene.world.setKineticSpeed(util.select.everywhere(), 0);
+		scene.world.moveSection(water, util.vector.of(0, 2, -2), 10);
+		scene.world.moveSection(wheelElement, util.vector.of(0, 1, -1), 10);
+		scene.idle(10);
+		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
+		scene.idle(10);
+		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.HORIZONTAL_FACING, Direction.WEST), false);
+		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
+		scene.idle(1);
+		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
+		scene.world.moveSection(wheelElement, util.vector.of(0, -1, 1), 10);
+		scene.idle(10);
+		scene.world.setKineticSpeed(util.select.everywhere(), -8);
+
+		scene.overlay.showText(70)
+			.colored(PonderPalette.RED)
+			.text("Facing the opposite way, they will not be as effective")
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(wheel));
+		scene.idle(80);
+
+		scene.world.setKineticSpeed(util.select.everywhere(), 0);
+		scene.world.moveSection(water, util.vector.of(0, 2, -2), 10);
+		scene.world.moveSection(wheelElement, util.vector.of(0, 1, -1), 10);
+		scene.idle(10);
+		scene.rotateCameraY(30);
+		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
+		scene.idle(10);
+		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.HORIZONTAL_FACING, Direction.EAST), false);
+		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
+		scene.idle(1);
+		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
+		scene.world.moveSection(wheelElement, util.vector.of(0, -1, 1), 10);
+		scene.idle(10);
+		scene.world.setKineticSpeed(util.select.everywhere(), -12);
+		scene.effects.indicateSuccess(gaugePos);
+	}
+
+	public static void handCrank(SceneBuilder scene, SceneBuildingUtil util) {
+		manualSource(scene, util, true);
+	}
+
+	public static void valveHandle(SceneBuilder scene, SceneBuildingUtil util) {
+		manualSource(scene, util, false);
+		scene.world.setKineticSpeed(util.select.everywhere(), 0);
+		scene.idle(20);
+		Vec3d centerOf = util.vector.centerOf(2, 2, 2);
+		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
+			.withItem(new ItemStack(Items.BLUE_DYE)), 40);
+		scene.idle(7);
+		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES[11].getDefaultState()
+			.with(ValveHandleBlock.FACING, Direction.UP), true);
+		scene.idle(10);
+		scene.overlay.showText(70)
+			.text("Valve handles can be dyed for aesthetic purposes")
+			.placeNearTarget()
+			.pointAt(centerOf);
+	}
+
+	private static void manualSource(SceneBuilder scene, SceneBuildingUtil util, boolean handCrank) {
+		String name = handCrank ? "Hand Cranks" : "Valve Handles";
+		scene.title(handCrank ? "hand_crank" : "valve_handle", "Generating Rotational Force using " + name);
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		BlockPos gaugePos = util.grid.at(1, 3, 3);
+		BlockPos handlePos = util.grid.at(2, 2, 2);
+		Selection handleSelect = util.select.position(handlePos);
+
+		scene.world.showSection(util.select.layersFrom(1)
+			.substract(handleSelect), Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(handleSelect, Direction.DOWN);
+		scene.idle(20);
+
+		Vec3d centerOf = util.vector.centerOf(handlePos);
+		scene.overlay.showText(70)
+			.text(name + " can be used by players to apply rotational force manually")
+			.placeNearTarget()
+			.pointAt(centerOf);
+		scene.idle(80);
+
+		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick(), 40);
+		scene.idle(7);
+		scene.world.setKineticSpeed(util.select.everywhere(), handCrank ? 32 : 16);
+		scene.world.modifyKineticSpeed(util.select.column(1, 3), f -> f * -2);
+		scene.effects.rotationDirectionIndicator(handlePos);
+		scene.effects.indicateSuccess(gaugePos);
+		scene.idle(10);
+		scene.overlay.showText(50)
+			.text("Hold Right-Click to rotate it Counter-Clockwise")
+			.placeNearTarget()
+			.pointAt(centerOf);
+		scene.idle(70);
+		scene.overlay.showText(50)
+			.colored(handCrank ? PonderPalette.MEDIUM : PonderPalette.SLOW)
+			.text("Its conveyed speed is " + (handCrank ? "relatively high" : "slow and precise"))
+			.placeNearTarget()
+			.pointAt(centerOf);
+		scene.idle(70);
+
+		scene.world.setKineticSpeed(util.select.everywhere(), 0);
+		scene.idle(10);
+
+		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
+			.whileSneaking(), 40);
+		scene.idle(7);
+		scene.world.setKineticSpeed(util.select.everywhere(), handCrank ? -32 : -16);
+		scene.world.modifyKineticSpeed(util.select.column(1, 3), f -> f * -2);
+		scene.effects.rotationDirectionIndicator(handlePos);
+		scene.effects.indicateSuccess(gaugePos);
+		scene.idle(10);
+		scene.overlay.showText(90)
+			.text("Sneak and Hold Right-Click to rotate it Clockwise")
+			.placeNearTarget()
+			.pointAt(centerOf);
+		scene.idle(90);
 	}
 
 }

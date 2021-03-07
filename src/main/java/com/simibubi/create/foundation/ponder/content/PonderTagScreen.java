@@ -285,4 +285,11 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		return super.mouseClicked(x, y, button);
 	}
 
+	@Override
+	public boolean isEquivalentTo(AbstractSimiScreen other) {
+		if (other instanceof PonderTagScreen)
+			return tag == ((PonderTagScreen) other).tag;
+		return super.isEquivalentTo(other);
+	}
+
 }

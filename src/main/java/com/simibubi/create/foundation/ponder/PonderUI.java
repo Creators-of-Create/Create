@@ -97,7 +97,7 @@ public class PonderUI extends AbstractSimiScreen {
 			stack = new ItemStack(ForgeRegistries.ITEMS.getValue(component));
 		else
 			stack = new ItemStack(ForgeRegistries.BLOCKS.getValue(component));
-		
+
 		tags = new ArrayList<>(PonderRegistry.tags.getTags(component));
 		this.scenes = scenes;
 		if (scenes.isEmpty()) {
@@ -725,6 +725,13 @@ public class PonderUI extends AbstractSimiScreen {
 
 	public ItemStack getSubject() {
 		return stack;
+	}
+
+	@Override
+	public boolean isEquivalentTo(AbstractSimiScreen other) {
+		if (other instanceof PonderUI)
+			return stack.isItemEqual(((PonderUI) other).stack);
+		return super.isEquivalentTo(other);
 	}
 
 }

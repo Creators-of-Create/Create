@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
@@ -49,22 +48,25 @@ public class ScreenOpener {
 	// transitions are only supported in simiScreens atm. they take care of all the
 	// rendering for it
 	public static void transitionTo(AbstractSimiScreen screen) {
-		
-		List<Screen> screenHistory = getScreenHistory();
-		if (!screenHistory.isEmpty()) {
-			Screen previouslyRenderedScreen = screenHistory.get(0);
-			if (screen instanceof PonderUI && previouslyRenderedScreen instanceof PonderUI) {
-				if (((PonderUI) screen).getSubject()
-					.isItemEqual(((PonderUI) previouslyRenderedScreen).getSubject())) {
-					openPreviousScreen(Minecraft.getInstance().currentScreen);
-					return;
-				}
-			}
-		}
-
+		if (tryBackTracking(screen))
+			return;
 		screen.transition.startWithValue(0.1)
 			.chase(1, .4f, LerpedFloat.Chaser.EXP);
 		open(screen);
+	}
+
+	private static boolean tryBackTracking(AbstractSimiScreen screen) {
+		List<Screen> screenHistory = getScreenHistory();
+		if (screenHistory.isEmpty())
+			return false;
+		Screen previouslyRenderedScreen = screenHistory.get(0);
+		if (!(previouslyRenderedScreen instanceof AbstractSimiScreen))
+			return false;
+		if (!screen.isEquivalentTo((AbstractSimiScreen) previouslyRenderedScreen))
+			return false;
+
+		openPreviousScreen(Minecraft.getInstance().currentScreen);
+		return true;
 	}
 
 	public static void clearStack() {

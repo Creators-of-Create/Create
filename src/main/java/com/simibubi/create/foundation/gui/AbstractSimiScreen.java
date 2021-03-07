@@ -275,5 +275,9 @@ public abstract class AbstractSimiScreen extends Screen {
 		double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
 		centerScalingOn((int) mouseX, (int) mouseY);
 	}
+	
+	public boolean isEquivalentTo(AbstractSimiScreen other) {
+		return false;
+	}
 
 }
