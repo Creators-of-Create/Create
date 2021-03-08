@@ -55,7 +55,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock.MinecartAnchorBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
@@ -693,8 +693,8 @@ public class AllBlocks {
 					.getName() + "/head"))))
 			.register();
 
-	public static final BlockEntry<GantryPinionBlock> GANTRY_PINION =
-		REGISTRATE.block("gantry_pinion", GantryPinionBlock::new)
+	public static final BlockEntry<GantryCarriageBlock> GANTRY_CARRIAGE =
+		REGISTRATE.block("gantry_carriage", GantryCarriageBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(Block.Properties::nonOpaque)
 			.blockstate(BlockStateGen.directionalAxisBlockProvider())
@@ -1093,7 +1093,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.andesite()))
-			.blockstate(new FunnelGenerator("andesite")::generate)
+			.blockstate(new FunnelGenerator("andesite", false)::generate)
 			.item(FunnelItem::new)
 			.model(FunnelGenerator.itemModel("andesite"))
 			.build()
@@ -1112,7 +1112,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::softMetal)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(addMovementBehaviour(FunnelMovementBehaviour.brass()))
-			.blockstate(new FunnelGenerator("brass")::generate)
+			.blockstate(new FunnelGenerator("brass", true)::generate)
 			.item(FunnelItem::new)
 			.model(FunnelGenerator.itemModel("brass"))
 			.build()

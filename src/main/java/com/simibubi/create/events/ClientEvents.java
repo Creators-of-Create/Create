@@ -1,8 +1,5 @@
 package com.simibubi.create.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -25,10 +22,10 @@ import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRen
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
+import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
@@ -39,7 +36,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -56,6 +52,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -65,6 +62,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -92,7 +92,8 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		ScreenOpener.tick();
+		PonderTooltipHandler.tick();
+		//ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
 		FilteringRenderer.tick();
@@ -136,6 +137,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
 		ms.push();
@@ -146,9 +148,8 @@ public class ClientEvents {
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
-		CreateClient.outliner.renderOutlines(ms, buffer);
+		CreateClient.outliner.renderOutlines(ms, buffer, pt);
 //		LightVolumeDebugger.render(ms, buffer);
-//		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -173,6 +174,11 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
+	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
+		PonderTooltipHandler.handleTooltipColor(event);
+	}
+	
+	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
@@ -193,7 +199,8 @@ public class ClientEvents {
 					.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
-
+		
+		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
 	}
 
 	@SubscribeEvent

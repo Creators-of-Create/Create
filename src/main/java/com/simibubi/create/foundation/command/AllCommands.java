@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.Collections;
+import java.util.function.Predicate;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.Collections;
-import java.util.function.Predicate;
 
 public class AllCommands {
 
@@ -29,6 +30,7 @@ public class AllCommands {
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())
 				.then(CloneCommand.register())
+				.then(PonderCommand.register())
 
 				//utility
 				.then(util)

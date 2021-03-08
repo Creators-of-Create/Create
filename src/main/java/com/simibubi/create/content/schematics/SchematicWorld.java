@@ -34,11 +34,12 @@ import net.minecraft.world.biome.Biomes;
 
 public class SchematicWorld extends WrappedWorld {
 
-	private Map<BlockPos, BlockState> blocks;
-	private Map<BlockPos, TileEntity> tileEntities;
-	private List<TileEntity> renderedTileEntities;
-	private List<Entity> entities;
-	private MutableBoundingBox bounds;
+	protected Map<BlockPos, BlockState> blocks;
+	protected Map<BlockPos, TileEntity> tileEntities;
+	protected List<TileEntity> renderedTileEntities;
+	protected List<Entity> entities;
+	protected MutableBoundingBox bounds;
+	
 	public BlockPos anchor;
 	public boolean renderMode;
 
@@ -179,6 +180,18 @@ public class SchematicWorld extends WrappedWorld {
 		pos = pos.subtract(anchor);
 		bounds.expandTo(new MutableBoundingBox(pos, pos));
 		blocks.put(pos, arg1);
+		if (tileEntities.containsKey(pos)) {
+			TileEntity tileEntity = tileEntities.get(pos);
+			if (!tileEntity.getType().isValidBlock(arg1.getBlock())) {
+				tileEntities.remove(pos);
+				renderedTileEntities.remove(tileEntity);
+			}
+		}
+		
+		TileEntity tileEntity = getTileEntity(pos);
+		if (tileEntity != null)
+			tileEntities.put(pos, tileEntity);
+		
 		return true;
 	}
 

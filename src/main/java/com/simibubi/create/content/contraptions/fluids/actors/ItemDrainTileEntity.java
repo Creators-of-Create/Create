@@ -98,10 +98,12 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			return;
 		}
 
+		boolean onClient = world.isRemote && !isVirtual();
+		
 		if (processingTicks > 0) {
 			heldItem.prevBeltPosition = .5f;
 			boolean wasAtBeginning = processingTicks == FILLING_TIME;
-			if (!world.isRemote || processingTicks < FILLING_TIME)
+			if (!onClient || processingTicks < FILLING_TIME)
 				processingTicks--;
 			if (!continueProcessing()) {
 				processingTicks = 0;
@@ -120,7 +122,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (heldItem.beltPosition > 1) {
 			heldItem.beltPosition = 1;
 
-			if (world.isRemote)
+			if (onClient)
 				return;
 
 			Direction side = heldItem.insertedFrom;
@@ -186,7 +188,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			if (!EmptyingByBasin.canItemBeEmptied(world, heldItem.stack))
 				return;
 			heldItem.beltPosition = .5f;
-			if (world.isRemote)
+			if (onClient)
 				return;
 			processingTicks = FILLING_TIME;
 			sendData();
@@ -195,7 +197,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	protected boolean continueProcessing() {
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return true;
 		if (processingTicks < 5)
 			return true;

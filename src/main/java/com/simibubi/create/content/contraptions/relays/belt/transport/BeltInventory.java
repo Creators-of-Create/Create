@@ -82,7 +82,7 @@ public class BeltInventory {
 			.get(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
 		float spacing = 1;
 		World world = belt.getWorld();
-		boolean onClient = world.isRemote;
+		boolean onClient = world.isRemote && !belt.isVirtual();
 
 		// resolve ending only when items will reach it this tick
 		Ending ending = Ending.UNRESOLVED;
@@ -105,7 +105,7 @@ public class BeltInventory {
 				movement *= ServerSpeedProvider.get();
 
 			// Don't move if held by processing (client)
-			if (onClient && currentItem.locked)
+			if (world.isRemote && currentItem.locked)
 				continue;
 
 			// Don't move if other items are waiting in front
@@ -436,5 +436,5 @@ public class BeltInventory {
 	public List<TransportedItemStack> getTransportedItems() {
 		return items;
 	}
-
+	
 }

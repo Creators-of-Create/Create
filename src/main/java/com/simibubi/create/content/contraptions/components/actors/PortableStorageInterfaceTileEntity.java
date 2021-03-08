@@ -55,8 +55,9 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	public void tick() {
 		super.tick();
 		boolean wasConnected = isConnected();
+		int timeUnit = getTransferTimeout() / 2;
 
-		if (transferTimer > 0) {
+		if (transferTimer > 0 && (!isVirtual() || transferTimer != timeUnit)) {
 			transferTimer--;
 			if (transferTimer == 0 || powered)
 				stopTransferring();
@@ -67,7 +68,6 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 			markDirty();
 
 		float progress = 0;
-		int timeUnit = getTransferTimeout() / 2;
 		if (isConnected)
 			progress = 1;
 		else if (transferTimer >= timeUnit * 3)
@@ -106,12 +106,13 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		powered = isBlockPowered;
 		sendData();
 	}
-	
+
 	public boolean isPowered() {
 		return powered;
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
