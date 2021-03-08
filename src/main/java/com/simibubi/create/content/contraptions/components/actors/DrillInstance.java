@@ -6,10 +6,7 @@ import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
@@ -34,16 +31,15 @@ public class DrillInstance extends SingleRotatingInstance {
         BlockState state = context.state;
         InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);
 
-        model.createInstance(data -> {
-            Direction facing = state.get(DrillBlock.FACING);
-            float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
-            float eulerY = facing.getHorizontalAngle();
-            data.setPosition(context.localPos)
-                .setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-                .setRotationOffset(0)
-                .setRotationAxis(0, 0, 1)
-                .setLocalRotation(eulerX, eulerY, 0);
-        });
+        Direction facing = state.get(DrillBlock.FACING);
+        float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
+        float eulerY = facing.getHorizontalAngle();
+        model.getInstance(model.createInstance())
+             .setPosition(context.localPos)
+             .setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
+             .setRotationOffset(0)
+             .setRotationAxis(0, 0, 1)
+             .setLocalRotation(eulerX, eulerY, 0);
     }
 
     @Override

@@ -85,31 +85,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         return this.data.get(key.index);
     }
 
-    public synchronized void modifyInstance(InstanceKey<D> key, Consumer<D> edit) {
-        verifyKey(key);
-
-        D data = this.data.get(key.index);
-
-        edit.accept(data);
-
-        markIndexChanged(key.index);
-    }
-
     public synchronized InstanceKey<D> createInstance() {
         D instanceData = newInstance();
-
-        InstanceKey<D> key = new InstanceKey<>(this, data.size());
-        data.add(instanceData);
-        keys.add(key);
-
-        markIndexChanged(key.index);
-
-        return key;
-    }
-
-    public synchronized InstanceKey<D> createInstance(Consumer<D> setup) {
-        D instanceData = newInstance();
-        setup.accept(instanceData);
 
         InstanceKey<D> key = new InstanceKey<>(this, data.size());
         data.add(instanceData);

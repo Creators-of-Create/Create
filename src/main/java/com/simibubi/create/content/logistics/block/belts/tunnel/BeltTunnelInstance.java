@@ -53,17 +53,20 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
                 float intensity = segment == 3 ? 1.5f : segment + 1;
                 float segmentOffset = -3 / 16f * segment;
 
-                flaps.add(model.createInstance(flapData -> {
-                    flapData.setPosition(pos)
-                            .setSegmentOffset(segmentOffset, 0, 0)
-                            .setBlockLight(blockLight)
-                            .setSkyLight(skyLight)
-                            .setHorizontalAngle(horizontalAngle)
-                            .setFlapness(flapness)
-                            .setFlapScale(flapScale)
-                            .setPivotVoxelSpace(0, 10, 1)
-                            .setIntensity(intensity);
-                }));
+                InstanceKey<FlapData> key = model.createInstance();
+
+                key.getInstance()
+                   .setPosition(pos)
+                   .setSegmentOffset(segmentOffset, 0, 0)
+                   .setBlockLight(blockLight)
+                   .setSkyLight(skyLight)
+                   .setHorizontalAngle(horizontalAngle)
+                   .setFlapness(flapness)
+                   .setFlapScale(flapScale)
+                   .setPivotVoxelSpace(0, 10, 1)
+                   .setIntensity(intensity);
+
+                flaps.add(key);
             }
 
             tunnelFlaps.put(direction, flaps);
@@ -80,7 +83,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
             float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
             for (InstanceKey<FlapData> key : keys) {
-                key.modifyInstance(data -> data.setFlapness(flapness));
+                key.getInstance().setFlapness(flapness);
             }
         });
     }
@@ -95,8 +98,8 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
         for (ArrayList<InstanceKey<FlapData>> instanceKeys : tunnelFlaps.values()) {
             for (InstanceKey<FlapData> it : instanceKeys) {
-                it.modifyInstance(data -> data.setBlockLight(blockLight)
-                                              .setSkyLight(skyLight));
+                it.getInstance().setBlockLight(blockLight)
+                                .setSkyLight(skyLight);
             }
         }
     }

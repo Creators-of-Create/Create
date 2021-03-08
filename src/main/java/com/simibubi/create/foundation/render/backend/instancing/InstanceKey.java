@@ -21,10 +21,6 @@ public class InstanceKey<D extends InstanceData> {
         return index != INVALID;
     }
 
-    public void modifyInstance(Consumer<D> edit) {
-        model.modifyInstance(this, edit);
-    }
-
     public D getInstance() {
         return model.getInstance(this);
     }

@@ -72,9 +72,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
             InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
-            Consumer<BeltData> setupFunc = setupFunc(bottom, spriteShift);
 
-            keys.add(beltModel.createInstance(setupFunc));
+            keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
             if (diagonal) break;
         }
@@ -82,7 +81,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         if (tile.hasPulley()) {
             InstancedModel<RotatingData> pulleyModel = getPulleyModel();
 
-            pulleyKey = pulleyModel.createInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
+            pulleyKey = setup(pulleyModel.createInstance(), tile.getSpeed(), getRotationAxis());
         }
     }
 
@@ -94,9 +93,10 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         for (InstanceKey<BeltData> key : keys) {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
-            key.modifyInstance(data -> data.setScrollTexture(spriteShiftEntry)
-                                           .setColor(tile.network)
-                                           .setRotationalSpeed(getScrollSpeed()));
+            key.getInstance()
+               .setScrollTexture(spriteShiftEntry)
+               .setColor(tile.network)
+               .setRotationalSpeed(getScrollSpeed());
             bottom = false;
         }
 
@@ -107,11 +107,9 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     public void updateLight() {
-        for (InstanceKey<BeltData> key : keys) {
-            key.modifyInstance(this::relight);
-        }
+        keys.forEach(this::relight);
 
-        if (pulleyKey != null) pulleyKey.modifyInstance(this::relight);
+        if (pulleyKey != null) relight(pulleyKey);
     }
 
     @Override
@@ -165,22 +163,22 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return dir;
     }
 
-    private Consumer<BeltData> setupFunc(boolean bottom, SpriteShiftEntry spriteShift) {
-        return data -> {
-            float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (beltSlope == BeltSlope.DOWNWARD ? 180 : 0);
-            float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
-            float rotZ = sideways ? 90 : ((vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ? 180 : 0);
+    private InstanceKey<BeltData> setup(InstanceKey<BeltData> key, boolean bottom, SpriteShiftEntry spriteShift) {
+        float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (beltSlope == BeltSlope.DOWNWARD ? 180 : 0);
+        float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
+        float rotZ = sideways ? 90 : ((vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ? 180 : 0);
 
-            BlockPos pos = tile.getPos();
-            data.setTileEntity(tile)
-                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-                .setRotation(rotX, rotY, rotZ)
-                .setRotationalSpeed(getScrollSpeed())
-                .setRotationOffset(bottom ? 0.5f : 0f)
-                .setScrollTexture(spriteShift)
-                .setScrollMult(diagonal ? 3f / 8f : 0.5f);
-        };
+        key.getInstance()
+           .setTileEntity(tile)
+           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
+           .setRotation(rotX, rotY, rotZ)
+           .setRotationalSpeed(getScrollSpeed())
+           .setRotationOffset(bottom ? 0.5f : 0f)
+           .setScrollTexture(spriteShift)
+           .setScrollMult(diagonal ? 3f / 8f : 0.5f);
+
+        return key;
     }
 
 }

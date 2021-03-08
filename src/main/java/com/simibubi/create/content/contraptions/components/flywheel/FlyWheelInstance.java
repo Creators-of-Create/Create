@@ -39,8 +39,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
         facing = lastState.get(BlockStateProperties.HORIZONTAL_FACING);
 
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
-        Consumer<RotatingData> setup = setupFunc(tile.getSpeed(), axis);
-        shaft = shaftModel().createInstance(setup);
+        shaft = setup(shaftModel().createInstance(), tile.getSpeed(), axis);
 //        wheel = wheelModel().setupInstance(setup);
     }
 
@@ -53,14 +52,13 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
 
     @Override
     public void updateLight() {
-        shaft.modifyInstance(this::relight);
+        relight(shaft);
 //        wheel.modifyInstance(this::relight);
     }
 
     @Override
     public void remove() {
         shaft.delete();
-        shaft = null;
 //        wheel.delete();
 //        wheel = null;
     }

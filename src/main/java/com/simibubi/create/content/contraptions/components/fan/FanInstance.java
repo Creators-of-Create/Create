@@ -28,7 +28,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     protected InstanceKey<RotatingData> shaft;
     protected InstanceKey<RotatingData> fan;
 
-    public FanInstance(InstancedTileRenderer modelManager, EncasedFanTileEntity tile) {
+    public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -42,30 +42,22 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         InstancedModel<RotatingData> fanInner =
                 AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, lastState, direction.getOpposite());
 
-        shaft = shaftHalf.createInstance(data -> {
-            BlockPos behind = pos.offset(direction.getOpposite());
-            int blockLight = world.getLightLevel(LightType.BLOCK, behind);
-            int skyLight = world.getLightLevel(LightType.SKY, behind);
+        shaft = shaftHalf.createInstance();
+        shaft.getInstance()
+             .setRotationalSpeed(tile.getSpeed())
+             .setRotationOffset(getRotationOffset(axis))
+             .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+             .setTileEntity(tile);
 
-            data.setRotationalSpeed(tile.getSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                .setTileEntity(tile)
-                .setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
-        fan = fanInner.createInstance(data -> {
-            BlockPos inFront = pos.offset(direction);
-            int blockLight = world.getLightLevel(LightType.BLOCK, inFront);
-            int skyLight = world.getLightLevel(LightType.SKY, inFront);
 
-            data.setRotationalSpeed(getFanSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                .setTileEntity(tile)
-                .setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
+        fan = fanInner.createInstance();
+        fan.getInstance()
+           .setRotationalSpeed(getFanSpeed())
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+           .setTileEntity(tile);
+
+        updateLight();
     }
 
     private float getFanSpeed() {
@@ -82,32 +74,31 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         Direction.Axis axis = lastState.get(FACING).getAxis();
         updateRotation(shaft, axis);
 
-        fan.modifyInstance(data -> {
-            data.setColor(tile.network)
-                .setRotationalSpeed(getFanSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
-        });
+        fan.getInstance()
+           .setColor(tile.network)
+           .setRotationalSpeed(getFanSpeed())
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
     }
 
     @Override
     public void updateLight() {
         final Direction direction = lastState.get(FACING);
 
-        shaft.modifyInstance(data -> {
-            BlockPos behind = pos.offset(direction.getOpposite());
-            int blockLight = world.getLightLevel(LightType.BLOCK, behind);
-            int skyLight = world.getLightLevel(LightType.SKY, behind);
-            data.setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
-        fan.modifyInstance(data -> {
-            BlockPos inFront = pos.offset(direction);
-            int blockLight = world.getLightLevel(LightType.BLOCK, inFront);
-            int skyLight = world.getLightLevel(LightType.SKY, inFront);
-            data.setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
+        BlockPos behind = pos.offset(direction.getOpposite());
+        putLight(shaft, behind);
+
+        BlockPos inFront = pos.offset(direction);
+        putLight(fan, inFront);
+    }
+
+    private void putLight(InstanceKey<RotatingData> key, BlockPos pos) {
+        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
+        int skyLight = world.getLightLevel(LightType.SKY, pos);
+
+        key.getInstance()
+           .setBlockLight(blockLight)
+           .setSkyLight(skyLight);
     }
 
     @Override

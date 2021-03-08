@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.base;
 
-import java.util.function.Consumer;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -19,28 +17,29 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis) {
-        key.modifyInstance(data -> {
-            data.setColor(tile.network)
-                .setRotationalSpeed(tile.getSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(axis);
-        });
+        key.getInstance()
+           .setColor(tile.network)
+           .setRotationalSpeed(tile.getSpeed())
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(axis);
     }
 
-    protected final Consumer<RotatingData> setupFunc(float speed, Direction.Axis axis) {
-        return data -> {
-            data.setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-                .setTileEntity(tile)
-                .setRotationalSpeed(speed)
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(axis);
-        };
+    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed, Direction.Axis axis) {
+        key.getInstance()
+           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
+           .setTileEntity(tile)
+           .setRotationalSpeed(speed)
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(axis);
+
+        return key;
     }
 
-    protected final void relight(KineticData<?> data) {
-        data.setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-            .setSkyLight(world.getLightLevel(LightType.SKY, pos));
+    protected final void relight(InstanceKey<? extends KineticData<?>> key) {
+        key.getInstance()
+           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+           .setSkyLight(world.getLightLevel(LightType.SKY, pos));
     }
 
     protected float getRotationOffset(final Direction.Axis axis) {

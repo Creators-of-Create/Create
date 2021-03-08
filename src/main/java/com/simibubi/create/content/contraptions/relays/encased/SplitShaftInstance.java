@@ -45,7 +45,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
-            keys.add(half.createInstance(setupFunc(splitSpeed, boxAxis)));
+            keys.add(setup(half.createInstance(), splitSpeed, boxAxis));
         }
     }
 
@@ -63,9 +63,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
     @Override
     public void updateLight() {
-        for (InstanceKey<RotatingData> key : keys) {
-            key.modifyInstance(this::relight);
-        }
+        keys.forEach(this::relight);
     }
 
     @Override
@@ -75,13 +73,12 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
     }
 
     protected void updateRotation(InstanceKey<RotatingData> key, Direction dir) {
-        key.modifyInstance(data -> {
-            Direction.Axis axis = dir.getAxis();
+        Direction.Axis axis = dir.getAxis();
 
-            data.setColor(tile.network)
-                .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
-        });
+        key.getInstance()
+           .setColor(tile.network)
+           .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
     }
 }

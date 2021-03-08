@@ -46,17 +46,16 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		BlockState state = context.state;
 		InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
 
-		model.createInstance(data -> {
-			Direction facing = state.get(HORIZONTAL_FACING);
-			float originOffset = 1 / 16f;
-			Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
-			data.setPosition(context.localPos)
-				.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-				.setRotationOffset(0)
-				.setRotationCenter(rotOffset)
-				.setRotationAxis(-1, 0, 0)
-				.setLocalRotation(0, facing.getHorizontalAngle(), 0);
-		});
+		Direction facing = state.get(HORIZONTAL_FACING);
+		float originOffset = 1 / 16f;
+		Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
+		model.getInstance(model.createInstance())
+			 .setPosition(context.localPos)
+			 .setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
+			 .setRotationOffset(0)
+			 .setRotationCenter(rotOffset)
+			 .setRotationAxis(-1, 0, 0)
+			 .setLocalRotation(0, facing.getHorizontalAngle(), 0);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,

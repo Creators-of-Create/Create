@@ -48,15 +48,20 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
             float intensity = segment == 3 ? 1.5f : segment + 1;
             float segmentOffset = -3 / 16f * segment;
 
-            flaps.add(model.createInstance(flapData -> flapData.setPosition(pos)
-                                                               .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
-                                                               .setBlockLight(blockLight)
-                                                               .setSkyLight(skyLight)
-                                                               .setHorizontalAngle(horizontalAngle)
-                                                               .setFlapness(flapness)
-                                                               .setFlapScale(-1)
-                                                               .setPivotVoxelSpace(0, 10, 9.5f)
-                                                               .setIntensity(intensity)));
+            InstanceKey<FlapData> key = model.createInstance();
+
+            key.getInstance()
+               .setPosition(pos)
+               .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
+               .setBlockLight(blockLight)
+               .setSkyLight(skyLight)
+               .setHorizontalAngle(horizontalAngle)
+               .setFlapness(flapness)
+               .setFlapScale(-1)
+               .setPivotVoxelSpace(0, 10, 9.5f)
+               .setIntensity(intensity);
+
+            flaps.add(key);
         }
     }
 
@@ -67,7 +72,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
 
         for (InstanceKey<FlapData> key : flaps) {
-            key.modifyInstance(data -> data.setFlapness(flapness));
+            key.getInstance().setFlapness(flapness);
         }
     }
 
@@ -79,8 +84,9 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
         int skyLight = world.getLightLevel(LightType.SKY, pos);
 
         for (InstanceKey<FlapData> it : flaps) {
-            it.modifyInstance(data -> data.setBlockLight(blockLight)
-                                          .setSkyLight(skyLight));
+            it.getInstance()
+              .setBlockLight(blockLight)
+              .setSkyLight(skyLight);
        }
     }
 
