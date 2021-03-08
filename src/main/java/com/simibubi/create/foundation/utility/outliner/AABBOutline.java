@@ -22,7 +22,7 @@ public class AABBOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		renderBB(ms, buffer, bb);
 	}
 

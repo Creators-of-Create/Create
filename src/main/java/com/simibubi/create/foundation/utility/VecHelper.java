@@ -78,7 +78,7 @@ public class VecHelper {
 		vec = vec.normalize();
 		return new Vec3d(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
 	}
-	
+
 	public static Vec3d axisAlingedPlaneOf(Direction face) {
 		return axisAlingedPlaneOf(new Vec3d(face.getDirectionVec()));
 	}
@@ -122,6 +122,11 @@ public class VecHelper {
 	public static Vec3d clamp(Vec3d vec, float maxLength) {
 		return vec.length() > maxLength ? vec.normalize()
 			.scale(maxLength) : vec;
+	}
+
+	public static Vec3d lerp(float p, Vec3d from, Vec3d to) {
+		return from.add(to.subtract(from)
+			.scale(p));
 	}
 
 	public static Vec3d clampComponentWise(Vec3d vec, float maxLength) {

@@ -31,7 +31,7 @@ public abstract class Outline {
 		params = new OutlineParams();
 	}
 
-	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer);
+	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt);
 
 	public void renderCuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vec3d start, Vec3d end) {
 		Vec3d diff = end.subtract(start);

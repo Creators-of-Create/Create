@@ -187,10 +187,10 @@ public class AllShapes {
 		TANK_TOP_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK_TOP_LID)
 			.add(TANK)
 			.build(),
-		FUNNEL_FLOOR = shape(2, -2, 2, 14, 8, 14).add(1, 2, 1, 15, 8, 15)
+		FUNNEL_FLOOR = shape(2, -2, 2, 14, 8, 14).add(1, 1, 1, 15, 8, 15)
 			.add(0, 4, 0, 16, 10, 16)
 			.build(),
-		FUNNEL_CEILING = shape(2, 8, 2, 14, 18, 14).add(1, 8, 1, 15, 14, 15)
+		FUNNEL_CEILING = shape(2, 8, 2, 14, 18, 14).add(1, 8, 1, 15, 15, 15)
 			.add(0, 6, 0, 16, 12, 16)
 			.build(),
 		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)

@@ -5,10 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.ColorHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AllIcons {
+public class AllIcons implements IScreenRenderable {
 
 	public static final ResourceLocation ICON_ATLAS = Create.asResource("textures/gui/icons.png");
 	private static int x = 0, y = -1;
@@ -70,7 +68,10 @@ public class AllIcons {
 		I_REPLACE = next(),
 		I_CLEAR = next(),
 		I_OVERLAY = next(),
-		I_FLATTEN = next();
+		I_FLATTEN = next(),
+		I_LMB = next(),
+		I_SCROLL = next(),
+		I_RMB = next();
 	
 	public static final AllIcons 
 		I_TOOL_DEPLOY = newRow(),
@@ -115,7 +116,13 @@ public class AllIcons {
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
 		
-		I_SCHEMATIC = newRow();
+		I_SCHEMATIC = newRow(),
+		
+		I_MTD_LEFT = newRow(),
+		I_MTD_CLOSE = next(),
+		I_MTD_RIGHT = next(),
+		I_MTD_SCAN = next(),
+		I_MTD_REPLAY = next();
 	
 	public AllIcons(int x, int y) {
 		iconX = x * 16;
@@ -137,16 +144,11 @@ public class AllIcons {
 			.bindTexture(ICON_ATLAS);
 	}
 
+	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(AbstractGui screen, int x, int y) {
 		bind();
 		screen.blit(x, y, iconX, iconY, 16, 16);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void draw(int x, int y) {
-		draw(new Screen(null) {
-		}, x, y);
 	}
 
 	@OnlyIn(Dist.CLIENT)

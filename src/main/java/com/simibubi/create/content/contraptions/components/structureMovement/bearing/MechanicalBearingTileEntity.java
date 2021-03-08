@@ -25,7 +25,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity implements IBearingTileEntity, IDisplayAssemblyExceptions {
+public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
+	implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected ControlledContraptionEntity movedContraption;
@@ -34,6 +35,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	protected boolean assembleNextTick;
 	protected float clientAngleDiff;
 	protected AssemblyException lastException;
+
+	private float prevAngle;
 
 	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
@@ -87,6 +90,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
+		if (isVirtual())
+			return MathHelper.lerp(partialTicks + .5f, prevAngle, angle);
 		if (movedContraption == null || movedContraption.isStalled() || !running)
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
@@ -145,7 +150,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.WINDMILL, world, pos, 5);
 		if (contraption.getSailBlocks() >= 16 * 8)
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.MAXED_WINDMILL, world, pos, 5);
-		
+
 		contraption.removeBlocksFromWorld(world, BlockPos.ZERO);
 		movedContraption = ControlledContraptionEntity.create(world, this, contraption);
 		BlockPos anchor = pos.offset(direction);
@@ -179,6 +184,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public void tick() {
 		super.tick();
 
+		prevAngle = angle;
 		if (world.isRemote)
 			clientAngleDiff /= 2;
 
@@ -291,7 +297,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 		BlockState state = getBlockState();
 		if (!(state.getBlock() instanceof BearingBlock))
 			return false;
-		
+
 		BlockState attachedState = world.getBlockState(pos.offset(state.get(BearingBlock.FACING)));
 		if (attachedState.getMaterial()
 			.isReplaceable())
@@ -304,4 +310,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity imp
 	public boolean shouldRenderAsTE() {
 		return true;
 	}
+
+	public void setAngle(float forcedAngle) {
+		angle = forcedAngle;
+	}
+
 }

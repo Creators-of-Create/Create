@@ -129,7 +129,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (inventory.remainingTime > 0)
 			spawnParticles(inventory.getStackInSlot(0));
 
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
@@ -317,7 +317,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		if (inventory.isEmpty())
 			return;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		List<? extends IRecipe<?>> recipes = getRecipes();

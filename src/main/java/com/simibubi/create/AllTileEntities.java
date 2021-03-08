@@ -54,9 +54,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
@@ -248,11 +248,11 @@ public class AllTileEntities {
 		.onRegister(SingleRotatingInstance::register)
 		.register();
 	
-	public static final TileEntityEntry<GantryPinionTileEntity> GANTRY_PINION = Create.registrate()
-		.tileEntity("gantry_pinion", GantryPinionTileEntity::new)
-		.validBlocks(AllBlocks.GANTRY_PINION)
-		.renderer(() -> GantryPinionRenderer::new)
-		.onRegister(GantryPinionInstance::register)
+	public static final TileEntityEntry<GantryCarriageTileEntity> GANTRY_PINION = Create.registrate()
+		.tileEntity("gantry_pinion", GantryCarriageTileEntity::new)
+		.validBlocks(AllBlocks.GANTRY_CARRIAGE)
+		.renderer(() -> GantryCarriageRenderer::new)
+		.onRegister(GantryCarriageInstance::register)
 		.register();
 
 	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP = Create.registrate()

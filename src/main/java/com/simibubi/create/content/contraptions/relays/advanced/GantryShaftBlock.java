@@ -259,6 +259,16 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
 			&& oldState.get(POWERED) == newState.get(POWERED);
 	}
+	
+	@Override
+	public float getParticleTargetRadius() {
+		return .35f;
+	}
+
+	@Override
+	public float getParticleInitialRadius() {
+		return .25f;
+	}
 
 	public static class PlacementHelper extends PoleHelper<Direction> {
 

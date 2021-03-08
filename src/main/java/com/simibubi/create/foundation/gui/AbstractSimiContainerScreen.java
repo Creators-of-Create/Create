@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
@@ -41,6 +42,8 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
+		partialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		renderBackground();
 		renderWindow(mouseX, mouseY, partialTicks);
 		

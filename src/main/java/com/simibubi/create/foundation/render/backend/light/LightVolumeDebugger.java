@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -29,6 +30,6 @@ public class LightVolumeDebugger {
                                                  outline.getParams().colored(pair.getSecond());
                                                  return outline;
                                              })
-                                             .forEach(outline -> outline.render(ms, buffer));
+                                             .forEach(outline -> outline.render(ms, buffer, AnimationTickHolder.getPartialTicks()));
     }
 }

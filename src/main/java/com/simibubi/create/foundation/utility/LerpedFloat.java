@@ -46,6 +46,10 @@ public class LerpedFloat {
 		return this;
 	}
 
+	public void updateChaseTarget(float target) {
+		this.chaseTarget = target;
+	}
+
 	public boolean updateChaseSpeed(double speed) {
 		float prevSpeed = this.chaseSpeed;
 		this.chaseSpeed = (float) speed;
