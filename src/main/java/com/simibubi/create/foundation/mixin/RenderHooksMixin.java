@@ -45,7 +45,7 @@ public class RenderHooksMixin {
         GL20.glUseProgram(0);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "updateChunks(J)V"), method = "render")
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")
     private void setupFrame(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo info, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
         Vec3d cameraPos = info.getProjectedView();
         double camX = cameraPos.getX();
