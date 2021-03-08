@@ -22,7 +22,7 @@ public class SawInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, SawInstance::new));
     }
 
-    public SawInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public SawInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

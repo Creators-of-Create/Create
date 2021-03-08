@@ -26,7 +26,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
     protected ArrayList<InstanceKey<RotatingData>> keys;
 
-    public SplitShaftInstance(InstancedTileRenderer modelManager, SplitShaftTileEntity tile) {
+    public SplitShaftInstance(InstancedTileRenderer<?> modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
     }
 

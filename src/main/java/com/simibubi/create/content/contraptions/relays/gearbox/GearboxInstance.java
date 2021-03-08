@@ -29,7 +29,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected EnumMap<Direction, InstanceKey<RotatingData>> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(InstancedTileRenderer modelManager, GearboxTileEntity tile) {
+    public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
     }
 

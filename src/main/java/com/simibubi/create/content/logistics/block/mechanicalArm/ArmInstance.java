@@ -18,7 +18,7 @@ public class ArmInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, ArmInstance::new));
     }
 
-    public ArmInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public ArmInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

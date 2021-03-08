@@ -69,8 +69,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         vao.delete();
     }
 
-    protected abstract D newInstance();
-
     public synchronized void deleteInstance(InstanceKey<D> key) {
         verifyKey(key);
 
@@ -96,6 +94,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
         return key;
     }
+
+    protected abstract D newInstance();
 
     protected void doRender() {
         vao.with(vao -> {

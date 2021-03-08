@@ -17,7 +17,7 @@ public class MillStoneCogInstance extends SingleRotatingInstance {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
                 InstancedTileRenderRegistry.instance.register(type, MillStoneCogInstance::new));    }
 
-    public MillStoneCogInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public MillStoneCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

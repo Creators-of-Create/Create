@@ -15,7 +15,7 @@ public class ShaftlessCogInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, ShaftlessCogInstance::new));
     }
 
-    public ShaftlessCogInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public ShaftlessCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

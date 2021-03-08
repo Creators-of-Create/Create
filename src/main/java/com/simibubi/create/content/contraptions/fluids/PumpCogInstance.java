@@ -18,7 +18,7 @@ public class PumpCogInstance extends SingleRotatingInstance {
                 InstancedTileRenderRegistry.instance.register(type, PumpCogInstance::new));
     }
 
-    public PumpCogInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public PumpCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
