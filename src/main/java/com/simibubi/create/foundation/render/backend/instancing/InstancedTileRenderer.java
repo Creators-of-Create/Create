@@ -4,11 +4,13 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
@@ -69,7 +71,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (!Backend.canUseInstancing() || isTileUnloaded(tile)) return null;
+        if (!Backend.canUseInstancing() || !canCreateInstance(tile)) return null;
 
         TileEntityInstance<?> instance = instances.get(tile);
 
@@ -147,17 +149,21 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         tickableInstances.clear();
     }
 
-    public boolean isTileUnloaded(TileEntity tile) {
-        if (tile.isRemoved()) return true;
+    public boolean canCreateInstance(TileEntity tile) {
+        if (tile.isRemoved()) return false;
 
         World world = tile.getWorld();
 
-        if (world == null) return true;
+        if (world == null) return false;
 
-        BlockPos pos = tile.getPos();
+        if (world == Minecraft.getInstance().world) {
+            BlockPos pos = tile.getPos();
 
-        IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
+            IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
 
-        return existingChunk == null;
+            return existingChunk != null;
+        }
+
+        return world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel();
     }
 }
