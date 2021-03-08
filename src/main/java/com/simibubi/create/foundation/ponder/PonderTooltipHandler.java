@@ -98,12 +98,13 @@ public class PonderTooltipHandler {
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 		if (lastHoveredStack != stack)
 			return;
-		if (subject) {
-			toolTip.set(1, Lang.createTranslationTextComponent(SUBJECT)
-				.applyTextStyle(TextFormatting.GREEN));
-			return;
-		}
-		toolTip.set(1, makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f)));
+		ITextComponent component = subject ? Lang.createTranslationTextComponent(SUBJECT)
+			.applyTextStyle(TextFormatting.GREEN)
+			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
+		if (toolTip.size() < 2)
+			toolTip.add(component);
+		else
+			toolTip.set(1, component);
 	}
 
 	public static void handleTooltipColor(RenderTooltipEvent.Color event) {

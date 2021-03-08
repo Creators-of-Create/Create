@@ -21,6 +21,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,6 +39,9 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.Constants.BlockFlags;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -227,7 +231,15 @@ public class SymmetryWandItem extends Item {
 				if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
 					continue;
 
+				BlockSnapshot blocksnapshot = BlockSnapshot.getBlockSnapshot(world, position);
+				IFluidState ifluidstate = world.getFluidState(position);
+				world.setBlockState(position, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
 				world.setBlockState(position, blockState);
+				if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
+					blocksnapshot.restore(true, false);
+					continue;
+				}
+				
 				targets.add(position);
 			}
 		}

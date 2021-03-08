@@ -42,6 +42,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
@@ -49,7 +50,9 @@ public class PonderWorld extends SchematicWorld {
 	protected Map<BlockPos, BlockState> originalBlocks;
 	protected Map<BlockPos, TileEntity> originalTileEntities;
 	protected List<Entity> originalEntities;
+
 	protected PonderWorldParticles particles;
+	private final Map<ResourceLocation, IParticleFactory<?>> particleFactories;
 
 	int overrideLight;
 	Selection mask;
@@ -60,6 +63,10 @@ public class PonderWorld extends SchematicWorld {
 		originalTileEntities = new HashMap<>();
 		originalEntities = new ArrayList<>();
 		particles = new PonderWorldParticles(this);
+
+		// ParticleManager.factories - ATs don't seem to like this one
+		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleManager.class,
+			Minecraft.getInstance().particles, "field_178932_g");
 	}
 
 	public void createBackup() {
@@ -186,9 +193,8 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends IParticleData> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		ParticleManager particleManager = Minecraft.getInstance().particles;
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
-		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleManager.factories.get(key);
+		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleFactories.get(key);
 		return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, this, x, y, z, mx, my, mz);
 	}
 
