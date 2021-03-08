@@ -317,6 +317,14 @@ public class SceneBuilder {
 			addInstruction(scene -> scene.linkElement(parrot, link));
 			return link;
 		}
+		
+		public ElementLink<ParrotElement> flappyBirb(Vec3d location) {
+			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+			ParrotElement parrot = ParrotElement.flappy(location);
+			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
+			addInstruction(scene -> scene.linkElement(parrot, link));
+			return link;
+		}
 
 		public ElementLink<ParrotElement> birbPartying(Vec3d location) {
 			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
@@ -564,6 +572,14 @@ public class SceneBuilder {
 				BeltItemElement resolve = scene.resolve(link);
 				if (resolve != null)
 					resolve.ifPresent(tis -> tis.locked = stalled);
+			});
+		}
+		
+		public void changeBeltItemTo(ElementLink<BeltItemElement> link, ItemStack newStack) {
+			addInstruction(scene -> {
+				BeltItemElement resolve = scene.resolve(link);
+				if (resolve != null)
+					resolve.ifPresent(tis -> tis.stack = newStack);
 			});
 		}
 

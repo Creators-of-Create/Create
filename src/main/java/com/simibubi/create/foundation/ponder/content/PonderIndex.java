@@ -41,6 +41,11 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch);
 		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift);
 
+		PonderRegistry.forComponents(AllBlocks.ENCASED_FAN)
+			.addStoryBoard("fan/direction", FanScenes::direction)
+			.addStoryBoard("fan/processing", FanScenes::processing)
+			.addStoryBoard("fan/source", FanScenes::source);
+
 		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor);
 		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel);
 		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank);

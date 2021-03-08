@@ -21,7 +21,8 @@ public class UIRenderHelper {
 		RenderSystem.recordRenderCall(() -> {
 			MainWindow mainWindow = Minecraft.getInstance().getWindow();
 			framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true, Minecraft.IS_RUNNING_ON_MAC);
-			framebuffer.deleteFramebuffer();
+			framebuffer.setFramebufferColor(0, 0, 0, 0);
+//			framebuffer.deleteFramebuffer();
 		});
 	}
 

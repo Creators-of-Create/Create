@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
@@ -42,6 +43,12 @@ public class ParrotElement extends AnimatedSceneElement {
 		return parrotElement;
 	}
 
+	public static ParrotElement flappy(Vec3d location) {
+		ParrotElement parrotElement = new ParrotElement(location);
+		parrotElement.pose = parrotElement.new FlappyPose();
+		return parrotElement;
+	}
+
 	protected ParrotElement(Vec3d location) {
 		this.location = location;
 	}
@@ -61,18 +68,19 @@ public class ParrotElement extends AnimatedSceneElement {
 		if (entity == null)
 			return;
 
-		entity.prevPosX = entity.getX();
-		entity.prevPosY = entity.getY();
-		entity.prevPosZ = entity.getZ();
 		entity.ticksExisted++;
 		entity.prevRotationYawHead = entity.rotationYawHead;
 		entity.oFlapSpeed = entity.flapSpeed;
 		entity.oFlap = entity.flap;
 		entity.onGround = true;
-		entity.prevRotationYaw = entity.rotationYaw;
-		entity.prevRotationPitch = entity.rotationPitch;
 
 		pose.tick(scene);
+
+		entity.prevPosX = entity.getX();
+		entity.prevPosY = entity.getY();
+		entity.prevPosZ = entity.getZ();
+		entity.prevRotationYaw = entity.rotationYaw;
+		entity.prevRotationPitch = entity.rotationPitch;
 	}
 
 	public void setPositionOffset(Vec3d position, boolean immediate) {
@@ -149,6 +157,28 @@ public class ParrotElement extends AnimatedSceneElement {
 		void tick(PonderScene scene) {
 			entity.prevRotationYaw = entity.rotationYaw;
 			entity.rotationYaw -= 2;
+		}
+
+	}
+
+	class FlappyPose extends ParrotPose {
+
+		@Override
+		void create(PonderWorld world) {
+			super.create(world);
+		}
+
+		@Override
+		void tick(PonderScene scene) {
+			double length = entity.getPositionVec()
+				.subtract(entity.prevPosX, entity.prevPosY, entity.prevPosZ)
+				.length();
+			entity.onGround = false;
+			double phase = Math.min(length * 15, 8);
+			float f = (float) ((AnimationTickHolder.getTicks() % 100) * phase);
+			entity.flapSpeed = MathHelper.sin(f) + 1;
+			if (length == 0)
+				entity.flapSpeed = 0;
 		}
 
 	}
