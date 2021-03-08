@@ -4,7 +4,7 @@ public interface IVertexAttrib {
 
     String attribName();
 
-    VertexAttribSpec attribSpec();
+    IAttribSpec attribSpec();
 
     int getDivisor();
 

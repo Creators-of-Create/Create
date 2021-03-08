@@ -34,7 +34,7 @@ public class DrillInstance extends SingleRotatingInstance {
         BlockState state = context.state;
         InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);
 
-        model.setupInstance(data -> {
+        model.createInstance(data -> {
             Direction facing = state.get(DrillBlock.FACING);
             float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
             float eulerY = facing.getHorizontalAngle();

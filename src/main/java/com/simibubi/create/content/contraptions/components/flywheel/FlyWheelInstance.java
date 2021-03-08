@@ -40,7 +40,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> {
 
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
         Consumer<RotatingData> setup = setupFunc(tile.getSpeed(), axis);
-        shaft = shaftModel().setupInstance(setup);
+        shaft = shaftModel().createInstance(setup);
 //        wheel = wheelModel().setupInstance(setup);
     }
 

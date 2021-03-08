@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 
-public class VertexAttribSpec {
+public class VertexAttribSpec implements IAttribSpec {
 
     private final GlPrimitiveType type;
     private final int count;
@@ -24,14 +24,17 @@ public class VertexAttribSpec {
         this.normalized = normalized;
     }
 
+    @Override
     public void vertexAttribPointer(int stride, int index, int pointer) {
         GL20.glVertexAttribPointer(index, count, type.getGlConstant(), normalized, stride, pointer);
     }
 
+    @Override
     public int getSize() {
         return size;
     }
 
+    @Override
     public int getAttributeCount() {
         return attributeCount;
     }

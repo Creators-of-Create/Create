@@ -1,15 +1,15 @@
 package com.simibubi.create.foundation.render.backend.gl.attrib;
 
-public enum ModelVertexAttributes implements IVertexAttrib {
-    VERTEX_POSITION("aPos", CommonAttributes.VEC3),
-    NORMAL("aNormal", CommonAttributes.NORMAL),
-    TEXTURE("aTexCoords", CommonAttributes.UV),
+public enum InstanceVertexAttributes implements IVertexAttrib {
+    TRANSFORM("aTransform", MatrixAttributes.MAT4),
+    NORMAL_MAT("aNormalMat", MatrixAttributes.MAT3),
+    LIGHT("aLight", CommonAttributes.LIGHT),
     ;
 
     private final String name;
-    private final VertexAttribSpec spec;
+    private final IAttribSpec spec;
 
-    ModelVertexAttributes(String name, VertexAttribSpec spec) {
+    InstanceVertexAttributes(String name, IAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }

@@ -25,6 +25,10 @@ public class InstanceKey<D extends InstanceData> {
         model.modifyInstance(this, edit);
     }
 
+    public D getInstance() {
+        return model.getInstance(this);
+    }
+
     public void delete() {
         model.deleteInstance(this);
     }

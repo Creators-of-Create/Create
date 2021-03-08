@@ -48,15 +48,15 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
             float intensity = segment == 3 ? 1.5f : segment + 1;
             float segmentOffset = -3 / 16f * segment;
 
-            flaps.add(model.setupInstance(flapData -> flapData.setPosition(pos)
-                                                              .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
-                                                              .setBlockLight(blockLight)
-                                                              .setSkyLight(skyLight)
-                                                              .setHorizontalAngle(horizontalAngle)
-                                                              .setFlapness(flapness)
-                                                              .setFlapScale(-1)
-                                                              .setPivotVoxelSpace(0, 10, 9.5f)
-                                                              .setIntensity(intensity)));
+            flaps.add(model.createInstance(flapData -> flapData.setPosition(pos)
+                                                               .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
+                                                               .setBlockLight(blockLight)
+                                                               .setSkyLight(skyLight)
+                                                               .setHorizontalAngle(horizontalAngle)
+                                                               .setFlapness(flapness)
+                                                               .setFlapScale(-1)
+                                                               .setPivotVoxelSpace(0, 10, 9.5f)
+                                                               .setIntensity(intensity)));
         }
     }
 

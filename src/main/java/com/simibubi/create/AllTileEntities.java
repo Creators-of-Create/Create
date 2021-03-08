@@ -51,8 +51,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
@@ -250,7 +252,7 @@ public class AllTileEntities {
 		.tileEntity("gantry_pinion", GantryPinionTileEntity::new)
 		.validBlocks(AllBlocks.GANTRY_PINION)
 		.renderer(() -> GantryPinionRenderer::new)
-		.onRegister(ShaftInstance::register)
+		.onRegister(GantryPinionInstance::register)
 		.register();
 
 	public static final TileEntityEntry<PumpTileEntity> MECHANICAL_PUMP = Create.registrate()
@@ -405,6 +407,7 @@ public class AllTileEntities {
 		.tileEntity("sticker", StickerTileEntity::new)
 		.validBlocks(AllBlocks.STICKER)
 		.renderer(() -> StickerRenderer::new)
+		.onRegister(StickerInstance::register)
 		.register();
 
 	public static final TileEntityEntry<DrillTileEntity> DRILL = Create.registrate()

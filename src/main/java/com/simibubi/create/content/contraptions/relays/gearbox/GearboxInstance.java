@@ -50,7 +50,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
             InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, direction);
 
-            InstanceKey<RotatingData> key = shaft.setupInstance(data -> {
+            InstanceKey<RotatingData> key = shaft.createInstance(data -> {
                 data.setBlockLight(blockLight)
                     .setSkyLight(skyLight)
                     .setRotationalSpeed(getSpeed(direction))

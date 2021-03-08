@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
@@ -26,7 +27,7 @@ public enum ContraptionVertexAttributes implements IVertexAttrib {
     }
 
     @Override
-    public VertexAttribSpec attribSpec() {
+    public IAttribSpec attribSpec() {
         return spec;
     }
 

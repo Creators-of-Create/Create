@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.lwjgl.opengl.GL11;
 
@@ -19,7 +20,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -100,6 +100,8 @@ public class RenderedContraption {
     }
 
     public void beginFrame(double camX, double camY, double camZ) {
+        kinetics.beginFrame(camX, camY, camZ);
+
         AbstractContraptionEntity entity = contraption.entity;
         float pt = AnimationTickHolder.getPartialTicks();
 

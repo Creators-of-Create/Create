@@ -6,11 +6,11 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.RenderMath;
 import com.simibubi.create.foundation.render.backend.BufferedModel;
 import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlVertexArray;
@@ -95,7 +95,19 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         markIndexChanged(key.index);
     }
 
-    public synchronized InstanceKey<D> setupInstance(Consumer<D> setup) {
+    public synchronized InstanceKey<D> createInstance() {
+        D instanceData = newInstance();
+
+        InstanceKey<D> key = new InstanceKey<>(this, data.size());
+        data.add(instanceData);
+        keys.add(key);
+
+        markIndexChanged(key.index);
+
+        return key;
+    }
+
+    public synchronized InstanceKey<D> createInstance(Consumer<D> setup) {
         D instanceData = newInstance();
         setup.accept(instanceData);
 
@@ -124,7 +136,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
         int stride = instanceFormat.getStride();
         int newInstanceCount = instanceCount();
-        int instanceSize = RenderMath.nextPowerOf2((newInstanceCount + 1) * stride);
+        int instanceSize = RenderUtil.nextPowerOf2((newInstanceCount + 1) * stride);
 
         instanceVBO.with(vbo -> {
             // this probably changes enough that it's not worth reallocating the entire buffer every time.

@@ -31,7 +31,7 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 
 public class Backend {
-    public static final Boolean SHADER_DEBUG_OUTPUT = false;
+    public static final Boolean SHADER_DEBUG_OUTPUT = true;
 
     public static final Logger log = LogManager.getLogger(Backend.class);
     public static final FloatBuffer MATRIX_BUFFER = MemoryUtil.memAllocFloat(16);

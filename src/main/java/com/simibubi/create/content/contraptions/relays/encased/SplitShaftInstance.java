@@ -45,7 +45,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
-            keys.add(half.setupInstance(setupFunc(splitSpeed, boxAxis)));
+            keys.add(half.createInstance(setupFunc(splitSpeed, boxAxis)));
         }
     }
 

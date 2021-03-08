@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 
 public class CommonAttributes {
 
-    public static final VertexAttribSpec MAT4 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 16);
     public static final VertexAttribSpec VEC4 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 4);
     public static final VertexAttribSpec VEC3 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 3);
     public static final VertexAttribSpec VEC2 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 2);

@@ -6,11 +6,13 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.RotatingInstancedModel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
 import com.simibubi.create.content.logistics.block.FlapInstancedModel;
+import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 
+import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedInstancedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
@@ -25,6 +27,8 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
 
     @Override
     public void registerMaterials() {
+        materials.put(RenderMaterials.MODELS, new RenderMaterial<>(this, AllProgramSpecs.MODEL, TransformedInstancedModel::new));
+
         materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.BELT, BeltInstancedModel::new));
         materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.ROTATING, RotatingInstancedModel::new));
         materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.FLAPS, FlapInstancedModel::new));

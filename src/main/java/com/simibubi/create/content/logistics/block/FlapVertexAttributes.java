@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
@@ -29,7 +30,7 @@ public enum FlapVertexAttributes implements IVertexAttrib {
     }
 
     @Override
-    public VertexAttribSpec attribSpec() {
+    public IAttribSpec attribSpec() {
         return spec;
     }
 

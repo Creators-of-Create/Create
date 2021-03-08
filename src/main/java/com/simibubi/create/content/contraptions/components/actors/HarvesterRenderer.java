@@ -46,7 +46,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		BlockState state = context.state;
 		InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
 
-		model.setupInstance(data -> {
+		model.createInstance(data -> {
 			Direction facing = state.get(HORIZONTAL_FACING);
 			float originOffset = 1 / 16f;
 			Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);

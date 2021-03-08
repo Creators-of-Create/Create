@@ -53,7 +53,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
                 float intensity = segment == 3 ? 1.5f : segment + 1;
                 float segmentOffset = -3 / 16f * segment;
 
-                flaps.add(model.setupInstance(flapData -> {
+                flaps.add(model.createInstance(flapData -> {
                     flapData.setPosition(pos)
                             .setSegmentOffset(segmentOffset, 0, 0)
                             .setBlockLight(blockLight)

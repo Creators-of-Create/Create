@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.LerpedFloat;
@@ -21,7 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class StickerTileEntity extends SmartTileEntity {
+public class StickerTileEntity extends SmartTileEntity implements IInstanceRendered {
 
 	LerpedFloat piston;
 	boolean update;
@@ -41,6 +43,7 @@ public class StickerTileEntity extends SmartTileEntity {
 		if (!world.isRemote)
 			return;
 		piston.startWithValue(isBlockStateExtended() ? 1 : 0);
+		CreateClient.kineticRenderer.add(this);
 	}
 
 	public boolean isBlockStateExtended() {
@@ -91,4 +94,8 @@ public class StickerTileEntity extends SmartTileEntity {
 			0.35F, attach ? 0.75F : 0.2f);
 	}
 
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
 }

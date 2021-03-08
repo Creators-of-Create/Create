@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
@@ -25,7 +26,7 @@ public enum BeltVertexAttributes implements IVertexAttrib {
     }
 
     @Override
-    public VertexAttribSpec attribSpec() {
+    public IAttribSpec attribSpec() {
         return spec;
     }
 

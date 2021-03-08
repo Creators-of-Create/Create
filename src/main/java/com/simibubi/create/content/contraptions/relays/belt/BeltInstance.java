@@ -74,7 +74,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
             Consumer<BeltData> setupFunc = setupFunc(bottom, spriteShift);
 
-            keys.add(beltModel.setupInstance(setupFunc));
+            keys.add(beltModel.createInstance(setupFunc));
 
             if (diagonal) break;
         }
@@ -82,7 +82,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         if (tile.hasPulley()) {
             InstancedModel<RotatingData> pulleyModel = getPulleyModel();
 
-            pulleyKey = pulleyModel.setupInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
+            pulleyKey = pulleyModel.createInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
         }
     }
 

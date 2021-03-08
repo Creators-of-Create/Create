@@ -28,7 +28,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
     @Override
     protected void init() {
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
-        rotatingModelKey = getModel().setupInstance(setupFunc(tile.getSpeed(), axis));
+        rotatingModelKey = getModel().createInstance(setupFunc(tile.getSpeed(), axis));
     }
 
     @Override

@@ -56,8 +56,6 @@ public class ContraptionRenderDispatcher {
     public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
     protected static PlacementSimulationWorld renderWorld;
 
-    private static boolean firstLayer = true;
-
     public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
@@ -68,10 +66,6 @@ public class ContraptionRenderDispatcher {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightPacket(world, chunkX, chunkZ);
         }
-    }
-
-    public static void renderTick() {
-        firstLayer = true;
     }
 
     public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
@@ -120,7 +114,7 @@ public class ContraptionRenderDispatcher {
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         if (Backend.canUseVBOs()) {
-            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
+            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.C_STRUCTURE);
             structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
             for (RenderedContraption renderer : renderers.values()) {
                 renderer.doRenderLayer(layer, structureShader);

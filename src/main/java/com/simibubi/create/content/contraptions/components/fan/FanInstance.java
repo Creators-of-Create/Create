@@ -42,7 +42,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         InstancedModel<RotatingData> fanInner =
                 AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, lastState, direction.getOpposite());
 
-        shaft = shaftHalf.setupInstance(data -> {
+        shaft = shaftHalf.createInstance(data -> {
             BlockPos behind = pos.offset(direction.getOpposite());
             int blockLight = world.getLightLevel(LightType.BLOCK, behind);
             int skyLight = world.getLightLevel(LightType.SKY, behind);
@@ -54,7 +54,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
                 .setBlockLight(blockLight)
                 .setSkyLight(skyLight);
         });
-        fan = fanInner.setupInstance(data -> {
+        fan = fanInner.createInstance(data -> {
             BlockPos inFront = pos.offset(direction);
             int blockLight = world.getLightLevel(LightType.BLOCK, inFront);
             int skyLight = world.getLightLevel(LightType.SKY, inFront);

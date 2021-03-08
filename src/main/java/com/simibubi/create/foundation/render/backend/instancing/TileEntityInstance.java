@@ -53,4 +53,8 @@ public abstract class TileEntityInstance<T extends TileEntity> {
      * Call {@link InstanceKey#delete()} on all acquired keys.
      */
     public abstract void remove();
+
+    public BlockPos getFloatingPos() {
+        return pos.subtract(modelManager.getOriginCoordinate());
+    }
 }
