@@ -95,7 +95,7 @@ public class PonderButton extends AbstractSimiWidget {
 
 		float flashValue = flash.getValue(partialTicks);
 		if (flashValue > .1f)
-			fade *= 3 * flashValue + (Math.sin(AnimationTickHolder.getRenderTick() / 6)) / 1f;
+			fade *= 3 * flashValue + ((Math.sin(AnimationTickHolder.getTicks() + partialTicks) / 6)) / 1f;
 
 		int backgroundColor = ColorHelper.applyAlpha(0xdd000000, fade);
 		int borderColorStart = ColorHelper.applyAlpha(isHovered ? 0x70ffffff : 0x40aa9999, fade);

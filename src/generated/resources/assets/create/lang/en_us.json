@@ -1906,6 +1906,24 @@
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
+	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
+	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
+	"create.ponder.fan_direction.text_2": "Strength and Direction of Flow depends on the Rotational Input",
+
+	"create.ponder.fan_processing.header": "Processing Items using Encased Fans",
+	"create.ponder.fan_processing.text_1": "When passing through lava, the Air Flow becomes Heated",
+	"create.ponder.fan_processing.text_2": "Items caught in the area will be smelted",
+	"create.ponder.fan_processing.text_3": "Food items thrown here would be incinerated",
+	"create.ponder.fan_processing.text_4": "Instead, a setup for Smoking using Fire should be used for them",
+	"create.ponder.fan_processing.text_5": "Air Flows passing through water create a Washing Setup",
+	"create.ponder.fan_processing.text_6": "Some interesting new processing can be done with it",
+	"create.ponder.fan_processing.text_7": "The Speed of the Fan does NOT affect the processing speed, only its range",
+	"create.ponder.fan_processing.text_8": "Fan Processing can also be applied to Items on Depots and Belts",
+
+	"create.ponder.fan_source.header": "Generating Rotational Force using Encased Fans",
+	"create.ponder.fan_source.text_1": "Fans facing down into a source of heat can provide Rotational Force",
+	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
+
 	"create.ponder.funnel_compat.header": "Funnel compatibility",
 	"create.ponder.funnel_compat.text_1": "Funnels should also interact nicely with a handful of other components.",
 	"create.ponder.funnel_compat.text_2": "Vertical Saws",
