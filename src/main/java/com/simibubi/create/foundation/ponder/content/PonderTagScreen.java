@@ -82,7 +82,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 					if (!PonderRegistry.all.containsKey(i.getRegistryName()))
 						return;
 					centerScalingOn(mouseX, mouseY);
-					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i)));
+					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				}).showing(new ItemStack(i));
 
 			button.fade(1);
@@ -99,7 +99,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 						.getRegistryName()))
 						return;
 					centerScalingOn(mouseX, mouseY);
-					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem()));
+					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
 				}).showing(tag.getMainItem());
 
 			button.fade(1);
