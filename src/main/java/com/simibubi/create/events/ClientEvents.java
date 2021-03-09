@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -124,6 +125,13 @@ public class ClientEvents {
 			AnimationTickHolder.reset();
 			((ClientWorld) world).loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
 		}
+
+		/*
+		i was getting nullPointers when trying to call this during client setup,
+		so i assume minecraft's language manager isn't yet fully loaded at that time.
+		not sure where else to call this tho :S
+		*/
+		IHaveGoggleInformation.numberFormat.update();
 	}
 
 	@SubscribeEvent
