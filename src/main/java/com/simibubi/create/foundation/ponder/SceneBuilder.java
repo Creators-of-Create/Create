@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
@@ -19,6 +20,8 @@ import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.ParrotPose;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.SpinOnComponentPose;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
@@ -294,44 +297,25 @@ public class SceneBuilder {
 	public class SpecialInstructions {
 
 		public ElementLink<ParrotElement> birbOnTurntable(BlockPos pos) {
-			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
-			ParrotElement parrot = ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos), pos);
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
-			addInstruction(scene -> scene.linkElement(parrot, link));
-			return link;
+			return createBirb(VecHelper.getCenterOf(pos), () -> new SpinOnComponentPose(pos));
 		}
 
 		public ElementLink<ParrotElement> birbOnSpinnyShaft(BlockPos pos) {
+			return createBirb(VecHelper.getCenterOf(pos)
+				.add(0, 0.5, 0), () -> new SpinOnComponentPose(pos));
+		}
+
+		public ElementLink<ParrotElement> createBirb(Vec3d location, Supplier<? extends ParrotPose> pose) {
 			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
-			ParrotElement parrot = ParrotElement.spinOnComponent(VecHelper.getCenterOf(pos)
-				.add(0, 0.5, 0), pos);
+			ParrotElement parrot = ParrotElement.create(location, pose);
 			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
 			addInstruction(scene -> scene.linkElement(parrot, link));
 			return link;
 		}
 
-		public ElementLink<ParrotElement> birbLookingAtPOI(Vec3d location) {
-			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
-			ParrotElement parrot = ParrotElement.lookAtPOI(location);
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
-			addInstruction(scene -> scene.linkElement(parrot, link));
-			return link;
-		}
-		
-		public ElementLink<ParrotElement> flappyBirb(Vec3d location) {
-			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
-			ParrotElement parrot = ParrotElement.flappy(location);
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
-			addInstruction(scene -> scene.linkElement(parrot, link));
-			return link;
-		}
-
-		public ElementLink<ParrotElement> birbPartying(Vec3d location) {
-			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
-			ParrotElement parrot = ParrotElement.dance(location);
-			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
-			addInstruction(scene -> scene.linkElement(parrot, link));
-			return link;
+		public void changeBirbPose(ElementLink<ParrotElement> birb, Supplier<? extends ParrotPose> pose) {
+			addInstruction(scene -> scene.resolve(birb)
+				.setPose(pose.get()));
 		}
 
 		public void movePointOfInterest(Vec3d location) {
@@ -574,7 +558,7 @@ public class SceneBuilder {
 					resolve.ifPresent(tis -> tis.locked = stalled);
 			});
 		}
-		
+
 		public void changeBeltItemTo(ElementLink<BeltItemElement> link, ItemStack newStack) {
 			addInstruction(scene -> {
 				BeltItemElement resolve = scene.resolve(link);

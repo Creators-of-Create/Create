@@ -91,6 +91,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.palette.PaletteHashMap;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -929,10 +930,14 @@ public abstract class Contraption {
 		for (BlockInfo block : blocks.values()) {
 			BlockPos add = block.pos.add(anchor)
 				.add(offset);
-			if (!shouldUpdateAfterMovement(block))
-				continue;
-			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
-				BlockFlags.IS_MOVING | BlockFlags.DEFAULT);
+//			if (!shouldUpdateAfterMovement(block))
+//				continue;
+			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
+			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
+			world.notifyNeighbors(add, block.state.getBlock());
+			block.state.updateDiagonalNeighbors(world, add, flags & -2);
+//			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
+//				BlockFlags.IS_MOVING | BlockFlags.DEFAULT); this method did strange logspamming with POI-related blocks
 		}
 	}
 
@@ -1079,6 +1084,9 @@ public abstract class Contraption {
 	}
 
 	protected boolean shouldUpdateAfterMovement(BlockInfo info) {
+		if (PointOfInterestType.forState(info.state)
+			.isPresent())
+			return false;
 		return true;
 	}
 

@@ -92,11 +92,16 @@
 			}
 		}
 	],
-	"groups": [0, 1, 2, 3, 4,
-		{
-			"name": "lever",
-			"origin": [8, 8, 8],
-			"children": [5, 6]
-		}
-	]
+	"display": {
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+        "fixed": {
+            "rotation": [ 270, 0, 0 ],
+            "translation": [ 0, 0, -3],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    }
 }

@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.FlappyPose;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -32,7 +33,6 @@ public class FanScenes {
 		scene.title("fan_direction", "Air flow of Encased Fans");
 		scene.configureBasePlate(0, 1, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
-//		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
 		scene.idle(5);
 		scene.world.showSection(util.select.fromTo(3, 1, 0, 3, 1, 5)
 			.add(util.select.position(3, 2, 4)), Direction.DOWN);
@@ -45,7 +45,7 @@ public class FanScenes {
 		scene.idle(40);
 		scene.effects.rotationDirectionIndicator(fanPos.south());
 
-		ElementLink<ParrotElement> flappyBirb = scene.special.flappyBirb(util.vector.topOf(1, 0, 3));
+		ElementLink<ParrotElement> flappyBirb = scene.special.createBirb(util.vector.topOf(1, 0, 3), FlappyPose::new);
 		scene.idle(2);
 		scene.special.rotateParrot(flappyBirb, 0, 235, 0, 30);
 		scene.special.moveParrot(flappyBirb, util.vector.of(0, 0, -2.5), 30);

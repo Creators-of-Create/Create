@@ -180,6 +180,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public ResourceLocation getId() {
 		return id;
 	}
+	
+	@Override
+	public boolean isDynamic() {
+		return true;
+	}
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {

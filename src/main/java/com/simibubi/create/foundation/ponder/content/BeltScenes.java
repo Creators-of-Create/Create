@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.FaceCursorPose;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.FacePointOfInterestPose;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -324,8 +326,8 @@ public class BeltScenes {
 
 		scene.idle(20);
 
-		ElementLink<ParrotElement> parrot = scene.special.birbLookingAtPOI(util.vector.topOf(0, 1, 2)
-			.add(0, -3 / 16f, 0));
+		ElementLink<ParrotElement> parrot = scene.special.createBirb(util.vector.topOf(0, 1, 2)
+			.add(0, -3 / 16f, 0), FacePointOfInterestPose::new);
 		scene.special.moveParrot(parrot, util.vector.of(1.78, 0, 0), 40);
 		scene.special.movePointOfInterest(util.grid.at(1, 1, 3));
 
@@ -371,7 +373,7 @@ public class BeltScenes {
 		scene.effects.indicateSuccess(util.grid.at(3, 2, 2));
 		scene.idle(20);
 
-		scene.special.movePointOfInterest(util.grid.at(2, 1, 5));
+		scene.special.changeBirbPose(parrot, FaceCursorPose::new);
 	}
 
 	public static void beltsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {

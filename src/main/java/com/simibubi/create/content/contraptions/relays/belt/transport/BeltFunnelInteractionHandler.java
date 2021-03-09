@@ -97,6 +97,7 @@ public class BeltFunnelInteractionHandler {
 				remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
 
 			funnelTE.flap(true);
+			funnelTE.onTransfer(toInsert);
 			currentItem.stack = remainder;
 			beltInventory.belt.sendData();
 			if (blocking)

@@ -33,7 +33,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	public Class<? extends CondensedBlockCuttingRecipe> getRecipeClass() {
 		return CondensedBlockCuttingRecipe.class;
 	}
-
+	
 	@Override
 	public void setIngredients(CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
@@ -117,6 +117,11 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 				condensed.add(cr);
 			}
 			return condensed;
+		}
+		
+		@Override
+		public boolean isDynamic() {
+			return true;
 		}
 
 	}

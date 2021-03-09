@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.DancePose;
+import com.simibubi.create.foundation.ponder.elements.ParrotElement.FacePointOfInterestPose;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -108,7 +110,7 @@ public class DebugScenes {
 		scene.showBasePlate();
 		scene.idle(10);
 		Vec3d parrotPos = util.vector.topOf(1, 0, 1);
-		scene.special.birbLookingAtPOI(parrotPos);
+		scene.special.createBirb(parrotPos, FacePointOfInterestPose::new);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 		scene.overlay.showText(1000)
 			.text("Fluid rendering test.")
@@ -290,11 +292,11 @@ public class DebugScenes {
 			.pointAt(util.vector.topOf(pos));
 
 		scene.idle(10);
-		scene.special.birbPartying(util.vector.topOf(0, 1, 2));
+		scene.special.createBirb(util.vector.topOf(0, 1, 2), DancePose::new);
 		scene.idle(10);
 
-		scene.special.birbLookingAtPOI(util.vector.centerOf(3, 1, 3)
-			.add(0, 0.25f, 0));
+		scene.special.createBirb(util.vector.centerOf(3, 1, 3)
+			.add(0, 0.25f, 0), FacePointOfInterestPose::new);
 		scene.idle(20);
 
 		BlockPos poi1 = util.grid.at(4, 1, 0);

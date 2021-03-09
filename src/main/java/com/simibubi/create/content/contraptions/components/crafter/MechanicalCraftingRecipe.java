@@ -37,6 +37,11 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	}
 	
 	@Override
+	public boolean isDynamic() {
+		return true;
+	}
+	
+	@Override
 	public IRecipeSerializer<?> getSerializer() {
 		return AllRecipeTypes.MECHANICAL_CRAFTING.serializer;
 	}
