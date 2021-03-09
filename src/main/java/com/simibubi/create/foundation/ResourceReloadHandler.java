@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
-
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
@@ -18,6 +18,7 @@ public class ResourceReloadHandler extends ReloadListener<Object> {
 	protected void apply(Object $, IResourceManager resourceManagerIn, IProfiler profilerIn) {
 		SpriteShifter.reloadUVs();
 		CreateClient.invalidateRenderers();
+		IHaveGoggleInformation.numberFormat.update();
 	}
 
 }

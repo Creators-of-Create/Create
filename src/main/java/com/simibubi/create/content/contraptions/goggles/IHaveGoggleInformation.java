@@ -1,10 +1,7 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import java.text.DecimalFormat;
-import java.util.List;
-
 import com.simibubi.create.foundation.utility.Lang;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -13,12 +10,16 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
 * */
 public interface IHaveGoggleInformation {
 
-	DecimalFormat decimalFormat = new DecimalFormat("#.##");
+	Format numberFormat = new Format();
 	String spacing = "    ";
 
 	/**
@@ -33,7 +34,7 @@ public interface IHaveGoggleInformation {
 	}
 
 	static String format(double d) {
-		return decimalFormat.format(d);
+		return numberFormat.get().format(d);
 	}
 
 	default boolean containedFluidTooltip(List<String> tooltip, boolean isPlayerSneaking,
@@ -87,6 +88,25 @@ public interface IHaveGoggleInformation {
 			.getFormattedText();
 		tooltip.add(capacityString);
 		return true;
+	}
+
+	class Format {
+
+		private NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);;
+
+		private Format() {}
+
+		public NumberFormat get() {
+			return format;
+		}
+
+		public void update() {
+			format = NumberFormat.getInstance(Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getJavaLocale());
+			format.setMaximumFractionDigits(2);
+			format.setMinimumFractionDigits(0);
+			format.setGroupingUsed(true);
+		}
+
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -13,10 +15,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,7 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 
 	protected final List<Item> items;
 	private final double itemXmult = 0.5;
-	private final double itemYmult = 0.75;
+	private double itemYmult = 0.75;
 	protected Rectangle2d itemArea;
 
 	private ItemStack hoveredItem = ItemStack.EMPTY;
@@ -45,11 +49,31 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 	protected void init() {
 		super.init();
 
+		//populate lists
 		widgets.clear();
 
 		chapters.clear();
-		chapters.addAll(PonderRegistry.chapters.getAllChapters());
+		//chapters.addAll(PonderRegistry.chapters.getAllChapters());
 
+		items.clear();
+		PonderRegistry.all.keySet()
+				.stream()
+				.map(key -> {
+					Item item = ForgeRegistries.ITEMS.getValue(key);
+					if (item == null) {
+						Block b = ForgeRegistries.BLOCKS.getValue(key);
+						if (b != null)
+							item = b.asItem();
+					}
+					return item;
+				})
+				.filter(Objects::nonNull)
+				.filter(PonderIndexScreen::exclusions)
+				.forEach(items::add);
+
+		boolean hasChapters = !chapters.isEmpty();
+
+		//setup chapters
 		LayoutHelper layout = LayoutHelper.centeredHorizontal(
 				chapters.size(),
 				MathHelper.clamp((int) Math.ceil(chapters.size() / 4f), 1, 4),
@@ -73,24 +97,15 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 			layout.next();
 		}
 
-		items.clear();
-		PonderRegistry.all.keySet()
-				.stream()
-				.map(key -> {
-					Item item = ForgeRegistries.ITEMS.getValue(key);
-					if (item == null) {
-						Block b = ForgeRegistries.BLOCKS.getValue(key);
-						if (b != null)
-							item = b.asItem();
-					}
-					return item;
-				})
-				.filter(Objects::nonNull)
-				.forEach(items::add);
+		//setup items
+		if (!hasChapters) {
+			itemYmult = 0.5;
+		}
 
+		int maxItemRows = hasChapters ? 4 : 7;
 		layout = LayoutHelper.centeredHorizontal(
 				items.size(),
-				MathHelper.clamp((int) Math.ceil(items.size() / 11f), 1, 4),
+				MathHelper.clamp((int) Math.ceil(items.size() / 11f), 1, maxItemRows),
 				28,
 				28,
 				8
@@ -100,8 +115,13 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 		int itemCenterY = (int) (height * itemYmult);
 
 		for (Item item : items) {
-			PonderButton button = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {})
-					.showing(new ItemStack(item));
+			PonderButton button = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {
+				if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+					return;
+
+				centerScalingOn(x, y);
+				ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
+			}).showing(new ItemStack(item));
 
 			button.fade(1);
 			widgets.add(button);
@@ -109,6 +129,15 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 		}
 
 
+	}
+
+	private static boolean exclusions(Item item) {
+		if (item instanceof BlockItem) {
+			Block block = ((BlockItem) item).getBlock();
+			if (block instanceof ValveHandleBlock && !AllBlocks.COPPER_VALVE_HANDLE.is(item)) return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -132,14 +161,15 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 		int x = (int) (width * chapterXmult);
 		int y = (int) (height * chapterYmult);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(x, y, 0);
+		if (!chapters.isEmpty()) {
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(x, y, 0);
 
-		UIRenderHelper.streak(0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
-		drawString(font, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
+			UIRenderHelper.streak(0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
+			drawString(font, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
 
-		RenderSystem.popMatrix();
-
+			RenderSystem.popMatrix();
+		}
 
 		x = (int) (width * itemXmult);
 		y = (int) (height * itemYmult);
@@ -164,6 +194,31 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 		renderTooltip(hoveredItem, mouseX, mouseY);
 
 		RenderSystem.popMatrix();
+	}
+
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		MutableBoolean handled = new MutableBoolean(false);
+		widgets.forEach(w -> {
+			if (handled.booleanValue())
+				return;
+			if (!w.isMouseOver(x, y))
+				return;
+			if (w instanceof PonderButton) {
+				PonderButton btn = (PonderButton) w;
+				btn.runCallback(x, y);
+				handled.setTrue();
+			}
+		});
+
+		if (handled.booleanValue())
+			return true;
+		return super.mouseClicked(x, y, button);
+	}
+
+	@Override
+	public boolean isEquivalentTo(AbstractSimiScreen other) {
+		return other instanceof PonderIndexScreen;
 	}
 
 	public ItemStack getHoveredTooltipItem() {
