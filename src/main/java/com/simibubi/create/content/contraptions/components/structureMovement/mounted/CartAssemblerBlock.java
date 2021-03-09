@@ -92,15 +92,18 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	private static Item getRailItem(BlockState state) {
-		return state.get(RAIL_TYPE).getItem();
+		return state.get(RAIL_TYPE)
+			.getItem();
 	}
 
 	public static BlockState getRailBlock(BlockState state) {
-		AbstractRailBlock railBlock = (AbstractRailBlock) state.get(RAIL_TYPE).getBlock();
+		AbstractRailBlock railBlock = (AbstractRailBlock) state.get(RAIL_TYPE)
+			.getBlock();
 		BlockState railState = railBlock.getDefaultState()
 			.with(railBlock.getShapeProperty(), state.get(RAIL_SHAPE));
 		if (railState.has(ControllerRailBlock.BACKWARDS)) {
-			railState = railState.with(ControllerRailBlock.BACKWARDS, state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS);
+			railState = railState.with(ControllerRailBlock.BACKWARDS,
+				state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS);
 		}
 		return railState;
 	}
@@ -145,11 +148,22 @@ public class CartAssemblerBlock extends AbstractRailBlock
 				disassemble(world, pos, cart);
 			if (action == CartAssemblerAction.ASSEMBLE_ACCELERATE) {
 				Direction facing = cart.getAdjustedHorizontalFacing();
+
+				RailShape railShape = state.get(RAIL_SHAPE);
+				for (Direction d : Iterate.directionsInAxis(railShape == RailShape.EAST_WEST ? Axis.X : Axis.Z))
+					if (world.getBlockState(pos.offset(d))
+						.isNormalCube(world, pos.offset(d)))
+						facing = d.getOpposite();
+
 				float speed = getRailMaxSpeed(state, world, pos, cart);
 				cart.setMotion(facing.getXOffset() * speed, facing.getYOffset() * speed, facing.getZOffset() * speed);
 			}
 			if (action == CartAssemblerAction.ASSEMBLE_ACCELERATE_DIRECTIONAL) {
-				Vec3i accelerationVector = ControllerRailBlock.getAccelerationVector(AllBlocks.CONTROLLER_RAIL.getDefaultState().with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE)).with(ControllerRailBlock.BACKWARDS, state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS));
+				Vec3i accelerationVector =
+					ControllerRailBlock.getAccelerationVector(AllBlocks.CONTROLLER_RAIL.getDefaultState()
+						.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
+						.with(ControllerRailBlock.BACKWARDS,
+							state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS));
 				float speed = getRailMaxSpeed(state, world, pos, cart);
 				cart.setMotion(new Vec3d(accelerationVector).scale(speed));
 			}
@@ -192,7 +206,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 				.isEmpty() ? CartAssemblerAction.ASSEMBLE_ACCELERATE : CartAssemblerAction.DISASSEMBLE;
 
 		if (type == CartAssembleRailType.CONTROLLER_RAIL || type == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS)
-			return powered ? CartAssemblerAction.ASSEMBLE_ACCELERATE_DIRECTIONAL : CartAssemblerAction.DISASSEMBLE_BRAKE;
+			return powered ? CartAssemblerAction.ASSEMBLE_ACCELERATE_DIRECTIONAL
+				: CartAssemblerAction.DISASSEMBLE_BRAKE;
 
 		return CartAssemblerAction.PASS;
 	}
@@ -241,10 +256,9 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			.isCoupledThroughContraption())
 			return;
 
-		
 		Optional<CartAssemblerTileEntity> assembler = getTileEntityOptional(world, pos);
 		CartMovementMode mode = assembler.map(te -> CartMovementMode.values()[te.movementMode.value])
-				.orElse(CartMovementMode.ROTATE);
+			.orElse(CartMovementMode.ROTATE);
 
 		MountedContraption contraption = new MountedContraption(mode);
 		try {
@@ -485,15 +499,22 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
 		BlockPos pos = context.getPos();
-		BlockState newState = state.with(RAIL_SHAPE, state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
-		if (state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL || state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS) {
-			newState = newState.with(RAIL_TYPE, AllBlocks.CONTROLLER_RAIL.get().rotate(AllBlocks.CONTROLLER_RAIL.getDefaultState()
-				.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE)).with(ControllerRailBlock.BACKWARDS,
-					state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS), Rotation.CLOCKWISE_90)
-				.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS : CartAssembleRailType.CONTROLLER_RAIL);
+		BlockState newState = state.with(RAIL_SHAPE,
+			state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
+		if (state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL
+			|| state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS) {
+			newState = newState.with(RAIL_TYPE, AllBlocks.CONTROLLER_RAIL.get()
+				.rotate(AllBlocks.CONTROLLER_RAIL.getDefaultState()
+					.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
+					.with(ControllerRailBlock.BACKWARDS,
+						state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS),
+					Rotation.CLOCKWISE_90)
+				.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS
+					: CartAssembleRailType.CONTROLLER_RAIL);
 		}
-			context.getWorld().setBlockState(pos, newState, 3);
-			world.notifyNeighborsOfStateChange(pos.down(), this);
+		context.getWorld()
+			.setBlockState(pos, newState, 3);
+		world.notifyNeighborsOfStateChange(pos.down(), this);
 		return ActionResultType.SUCCESS;
 	}
 }

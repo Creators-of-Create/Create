@@ -58,7 +58,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected Contraption contraption;
 	protected boolean initialized;
-	private boolean prevPosInvalid;
+	protected boolean prevPosInvalid;
 	private boolean ticking;
 
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {

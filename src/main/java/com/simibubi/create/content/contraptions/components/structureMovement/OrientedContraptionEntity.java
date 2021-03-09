@@ -64,6 +64,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	protected boolean forceAngle;
 	private boolean isSerializingFurnaceCart;
 	private boolean attachedExtraInventories;
+	private boolean manuallyPlaced;
 
 	public float prevYaw;
 	public float yaw;
@@ -91,6 +92,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		entity.setContraption(contraption);
 		initialOrientation.ifPresent(entity::setInitialOrientation);
 		entity.startAtInitialYaw();
+		return entity;
+	}
+
+	public static OrientedContraptionEntity createAtYaw(World world, Contraption contraption,
+		Optional<Direction> initialOrientation, float initialYaw) {
+		OrientedContraptionEntity entity = create(world, contraption, initialOrientation);
+		entity.startAtYaw(initialYaw);
+		entity.manuallyPlaced = true;
 		return entity;
 	}
 
@@ -153,6 +162,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		if (compound.contains("InitialOrientation"))
 			setInitialOrientation(NBTHelper.readEnum(compound, "InitialOrientation", Direction.class));
+
+		yaw = compound.getFloat("Yaw");
+		pitch = compound.getFloat("Pitch");
+		manuallyPlaced = compound.getBoolean("Placed");
+
 		if (compound.contains("ForceYaw"))
 			startAtYaw(compound.getFloat("ForceYaw"));
 
@@ -163,9 +177,6 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				targetYaw = prevYaw = yaw += yawFromVector(motionBeforeStall);
 			setMotion(Vec3d.ZERO);
 		}
-
-		yaw = compound.getFloat("Yaw");
-		pitch = compound.getFloat("Pitch");
 
 		setCouplingId(
 			compound.contains("OnCoupling") ? NBTUtil.readUniqueId(compound.getCompound("OnCoupling")) : null);
@@ -188,6 +199,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			forceAngle = false;
 		}
 
+		compound.putBoolean("Placed", manuallyPlaced);
 		compound.putFloat("Yaw", yaw);
 		compound.putFloat("Pitch", pitch);
 
@@ -198,7 +210,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
-		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent())
+		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent() && !manuallyPlaced)
 			startAtInitialYaw();
 	}
 
@@ -357,14 +369,16 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		boolean rotating = false;
 		Vec3d movementVector = riding.getMotion();
-
+		Vec3d locationDiff = riding.getPositionVec()
+			.subtract(riding.prevPosX, riding.prevPosY, riding.prevPosZ);
 		if (!(riding instanceof AbstractMinecartEntity))
-			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
+			movementVector = locationDiff;
 		Vec3d motion = movementVector.normalize();
 
 		if (!isInitialOrientationPresent() && !world.isRemote) {
-			if (motion.length() > 0) {
-				Direction facingFromVector = Direction.getFacingFromVector(motion.x, motion.y, motion.z);
+			if (locationDiff.length() > 0) {
+				Direction facingFromVector =
+					Direction.getFacingFromVector(locationDiff.x, locationDiff.y, locationDiff.z);
 				if (initialYawOffset != -1)
 					facingFromVector = Direction.fromAngle(facingFromVector.getHorizontalAngle() - initialYawOffset);
 				if (facingFromVector.getAxis()
@@ -520,12 +534,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		for (MatrixStack stack : matrixStacks)
 			MatrixStacker.of(stack)
-						 .nudge(getEntityId())
-						 .centre()
-						 .rotateY(angleYaw)
-						 .rotateZ(anglePitch)
-						 .rotateY(angleInitialYaw)
-						 .unCentre();
+				.nudge(getEntityId())
+				.centre()
+				.rotateY(angleYaw)
+				.rotateZ(anglePitch)
+				.rotateY(angleInitialYaw)
+				.unCentre();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -541,7 +555,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	private void repositionOnCart(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
 		Vec3d cartPos = getCartOffset(partialTicks, ridingEntity);
 
-		if (cartPos == Vec3d.ZERO) return;
+		if (cartPos == Vec3d.ZERO)
+			return;
 
 		for (MatrixStack stack : matrixStacks)
 			stack.translate(cartPos.x, cartPos.y, cartPos.z);

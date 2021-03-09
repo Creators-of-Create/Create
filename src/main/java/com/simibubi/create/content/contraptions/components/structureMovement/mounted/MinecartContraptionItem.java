@@ -169,7 +169,9 @@ public class MinecartContraptionItem extends Item {
 
 			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag, false);
 			OrientedContraptionEntity contraptionEntity =
-				OrientedContraptionEntity.create(world, mountedContraption, intialOrientation);
+				newFacing == null ? OrientedContraptionEntity.create(world, mountedContraption, intialOrientation)
+					: OrientedContraptionEntity.createAtYaw(world, mountedContraption, intialOrientation,
+						newFacing.getHorizontalAngle());
 
 			contraptionEntity.startRiding(cart);
 			contraptionEntity.setPosition(cart.getX(), cart.getY(), cart.getZ());
@@ -209,7 +211,8 @@ public class MinecartContraptionItem extends Item {
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
 		if (!event.getWorld().isRemote) {
-			player.inventory.placeItemBackInInventory(event.getWorld(), create(type, contraption).setDisplayName(entity.getCustomName()));
+			player.inventory.placeItemBackInInventory(event.getWorld(),
+				create(type, contraption).setDisplayName(entity.getCustomName()));
 			contraption.remove();
 			entity.remove();
 		}
