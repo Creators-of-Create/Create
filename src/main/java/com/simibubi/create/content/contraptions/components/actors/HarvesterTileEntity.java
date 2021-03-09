@@ -9,10 +9,17 @@ public class HarvesterTileEntity extends SyncedTileEntity {
 	public HarvesterTileEntity(TileEntityType<? extends HarvesterTileEntity> type) {
 		super(type);
 	}
-	
+
 	@Override
 	public boolean hasFastRenderer() {
 		return true;
-	} 
+	}
+
+	// For simulations such as Ponder
+	float manuallyAnimatedSpeed;
+
+	public void setAnimatedSpeed(float speed) {
+		manuallyAnimatedSpeed = speed;
+	}
 
 }

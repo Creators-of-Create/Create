@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -145,7 +146,7 @@ public abstract class AbstractSimiScreen extends Screen {
 				return true;
 
 		if (code == GLFW.GLFW_KEY_BACKSPACE) {
-			ScreenOpener.openPreviousScreen(this);
+			ScreenOpener.openPreviousScreen(this, Optional.empty());
 			return true;
 		}
 
@@ -242,9 +243,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	private static String screenTitle(Screen screen) {
 		if (screen instanceof AbstractSimiScreen)
 			return ((AbstractSimiScreen) screen).getBreadcrumbTitle();
-
-		return screen.getClass()
-			.getSimpleName();
+		return "<";
 	}
 
 	protected String getBreadcrumbTitle() {
@@ -275,9 +274,11 @@ public abstract class AbstractSimiScreen extends Screen {
 		double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
 		centerScalingOn((int) mouseX, (int) mouseY);
 	}
-	
+
 	public boolean isEquivalentTo(AbstractSimiScreen other) {
 		return false;
 	}
+
+	public void shareContextWith(AbstractSimiScreen other) {}
 
 }

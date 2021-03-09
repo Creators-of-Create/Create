@@ -596,6 +596,15 @@ public class SceneBuilder {
 			modifyTileNBT(selection, teType, consumer, false);
 		}
 
+		public <T extends TileEntity> void modifyTileEntity(BlockPos position, Class<T> teType,
+			Consumer<T> consumer) {
+			addInstruction(scene -> {
+				TileEntity tileEntity = scene.world.getTileEntity(position);
+				if (teType.isInstance(tileEntity))
+					consumer.accept(teType.cast(tileEntity));
+			});
+		}
+
 		public void modifyTileNBT(Selection selection, Class<? extends TileEntity> teType,
 			Consumer<CompoundNBT> consumer, boolean reDrawBlocks) {
 			addInstruction(new TileEntityDataInstruction(selection, teType, nbt -> {

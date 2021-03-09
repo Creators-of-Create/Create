@@ -35,7 +35,8 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	protected void renderSafe(HarvesterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer superBuffer = AllBlockPartials.HARVESTER_BLADE.renderOnHorizontal(blockState);
+		SuperByteBuffer superBuffer = AllBlockPartials.HARVESTER_BLADE.renderOn(blockState);
+		transform(blockState.get(HarvesterBlock.HORIZONTAL_FACING), superBuffer, te.manuallyAnimatedSpeed);
 		superBuffer.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
@@ -50,12 +51,12 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		float originOffset = 1 / 16f;
 		Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 		model.getInstance(model.createInstance())
-			 .setPosition(context.localPos)
-			 .setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-			 .setRotationOffset(0)
-			 .setRotationCenter(rotOffset)
-			 .setRotationAxis(-1, 0, 0)
-			 .setLocalRotation(0, facing.getHorizontalAngle(), 0);
+			.setPosition(context.localPos)
+			.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
+			.setRotationOffset(0)
+			.setRotationCenter(rotOffset)
+			.setRotationAxis(-1, 0, 0)
+			.setLocalRotation(0, facing.getHorizontalAngle(), 0);
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
@@ -66,21 +67,26 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 			? context.getAnimationSpeed()
 			: 0);
-
 		if (context.contraption.stalled)
 			speed = 0;
-		float time = AnimationTickHolder.getRenderTime() / 20;
-		float angle = (time * speed) % 360;
+
+		transform(facing, superBuffer, speed);
+
+		superBuffer.light(msLocal.peek()
+			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
+			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
+	}
+
+	public static void transform(Direction facing, SuperByteBuffer superBuffer, float speed) {
 		float originOffset = 1 / 16f;
 		Vec3d rotOffset = new Vec3d(0, -2 * originOffset, originOffset).add(VecHelper.getCenterOf(BlockPos.ZERO));
+		float time = AnimationTickHolder.getRenderTime() / 20;
+		float angle = (time * speed) % 360;
 
 		superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
 			.translate(rotOffset.x, rotOffset.y, rotOffset.z)
 			.rotate(Direction.WEST, AngleHelper.rad(angle))
-			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z)
-			.light(msLocal.peek()
-				.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
+			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z);
 	}
 
 	public static void transformHead(MatrixStack ms, float angle) {}

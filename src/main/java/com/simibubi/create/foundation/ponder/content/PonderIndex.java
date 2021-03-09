@@ -16,20 +16,22 @@ public class PonderIndex {
 		// (!) Modifications inside storyboard methods only require re-opening the ui
 
 		PonderRegistry.forComponents(AllBlocks.SHAFT)
-			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay);
+			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, PonderTag.KINETIC_RELAYS);
 		PonderRegistry.forComponents(AllBlocks.SHAFT, AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
 		PonderRegistry.forComponents(AllBlocks.COGWHEEL)
-			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay)
+			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay, PonderTag.KINETIC_RELAYS)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp);
+
 		PonderRegistry.forComponents(AllBlocks.LARGE_COGWHEEL)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
-			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay);
+			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, PonderTag.KINETIC_RELAYS);
+
 		PonderRegistry.forComponents(AllItems.BELT_CONNECTOR)
-			.addStoryBoard("belt/connect", BeltScenes::beltConnector)
+			.addStoryBoard("belt/connect", BeltScenes::beltConnector, PonderTag.KINETIC_RELAYS)
 			.addStoryBoard("belt/directions", BeltScenes::directions)
-			.addStoryBoard("belt/transport", BeltScenes::transport)
+			.addStoryBoard("belt/transport", BeltScenes::transport, PonderTag.LOGISTICS)
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_CASING, AllBlocks.BRASS_CASING)
@@ -37,40 +39,56 @@ public class PonderIndex {
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
 		PonderRegistry.forComponents(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)
-			.addStoryBoard("gearbox", KineticsScenes::gearbox);
-		PonderRegistry.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch);
-		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift);
+			.addStoryBoard("gearbox", KineticsScenes::gearbox, PonderTag.KINETIC_RELAYS);
+
+		PonderRegistry.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, PonderTag.KINETIC_RELAYS);
+		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
+			PonderTag.KINETIC_RELAYS);
 
 		PonderRegistry.forComponents(AllBlocks.ENCASED_FAN)
-			.addStoryBoard("fan/direction", FanScenes::direction)
+			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing)
-			.addStoryBoard("fan/source", FanScenes::source);
+			.addStoryBoard("fan/source", FanScenes::source, PonderTag.KINETIC_SOURCES);
 
-		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor);
-		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel);
-		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank);
-		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle);
+		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
+			PonderTag.KINETIC_SOURCES);
+		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
+			PonderTag.KINETIC_SOURCES);
+		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank,
+			PonderTag.KINETIC_SOURCES);
+
+		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
+			PonderTag.KINETIC_SOURCES);
 		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES)
 			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
 		PonderRegistry.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
-			ChainDriveScenes::chainDriveAsRelay);
+			ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
-			.addStoryBoard("funnels/intro", FunnelScenes::intro)
+			.addStoryBoard("funnels/intro", FunnelScenes::intro, PonderTag.LOGISTICS)
 			.addStoryBoard("funnels/direction", FunnelScenes::directionality)
 			.addStoryBoard("funnels/compat", FunnelScenes::compat)
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
 
+		// Windmill Bearing
+		PonderRegistry.forComponents(AllBlocks.WINDMILL_BEARING)
+			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
+			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
+				PonderTag.MOVEMENT_ANCHOR);
+
 		// Gantries
-		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft);
-		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion);
+		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
+			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
+		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
+			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
+
 		PonderRegistry.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
@@ -78,7 +96,7 @@ public class PonderIndex {
 
 		// Movement Actors
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
-			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer)
+			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, PonderTag.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
 
 		// Debug scenes, can be found in game via the Brass Hand

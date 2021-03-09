@@ -77,12 +77,20 @@ public class PonderUI extends AbstractSimiScreen {
 
 	private LerpedFloat lazyIndex;
 	private int index = 0;
+	private PonderTag referredToByTag;
 
 	private PonderButton left, right, scan, chap;
 
 	public static PonderUI of(ItemStack item) {
 		return new PonderUI(PonderRegistry.compile(item.getItem()
 			.getRegistryName()));
+	}
+
+	public static PonderUI of(ItemStack item, PonderTag tag) {
+		PonderUI ponderUI = new PonderUI(PonderRegistry.compile(item.getItem()
+			.getRegistryName()));
+		ponderUI.referredToByTag = tag;
+		return ponderUI;
 	}
 
 	public static PonderUI of(PonderChapter chapter) {
@@ -186,6 +194,26 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
+
+		if (referredToByTag != null) {
+			for (int i = 0; i < scenes.size(); i++) {
+				PonderScene ponderScene = scenes.get(i);
+				if (!ponderScene.tags.contains(referredToByTag))
+					continue;
+				if (i == index)
+					break;
+				scenes.get(index)
+					.fadeOut();
+				index = i;
+				scenes.get(index)
+					.begin();
+				lazyIndex.chase(index, 1 / 4f, Chaser.EXP);
+				identifyMode = false;
+				break;
+			}
+			referredToByTag = null;
+		}
+
 		PonderScene activeScene = scenes.get(index);
 		if (!identifyMode)
 			activeScene.tick();
@@ -741,6 +769,12 @@ public class PonderUI extends AbstractSimiScreen {
 		if (other instanceof PonderUI)
 			return stack.isItemEqual(((PonderUI) other).stack);
 		return super.isEquivalentTo(other);
+	}
+
+	@Override
+	public void shareContextWith(AbstractSimiScreen other) {
+		if (other instanceof PonderUI)
+			((PonderUI) other).referredToByTag = referredToByTag;
 	}
 
 }

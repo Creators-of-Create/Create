@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -34,14 +35,17 @@ public class ScreenOpener {
 		openScreen(toOpen);
 	}
 
-	public static void openPreviousScreen(Screen current) {
+	public static void openPreviousScreen(Screen current, Optional<AbstractSimiScreen> screenWithContext) {
 		if (backStack.isEmpty())
 			return;
 		backSteppedFrom = current;
 		Screen previousScreen = backStack.pop();
-		if (previousScreen instanceof AbstractSimiScreen)
-			((AbstractSimiScreen) previousScreen).transition.startWithValue(-0.1)
+		if (previousScreen instanceof AbstractSimiScreen) {
+			AbstractSimiScreen previousAbstractSimiScreen = (AbstractSimiScreen) previousScreen;
+			screenWithContext.ifPresent(s -> s.shareContextWith(previousAbstractSimiScreen));
+			previousAbstractSimiScreen.transition.startWithValue(-0.1)
 				.chase(-1, .4f, LerpedFloat.Chaser.EXP);
+		}
 		openScreen(previousScreen);
 	}
 
@@ -65,7 +69,7 @@ public class ScreenOpener {
 		if (!screen.isEquivalentTo((AbstractSimiScreen) previouslyRenderedScreen))
 			return false;
 
-		openPreviousScreen(Minecraft.getInstance().currentScreen);
+		openPreviousScreen(Minecraft.getInstance().currentScreen, Optional.of(screen));
 		return true;
 	}
 
