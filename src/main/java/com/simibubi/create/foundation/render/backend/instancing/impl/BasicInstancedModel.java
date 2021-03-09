@@ -6,16 +6,16 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class TransformedInstancedModel extends InstancedModel<TransformData> {
+public class BasicInstancedModel extends InstancedModel<ModelData> {
     public static final VertexFormat INSTANCE_FORMAT = VertexFormat.builder().addAttributes(InstanceVertexAttributes.class).build();
 
-    public TransformedInstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
+    public BasicInstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(renderer, buf);
     }
 
     @Override
-    protected TransformData newInstance() {
-        return new TransformData(this);
+    protected ModelData newInstance() {
+        return new ModelData(this);
     }
 
     @Override

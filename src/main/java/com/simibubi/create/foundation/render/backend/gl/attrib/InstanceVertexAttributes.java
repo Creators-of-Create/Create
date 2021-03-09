@@ -4,6 +4,7 @@ public enum InstanceVertexAttributes implements IVertexAttrib {
     TRANSFORM("aTransform", MatrixAttributes.MAT4),
     NORMAL_MAT("aNormalMat", MatrixAttributes.MAT3),
     LIGHT("aLight", CommonAttributes.LIGHT),
+    COLOR("aColor", CommonAttributes.RGBA),
     ;
 
     private final String name;
