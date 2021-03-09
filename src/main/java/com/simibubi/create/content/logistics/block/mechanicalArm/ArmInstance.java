@@ -156,8 +156,8 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
     @Override
     public void updateLight() {
         super.updateLight();
-        byte block = (byte) (world.getLightLevel(LightType.BLOCK, pos) << 4);
-        byte sky = (byte) (world.getLightLevel(LightType.SKY, pos) << 4);
+        int block = world.getLightLevel(LightType.BLOCK, pos);
+        int sky = world.getLightLevel(LightType.SKY, pos);
 
 
         models.stream()

@@ -54,13 +54,13 @@ public class ModelData extends InstanceData {
         return this;
     }
 
-    public ModelData setBlockLight(byte blockLight) {
-        this.blockLight = blockLight;
+    public ModelData setBlockLight(int blockLight) {
+        this.blockLight = (byte) (blockLight << 4);
         return this;
     }
 
-    public ModelData setSkyLight(byte skyLight) {
-        this.skyLight = skyLight;
+    public ModelData setSkyLight(int skyLight) {
+        this.skyLight = (byte) (skyLight << 4);
         return this;
     }
 

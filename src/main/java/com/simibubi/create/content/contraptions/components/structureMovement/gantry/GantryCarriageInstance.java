@@ -86,8 +86,8 @@ public class GantryCarriageInstance extends ShaftInstance implements ITickableIn
     @Override
     public void updateLight() {
         gantryCogs.getInstance()
-            .setBlockLight((byte) (world.getLightLevel(LightType.BLOCK, pos) << 4))
-            .setSkyLight((byte) (world.getLightLevel(LightType.SKY, pos) << 4));
+            .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+            .setSkyLight(world.getLightLevel(LightType.SKY, pos));
     }
 
     @Override

@@ -39,10 +39,12 @@ import com.simibubi.create.content.contraptions.components.millstone.MillstoneRe
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneTileEntity;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerRenderer;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
+import com.simibubi.create.content.contraptions.components.mixer.MixerInstance;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorRenderer;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressRenderer;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.press.PressInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
@@ -488,14 +490,14 @@ public class AllTileEntities {
 		.tileEntity("mechanical_press", MechanicalPressTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_PRESS)
 		.renderer(() -> MechanicalPressRenderer::new)
-		.onRegister(ShaftInstance::register)
+		.onRegister(PressInstance::register)
 		.register();
 
 	public static final TileEntityEntry<MechanicalMixerTileEntity> MECHANICAL_MIXER = Create.registrate()
 		.tileEntity("mechanical_mixer", MechanicalMixerTileEntity::new)
 		.validBlocks(AllBlocks.MECHANICAL_MIXER)
 		.renderer(() -> MechanicalMixerRenderer::new)
-		.onRegister(ShaftlessCogInstance::register)
+		.onRegister(MixerInstance::register)
 		.register();
 
 	public static final TileEntityEntry<DeployerTileEntity> DEPLOYER = Create.registrate()

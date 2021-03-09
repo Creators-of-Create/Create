@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -41,7 +42,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
 		ArmTileEntity arm = (ArmTileEntity) te;
 
-		boolean usingFlywheel = Backend.canUseInstancing();
+		boolean usingFlywheel = FastRenderDispatcher.available(te.getWorld());
 
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
