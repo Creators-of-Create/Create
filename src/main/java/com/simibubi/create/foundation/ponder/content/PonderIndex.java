@@ -77,6 +77,12 @@ public class PonderIndex {
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
 
+		// Windmill Bearing
+		PonderRegistry.forComponents(AllBlocks.WINDMILL_BEARING)
+			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
+			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
+				PonderTag.MOVEMENT_ANCHOR);
+
 		// Gantries
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
