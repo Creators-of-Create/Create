@@ -34,6 +34,7 @@ import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionIns
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.ponder.instructions.FadeOutOfSceneInstruction;
+import com.simibubi.create.foundation.ponder.instructions.HighlightValueBoxInstruction;
 import com.simibubi.create.foundation.ponder.instructions.LineInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
 import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
@@ -284,6 +285,15 @@ public class SceneBuilder {
 			addInstruction(new ChaseAABBInstruction(color, slot, boundingBox, duration));
 		}
 
+		public void showCenteredScrollInput(BlockPos pos, Direction side, int duration) {
+			Axis axis = side.getAxis();
+			float s = 1 / 16f;
+			float q = 1 / 4f;
+			Vec3d expands = new Vec3d(axis == Axis.X ? s : q, axis == Axis.Y ? s : q, axis == Axis.Z ? s : q);
+			addInstruction(new HighlightValueBoxInstruction(scene.getSceneBuildingUtil().vector.blockSurface(pos, side),
+				expands, duration));
+		}
+
 		public void showLine(PonderPalette color, Vec3d start, Vec3d end, int duration) {
 			addInstruction(new LineInstruction(color, start, end, duration));
 		}
@@ -350,6 +360,12 @@ public class SceneBuilder {
 				Optional.of(() -> scene.resolve(link))));
 		}
 
+		public void glueBlockOnto(BlockPos position, Direction fadeInDirection, ElementLink<WorldSectionElement> link) {
+			addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection,
+				scene.getSceneBuildingUtil().select.position(position), Optional.of(() -> scene.resolve(link)),
+				position));
+		}
+
 		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection) {
 			DisplayWorldSectionInstruction instruction =
 				new DisplayWorldSectionInstruction(15, fadeInDirection, selection, Optional.empty());
@@ -403,6 +419,11 @@ public class SceneBuilder {
 		public void configureCenterOfRotation(ElementLink<WorldSectionElement> link, Vec3d anchor) {
 			addInstruction(scene -> scene.resolve(link)
 				.setCenterOfRotation(anchor));
+		}
+
+		public void configureStabilization(ElementLink<WorldSectionElement> link, Vec3d anchor) {
+			addInstruction(scene -> scene.resolve(link)
+				.stabilizeRotation(anchor));
 		}
 
 		public void moveSection(ElementLink<WorldSectionElement> link, Vec3d offset, int duration) {
@@ -596,8 +617,7 @@ public class SceneBuilder {
 			modifyTileNBT(selection, teType, consumer, false);
 		}
 
-		public <T extends TileEntity> void modifyTileEntity(BlockPos position, Class<T> teType,
-			Consumer<T> consumer) {
+		public <T extends TileEntity> void modifyTileEntity(BlockPos position, Class<T> teType, Consumer<T> consumer) {
 			addInstruction(scene -> {
 				TileEntity tileEntity = scene.world.getTileEntity(position);
 				if (teType.isInstance(tileEntity))

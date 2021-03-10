@@ -83,6 +83,14 @@ public class PonderIndex {
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
 				PonderTag.MOVEMENT_ANCHOR);
 
+		// Mechanical Bearing
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_BEARING)
+			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, PonderTag.KINETIC_APPLIANCES,
+				PonderTag.MOVEMENT_ANCHOR)
+			.addStoryBoard("mechanical_bearing/modes", BearingScenes::bearingModes)
+			.addStoryBoard("mechanical_bearing/stabilized", BearingScenes::stabilizedBearings,
+				PonderTag.CONTRAPTION_ACTOR);
+
 		// Gantries
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);

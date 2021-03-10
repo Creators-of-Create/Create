@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -102,7 +101,7 @@ public class BearingScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.topOf(windmill))
 			.placeNearTarget()
-			.text("Once Activated, the Windmill Bearing will start providing Rotational Force");
+			.text("Activated with Right-Click, the Windmill Bearing will start providing Rotational Force");
 		scene.idle(70);
 
 		scene.overlay.showText(60)
@@ -113,19 +112,14 @@ public class BearingScenes {
 		scene.idle(90);
 
 		Vec3d surface = util.vector.blockSurface(windmill, Direction.WEST);
-		AxisAlignedBB point = new AxisAlignedBB(surface, surface);
-		AxisAlignedBB expanded = point.grow(1 / 16f, 1 / 4f, 1 / 4f);
-
 		scene.overlay.showControls(new InputWindowElement(surface, Pointing.DOWN).scroll()
 			.withWrench(), 60);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, point, point, 1);
-		scene.idle(1);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, point, expanded, 50);
+		scene.overlay.showCenteredScrollInput(windmill, Direction.WEST, 50);
 		scene.overlay.showText(60)
 			.pointAt(surface)
 			.placeNearTarget()
 			.text("Use a Wrench to configure its rotation direction");
-		scene.idle(35);
+		scene.idle(36);
 
 		scene.world.rotateBearing(windmill, -90 - 45, 75);
 		scene.world.rotateSection(structure, 0, 0, -90 - 45, 75);
@@ -186,13 +180,241 @@ public class BearingScenes {
 			new InputWindowElement(util.vector.blockSurface(bearingPos, Direction.WEST), Pointing.LEFT).rightClick(),
 			40);
 		scene.idle(7);
+		scene.markAsFinished();
 		scene.world.rotateBearing(bearingPos, -720, 400);
 		scene.world.rotateSection(contraption, 0, -720, 0, 400);
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class,
 			hte -> hte.setAnimatedSpeed(-150));
-		scene.markAsFinished();
 		scene.idle(400);
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class, hte -> hte.setAnimatedSpeed(0));
+	}
+
+	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("mechanical_bearing", "Movings Structures using the Mechanical Bearing");
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(util.select.layer(1), Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.layer(2), Direction.DOWN);
+		scene.idle(10);
+
+		Selection cog1 = util.select.position(6, 0, 4);
+		Selection cog2 = util.select.position(5, 1, 4);
+		Selection cog3 = util.select.position(4, 1, 3);
+		Selection cog4 = util.select.position(3, 1, 3);
+		Selection all = cog1.copy()
+			.add(cog2)
+			.add(cog3)
+			.add(cog4);
+
+		BlockPos bearingPos = util.grid.at(3, 2, 3);
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos.up()), 60)
+			.colored(PonderPalette.GREEN)
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.placeNearTarget()
+			.text("Mechanical Bearings attach to the block in front of them");
+		scene.idle(50);
+
+		ElementLink<WorldSectionElement> plank = scene.world.showIndependentSection(util.select.position(bearingPos.up()
+			.east()
+			.north()), Direction.DOWN);
+		scene.world.moveSection(plank, util.vector.of(-1, 0, 1), 0);
+		scene.idle(20);
+
+		scene.world.setKineticSpeed(cog1, -8);
+		scene.world.setKineticSpeed(cog2, 8);
+		scene.world.setKineticSpeed(cog3, -16);
+		scene.world.setKineticSpeed(cog4, 16);
+		scene.effects.rotationSpeedIndicator(bearingPos.down());
+		scene.world.rotateBearing(bearingPos, 360, 37 * 2);
+		scene.world.rotateSection(plank, 0, 360, 0, 37 * 2);
+
+		scene.overlay.showText(80)
+			.pointAt(util.vector.topOf(bearingPos.up()))
+			.placeNearTarget()
+			.text("Upon receiving Rotational Force, it will assemble it into a Rotating Contraption");
+		scene.idle(37 * 2);
+		scene.world.setKineticSpeed(all, 0);
+		scene.idle(20);
+
+		scene.world.hideIndependentSection(plank, Direction.UP);
+		scene.idle(15);
+		Selection plank2 = util.select.position(4, 3, 2);
+		ElementLink<WorldSectionElement> contraption = scene.world.showIndependentSection(util.select.layersFrom(3)
+			.substract(plank2), Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSectionAndMerge(plank2, Direction.SOUTH, contraption);
+		scene.idle(15);
+		scene.effects.superGlue(util.grid.at(4, 3, 2), Direction.SOUTH, true);
+		scene.idle(5);
+
+		scene.world.configureCenterOfRotation(contraption, util.vector.topOf(bearingPos));
+		scene.world.setKineticSpeed(cog1, -8);
+		scene.world.setKineticSpeed(cog2, 8);
+		scene.world.setKineticSpeed(cog3, -16);
+		scene.world.setKineticSpeed(cog4, 16);
+		scene.effects.rotationSpeedIndicator(bearingPos.down());
+		scene.world.rotateBearing(bearingPos, 360 * 2, 37 * 4);
+		scene.world.rotateSection(contraption, 0, 360 * 2, 0, 37 * 4);
+
+		scene.overlay.showText(120)
+			.pointAt(util.vector.topOf(bearingPos.up()))
+			.placeNearTarget()
+			.sharedText("movement_anchors");
+
+		scene.idle(37 * 4);
+		scene.world.setKineticSpeed(all, 0);
+	}
+
+	public static void bearingModes(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("bearing_modes", "Movement Modes of the Mechanical Bearing");
+		Selection sideCog = util.select.position(util.grid.at(7, 0, 3));
+		Selection cogColumn = util.select.fromTo(6, 1, 3, 6, 4, 3);
+		Selection cogAndClutch = util.select.fromTo(5, 3, 1, 5, 4, 2);
+		BlockPos leverPos = util.grid.at(5, 3, 1);
+
+		scene.world.setKineticSpeed(sideCog, 4);
+		scene.world.setKineticSpeed(cogColumn, -4);
+		scene.world.setKineticSpeed(cogAndClutch, 8);
+		scene.world.toggleRedstonePower(cogAndClutch);
+
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(cogColumn, Direction.DOWN);
+		scene.idle(5);
+		scene.world.showSection(cogAndClutch, Direction.DOWN);
+		scene.idle(10);
+
+		BlockPos bearingPos = util.grid.at(5, 2, 2);
+		scene.world.showSection(util.select.position(bearingPos), Direction.UP);
+		scene.idle(10);
+
+		ElementLink<WorldSectionElement> contraption =
+			scene.world.showIndependentSection(util.select.fromTo(5, 1, 2, 2, 1, 2), Direction.EAST);
+		scene.world.configureCenterOfRotation(contraption, util.vector.centerOf(bearingPos));
+		scene.idle(20);
+
+		scene.world.toggleRedstonePower(cogAndClutch);
+		scene.effects.indicateRedstone(leverPos);
+		scene.world.rotateSection(contraption, 0, 55, 0, 23);
+		scene.world.rotateBearing(bearingPos, 55, 23);
+		scene.idle(24);
+
+		scene.world.toggleRedstonePower(cogAndClutch);
+		scene.effects.indicateRedstone(leverPos);
+		scene.world.rotateSection(contraption, 0, 35, 0, 0);
+		scene.world.rotateBearing(bearingPos, 35, 0);
+
+		Vec3d target = util.vector.topOf(bearingPos.down());
+		scene.overlay.showLine(PonderPalette.RED, target.add(-2.5, 0, 3.5), target, 50);
+		scene.overlay.showLine(PonderPalette.GREEN, target.add(0, 0, 4.5), target, 50);
+
+		scene.idle(50);
+
+		scene.overlay.showText(100)
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.placeNearTarget()
+			.colored(PonderPalette.RED)
+			.text("When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle");
+		scene.idle(110);
+
+		scene.overlay.showCenteredScrollInput(bearingPos, Direction.NORTH, 60);
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(bearingPos, Direction.NORTH), Pointing.DOWN).scroll()
+				.withWrench(),
+			60);
+		scene.idle(10);
+		scene.overlay.showText(60)
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.placeNearTarget()
+			.text("This behaviour can be modified using a Wrench");
+		scene.idle(70);
+
+		scene.world.toggleRedstonePower(cogAndClutch);
+		scene.effects.indicateRedstone(leverPos);
+		scene.world.rotateSection(contraption, 0, -55, 0, 23);
+		scene.world.rotateBearing(bearingPos, -55, 23);
+		scene.idle(24);
+
+		scene.world.toggleRedstonePower(cogAndClutch);
+		scene.effects.indicateRedstone(leverPos);
+		scene.idle(40);
+
+		scene.overlay.showText(120)
+			.colored(PonderPalette.GREEN)
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 3), Direction.UP))
+			.placeNearTarget()
+			.text("It can be configured never to revert to solid blocks, or only near the angle it started at");
+
+	}
+
+	public static void stabilizedBearings(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("stabilized_bearings", "Stabilized Contraptions");
+
+		Selection beltAndBearing = util.select.fromTo(3, 3, 4, 3, 1, 6);
+		Selection largeCog = util.select.position(2, 0, 6);
+		BlockPos parentBearingPos = util.grid.at(3, 3, 4);
+		BlockPos bearingPos = util.grid.at(3, 4, 2);
+
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(beltAndBearing, Direction.DOWN);
+		scene.idle(10);
+
+		ElementLink<WorldSectionElement> contraption =
+			scene.world.showIndependentSection(util.select.fromTo(3, 3, 3, 3, 4, 3), Direction.SOUTH);
+		scene.world.configureCenterOfRotation(contraption, util.vector.centerOf(parentBearingPos));
+		scene.idle(20);
+		scene.world.glueBlockOnto(bearingPos, Direction.SOUTH, contraption);
+
+		scene.idle(15);
+
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos), 60)
+			.text("Whenever Mechanical Bearings are themselves part of a moving Structure..")
+			.placeNearTarget();
+		scene.idle(70);
+
+		scene.world.setKineticSpeed(largeCog, -8);
+		scene.world.setKineticSpeed(beltAndBearing, 16);
+		scene.world.rotateBearing(parentBearingPos, 360, 74);
+		scene.world.rotateSection(contraption, 0, 0, 360, 74);
+		scene.world.rotateBearing(bearingPos, -360, 74);
+		scene.idle(74);
+
+		scene.world.setKineticSpeed(largeCog, 0);
+		scene.world.setKineticSpeed(beltAndBearing, 0);
+		scene.overlay.showText(60)
+			.text("..they will attempt to keep themselves upright")
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.NORTH))
+			.placeNearTarget();
+		scene.idle(70);
+
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos.north()), 60)
+			.colored(PonderPalette.GREEN)
+			.text("Once again, the bearing will attach to the block in front of it")
+			.placeNearTarget();
+		scene.idle(70);
+
+		ElementLink<WorldSectionElement> subContraption =
+			scene.world.showIndependentSection(util.select.fromTo(4, 4, 1, 2, 4, 1), Direction.SOUTH);
+		scene.world.configureCenterOfRotation(subContraption, util.vector.centerOf(parentBearingPos));
+		scene.world.configureStabilization(subContraption, util.vector.centerOf(bearingPos));
+		scene.idle(20);
+
+		scene.overlay.showText(80)
+			.text("As a result, the entire sub-Contraption will stay upright");
+
+		scene.world.setKineticSpeed(largeCog, -8);
+		scene.world.setKineticSpeed(beltAndBearing, 16);
+		scene.world.rotateBearing(parentBearingPos, 360 * 2, 74 * 2);
+		scene.world.rotateSection(contraption, 0, 0, 360 * 2, 74 * 2);
+		scene.world.rotateBearing(bearingPos, -360 * 2, 74 * 2);
+		scene.world.rotateSection(subContraption, 0, 0, 360 * 2, 74 * 2);
+		
+		scene.markAsFinished();
+		scene.idle(74 * 2);
+		scene.world.setKineticSpeed(largeCog, 0);
+		scene.world.setKineticSpeed(beltAndBearing, 0);
 	}
 
 }

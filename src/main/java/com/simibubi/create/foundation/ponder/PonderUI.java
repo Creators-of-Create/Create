@@ -602,8 +602,12 @@ public class PonderUI extends AbstractSimiScreen {
 				return true;
 			}
 
-			clipboardHelper.setClipboardString(handle, "util.grid.at(" + hoveredBlockPos.getX() + ", "
-				+ hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ() + ")");
+			if (hasShiftDown())
+				clipboardHelper.setClipboardString(handle, "util.select.position(" + hoveredBlockPos.getX() + ", "
+					+ hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ() + ")");
+			else
+				clipboardHelper.setClipboardString(handle, "util.grid.at(" + hoveredBlockPos.getX() + ", "
+					+ hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ() + ")");
 			copiedBlockPos = hoveredBlockPos;
 			return true;
 		}

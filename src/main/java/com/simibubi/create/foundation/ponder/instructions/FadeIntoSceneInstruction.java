@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> extends TickingInstruction {
 
-	private Direction fadeInFrom;
+	protected Direction fadeInFrom;
 	protected T element;
 	private ElementLink<T> elementLink;
 
