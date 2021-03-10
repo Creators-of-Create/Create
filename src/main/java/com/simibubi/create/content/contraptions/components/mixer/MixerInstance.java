@@ -48,9 +48,12 @@ public class MixerInstance extends ShaftlessCogInstance implements ITickableInst
                                 .createInstance();
 
 
-        updateLight();
         MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) tile;
-        transformPole(getRenderedHeadOffset(mixer));
+        float renderedHeadOffset = getRenderedHeadOffset(mixer);
+
+        transformPole(renderedHeadOffset);
+        transformHead(mixer, renderedHeadOffset);
+        updateLight();
     }
 
     @Override

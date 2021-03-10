@@ -3,8 +3,10 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -16,8 +18,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import org.apache.http.client.CredentialsProvider;
 
-public class EngineTileEntity extends SmartTileEntity {
+public class EngineTileEntity extends SmartTileEntity implements IInstanceRendered {
 
 	public float appliedCapacity;
 	public float appliedSpeed;
@@ -98,6 +102,18 @@ public class EngineTileEntity extends SmartTileEntity {
 		if (poweredWheel == null)
 			return;
 		poweredWheel.setRotation(appliedSpeed, appliedCapacity);
+	}
+
+	@Override
+	public void onChunkLightUpdate() {
+		CreateClient.kineticRenderer.onLightUpdate(this);
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 }

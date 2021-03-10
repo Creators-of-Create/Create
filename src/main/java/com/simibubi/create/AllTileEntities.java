@@ -32,6 +32,7 @@ import com.simibubi.create.content.contraptions.components.fan.NozzleTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.FlyWheelInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineTileEntity;
 import com.simibubi.create.content.contraptions.components.millstone.MillStoneCogInstance;
@@ -139,6 +140,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
+import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
@@ -151,6 +153,7 @@ public class AllTileEntities {
 		.tileEntity("schematicannon", SchematicannonTileEntity::new)
 		.validBlocks(AllBlocks.SCHEMATICANNON)
 		.renderer(() -> SchematicannonRenderer::new)
+		.onRegister(SchematicannonInstance::register)
 		.register();
 
 	public static final TileEntityEntry<SchematicTableTileEntity> SCHEMATIC_TABLE = Create.registrate()
@@ -456,6 +459,7 @@ public class AllTileEntities {
 		.tileEntity("furnace_engine", FurnaceEngineTileEntity::new)
 		.validBlocks(AllBlocks.FURNACE_ENGINE)
 		.renderer(() -> EngineRenderer::new)
+        .onRegister(EngineInstance::register)
 		.register();
 
 	public static final TileEntityEntry<MillstoneTileEntity> MILLSTONE = Create.registrate()

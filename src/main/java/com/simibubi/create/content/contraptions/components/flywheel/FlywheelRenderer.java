@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock.ConnectionState;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
@@ -33,10 +34,11 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		BlockState blockState = te.getBlockState();
 		FlywheelTileEntity wte = (FlywheelTileEntity) te;
 
-		SuperByteBuffer wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontal(blockState.rotate(Rotation.CLOCKWISE_90));
 		float speed = wte.visualSpeed.get(partialTicks) * 3 / 10f;
 		float angle = wte.angle + speed * partialTicks;
 
@@ -68,6 +70,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 					.renderInto(ms, vb);
 		}
 
+		SuperByteBuffer wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontal(blockState.rotate(Rotation.CLOCKWISE_90));
 		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING)
 			.getAxis(), AngleHelper.rad(angle), light);
 		wheel.renderInto(ms, vb);

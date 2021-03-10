@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -21,6 +22,14 @@ public class MatrixStacker {
 			instance = new MatrixStacker();
 		instance.ms = ms;
 		return instance;
+	}
+
+	public MatrixStacker rotate(Direction axis, float radians) {
+		if (radians == 0)
+			return this;
+		ms.multiply(axis.getUnitVector()
+						.getRadialQuaternion(radians));
+		return this;
 	}
 
 	public MatrixStacker rotate(double angle, Axis axis) {
