@@ -525,7 +525,7 @@ public class SceneBuilder {
 					return;
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
 			});
-			flapFunnels(scene.getSceneBuildingUtil().select.position(location.up()), true);
+			flapFunnel(location.up(), true);
 		}
 
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
@@ -553,9 +553,8 @@ public class SceneBuilder {
 					scene.linkElement(tracker, link);
 					return TransportedResult.doNothing();
 				});
-
 			});
-			flapFunnels(scene.getSceneBuildingUtil().select.position(beltLocation.up()), true);
+			flapFunnel(beltLocation.up(), true);
 			return link;
 		}
 
@@ -633,11 +632,8 @@ public class SceneBuilder {
 			}, reDrawBlocks));
 		}
 
-		public void flapFunnels(Selection selection, boolean outward) {
-			addInstruction(new TileEntityDataInstruction(selection, FunnelTileEntity.class, nbt -> {
-				nbt.putInt("Flap", outward ? -1 : 1);
-				return nbt;
-			}, false));
+		public void flapFunnel(BlockPos position, boolean outward) {
+			modifyTileEntity(position, FunnelTileEntity.class, funnel -> funnel.flap(!outward));
 		}
 
 	}

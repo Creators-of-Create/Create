@@ -313,10 +313,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		transformMS(ms, pt);
 		RenderSystem.disableTexture();
 		WorldRenderer.drawBox(ms, buffer.getBuffer(RenderType.getLines()), shape.getBoundingBox()
-			.offset(selectedBlock), 1, 1, 1, 1);
-		if (buffer instanceof SuperRenderTypeBuffer)
-			((SuperRenderTypeBuffer) buffer).draw(RenderType.getLines());
-		RenderSystem.enableTexture();
+			.offset(selectedBlock), 1, 1, 1, 0.6f);
+//		if (buffer instanceof SuperRenderTypeBuffer)
+//			((SuperRenderTypeBuffer) buffer).draw(RenderType.getLines());
 		ms.pop();
 	}
 

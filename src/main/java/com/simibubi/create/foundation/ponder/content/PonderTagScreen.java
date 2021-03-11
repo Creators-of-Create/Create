@@ -77,13 +77,16 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		int itemCenterY = getItemsY();
 
 		for (Item i : items) {
+			final boolean canClick = PonderRegistry.all.containsKey(i.getRegistryName());
 			PonderButton button =
 				new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (mouseX, mouseY) -> {
-					if (!PonderRegistry.all.containsKey(i.getRegistryName()))
+					if (!canClick)
 						return;
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				}).showing(new ItemStack(i));
+			if (!canClick)
+				button.noClickEvent();
 
 			button.fade(1);
 			widgets.add(button);
@@ -92,18 +95,20 @@ public class PonderTagScreen extends AbstractSimiScreen {
 
 		if (!tag.getMainItem()
 			.isEmpty()) {
+			final boolean canClick = PonderRegistry.all.containsKey(tag.getMainItem()
+				.getItem()
+				.getRegistryName());
 			PonderButton button =
 				new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
-					if (!PonderRegistry.all.containsKey(tag.getMainItem()
-						.getItem()
-						.getRegistryName()))
+					if (!canClick)
 						return;
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
 				}).showing(tag.getMainItem());
+			if (!canClick)
+				button.noClickEvent();
 
 			button.fade(1);
-//			button.flash();
 			widgets.add(button);
 		}
 
@@ -133,6 +138,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
+		PonderUI.ponderTicks++;
 
 		hoveredItem = ItemStack.EMPTY;
 		MainWindow w = minecraft.getWindow();
@@ -290,6 +296,11 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		if (other instanceof PonderTagScreen)
 			return tag == ((PonderTagScreen) other).tag;
 		return super.isEquivalentTo(other);
+	}
+	
+	@Override
+	public boolean isPauseScreen() {
+		return true;
 	}
 
 }

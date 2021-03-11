@@ -6,9 +6,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
+import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.MainWindow;
@@ -170,7 +170,7 @@ public class ParrotElement extends AnimatedSceneElement {
 				.length();
 			entity.onGround = false;
 			double phase = Math.min(length * 15, 8);
-			float f = (float) ((AnimationTickHolder.getTicks() % 100) * phase);
+			float f = (float) ((PonderUI.ponderTicks % 100) * phase);
 			entity.flapSpeed = MathHelper.sin(f) + 1;
 			if (length == 0)
 				entity.flapSpeed = 0;

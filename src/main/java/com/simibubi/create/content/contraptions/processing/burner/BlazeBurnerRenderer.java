@@ -27,7 +27,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		if (heatLevel == HeatLevel.NONE)
 			return;
 
-		float renderTick = AnimationTickHolder.getRenderTime() + (te.hashCode() % 13) * 16f;
+		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 13) * 16f;
 		float offset = (MathHelper.sin((float) ((renderTick / 16f) % (2 * Math.PI))) + .5f) / 16f;
 
 		AllBlockPartials blazeModel = AllBlockPartials.BLAZES.get(heatLevel);
