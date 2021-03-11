@@ -1,29 +1,10 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
-import static com.simibubi.create.AllTags.tagBlockAndItem;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
-import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
-import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
-import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
-import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
-import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
-
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
-import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
-import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
-import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
-import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
-import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
-import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
-import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.*;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
@@ -46,11 +27,7 @@ import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGe
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawGenerator;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedBearingMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
@@ -73,15 +50,7 @@ import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlockItem;
-import com.simibubi.create.content.contraptions.fluids.pipes.BracketGenerator;
-import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeGenerator;
+import com.simibubi.create.content.contraptions.fluids.pipes.*;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
@@ -103,13 +72,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.BracketedKinet
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyBlock;
-import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltGenerator;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
+import com.simibubi.create.content.contraptions.relays.encased.*;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
@@ -121,50 +84,23 @@ import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
-import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
-import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterGenerator;
-import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
-import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
-import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelGenerator;
-import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
-import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
+import com.simibubi.create.content.logistics.block.diodes.*;
+import com.simibubi.create.content.logistics.block.funnel.*;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
-import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
-import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
-import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
-import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.block.redstone.*;
 import com.simibubi.create.content.palettes.MetalBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
+import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
-import com.simibubi.create.foundation.data.AssetLookup;
-import com.simibubi.create.foundation.data.BlockStateGen;
-import com.simibubi.create.foundation.data.BuilderTransformers;
-import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.data.ModelGen;
-import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.data.*;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.util.entry.BlockEntry;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -182,6 +118,15 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
+
+import static com.simibubi.create.AllMovementBehaviours.addMovementBehaviour;
+import static com.simibubi.create.AllTags.tagBlockAndItem;
+import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
+import static com.simibubi.create.foundation.data.BlockStateGen.oxidizedBlockstate;
+import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
+import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
 public class AllBlocks {
 
@@ -373,6 +318,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(StressConfigDefaults.setCapacity(8.0))
 		.tag(AllBlockTags.BRITTLE.tag)
+		.onRegister(ItemUseOverrides::addBlock)
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -1197,6 +1143,7 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.LEVER)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+			.onRegister(ItemUseOverrides::addBlock)
 			.item()
 			.transform(customItemModel())
 			.register();
