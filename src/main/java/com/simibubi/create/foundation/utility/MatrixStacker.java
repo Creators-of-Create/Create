@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -21,6 +22,14 @@ public class MatrixStacker {
 			instance = new MatrixStacker();
 		instance.ms = ms;
 		return instance;
+	}
+
+	public MatrixStacker rotate(Direction axis, float radians) {
+		if (radians == 0)
+			return this;
+		ms.multiply(axis.getUnitVector()
+						.getRadialQuaternion(radians));
+		return this;
 	}
 
 	public MatrixStacker rotate(double angle, Axis axis) {
@@ -75,7 +84,7 @@ public class MatrixStacker {
 	}
 
 	public MatrixStacker nudge(int id) {
-		long randomBits = (long) id * 493286711L;
+		long randomBits = (long) id * 31L * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
 		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
@@ -84,7 +93,7 @@ public class MatrixStacker {
 		return this;
 	}
 
-	private MatrixStacker multiply(Vector3f axis, double angle) {
+	public MatrixStacker multiply(Vector3f axis, double angle) {
 		if (angle == 0)
 			return this;
 		ms.multiply(axis.getDegreesQuaternion((float) angle));

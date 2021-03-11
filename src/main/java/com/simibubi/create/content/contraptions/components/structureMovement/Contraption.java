@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.utility.*;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -53,12 +56,6 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.foundation.utility.UniqueLinkedList;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.AbstractButtonBlock;
@@ -85,7 +82,6 @@ import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -853,16 +849,7 @@ public abstract class Contraption {
 				TileEntity te = TileEntity.create(tag);
 				if (te == null)
 					return;
-				te.setLocation(new WrappedWorld(world) {
-
-					@Override
-					public BlockState getBlockState(BlockPos pos) {
-						if (!pos.equals(te.getPos()))
-							return Blocks.AIR.getDefaultState();
-						return info.state;
-					}
-
-				}, te.getPos());
+				te.setLocation(new ContraptionTileWorld(world, te, info), te.getPos());
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -1091,27 +1078,25 @@ public abstract class Contraption {
 	}
 
 	public void expandBoundsAroundAxis(Axis axis) {
-		AxisAlignedBB bb = bounds;
-		double maxXDiff = Math.max(bb.maxX - 1, -bb.minX);
-		double maxYDiff = Math.max(bb.maxY - 1, -bb.minY);
-		double maxZDiff = Math.max(bb.maxZ - 1, -bb.minZ);
-		double maxDiff = 0;
+		Set<BlockPos> blocks = getBlocks().keySet();
 
-		if (axis == Axis.X)
-			maxDiff = Math.max(maxZDiff, maxYDiff);
-		if (axis == Axis.Y)
-			maxDiff = Math.max(maxZDiff, maxXDiff);
-		if (axis == Axis.Z)
-			maxDiff = Math.max(maxXDiff, maxYDiff);
+		int radius = (int) (Math.ceil(Math.sqrt(getRadius(blocks, axis))));
 
-		Vec3d vec = new Vec3d(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
-			.getDirectionVec());
-		Vec3d planeByNormal = VecHelper.axisAlingedPlaneOf(vec);
-		Vec3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
-			.add(planeByNormal.scale(-maxDiff));
-		Vec3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)
-			.add(planeByNormal.scale(maxDiff + 1));
-		bounds = new AxisAlignedBB(min, max);
+		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
+
+		GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(bounds);
+		if (axis == Direction.Axis.X) {
+			betterBounds.maxX = contraptionBounds.maxX;
+			betterBounds.minX = contraptionBounds.minX;
+		} else if (axis == Direction.Axis.Y) {
+			betterBounds.maxY = contraptionBounds.maxY;
+			betterBounds.minY = contraptionBounds.minY;
+		} else if (axis == Direction.Axis.Z) {
+			betterBounds.maxZ = contraptionBounds.maxZ;
+			betterBounds.minZ = contraptionBounds.minZ;
+		}
+
+		bounds = betterBounds.toAABB();
 	}
 
 	public void addExtraInventories(Entity entity) {}
@@ -1163,4 +1148,51 @@ public abstract class Contraption {
 		return new EmptyLighter(this);
 	}
 
+	public static float getRadius(Set<BlockPos> blocks, Direction.Axis axis) {
+		switch (axis) {
+		case X:
+			return getMaxDistSqr(blocks, BlockPos::getY, BlockPos::getZ);
+		case Y:
+			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
+		case Z:
+			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
+		}
+
+		throw new IllegalStateException("Impossible axis");
+	}
+
+	public static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+		float maxDistSq = -1;
+		for (BlockPos pos : blocks) {
+			float a = one.get(pos);
+			float b = other.get(pos);
+
+			float distSq = a * a + b * b;
+
+
+			if (distSq > maxDistSq) maxDistSq = distSq;
+		}
+
+		return maxDistSq;
+	}
+
+	private static class ContraptionTileWorld extends WrappedWorld implements IFlywheelWorld {
+
+		private final TileEntity te;
+		private final BlockInfo info;
+
+		public ContraptionTileWorld(World world, TileEntity te, BlockInfo info) {
+			super(world);
+			this.te = te;
+			this.info = info;
+		}
+
+		@Override
+		public BlockState getBlockState(BlockPos pos) {
+			if (!pos.equals(te.getPos()))
+				return Blocks.AIR.getDefaultState();
+			return info.state;
+		}
+
+	}
 }

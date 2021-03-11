@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.render.backend.gl.GlFog;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
 import com.simibubi.create.foundation.render.backend.gl.shader.*;
 import com.simibubi.create.foundation.render.backend.gl.versioned.GlFeatureCompat;
+import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
@@ -63,6 +65,10 @@ public class Backend {
     @SuppressWarnings("unchecked")
     public static <P extends GlProgram, S extends ProgramSpec<P>> P getProgram(S spec) {
         return (P) programs.get(spec).get(GlFog.getFogMode());
+    }
+
+    public static boolean isFlywheelWorld(World world) {
+        return world == Minecraft.getInstance().world || (world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel());
     }
 
     public static boolean available() {

@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.render.backend.instancing.ITickableInstanc
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.TransformData;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -28,7 +28,7 @@ public class GantryCarriageInstance extends ShaftInstance implements ITickableIn
                 InstancedTileRenderRegistry.instance.register(type, GantryCarriageInstance::new));
     }
 
-    private InstanceKey<TransformData> gantryCogs;
+    private InstanceKey<ModelData> gantryCogs;
 
     public GantryCarriageInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
@@ -47,7 +47,7 @@ public class GantryCarriageInstance extends ShaftInstance implements ITickableIn
 
     @Override
     public void tick() {
-        lastState = world.getBlockState(pos);
+        lastState = tile.getBlockState();
         Direction facing = lastState.get(GantryCarriageBlock.FACING);
         Boolean alongFirst = lastState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
         Direction.Axis rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
@@ -80,14 +80,14 @@ public class GantryCarriageInstance extends ShaftInstance implements ITickableIn
                      .translate(0, 9 / 16f, 0)
                      .unCentre();
 
-        gantryCogs.getInstance().setTransform(ms);
+        gantryCogs.getInstance().setTransformNoCopy(ms);
     }
 
     @Override
     public void updateLight() {
         gantryCogs.getInstance()
-            .setBlockLight((byte) (world.getLightLevel(LightType.BLOCK, pos) << 4))
-            .setSkyLight((byte) (world.getLightLevel(LightType.SKY, pos) << 4));
+            .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+            .setSkyLight(world.getLightLevel(LightType.SKY, pos));
     }
 
     @Override

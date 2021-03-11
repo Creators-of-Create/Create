@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.PonderUI;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.LerpedFloat;
 
@@ -26,6 +25,7 @@ public class PonderButton extends AbstractSimiWidget {
 	private float fade;
 	private KeyBinding shortcut;
 	private LerpedFloat flash;
+	private boolean noClickEvent;
 
 	public static final int SIZE = 20;
 
@@ -51,6 +51,11 @@ public class PonderButton extends AbstractSimiWidget {
 
 	public PonderButton showing(ItemStack item) {
 		this.item = item;
+		return this;
+	}
+
+	public PonderButton noClickEvent() {
+		this.noClickEvent = true;
 		return this;
 	}
 
@@ -86,7 +91,7 @@ public class PonderButton extends AbstractSimiWidget {
 		if (fade < .1f)
 			return;
 
-		isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height && fade > .75f;
+		isHovered = isMouseOver(mouseX, mouseY) && fade > .75f;
 
 		RenderSystem.pushMatrix();
 		RenderSystem.disableDepthTest();
@@ -95,11 +100,13 @@ public class PonderButton extends AbstractSimiWidget {
 
 		float flashValue = flash.getValue(partialTicks);
 		if (flashValue > .1f)
-			fade *= 3 * flashValue + Math.sin((AnimationTickHolder.getTicks() + partialTicks) / 6);
+			fade *= 3 * flashValue + Math.sin((PonderUI.ponderTicks + partialTicks) / 6);
 
 		int backgroundColor = ColorHelper.applyAlpha(0xdd000000, fade);
-		int borderColorStart = ColorHelper.applyAlpha(isHovered ? 0x70ffffff : 0x40aa9999, fade);
-		int borderColorEnd = ColorHelper.applyAlpha(isHovered ? 0x30ffffff : 0x20aa9999, fade);
+		int borderColorStart =
+			ColorHelper.applyAlpha(noClickEvent ? 0x70984500 : isHovered ? 0x70ffffff : 0x40aa9999, fade);
+		int borderColorEnd =
+			ColorHelper.applyAlpha(noClickEvent ? 0x70692400 : isHovered ? 0x30ffffff : 0x20aa9999, fade);
 
 		PonderUI.renderBox(x, y, width, height, backgroundColor, borderColorStart, borderColorEnd);
 		RenderSystem.translated(0, 0, 800);
@@ -152,5 +159,14 @@ public class PonderButton extends AbstractSimiWidget {
 
 	public ItemStack getItem() {
 		return item;
+	}
+
+	@Override
+	public boolean isMouseOver(double x, double y) {
+		double m = 4;
+		x = Math.floor(x);
+		y = Math.floor(y);
+		return active && visible
+			&& !(x < this.x - m || x > this.x + width + m - 1 || y < this.y - m || y > this.y + height + m - 1);
 	}
 }

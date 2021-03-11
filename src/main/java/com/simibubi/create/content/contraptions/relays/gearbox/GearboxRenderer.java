@@ -30,7 +30,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTime();
+		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();

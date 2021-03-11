@@ -41,9 +41,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	@Override
 	protected float getOffset(KineticTileEntity te, float partialTicks) {
 		PulleyTileEntity pulley = (PulleyTileEntity) te;
-		boolean running = pulley.running;
-		boolean moving = running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
-		float offset = pulley.getInterpolatedOffset(moving ? partialTicks : 0.5f);
+		float offset = pulley.getInterpolatedOffset(partialTicks);
 
 		if (pulley.movedContraption != null) {
 			AbstractContraptionEntity e = pulley.movedContraption;
@@ -57,7 +55,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected boolean isRunning(KineticTileEntity te) {
-		return ((PulleyTileEntity) te).running;
+		return ((PulleyTileEntity) te).running || te.isVirtual();
 	}
 
 }

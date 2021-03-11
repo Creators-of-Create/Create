@@ -77,11 +77,41 @@ public class PonderIndex {
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
 
+		// Mechanical Piston
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
+			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, PonderTag.KINETIC_APPLIANCES,
+				PonderTag.MOVEMENT_ANCHOR);
+		PonderRegistry
+			.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON,
+				AllBlocks.PISTON_EXTENSION_POLE)
+			.addStoryBoard("mechanical_piston/piston_pole", PistonScenes::poles);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
+			.addStoryBoard("mechanical_piston/modes", PistonScenes::movementModes);
+
+		// Windmill Bearing
+		PonderRegistry.forComponents(AllBlocks.ROPE_PULLEY)
+			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, PonderTag.KINETIC_APPLIANCES,
+				PonderTag.MOVEMENT_ANCHOR)
+			.addStoryBoard("rope_pulley/modes", PulleyScenes::movementModes)
+			.addStoryBoard("rope_pulley/attachment", PulleyScenes::attachment);
+
 		// Windmill Bearing
 		PonderRegistry.forComponents(AllBlocks.WINDMILL_BEARING)
 			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
 				PonderTag.MOVEMENT_ANCHOR);
+
+		// Mechanical Bearing
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_BEARING)
+			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, PonderTag.KINETIC_APPLIANCES,
+				PonderTag.MOVEMENT_ANCHOR)
+			.addStoryBoard("mechanical_bearing/modes", BearingScenes::bearingModes)
+			.addStoryBoard("mechanical_bearing/stabilized", BearingScenes::stabilizedBearings,
+				PonderTag.CONTRAPTION_ACTOR);
+
+		// Clockwork Bearing
+		PonderRegistry.addStoryBoard(AllBlocks.CLOCKWORK_BEARING, "clockwork_bearing", BearingScenes::clockwork,
+			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
 
 		// Gantries
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,

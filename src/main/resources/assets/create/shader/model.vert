@@ -7,6 +7,7 @@ attribute vec2 aTexCoords;
 attribute mat4 aTransform;
 attribute mat3 aNormalMat;
 attribute vec2 aLight;
+attribute vec4 aColor;
 
 varying vec2 TexCoords;
 varying vec4 Color;
@@ -72,5 +73,5 @@ void main() {
     Light = aLight;
     gl_Position = uViewProjection * worldPos;
 
-    Color = vec4(1.);
+    Color = aColor;
 }

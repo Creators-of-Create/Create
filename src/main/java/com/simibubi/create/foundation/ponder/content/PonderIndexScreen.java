@@ -49,43 +49,39 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 	protected void init() {
 		super.init();
 
-		//populate lists
+		// populate lists
 		widgets.clear();
 
 		chapters.clear();
-		//chapters.addAll(PonderRegistry.chapters.getAllChapters());
+		// chapters.addAll(PonderRegistry.chapters.getAllChapters());
 
 		items.clear();
 		PonderRegistry.all.keySet()
-				.stream()
-				.map(key -> {
-					Item item = ForgeRegistries.ITEMS.getValue(key);
-					if (item == null) {
-						Block b = ForgeRegistries.BLOCKS.getValue(key);
-						if (b != null)
-							item = b.asItem();
-					}
-					return item;
-				})
-				.filter(Objects::nonNull)
-				.filter(PonderIndexScreen::exclusions)
-				.forEach(items::add);
+			.stream()
+			.map(key -> {
+				Item item = ForgeRegistries.ITEMS.getValue(key);
+				if (item == null) {
+					Block b = ForgeRegistries.BLOCKS.getValue(key);
+					if (b != null)
+						item = b.asItem();
+				}
+				return item;
+			})
+			.filter(Objects::nonNull)
+			.filter(PonderIndexScreen::exclusions)
+			.forEach(items::add);
 
 		boolean hasChapters = !chapters.isEmpty();
 
-		//setup chapters
-		LayoutHelper layout = LayoutHelper.centeredHorizontal(
-				chapters.size(),
-				MathHelper.clamp((int) Math.ceil(chapters.size() / 4f), 1, 4),
-				200,
-				38,
-				16
-		);
+		// setup chapters
+		LayoutHelper layout = LayoutHelper.centeredHorizontal(chapters.size(),
+			MathHelper.clamp((int) Math.ceil(chapters.size() / 4f), 1, 4), 200, 38, 16);
 		chapterArea = layout.getArea();
 		int chapterCenterX = (int) (width * chapterXmult);
 		int chapterCenterY = (int) (height * chapterYmult);
 
-		//todo at some point pagination or horizontal scrolling may be needed for chapters/items
+		// todo at some point pagination or horizontal scrolling may be needed for
+		// chapters/items
 		for (PonderChapter chapter : chapters) {
 			ChapterLabel label = new ChapterLabel(chapter, chapterCenterX + layout.getX(),
 				chapterCenterY + layout.getY(), (mouseX, mouseY) -> {
@@ -97,44 +93,40 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 			layout.next();
 		}
 
-		//setup items
+		// setup items
 		if (!hasChapters) {
 			itemYmult = 0.5;
 		}
 
 		int maxItemRows = hasChapters ? 4 : 7;
-		layout = LayoutHelper.centeredHorizontal(
-				items.size(),
-				MathHelper.clamp((int) Math.ceil(items.size() / 11f), 1, maxItemRows),
-				28,
-				28,
-				8
-		);
+		layout = LayoutHelper.centeredHorizontal(items.size(),
+			MathHelper.clamp((int) Math.ceil(items.size() / 11f), 1, maxItemRows), 28, 28, 8);
 		itemArea = layout.getArea();
 		int itemCenterX = (int) (width * itemXmult);
 		int itemCenterY = (int) (height * itemYmult);
 
 		for (Item item : items) {
-			PonderButton button = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {
-				if (!PonderRegistry.all.containsKey(item.getRegistryName()))
-					return;
+			PonderButton button =
+				new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {
+					if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+						return;
 
-				centerScalingOn(x, y);
-				ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
-			}).showing(new ItemStack(item));
+					centerScalingOn(x, y);
+					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
+				}).showing(new ItemStack(item));
 
 			button.fade(1);
 			widgets.add(button);
 			layout.next();
 		}
 
-
 	}
 
 	private static boolean exclusions(Item item) {
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
-			if (block instanceof ValveHandleBlock && !AllBlocks.COPPER_VALVE_HANDLE.is(item)) return false;
+			if (block instanceof ValveHandleBlock && !AllBlocks.COPPER_VALVE_HANDLE.is(item))
+				return false;
 		}
 
 		return true;
@@ -143,6 +135,7 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
+		PonderUI.ponderTicks++;
 
 		hoveredItem = ItemStack.EMPTY;
 		MainWindow w = minecraft.getWindow();
@@ -223,5 +216,10 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 
 	public ItemStack getHoveredTooltipItem() {
 		return hoveredItem;
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return true;
 	}
 }

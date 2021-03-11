@@ -24,6 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 
 public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntity> {
 
@@ -36,7 +37,8 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		int light, int overlay) {
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer superBuffer = AllBlockPartials.HARVESTER_BLADE.renderOn(blockState);
-		transform(blockState.get(HarvesterBlock.HORIZONTAL_FACING), superBuffer, te.manuallyAnimatedSpeed);
+		transform(te.getWorld(), blockState.get(HarvesterBlock.HORIZONTAL_FACING), superBuffer,
+			te.manuallyAnimatedSpeed);
 		superBuffer.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
@@ -70,17 +72,17 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		if (context.contraption.stalled)
 			speed = 0;
 
-		transform(facing, superBuffer, speed);
+		transform(context.world, facing, superBuffer, speed);
 
 		superBuffer.light(msLocal.peek()
 			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
 
-	public static void transform(Direction facing, SuperByteBuffer superBuffer, float speed) {
+	public static void transform(World world, Direction facing, SuperByteBuffer superBuffer, float speed) {
 		float originOffset = 1 / 16f;
 		Vec3d rotOffset = new Vec3d(0, -2 * originOffset, originOffset).add(VecHelper.getCenterOf(BlockPos.ZERO));
-		float time = AnimationTickHolder.getRenderTime() / 20;
+		float time = AnimationTickHolder.getRenderTime(world) / 20;
 		float angle = (time * speed) % 360;
 
 		superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))

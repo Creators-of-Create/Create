@@ -52,12 +52,11 @@ public class FunnelScenes {
 		BlockPos entryBeltPos = util.grid.at(3, 1, 2);
 		BlockPos exitBeltPos = util.grid.at(1, 1, 2);
 		ItemStack itemStack = AllBlocks.BRASS_BLOCK.asStack();
-		Selection exitFunnel = util.select.position(exitBeltPos.up());
 
 		for (int i = 0; i < 8; i++) {
 			scene.idle(8);
 			scene.world.removeItemsFromBelt(exitBeltPos);
-			scene.world.flapFunnels(exitFunnel, false);
+			scene.world.flapFunnel(exitBeltPos.up(), false);
 			if (i == 2)
 				scene.rotateCameraY(70);
 			if (i < 6)
@@ -94,7 +93,7 @@ public class FunnelScenes {
 
 		for (int i = 0; i < 3; i++) {
 			scene.idle(8);
-			scene.world.flapFunnels(outputFunnel, false);
+			scene.world.flapFunnel(util.grid.at(1, 2, 4), false);
 			scene.world.createItemEntity(sideItemSpawn, util.vector.of(-.05, 0, 0), itemStack);
 		}
 
@@ -198,7 +197,7 @@ public class FunnelScenes {
 
 		scene.idle(20);
 
-		scene.world.flapFunnels(sideFunnelSelection, true);
+		scene.world.flapFunnel(sideFunnel, true);
 		itemLink = scene.world.createItemEntity(sideCenter.subtract(0, .45, 0), util.vector.of(0, 0, -0.1), itemStack);
 		scene.idle(60);
 		scene.world.hideSection(sideFunnelSelection, Direction.UP);
@@ -233,7 +232,7 @@ public class FunnelScenes {
 			scene.idle(35);
 
 			scene.world.removeItemsFromBelt(beltPos);
-			scene.world.flapFunnels(beltFunnelSetup, false);
+			scene.world.flapFunnel(util.grid.at(2, 2, 2), false);
 
 			if (i == 0) {
 				scene.idle(50);
@@ -374,7 +373,7 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.world.createItemOnBeltLike(andesiteFunnel.down()
 			.north(), Direction.SOUTH, itemStack);
-		scene.world.flapFunnels(util.select.position(andesiteFunnel), true);
+		scene.world.flapFunnel(andesiteFunnel, true);
 		scene.idle(60);
 
 		scene.overlay.showText(60)
@@ -384,7 +383,7 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.world.createItemOnBeltLike(brassFunnel.down()
 			.north(), Direction.SOUTH, ItemHandlerHelper.copyStackWithSize(itemStack, 64));
-		scene.world.flapFunnels(util.select.position(brassFunnel), true);
+		scene.world.flapFunnel(brassFunnel, true);
 		scene.idle(60);
 
 		AxisAlignedBB filterSlot = new AxisAlignedBB(brassFunnel).grow(-.35, -.35, -.35)
@@ -421,7 +420,7 @@ public class FunnelScenes {
 
 			if (i > 0 && (i < 3 || i % 3 == 0)) {
 				scene.world.removeItemsFromBelt(brassFunnel.down());
-				scene.world.flapFunnels(util.select.position(brassFunnel), false);
+				scene.world.flapFunnel(brassFunnel, false);
 			}
 
 			scene.world.modifyEntities(ItemEntity.class, e -> {

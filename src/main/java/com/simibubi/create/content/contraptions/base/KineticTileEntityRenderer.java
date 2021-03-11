@@ -58,7 +58,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime();
+		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;

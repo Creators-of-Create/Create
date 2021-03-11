@@ -20,5 +20,7 @@ public interface IBearingTileEntity extends IControlContraption {
 			return bearingAxis != axis;
 		});
 	}
+	
+	void setAngle(float forcedAngle);
 
 }

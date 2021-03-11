@@ -64,6 +64,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	Vec3d prevAnimatedRotation = Vec3d.ZERO;
 	Vec3d animatedRotation = Vec3d.ZERO;
 	Vec3d centerOfRotation = Vec3d.ZERO;
+	Vec3d stabilizationAnchor = null;
 
 	BlockPos selectedBlock;
 
@@ -101,6 +102,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public void setCenterOfRotation(Vec3d center) {
 		centerOfRotation = center;
+	}
+
+	public void stabilizeRotation(Vec3d anchor) {
+		stabilizationAnchor = anchor;
 	}
 
 	@Override
@@ -194,11 +199,21 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO)) {
 			if (centerOfRotation == null)
 				centerOfRotation = section.getCenter();
+			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
+			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
+			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			in = in.subtract(centerOfRotation);
-			in = VecHelper.rotate(in, -MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x), Axis.X);
-			in = VecHelper.rotate(in, -MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z), Axis.Z);
-			in = VecHelper.rotate(in, -MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y), Axis.Y);
+			in = VecHelper.rotate(in, -rotX, Axis.X);
+			in = VecHelper.rotate(in, -rotZ, Axis.Z);
+			in = VecHelper.rotate(in, -rotY, Axis.Y);
 			in = in.add(centerOfRotation);
+			if (stabilizationAnchor != null) {
+				in = in.subtract(stabilizationAnchor);
+				in = VecHelper.rotate(in, rotX, Axis.X);
+				in = VecHelper.rotate(in, rotZ, Axis.Z);
+				in = VecHelper.rotate(in, rotY, Axis.Y);
+				in = in.add(stabilizationAnchor);
+			}
 		}
 		return in;
 	}
@@ -209,12 +224,23 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (!animatedRotation.equals(Vec3d.ZERO) || !prevAnimatedRotation.equals(Vec3d.ZERO)) {
 			if (centerOfRotation == null)
 				centerOfRotation = section.getCenter();
+			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
+			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
+			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			MatrixStacker.of(ms)
 				.translate(centerOfRotation)
-				.rotateX(MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x))
-				.rotateZ(MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z))
-				.rotateY(MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y))
+				.rotateX(rotX)
+				.rotateZ(rotZ)
+				.rotateY(rotY)
 				.translateBack(centerOfRotation);
+			if (stabilizationAnchor != null) {
+				MatrixStacker.of(ms)
+					.translate(stabilizationAnchor)
+					.rotateX(-rotX)
+					.rotateZ(-rotZ)
+					.rotateY(-rotY)
+					.translateBack(stabilizationAnchor);
+			}
 		}
 	}
 
@@ -287,10 +313,9 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		transformMS(ms, pt);
 		RenderSystem.disableTexture();
 		WorldRenderer.drawBox(ms, buffer.getBuffer(RenderType.getLines()), shape.getBoundingBox()
-			.offset(selectedBlock), 1, 1, 1, 1);
-		if (buffer instanceof SuperRenderTypeBuffer)
-			((SuperRenderTypeBuffer) buffer).draw(RenderType.getLines());
-		RenderSystem.enableTexture();
+			.offset(selectedBlock), 1, 1, 1, 0.6f);
+//		if (buffer instanceof SuperRenderTypeBuffer)
+//			((SuperRenderTypeBuffer) buffer).draw(RenderType.getLines());
 		ms.pop();
 	}
 

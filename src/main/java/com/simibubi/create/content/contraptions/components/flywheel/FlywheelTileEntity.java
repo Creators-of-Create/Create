@@ -100,9 +100,4 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			updateGeneratedRotation();
 		}
 	}
-
-	@Override
-	public boolean shouldRenderAsTE() {
-		return true;
-	}
 }

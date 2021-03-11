@@ -4,12 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.TransformData;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
@@ -24,7 +23,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     float lastOffset = Float.NaN;
 
-    private InstanceKey<TransformData> head;
+    private InstanceKey<ModelData> head;
 
     public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
@@ -61,7 +60,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
                      .translate(0, (offset * offset) * 4 / 16f, 0);
 
         head.getInstance()
-            .setTransform(stack);
+            .setTransformNoCopy(stack);
 
         lastOffset = offset;
     }
@@ -69,8 +68,8 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
     @Override
     public void updateLight() {
         head.getInstance()
-            .setBlockLight((byte) (world.getLightLevel(LightType.BLOCK, pos) << 4))
-            .setSkyLight((byte) (world.getLightLevel(LightType.SKY, pos) << 4));
+            .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+            .setSkyLight(world.getLightLevel(LightType.SKY, pos));
     }
 
     @Override

@@ -28,7 +28,8 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class ClockworkBearingTileEntity extends KineticTileEntity implements IBearingTileEntity, IDisplayAssemblyExceptions {
+public class ClockworkBearingTileEntity extends KineticTileEntity
+	implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
 	protected ControlledContraptionEntity hourHand;
 	protected ControlledContraptionEntity minuteHand;
@@ -40,8 +41,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	protected boolean running;
 	protected boolean assembleNextTick;
 	protected AssemblyException lastException;
-
 	protected ScrollOptionBehaviour<ClockHands> operationMode;
+
+	private float prevForcedAngle;
 
 	public ClockworkBearingTileEntity(TileEntityType<? extends ClockworkBearingTileEntity> type) {
 		super(type);
@@ -67,6 +69,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		super.tick();
 
 		if (world.isRemote) {
+			prevForcedAngle = hourAngle;
 			clientMinuteAngleDiff /= 2;
 			clientHourAngleDiff /= 2;
 		}
@@ -341,6 +344,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
+		if (isVirtual())
+			return MathHelper.lerp(partialTicks, prevForcedAngle, hourAngle);
 		if (hourHand == null || hourHand.isStalled())
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, hourAngle, hourAngle + getHourArmSpeed());
@@ -413,5 +418,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
+	}
+
+	public void setAngle(float forcedAngle) {
+		hourAngle = forcedAngle;
 	}
 }

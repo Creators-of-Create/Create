@@ -74,7 +74,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			MatrixStack localTransforms = new MatrixStack();
 			MatrixStacker msr = MatrixStacker.of(localTransforms);
 			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-			float renderTick = AnimationTickHolder.getRenderTime();
+			float renderTick = AnimationTickHolder.getRenderTime(te.getWorld());
 
 			msr.centre();
 			msr.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0));

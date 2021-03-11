@@ -92,7 +92,8 @@ public class ChainDriveScenes {
 
 	public static void adjustableChainGearshift(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("chain_gearshift", "Controlling rotational speed with Chain Gearshifts");
-		scene.configureBasePlate(0, 0, 7);
+		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
 		BlockPos leverPos = util.grid.at(3, 1, 0);

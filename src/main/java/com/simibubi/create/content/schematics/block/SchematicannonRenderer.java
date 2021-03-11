@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
@@ -40,33 +41,20 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
 			IRenderTypeBuffer buffer, int light, int overlay) {
 
-		double yaw = 0;
-		double pitch = 40;
+		boolean blocksLaunching = !tileEntityIn.flyingBlocks.isEmpty();
+		if (blocksLaunching)
+			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
+
+		if (FastRenderDispatcher.available(tileEntityIn.getWorld())) return;
 
 		BlockPos pos = tileEntityIn.getPos();
-		if (tileEntityIn.target != null) {
 
-			// Calculate Angle of Cannon
-			Vec3d diff = new Vec3d(tileEntityIn.target.subtract(pos));
-			if (tileEntityIn.previousTarget != null) {
-				diff = (new Vec3d(tileEntityIn.previousTarget)
-						.add(new Vec3d(tileEntityIn.target.subtract(tileEntityIn.previousTarget)).scale(partialTicks)))
-								.subtract(new Vec3d(pos));
-			}
+		double[] cannonAngles = getCannonAngles(tileEntityIn, pos, partialTicks);
 
-			double diffX = diff.getX();
-			double diffZ = diff.getZ();
-			yaw = MathHelper.atan2(diffX, diffZ);
-			yaw = yaw / Math.PI * 180;
+		double pitch = cannonAngles[0];
+		double yaw = cannonAngles[1];
 
-			float distance = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
-			double yOffset = 0 + distance * 2f;
-			pitch = MathHelper.atan2(distance, diff.getY() * 3 + yOffset);
-			pitch = pitch / Math.PI * 180 + 10;
-
-		}
-
-		double recoil = !tileEntityIn.flyingBlocks.isEmpty() ? getRecoil(tileEntityIn, partialTicks, ms, buffer, light, overlay) : 0;
+		double recoil = getRecoil(tileEntityIn, partialTicks);
 
 		ms.push();
 		BlockState state = tileEntityIn.getBlockState();
@@ -91,9 +79,51 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		ms.pop();
 	}
 
-	private double getRecoil(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public static double[] getCannonAngles(SchematicannonTileEntity tile, BlockPos pos, float partialTicks) {
+		double yaw = 0;
+		double pitch = 40;
+
+		if (tile.target != null) {
+
+			// Calculate Angle of Cannon
+			Vec3d diff = new Vec3d(tile.target.subtract(pos));
+			if (tile.previousTarget != null) {
+				diff = (new Vec3d(tile.previousTarget)
+						.add(new Vec3d(tile.target.subtract(tile.previousTarget)).scale(partialTicks)))
+						.subtract(new Vec3d(pos));
+			}
+
+			double diffX = diff.getX();
+			double diffZ = diff.getZ();
+			yaw = MathHelper.atan2(diffX, diffZ);
+			yaw = yaw / Math.PI * 180;
+
+			float distance = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
+			double yOffset = 0 + distance * 2f;
+			pitch = MathHelper.atan2(distance, diff.getY() * 3 + yOffset);
+			pitch = pitch / Math.PI * 180 + 10;
+
+		}
+
+		return new double[] { pitch, yaw };
+	}
+
+	public static double getRecoil(SchematicannonTileEntity tileEntityIn, float partialTicks) {
 		double recoil = 0;
 
+		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
+
+			if (launched.ticksRemaining == 0) continue;
+
+			// Apply Recoil if block was just launched
+			if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10)
+				recoil = Math.max(recoil, (launched.ticksRemaining + 1 - partialTicks) - launched.totalTicks + 10);
+		}
+
+		return recoil;
+	}
+
+	private static void renderLaunchedBlocks(SchematicannonTileEntity tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
 
 			if (launched.ticksRemaining == 0)
@@ -141,10 +171,6 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 			ms.pop();
 
-			// Apply Recoil if block was just launched
-			if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10)
-				recoil = Math.max(recoil, (launched.ticksRemaining + 1 - partialTicks) - launched.totalTicks + 10);
-
 			// Render particles for launch
 			if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
 				tileEntityIn.firstRenderTick = false;
@@ -162,8 +188,6 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			}
 
 		}
-
-		return recoil;
 	}
 
 }

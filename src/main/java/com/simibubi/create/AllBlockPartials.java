@@ -16,8 +16,11 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -257,6 +260,24 @@ public class AllBlockPartials {
 			return stack;
 		};
 		return dispatcher.getMaterial(KineticRenderMaterials.ROTATING).getModel(this, referenceState, facing, ms);
+	}
+
+	public InstancedModel<ModelData> renderOnHorizontalModel(InstancedTileRenderer<?> dispatcher, BlockState referenceState) {
+		Direction facing = referenceState.get(HORIZONTAL_FACING);
+		return renderOnDirectionalSouthModel(dispatcher, referenceState, facing);
+	}
+
+	public InstancedModel<ModelData> renderOnDirectionalSouthModel(InstancedTileRenderer<?> dispatcher, BlockState referenceState, Direction facing) {
+		Supplier<MatrixStack> ms = () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+						 .centre()
+						 .rotateY(AngleHelper.horizontalAngle(facing))
+						 .rotateX(AngleHelper.verticalAngle(facing))
+						 .unCentre();
+			return stack;
+		};
+		return dispatcher.getMaterial(RenderMaterials.MODELS).getModel(this, referenceState, facing, ms);
 	}
 
 }

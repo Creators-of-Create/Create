@@ -57,7 +57,7 @@ public class FastRenderDispatcher {
     }
 
     public static boolean available(World world) {
-        return Backend.canUseInstancing() && !(world instanceof SchematicWorld);
+        return Backend.canUseInstancing() && Backend.isFlywheelWorld(world);
     }
 
     public static int getDebugMode() {

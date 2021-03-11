@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.IBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
@@ -24,14 +24,14 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 
 	public static AnimateTileEntityInstruction bearing(BlockPos location, float totalDelta, int ticks) {
 		return new AnimateTileEntityInstruction(location, totalDelta, ticks,
-			(w, f) -> castIfPresent(w, location, MechanicalBearingTileEntity.class).ifPresent(bte -> bte.setAngle(f)),
-			(w) -> castIfPresent(w, location, MechanicalBearingTileEntity.class).map(bte -> bte.getInterpolatedAngle(0))
+			(w, f) -> castIfPresent(w, location, IBearingTileEntity.class).ifPresent(bte -> bte.setAngle(f)),
+			(w) -> castIfPresent(w, location, IBearingTileEntity.class).map(bte -> bte.getInterpolatedAngle(0))
 				.orElse(0f));
 	}
 
 	public static AnimateTileEntityInstruction pulley(BlockPos location, float totalDelta, int ticks) {
 		return new AnimateTileEntityInstruction(location, totalDelta, ticks,
-			(w, f) -> castIfPresent(w, location, PulleyTileEntity.class).ifPresent(pulley -> pulley.offset = f),
+			(w, f) -> castIfPresent(w, location, PulleyTileEntity.class).ifPresent(pulley -> pulley.animateOffset(f)),
 			(w) -> castIfPresent(w, location, PulleyTileEntity.class).map(pulley -> pulley.offset)
 				.orElse(0f));
 	}

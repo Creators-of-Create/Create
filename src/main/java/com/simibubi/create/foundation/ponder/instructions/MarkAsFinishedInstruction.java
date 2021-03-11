@@ -14,5 +14,10 @@ public class MarkAsFinishedInstruction extends PonderInstruction {
 	public void tick(PonderScene scene) {
 		scene.setFinished(true);
 	}
+	
+	@Override
+	public void onScheduled(PonderScene scene) {
+		scene.stopCounting();
+	}
 
 }
