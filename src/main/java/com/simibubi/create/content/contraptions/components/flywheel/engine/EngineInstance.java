@@ -25,7 +25,6 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
                 InstancedTileRenderRegistry.instance.register(type, EngineInstance::new));
     }
 
-    protected BlockPos baseBlockPos;
     protected InstanceKey<ModelData> frame;
 
     public EngineInstance(InstancedTileRenderer<?> modelManager, EngineTileEntity tile) {
@@ -44,8 +43,6 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
         Direction facing = lastState.get(BlockStateProperties.HORIZONTAL_FACING);
 
-        baseBlockPos = EngineBlock.getBaseBlockPos(lastState, pos);
-
         this.frame = modelManager.getMaterial(RenderMaterials.MODELS).getModel(frame, lastState).createInstance();
 
         float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
@@ -54,6 +51,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
         MatrixStacker msr = MatrixStacker.of(ms);
 
         msr.translate(getFloatingPos())
+           .nudge(tile.hashCode())
            .centre()
            .rotate(Direction.UP, angle)
            .unCentre()
@@ -72,8 +70,8 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     @Override
     public void updateLight() {
-        int block = world.getLightLevel(LightType.BLOCK, baseBlockPos);
-        int sky = world.getLightLevel(LightType.SKY, baseBlockPos);
+        int block = world.getLightLevel(LightType.BLOCK, pos);
+        int sky = world.getLightLevel(LightType.SKY, pos);
 
         frame.getInstance().setBlockLight(block).setSkyLight(sky);
     }

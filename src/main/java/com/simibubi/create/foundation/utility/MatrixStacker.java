@@ -84,7 +84,7 @@ public class MatrixStacker {
 	}
 
 	public MatrixStacker nudge(int id) {
-		long randomBits = (long) id * 493286711L;
+		long randomBits = (long) id * 31L * 493286711L;
 		randomBits = randomBits * randomBits * 4392167121L + randomBits * 98761L;
 		float xNudge = (((float) (randomBits >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float yNudge = (((float) (randomBits >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;

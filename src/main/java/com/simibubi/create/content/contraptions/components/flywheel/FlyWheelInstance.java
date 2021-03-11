@@ -53,6 +53,8 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     protected float lastAngle = Float.NaN;
 
+    protected boolean firstFrame = true;
+
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
         super(modelManager, tile);
     }
@@ -87,6 +89,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         }
 
         updateLight();
+        firstFrame = true;
     }
 
     @Override
@@ -97,7 +100,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         float speed = tile.visualSpeed.get(partialTicks) * 3 / 10f;
         float angle = tile.angle + speed * partialTicks;
 
-        if (Math.abs(angle - lastAngle) < 0.001) return;
+        if (!firstFrame && Math.abs(angle - lastAngle) < 0.001) return;
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
@@ -140,6 +143,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         wheel.getInstance().setTransformNoCopy(ms);
 
         lastAngle = angle;
+        firstFrame = false;
     }
 
     @Override
