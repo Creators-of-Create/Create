@@ -431,6 +431,8 @@ public class BearingScenes {
 
 	public static void clockwork(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("clockwork_bearing", "Animating Structures using Clockwork Bearings");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
 
 		Selection kinetics = util.select.fromTo(3, 3, 4, 3, 1, 6);
 		Selection largeCog = util.select.position(2, 0, 6);
