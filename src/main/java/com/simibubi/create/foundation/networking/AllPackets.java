@@ -91,6 +91,7 @@ public enum AllPackets {
 	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket::new, PLAY_TO_CLIENT),
 	TUNNEL_FLAP(TunnelFlapPacket.class, TunnelFlapPacket::new, PLAY_TO_CLIENT),
 	FUNNEL_FLAP(FunnelFlapPacket.class, FunnelFlapPacket::new, PLAY_TO_CLIENT),
+	OPEN_PONDER(PonderPacket.class, PonderPacket::new, PLAY_TO_CLIENT)
 
 	;
 
