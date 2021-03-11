@@ -21,7 +21,7 @@ public class GlShader extends GlObject {
             source = preProcessor.process(source);
 
             if (Backend.SHADER_DEBUG_OUTPUT)
-                Backend.log.info("Preprocessor run on " + name);// + ":\n" + source);
+                Backend.log.debug("Preprocessor run on " + name);// + ":\n" + source);
         }
 
         GL20.glShaderSource(handle, source);
@@ -30,11 +30,11 @@ public class GlShader extends GlObject {
         String log = GL20.glGetShaderInfoLog(handle);
 
         if (!log.isEmpty()) {
-            Backend.log.warn("Shader compilation log for " + name + ": " + log);
+            Backend.log.error("Shader compilation log for " + name + ": " + log);
         }
 
         if (GL20.glGetShaderi(handle, GL20.GL_COMPILE_STATUS) != GL20.GL_TRUE) {
-            throw new RuntimeException("Could not compile shader");
+            throw new RuntimeException("Could not compile shader. See log for details.");
         }
 
         setHandle(handle);

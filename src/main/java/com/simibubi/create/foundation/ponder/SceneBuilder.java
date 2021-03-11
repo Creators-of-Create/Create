@@ -24,26 +24,8 @@ import com.simibubi.create.foundation.ponder.elements.ParrotElement.ParrotPose;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement.SpinOnComponentPose;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
-import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
-import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
-import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
-import com.simibubi.create.foundation.ponder.instructions.DelayInstruction;
-import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
+import com.simibubi.create.foundation.ponder.instructions.*;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.ponder.instructions.FadeOutOfSceneInstruction;
-import com.simibubi.create.foundation.ponder.instructions.HighlightValueBoxInstruction;
-import com.simibubi.create.foundation.ponder.instructions.LineInstruction;
-import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
-import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
-import com.simibubi.create.foundation.ponder.instructions.OutlineSelectionInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ReplaceBlocksInstruction;
-import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction;
-import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
-import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
-import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -343,6 +325,10 @@ public class SceneBuilder {
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vec3d offset, int duration) {
 			addInstruction(AnimateParrotInstruction.move(link, offset, duration));
+		}
+
+		public void addKeyframe() {
+			addInstruction(KeyframeInstruction.INSTANCE);
 		}
 
 	}

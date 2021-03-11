@@ -64,7 +64,6 @@ public class PonderUI extends AbstractSimiScreen {
 	private List<PonderButton> tagButtons;
 	private List<LerpedFloat> tagFades;
 	private LerpedFloat fadeIn;
-	private LerpedFloat sceneProgress;
 	ItemStack stack;
 	PonderChapter chapter = null;
 
@@ -80,6 +79,7 @@ public class PonderUI extends AbstractSimiScreen {
 	private PonderTag referredToByTag;
 
 	private PonderButton left, right, scan, chap;
+	private PonderProgressBar progressBar;
 
 	public static PonderUI of(ItemStack item) {
 		return new PonderUI(PonderRegistry.compile(item.getItem()
@@ -115,8 +115,6 @@ public class PonderUI extends AbstractSimiScreen {
 		}
 		lazyIndex = LerpedFloat.linear()
 			.startWithValue(index);
-		sceneProgress = LerpedFloat.linear()
-			.startWithValue(0);
 		fadeIn = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(1, .1f, Chaser.EXP);
@@ -160,6 +158,11 @@ public class PonderUI extends AbstractSimiScreen {
 		int bX = (width - 20) / 2 - (70 + 2 * spacing);
 		int bY = height - 20 - 31;
 
+		int pX = (width / 2) - 110;
+		int pY = bY + PonderButton.SIZE + 4;
+		int pW = width - 2 * pX;
+		widgets.add(progressBar = new PonderProgressBar(this, pX, pY, pW, 1));
+
 		widgets.add(scan = new PonderButton(bX, bY, () -> {
 			identifyMode = !identifyMode;
 			if (!identifyMode)
@@ -188,7 +191,6 @@ public class PonderUI extends AbstractSimiScreen {
 		widgets.add(new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
 			.shortcut(bindings.keyBindBack)
 			.fade(0, -1));
-
 	}
 
 	@Override
@@ -217,10 +219,9 @@ public class PonderUI extends AbstractSimiScreen {
 		PonderScene activeScene = scenes.get(index);
 		if (!identifyMode)
 			activeScene.tick();
-		sceneProgress.chase(activeScene.getSceneProgress(), .5f, Chaser.EXP);
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
-		sceneProgress.tickChaser();
+		progressBar.tick();
 
 		if (!identifyMode) {
 			float lazyIndexValue = lazyIndex.getValue();
@@ -230,6 +231,17 @@ public class PonderUI extends AbstractSimiScreen {
 		}
 
 		updateIdentifiedItem(activeScene);
+	}
+
+	public PonderScene getActiveScene() {
+		return scenes.get(index);
+	}
+
+	public void seekToTime(int time) {
+		if (getActiveScene().currentTime > time)
+			replay();
+
+		getActiveScene().seekToTime(time);
 	}
 
 	public void updateIdentifiedItem(PonderScene activeScene) {
@@ -489,18 +501,6 @@ public class PonderUI extends AbstractSimiScreen {
 			right.flash();
 		else
 			right.dim();
-
-		{
-			int x = (width / 2) - 110;
-			int y = right.y + right.getHeight() + 4;
-			int w = width - 2 * x;
-			renderBox(x, y, w, 1, false);
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(x - 2, y - 2, 0);
-			RenderSystem.scaled((w + 4) * sceneProgress.getValue(partialTicks), 1, 1);
-			GuiUtils.drawGradientRect(200, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
-			RenderSystem.popMatrix();
-		}
 
 		// Tags
 		List<PonderTag> sceneTags = activeScene.tags;

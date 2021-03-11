@@ -122,6 +122,8 @@ public class Backend {
                 for (ProgramSpec<?> shader : registry.values()) {
                     loadProgram(manager, shader);
                 }
+
+                log.info("Loaded all shader programs.");
             }
         }
     }
@@ -140,7 +142,7 @@ public class Backend {
 
             programs.put(programSpec, new ProgramGroup<>(programGroup));
 
-            log.info("Loaded program {}", programSpec.name);
+            log.debug("Loaded program {}", programSpec.name);
         } catch (IOException ex) {
             log.error("Failed to load program {}", programSpec.name, ex);
             return;

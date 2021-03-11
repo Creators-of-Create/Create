@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.ponder.instructions.KeyframeInstruction;
+import org.antlr.v4.runtime.misc.IntegerList;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -59,6 +61,8 @@ public class PonderScene {
 	int textIndex;
 	String sceneId;
 
+	IntegerList keyframeTimes;
+
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
 	Set<PonderElement> elements;
@@ -102,6 +106,7 @@ public class PonderScene {
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
+		keyframeTimes = new IntegerList(4);
 
 		setPointOfInterest(new Vec3d(0, 4, 0));
 	}
@@ -180,6 +185,7 @@ public class PonderScene {
 		world.restore();
 		elements.clear();
 		linkedElements.clear();
+		keyframeTimes.clear();
 
 		transform = new SceneTransform();
 		finished = false;
@@ -270,6 +276,15 @@ public class PonderScene {
 			finished = true;
 	}
 
+	public void seekToTime(int time) {
+		if (time < currentTime)
+			throw new IllegalStateException("Cannot seek backwards. Rewind first.");
+
+		while (currentTime < time && !finished) {
+			tick();
+		}
+	}
+
 	public void addToSceneTime(int time) {
 		if (!stoppedCounting)
 			totalTime += time;
@@ -277,6 +292,12 @@ public class PonderScene {
 
 	public void stopCounting() {
 		stoppedCounting = true;
+	}
+
+	public void markKeyframe() {
+		if (!stoppedCounting) {
+			keyframeTimes.add(totalTime);
+		}
 	}
 
 	public void addElement(PonderElement e) {

@@ -48,6 +48,8 @@ public class GantryScenes {
 		scene.overlay.showText(80)
 			.text(text)
 			.pointAt(util.vector.centerOf(centralShaft));
+
+		scene.special.addKeyframe();
 		scene.idle(80);
 
 		scene.world.hideIndependentSection(gantry, Direction.UP);
@@ -59,6 +61,7 @@ public class GantryScenes {
 			.text("Gantry setups can move attached Blocks.")
 			.pointAt(gantryTop)
 			.placeNearTarget();
+		scene.special.addKeyframe();
 		scene.idle(30);
 
 		Selection planks = util.select.position(5, 3, 1);
@@ -75,6 +78,7 @@ public class GantryScenes {
 			.sharedText("movement_anchors")
 			.pointAt(gantryTop)
 			.placeNearTarget();
+		scene.special.addKeyframe();
 		scene.idle(80);
 
 		scene.world.modifyKineticSpeed(util.select.layer(0), f -> 32f);
@@ -107,6 +111,7 @@ public class GantryScenes {
 		scene.idle(15);
 		scene.world.moveSection(gantry, util.vector.of(-3, 0, 0), 40);
 		scene.idle(40);
+		scene.special.addKeyframe();
 
 		scene.world.toggleRedstonePower(shaft);
 		scene.world.toggleRedstonePower(util.select.position(3, 1, 0));
@@ -122,6 +127,7 @@ public class GantryScenes {
 				.south()))
 			.text("Redstone-powered gantry shafts stop moving their carriages")
 			.placeNearTarget();
+		scene.special.addKeyframe();
 		scene.idle(70);
 
 		Selection cogSelection = util.select.position(cogPos);
@@ -168,6 +174,7 @@ public class GantryScenes {
 			.text("The movement direction of carriages depend on their shafts' orientation")
 			.pointAt(util.vector.topOf(1, 1, 3))
 			.placeNearTarget();
+		scene.special.addKeyframe();
 		scene.idle(80);
 
 		BlockPos lastShaft = util.grid.at(0, 1, 2);
@@ -188,6 +195,7 @@ public class GantryScenes {
 					.text("...as well as the rotation direction of the shaft")
 					.pointAt(util.vector.blockSurface(lastShaft, Direction.WEST))
 					.placeNearTarget();
+				scene.special.addKeyframe();
 			}
 
 			scene.idle(30);
@@ -216,6 +224,7 @@ public class GantryScenes {
 			.text("Same rules apply for the propagated rotation")
 			.pointAt(util.vector.topOf(0, 3, 3))
 			.placeNearTarget();
+		scene.special.addKeyframe();
 		scene.idle(20);
 
 		for (boolean flip2 : Iterate.trueAndFalse) {
@@ -260,6 +269,7 @@ public class GantryScenes {
 		scene.overlay.showText(60)
 			.text("Gantry shafts attach to a carriage without the need of super glue")
 			.independent(20);
+		scene.special.addKeyframe();
 		scene.idle(40);
 
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
@@ -272,6 +282,7 @@ public class GantryScenes {
 		scene.overlay.showText(60)
 			.text("Same applies for carriages on moved Gantry Shafts")
 			.independent(20);
+		scene.special.addKeyframe();
 		scene.idle(15);
 
 		scene.world.moveSection(gantry, util.vector.of(0, 2, 0), 40);
