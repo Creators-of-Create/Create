@@ -241,6 +241,7 @@ public class GantryScenes {
 	public static void subgantry(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("gantry_cascaded", "Cascaded Gantries");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -2 * f);
 		scene.world.showSection(util.select.layer(0)
 			.add(util.select.column(5, 3))

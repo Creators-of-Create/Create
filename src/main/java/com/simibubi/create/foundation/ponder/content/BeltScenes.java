@@ -161,6 +161,7 @@ public class BeltScenes {
 	public static void directions(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("belt_directions", "Valid Orientations for Mechanical Belts");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
 		scene.idle(5);
 
@@ -305,6 +306,7 @@ public class BeltScenes {
 	public static void transport(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("belt_transport", "Using Mechanical Belts for Logistics");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -.6f * f);
 		scene.showBasePlate();
 		scene.idle(5);
@@ -379,6 +381,7 @@ public class BeltScenes {
 	public static void beltsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("belt_casing", "Encasing Belts");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.showBasePlate();
 		scene.idle(5);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);

@@ -24,7 +24,6 @@ import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -139,7 +138,7 @@ public class PonderUI extends AbstractSimiScreen {
 		tags.forEach(t -> {
 			int i = tagButtons.size();
 			int x = 31;
-			int y = 71 + i * 30;
+			int y = 81 + i * 30;
 			PonderButton b = new PonderButton(x, y, (mouseX, mouseY) -> {
 				centerScalingOn(mouseX, mouseY);
 				ScreenOpener.transitionTo(new PonderTagScreen(t));
@@ -315,6 +314,11 @@ public class PonderUI extends AbstractSimiScreen {
 		renderWidgets(mouseX, mouseY, identifyMode ? ponderPartialTicksPaused : partialTicks);
 	}
 
+	@Override
+	public void renderBackground() {
+		super.renderBackground();
+	}
+
 	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
 		renderScene(mouseX, mouseY, index, partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
@@ -326,7 +330,7 @@ public class PonderUI extends AbstractSimiScreen {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
-		double value = lazyIndex.getValue(AnimationTickHolder.getPartialTicks(story.world));
+		double value = lazyIndex.getValue(minecraft.getRenderPartialTicks());
 		double diff = i - value;
 		double slide = MathHelper.lerp(diff * diff, 200, 600) * diff;
 
@@ -341,15 +345,36 @@ public class PonderUI extends AbstractSimiScreen {
 		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
+		MutableBoundingBox bounds = story.getBounds();
+		RenderSystem.pushMatrix();
+		RenderSystem.multMatrix(ms.peek()
+			.getModel());
+
+		// kool shadow fx
+		{
+			RenderSystem.enableCull();
+			RenderSystem.enableDepthTest();
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
+			RenderSystem.scaled(1, -1, 1);
+			for (int f = 0; f < 4; f++) {
+				RenderSystem.translated(story.basePlateSize, 0, 0);
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(0, 0, 1/1024f);
+				GuiUtils.drawGradientRect(0, 0, 0, -story.basePlateSize, 4, 0x66_000000, 0x00_000000);
+				RenderSystem.popMatrix();
+				RenderSystem.rotatef(-90, 0, 1, 0);
+			}
+			RenderSystem.popMatrix();
+			RenderSystem.disableCull();
+			RenderSystem.disableDepthTest();
+		}
+
 		// coords for debug
 		if (PonderIndex.EDITOR_MODE && !userViewMode) {
-			MutableBoundingBox bounds = story.getBounds();
 
-			RenderSystem.pushMatrix();
-			RenderSystem.multMatrix(ms.peek()
-				.getModel());
-
-			RenderSystem.scaled(-1 / 16d, -1 / 16d, 1 / 16d);
+			RenderSystem.scaled(-1, -1, 1);
+			RenderSystem.scaled(1 / 16d, 1 / 16d, 1 / 16d);
 			RenderSystem.translated(1, -8, -1 / 64f);
 
 			// X AXIS
@@ -389,10 +414,10 @@ public class PonderUI extends AbstractSimiScreen {
 				RenderSystem.popMatrix();
 			}
 			RenderSystem.popMatrix();
-
 			buffer.draw();
-			RenderSystem.popMatrix();
 		}
+
+		RenderSystem.popMatrix();
 
 		ms.pop();
 	}
@@ -416,7 +441,7 @@ public class PonderUI extends AbstractSimiScreen {
 			int y = 31;
 
 			String title = activeScene.getTitle();
-			int wordWrappedHeight = font.getWordWrappedHeight(title, left.x);
+			int wordWrappedHeight = font.getWordWrappedHeight(title, left.x - 51);
 
 			int streakHeight = 35 - 9 + wordWrappedHeight;
 			UIRenderHelper.streak(0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade), 0x101010);
@@ -435,7 +460,7 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.translated(x, y, 0);
 			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
 			RenderSystem.translated(0, 0, 5);
-			font.drawSplitString(title, 0, 0, left.x, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			font.drawSplitString(title, 0, 0, left.x - 51, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 
 			if (chapter != null) {
@@ -477,7 +502,6 @@ public class PonderUI extends AbstractSimiScreen {
 				}
 				RenderSystem.popMatrix();
 			}
-
 			scan.flash();
 		} else {
 			scan.dim();
@@ -523,11 +547,16 @@ public class PonderUI extends AbstractSimiScreen {
 			int x = (width / 2) - 110;
 			int y = right.y + right.getHeight() + 4;
 			int w = width - 2 * x;
+
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(0, 0, 400);
 			renderBox(x, y, w, 1, false);
+			RenderSystem.popMatrix();
+
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(x - 2, y - 2, 0);
 			RenderSystem.scaled((w + 4) * sceneProgress.getValue(partialTicks), 1, 1);
-			GuiUtils.drawGradientRect(200, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
+			GuiUtils.drawGradientRect(500, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
 			RenderSystem.popMatrix();
 		}
 

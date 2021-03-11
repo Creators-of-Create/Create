@@ -76,9 +76,11 @@ public class PonderScene {
 	WorldSectionElement baseWorldSection;
 	Entity renderViewEntity;
 
-	int offsetX;
-	int offsetZ;
-	int size;
+	int basePlateOffsetX;
+	int basePlateOffsetZ;
+	int basePlateSize;
+	float scaleFactor;
+	float yOffset;
 
 	boolean stoppedCounting;
 	int totalTime;
@@ -98,10 +100,12 @@ public class PonderScene {
 		schedule = new ArrayList<>();
 		activeSchedule = new ArrayList<>();
 		transform = new SceneTransform();
-		size = getBounds().getXSize();
+		basePlateSize = getBounds().getXSize();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
+		scaleFactor = 1;
+		yOffset = 0;
 
 		setPointOfInterest(new Vec3d(0, 4, 0));
 	}
@@ -136,11 +140,12 @@ public class PonderScene {
 		BlockPos selectedPos = nearestHit.getValue()
 			.getSecond();
 
-		BlockPos origin = new BlockPos(offsetX, 0, offsetZ);
+		BlockPos origin = new BlockPos(basePlateOffsetX, 0, basePlateOffsetZ);
 		if (!world.getBounds()
 			.isVecInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new MutableBoundingBox(origin, origin.add(new Vec3i(size - 1, 0, size - 1))).isVecInside(selectedPos)) {
+		if (new MutableBoundingBox(origin, origin.add(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
+			.isVecInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
 					.getFirst()
@@ -383,11 +388,11 @@ public class PonderScene {
 		}
 
 		public MatrixStack apply(MatrixStack ms) {
-			return apply(ms, AnimationTickHolder.getPartialTicks());
+			return apply(ms, AnimationTickHolder.getPartialTicks(world));
 		}
 
 		public MatrixStack apply(MatrixStack ms, float pt) {
-			ms.translate(width / 2, height / 2, 200);
+			ms.translate(width / 2, height / 2, 200 + offset);
 
 			MatrixStacker.of(ms)
 				.rotateX(-35)
@@ -396,12 +401,15 @@ public class PonderScene {
 			MatrixStacker.of(ms)
 				.rotateY(-55)
 				.rotateX(35);
-
 			MatrixStacker.of(ms)
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
-			ms.scale(30, -30, 30);
-			ms.translate((size + offsetX) / -2f, -1f, (size + offsetZ) / -2f);
+
+			float f = 30 * scaleFactor;
+
+			ms.scale(f, -f, f);
+			ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
+				(basePlateSize + basePlateOffsetZ) / -2f);
 
 			return ms;
 		}
@@ -416,7 +424,7 @@ public class PonderScene {
 			float pt = AnimationTickHolder.getPartialTicks();
 			Vec3d vec = new Vec3d(x, y, depth);
 
-			vec = vec.subtract(width / 2, height / 2, 200);
+			vec = vec.subtract(width / 2, height / 2, 200 + offset);
 			vec = VecHelper.rotate(vec, 35, Axis.X);
 			vec = VecHelper.rotate(vec, -55, Axis.Y);
 			vec = vec.subtract(offset, 0, 0);
@@ -424,8 +432,12 @@ public class PonderScene {
 			vec = VecHelper.rotate(vec, -35, Axis.X);
 			vec = VecHelper.rotate(vec, -xRotation.getValue(pt), Axis.X);
 			vec = VecHelper.rotate(vec, -yRotation.getValue(pt), Axis.Y);
-			vec = vec.mul(1f / 30, 1f / -30, 1f / 30);
-			vec = vec.subtract((size + offsetX) / -2f, -1f, (size + offsetZ) / -2f);
+
+			float f = 1f / (30 * scaleFactor);
+
+			vec = vec.mul(f, -f, f);
+			vec = vec.subtract((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
+				(basePlateSize + basePlateOffsetZ) / -2f);
 
 			return vec;
 		}

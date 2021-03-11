@@ -16,7 +16,9 @@ public class PulleyScenes {
 
 	public static void movement(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("rope_pulley", "Moving Structures using Rope Pulleys");
-		scene.configureBasePlate(0, 0, 8);
+		scene.configureBasePlate(0, 0, 5);
+		scene.scaleSceneView(0.95f);
+		scene.setSceneOffsetY(-1);
 
 		Selection reversable = util.select.fromTo(2, 3, 4, 2, 4, 2);
 		BlockPos leverPos = util.grid.at(1, 2, 4);
@@ -101,7 +103,9 @@ public class PulleyScenes {
 
 	public static void movementModes(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("rope_pulley_modes", "Movement Modes of the Rope Pulley");
-		scene.configureBasePlate(0, 0, 8);
+		scene.configureBasePlate(0, 0, 5);
+		scene.scaleSceneView(0.95f);
+		scene.setSceneOffsetY(-1);
 
 		Selection reversable = util.select.fromTo(2, 3, 4, 2, 4, 2);
 		BlockPos leverPos = util.grid.at(1, 2, 4);
@@ -172,7 +176,9 @@ public class PulleyScenes {
 
 	public static void attachment(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("rope_pulley_attachment", "Moving Pulleys as part of a Contraption");
-		scene.configureBasePlate(0, 0, 8);
+		scene.configureBasePlate(0, 0, 5);
+		scene.scaleSceneView(0.95f);
+		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 

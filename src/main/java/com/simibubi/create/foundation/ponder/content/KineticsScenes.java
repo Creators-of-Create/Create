@@ -279,6 +279,8 @@ public class KineticsScenes {
 	public static void gearbox(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("gearbox", "Relaying rotational force using Gearboxes");
 		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
+		
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.world.showSection(util.select.fromTo(4, 1, 6, 3, 2, 5), Direction.UP);
 		scene.idle(10);
