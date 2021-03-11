@@ -80,6 +80,7 @@ public class PonderScene {
 	int offsetZ;
 	int size;
 
+	boolean stoppedCounting;
 	int totalTime;
 	int currentTime;
 
@@ -189,6 +190,7 @@ public class PonderScene {
 		elements.add(baseWorldSection);
 
 		totalTime = 0;
+		stoppedCounting = false;
 		activeSchedule.addAll(schedule);
 		activeSchedule.forEach(i -> i.onScheduled(this));
 	}
@@ -269,7 +271,12 @@ public class PonderScene {
 	}
 
 	public void addToSceneTime(int time) {
-		totalTime += time;
+		if (!stoppedCounting)
+			totalTime += time;
+	}
+
+	public void stopCounting() {
+		stoppedCounting = true;
 	}
 
 	public void addElement(PonderElement e) {

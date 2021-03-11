@@ -27,6 +27,7 @@ import net.minecraft.util.math.Vec3d;
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	protected int initialOffset;
+	private float prevAnimatedOffset;
 
 	public PulleyTileEntity(TileEntityType<? extends PulleyTileEntity> type) {
 		super(type);
@@ -40,6 +41,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() + offset * offset;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		if (isVirtual())
+			prevAnimatedOffset = offset;
 	}
 
 	@Override
@@ -217,6 +225,18 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	protected ValueBoxTransform getMovementModeSlot() {
 		return new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP);
+	}
+
+	@Override
+	public float getInterpolatedOffset(float partialTicks) {
+		if (isVirtual())
+			return MathHelper.lerp(partialTicks, prevAnimatedOffset, offset);
+		boolean moving = running && (movedContraption == null || !movedContraption.isStalled());
+		return super.getInterpolatedOffset(moving ? partialTicks : 0.5f);
+	}
+	
+	public void animateOffset(float forcedOffset) {
+		offset = forcedOffset;
 	}
 
 }

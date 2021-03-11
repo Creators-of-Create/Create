@@ -327,9 +327,10 @@ public class BearingScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
-			.text("This behaviour can be modified using a Wrench");
+			.sharedText("behaviour_modify_wrench");
 		scene.idle(70);
 
+		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
 		scene.world.toggleRedstonePower(cogAndClutch);
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.rotateSection(contraption, 0, -55, 0, 23);
@@ -343,7 +344,6 @@ public class BearingScenes {
 		scene.overlay.showText(120)
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 3), Direction.UP))
-			.placeNearTarget()
 			.text("It can be configured never to revert to solid blocks, or only near the angle it started at");
 
 	}
@@ -410,11 +410,143 @@ public class BearingScenes {
 		scene.world.rotateSection(contraption, 0, 0, 360 * 2, 74 * 2);
 		scene.world.rotateBearing(bearingPos, -360 * 2, 74 * 2);
 		scene.world.rotateSection(subContraption, 0, 0, 360 * 2, 74 * 2);
-		
+
 		scene.markAsFinished();
 		scene.idle(74 * 2);
 		scene.world.setKineticSpeed(largeCog, 0);
 		scene.world.setKineticSpeed(beltAndBearing, 0);
+	}
+
+	public static void clockwork(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("clockwork_bearing", "Animating Structures using Clockwork Bearings");
+
+		Selection kinetics = util.select.fromTo(3, 3, 4, 3, 1, 6);
+		Selection largeCog = util.select.position(2, 0, 6);
+		BlockPos bearingPos = util.grid.at(3, 3, 3);
+
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(kinetics, Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(bearingPos), Direction.DOWN);
+		scene.idle(10);
+
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos.north()), 60)
+			.colored(PonderPalette.GREEN)
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.placeNearTarget()
+			.text("Clockwork Bearings attach to blocks in front of them");
+		scene.idle(50);
+
+		ElementLink<WorldSectionElement> plank =
+			scene.world.showIndependentSection(util.select.position(2, 3, 2), Direction.SOUTH);
+		scene.world.moveSection(plank, util.vector.of(1, 0, 0), 0);
+		scene.idle(20);
+
+		scene.world.rotateSection(plank, 0, 0, 60, 25);
+		scene.world.rotateBearing(bearingPos, 60, 25);
+		scene.world.setKineticSpeed(kinetics, 8);
+		scene.world.setKineticSpeed(largeCog, -4);
+
+		scene.idle(25);
+		scene.overlay.showText(80)
+			.pointAt(util.vector.blockSurface(bearingPos.north(), Direction.NORTH))
+			.placeNearTarget()
+			.text("Upon receiving Rotational Force, the structure will be rotated according to the hour of the day");
+		scene.idle(90);
+
+		scene.overlay.showText(30)
+			.pointAt(util.vector.blockSurface(bearingPos.north(), Direction.NORTH))
+			.placeNearTarget()
+			.text("3:00");
+		scene.world.rotateSection(plank, 0, 0, 30, 12);
+		scene.world.rotateBearing(bearingPos, 30, 12);
+		scene.idle(42);
+		scene.overlay.showText(30)
+			.pointAt(util.vector.blockSurface(bearingPos.north(), Direction.NORTH))
+			.placeNearTarget()
+			.text("4:00");
+		scene.world.rotateSection(plank, 0, 0, 30, 12);
+		scene.world.rotateBearing(bearingPos, 30, 12);
+		scene.idle(42);
+
+		InputWindowElement clickTheBearing = new InputWindowElement(util.vector.topOf(bearingPos), Pointing.DOWN);
+		InputWindowElement clickTheBearingSide =
+			new InputWindowElement(util.vector.blockSurface(bearingPos, Direction.WEST), Pointing.LEFT);
+
+		scene.overlay.showControls(clickTheBearing.rightClick(), 60);
+		scene.idle(7);
+		scene.world.rotateSection(plank, 0, 0, -120, 0);
+		scene.world.rotateBearing(bearingPos, -120, 0);
+		scene.overlay.showText(60)
+			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.placeNearTarget()
+			.text("Right-Click the bearing to start or stop animating the structure");
+		scene.idle(70);
+
+		scene.world.hideIndependentSection(plank, Direction.NORTH);
+		scene.idle(15);
+
+		ElementLink<WorldSectionElement> hourHand =
+			scene.world.showIndependentSection(util.select.fromTo(3, 3, 1, 3, 5, 2), Direction.SOUTH);
+		scene.world.configureCenterOfRotation(hourHand, util.vector.centerOf(bearingPos));
+		scene.idle(15);
+		scene.overlay.showSelectionWithText(util.select.fromTo(3, 3, 1, 3, 4, 2), 80)
+			.placeNearTarget()
+			.sharedText("movement_anchors");
+		scene.idle(90);
+
+		scene.overlay.showControls(clickTheBearingSide.rightClick(), 20);
+		scene.idle(7);
+		scene.world.rotateSection(hourHand, 0, 0, 120, 50);
+		scene.world.rotateBearing(bearingPos, 120, 50);
+		scene.idle(60);
+
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos.north(3)), 80)
+			.placeNearTarget()
+			.colored(PonderPalette.BLUE)
+			.text("In front of the Hour Hand, a second structure can be added");
+		scene.idle(90);
+		scene.overlay.showControls(clickTheBearingSide.rightClick(), 20);
+		scene.idle(7);
+		scene.world.rotateSection(hourHand, 0, 0, -120, 0);
+		scene.world.rotateBearing(bearingPos, -120, 0);
+		scene.idle(10);
+
+		ElementLink<WorldSectionElement> minuteHand =
+			scene.world.showIndependentSection(util.select.fromTo(3, 3, 0, 3, 6, 0), Direction.SOUTH);
+		scene.world.configureCenterOfRotation(minuteHand, util.vector.centerOf(bearingPos));
+		scene.idle(30);
+
+		scene.overlay.showOutline(PonderPalette.BLUE, minuteHand, util.select.fromTo(3, 3, 0, 3, 6, 0), 85);
+		scene.overlay.showSelectionWithText(util.select.fromTo(3, 3, 1, 3, 4, 2), 80)
+			.placeNearTarget()
+			.colored(PonderPalette.GREEN)
+			.text("Ensure the two Structures are not attached to each other through super glue or similar");
+		scene.idle(90);
+
+		scene.overlay.showControls(clickTheBearingSide.rightClick(), 20);
+		scene.idle(7);
+
+		scene.world.rotateSection(hourHand, 0, 0, 120, 50);
+		scene.world.rotateSection(minuteHand, 0, 0, 180, 75);
+		scene.world.rotateBearing(bearingPos, 120, 50);
+		scene.idle(90);
+		scene.world.rotateSection(minuteHand, 0, 0, 6, 3);
+
+		scene.overlay.showText(80)
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(bearingPos.north(3), Direction.NORTH))
+			.colored(PonderPalette.GREEN)
+			.text("The Second Structure will now rotate as the Minute Hand");
+		scene.markAsFinished();
+
+		for (int i = 0; i < 40; i++) {
+			scene.idle(23);
+			scene.world.rotateSection(minuteHand, 0, 0, 6, 3);
+			if (i == 29)
+				scene.world.rotateSection(hourHand, 0, 0, 30, 20);
+		}
 	}
 
 }

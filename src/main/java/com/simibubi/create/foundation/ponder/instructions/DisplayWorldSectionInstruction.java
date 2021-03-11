@@ -35,6 +35,8 @@ public class DisplayWorldSectionInstruction extends FadeIntoSceneInstruction<Wor
 	@Override
 	protected void firstTick(PonderScene scene) {
 		super.firstTick(scene);
+		mergeOnto.ifPresent(wse -> element.setAnimatedOffset(wse.get()
+			.getAnimatedOffset(), true));
 		element.set(initialSelection);
 		element.setVisible(true);
 	}
