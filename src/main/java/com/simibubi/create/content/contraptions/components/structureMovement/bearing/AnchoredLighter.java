@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 
-public class BearingLighter extends ContraptionLighter<BearingContraption> {
+public class AnchoredLighter extends ContraptionLighter<Contraption> {
 
-    public BearingLighter(BearingContraption contraption) {
+    public AnchoredLighter(Contraption contraption) {
         super(contraption);
     }
 

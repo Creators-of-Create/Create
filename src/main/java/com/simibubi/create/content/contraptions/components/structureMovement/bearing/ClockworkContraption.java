@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -129,4 +130,8 @@ public class ClockworkContraption extends Contraption {
 		HOUR, MINUTE
 	}
 
+	@Override
+	public ContraptionLighter<?> makeLighter() {
+		return new AnchoredLighter(this);
+	}
 }

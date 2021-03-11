@@ -97,6 +97,6 @@ public class BearingContraption extends Contraption {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public ContraptionLighter<?> makeLighter() {
-		return new BearingLighter(this);
+		return new AnchoredLighter(this);
 	}
 }
