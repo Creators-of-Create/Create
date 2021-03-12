@@ -366,8 +366,6 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@Override
 	public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos,
 		@Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
-		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-
 		if (worldIn.isRemote)
 			return;
 
@@ -375,6 +373,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
 		}
+
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 	}
 
 	@Override
@@ -439,7 +439,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state) {
-		ArrayList<ItemStack> reuiredItems = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> reuiredItems = new ArrayList<>();
 		reuiredItems.add(new ItemStack(getRailItem(state)));
 		reuiredItems.add(new ItemStack(asItem()));
 		return new ItemRequirement(ItemUseType.CONSUME, reuiredItems);
