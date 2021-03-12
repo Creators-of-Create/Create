@@ -239,4 +239,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		offset = forcedOffset;
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

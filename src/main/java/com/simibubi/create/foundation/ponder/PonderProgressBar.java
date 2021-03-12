@@ -51,36 +51,44 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	@Override
 	protected boolean clicked(double mouseX, double mouseY) {
 		return this.active && this.visible && !ponder.getActiveScene().keyframeTimes.isEmpty()
-			&& mouseX >= (double) this.x && mouseX < (double) (this.x + this.width) && mouseY >= (double) this.y - 3
+			&& mouseX >= (double) this.x && mouseX < (double) (this.x + this.width + 4) && mouseY >= (double) this.y - 3
 			&& mouseY < (double) (this.y + this.height + 20);
 	}
 
 	@Override
 	public void onClick(double mouseX, double mouseY) {
-		PonderScene activeScene = ponder.getActiveScene();
-		int clickedAtTime = (int) ((mouseX - x) / ((double) width) * activeScene.totalTime);
+        PonderScene activeScene = ponder.getActiveScene();
+        IntegerList keyframeTimes = activeScene.keyframeTimes;
 
-		int seekTime = 0;
+		int keyframeIndex = getHoveredKeyframeIndex(activeScene, mouseX);
 
-		IntegerList keyframeTimes = activeScene.keyframeTimes;
-		for (int i = 0; i < keyframeTimes.size(); i++) {
-			int keyframeTime = keyframeTimes.get(i);
-
-			if (keyframeTime > clickedAtTime)
-				break;
-
-			seekTime = keyframeTime;
-		}
-		ponder.seekToTime(seekTime);
+		if (keyframeIndex == -1)
+			ponder.seekToTime(0);
+		else if (keyframeIndex == keyframeTimes.size())
+			ponder.seekToTime(activeScene.totalTime);
+		else
+			ponder.seekToTime(keyframeTimes.get(keyframeIndex));
 	}
 
-	public int getHoveredKeyframeIndex(double mouseX) {
-		PonderScene activeScene = ponder.getActiveScene();
-		int clickedAtTime = (int) ((mouseX - x) / ((double) width) * activeScene.totalTime);
+	public int getHoveredKeyframeIndex(PonderScene activeScene, double mouseX) {
+		IntegerList keyframeTimes = activeScene.keyframeTimes;
+
+		int totalTime = activeScene.totalTime;
+		int clickedAtTime = (int) ((mouseX - x) / ((double) width + 4) * totalTime);
+
+		{
+			int lastKeyframeTime = keyframeTimes.get(keyframeTimes.size() - 1);
+
+			int diffToEnd = totalTime - clickedAtTime;
+			int diffToLast = clickedAtTime - lastKeyframeTime;
+
+			if (diffToEnd > 0 && diffToEnd < diffToLast / 2) {
+				return keyframeTimes.size();
+			}
+		}
 
 		int index = -1;
 
-		IntegerList keyframeTimes = activeScene.keyframeTimes;
 		for (int i = 0; i < keyframeTimes.size(); i++) {
 			int keyframeTime = keyframeTimes.get(i);
 
@@ -125,46 +133,59 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		int hoverIndex;
 
 		if (isHovered) {
-			hoverIndex = getHoveredKeyframeIndex(mouseX);
+			hoverIndex = getHoveredKeyframeIndex(activeScene, mouseX);
 			float flashValue = flash.getValue(partialTicks) * 3
 				+ (float) Math.sin((AnimationTickHolder.getTicks() + partialTicks) / 6);
 
 			hoverEndColor = ColorHelper.applyAlpha(0x70ffffff, flashValue);
 			hoverStartColor = ColorHelper.applyAlpha(0x30ffffff, flashValue);
 		} else {
-			hoverIndex = -1;
+			hoverIndex = -2;
 			hoverEndColor = 0;
 			hoverStartColor = 0;
 		}
-
 		IntegerList keyframeTimes = activeScene.keyframeTimes;
+
+		if (hoverIndex == -1)
+			drawKeyframe(activeScene, true, 0, 0, hoverStartColor, hoverEndColor, 8);
+		else if (hoverIndex == keyframeTimes.size())
+			drawKeyframe(activeScene, true, activeScene.totalTime, width + 4, hoverStartColor, hoverEndColor, 8);
+
 		for (int i = 0; i < keyframeTimes.size(); i++) {
 			int keyframeTime = keyframeTimes.get(i);
 			int keyframePos = (int) (((float) keyframeTime) / ((float) activeScene.totalTime) * (width + 4));
 
-			int startColor = i == hoverIndex ? hoverStartColor : 0x30ffeedd;
-			int endColor = i == hoverIndex ? hoverEndColor : 0x60ffeedd;
-			int height = i == hoverIndex ? 8 : 4;
+			boolean selected = i == hoverIndex;
+			int startColor = selected ? hoverStartColor : 0x30ffeedd;
+			int endColor = selected ? hoverEndColor : 0x60ffeedd;
+			int height = selected ? 8 : 4;
 
-			if (i == hoverIndex) {
-				FontRenderer font = Minecraft.getInstance().fontRenderer;
-				GuiUtils.drawGradientRect(500, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, 0, 400);
-				String text;
-				int offset;
-				if (activeScene.currentTime < keyframeTime) {
-					text = ">";
-					offset = -1 - font.getStringWidth(text);
-				} else {
-					text = "<";
-					offset = 3;
-				}
-				font.drawString(text, keyframePos + offset, 10, endColor);
-				RenderSystem.popMatrix();
-			}
-			GuiUtils.drawGradientRect(500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
+			drawKeyframe(activeScene, selected, keyframeTime, keyframePos, startColor, endColor, height);
+
 		}
+	}
+
+	private void drawKeyframe(PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
+		if (selected) {
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			GuiUtils.drawGradientRect(500, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
+			RenderSystem.pushMatrix();
+			RenderSystem.translated(0, 0, 400);
+			String text;
+			int offset;
+			if (activeScene.currentTime < keyframeTime) {
+				text = ">";
+				offset = -1 - font.getStringWidth(text);
+			}
+			else {
+				text = "<";
+				offset = 3;
+			}
+			font.drawString(text, keyframePos + offset, 10, endColor);
+			RenderSystem.popMatrix();
+		}
+
+		GuiUtils.drawGradientRect(500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
 	}
 
 	@Override
