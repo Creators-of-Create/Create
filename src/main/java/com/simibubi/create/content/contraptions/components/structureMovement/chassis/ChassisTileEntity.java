@@ -125,8 +125,6 @@ public class ChassisTileEntity extends SmartTileEntity {
 
 		// Collect group of connected linear chassis
 		for (Direction offset : Iterate.directions) {
-			if (offset.getAxis() == axis)
-				continue;
 			BlockPos current = pos.offset(offset);
 			if (visited.contains(current))
 				continue;

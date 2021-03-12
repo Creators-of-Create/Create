@@ -44,7 +44,10 @@ public class AllSpriteShifts {
 		SHADOW_STEEL_CASING = omni("shadow_steel_casing"), REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
 		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
 
-	public static final CTSpriteShiftEntry CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
+	public static final CTSpriteShiftEntry 
+		CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_side"),
+		SECONDARY_CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "secondary_linear_chassis_side"),
+		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
 		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),

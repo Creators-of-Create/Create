@@ -24,7 +24,6 @@ import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -38,6 +37,7 @@ import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -55,6 +55,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends AbstractSimiScreen {
 
+	public static int ponderTicks;
+	public static float ponderPartialTicksPaused;
+
 	public static final String PONDERING = PonderLocalization.LANG_PREFIX + "pondering";
 	public static final String IDENTIFY_MODE = PonderLocalization.LANG_PREFIX + "identify_mode";
 	public static final String IN_CHAPTER = PonderLocalization.LANG_PREFIX + "in_chapter";
@@ -67,6 +70,7 @@ public class PonderUI extends AbstractSimiScreen {
 	ItemStack stack;
 	PonderChapter chapter = null;
 
+	private boolean userViewMode;
 	private boolean identifyMode;
 	private ItemStack hoveredTooltipItem;
 	private BlockPos hoveredBlockPos;
@@ -78,7 +82,7 @@ public class PonderUI extends AbstractSimiScreen {
 	private int index = 0;
 	private PonderTag referredToByTag;
 
-	private PonderButton left, right, scan, chap;
+	private PonderButton left, right, scan, chap, userMode;
 	private PonderProgressBar progressBar;
 
 	public static PonderUI of(ItemStack item) {
@@ -132,7 +136,7 @@ public class PonderUI extends AbstractSimiScreen {
 		tags.forEach(t -> {
 			int i = tagButtons.size();
 			int x = 31;
-			int y = 71 + i * 30;
+			int y = 81 + i * 30;
 			PonderButton b = new PonderButton(x, y, (mouseX, mouseY) -> {
 				centerScalingOn(mouseX, mouseY);
 				ScreenOpener.transitionTo(new PonderTagScreen(t));
@@ -158,19 +162,30 @@ public class PonderUI extends AbstractSimiScreen {
 		int bX = (width - 20) / 2 - (70 + 2 * spacing);
 		int bY = height - 20 - 31;
 
-		int pX = (width / 2) - 110;
-		int pY = bY + PonderButton.SIZE + 4;
-		int pW = width - 2 * pX;
-		widgets.add(progressBar = new PonderProgressBar(this, pX, pY, pW, 1));
+		{
+			int pX = (width / 2) - 110;
+			int pY = bY + PonderButton.SIZE + 4;
+			int pW = width - 2 * pX;
+			widgets.add(progressBar = new PonderProgressBar(this, pX, pY, pW, 1));
+		}
 
 		widgets.add(scan = new PonderButton(bX, bY, () -> {
 			identifyMode = !identifyMode;
 			if (!identifyMode)
 				scenes.get(index)
 					.deselect();
+			else
+				ponderPartialTicksPaused = minecraft.getRenderPartialTicks();
 		}).showing(AllIcons.I_MTD_SCAN)
 			.shortcut(bindings.keyBindDrop)
 			.fade(0, -1));
+
+		if (PonderIndex.EDITOR_MODE) {
+			widgets.add(userMode = new PonderButton(31, bY, () -> {
+				userViewMode = !userViewMode;
+			}).showing(AllIcons.I_MTD_USER_MODE)
+				.fade(0, -1));
+		}
 
 		bX += 50 + spacing;
 		widgets.add(left = new PonderButton(bX, bY, () -> this.scroll(false)).showing(AllIcons.I_MTD_LEFT)
@@ -217,8 +232,10 @@ public class PonderUI extends AbstractSimiScreen {
 		}
 
 		PonderScene activeScene = scenes.get(index);
-		if (!identifyMode)
+		if (!identifyMode) {
+			ponderTicks++;
 			activeScene.tick();
+		}
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
 		progressBar.tick();
@@ -307,8 +324,13 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.enableBlend();
-		renderVisibleScenes(mouseX, mouseY, identifyMode ? 0 : partialTicks);
-		renderWidgets(mouseX, mouseY, identifyMode ? 0 : partialTicks);
+		renderVisibleScenes(mouseX, mouseY, identifyMode ? ponderPartialTicksPaused : partialTicks);
+		renderWidgets(mouseX, mouseY, identifyMode ? ponderPartialTicksPaused : partialTicks);
+	}
+
+	@Override
+	public void renderBackground() {
+		super.renderBackground();
 	}
 
 	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
@@ -322,7 +344,7 @@ public class PonderUI extends AbstractSimiScreen {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		MatrixStack ms = new MatrixStack();
-		double value = lazyIndex.getValue(AnimationTickHolder.getPartialTicks());
+		double value = lazyIndex.getValue(minecraft.getRenderPartialTicks());
 		double diff = i - value;
 		double slide = MathHelper.lerp(diff * diff, 200, 600) * diff;
 
@@ -337,15 +359,36 @@ public class PonderUI extends AbstractSimiScreen {
 		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
-		// coords for debug
-		if (PonderIndex.EDITOR_MODE) {
-			MutableBoundingBox bounds = story.getBounds();
+		MutableBoundingBox bounds = story.getBounds();
+		RenderSystem.pushMatrix();
+		RenderSystem.multMatrix(ms.peek()
+			.getModel());
 
+		// kool shadow fx
+		{
+			RenderSystem.enableCull();
+			RenderSystem.enableDepthTest();
 			RenderSystem.pushMatrix();
-			RenderSystem.multMatrix(ms.peek()
-				.getModel());
+			RenderSystem.translated(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
+			RenderSystem.scaled(1, -1, 1);
+			for (int f = 0; f < 4; f++) {
+				RenderSystem.translated(story.basePlateSize, 0, 0);
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(0, 0, 1/1024f);
+				GuiUtils.drawGradientRect(0, 0, 0, -story.basePlateSize, 4, 0x66_000000, 0x00_000000);
+				RenderSystem.popMatrix();
+				RenderSystem.rotatef(-90, 0, 1, 0);
+			}
+			RenderSystem.popMatrix();
+			RenderSystem.disableCull();
+			RenderSystem.disableDepthTest();
+		}
 
-			RenderSystem.scaled(-1 / 16d, -1 / 16d, 1 / 16d);
+		// coords for debug
+		if (PonderIndex.EDITOR_MODE && !userViewMode) {
+
+			RenderSystem.scaled(-1, -1, 1);
+			RenderSystem.scaled(1 / 16d, 1 / 16d, 1 / 16d);
 			RenderSystem.translated(1, -8, -1 / 64f);
 
 			// X AXIS
@@ -385,10 +428,10 @@ public class PonderUI extends AbstractSimiScreen {
 				RenderSystem.popMatrix();
 			}
 			RenderSystem.popMatrix();
-
 			buffer.draw();
-			RenderSystem.popMatrix();
 		}
+
+		RenderSystem.popMatrix();
 
 		ms.pop();
 	}
@@ -400,6 +443,10 @@ public class PonderUI extends AbstractSimiScreen {
 		PonderScene activeScene = scenes.get(index);
 		int textColor = 0xeeeeee;
 
+		boolean noWidgetsHovered = true;
+		for (Widget widget : widgets)
+			noWidgetsHovered &= !widget.isMouseOver(mouseX, mouseY);
+
 		{
 			// Chapter title
 			RenderSystem.pushMatrix();
@@ -408,7 +455,7 @@ public class PonderUI extends AbstractSimiScreen {
 			int y = 31;
 
 			String title = activeScene.getTitle();
-			int wordWrappedHeight = font.getWordWrappedHeight(title, left.x);
+			int wordWrappedHeight = font.getWordWrappedHeight(title, left.x - 51);
 
 			int streakHeight = 35 - 9 + wordWrappedHeight;
 			UIRenderHelper.streak(0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade), 0x101010);
@@ -427,7 +474,7 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.translated(x, y, 0);
 			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
 			RenderSystem.translated(0, 0, 5);
-			font.drawSplitString(title, 0, 0, left.x, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			font.drawSplitString(title, 0, 0, left.x - 51, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 
 			if (chapter != null) {
@@ -445,32 +492,40 @@ public class PonderUI extends AbstractSimiScreen {
 		}
 
 		if (identifyMode) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(mouseX, mouseY, 100);
-			if (hoveredTooltipItem.isEmpty()) {
-				String tooltip = Lang
-					.createTranslationTextComponent(IDENTIFY_MODE,
-						new StringTextComponent(minecraft.gameSettings.keyBindDrop.getKeyBinding()
-							.getLocalizedName()).applyTextStyle(TextFormatting.WHITE))
-					.applyTextStyle(TextFormatting.GRAY)
-					.getFormattedText();
-				renderTooltip(font.listFormattedStringToWidth(tooltip, width / 3), 0, 0);
-			} else
-				renderTooltip(hoveredTooltipItem, 0, 0);
-			if (hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
-				RenderSystem.translated(0, -15, 0);
-				boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
-				String coords = new StringTextComponent(
-					hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
-						.applyTextStyles(copied ? TextFormatting.GREEN : TextFormatting.GOLD)
+			if (noWidgetsHovered) {
+				RenderSystem.pushMatrix();
+				RenderSystem.translated(mouseX, mouseY, 100);
+				if (hoveredTooltipItem.isEmpty()) {
+					String tooltip = Lang
+						.createTranslationTextComponent(IDENTIFY_MODE,
+							new StringTextComponent(minecraft.gameSettings.keyBindDrop.getKeyBinding()
+								.getLocalizedName()).applyTextStyle(TextFormatting.WHITE))
+						.applyTextStyle(TextFormatting.GRAY)
 						.getFormattedText();
-				renderTooltip(coords, 0, 0);
+					renderTooltip(font.listFormattedStringToWidth(tooltip, width / 3), 0, 0);
+				} else
+					renderTooltip(hoveredTooltipItem, 0, 0);
+				if (hoveredBlockPos != null && PonderIndex.EDITOR_MODE && !userViewMode) {
+					RenderSystem.translated(0, -15, 0);
+					boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
+					String coords = new StringTextComponent(
+						hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
+							.applyTextStyles(copied ? TextFormatting.GREEN : TextFormatting.GOLD)
+							.getFormattedText();
+					renderTooltip(coords, 0, 0);
+				}
+				RenderSystem.popMatrix();
 			}
-			RenderSystem.popMatrix();
-
 			scan.flash();
 		} else {
 			scan.dim();
+		}
+
+		if (PonderIndex.EDITOR_MODE) {
+			if (userViewMode)
+				userMode.flash();
+			else
+				userMode.dim();
 		}
 
 		{
@@ -777,8 +832,25 @@ public class PonderUI extends AbstractSimiScreen {
 
 	@Override
 	public void shareContextWith(AbstractSimiScreen other) {
-		if (other instanceof PonderUI)
-			((PonderUI) other).referredToByTag = referredToByTag;
+		if (other instanceof PonderUI) {
+			PonderUI ponderUI = (PonderUI) other;
+			ponderUI.referredToByTag = referredToByTag;
+		}
+	}
+
+	public static float getPartialTicks() {
+		if (Minecraft.getInstance().currentScreen instanceof PonderUI) {
+			PonderUI ui = (PonderUI) Minecraft.getInstance().currentScreen;
+			if (ui.identifyMode)
+				return ponderPartialTicksPaused;
+		}
+		return Minecraft.getInstance()
+			.getRenderPartialTicks();
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return true;
 	}
 
 }

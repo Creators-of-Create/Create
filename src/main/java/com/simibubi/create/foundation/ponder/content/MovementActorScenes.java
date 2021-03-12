@@ -22,7 +22,9 @@ public class MovementActorScenes {
 
 	public static void psiTransfer(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("portable_storage_interface", "Contraption Storage Exchange");
-		scene.configureBasePlate(0, 0, 8);
+		scene.configureBasePlate(0, 0, 6);
+		scene.scaleSceneView(0.95f);
+		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 
@@ -112,7 +114,7 @@ public class MovementActorScenes {
 		scene.world.modifyEntity(entity2, Entity::remove);
 
 		scene.overlay
-			.showControls(new InputWindowElement(util.vector.topOf(6, 3, 2), Pointing.DOWN).withItem(itemStack), 40);
+			.showControls(new InputWindowElement(util.vector.topOf(5, 3, 2), Pointing.DOWN).withItem(itemStack), 40);
 
 		scene.idle(30);
 		scene.world.hideSection(util.select.position(hopper), Direction.UP);
@@ -148,7 +150,8 @@ public class MovementActorScenes {
 
 	public static void psiRedstone(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("portable_storage_interface_redstone", "Redstone Control");
-		scene.configureBasePlate(0, 0, 6);
+		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 
 		Class<PortableItemInterfaceTileEntity> psiClass = PortableItemInterfaceTileEntity.class;
 		Selection psis = util.select.fromTo(1, 1, 3, 1, 3, 3);

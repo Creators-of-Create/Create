@@ -80,6 +80,7 @@ public class GantryScenes {
 			.placeNearTarget();
 		scene.special.addKeyframe();
 		scene.idle(80);
+		scene.special.addKeyframe();
 
 		scene.world.modifyKineticSpeed(util.select.layer(0), f -> 32f);
 		scene.world.modifyKineticSpeed(util.select.layer(1), f -> -64f);
@@ -111,7 +112,6 @@ public class GantryScenes {
 		scene.idle(15);
 		scene.world.moveSection(gantry, util.vector.of(-3, 0, 0), 40);
 		scene.idle(40);
-		scene.special.addKeyframe();
 
 		scene.world.toggleRedstonePower(shaft);
 		scene.world.toggleRedstonePower(util.select.position(3, 1, 0));
@@ -250,6 +250,7 @@ public class GantryScenes {
 	public static void subgantry(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("gantry_cascaded", "Cascaded Gantries");
 		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -2 * f);
 		scene.world.showSection(util.select.layer(0)
 			.add(util.select.column(5, 3))

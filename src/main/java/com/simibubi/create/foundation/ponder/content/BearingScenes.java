@@ -21,6 +21,9 @@ public class BearingScenes {
 
 	public static void windmillsAsSource(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("windmill_source", "Generating Rotational Force using Windmill Bearings");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
+		
 		scene.world.showSection(util.select.fromTo(1, 0, 1, 5, 0, 5), Direction.UP);
 		scene.world.setBlock(util.grid.at(2, -1, 0), AllBlocks.SAIL.getDefaultState()
 			.with(SailBlock.FACING, Direction.NORTH), false);
@@ -144,6 +147,8 @@ public class BearingScenes {
 
 	public static void windmillsAnyStructure(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("windmill_structure", "Windmill Contraptions");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 
@@ -191,6 +196,8 @@ public class BearingScenes {
 
 	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("mechanical_bearing", "Movings Structures using the Mechanical Bearing");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 		scene.world.showSection(util.select.layer(1), Direction.DOWN);
@@ -268,6 +275,9 @@ public class BearingScenes {
 
 	public static void bearingModes(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("bearing_modes", "Movement Modes of the Mechanical Bearing");
+		scene.configureBasePlate(1, 1, 6);
+		scene.setSceneOffsetY(-1);
+		
 		Selection sideCog = util.select.position(util.grid.at(7, 0, 3));
 		Selection cogColumn = util.select.fromTo(6, 1, 3, 6, 4, 3);
 		Selection cogAndClutch = util.select.fromTo(5, 3, 1, 5, 4, 2);
@@ -350,6 +360,8 @@ public class BearingScenes {
 
 	public static void stabilizedBearings(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("stabilized_bearings", "Stabilized Contraptions");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
 
 		Selection beltAndBearing = util.select.fromTo(3, 3, 4, 3, 1, 6);
 		Selection largeCog = util.select.position(2, 0, 6);
@@ -419,6 +431,8 @@ public class BearingScenes {
 
 	public static void clockwork(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("clockwork_bearing", "Animating Structures using Clockwork Bearings");
+		scene.configureBasePlate(1, 1, 5);
+		scene.setSceneOffsetY(-1);
 
 		Selection kinetics = util.select.fromTo(3, 3, 4, 3, 1, 6);
 		Selection largeCog = util.select.position(2, 0, 6);

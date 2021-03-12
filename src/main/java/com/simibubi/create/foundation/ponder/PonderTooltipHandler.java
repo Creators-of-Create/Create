@@ -95,7 +95,8 @@ public class PonderTooltipHandler {
 	}
 
 	public static void addToTooltip(List<ITextComponent> toolTip, ItemStack stack) {
-		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
+		float renderPartialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		if (lastHoveredStack != stack)
 			return;
 		ITextComponent component = subject ? Lang.createTranslationTextComponent(SUBJECT)

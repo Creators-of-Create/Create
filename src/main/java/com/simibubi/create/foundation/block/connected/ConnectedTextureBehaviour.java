@@ -55,10 +55,9 @@ public abstract class ConnectedTextureBehaviour {
 		if (textureEntry == null)
 			return context;
 
-		Axis axis = face.getAxis();
 		boolean positive = face.getAxisDirection() == AxisDirection.POSITIVE;
-		Direction h = axis == Axis.X ? Direction.SOUTH : Direction.WEST;
-		Direction v = axis.isHorizontal() ? Direction.UP : Direction.NORTH;
+		Direction h = getRightDirection(reader, pos, state, face);
+		Direction v = getUpDirection(reader, pos, state, face);
 		h = positive ? h.getOpposite() : h;
 		if (face == Direction.DOWN) {
 			v = v.getOpposite();
@@ -93,6 +92,16 @@ public abstract class ConnectedTextureBehaviour {
 		}
 
 		return context;
+	}
+
+	protected Direction getUpDirection(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
+		Axis axis = face.getAxis();
+		return axis.isHorizontal() ? Direction.UP : Direction.NORTH;
+	}
+
+	protected Direction getRightDirection(ILightReader reader, BlockPos pos, BlockState state, Direction face) {
+		Axis axis = face.getAxis();
+		return axis == Axis.X ? Direction.SOUTH : Direction.WEST;
 	}
 
 	private boolean testConnection(ILightReader reader, BlockPos pos, BlockState state, Direction face,

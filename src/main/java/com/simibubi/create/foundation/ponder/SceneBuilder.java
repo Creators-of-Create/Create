@@ -123,9 +123,29 @@ public class SceneBuilder {
 	 *                      assumes it to be square
 	 */
 	public void configureBasePlate(int xOffset, int zOffset, int basePlateSize) {
-		scene.offsetX = xOffset;
-		scene.offsetZ = zOffset;
-		scene.size = basePlateSize;
+		scene.basePlateOffsetX = xOffset;
+		scene.basePlateOffsetZ = zOffset;
+		scene.basePlateSize = basePlateSize;
+	}
+
+	/**
+	 * Use this in case you are not happy with the scale of the scene relative to
+	 * the overlay
+	 * 
+	 * @param factor >1 will make the scene appear larger, smaller otherwise
+	 */
+	public void scaleSceneView(float factor) {
+		scene.scaleFactor = factor;
+	}
+
+	/**
+	 * Use this in case you are not happy with the vertical alignment of the scene
+	 * relative to the overlay
+	 * 
+	 * @param yOffset >0 moves the scene up, down otherwise
+	 */
+	public void setSceneOffsetY(float yOffset) {
+		scene.yOffset = yOffset;
 	}
 
 	/**
@@ -133,8 +153,10 @@ public class SceneBuilder {
 	 * of the schematic's structure. Makes for a nice opener
 	 */
 	public void showBasePlate() {
-		world.showSection(scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.offsetX, 0, scene.offsetZ),
-			new Vec3i(scene.size, 0, scene.size)), Direction.UP);
+		world.showSection(
+			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.basePlateOffsetX, 0, scene.basePlateOffsetZ),
+				new Vec3i(scene.basePlateSize, 0, scene.basePlateSize)),
+			Direction.UP);
 	}
 
 	/**
@@ -511,7 +533,7 @@ public class SceneBuilder {
 					return;
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
 			});
-			flapFunnels(scene.getSceneBuildingUtil().select.position(location.up()), true);
+			flapFunnel(location.up(), true);
 		}
 
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
@@ -539,9 +561,8 @@ public class SceneBuilder {
 					scene.linkElement(tracker, link);
 					return TransportedResult.doNothing();
 				});
-
 			});
-			flapFunnels(scene.getSceneBuildingUtil().select.position(beltLocation.up()), true);
+			flapFunnel(beltLocation.up(), true);
 			return link;
 		}
 
@@ -619,11 +640,8 @@ public class SceneBuilder {
 			}, reDrawBlocks));
 		}
 
-		public void flapFunnels(Selection selection, boolean outward) {
-			addInstruction(new TileEntityDataInstruction(selection, FunnelTileEntity.class, nbt -> {
-				nbt.putInt("Flap", outward ? -1 : 1);
-				return nbt;
-			}, false));
+		public void flapFunnel(BlockPos position, boolean outward) {
+			modifyTileEntity(position, FunnelTileEntity.class, funnel -> funnel.flap(!outward));
 		}
 
 	}

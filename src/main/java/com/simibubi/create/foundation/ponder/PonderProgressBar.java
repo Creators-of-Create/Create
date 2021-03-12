@@ -97,13 +97,17 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
         isHovered = clicked(mouseX, mouseY);
 
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(0, 0, 400);
         PonderUI.renderBox(x, y, width, height, false);
+        RenderSystem.popMatrix();
+
         RenderSystem.pushMatrix();
         RenderSystem.translated(x - 2, y - 2, 0);
 
         RenderSystem.pushMatrix();
         RenderSystem.scaled((width + 4) * progress.getValue(partialTicks), 1, 1);
-        GuiUtils.drawGradientRect(200, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
+        GuiUtils.drawGradientRect(500, 0, 3, 1, 4, 0x60ffeedd, 0x60ffeedd);
         RenderSystem.popMatrix();
 
         renderKeyframes(mouseX, partialTicks);
@@ -139,7 +143,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
             int endColor = i == hoverIndex ? hoverEndColor : 0x60ffeedd;
 
             int keyframePos = (int) (((float) keyframeTime) / ((float) activeScene.totalTime) * (width + 4));
-            GuiUtils.drawGradientRect(200, keyframePos, 1, keyframePos + 1, 4, startColor, endColor);
+            GuiUtils.drawGradientRect(500, keyframePos, 1, keyframePos + 1, 4, startColor, endColor);
         }
     }
 
