@@ -1,14 +1,18 @@
 package com.simibubi.create.foundation.command;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -66,7 +70,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		fixLighting(() -> Actions::experimentalLighting),
 		overlayReset(() -> Actions::overlayReset),
 		experimentalRendering(() -> Actions::experimentalRendering),
-		ponderIndex(() -> Actions::ponderIndex),
+		openPonder(() -> Actions::openPonder),
 
 		;
 
@@ -133,8 +137,20 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		}
 
 		@OnlyIn(Dist.CLIENT)
-		private static void ponderIndex(String value) {
-			ScreenOpener.transitionTo(new PonderIndexScreen());
+		private static void openPonder(String value) {
+			if (value.equals("index")) {
+				ScreenOpener.transitionTo(new PonderIndexScreen());
+				return;
+			}
+
+			ResourceLocation id = new ResourceLocation(value);
+			if (!PonderRegistry.all.containsKey(id)) {
+				Create.logger.error("Could not find ponder scenes for item: " + id);
+				return;
+			}
+
+			ScreenOpener.transitionTo(PonderUI.of(id));
+
 		}
 
 		private static ITextComponent boolToText(boolean b) {
