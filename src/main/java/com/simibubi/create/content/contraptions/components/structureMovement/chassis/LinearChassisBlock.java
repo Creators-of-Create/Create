@@ -14,7 +14,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
+import net.minecraft.world.IWorld;
 
 public class LinearChassisBlock extends AbstractChassisBlock {
 
@@ -50,12 +52,27 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 		}
 		return super.getStateForPlacement(context);
 	}
+	
+	@Override
+	public BlockState updatePostPlacement(BlockState state, Direction side, BlockState other, IWorld p_196271_4_,
+		BlockPos p_196271_5_, BlockPos p_196271_6_) {
+		BooleanProperty property = getGlueableSide(state, side);
+		if (property == null || !sameKind(state, other) || state.get(AXIS) != other.get(AXIS))
+			return state;
+		return state.with(property, false);
+	}
 
 	@Override
 	public BooleanProperty getGlueableSide(BlockState state, Direction face) {
 		if (face.getAxis() != state.get(AXIS))
 			return null;
 		return face.getAxisDirection() == AxisDirection.POSITIVE ? STICKY_TOP : STICKY_BOTTOM;
+	}
+
+	@Override
+	protected boolean glueAllowedOnSide(IBlockReader world, BlockPos pos, BlockState state, Direction side) {
+		BlockState other = world.getBlockState(pos.offset(side));
+		return !sameKind(other, state) || state.get(AXIS) != other.get(AXIS);
 	}
 
 	public static boolean isChassis(BlockState state) {

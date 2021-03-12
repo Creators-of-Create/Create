@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -186,6 +187,14 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 		if (AllBlocks.STICKER.has(state))
 			return state.get(DirectionalBlock.FACING) == direction;
+		
+		if (state.getBlock() == Blocks.SLIME_BLOCK)
+			return true;
+		if (state.getBlock() == Blocks.field_226907_mc_) // honey block
+			return true;
+		
+		if (AllBlocks.CART_ASSEMBLER.has(state))
+			return Direction.UP == direction;
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			return state.get(DirectionalKineticBlock.FACING) == direction;

@@ -59,7 +59,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (isSlimeBall && state.get(affectedSide)) {
 			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
-				if (glueableSide != null && !state.get(glueableSide)) {
+				if (glueableSide != null && !state.get(glueableSide) && glueAllowedOnSide(worldIn, pos, state, face)) {
 					if (worldIn.isRemote) {
 						Vec3d vec = hit.getHitVec();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -78,6 +78,8 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return ActionResultType.PASS;
 		if (state.get(affectedSide) == isSlimeBall)
 			return ActionResultType.PASS;
+		if (!glueAllowedOnSide(worldIn, pos, state, hit.getFace()))
+			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
 			Vec3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -94,6 +96,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (rotation == Rotation.NONE)
 			return state;
 
+		@SuppressWarnings("deprecation")
 		BlockState rotated = super.rotate(state, rotation);
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);
@@ -140,5 +143,9 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	public abstract BooleanProperty getGlueableSide(BlockState state, Direction face);
+
+	protected boolean glueAllowedOnSide(IBlockReader world, BlockPos pos, BlockState state, Direction side) {
+		return true;
+	}
 
 }
