@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -15,7 +11,6 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -43,6 +38,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class GantryShaftBlock extends DirectionalKineticBlock {
 
@@ -73,7 +72,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		if (!placementHelper.matchesItem(heldItem))
 			return ActionResultType.PASS;
 
-		return placementHelper.getOffset(world, state, pos, ray).placeInWorld(world, ((BlockItem) heldItem.getItem()), player, hand, ray);
+		return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, ((BlockItem) heldItem.getItem()), player, hand, ray);
 	}
 
 	@Override
@@ -283,12 +282,10 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		}
 
 		@Override
-		public PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
-			PlacementOffset offset = super.getOffset(world, state, pos, ray);
-			if (!offset.isSuccessful())
-				return offset;
-			return PlacementOffset.success(offset.getPos(), offset.getTransform()
-				.andThen(s -> s.with(POWERED, state.get(POWERED))));
+		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
+			offset.withTransform(offset.getTransform().andThen(s -> s.with(POWERED, state.get(POWERED))));
+			return offset;
 		}
 	}
 

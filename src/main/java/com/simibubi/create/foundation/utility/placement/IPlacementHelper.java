@@ -1,19 +1,13 @@
 package com.simibubi.create.foundation.utility.placement;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -21,6 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 public interface IPlacementHelper {
@@ -46,11 +46,11 @@ public interface IPlacementHelper {
 	 * @return PlacementOffset.fail() if no valid offset could be found.
 	 * PlacementOffset.success(newPos) with newPos being the new position the block should be placed at
 	 */
-	PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray);
+	PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray);
 
-	//overrides the default ghost state of the helper with the actual state of the held block item, this is used in PlacementHelpers and can be ignored in most cases
-	default PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray, ItemStack heldItem) {
-		PlacementOffset offset = getOffset(world, state, pos, ray);
+	//sets the offset's ghost state with the default state of the held block item, this is used in PlacementHelpers and can be ignored in most cases
+	default PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray, ItemStack heldItem) {
+		PlacementOffset offset = getOffset(player, world, state, pos, ray);
 		if (heldItem.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) heldItem.getItem();
 			offset = offset.withGhostState(blockItem.getBlock().getDefaultState());
@@ -60,11 +60,10 @@ public interface IPlacementHelper {
 
 	//only gets called when placementOffset is successful
 	default void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-		//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()), ray.getFace());
-
 		displayGhost(offset);
 	}
 
+	//RIP
 	static void renderArrow(Vec3d center, Vec3d target, Direction arrowPlane) {
 		renderArrow(center, target, arrowPlane, 1D);
 	}

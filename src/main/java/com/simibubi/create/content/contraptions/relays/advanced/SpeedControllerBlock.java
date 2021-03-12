@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
-import java.util.function.Predicate;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -12,7 +10,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,6 +27,8 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import java.util.function.Predicate;
 
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
 
@@ -69,7 +68,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		ItemStack heldItem = player.getHeldItem(hand);
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		if (helper.matchesItem(heldItem))
-			return helper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return ActionResultType.PASS;
 	}
@@ -92,7 +91,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		}
 
 		@Override
-		public PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
 			BlockPos newPos = pos.up();
 			if (!world.getBlockState(newPos)
 				.getMaterial()
@@ -106,15 +105,6 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 				return PlacementOffset.fail();
 
 			return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));
-		}
-
-		@Override
-		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()),
-			//	Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE,
-			//		state.get(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X));
-
-			displayGhost(offset);
 		}
 	}
 

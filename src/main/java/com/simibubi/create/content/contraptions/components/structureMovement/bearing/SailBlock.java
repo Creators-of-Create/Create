@@ -1,13 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
@@ -16,18 +8,13 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
+import net.minecraft.item.*;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -39,6 +26,13 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class SailBlock extends ProperDirectionalBlock {
 
@@ -71,7 +65,7 @@ public class SailBlock extends ProperDirectionalBlock {
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+			return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		if (heldItem.getItem() instanceof ShearsItem) {
 			if (!world.isRemote)
@@ -209,7 +203,7 @@ public class SailBlock extends ProperDirectionalBlock {
 		}
 
 		@Override
-		public PlacementOffset getOffset(World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
 			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(SailBlock.FACING).getAxis(), dir -> world.getBlockState(pos.offset(dir)).getMaterial().isReplaceable());
 
 			if (directions.isEmpty())
@@ -217,12 +211,6 @@ public class SailBlock extends ProperDirectionalBlock {
 			else {
 				return PlacementOffset.success(pos.offset(directions.get(0)), s -> s.with(FACING, state.get(FACING)));
 			}
-		}
-
-		@Override
-		public void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
-			//IPlacementHelper.renderArrow(VecHelper.getCenterOf(pos), VecHelper.getCenterOf(offset.getPos()), state.get(FACING));
-			displayGhost(offset);
 		}
 	}
 }

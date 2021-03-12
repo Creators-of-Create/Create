@@ -1,14 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import java.util.UUID;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -36,8 +33,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import java.util.UUID;
+
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
+
+	public static final AttributeModifier singleRangeAttributeModifier = new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3, AttributeModifier.Operation.ADDITION);
+	public static final AttributeModifier doubleRangeAttributeModifier = new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5, AttributeModifier.Operation.ADDITION);
 
 	static Multimap<String, AttributeModifier> rangeModifier;
 	static Multimap<String, AttributeModifier> doubleRangeModifier;
@@ -45,15 +47,11 @@ public class ExtendoGripItem extends Item {
 	static {
 		// Holding an ExtendoGrip
 		rangeModifier = HashMultimap.create();
-		rangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(),
-			new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
-				AttributeModifier.Operation.ADDITION));
+		rangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(), singleRangeAttributeModifier);
 
 		// Holding two ExtendoGrips o.O
 		doubleRangeModifier = HashMultimap.create();
-		doubleRangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(),
-			new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
-				AttributeModifier.Operation.ADDITION));
+		doubleRangeModifier.put(PlayerEntity.REACH_DISTANCE.getName(), doubleRangeAttributeModifier);
 	}
 
 	public ExtendoGripItem(Properties properties) {
