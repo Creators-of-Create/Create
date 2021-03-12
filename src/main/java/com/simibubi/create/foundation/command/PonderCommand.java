@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.command;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.PonderPacket;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -20,34 +20,36 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import java.util.Collection;
 
 public class PonderCommand {
-	public static final SuggestionProvider<CommandSource> ALL_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.func_212476_a(PonderRegistry.all.keySet().stream(), builder));
+	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.func_212476_a(PonderRegistry.all.keySet().stream(), builder));
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("ponder")
 				.requires(cs -> cs.hasPermissionLevel(0))
-				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource().asPlayer();
-
-					AllPackets.channel.send(
-							PacketDistributor.PLAYER.with(() -> player),
-							new ConfigureConfigPacket(ConfigureConfigPacket.Actions.ponderIndex.name(), ""));
-
-					return 1;
-				})
-			.then(Commands.argument("scene", ResourceLocationArgument.resourceLocation()).suggests(ALL_PONDERS)
-			.executes(context -> openScene(ResourceLocationArgument.getResourceLocation(context, "scene"), ImmutableList.of(context.getSource().asPlayer())))
-			.then(Commands.argument("targets", EntityArgument.players())
-				.requires(cs -> cs.hasPermissionLevel(2))
-				.executes(context -> openScene(ResourceLocationArgument.getResourceLocation(context, "scene"), EntityArgument.getPlayers(context, "targets")))));
+				.executes(ctx -> openScene("index", ctx.getSource().asPlayer()))
+				.then(Commands.argument("scene", ResourceLocationArgument.resourceLocation())
+						.suggests(ITEM_PONDERS)
+						.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene").toString(), ctx.getSource().asPlayer()))
+						.then(Commands.argument("targets", EntityArgument.players())
+								.requires(cs -> cs.hasPermissionLevel(2))
+								.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene").toString(), EntityArgument.getPlayers(ctx, "targets")))
+						)
+				);
 
 	}
 
-	private static int openScene(ResourceLocation scene, Collection<? extends ServerPlayerEntity> players) {
+	private static int openScene(String sceneId, ServerPlayerEntity player) {
+		return openScene(sceneId, ImmutableList.of(player));
+	}
+
+	private static int openScene(String sceneId, Collection<? extends ServerPlayerEntity> players) {
 		for (ServerPlayerEntity player : players) {
 			if (player instanceof FakePlayer)
 				continue;
-			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new PonderPacket(scene));
+
+			AllPackets.channel.send(
+					PacketDistributor.PLAYER.with(() -> player),
+					new ConfigureConfigPacket(ConfigureConfigPacket.Actions.openPonder.name(), sceneId));
 		}
-		return 1;
+		return Command.SINGLE_SUCCESS;
 	}
 }
