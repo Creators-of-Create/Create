@@ -203,6 +203,22 @@ public class SceneBuilder {
 		addInstruction(new RotateSceneInstruction(0, degrees, true));
 	}
 
+	/**
+	 * Adds a Key Frame at the end of the last delay() instruction for the users to
+	 * skip to
+	 */
+	public void addKeyframe() {
+		addInstruction(KeyframeInstruction.IMMEDIATE);
+	}
+
+	/**
+	 * Adds a Key Frame a couple ticks after the last delay() instruction for the
+	 * users to skip to
+	 */
+	public void addLazyKeyframe() {
+		addInstruction(KeyframeInstruction.DELAYED);
+	}
+
 	public class EffectInstructions {
 
 		public void emitParticles(Vec3d location, Emitter emitter, float amountPerCycle, int cycles) {
@@ -347,10 +363,6 @@ public class SceneBuilder {
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vec3d offset, int duration) {
 			addInstruction(AnimateParrotInstruction.move(link, offset, duration));
-		}
-
-		public void addKeyframe() {
-			addInstruction(KeyframeInstruction.INSTANCE);
 		}
 
 	}

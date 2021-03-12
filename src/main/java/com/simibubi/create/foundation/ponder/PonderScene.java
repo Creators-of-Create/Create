@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.ponder.instructions.KeyframeInstruction;
 import org.antlr.v4.runtime.misc.IntegerList;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -271,6 +270,8 @@ public class PonderScene {
 			instruction.tick(this);
 			if (instruction.isComplete()) {
 				iterator.remove();
+				if (instruction.isBlocking())
+					break;
 				continue;
 			}
 			if (instruction.isBlocking())
@@ -299,10 +300,9 @@ public class PonderScene {
 		stoppedCounting = true;
 	}
 
-	public void markKeyframe() {
-		if (!stoppedCounting) {
-			keyframeTimes.add(totalTime);
-		}
+	public void markKeyframe(int offset) {
+		if (!stoppedCounting) 
+			keyframeTimes.add(totalTime + offset);
 	}
 
 	public void addElement(PonderElement e) {

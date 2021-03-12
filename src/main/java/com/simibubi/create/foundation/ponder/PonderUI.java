@@ -68,6 +68,7 @@ public class PonderUI extends AbstractSimiScreen {
 
 	private PonderButton left, right, scan, chap, userMode;
 	private PonderProgressBar progressBar;
+	private int skipCooling = 0;
 
 	public static PonderUI of(ResourceLocation id) {
 		return new PonderUI(PonderRegistry.compile(id));
@@ -200,6 +201,9 @@ public class PonderUI extends AbstractSimiScreen {
 	public void tick() {
 		super.tick();
 
+		if (skipCooling > 0)
+			skipCooling--;
+
 		if (referredToByTag != null) {
 			for (int i = 0; i < scenes.size(); i++) {
 				PonderScene ponderScene = scenes.get(i);
@@ -222,7 +226,8 @@ public class PonderUI extends AbstractSimiScreen {
 		PonderScene activeScene = scenes.get(index);
 		if (!identifyMode) {
 			ponderTicks++;
-			activeScene.tick();
+			if (skipCooling == 0)
+				activeScene.tick();
 		}
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
@@ -247,6 +252,8 @@ public class PonderUI extends AbstractSimiScreen {
 			replay();
 
 		getActiveScene().seekToTime(time);
+		if (time != 0)
+			coolDownAfterSkip();
 	}
 
 	public void updateIdentifiedItem(PonderScene activeScene) {
@@ -312,7 +319,8 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.enableBlend();
-		renderVisibleScenes(mouseX, mouseY, identifyMode ? ponderPartialTicksPaused : partialTicks);
+		renderVisibleScenes(mouseX, mouseY,
+			skipCooling > 0 ? 0 : identifyMode ? ponderPartialTicksPaused : partialTicks);
 		renderWidgets(mouseX, mouseY, identifyMode ? ponderPartialTicksPaused : partialTicks);
 	}
 
@@ -362,7 +370,7 @@ public class PonderUI extends AbstractSimiScreen {
 			for (int f = 0; f < 4; f++) {
 				RenderSystem.translated(story.basePlateSize, 0, 0);
 				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, 0, 1/1024f);
+				RenderSystem.translated(0, 0, 1 / 1024f);
 				GuiUtils.drawGradientRect(0, 0, 0, -story.basePlateSize, 4, 0x66_000000, 0x00_000000);
 				RenderSystem.popMatrix();
 				RenderSystem.rotatef(-90, 0, 1, 0);
@@ -480,7 +488,7 @@ public class PonderUI extends AbstractSimiScreen {
 		}
 
 		if (identifyMode) {
-			if (noWidgetsHovered) {
+			if (noWidgetsHovered && mouseY < height - 80) {
 				RenderSystem.pushMatrix();
 				RenderSystem.translated(mouseX, mouseY, 100);
 				if (hoveredTooltipItem.isEmpty()) {
@@ -518,11 +526,12 @@ public class PonderUI extends AbstractSimiScreen {
 
 		{
 			// Scene overlay
+			float scenePT = skipCooling > 0 ? 0 : partialTicks;
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(0, 0, 100);
-			renderOverlay(index, partialTicks);
+			renderOverlay(index, scenePT);
 			if (indexDiff > 1 / 512f)
-				renderOverlay(lazyIndexValue < index ? index - 1 : index + 1, partialTicks);
+				renderOverlay(lazyIndexValue < index ? index - 1 : index + 1, scenePT);
 			RenderSystem.popMatrix();
 		}
 
@@ -839,6 +848,10 @@ public class PonderUI extends AbstractSimiScreen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
+	}
+
+	public void coolDownAfterSkip() {
+		skipCooling = 15;
 	}
 
 }

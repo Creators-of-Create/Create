@@ -71,6 +71,11 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			return this;
 		}
 		
+		public Builder attachKeyFrame() {
+			scene.builder().addLazyKeyframe();
+			return this;
+		}
+		
 	}
 
 	@Override
