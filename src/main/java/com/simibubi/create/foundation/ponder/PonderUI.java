@@ -1,14 +1,37 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.*;
+import com.simibubi.create.foundation.gui.AbstractSimiScreen;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
-import com.simibubi.create.foundation.ponder.content.*;
+import com.simibubi.create.foundation.ponder.content.DebugScenes;
+import com.simibubi.create.foundation.ponder.content.PonderChapter;
+import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.ponder.content.PonderTag;
+import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LerpedFloat;
 import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.Pointing;
+
 import net.minecraft.client.ClipboardHelper;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
@@ -29,13 +52,6 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class PonderUI extends AbstractSimiScreen {
 

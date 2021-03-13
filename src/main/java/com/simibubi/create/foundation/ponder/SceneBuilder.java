@@ -10,6 +10,7 @@ import java.util.function.UnaryOperator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
@@ -531,6 +532,11 @@ public class SceneBuilder {
 				itemEntity.setMotion(motion);
 				return itemEntity;
 			});
+		}
+		
+		public ElementLink<EntityElement> createGlueEntity(BlockPos pos, Direction face) {
+			effects.superGlue(pos, face, false);
+			return createEntity(world -> new SuperGlueEntity(world, pos, face.getOpposite()));
 		}
 
 		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {

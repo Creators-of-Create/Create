@@ -105,8 +105,8 @@ public class SceneBuildingUtil {
 		}
 
 		public Selection layers(int y, int height) {
-			return cuboid(new BlockPos(0, y, 0), new Vec3i(sceneBounds.getXSize(),
-				Math.min(sceneBounds.getYSize() - y, height) - 1, sceneBounds.getZSize()));
+			return cuboid(new BlockPos(0, y, 0), new Vec3i(sceneBounds.getXSize() - 1,
+				Math.min(sceneBounds.getYSize() - y, height) - 1, sceneBounds.getZSize() - 1));
 		}
 
 		public Selection cuboid(BlockPos origin, Vec3i size) {

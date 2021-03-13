@@ -77,6 +77,17 @@ public class PonderIndex {
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
 
+		// Chassis & Super Glue
+		PonderRegistry.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
+			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup)
+			.addStoryBoard("chassis/linear_attachment", ChassisScenes::linearAttachement);
+		PonderRegistry.forComponents(AllBlocks.RADIAL_CHASSIS)
+			.addStoryBoard("chassis/radial", ChassisScenes::radial);
+		PonderRegistry.forComponents(AllItems.SUPER_GLUE)
+			.addStoryBoard("super_glue", ChassisScenes::superGlue);
+		PonderRegistry.forComponents(AllBlocks.STICKER)
+			.addStoryBoard("sticker", RedstoneScenes::sticker);
+
 		// Mechanical Piston
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, PonderTag.KINETIC_APPLIANCES,
@@ -128,6 +139,8 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, PonderTag.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
+		PonderRegistry.forComponents(AllBlocks.REDSTONE_CONTACT)
+			.addStoryBoard("redstone_contact", RedstoneScenes::contact);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)

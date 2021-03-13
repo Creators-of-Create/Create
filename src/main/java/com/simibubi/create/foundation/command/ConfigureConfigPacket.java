@@ -1,5 +1,10 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -9,6 +14,8 @@ import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.OptifineHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -21,10 +28,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class ConfigureConfigPacket extends SimplePacketBase {
 
@@ -112,10 +115,17 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 				return;
 			}
 
-			AllConfigs.CLIENT.experimentalRendering.set(Boolean.parseBoolean(value));
-			ITextComponent text = boolToText(AllConfigs.CLIENT.experimentalRendering.get()).appendSibling(new StringTextComponent(" Experimental Rendering").applyTextStyle(TextFormatting.WHITE));
-			player.sendStatusMessage(text, false);
+			boolean parsedBoolean = Boolean.parseBoolean(value);
+			boolean cannotUseER = OptifineHandler.usingShaders() && parsedBoolean;
+			
+			AllConfigs.CLIENT.experimentalRendering.set(parsedBoolean);
+			
+			ITextComponent text = boolToText(AllConfigs.CLIENT.experimentalRendering.get())
+				.appendSibling(new StringTextComponent(" Experimental Rendering").applyTextStyle(TextFormatting.WHITE));
+			ITextComponent error = new StringTextComponent("Experimental Rendering does not support Optifine Shaders")
+				.applyTextStyle(TextFormatting.RED);
 
+			player.sendStatusMessage(cannotUseER ? error : text, false);
 			FastRenderDispatcher.refresh();
 		}
 

@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -30,9 +29,9 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 
 		BlockState state = te.getBlockState();
 		SuperByteBuffer head = AllBlockPartials.STICKER_HEAD.renderOn(state);
-		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks());
+		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks(te.getWorld()));
 
-		if (te.getWorld() != Minecraft.getInstance().world)
+		if (te.getWorld() != Minecraft.getInstance().world && !te.isVirtual())
 			offset = state.get(StickerBlock.EXTENDED) ? 1 : 0;
 
 		Direction facing = state.get(StickerBlock.FACING);

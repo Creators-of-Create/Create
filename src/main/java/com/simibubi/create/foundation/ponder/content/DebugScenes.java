@@ -84,7 +84,6 @@ public class DebugScenes {
 		scene.overlay.showSelectionWithText(zAxis, 20)
 			.colored(PonderPalette.BLUE)
 			.text("Das Z axis");
-		scene.idle(10);
 	}
 
 	public static void blocksScene(SceneBuilder scene, SceneBuildingUtil util) {
