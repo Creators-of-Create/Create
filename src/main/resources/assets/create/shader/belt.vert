@@ -88,7 +88,7 @@ void main() {
     vec3 norm = normalize(normalMat * vec4(aNormal, 0.)).xyz;
 
     float scrollSize = aScrollTexture.w - aScrollTexture.y;
-    float scroll = fract(aSpeed * uTime / (36. * 16.) + aOffset) * scrollSize * aScrollMult;
+    float scroll = fract(aSpeed * uTime / (31.5 * 16.) + aOffset) * scrollSize * aScrollMult;
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords - aSourceTexture + aScrollTexture.xy + vec2(0, scroll);

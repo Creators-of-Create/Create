@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 
+import com.simibubi.create.foundation.utility.PhysicalFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
 public class ScrollValueHandler {
+
+	private static float lastPassiveScroll = 0.0f;
+	private static float passiveScroll = 0.0f;
+	private static float passiveScrollDirection = 1f;
+	private static final PhysicalFloat wrenchCog = PhysicalFloat.create().withDrag(0.7);
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
@@ -36,6 +42,10 @@ public class ScrollValueHandler {
 			return false;
 		if (!mc.player.isAllowEdit())
 			return false;
+
+		passiveScrollDirection = (float) delta;
+		wrenchCog.bump(3, delta * 10);
+
 		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
 			return false;
 		if (scrolling.slotPositioning instanceof Sided)
@@ -55,6 +65,17 @@ public class ScrollValueHandler {
 			applyTo(delta, scrolling);
 
 		return true;
+	}
+
+	public static float getScroll(float partialTicks) {
+		return wrenchCog.getValue(partialTicks) + MathHelper.lerp(partialTicks, lastPassiveScroll, passiveScroll);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void tick() {
+		lastPassiveScroll = passiveScroll;
+		wrenchCog.tick();
+		passiveScroll += passiveScrollDirection * 0.5;
 	}
 
 	protected static void applyTo(double delta, ScrollValueBehaviour scrolling) {

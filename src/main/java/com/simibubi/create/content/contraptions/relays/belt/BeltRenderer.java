@@ -110,7 +110,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 					float spriteSize = spriteShift.getTarget().getMaxV() - spriteShift.getTarget().getMinV();
 
-					double scroll = speed * time / (36 * 16) + (bottom ? 0.5 : 0.0);
+					double scroll = speed * time / (31.5 * 16) + (bottom ? 0.5 : 0.0);
 					scroll = scroll - Math.floor(scroll);
 					scroll = scroll * spriteSize * scrollMult;
 
