@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -36,7 +37,7 @@ public class PonderTag implements IScreenRenderable {
 
 		LOGISTICS = new PonderTag("logistics").item(Blocks.CHEST, true, false)
 			.defaultLang("Item Transportation", "Components which help moving items around"),
-			
+
 		REDSTONE = new PonderTag("redstone").item(Items.REDSTONE, true, false)
 			.defaultLang("Logic Components", "Components which help with redstone engineering"),
 
@@ -53,6 +54,10 @@ public class PonderTag implements IScreenRenderable {
 		CONTRAPTION_ACTOR = new PonderTag("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
 			.defaultLang("Contraption Actors",
 				"Components which expose special behaviour when attached to a moving contraption"),
+
+		CONTRAPTION_ASSEMBLY = new PonderTag("contraption_assembly").item(AllItems.SUPER_GLUE.get(), true, false)
+			.defaultLang("Block Attachment Utility",
+				"Tools and Components used to assemble structures moved as an animated Contraption"),
 
 //		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
 //

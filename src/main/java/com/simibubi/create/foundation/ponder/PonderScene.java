@@ -90,6 +90,7 @@ public class PonderScene {
 	int currentTime;
 
 	public PonderScene(PonderWorld world, ResourceLocation component, Collection<PonderTag> tags) {
+		world.scene = this;
 		pointOfInterest = Vec3d.ZERO;
 		textIndex = 1;
 
@@ -234,6 +235,7 @@ public class PonderScene {
 		world.renderEntities(ms, buffer, info, pt);
 		world.renderParticles(ms, buffer, info, pt);
 		outliner.renderOutlines(ms, buffer, pt);
+
 		ms.pop();
 	}
 
@@ -301,7 +303,7 @@ public class PonderScene {
 	}
 
 	public void markKeyframe(int offset) {
-		if (!stoppedCounting) 
+		if (!stoppedCounting)
 			keyframeTimes.add(totalTime + offset);
 	}
 
@@ -409,10 +411,10 @@ public class PonderScene {
 		}
 
 		public MatrixStack apply(MatrixStack ms) {
-			return apply(ms, AnimationTickHolder.getPartialTicks(world));
+			return apply(ms, AnimationTickHolder.getPartialTicks(world), false);
 		}
 
-		public MatrixStack apply(MatrixStack ms, float pt) {
+		public MatrixStack apply(MatrixStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
 			MatrixStacker.of(ms)
@@ -428,9 +430,18 @@ public class PonderScene {
 
 			float f = 30 * scaleFactor;
 
-			ms.scale(f, -f, f);
-			ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
-				(basePlateSize + basePlateOffsetZ) / -2f);
+			if (!overlayCompatible) {
+				ms.scale(f, -f, f);
+				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
+					(basePlateSize + basePlateOffsetZ) / -2f);
+			} else {
+				// For block breaking overlay; Don't ask
+				ms.scale(f, f, f);
+				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -yOffset,
+					(basePlateSize + basePlateOffsetZ) / -2f);
+				float y = (float) (0.5065 * Math.pow(2.2975, Math.log(1 / scaleFactor) / Math.log(2))) / 30;
+				ms.scale(y, -y, -y);
+			}
 
 			return ms;
 		}

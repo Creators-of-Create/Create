@@ -370,6 +370,21 @@ public class SceneBuilder {
 
 	public class WorldInstructions {
 
+		public void incrementBlockBreakingProgress(BlockPos pos) {
+			addInstruction(scene -> {
+				PonderWorld world = scene.getWorld();
+				int progress = world.getBlockBreakingProgressions()
+					.getOrDefault(pos, -1) + 1;
+				if (progress == 9) {
+					world.addBlockDestroyEffects(pos, world.getBlockState(pos));
+					world.destroyBlock(pos, false);
+					world.setBlockBreakingProgress(pos, 0);
+					scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+				} else
+					world.setBlockBreakingProgress(pos, progress + 1);
+			});
+		}
+
 		public void showSection(Selection selection, Direction fadeInDirection) {
 			addInstruction(new DisplayWorldSectionInstruction(15, fadeInDirection, selection,
 				Optional.of(scene::getBaseWorldSection)));
@@ -533,7 +548,7 @@ public class SceneBuilder {
 				return itemEntity;
 			});
 		}
-		
+
 		public ElementLink<EntityElement> createGlueEntity(BlockPos pos, Direction face) {
 			effects.superGlue(pos, face, false);
 			return createEntity(world -> new SuperGlueEntity(world, pos, face.getOpposite()));

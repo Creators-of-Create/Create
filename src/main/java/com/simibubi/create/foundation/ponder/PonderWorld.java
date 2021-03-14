@@ -47,8 +47,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
 
+	public PonderScene scene;
+	
 	protected Map<BlockPos, BlockState> originalBlocks;
 	protected Map<BlockPos, TileEntity> originalTileEntities;
+	protected Map<BlockPos, Integer> blockBreakingProgressions;
 	protected List<Entity> originalEntities;
 
 	protected PonderWorldParticles particles;
@@ -61,6 +64,7 @@ public class PonderWorld extends SchematicWorld {
 		super(anchor, original);
 		originalBlocks = new HashMap<>();
 		originalTileEntities = new HashMap<>();
+		blockBreakingProgressions = new HashMap<>();
 		originalEntities = new ArrayList<>();
 		particles = new PonderWorldParticles(this);
 
@@ -82,6 +86,7 @@ public class PonderWorld extends SchematicWorld {
 		entities.clear();
 		blocks.clear();
 		tileEntities.clear();
+		blockBreakingProgressions.clear();
 		renderedTileEntities.clear();
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
 		originalTileEntities.forEach((k, v) -> {
@@ -224,6 +229,17 @@ public class PonderWorld extends SchematicWorld {
 				belt2.setController(controllerPos);
 			}
 		}
+	}
+	
+	public void setBlockBreakingProgress(BlockPos pos, int damage) {
+		if (damage == 0)
+			blockBreakingProgressions.remove(pos);
+		else
+			blockBreakingProgressions.put(pos, damage - 1);
+	}
+	
+	public Map<BlockPos, Integer> getBlockBreakingProgressions() {
+		return blockBreakingProgressions;
 	}
 
 	public void addBlockDestroyEffects(BlockPos pos, BlockState state) {

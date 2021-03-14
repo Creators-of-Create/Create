@@ -79,14 +79,14 @@ public class PonderIndex {
 
 		// Chassis & Super Glue
 		PonderRegistry.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
-			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup)
+			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup, PonderTag.CONTRAPTION_ASSEMBLY)
 			.addStoryBoard("chassis/linear_attachment", ChassisScenes::linearAttachement);
 		PonderRegistry.forComponents(AllBlocks.RADIAL_CHASSIS)
-			.addStoryBoard("chassis/radial", ChassisScenes::radial);
+			.addStoryBoard("chassis/radial", ChassisScenes::radial, PonderTag.CONTRAPTION_ASSEMBLY);
 		PonderRegistry.forComponents(AllItems.SUPER_GLUE)
-			.addStoryBoard("super_glue", ChassisScenes::superGlue);
+			.addStoryBoard("super_glue", ChassisScenes::superGlue, PonderTag.CONTRAPTION_ASSEMBLY);
 		PonderRegistry.forComponents(AllBlocks.STICKER)
-			.addStoryBoard("sticker", RedstoneScenes::sticker);
+			.addStoryBoard("sticker", RedstoneScenes::sticker, PonderTag.CONTRAPTION_ASSEMBLY);
 
 		// Mechanical Piston
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
@@ -129,7 +129,6 @@ public class PonderIndex {
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
 		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
-
 		PonderRegistry.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
@@ -141,6 +140,14 @@ public class PonderIndex {
 			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
 		PonderRegistry.forComponents(AllBlocks.REDSTONE_CONTACT)
 			.addStoryBoard("redstone_contact", RedstoneScenes::contact);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_SAW)
+			.addStoryBoard("mechanical_saw/processing", MechanicalSawScenes::processing, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_saw/breaker", MechanicalSawScenes::treeCutting)
+			.addStoryBoard("mechanical_saw/contraption", MechanicalSawScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_DRILL)
+			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
+				PonderTag.CONTRAPTION_ACTOR);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
@@ -272,6 +279,15 @@ public class PonderIndex {
 			.add(AllBlocks.ROPE_PULLEY)
 			.add(AllBlocks.GANTRY_CARRIAGE)
 			.add(AllBlocks.CART_ASSEMBLER);
+
+		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ASSEMBLY)
+			.add(AllBlocks.LINEAR_CHASSIS)
+			.add(AllBlocks.SECONDARY_LINEAR_CHASSIS)
+			.add(AllBlocks.RADIAL_CHASSIS)
+			.add(AllItems.SUPER_GLUE)
+			.add(AllBlocks.STICKER)
+			.add(Blocks.SLIME_BLOCK)
+			.add(Blocks.field_226907_mc_); // honey block
 
 		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ACTOR)
 			.add(AllBlocks.MECHANICAL_HARVESTER)

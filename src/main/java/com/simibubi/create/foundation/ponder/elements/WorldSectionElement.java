@@ -2,12 +2,16 @@ package com.simibubi.create.foundation.ponder.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.MatrixApplyingVertexBuilder;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
@@ -16,7 +20,6 @@ import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
@@ -33,6 +36,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.IFluidState;
@@ -274,7 +278,31 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer, pt);
+		renderBlockBreakingProgress(world, ms, buffer, pt);
 		world.popLight();
+
+		Map<BlockPos, Integer> blockBreakingProgressions = world.getBlockBreakingProgressions();
+		MatrixStack overlayMS = null;
+
+		for (Entry<BlockPos, Integer> entry : blockBreakingProgressions.entrySet()) {
+			BlockPos pos = entry.getKey();
+			if (!section.test(pos))
+				continue;
+			if (overlayMS == null) {
+				overlayMS = new MatrixStack();
+				world.scene.getTransform()
+					.apply(overlayMS, pt, true);
+				transformMS(overlayMS, pt);
+			}
+			ms.push();
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			IVertexBuilder builder = new MatrixApplyingVertexBuilder(
+				buffer.getBuffer(ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(entry.getValue())), overlayMS.peek());
+			Minecraft.getInstance()
+				.getBlockRendererDispatcher()
+				.renderModel(world.getBlockState(BlockPos.ZERO), pos, world, ms, builder, EmptyModelData.INSTANCE);
+			ms.pop();
+		}
 	}
 
 	protected void renderStructure(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, RenderType type,
