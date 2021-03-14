@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 
-import com.simibubi.create.foundation.utility.PhysicalFloat;
+import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ public class ScrollValueHandler {
 	private static float lastPassiveScroll = 0.0f;
 	private static float passiveScroll = 0.0f;
 	private static float passiveScrollDirection = 1f;
-	private static final PhysicalFloat wrenchCog = PhysicalFloat.create().withDrag(0.7);
+	private static final PhysicalFloat wrenchCog = PhysicalFloat.create().withDrag(0.3);
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
@@ -43,8 +43,8 @@ public class ScrollValueHandler {
 		if (!mc.player.isAllowEdit())
 			return false;
 
-		passiveScrollDirection = (float) delta;
-		wrenchCog.bump(3, delta * 10);
+		passiveScrollDirection = (float) -delta;
+		wrenchCog.bump(3, -delta * 10);
 
 		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
 			return false;

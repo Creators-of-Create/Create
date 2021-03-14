@@ -14,10 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
-    public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, SingleRotatingInstance::new));
-    }
 
     protected InstanceKey<RotatingData> rotatingModelKey;
 

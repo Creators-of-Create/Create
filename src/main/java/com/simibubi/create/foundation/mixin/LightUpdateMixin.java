@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.mixin;
 
 import java.util.Map;
 
+import com.simibubi.create.CreateClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,10 +43,12 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
                  .entrySet()
                  .stream()
                  .filter(entry -> SectionPos.toChunk(entry.getKey().getY()) == sectionY)
-                 .map(Map.Entry::getValue)
-                 .filter(tile -> tile instanceof ILightListener)
-                 .map(tile -> (ILightListener) tile)
-                 .forEach(ILightListener::onChunkLightUpdate);
+                 .map(Map.Entry::getValue).forEach(tile -> {
+                CreateClient.kineticRenderer.onLightUpdate(tile);
+
+                if (tile instanceof ILightListener)
+                    ((ILightListener) tile).onChunkLightUpdate();
+            });
         }
 
         ContraptionRenderDispatcher.notifyLightUpdate((ILightReader) thi.getWorld(), type, pos);

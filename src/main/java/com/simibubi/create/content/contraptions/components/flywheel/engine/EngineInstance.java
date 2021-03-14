@@ -20,10 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
-    public static void register(TileEntityType<? extends EngineTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, EngineInstance::new));
-    }
 
     protected InstanceKey<ModelData> frame;
 

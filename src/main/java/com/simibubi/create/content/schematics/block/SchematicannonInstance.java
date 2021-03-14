@@ -22,10 +22,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements ITickableInstance {
-    public static void register(TileEntityType<? extends SchematicannonTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, SchematicannonInstance::new));
-    }
 
     private InstanceKey<ModelData> connector;
     private InstanceKey<ModelData> pipe;

@@ -386,16 +386,4 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		TooltipHelper.addHint(tooltip, "hint.horizontal_funnel");
 		return true;
 	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
-	}
-
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
-	}
 }

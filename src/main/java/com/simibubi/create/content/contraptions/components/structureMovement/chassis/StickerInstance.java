@@ -16,10 +16,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements ITickableInstance {
-    public static void register(TileEntityType<? extends StickerTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, StickerInstance::new));
-    }
 
     float lastOffset = Float.NaN;
 

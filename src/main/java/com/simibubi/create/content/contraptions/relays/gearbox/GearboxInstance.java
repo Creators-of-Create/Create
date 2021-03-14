@@ -21,10 +21,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
-    public static void register(TileEntityType<? extends GearboxTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, GearboxInstance::new));
-    }
 
     protected EnumMap<Direction, InstanceKey<RotatingData>> keys;
     protected Direction sourceFacing;

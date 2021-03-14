@@ -154,8 +154,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	public void initialize() {
 		super.initialize();
 		updateTunnelConnections();
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
@@ -197,10 +195,5 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 			}
 		}
 		return this.cap.cast();
-	}
-
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
 	}
 }

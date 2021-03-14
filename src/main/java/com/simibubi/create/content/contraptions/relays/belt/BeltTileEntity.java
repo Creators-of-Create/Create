@@ -23,6 +23,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandle
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.light.ILightListener;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -56,7 +57,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity {
+public class BeltTileEntity extends KineticTileEntity implements ILightListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -515,7 +516,6 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public void onChunkLightUpdate() {
-		super.onChunkLightUpdate();
 		updateLight();
 	}
 

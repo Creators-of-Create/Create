@@ -4,7 +4,7 @@
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
     "client": [
-        "OnRemoveTileMixin",
+        "AddRemoveTileMixin",
         "ShaderCloseMixin",
         "CancelTileEntityRenderMixin",
         "LightUpdateMixin",

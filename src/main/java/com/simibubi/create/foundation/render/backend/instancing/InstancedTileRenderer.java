@@ -19,6 +19,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
+    protected ArrayList<TileEntity> queuedAdditions = new ArrayList<>(64);
+
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
 
     protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
@@ -44,6 +46,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+        queuedAdditions.forEach(this::add);
+        queuedAdditions.clear();
         tickableInstances.values().forEach(ITickableInstance::tick);
     }
 
@@ -110,6 +114,12 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (tile instanceof IInstanceRendered) {
             getInstance(tile);
         }
+    }
+
+    public <T extends TileEntity> void queueAdd(T tile) {
+        if (!Backend.canUseInstancing()) return;
+
+        queuedAdditions.add(tile);
     }
 
     public <T extends TileEntity> void update(T tile) {
