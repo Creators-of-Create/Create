@@ -80,9 +80,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		}
 
 		super.initialize();
-
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
 	}
 
 	@Override
@@ -549,11 +546,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (!this.removed) {
 			FastRenderDispatcher.enqueueUpdate(this);
 		}
-	}
-
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;

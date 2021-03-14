@@ -11,7 +11,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
-import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;

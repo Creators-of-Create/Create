@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class ArmInstance extends SingleRotatingInstance implements ITickableInstance {
-    public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, ArmInstance::new));
-    }
+
     private InstanceKey<ModelData> base;
     private InstanceKey<ModelData> lowerBody;
     private InstanceKey<ModelData> upperBody;
@@ -67,6 +64,7 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
         clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
         models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 
+        firstTick = true;
         tick();
         updateLight();
     }

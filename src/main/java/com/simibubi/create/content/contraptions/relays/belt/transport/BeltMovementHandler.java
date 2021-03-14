@@ -133,11 +133,12 @@ public class BeltMovementHandler {
 			movement = movement.add(0, -Math.abs(axis.getCoordinate(movement.x, movement.y, movement.z)), 0);
 
 		Vec3d centering = new Vec3d(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
-		movement = movement.add(centering);
-
 		float step = entityIn.stepHeight;
-		if (!isPlayer)
+
+		if (!isPlayer) {
+			movement = movement.add(centering);
 			entityIn.stepHeight = 1;
+		}
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {

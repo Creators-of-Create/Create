@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;

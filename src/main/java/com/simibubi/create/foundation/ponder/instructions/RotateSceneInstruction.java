@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.instructions;
 import com.simibubi.create.foundation.ponder.PonderInstruction;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
-import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 public class RotateSceneInstruction extends PonderInstruction {
 

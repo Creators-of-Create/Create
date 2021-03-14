@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;

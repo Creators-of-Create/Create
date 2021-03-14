@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,6 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 		if (!world.isRemote)
 			return;
 		piston.startWithValue(isBlockStateExtended() ? 1 : 0);
-		CreateClient.kineticRenderer.add(this);
 	}
 
 	public boolean isBlockStateExtended() {
@@ -94,8 +93,4 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 			0.35F, attach ? 0.75F : 0.2f);
 	}
 
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
-	}
 }

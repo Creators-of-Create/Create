@@ -21,10 +21,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class MixerInstance extends ShaftlessCogInstance implements ITickableInstance {
-    public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, MixerInstance::new));
-    }
 
     private InstanceKey<RotatingData> mixerHead;
     private InstanceKey<ModelData> mixerPole;

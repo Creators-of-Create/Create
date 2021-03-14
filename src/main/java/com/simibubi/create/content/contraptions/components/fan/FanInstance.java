@@ -20,10 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
-    public static void register(TileEntityType<? extends EncasedFanTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, FanInstance::new));
-    }
 
     protected InstanceKey<RotatingData> shaft;
     protected InstanceKey<RotatingData> fan;

@@ -104,16 +104,4 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 		poweredWheel.setRotation(appliedSpeed, appliedCapacity);
 	}
 
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
-	}
-
 }

@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.elements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
-import com.simibubi.create.foundation.utility.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 public abstract class AnimatedOverlayElement extends PonderOverlayElement {
 

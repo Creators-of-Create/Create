@@ -26,10 +26,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
-    public static void register(TileEntityType<? extends BeltTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, BeltInstance::new));
-    }
 
     private boolean upward;
     private boolean diagonal;

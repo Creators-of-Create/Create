@@ -12,11 +12,6 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class ShaftInstance extends SingleRotatingInstance {
 
-	public static void register(TileEntityType<? extends KineticTileEntity> type) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-				InstancedTileRenderRegistry.instance.register(type, ShaftInstance::new));
-	}
-
 	public ShaftInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 	}

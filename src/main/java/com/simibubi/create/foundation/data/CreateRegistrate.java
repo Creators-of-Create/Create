@@ -19,10 +19,7 @@ import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
-import com.tterrag.registrate.builders.BlockBuilder;
-import com.tterrag.registrate.builders.Builder;
-import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.builders.*;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
@@ -38,6 +35,8 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -107,6 +106,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.stream()
 			.filter(e -> getSection(e) == section)
 			.collect(Collectors.toList());
+	}
+
+	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+		return this.tileEntity(this.self(), name, (NonNullFunction)factory);
+	}
+
+	@Override
+	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
+			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
+		});
 	}
 
 	/* Palettes */

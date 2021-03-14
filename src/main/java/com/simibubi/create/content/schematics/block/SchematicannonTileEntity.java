@@ -938,18 +938,6 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
-	}
-
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
-	}
-
-	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
 	}

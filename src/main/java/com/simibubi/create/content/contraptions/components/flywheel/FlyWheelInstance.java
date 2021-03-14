@@ -30,10 +30,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements ITickableInstance {
-    public static void register(TileEntityType<? extends FlywheelTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, FlyWheelInstance::new));
-    }
 
     protected Direction facing;
     protected boolean connectedLeft;

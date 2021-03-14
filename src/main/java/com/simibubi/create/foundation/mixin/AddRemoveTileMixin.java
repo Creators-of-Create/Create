@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.simibubi.create.CreateClient;
@@ -18,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(World.class)
-public class OnRemoveTileMixin {
+public class AddRemoveTileMixin {
 
     @Shadow @Final public boolean isRemote;
 
@@ -30,5 +31,10 @@ public class OnRemoveTileMixin {
     @Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"), method = "removeTileEntity", locals = LocalCapture.CAPTURE_FAILHARD)
     private void onRemoveTile(BlockPos pos, CallbackInfo ci, TileEntity te) {
         if (isRemote) CreateClient.kineticRenderer.remove(te);
+    }
+
+    @Inject(at = @At("TAIL"), method = "addTileEntity")
+    private void onAddTile(TileEntity te, CallbackInfoReturnable<Boolean> cir) {
+        if (isRemote) CreateClient.kineticRenderer.queueAdd(te);
     }
 }

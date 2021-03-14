@@ -10,10 +10,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 public class ShaftlessCogInstance extends SingleRotatingInstance {
-    public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, ShaftlessCogInstance::new));
-    }
 
     public ShaftlessCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
