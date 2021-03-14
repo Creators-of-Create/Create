@@ -278,7 +278,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer, pt);
-		renderBlockBreakingProgress(world, ms, buffer, pt);
 		world.popLight();
 
 		Map<BlockPos, Integer> blockBreakingProgressions = world.getBlockBreakingProgressions();
