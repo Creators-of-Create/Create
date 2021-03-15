@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;

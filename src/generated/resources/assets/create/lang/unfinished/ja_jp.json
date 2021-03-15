@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 318",
+	"_": "Missing Localizations: 351",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1851,6 +1851,23 @@
 	"create.ponder.tag.fluids": "UNLOCALIZED: Fluid Manipulators",
 	"create.ponder.tag.fluids.description": "UNLOCALIZED: Components which help relaying and making use of Fluids",
 
+	"create.ponder.adjustable_pulse_repeater.header": "UNLOCALIZED: Controlling signals using Adjustable Pulse Repeaters",
+	"create.ponder.adjustable_pulse_repeater.text_1": "UNLOCALIZED: Adjustable Pulse Repeaters emit a short pulse at a delay",
+	"create.ponder.adjustable_pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.adjustable_pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
+
+	"create.ponder.adjustable_repeater.header": "UNLOCALIZED: Controlling signals using Adjustable Repeaters",
+	"create.ponder.adjustable_repeater.text_1": "UNLOCALIZED: Adjustable Repeaters behave similarly to regular Repeaters",
+	"create.ponder.adjustable_repeater.text_2": "UNLOCALIZED: They charge up for a set time...",
+	"create.ponder.adjustable_repeater.text_3": "UNLOCALIZED: ...and cool down for the same duration",
+	"create.ponder.adjustable_repeater.text_4": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
+	"create.ponder.adjustable_repeater.text_5": "UNLOCALIZED: Configured delays can range up to 30 minutes",
+
+	"create.ponder.analog_lever.header": "UNLOCALIZED: Controlling signals using the Analog Lever",
+	"create.ponder.analog_lever.text_1": "UNLOCALIZED: Analog Levers make for a compact and precise source of redstone power",
+	"create.ponder.analog_lever.text_2": "UNLOCALIZED: Right-click to increase its analog power output",
+	"create.ponder.analog_lever.text_3": "UNLOCALIZED: Right-click while Sneaking to decrease the power output again",
+
 	"create.ponder.bearing_modes.header": "UNLOCALIZED: Movement Modes of the Mechanical Bearing",
 	"create.ponder.bearing_modes.text_1": "UNLOCALIZED: When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle",
 	"create.ponder.bearing_modes.text_2": "UNLOCALIZED: It can be configured never to revert to solid blocks, or only near the angle it started at",
@@ -2078,6 +2095,21 @@
 	"create.ponder.portable_storage_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 	"create.ponder.portable_storage_interface_redstone.text_1": "UNLOCALIZED: Redstone power will prevent the stationary interface from engaging",
 
+	"create.ponder.powered_latch.header": "UNLOCALIZED: Controlling signals using the Powered Latch",
+	"create.ponder.powered_latch.text_1": "UNLOCALIZED: Powered Latches are redstone controllable Levers",
+	"create.ponder.powered_latch.text_2": "UNLOCALIZED: Signals at the back switch it on",
+	"create.ponder.powered_latch.text_3": "UNLOCALIZED: Signals from the side switch it back off",
+	"create.ponder.powered_latch.text_4": "UNLOCALIZED: Powered latches can also be toggled manually",
+
+	"create.ponder.powered_toggle_latch.header": "UNLOCALIZED: Controlling signals using the Powered Toggle Latch",
+	"create.ponder.powered_toggle_latch.text_1": "UNLOCALIZED: Powered Toggle Latches are redstone controllable Levers",
+	"create.ponder.powered_toggle_latch.text_2": "UNLOCALIZED: Signals at the back will toggle its state",
+	"create.ponder.powered_toggle_latch.text_3": "UNLOCALIZED: ...on and back off",
+	"create.ponder.powered_toggle_latch.text_4": "UNLOCALIZED: Powered toggle latches can also be toggled manually",
+
+	"create.ponder.pulse_repeater.header": "UNLOCALIZED: Controlling signals using Pulse Repeaters",
+	"create.ponder.pulse_repeater.text_1": "UNLOCALIZED: Pulse Repeaters will shorten any redstone signal to a single pulse",
+
 	"create.ponder.radial_chassis.header": "UNLOCALIZED: Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "UNLOCALIZED: Radial Chassis connect to identical Chassis blocks in a row",
 	"create.ponder.radial_chassis.text_2": "UNLOCALIZED: When one is moved by a Contraption, the others are dragged with it",
@@ -2092,6 +2124,14 @@
 	"create.ponder.redstone_contact.header": "UNLOCALIZED: Redstone Contacts",
 	"create.ponder.redstone_contact.text_1": "UNLOCALIZED: Redstone Contacts facing each other will emit a redstone signal",
 	"create.ponder.redstone_contact.text_2": "UNLOCALIZED: This still applies when one of them is part of a moving Contraption",
+
+	"create.ponder.redstone_link.header": "UNLOCALIZED: Using Redstone Links",
+	"create.ponder.redstone_link.text_1": "UNLOCALIZED: Redstone Links can transmit redstone signals wirelessly",
+	"create.ponder.redstone_link.text_2": "UNLOCALIZED: Right-click while Sneaking to toggle receive mode",
+	"create.ponder.redstone_link.text_3": "UNLOCALIZED: A simple Right-click with a Wrench can do the same",
+	"create.ponder.redstone_link.text_4": "UNLOCALIZED: Receivers will emit the redstone power of transmitters within a range of 128 blocks",
+	"create.ponder.redstone_link.text_5": "UNLOCALIZED: Placing items in the two slots can specify a Frequency",
+	"create.ponder.redstone_link.text_6": "UNLOCALIZED: Only the links with matching Frequency combinations will communicate",
 
 	"create.ponder.rope_pulley.header": "UNLOCALIZED: Moving Structures using Rope Pulleys",
 	"create.ponder.rope_pulley.text_1": "UNLOCALIZED: Rope Pulleys can move blocks vertically when given Rotational Force",

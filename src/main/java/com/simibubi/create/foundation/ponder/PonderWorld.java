@@ -280,6 +280,11 @@ public class PonderWorld extends SchematicWorld {
 			}
 		}
 	}
+	
+	@Override
+	protected BlockState processBlockStateForPrinting(BlockState state) {
+		return state;
+	}
 
 	@Override
 	public boolean chunkExists(int x, int y) {
