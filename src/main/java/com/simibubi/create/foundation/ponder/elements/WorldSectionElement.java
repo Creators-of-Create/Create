@@ -253,11 +253,32 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		prevAnimatedRotation = animatedRotation;
 		if (!isVisible())
 			return;
-		if (renderedTileEntities == null)
-			return;
+		loadTEsIfMissing(scene.getWorld());
+		renderedTileEntities.removeIf(te -> scene.getWorld()
+			.getTileEntity(te.getPos()) != te);
 		renderedTileEntities.forEach(te -> {
 			if (te instanceof ITickableTileEntity)
 				((ITickableTileEntity) te).tick();
+		});
+	}
+	
+	@Override
+	public void whileSkipping(PonderScene scene) {
+		if (redraw)
+			renderedTileEntities = null;
+		redraw = false;
+	}
+
+	protected void loadTEsIfMissing(PonderWorld world) {
+		if (renderedTileEntities != null)
+			return;
+		renderedTileEntities = new ArrayList<>();
+		section.forEach(pos -> {
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if (tileEntity == null)
+				return;
+			renderedTileEntities.add(tileEntity);
+			tileEntity.updateContainingBlockInfo();
 		});
 	}
 
@@ -299,7 +320,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				buffer.getBuffer(ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(entry.getValue())), overlayMS.peek());
 			Minecraft.getInstance()
 				.getBlockRendererDispatcher()
-				.renderModel(world.getBlockState(BlockPos.ZERO), pos, world, ms, builder, EmptyModelData.INSTANCE);
+				.renderModel(world.getBlockState(pos), pos, world, ms, builder, EmptyModelData.INSTANCE);
 			ms.pop();
 		}
 	}
@@ -341,23 +362,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		RenderSystem.disableTexture();
 		WorldRenderer.drawBox(ms, buffer.getBuffer(RenderType.getLines()), shape.getBoundingBox()
 			.offset(selectedBlock), 1, 1, 1, 0.6f);
-//		if (buffer instanceof SuperRenderTypeBuffer)
-//			((SuperRenderTypeBuffer) buffer).draw(RenderType.getLines());
 		ms.pop();
 	}
 
 	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
-		if (renderedTileEntities == null) {
-			renderedTileEntities = new ArrayList<>();
-			section.forEach(pos -> {
-				TileEntity tileEntity = world.getTileEntity(pos);
-				if (tileEntity == null)
-					return;
-				renderedTileEntities.add(tileEntity);
-				tileEntity.updateContainingBlockInfo();
-			});
-		} else
-			renderedTileEntities.removeIf(te -> world.getTileEntity(te.getPos()) != te);
+		loadTEsIfMissing(world);
 		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer, pt);
 	}
 

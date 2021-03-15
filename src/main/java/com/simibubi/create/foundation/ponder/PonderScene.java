@@ -26,10 +26,10 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import net.minecraft.block.BlockState;
@@ -90,7 +90,9 @@ public class PonderScene {
 	int currentTime;
 
 	public PonderScene(PonderWorld world, ResourceLocation component, Collection<PonderTag> tags) {
-		world.scene = this;
+		if (world != null)
+			world.scene = this;
+
 		pointOfInterest = Vec3d.ZERO;
 		textIndex = 1;
 
@@ -289,8 +291,11 @@ public class PonderScene {
 			throw new IllegalStateException("Cannot seek backwards. Rewind first.");
 
 		while (currentTime < time && !finished) {
+			forEach(e -> e.whileSkipping(this));
 			tick();
 		}
+
+		forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 	}
 
 	public void addToSceneTime(int time) {

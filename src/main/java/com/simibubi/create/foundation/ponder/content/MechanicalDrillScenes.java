@@ -54,12 +54,12 @@ public class MechanicalDrillScenes {
 		ElementLink<EntityElement> plankEntity = scene.world.createItemEntity(util.vector.centerOf(breakingPos),
 			util.vector.of(0, .1f, 0), new ItemStack(Items.OAK_PLANKS));
 		scene.idle(20);
-
+		scene.idle(15);
+		
+		scene.world.modifyEntity(plankEntity, Entity::remove);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> 4 * f);
 		scene.effects.rotationSpeedIndicator(breakingPos.east(3));
-
-		scene.idle(20);
-		scene.world.modifyEntity(plankEntity, Entity::remove);
+		scene.idle(5);
 		scene.world.setBlock(breakingPos, Blocks.OAK_PLANKS.getDefaultState(), false);
 		scene.world.showSection(util.select.position(breakingPos), Direction.DOWN);
 
@@ -169,7 +169,7 @@ public class MechanicalDrillScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(4, 3, 2), Direction.WEST))
-			.text("Inventories attached to the Contraption will pick up their drops automatically");
+			.sharedText("storage_on_contraption");
 		scene.idle(70);
 
 		scene.world.showSection(planks, Direction.DOWN);

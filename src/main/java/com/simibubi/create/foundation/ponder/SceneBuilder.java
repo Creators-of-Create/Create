@@ -25,8 +25,27 @@ import com.simibubi.create.foundation.ponder.elements.ParrotElement.ParrotPose;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement.SpinOnComponentPose;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instructions.*;
+import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
+import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
+import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
+import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
+import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
+import com.simibubi.create.foundation.ponder.instructions.DelayInstruction;
+import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionInstruction;
+import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
+import com.simibubi.create.foundation.ponder.instructions.FadeOutOfSceneInstruction;
+import com.simibubi.create.foundation.ponder.instructions.HighlightValueBoxInstruction;
+import com.simibubi.create.foundation.ponder.instructions.KeyframeInstruction;
+import com.simibubi.create.foundation.ponder.instructions.LineInstruction;
+import com.simibubi.create.foundation.ponder.instructions.MarkAsFinishedInstruction;
+import com.simibubi.create.foundation.ponder.instructions.MovePoiInstruction;
+import com.simibubi.create.foundation.ponder.instructions.OutlineSelectionInstruction;
+import com.simibubi.create.foundation.ponder.instructions.ReplaceBlocksInstruction;
+import com.simibubi.create.foundation.ponder.instructions.RotateSceneInstruction;
+import com.simibubi.create.foundation.ponder.instructions.ShowInputInstruction;
+import com.simibubi.create.foundation.ponder.instructions.TextInstruction;
+import com.simibubi.create.foundation.ponder.instructions.TileEntityDataInstruction;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -315,6 +334,12 @@ public class SceneBuilder {
 				expands, duration));
 		}
 
+		public void showFilterSlotInput(Vec3d location, int duration) {
+			float s = .1f;
+			Vec3d expands = new Vec3d(s, s, s);
+			addInstruction(new HighlightValueBoxInstruction(location, expands, duration));
+		}
+
 		public void showLine(PonderPalette color, Vec3d start, Vec3d end, int duration) {
 			addInstruction(new LineInstruction(color, start, end, duration));
 		}
@@ -426,6 +451,10 @@ public class SceneBuilder {
 
 		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection) {
 			addInstruction(new FadeOutOfSceneInstruction<>(15, fadeOutDirection, link));
+		}
+
+		public void restoreBlocks(Selection selection) {
+			addInstruction(scene -> scene.world.restoreBlocks(selection));
 		}
 
 		public ElementLink<WorldSectionElement> makeSectionIndependent(Selection selection) {
@@ -608,7 +637,7 @@ public class SceneBuilder {
 				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
 				TransportedItemStackHandlerBehaviour transporter =
 					beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
-				transporter.handleProcessingOnAllItems(tis -> TransportedResult.removeItem());
+				transporter.handleCenteredProcessingOnAllItems(.52f, tis -> TransportedResult.removeItem());
 			});
 		}
 
