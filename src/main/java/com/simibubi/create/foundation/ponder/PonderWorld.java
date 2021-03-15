@@ -281,4 +281,14 @@ public class PonderWorld extends SchematicWorld {
 		}
 	}
 
+	@Override
+	public boolean chunkExists(int x, int y) {
+		return true; // fix particle lighting
+	}
+
+	@Override
+	public boolean isBlockPresent(BlockPos pos) {
+		return true; // fix particle lighting
+	}
+
 }
