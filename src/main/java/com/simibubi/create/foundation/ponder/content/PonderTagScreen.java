@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.ui.ChapterLabel;
 import com.simibubi.create.foundation.ponder.ui.LayoutHelper;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
+import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
@@ -197,7 +198,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 
 		PonderUI.renderBox(x - 3, y - 3, w + 6, h + 6, false);
 		RenderSystem.translated(0, 0, 100);
-		font.drawSplitString(desc, x, y, w, 0xeeeeee);
+		FontHelper.drawSplitString(font, desc, x, y, w, 0xeeeeee);
 		RenderSystem.popMatrix();
 	}
 
