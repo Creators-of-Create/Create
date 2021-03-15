@@ -63,9 +63,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     @Override
     public void updateLight() {
-        head.getInstance()
-            .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-            .setSkyLight(world.getLightLevel(LightType.SKY, pos));
+        relight(pos, head.getInstance());
     }
 
     @Override

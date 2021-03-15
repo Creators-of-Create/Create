@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -486,7 +487,7 @@ public class PonderUI extends AbstractSimiScreen {
 			RenderSystem.translated(x, y, 0);
 			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
 			RenderSystem.translated(0, 0, 5);
-			font.drawSplitString(title, 0, 0, left.x - 51, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			FontHelper.drawSplitString(font, title, 0, 0, left.x - 51, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 
 			if (chapter != null) {

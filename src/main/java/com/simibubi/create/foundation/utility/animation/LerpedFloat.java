@@ -81,6 +81,10 @@ public class LerpedFloat {
 		return MathHelper.lerp(partialTicks, previousValue, value);
 	}
 
+	public boolean settled() {
+		return MathHelper.epsilonEquals(previousValue, value);
+	}
+
 	public float getChaseTarget() {
 		return chaseTarget;
 	}

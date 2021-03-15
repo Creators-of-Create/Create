@@ -82,19 +82,10 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         final Direction direction = lastState.get(FACING);
 
         BlockPos behind = pos.offset(direction.getOpposite());
-        putLight(shaft, behind);
+        relight(behind, shaft.getInstance());
 
         BlockPos inFront = pos.offset(direction);
-        putLight(fan, inFront);
-    }
-
-    private void putLight(InstanceKey<RotatingData> key, BlockPos pos) {
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
-
-        key.getInstance()
-           .setBlockLight(blockLight)
-           .setSkyLight(skyLight);
+        relight(inFront, fan.getInstance());
     }
 
     @Override

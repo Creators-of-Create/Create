@@ -25,6 +25,8 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
+
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
@@ -60,9 +62,10 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 		return AllTileEntities.FLUID_VALVE.create();
 	}
 
+	@Nonnull
 	public static Axis getPipeAxis(BlockState state) {
 		if (!(state.getBlock() instanceof FluidValveBlock))
-			return null;
+			throw new IllegalStateException("Provided BlockState is for a different block.");
 		Direction facing = state.get(FACING);
 		boolean alongFirst = !state.get(AXIS_ALONG_FIRST_COORDINATE);
 		for (Axis axis : Iterate.axes) {
@@ -74,7 +77,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 			}
 			return axis;
 		}
-		return null;
+		throw new IllegalStateException("Impossible axis.");
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.engine.Engin
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.curiosities.tools.AllToolTiers;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -88,30 +89,8 @@ public class TooltipHelper {
 			words.add(word);
 		}
 
-		// Apply hard wrap
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		List<String> lines = new LinkedList<>();
-		StringBuilder currentLine = new StringBuilder();
-		int width = 0;
-		for (String word : words) {
-			int newWidth = font.getStringWidth(word);
-			if (width + newWidth > maxWidthPerLine) {
-				if (width > 0) {
-					String line = currentLine.toString();
-					lines.add(line);
-					currentLine = new StringBuilder();
-					width = 0;
-				} else {
-					lines.add(word);
-					continue;
-				}
-			}
-			currentLine.append(word);
-			width += newWidth;
-		}
-		if (width > 0) {
-			lines.add(currentLine.toString());
-		}
+		List<String> lines = FontHelper.cutString(font, markedUp, maxWidthPerLine);
 
 		// Format
 		String lineStart = Strings.repeat(" ", indent);

@@ -67,9 +67,7 @@ public class PressInstance extends ShaftInstance implements ITickableInstance {
     public void updateLight() {
         super.updateLight();
 
-        pressHead.getInstance()
-                 .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                 .setSkyLight(world.getLightLevel(LightType.SKY, pos));
+        relight(pos, pressHead.getInstance());
     }
 
     @Override

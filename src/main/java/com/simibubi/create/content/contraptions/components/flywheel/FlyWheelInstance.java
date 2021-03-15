@@ -150,20 +150,10 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     @Override
     public void updateLight() {
-        int block = world.getLightLevel(LightType.BLOCK, pos);
-        int sky = world.getLightLevel(LightType.SKY, pos);
-
-        shaft.getInstance().setBlockLight(block).setSkyLight(sky);
-        wheel.getInstance().setBlockLight(block).setSkyLight(sky);
+        relight(pos, shaft.getInstance(), wheel.getInstance());
 
         if (connection != null) {
-            BlockPos pos = this.pos.offset(connection);
-
-            int connectionBlock = world.getLightLevel(LightType.BLOCK, pos);
-            int connectionSky = world.getLightLevel(LightType.SKY, pos);
-            connectors.stream()
-                      .map(InstanceKey::getInstance)
-                      .forEach(data -> data.setBlockLight(connectionBlock).setSkyLight(connectionSky));
+            relight(this.pos.offset(connection), connectors.stream().map(InstanceKey::getInstance));
         }
     }
 

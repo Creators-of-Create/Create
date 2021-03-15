@@ -59,11 +59,11 @@ public class PonderWorldParticles {
 		}
 	}
 
-	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo p_228345_4_, float p_228345_5_) {
+	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo renderInfo, float pt) {
 		Minecraft mc = Minecraft.getInstance();
-		LightTexture p_228345_3_ = mc.gameRenderer.getLightmapTextureManager();
+		LightTexture lightTexture = mc.gameRenderer.getLightmapTextureManager();
 
-		p_228345_3_.enableLightmap();
+		lightTexture.enableLightmap();
 		Runnable enable = () -> {
 			RenderSystem.enableAlphaTest();
 			RenderSystem.defaultAlphaFunc();
@@ -87,7 +87,7 @@ public class PonderWorldParticles {
 				iparticlerendertype.beginRender(bufferbuilder, mc.textureManager);
 
 				for (Particle particle : iterable)
-					particle.buildGeometry(bufferbuilder, p_228345_4_, p_228345_5_);
+					particle.buildGeometry(bufferbuilder, renderInfo, pt);
 
 				iparticlerendertype.finishRender(tessellator);
 			}
@@ -97,7 +97,7 @@ public class PonderWorldParticles {
 		RenderSystem.depthMask(true);
 		RenderSystem.disableBlend();
 		RenderSystem.defaultAlphaFunc();
-		p_228345_3_.disableLightmap();
+		lightTexture.disableLightmap();
 		RenderSystem.disableFog();
 	}
 

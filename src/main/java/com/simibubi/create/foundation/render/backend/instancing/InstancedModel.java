@@ -34,6 +34,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
     protected int minIndexChanged = -1;
     protected int maxIndexChanged = -1;
 
+    protected boolean anyToRemove;
+
     public InstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(buf);
         this.renderer = renderer;
@@ -73,6 +75,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         verifyKey(key);
 
         key.invalidate();
+
+        anyToRemove = true;
     }
 
     public D getInstance(InstanceKey<D> key) {
@@ -161,6 +165,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
     // copied from ArrayList#removeIf
     protected boolean doRemoval() {
+        if (!anyToRemove) return false;
+
         // figure out which elements are to be removed
         // any exception thrown from the filter predicate at this stage
         // will leave the collection unmodified
@@ -197,6 +203,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             minIndexChanged = 0;
             maxIndexChanged = newSize - 1;
         }
+
+        this.anyToRemove = false;
 
         return anyToRemove;
     }
