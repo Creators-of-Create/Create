@@ -4,6 +4,7 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,6 +22,7 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.IHasContainer;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
@@ -35,6 +37,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	private IconButton folderButton;
 	private IconButton refreshButton;
 	private Label schematicsLabel;
+	private List<Rectangle2d> extraAreas;
 
 	private final String title = Lang.translate("gui.schematicTable.title");
 	private final String uploading = Lang.translate("gui.schematicTable.uploading");
@@ -87,12 +90,14 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		widgets.add(confirmButton);
 		widgets.add(folderButton);
 		widgets.add(refreshButton);
+
+		extraAreas = new ArrayList<>();
+		extraAreas.add(new Rectangle2d(mainLeft, mainTop, SCHEMATIC_TABLE.width, SCHEMATIC_TABLE.height));
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-
 	}
 
 	@Override
@@ -212,4 +217,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
 	}
 
+	@Override
+	public List<Rectangle2d> getExtraAreas() {
+		return extraAreas;
+	}
 }
