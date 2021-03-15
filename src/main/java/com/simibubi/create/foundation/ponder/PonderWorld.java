@@ -48,7 +48,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PonderWorld extends SchematicWorld {
 
 	public PonderScene scene;
-	
+
 	protected Map<BlockPos, BlockState> originalBlocks;
 	protected Map<BlockPos, TileEntity> originalTileEntities;
 	protected Map<BlockPos, Integer> blockBreakingProgressions;
@@ -99,6 +99,13 @@ public class PonderWorld extends SchematicWorld {
 			.ifPresent(entities::add));
 		particles.clearEffects();
 		fixVirtualTileEntities();
+	}
+
+	public void restoreBlocks(Selection selection) {
+		selection.forEach(p -> {
+			if (originalBlocks.containsKey(p))
+				blocks.put(p, originalBlocks.get(p));
+		});
 	}
 
 	public void pushFakeLight(int light) {
@@ -184,6 +191,9 @@ public class PonderWorld extends SchematicWorld {
 			entity.lastTickPosZ = entity.getZ();
 			entity.tick();
 
+			if (entity.getY() <= -.5f)
+				entity.remove();
+
 			if (!entity.isAlive())
 				iterator.remove();
 		}
@@ -230,14 +240,14 @@ public class PonderWorld extends SchematicWorld {
 			}
 		}
 	}
-	
+
 	public void setBlockBreakingProgress(BlockPos pos, int damage) {
 		if (damage == 0)
 			blockBreakingProgressions.remove(pos);
 		else
 			blockBreakingProgressions.put(pos, damage - 1);
 	}
-	
+
 	public Map<BlockPos, Integer> getBlockBreakingProgressions() {
 		return blockBreakingProgressions;
 	}

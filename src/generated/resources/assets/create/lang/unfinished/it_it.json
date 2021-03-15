@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 203",
+	"_": "Missing Localizations: 311",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1820,6 +1820,8 @@
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
+	"create.ponder.shared.storage_on_contraption": "UNLOCALIZED: Inventories attached to the Contraption will pick up their drops automatically",
+	"create.ponder.shared.behaviour_modify_wrench": "UNLOCALIZED: This behaviour can be modified using a Wrench",
 	"create.ponder.shared.rpm8": "UNLOCALIZED: 8 RPM",
 	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
 	"create.ponder.shared.rpm16_source": "UNLOCALIZED: Source: 16 RPM",
@@ -1830,6 +1832,8 @@
 	"create.ponder.tag.contraption_actor.description": "UNLOCALIZED: Components which expose special behaviour when attached to a moving contraption",
 	"create.ponder.tag.arm_targets": "UNLOCALIZED: Targets for Mechanical Arms",
 	"create.ponder.tag.arm_targets.description": "UNLOCALIZED: Components which can be selected as inputs or outputs to the Mechanical Arm",
+	"create.ponder.tag.contraption_assembly": "UNLOCALIZED: Block Attachment Utility",
+	"create.ponder.tag.contraption_assembly.description": "UNLOCALIZED: Tools and Components used to assemble structures moved as an animated Contraption",
 	"create.ponder.tag.logistics": "UNLOCALIZED: Item Transportation",
 	"create.ponder.tag.logistics.description": "UNLOCALIZED: Components which help moving items around",
 	"create.ponder.tag.movement_anchor": "UNLOCALIZED: Movement Anchors",
@@ -1846,6 +1850,10 @@
 	"create.ponder.tag.kinetic_relays.description": "UNLOCALIZED: Components which help relaying Rotational Force elsewhere",
 	"create.ponder.tag.fluids": "UNLOCALIZED: Fluid Manipulators",
 	"create.ponder.tag.fluids.description": "UNLOCALIZED: Components which help relaying and making use of Fluids",
+
+	"create.ponder.bearing_modes.header": "UNLOCALIZED: Movement Modes of the Mechanical Bearing",
+	"create.ponder.bearing_modes.text_1": "UNLOCALIZED: When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle",
+	"create.ponder.bearing_modes.text_2": "UNLOCALIZED: It can be configured never to revert to solid blocks, or only near the angle it started at",
 
 	"create.ponder.belt_casing.header": "UNLOCALIZED: Encasing Belts",
 	"create.ponder.belt_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Mechanical Belts",
@@ -1889,6 +1897,16 @@
 	"create.ponder.chain_gearshift.text_4": "UNLOCALIZED: In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift",
 	"create.ponder.chain_gearshift.text_5": "UNLOCALIZED: Using analog signals, the ratio can be adjusted more precisely between 1 and 2",
 	"create.ponder.chain_gearshift.text_6": "UNLOCALIZED: 12 RPM",
+
+	"create.ponder.clockwork_bearing.header": "UNLOCALIZED: Animating Structures using Clockwork Bearings",
+	"create.ponder.clockwork_bearing.text_1": "UNLOCALIZED: Clockwork Bearings attach to blocks in front of them",
+	"create.ponder.clockwork_bearing.text_2": "UNLOCALIZED: Upon receiving Rotational Force, the structure will be rotated according to the hour of the day",
+	"create.ponder.clockwork_bearing.text_3": "UNLOCALIZED: 3:00",
+	"create.ponder.clockwork_bearing.text_4": "UNLOCALIZED: 4:00",
+	"create.ponder.clockwork_bearing.text_5": "UNLOCALIZED: Right-Click the bearing to start or stop animating the structure",
+	"create.ponder.clockwork_bearing.text_6": "UNLOCALIZED: In front of the Hour Hand, a second structure can be added",
+	"create.ponder.clockwork_bearing.text_7": "UNLOCALIZED: Ensure the two Structures are not attached to each other through super glue or similar",
+	"create.ponder.clockwork_bearing.text_8": "UNLOCALIZED: The Second Structure will now rotate as the Minute Hand",
 
 	"create.ponder.clutch.header": "UNLOCALIZED: Controlling rotational force using a Clutch",
 	"create.ponder.clutch.text_1": "UNLOCALIZED: Clutches will relay rotation in a straight line",
@@ -1992,6 +2010,61 @@
 	"create.ponder.large_cogwheel.text_1": "UNLOCALIZED: Large cogwheels can connect to each other at right angles",
 	"create.ponder.large_cogwheel.text_2": "UNLOCALIZED: It will help relaying conveyed speed to other axes of rotation",
 
+	"create.ponder.linear_chassis_attachment.header": "UNLOCALIZED: Attaching blocks using Linear Chassis",
+	"create.ponder.linear_chassis_attachment.text_1": "UNLOCALIZED: The open faces of a Linear Chassis can be made Sticky",
+	"create.ponder.linear_chassis_attachment.text_2": "UNLOCALIZED: Click again to make the opposite side sticky",
+	"create.ponder.linear_chassis_attachment.text_3": "UNLOCALIZED: Sneak and Right-Click with an empty hand to remove the slime",
+	"create.ponder.linear_chassis_attachment.text_4": "UNLOCALIZED: Stickied faces of the Linear Chassis will attach a line of blocks in front of it",
+	"create.ponder.linear_chassis_attachment.text_5": "UNLOCALIZED: Using a Wrench, a precise Range can be specified for this chassis",
+	"create.ponder.linear_chassis_attachment.text_6": "UNLOCALIZED: Holding CTRL and scrolling adjusts the range of all attached Chassis Blocks",
+	"create.ponder.linear_chassis_attachment.text_7": "UNLOCALIZED: Attaching blocks to any other side requires the use of Super Glue",
+	"create.ponder.linear_chassis_attachment.text_8": "UNLOCALIZED: Using these mechanics, structures of any shape can move as a Contraption",
+
+	"create.ponder.linear_chassis_group.header": "UNLOCALIZED: Moving Linear Chassis in groups",
+	"create.ponder.linear_chassis_group.text_1": "UNLOCALIZED: Linear Chassis connect to identical Chassis blocks next to them",
+	"create.ponder.linear_chassis_group.text_2": "UNLOCALIZED: When one is moved by a Contraption, the others are dragged with it",
+	"create.ponder.linear_chassis_group.text_3": "UNLOCALIZED: Chassis of a different type or facing another direction will not attach",
+
+	"create.ponder.mechanical_bearing.header": "UNLOCALIZED: Movings Structures using the Mechanical Bearing",
+	"create.ponder.mechanical_bearing.text_1": "UNLOCALIZED: Mechanical Bearings attach to the block in front of them",
+	"create.ponder.mechanical_bearing.text_2": "UNLOCALIZED: Upon receiving Rotational Force, it will assemble it into a Rotating Contraption",
+
+	"create.ponder.mechanical_drill.header": "UNLOCALIZED: Breaking Blocks with the Mechanical Drill",
+	"create.ponder.mechanical_drill.text_1": "UNLOCALIZED: When given Rotational Force, a Mechanical Drill will break blocks directly in front of it",
+	"create.ponder.mechanical_drill.text_2": "UNLOCALIZED: Its mining speed depends on the Rotational Input",
+
+	"create.ponder.mechanical_drill_contraption.header": "UNLOCALIZED: Using Mechanical Drills on Contraptions",
+	"create.ponder.mechanical_drill_contraption.text_1": "UNLOCALIZED: Whenever Drills are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_drill_contraption.text_2": "UNLOCALIZED: ...they will break blocks the contraption runs them into",
+
+	"create.ponder.mechanical_piston.header": "UNLOCALIZED: Moving Structures using Mechanical Pistons",
+	"create.ponder.mechanical_piston.text_1": "UNLOCALIZED: Mechanical Pistons can move blocks in front of them",
+	"create.ponder.mechanical_piston.text_2": "UNLOCALIZED: Speed and direction of movement depend on the Rotational Input",
+	"create.ponder.mechanical_piston.text_3": "UNLOCALIZED: Sticky Mechanical Pistons can pull the attached blocks back",
+
+	"create.ponder.mechanical_piston_modes.header": "UNLOCALIZED: Movement Modes of the Mechanical Piston",
+	"create.ponder.mechanical_piston_modes.text_1": "UNLOCALIZED: Whenever Pistons stop moving, the moved structure reverts to blocks",
+	"create.ponder.mechanical_piston_modes.text_2": "UNLOCALIZED: It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.mechanical_saw_breaker.header": "UNLOCALIZED: Cutting Trees with the Mechanical Saw",
+	"create.ponder.mechanical_saw_breaker.text_1": "UNLOCALIZED: When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
+	"create.ponder.mechanical_saw_breaker.text_2": "UNLOCALIZED: In order to cut the tree fully, the Saw has to break the last block connecting it to the ground",
+
+	"create.ponder.mechanical_saw_contraption.header": "UNLOCALIZED: Using Mechanical Saws on Contraptions",
+	"create.ponder.mechanical_saw_contraption.text_1": "UNLOCALIZED: Whenever Saws are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_saw_contraption.text_2": "UNLOCALIZED: ...they will cut any trees the contraption runs them into",
+
+	"create.ponder.mechanical_saw_processing.header": "UNLOCALIZED: Processing Items on the Mechanical Saw",
+	"create.ponder.mechanical_saw_processing.text_1": "UNLOCALIZED: Upward facing Mechanical Saws can process a variety of items",
+	"create.ponder.mechanical_saw_processing.text_2": "UNLOCALIZED: The processed item always moves against the rotational input to the saw",
+	"create.ponder.mechanical_saw_processing.text_3": "UNLOCALIZED: Saws can work in-line with Mechanical Belts",
+	"create.ponder.mechanical_saw_processing.text_4": "UNLOCALIZED: When an ingredient has multiple possible outcomes, the filter slot can specify it",
+	"create.ponder.mechanical_saw_processing.text_5": "UNLOCALIZED: Without filter, the Saw would cycle through all outcomes instead",
+
+	"create.ponder.piston_pole.header": "UNLOCALIZED: Piston Extension Poles",
+	"create.ponder.piston_pole.text_1": "UNLOCALIZED: Without attached Poles, a Mechanical Piston cannot move",
+	"create.ponder.piston_pole.text_2": "UNLOCALIZED: The Length of pole added at its back determines the Extension Range",
+
 	"create.ponder.portable_storage_interface.header": "UNLOCALIZED: Contraption Storage Exchange",
 	"create.ponder.portable_storage_interface.text_1": "UNLOCALIZED: Inventories on moving contraptions cannot be accessed by players.",
 	"create.ponder.portable_storage_interface.text_2": "UNLOCALIZED: This component can interact with storage without the need to stop the contraption.",
@@ -2005,11 +2078,58 @@
 	"create.ponder.portable_storage_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 	"create.ponder.portable_storage_interface_redstone.text_1": "UNLOCALIZED: Redstone power will prevent the stationary interface from engaging",
 
+	"create.ponder.radial_chassis.header": "UNLOCALIZED: Attaching blocks using Radial Chassis",
+	"create.ponder.radial_chassis.text_1": "UNLOCALIZED: Radial Chassis connect to identical Chassis blocks in a row",
+	"create.ponder.radial_chassis.text_2": "UNLOCALIZED: When one is moved by a Contraption, the others are dragged with it",
+	"create.ponder.radial_chassis.text_3": "UNLOCALIZED: The side faces of a Radial Chassis can be made Sticky",
+	"create.ponder.radial_chassis.text_4": "UNLOCALIZED: Click again to make all other sides sticky",
+	"create.ponder.radial_chassis.text_5": "UNLOCALIZED: Sneak and Right-Click with an empty hand to remove the slime",
+	"create.ponder.radial_chassis.text_6": "UNLOCALIZED: Whenever a Block is next to a sticky face...",
+	"create.ponder.radial_chassis.text_7": "UNLOCALIZED: ...it will attach all reachable blocks within a radius on that layer",
+	"create.ponder.radial_chassis.text_8": "UNLOCALIZED: Using a Wrench, a precise Radius can be specified for this chassis",
+	"create.ponder.radial_chassis.text_9": "UNLOCALIZED: Blocks not reachable by any sticky face will not attach",
+
+	"create.ponder.redstone_contact.header": "UNLOCALIZED: Redstone Contacts",
+	"create.ponder.redstone_contact.text_1": "UNLOCALIZED: Redstone Contacts facing each other will emit a redstone signal",
+	"create.ponder.redstone_contact.text_2": "UNLOCALIZED: This still applies when one of them is part of a moving Contraption",
+
+	"create.ponder.rope_pulley.header": "UNLOCALIZED: Moving Structures using Rope Pulleys",
+	"create.ponder.rope_pulley.text_1": "UNLOCALIZED: Rope Pulleys can move blocks vertically when given Rotational Force",
+	"create.ponder.rope_pulley.text_2": "UNLOCALIZED: Direction and Speed of movement depend on the Rotational Input",
+
+	"create.ponder.rope_pulley_attachment.header": "UNLOCALIZED: Moving Pulleys as part of a Contraption",
+	"create.ponder.rope_pulley_attachment.text_1": "UNLOCALIZED: Whenever Pulleys are themselves being moved by a Contraption...",
+	"create.ponder.rope_pulley_attachment.text_2": "UNLOCALIZED: ...its attached structure will be dragged with it",
+	"create.ponder.rope_pulley_attachment.text_3": "UNLOCALIZED: Mind that pulleys are only movable while stopped",
+
+	"create.ponder.rope_pulley_modes.header": "UNLOCALIZED: Movement Modes of the Rope Pulley",
+	"create.ponder.rope_pulley_modes.text_1": "UNLOCALIZED: Whenever Pulleys stop moving, the moved structure reverts to blocks",
+	"create.ponder.rope_pulley_modes.text_2": "UNLOCALIZED: It can be configured never to revert to solid blocks, or only at the location it started at",
+
 	"create.ponder.shaft.header": "UNLOCALIZED: Relaying rotational force using Shafts",
 	"create.ponder.shaft.text_1": "UNLOCALIZED: Shafts will relay rotation in a straight line.",
 
 	"create.ponder.shaft_casing.header": "UNLOCALIZED: Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.stabilized_bearings.header": "UNLOCALIZED: Stabilized Contraptions",
+	"create.ponder.stabilized_bearings.text_1": "UNLOCALIZED: Whenever Mechanical Bearings are themselves part of a moving Structure..",
+	"create.ponder.stabilized_bearings.text_2": "UNLOCALIZED: ..they will attempt to keep themselves upright",
+	"create.ponder.stabilized_bearings.text_3": "UNLOCALIZED: Once again, the bearing will attach to the block in front of it",
+	"create.ponder.stabilized_bearings.text_4": "UNLOCALIZED: As a result, the entire sub-Contraption will stay upright",
+
+	"create.ponder.sticker.header": "UNLOCALIZED: Attaching blocks using the Sticker",
+	"create.ponder.sticker.text_1": "UNLOCALIZED: Stickers are ideal for Redstone-controlled block attachment",
+	"create.ponder.sticker.text_2": "UNLOCALIZED: Upon receiving a signal, it will toggle its state",
+	"create.ponder.sticker.text_3": "UNLOCALIZED: If it is now moved in a contraption, the block will move with it",
+	"create.ponder.sticker.text_4": "UNLOCALIZED: Toggled once again, the block is no longer attached",
+
+	"create.ponder.super_glue.header": "UNLOCALIZED: Attaching blocks using Super Glue",
+	"create.ponder.super_glue.text_1": "UNLOCALIZED: Super Glue can be used between any two blocks",
+	"create.ponder.super_glue.text_2": "UNLOCALIZED: The attached blocks will move together when assembled into a Contraption",
+	"create.ponder.super_glue.text_3": "UNLOCALIZED: Whenever Super Glue is held in the off-hand...",
+	"create.ponder.super_glue.text_4": "UNLOCALIZED: ...added blocks will be glued to the face they were placed on automatically",
+	"create.ponder.super_glue.text_5": "UNLOCALIZED: Super Glue can be removed with Left-Click",
 
 	"create.ponder.valve_handle.header": "UNLOCALIZED: Generating Rotational Force using Valve Handles",
 	"create.ponder.valve_handle.text_1": "UNLOCALIZED: Valve Handles can be used by players to apply rotational force manually",
@@ -2023,6 +2143,17 @@
 	"create.ponder.water_wheel.text_2": "UNLOCALIZED: The more faces are powered, the faster the Water Wheel will rotate",
 	"create.ponder.water_wheel.text_3": "UNLOCALIZED: The Wheels' blades should be oriented against the flow",
 	"create.ponder.water_wheel.text_4": "UNLOCALIZED: Facing the opposite way, they will not be as effective",
+
+	"create.ponder.windmill_source.header": "UNLOCALIZED: Generating Rotational Force using Windmill Bearings",
+	"create.ponder.windmill_source.text_1": "UNLOCALIZED: Windmill Bearings attach to the block in front of them",
+	"create.ponder.windmill_source.text_2": "UNLOCALIZED: If enough Sail-like blocks are attached to the block, it can act as a Windmill",
+	"create.ponder.windmill_source.text_3": "UNLOCALIZED: Activated with Right-Click, the Windmill Bearing will start providing Rotational Force",
+	"create.ponder.windmill_source.text_4": "UNLOCALIZED: The Amount of Sail Blocks determine its Rotation Speed",
+	"create.ponder.windmill_source.text_5": "UNLOCALIZED: Use a Wrench to configure its rotation direction",
+	"create.ponder.windmill_source.text_6": "UNLOCALIZED: Right-click the Bearing anytime to stop and edit the Structure again",
+
+	"create.ponder.windmill_structure.header": "UNLOCALIZED: Windmill Contraptions",
+	"create.ponder.windmill_structure.text_1": "UNLOCALIZED: Any Structure can count as a valid Windmill, as long as it contains at least 8 sail-like Blocks.",
 
 	"_": "Thank you for translating Create!"
 

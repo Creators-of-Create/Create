@@ -164,13 +164,14 @@ public class BlockHelper {
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
+		
 		IFluidState ifluidstate = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
 			world.playEvent(2001, pos, Block.getStateId(state));
 		TileEntity tileentity = state.hasTileEntity() ? world.getTileEntity(pos) : null;
 
-		if (world.getGameRules()
+		if (world instanceof ServerWorld && world.getGameRules()
 			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity))
 				droppedItemCallback.accept(itemStack);
