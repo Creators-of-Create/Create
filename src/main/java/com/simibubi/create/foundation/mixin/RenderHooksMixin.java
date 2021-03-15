@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.foundation.render.KineticRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL20;
@@ -52,17 +53,20 @@ public class RenderHooksMixin {
         double camY = cameraPos.getY();
         double camZ = cameraPos.getZ();
 
-        CreateClient.kineticRenderer.beginFrame(camX, camY, camZ);
+        CreateClient.kineticRenderer.get(world).beginFrame(camX, camY, camZ);
         ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
     }
 
     @Inject(at = @At("TAIL"), method = "loadRenderers")
     private void refresh(CallbackInfo ci) {
-        CreateClient.kineticRenderer.invalidate();
         ContraptionRenderDispatcher.invalidateAll();
         OptifineHandler.refresh();
         Backend.refresh();
 
-        if (Backend.canUseInstancing() && world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+        if (Backend.canUseInstancing() && world != null) {
+            KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+            kineticRenderer.invalidate();
+            world.loadedTileEntityList.forEach(kineticRenderer::add);
+        }
     }
 }

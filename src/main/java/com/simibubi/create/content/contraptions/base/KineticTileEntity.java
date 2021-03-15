@@ -535,12 +535,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void onChunkUnloaded() {
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
-	}
-
-	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.removed) {

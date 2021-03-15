@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
+import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
@@ -125,7 +126,9 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
-			((ClientWorld) world).loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+			KineticRenderer renderer = CreateClient.kineticRenderer.get(world);
+			renderer.invalidate();
+			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
 
 		/*
@@ -139,7 +142,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		if (event.getWorld().isRemote()) {
-			CreateClient.invalidateRenderers();
+			CreateClient.invalidateRenderers(event.getWorld());
 			AnimationTickHolder.reset();
 		}
 	}
