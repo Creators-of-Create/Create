@@ -280,5 +280,10 @@ public class PonderWorld extends SchematicWorld {
 			}
 		}
 	}
+	
+	@Override
+	protected BlockState processBlockStateForPrinting(BlockState state) {
+		return state;
+	}
 
 }
