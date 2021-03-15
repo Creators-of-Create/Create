@@ -99,14 +99,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
     @Override
     public void updateLight() {
-        int blockLight = tile.getWorld().getLightLevel(LightType.BLOCK, pos);
-        int skyLight = tile.getWorld().getLightLevel(LightType.SKY, pos);
-
-        for (InstanceKey<RotatingData> key : keys.values()) {
-            key.getInstance()
-               .setBlockLight(blockLight)
-               .setSkyLight(skyLight);
-        }
+        relight(pos, keys.values().stream().map(InstanceKey::getInstance));
     }
 
     @Override

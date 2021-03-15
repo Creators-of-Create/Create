@@ -24,6 +24,15 @@ public class MatrixStacker {
 		return instance;
 	}
 
+	public MatrixStacker restoreIdentity() {
+		MatrixStack.Entry entry = ms.peek();
+
+		entry.getModel().loadIdentity();
+		entry.getNormal().loadIdentity();
+
+		return this;
+	}
+
 	public MatrixStacker rotate(Direction axis, float radians) {
 		if (radians == 0)
 			return this;

@@ -36,12 +36,6 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return key;
     }
 
-    protected final void relight(InstanceKey<? extends KineticData<?>> key) {
-        key.getInstance()
-           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-           .setSkyLight(world.getLightLevel(LightType.SKY, pos));
-    }
-
     protected float getRotationOffset(final Direction.Axis axis) {
         float offset = CogWheelBlock.isLargeCog(lastState) ? 11.25f : 0;
         double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())

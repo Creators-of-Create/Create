@@ -77,6 +77,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.*;
+import com.simibubi.create.content.contraptions.relays.gauge.GaugeInstance;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
@@ -260,7 +261,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<FluidValveTileEntity> FLUID_VALVE = Create.registrate()
 		.tileEntity("fluid_valve", FluidValveTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> FluidValveInstance::new)
 		.validBlocks(AllBlocks.FLUID_VALVE)
 		.renderer(() -> FluidValveRenderer::new)
 		.register();
@@ -515,14 +516,14 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<SpeedGaugeTileEntity> SPEEDOMETER = Create.registrate()
 		.tileEntity("speedometer", SpeedGaugeTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> GaugeInstance.Speed::new)
 		.validBlocks(AllBlocks.SPEEDOMETER)
 		.renderer(() -> GaugeRenderer::speed)
 		.register();
 
 	public static final TileEntityEntry<StressGaugeTileEntity> STRESSOMETER = Create.registrate()
 		.tileEntity("stressometer", StressGaugeTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> GaugeInstance.Stress::new)
 		.validBlocks(AllBlocks.STRESSOMETER)
 		.renderer(() -> GaugeRenderer::stress)
 		.register();

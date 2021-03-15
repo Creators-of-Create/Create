@@ -73,7 +73,7 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
     public void tick() {
         ArmTileEntity arm = (ArmTileEntity) tile;
 
-        boolean settled = Stream.of(arm.baseAngle, arm.lowerArmAngle, arm.upperArmAngle, arm.headAngle).allMatch(InterpolatedValue::settled);
+        boolean settled = arm.baseAngle.settled() && arm.lowerArmAngle.settled() && arm.upperArmAngle.settled() && arm.headAngle.settled();
         boolean rave = arm.phase == ArmTileEntity.Phase.DANCING;
 
         if (!settled || rave || firstTick)
@@ -154,13 +154,8 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
     @Override
     public void updateLight() {
         super.updateLight();
-        int block = world.getLightLevel(LightType.BLOCK, pos);
-        int sky = world.getLightLevel(LightType.SKY, pos);
 
-
-        models.stream()
-              .map(InstanceKey::getInstance)
-              .forEach(data -> data.setSkyLight(sky).setBlockLight(block));
+        relight(pos, models.stream().map(InstanceKey::getInstance));
     }
 
     @Override

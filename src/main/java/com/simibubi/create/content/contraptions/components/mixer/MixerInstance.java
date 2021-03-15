@@ -92,14 +92,9 @@ public class MixerInstance extends ShaftlessCogInstance implements ITickableInst
     public void updateLight() {
         super.updateLight();
 
-        BlockPos down = pos.down();
-        mixerHead.getInstance()
-                 .setBlockLight(world.getLightLevel(LightType.BLOCK, down))
-                 .setSkyLight(world.getLightLevel(LightType.SKY, down));
+        relight(pos.down(), mixerHead.getInstance());
 
-        mixerPole.getInstance()
-                 .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                 .setSkyLight(world.getLightLevel(LightType.SKY, pos));
+        relight(pos, mixerPole.getInstance());
     }
 
     @Override

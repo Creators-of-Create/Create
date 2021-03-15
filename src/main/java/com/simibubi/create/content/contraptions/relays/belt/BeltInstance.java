@@ -1,29 +1,24 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
@@ -103,9 +98,9 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     public void updateLight() {
-        keys.forEach(this::relight);
+        relight(pos, keys.stream().map(InstanceKey::getInstance));
 
-        if (pulleyKey != null) relight(pulleyKey);
+        if (pulleyKey != null) relight(pos, pulleyKey.getInstance());
     }
 
     @Override

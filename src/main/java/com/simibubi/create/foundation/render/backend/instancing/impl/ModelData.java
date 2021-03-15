@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.Matrix4f;
 
 import java.nio.ByteBuffer;
 
-public class ModelData extends InstanceData {
+public class ModelData extends InstanceData implements IFlatLight<ModelData> {
     private static final Matrix4f IDENT4 = new Matrix4f();
     private static final Matrix3f IDENT3 = new Matrix3f();
     static {
@@ -54,11 +54,13 @@ public class ModelData extends InstanceData {
         return this;
     }
 
+    @Override
     public ModelData setBlockLight(int blockLight) {
         this.blockLight = (byte) (blockLight << 4);
         return this;
     }
 
+    @Override
     public ModelData setSkyLight(int skyLight) {
         this.skyLight = (byte) (skyLight << 4);
         return this;

@@ -66,9 +66,6 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     @Override
     public void updateLight() {
-        int block = world.getLightLevel(LightType.BLOCK, pos);
-        int sky = world.getLightLevel(LightType.SKY, pos);
-
-        frame.getInstance().setBlockLight(block).setSkyLight(sky);
+        relight(pos, frame.getInstance());
     }
 }

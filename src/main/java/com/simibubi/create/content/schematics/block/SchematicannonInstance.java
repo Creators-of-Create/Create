@@ -81,15 +81,6 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
     @Override
     public void updateLight() {
-        int block = world.getLightLevel(LightType.BLOCK, pos);
-        int sky = world.getLightLevel(LightType.SKY, pos);
-
-        connector.getInstance()
-                 .setBlockLight(block)
-                 .setSkyLight(sky);
-
-        pipe.getInstance()
-            .setBlockLight(block)
-            .setSkyLight(sky);
+        relight(pos, connector.getInstance(), pipe.getInstance());
     }
 }

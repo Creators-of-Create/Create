@@ -4,14 +4,10 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
@@ -35,7 +31,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     @Override
     public void updateLight() {
-        relight(rotatingModelKey);
+        relight(pos, rotatingModelKey.getInstance());
     }
 
     @Override
