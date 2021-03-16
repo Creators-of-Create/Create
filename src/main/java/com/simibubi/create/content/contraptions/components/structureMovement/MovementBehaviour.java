@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -8,9 +10,12 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nullable;
 
 public abstract class MovementBehaviour {
 
@@ -61,7 +66,10 @@ public abstract class MovementBehaviour {
 		IRenderTypeBuffer buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
-	public void addInstance(RenderedContraption contraption, MovementContext context) {}
+	@Nullable
+	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+		return null;
+	}
 
 	public void onSpeedChanged(MovementContext context, Vec3d oldMotion, Vec3d motion) {
 

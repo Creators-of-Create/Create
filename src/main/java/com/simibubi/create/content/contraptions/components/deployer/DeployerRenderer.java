@@ -50,11 +50,17 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		int light, int overlay) {
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
+
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+
+		if (te.heldItem.isEmpty()) return;
+
 		BlockState deployerState = te.getBlockState();
 		Vec3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
@@ -166,8 +172,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockPos pos = BlockPos.ZERO;
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		World world = context.world;
-		AllBlockPartials handPose =
-			mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
+		AllBlockPartials handPose = getHandPose(mode);
 
 		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
 		SuperByteBuffer hand = handPose.renderOn(blockState);
@@ -196,6 +201,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.renderInto(ms, builder);
 		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
+	}
+
+	static AllBlockPartials getHandPose(DeployerTileEntity.Mode mode) {
+		return mode == DeployerTileEntity.Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
 	}
 
 }

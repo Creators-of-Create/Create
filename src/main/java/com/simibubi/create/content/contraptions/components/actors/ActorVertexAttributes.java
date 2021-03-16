@@ -12,6 +12,7 @@ public enum ActorVertexAttributes implements IVertexAttrib {
     AXIS("aAxis", CommonAttributes.NORMAL),
     INSTANCE_ROTATION("aInstanceRot", CommonAttributes.VEC3),
     ROTATION_CENTER("aRotationCenter", CommonAttributes.NORMAL),
+    SPEED("aSpeed", CommonAttributes.FLOAT),
     ;
 
     private final String name;

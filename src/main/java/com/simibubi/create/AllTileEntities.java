@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.crank.HandCrankRender
 import com.simibubi.create.content.contraptions.components.crank.HandCrankTileEntity;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelTileEntity;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerInstance;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanRenderer;
@@ -476,7 +477,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<DeployerTileEntity> DEPLOYER = Create.registrate()
 		.tileEntity("deployer", DeployerTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> DeployerInstance::new)
 		.validBlocks(AllBlocks.DEPLOYER)
 		.renderer(() -> DeployerRenderer::new)
 		.register();

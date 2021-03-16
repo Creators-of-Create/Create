@@ -3,6 +3,9 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -23,6 +26,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants.NBT;
+
+import javax.annotation.Nullable;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
@@ -167,7 +172,18 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
+		if (!FastRenderDispatcher.available())
+			DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 
+	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+		return new DeployerActorInstance(kr, context);
+	}
 }

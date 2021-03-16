@@ -109,4 +109,18 @@ public class MatrixStacker {
 		return this;
 	}
 
+	public MatrixStacker push() {
+		ms.push();
+		return this;
+	}
+
+	public MatrixStacker pop() {
+		ms.pop();
+		return this;
+	}
+
+	public MatrixStack unwrap() {
+		return ms;
+	}
+
 }
