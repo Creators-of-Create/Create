@@ -38,6 +38,16 @@ public class SelectionScrollInput extends ScrollInput {
 	protected void updateTooltip() {
 		toolTip.clear();
 		toolTip.add(TextFormatting.BLUE + title);
+		int min = Math.min(this.max - 16, state - 7);
+		int max = Math.max(this.min + 16, state + 8);
+		min = Math.max(min, this.min);
+		max = Math.min(max, this.max);
+		if (this.min + 1 == min)
+			min--;
+		if (min > this.min)
+			toolTip.add(TextFormatting.GRAY + "> ...");
+		if (this.max - 1 == max)
+			max++;
 		for (int i = min; i < max; i++) {
 			StringBuilder result = new StringBuilder();
 			if (i == state)
@@ -46,6 +56,8 @@ public class SelectionScrollInput extends ScrollInput {
 				result.append(TextFormatting.GRAY).append("> ").append(options.get(i));
 			toolTip.add(result.toString());
 		}
+		if (max < this.max)
+			toolTip.add(TextFormatting.GRAY + "> ...");
 		toolTip.add(TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + scrollToSelect);
 	}
 

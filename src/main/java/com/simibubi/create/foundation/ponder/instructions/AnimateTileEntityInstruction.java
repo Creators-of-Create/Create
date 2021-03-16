@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.IBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
@@ -36,6 +37,14 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 				.orElse(0f));
 	}
 
+	public static AnimateTileEntityInstruction deployer(BlockPos location, float totalDelta, int ticks) {
+		return new AnimateTileEntityInstruction(location, totalDelta, ticks,
+			(w, f) -> castIfPresent(w, location, DeployerTileEntity.class)
+				.ifPresent(deployer -> deployer.setAnimatedOffset(f)),
+			(w) -> castIfPresent(w, location, DeployerTileEntity.class).map(deployer -> deployer.getHandOffset(1))
+				.orElse(0f));
+	}
+
 	protected AnimateTileEntityInstruction(BlockPos location, float totalDelta, int ticks,
 		BiConsumer<PonderWorld, Float> setter, Function<PonderWorld, Float> getter) {
 		super(false, ticks);
@@ -57,7 +66,11 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 	public void tick(PonderScene scene) {
 		super.tick(scene);
 		PonderWorld world = scene.getWorld();
-		setter.accept(world, (float) (remainingTicks == 0 ? target : getter.apply(world) + deltaPerTick));
+		float current = getter.apply(world);
+		float next = (float) (remainingTicks == 0 ? target : current + deltaPerTick);
+		setter.accept(world, next);
+		if (remainingTicks == 0) // lock interpolation
+			setter.accept(world, next);
 	}
 
 	private static <T> Optional<T> castIfPresent(PonderWorld world, BlockPos pos, Class<T> teType) {

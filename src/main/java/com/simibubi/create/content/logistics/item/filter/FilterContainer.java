@@ -24,7 +24,7 @@ public class FilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected void addFilterSlots() {
-		int x = 23;
+		int x = -27;
 		int y = 20;
 
 		for (int row = 0; row < 2; ++row)

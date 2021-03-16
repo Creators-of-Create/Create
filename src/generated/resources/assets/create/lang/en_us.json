@@ -1947,6 +1947,37 @@
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
+	"create.ponder.deployer.header": "Using the Deployer",
+	"create.ponder.deployer.text_1": "Given Rotational Force, a Deployer can imitate player interactions",
+	"create.ponder.deployer.text_10": "Right-click the front to give it an Item to use",
+	"create.ponder.deployer.text_11": "Items can also be inserted automatically",
+	"create.ponder.deployer.text_12": "Deployers carry a filter slot",
+	"create.ponder.deployer.text_13": "When a filter is set, it activates only while holding a matching item",
+	"create.ponder.deployer.text_14": "Only items matching the filter can now be inserted...",
+	"create.ponder.deployer.text_15": "...and only non-matching items will be extracted",
+	"create.ponder.deployer.text_2": "It will always interact with the position 2 blocks in front of itself",
+	"create.ponder.deployer.text_3": "Blocks directly in front will not obstruct it",
+	"create.ponder.deployer.text_4": "Deployers can:",
+	"create.ponder.deployer.text_5": "Place Blocks,",
+	"create.ponder.deployer.text_6": "Use Items,",
+	"create.ponder.deployer.text_7": "Activate Blocks,",
+	"create.ponder.deployer.text_8": "Harvest blocks",
+	"create.ponder.deployer.text_9": "and Attack Mobs",
+
+	"create.ponder.deployer_contraption.header": "Using Deployers on Contraptions",
+	"create.ponder.deployer_contraption.text_1": "Whenever Deployers are moved as part of an animated Contraption...",
+	"create.ponder.deployer_contraption.text_2": "They activate at each visited location, using items from inventories anywhere on the contraption",
+	"create.ponder.deployer_contraption.text_3": "The Filter slot can be used to specify which items to pull",
+
+	"create.ponder.deployer_modes.header": "Modes of the Deployer",
+	"create.ponder.deployer_modes.text_1": "By default, a Deployer imitates a Right-click interaction",
+	"create.ponder.deployer_modes.text_2": "Using a Wrench, it can be set to imitate a Left-click instead",
+
+	"create.ponder.deployer_redstone.header": "Controlling Deployers with Redstone",
+	"create.ponder.deployer_redstone.text_1": "When powered by Redstone, Deployers will not activate",
+	"create.ponder.deployer_redstone.text_2": "Before stopping, the Deployer will finish any started cycles",
+	"create.ponder.deployer_redstone.text_3": "Thus, a negative pulse can be used to trigger exactly one activation cycle",
+
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
 	"create.ponder.fan_direction.text_2": "Strength and Direction of Flow depends on the Rotational Input",
@@ -2059,6 +2090,10 @@
 	"create.ponder.mechanical_drill_contraption.text_1": "Whenever Drills are moved as part of an animated Contraption...",
 	"create.ponder.mechanical_drill_contraption.text_2": "...they will break blocks the contraption runs them into",
 
+	"create.ponder.mechanical_harvester.header": "Using Mechanical Harvesters on Contraptions",
+	"create.ponder.mechanical_harvester.text_1": "Whenever Harvesters are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_harvester.text_2": "They will harvest and reset any mature crops on their way",
+
 	"create.ponder.mechanical_piston.header": "Moving Structures using Mechanical Pistons",
 	"create.ponder.mechanical_piston.text_1": "Mechanical Pistons can move blocks in front of them",
 	"create.ponder.mechanical_piston.text_2": "Speed and direction of movement depend on the Rotational Input",
@@ -2067,6 +2102,12 @@
 	"create.ponder.mechanical_piston_modes.header": "Movement Modes of the Mechanical Piston",
 	"create.ponder.mechanical_piston_modes.text_1": "Whenever Pistons stop moving, the moved structure reverts to blocks",
 	"create.ponder.mechanical_piston_modes.text_2": "It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.mechanical_plough.header": "Using Mechanical Ploughs on Contraptions",
+	"create.ponder.mechanical_plough.text_1": "Whenever Ploughs are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_plough.text_2": "...they will break blocks without a solid collision hitbox",
+	"create.ponder.mechanical_plough.text_3": "Additionally, ploughs can create farmland",
+	"create.ponder.mechanical_plough.text_4": "...they can also launch entities without hurting them",
 
 	"create.ponder.mechanical_saw_breaker.header": "Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
@@ -2134,9 +2175,9 @@
 	"create.ponder.redstone_link.text_1": "Redstone Links can transmit redstone signals wirelessly",
 	"create.ponder.redstone_link.text_2": "Right-click while Sneaking to toggle receive mode",
 	"create.ponder.redstone_link.text_3": "A simple Right-click with a Wrench can do the same",
-	"create.ponder.redstone_link.text_4": "Receivers will emit the redstone power of transmitters within a range of 128 blocks",
+	"create.ponder.redstone_link.text_4": "Receivers emit the redstone power of transmitters within 128 blocks",
 	"create.ponder.redstone_link.text_5": "Placing items in the two slots can specify a Frequency",
-	"create.ponder.redstone_link.text_6": "Only the links with matching Frequency combinations will communicate",
+	"create.ponder.redstone_link.text_6": "Only the links with matching Frequencies will communicate",
 
 	"create.ponder.rope_pulley.header": "Moving Structures using Rope Pulleys",
 	"create.ponder.rope_pulley.text_1": "Rope Pulleys can move blocks vertically when given Rotational Force",

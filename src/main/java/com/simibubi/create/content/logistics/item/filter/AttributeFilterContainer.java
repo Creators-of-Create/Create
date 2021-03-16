@@ -62,8 +62,8 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	protected void addFilterSlots() {
-		this.addSlot(new SlotItemHandler(filterInventory, 0, 16, 22));
-		this.addSlot(new SlotItemHandler(filterInventory, 1, 22, 57) {
+		this.addSlot(new SlotItemHandler(filterInventory, 0, -34, 22));
+		this.addSlot(new SlotItemHandler(filterInventory, 1, -28, 57) {
 			@Override
 			public boolean canTakeStack(PlayerEntity playerIn) {
 				return false;

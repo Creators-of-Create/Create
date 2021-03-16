@@ -6,6 +6,7 @@ import static net.minecraft.util.text.TextFormatting.GRAY;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -19,6 +20,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -26,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
+    private List<Rectangle2d> extraAreas = Collections.EMPTY_LIST;
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
@@ -37,12 +40,15 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width + 80, background.height + PLAYER_INVENTORY.height + 20);
+		setWindowSize(PLAYER_INVENTORY.width, background.height + PLAYER_INVENTORY.height + 20);
 		super.init();
 		widgets.clear();
+		int x = guiLeft - 50;
+		int offset = guiTop < 30 ? 30 - guiTop : 0;
+		extraAreas = ImmutableList.of(new Rectangle2d(x, guiTop + offset, background.width + 70, background.height - offset));
 
-		resetButton = new IconButton(guiLeft + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
-		confirmButton = new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		resetButton = new IconButton(x + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
+		confirmButton = new IconButton(x + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
@@ -50,11 +56,11 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
-		int x = guiLeft;
+		int x = guiLeft - 50;
 		int y = guiTop;
 		background.draw(this, x, y);
 
-		int invX = x + 50;
+		int invX = guiLeft;
 		int invY = y + background.height + 10;
 		PLAYER_INVENTORY.draw(this, invX, invY);
 
@@ -62,7 +68,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		font.drawStringWithShadow(I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
 		GuiGameElement.of(container.filterItem)
-				.at(guiLeft + background.width, guiTop +background.height -60)
+				.at(x + background.width, guiTop +background.height -60)
 				.scale(5)
 				.render();
 
@@ -150,4 +156,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		AllPackets.channel.sendToServer(new FilterScreenPacket(option));
 	}
 
+	@Override
+	public List<Rectangle2d> getExtraAreas() {
+		return extraAreas;
+	}
 }

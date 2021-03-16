@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,9 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameter;
+import net.minecraft.world.storage.loot.LootParameters;
 
 public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -73,6 +77,20 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			.isEmpty() && !(state.getBlock() instanceof FlowingFluidBlock)
 			&& !(world.getBlockState(breakingPos.down())
 				.getBlock() instanceof FarmlandBlock);
+	}
+
+	@Override
+	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
+		super.onBlockBroken(context, pos, brokenState);
+
+		if (brokenState.getBlock() == Blocks.SNOW && context.world instanceof ServerWorld) {
+			ServerWorld world = (ServerWorld) context.world;
+			brokenState.getDrops(new LootContext.Builder(world).withParameter(LootParameters.BLOCK_STATE, brokenState)
+				.withParameter(LootParameters.POSITION, pos)
+				.withParameter(LootParameters.THIS_ENTITY, getPlayer(context))
+				.withParameter(LootParameters.TOOL, new ItemStack(Items.IRON_SHOVEL)))
+				.forEach(s -> dropItem(context, s));
+		}
 	}
 
 	@Override
