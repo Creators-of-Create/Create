@@ -40,6 +40,8 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.content.logistics.item.filter.FilterScreen;
 import com.simibubi.create.content.schematics.block.SchematicTableScreen;
 import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -231,6 +233,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
 		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
 		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
+		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
+		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
 	}
 

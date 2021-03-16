@@ -60,7 +60,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	protected void init() {
 		super.init();
-		int x = guiLeft;
+		int x = guiLeft - 50;
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
@@ -158,7 +158,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		RenderSystem.translatef(0.0F, 0.0F, 32.0F);
 		this.setBlitOffset(200);
 		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(font, stack, guiLeft + 22, guiTop + 57,
+		this.itemRenderer.renderItemOverlayIntoGUI(font, stack, guiLeft - 27, guiTop + 57,
 			String.valueOf(selectedAttributes.size() - 1));
 		this.setBlitOffset(0);
 		this.itemRenderer.zLevel = 0.0F;

@@ -54,7 +54,7 @@ public abstract class AbstractFilterContainer extends Container {
 	protected abstract void saveData(ItemStack filterItem);
 
 	protected void addPlayerSlots() {
-		int x = 58;
+		int x = 8;
 		int y = 28 + getInventoryOffset();
 
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
