@@ -1725,11 +1725,11 @@
 	"block.create.analog_lever.tooltip": "可調節拉杆",
 	"block.create.analog_lever.tooltip.summary": "一種可以調節任意信號強度的推杆。",
 
-	"block.create.powered_toggle_latch.tooltip": "T觸發器",
-	"block.create.powered_toggle_latch.tooltip.summary": "一種拉杆，在紅石電路中可以用作t觸發器。",
+	"block.create.powered_toggle_latch.tooltip": "T型正反器",
+	"block.create.powered_toggle_latch.tooltip.summary": "一種拉杆，在紅石電路中可以用做T型正反器。",
 
 	"block.create.powered_latch.tooltip": "鎖存器",
-	"block.create.powered_latch.tooltip.summary": "一種拉杆，在紅石電路中用作鎖存器，從後方輸入將會啟用這個拉杆，從側邊輸入將會重置這個拉杆。",
+	"block.create.powered_latch.tooltip.summary": "一種拉杆，在紅石電路中用做鎖存器，從後方輸入將會啟用這個拉杆，從側邊輸入將會重置這個拉杆。",
 
 	"block.create.controller_rail.tooltip": "控制鐵軌",
 	"block.create.controller_rail.tooltip.summary": "單向電動導軌，能夠精細控制礦車的移動速度。",
