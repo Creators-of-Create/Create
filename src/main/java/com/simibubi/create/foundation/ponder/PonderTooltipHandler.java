@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.ponder;
 import java.util.List;
 
 import com.google.common.base.Strings;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
@@ -79,9 +78,8 @@ public class PonderTooltipHandler {
 
 		if (!subject && InputMappings.isKeyDown(window, keyCode)) {
 			if (value >= 1) {
-				if (currentScreen instanceof AbstractSimiScreen)
-					((AbstractSimiScreen) currentScreen).centerScalingOnMouse();
-
+				if (currentScreen instanceof NavigatableSimiScreen)
+					((NavigatableSimiScreen) currentScreen).centerScalingOnMouse();
 				ScreenOpener.transitionTo(PonderUI.of(stack));
 				holdWProgress.startWithValue(0);
 				return;

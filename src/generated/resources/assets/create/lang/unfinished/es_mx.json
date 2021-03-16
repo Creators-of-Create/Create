@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1226",
+	"_": "Missing Localizations: 1232",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1817,6 +1817,12 @@
 	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
 	"create.ponder.identify_mode": "UNLOCALIZED: Identify mode active.\nUnpause with [%1$s]",
 	"create.ponder.associated": "UNLOCALIZED: Associated Entries",
+	"create.ponder.close": "UNLOCALIZED: Close",
+	"create.ponder.identify": "UNLOCALIZED: Identify",
+	"create.ponder.next": "UNLOCALIZED: Next Scene",
+	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
+	"create.ponder.replay": "UNLOCALIZED: Replay",
+	"create.ponder.think_back": "UNLOCALIZED: Think Back",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
