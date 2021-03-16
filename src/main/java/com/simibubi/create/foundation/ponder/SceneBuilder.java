@@ -177,7 +177,7 @@ public class SceneBuilder {
 	public void showBasePlate() {
 		world.showSection(
 			scene.getSceneBuildingUtil().select.cuboid(new BlockPos(scene.basePlateOffsetX, 0, scene.basePlateOffsetZ),
-				new Vec3i(scene.basePlateSize, 0, scene.basePlateSize)),
+				new Vec3i(scene.basePlateSize - 1, 0, scene.basePlateSize - 1)),
 			Direction.UP);
 	}
 
@@ -512,6 +512,10 @@ public class SceneBuilder {
 
 		public void movePulley(BlockPos pos, float distance, int duration) {
 			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
+		}
+		
+		public void moveDeployer(BlockPos pos, float distance, int duration) {
+			addInstruction(AnimateTileEntityInstruction.deployer(pos, distance, duration));
 		}
 
 		public void setBlocks(Selection selection, BlockState state, boolean spawnParticles) {

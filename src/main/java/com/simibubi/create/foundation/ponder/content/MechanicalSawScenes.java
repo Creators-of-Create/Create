@@ -173,6 +173,7 @@ public class MechanicalSawScenes {
 	public static void treeCutting(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("mechanical_saw_breaker", "Cutting Trees with the Mechanical Saw");
 		scene.configureBasePlate(0, 0, 5);
+		scene.scaleSceneView(.9f);
 		scene.world.setBlock(util.grid.at(2, 0, 2), Blocks.GRASS_BLOCK.getDefaultState(), false);
 		scene.world.showSection(util.select.layer(0)
 			.add(util.select.position(3, 1, 1))
@@ -265,6 +266,7 @@ public class MechanicalSawScenes {
 	public static void contraption(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("mechanical_saw_contraption", "Using Mechanical Saws on Contraptions");
 		scene.configureBasePlate(1, 0, 6);
+		scene.scaleSceneView(.9f);
 		scene.world.setBlock(util.grid.at(2, 0, 3), Blocks.GRASS_BLOCK.getDefaultState(), false);
 		scene.world.showSection(util.select.layer(0)
 			.add(util.select.position(3, 1, 1))

@@ -12,6 +12,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
@@ -106,6 +107,7 @@ public class PonderWorld extends SchematicWorld {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
 		});
+		scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 	}
 
 	public void pushFakeLight(int light) {
@@ -280,7 +282,7 @@ public class PonderWorld extends SchematicWorld {
 			}
 		}
 	}
-	
+
 	@Override
 	protected BlockState processBlockStateForPrinting(BlockState state) {
 		return state;
@@ -295,5 +297,5 @@ public class PonderWorld extends SchematicWorld {
 	public boolean isBlockPresent(BlockPos pos) {
 		return true; // fix particle lighting
 	}
-
+	
 }

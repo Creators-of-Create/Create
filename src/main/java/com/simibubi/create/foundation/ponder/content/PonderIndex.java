@@ -148,6 +148,15 @@ public class PonderIndex {
 			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
 				PonderTag.CONTRAPTION_ACTOR);
+		PonderRegistry.forComponents(AllBlocks.DEPLOYER)
+			.addStoryBoard("deployer/filter", DeployerScenes::filter, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("deployer/modes", DeployerScenes::modes)
+			.addStoryBoard("deployer/redstone", DeployerScenes::redstone)
+			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_HARVESTER)
+			.addStoryBoard("harvester", MovementActorScenes::harvester);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PLOUGH)
+			.addStoryBoard("plough", MovementActorScenes::plough);
 
 		// Redstone
 		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)
@@ -208,6 +217,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_CRAFTER)
 			.add(AllBlocks.MECHANICAL_DRILL)
 			.add(AllBlocks.MECHANICAL_SAW)
+			.add(AllBlocks.DEPLOYER)
 			.add(AllBlocks.MECHANICAL_PUMP)
 			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllBlocks.MECHANICAL_PISTON)
@@ -320,7 +330,6 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.SEATS[0])
 			.add(AllBlocks.REDSTONE_CONTACT)
-			.add(AllBlocks.SAIL)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
 			.add(Blocks.DROPPER);

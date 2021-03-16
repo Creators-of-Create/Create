@@ -109,8 +109,10 @@ public class PonderRegistry {
 		String filepath = "ponder/" + path + ".nbt";
 		InputStream resourceAsStream = Create.class.getClassLoader()
 			.getResourceAsStream(filepath);
-		if (resourceAsStream == null)
-			throw new IllegalStateException("Could not find ponder schematic: " + filepath);
+		if (resourceAsStream == null) {
+			Create.logger.error("Ponder schematic missing: " + path);
+			return t;
+		}
 		try (DataInputStream stream =
 			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceAsStream)))) {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
