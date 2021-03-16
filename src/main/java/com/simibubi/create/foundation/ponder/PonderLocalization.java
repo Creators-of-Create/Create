@@ -73,6 +73,13 @@ public class PonderLocalization {
 		addGeneral(object, PonderUI.PONDERING, "Pondering about...");
 		addGeneral(object, PonderUI.IDENTIFY_MODE, "Identify mode active.\nUnpause with [%1$s]");
 		addGeneral(object, PonderTagScreen.ASSOCIATED, "Associated Entries");
+		
+		addGeneral(object, PonderUI.CLOSE, "Close");
+		addGeneral(object, PonderUI.IDENTIFY, "Identify");
+		addGeneral(object, PonderUI.NEXT, "Next Scene");
+		addGeneral(object, PonderUI.PREVIOUS, "Previous Scene");
+		addGeneral(object, PonderUI.REPLAY, "Replay");
+		addGeneral(object, PonderUI.THINK_BACK, "Think Back");
 
 		shared.forEach((k, v) -> object.addProperty(Create.ID + "." + langKeyForShared(k), v));
 		tag.forEach((k, v) -> {

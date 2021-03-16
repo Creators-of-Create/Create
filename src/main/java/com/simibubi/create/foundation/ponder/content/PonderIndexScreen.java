@@ -1,16 +1,23 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.ui.ChapterLabel;
 import com.simibubi.create.foundation.ponder.ui.LayoutHelper;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.widget.Widget;
@@ -20,13 +27,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-public class PonderIndexScreen extends AbstractSimiScreen {
+public class PonderIndexScreen extends NavigatableSimiScreen {
 
 	protected final List<PonderChapter> chapters;
 	private final double chapterXmult = 0.5;
@@ -47,10 +49,8 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		super.init();
-
-		// populate lists
 		widgets.clear();
+		super.init();
 
 		chapters.clear();
 		// chapters.addAll(PonderRegistry.chapters.getAllChapters());
@@ -210,7 +210,7 @@ public class PonderIndexScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public boolean isEquivalentTo(AbstractSimiScreen other) {
+	public boolean isEquivalentTo(NavigatableSimiScreen other) {
 		return other instanceof PonderIndexScreen;
 	}
 

@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -39,14 +40,14 @@ public class SchematicWorld extends WrappedWorld {
 	protected List<TileEntity> renderedTileEntities;
 	protected List<Entity> entities;
 	protected MutableBoundingBox bounds;
-	
+
 	public BlockPos anchor;
 	public boolean renderMode;
 
 	public SchematicWorld(World original) {
 		this(BlockPos.ZERO, original);
 	}
-	
+
 	public SchematicWorld(BlockPos anchor, World original) {
 		super(original);
 		this.blocks = new HashMap<>();
@@ -111,12 +112,8 @@ public class SchematicWorld extends WrappedWorld {
 
 		if (pos.getY() - bounds.minY == -1 && !renderMode)
 			return Blocks.GRASS_BLOCK.getDefaultState();
-		if (getBounds().isVecInside(pos) && blocks.containsKey(pos)) {
-			BlockState blockState = blocks.get(pos);
-			if (blockState.has(BlockStateProperties.LIT))
-				blockState = blockState.with(BlockStateProperties.LIT, false);
-			return blockState;
-		}
+		if (getBounds().isVecInside(pos) && blocks.containsKey(pos))
+			return processBlockStateForPrinting(blocks.get(pos));
 		return Blocks.AIR.getDefaultState();
 	}
 
@@ -177,21 +174,23 @@ public class SchematicWorld extends WrappedWorld {
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState arg1, int arg2) {
-		pos = pos.subtract(anchor);
+		pos = pos.toImmutable()
+			.subtract(anchor);
 		bounds.expandTo(new MutableBoundingBox(pos, pos));
 		blocks.put(pos, arg1);
 		if (tileEntities.containsKey(pos)) {
 			TileEntity tileEntity = tileEntities.get(pos);
-			if (!tileEntity.getType().isValidBlock(arg1.getBlock())) {
+			if (!tileEntity.getType()
+				.isValidBlock(arg1.getBlock())) {
 				tileEntities.remove(pos);
 				renderedTileEntities.remove(tileEntity);
 			}
 		}
-		
+
 		TileEntity tileEntity = getTileEntity(pos);
 		if (tileEntity != null)
 			tileEntities.put(pos, tileEntity);
-		
+
 		return true;
 	}
 
@@ -211,6 +210,12 @@ public class SchematicWorld extends WrappedWorld {
 
 	public Iterable<TileEntity> getRenderedTileEntities() {
 		return renderedTileEntities;
+	}
+
+	protected BlockState processBlockStateForPrinting(BlockState state) {
+		if (state.getBlock() instanceof AbstractFurnaceBlock && state.has(BlockStateProperties.LIT))
+			state = state.with(BlockStateProperties.LIT, false);
+		return state;
 	}
 
 }

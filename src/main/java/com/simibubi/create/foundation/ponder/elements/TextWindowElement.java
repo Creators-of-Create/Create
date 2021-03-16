@@ -103,7 +103,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			boxWidth = Math.max(boxWidth, screen.getFontRenderer()
 				.getStringWidth(string));
 		int boxHeight = screen.getFontRenderer()
-			.getWordWrappedHeight(bakedText, textWidth);
+			.getWordWrappedHeight(bakedText, boxWidth);
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, sceneToScreen.y, 400);

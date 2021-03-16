@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
@@ -35,13 +36,13 @@ public class ScreenOpener {
 		openScreen(toOpen);
 	}
 
-	public static void openPreviousScreen(Screen current, Optional<AbstractSimiScreen> screenWithContext) {
+	public static void openPreviousScreen(Screen current, Optional<NavigatableSimiScreen> screenWithContext) {
 		if (backStack.isEmpty())
 			return;
 		backSteppedFrom = current;
 		Screen previousScreen = backStack.pop();
-		if (previousScreen instanceof AbstractSimiScreen) {
-			AbstractSimiScreen previousAbstractSimiScreen = (AbstractSimiScreen) previousScreen;
+		if (previousScreen instanceof NavigatableSimiScreen) {
+			NavigatableSimiScreen previousAbstractSimiScreen = (NavigatableSimiScreen) previousScreen;
 			screenWithContext.ifPresent(s -> s.shareContextWith(previousAbstractSimiScreen));
 			previousAbstractSimiScreen.transition.startWithValue(-0.1)
 				.chase(-1, .4f, LerpedFloat.Chaser.EXP);
@@ -51,7 +52,7 @@ public class ScreenOpener {
 
 	// transitions are only supported in simiScreens atm. they take care of all the
 	// rendering for it
-	public static void transitionTo(AbstractSimiScreen screen) {
+	public static void transitionTo(NavigatableSimiScreen screen) {
 		if (tryBackTracking(screen))
 			return;
 		screen.transition.startWithValue(0.1)
@@ -59,14 +60,14 @@ public class ScreenOpener {
 		open(screen);
 	}
 
-	private static boolean tryBackTracking(AbstractSimiScreen screen) {
+	private static boolean tryBackTracking(NavigatableSimiScreen screen) {
 		List<Screen> screenHistory = getScreenHistory();
 		if (screenHistory.isEmpty())
 			return false;
 		Screen previouslyRenderedScreen = screenHistory.get(0);
 		if (!(previouslyRenderedScreen instanceof AbstractSimiScreen))
 			return false;
-		if (!screen.isEquivalentTo((AbstractSimiScreen) previouslyRenderedScreen))
+		if (!screen.isEquivalentTo((NavigatableSimiScreen) previouslyRenderedScreen))
 			return false;
 
 		openPreviousScreen(Minecraft.getInstance().currentScreen, Optional.of(screen));

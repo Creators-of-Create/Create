@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
     public static int MAX_ORIGIN_DISTANCE = 100;
@@ -40,30 +41,27 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+        int cX = MathHelper.floor(cameraX);
+        int cY = MathHelper.floor(cameraY);
+        int cZ = MathHelper.floor(cameraZ);
 
-        Minecraft mc = Minecraft.getInstance();
-        Entity renderViewEntity = mc.renderViewEntity;
-
-        if (renderViewEntity == null) return;
-
-        BlockPos renderViewPosition = renderViewEntity.getPosition();
-
-        int dX = Math.abs(renderViewPosition.getX() - originCoordinate.getX());
-        int dY = Math.abs(renderViewPosition.getY() - originCoordinate.getY());
-        int dZ = Math.abs(renderViewPosition.getZ() - originCoordinate.getZ());
+        int dX = Math.abs(cX - originCoordinate.getX());
+        int dY = Math.abs(cY - originCoordinate.getY());
+        int dZ = Math.abs(cZ - originCoordinate.getZ());
 
         if (dX > MAX_ORIGIN_DISTANCE ||
-            dY > MAX_ORIGIN_DISTANCE ||
-            dZ > MAX_ORIGIN_DISTANCE) {
+                dY > MAX_ORIGIN_DISTANCE ||
+                dZ > MAX_ORIGIN_DISTANCE) {
 
-            originCoordinate = renderViewPosition;
+            originCoordinate = new BlockPos(cX, cY, cZ);
 
             ArrayList<TileEntity> instancedTiles = new ArrayList<>(instances.keySet());
             invalidate();
             instancedTiles.forEach(this::add);
         }
+
+        super.beginFrame(cameraX, cameraY, cameraZ);
     }
 
     @Override

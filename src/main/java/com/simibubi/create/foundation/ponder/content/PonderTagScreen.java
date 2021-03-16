@@ -7,9 +7,9 @@ import java.util.Objects;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderUI;
@@ -28,11 +28,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PonderTagScreen extends AbstractSimiScreen {
+public class PonderTagScreen extends NavigatableSimiScreen {
 
 	public static final String ASSOCIATED = PonderLocalization.LANG_PREFIX + "associated";
 
-	protected final PonderTag tag;
+	private final PonderTag tag;
 	protected final List<Item> items;
 	private final double itemXmult = 0.5;
 	protected Rectangle2d itemArea;
@@ -52,8 +52,8 @@ public class PonderTagScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		super.init();
 		widgets.clear();
+		super.init();
 
 		// items
 		items.clear();
@@ -146,6 +146,8 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		double mouseX = minecraft.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
 		double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
 		for (Widget widget : widgets) {
+			if (widget == backTrack)
+				continue;
 			if (widget instanceof PonderButton)
 				if (widget.isMouseOver(mouseX, mouseY)) {
 					hoveredItem = ((PonderButton) widget).getItem();
@@ -200,6 +202,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 		RenderSystem.translated(0, 0, 100);
 		FontHelper.drawSplitString(font, desc, x, y, w, 0xeeeeee);
 		RenderSystem.popMatrix();
+		
 	}
 
 	protected void renderItems(int mouseX, int mouseY, float partialTicks) {
@@ -293,7 +296,7 @@ public class PonderTagScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public boolean isEquivalentTo(AbstractSimiScreen other) {
+	public boolean isEquivalentTo(NavigatableSimiScreen other) {
 		if (other instanceof PonderTagScreen)
 			return tag == ((PonderTagScreen) other).tag;
 		return super.isEquivalentTo(other);
@@ -302,6 +305,10 @@ public class PonderTagScreen extends AbstractSimiScreen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
+	}
+
+	public PonderTag getTag() {
+		return tag;
 	}
 
 }

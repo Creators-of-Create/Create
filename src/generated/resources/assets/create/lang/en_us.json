@@ -1816,6 +1816,12 @@
 	"create.ponder.pondering": "Pondering about...",
 	"create.ponder.identify_mode": "Identify mode active.\nUnpause with [%1$s]",
 	"create.ponder.associated": "Associated Entries",
+	"create.ponder.close": "Close",
+	"create.ponder.identify": "Identify",
+	"create.ponder.next": "Next Scene",
+	"create.ponder.previous": "Previous Scene",
+	"create.ponder.replay": "Replay",
+	"create.ponder.think_back": "Think Back",
 	"create.ponder.shared.movement_anchors": "With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "32 RPM",
 	"create.ponder.shared.sneak_and": "Sneak +",
@@ -1849,6 +1855,23 @@
 	"create.ponder.tag.kinetic_relays.description": "Components which help relaying Rotational Force elsewhere",
 	"create.ponder.tag.fluids": "Fluid Manipulators",
 	"create.ponder.tag.fluids.description": "Components which help relaying and making use of Fluids",
+
+	"create.ponder.adjustable_pulse_repeater.header": "Controlling signals using Adjustable Pulse Repeaters",
+	"create.ponder.adjustable_pulse_repeater.text_1": "Adjustable Pulse Repeaters emit a short pulse at a delay",
+	"create.ponder.adjustable_pulse_repeater.text_2": "Using the mouse wheel, the charge time can be configured",
+	"create.ponder.adjustable_pulse_repeater.text_3": "Configured delays can range up to 30 minutes",
+
+	"create.ponder.adjustable_repeater.header": "Controlling signals using Adjustable Repeaters",
+	"create.ponder.adjustable_repeater.text_1": "Adjustable Repeaters behave similarly to regular Repeaters",
+	"create.ponder.adjustable_repeater.text_2": "They charge up for a set time...",
+	"create.ponder.adjustable_repeater.text_3": "...and cool down for the same duration",
+	"create.ponder.adjustable_repeater.text_4": "Using the mouse wheel, the charge time can be configured",
+	"create.ponder.adjustable_repeater.text_5": "Configured delays can range up to 30 minutes",
+
+	"create.ponder.analog_lever.header": "Controlling signals using the Analog Lever",
+	"create.ponder.analog_lever.text_1": "Analog Levers make for a compact and precise source of redstone power",
+	"create.ponder.analog_lever.text_2": "Right-click to increase its analog power output",
+	"create.ponder.analog_lever.text_3": "Right-click while Sneaking to decrease the power output again",
 
 	"create.ponder.bearing_modes.header": "Movement Modes of the Mechanical Bearing",
 	"create.ponder.bearing_modes.text_1": "When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle",
@@ -2077,6 +2100,21 @@
 	"create.ponder.portable_storage_interface_redstone.header": "Redstone Control",
 	"create.ponder.portable_storage_interface_redstone.text_1": "Redstone power will prevent the stationary interface from engaging",
 
+	"create.ponder.powered_latch.header": "Controlling signals using the Powered Latch",
+	"create.ponder.powered_latch.text_1": "Powered Latches are redstone controllable Levers",
+	"create.ponder.powered_latch.text_2": "Signals at the back switch it on",
+	"create.ponder.powered_latch.text_3": "Signals from the side switch it back off",
+	"create.ponder.powered_latch.text_4": "Powered latches can also be toggled manually",
+
+	"create.ponder.powered_toggle_latch.header": "Controlling signals using the Powered Toggle Latch",
+	"create.ponder.powered_toggle_latch.text_1": "Powered Toggle Latches are redstone controllable Levers",
+	"create.ponder.powered_toggle_latch.text_2": "Signals at the back will toggle its state",
+	"create.ponder.powered_toggle_latch.text_3": "...on and back off",
+	"create.ponder.powered_toggle_latch.text_4": "Powered toggle latches can also be toggled manually",
+
+	"create.ponder.pulse_repeater.header": "Controlling signals using Pulse Repeaters",
+	"create.ponder.pulse_repeater.text_1": "Pulse Repeaters will shorten any redstone signal to a single pulse",
+
 	"create.ponder.radial_chassis.header": "Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "Radial Chassis connect to identical Chassis blocks in a row",
 	"create.ponder.radial_chassis.text_2": "When one is moved by a Contraption, the others are dragged with it",
@@ -2091,6 +2129,14 @@
 	"create.ponder.redstone_contact.header": "Redstone Contacts",
 	"create.ponder.redstone_contact.text_1": "Redstone Contacts facing each other will emit a redstone signal",
 	"create.ponder.redstone_contact.text_2": "This still applies when one of them is part of a moving Contraption",
+
+	"create.ponder.redstone_link.header": "Using Redstone Links",
+	"create.ponder.redstone_link.text_1": "Redstone Links can transmit redstone signals wirelessly",
+	"create.ponder.redstone_link.text_2": "Right-click while Sneaking to toggle receive mode",
+	"create.ponder.redstone_link.text_3": "A simple Right-click with a Wrench can do the same",
+	"create.ponder.redstone_link.text_4": "Receivers will emit the redstone power of transmitters within a range of 128 blocks",
+	"create.ponder.redstone_link.text_5": "Placing items in the two slots can specify a Frequency",
+	"create.ponder.redstone_link.text_6": "Only the links with matching Frequency combinations will communicate",
 
 	"create.ponder.rope_pulley.header": "Moving Structures using Rope Pulleys",
 	"create.ponder.rope_pulley.text_1": "Rope Pulleys can move blocks vertically when given Rotational Force",

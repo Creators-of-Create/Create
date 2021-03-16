@@ -55,11 +55,13 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RedstoneTorchBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.state.IProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -334,6 +336,15 @@ public class SceneBuilder {
 				expands, duration));
 		}
 
+		public void showRepeaterScrollInput(BlockPos pos, int duration) {
+			float s = 1 / 16f;
+			float q = 1 / 6f;
+			Vec3d expands = new Vec3d(q, s, q);
+			addInstruction(
+				new HighlightValueBoxInstruction(scene.getSceneBuildingUtil().vector.blockSurface(pos, Direction.DOWN)
+					.add(0, 3 / 16f, 0), expands, duration));
+		}
+
 		public void showFilterSlotInput(Vec3d location, int duration) {
 			float s = .1f;
 			Vec3d expands = new Vec3d(s, s, s);
@@ -523,6 +534,11 @@ public class SceneBuilder {
 			modifyBlocks(scene.getSceneBuildingUtil().select.position(pos), stateFunc, spawnParticles);
 		}
 
+		public void cycleBlockProperty(BlockPos pos, IProperty<?> property) {
+			modifyBlocks(scene.getSceneBuildingUtil().select.position(pos),
+				s -> s.has(property) ? s.cycle(property) : s, false);
+		}
+
 		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
 			addInstruction(new ReplaceBlocksInstruction(selection, stateFunc, false, spawnParticles));
 		}
@@ -533,6 +549,8 @@ public class SceneBuilder {
 					s = s.with(BlockStateProperties.POWER_0_15, s.get(BlockStateProperties.POWER_0_15) == 0 ? 15 : 0);
 				if (s.has(BlockStateProperties.POWERED))
 					s = s.cycle(BlockStateProperties.POWERED);
+				if (s.has(RedstoneTorchBlock.LIT))
+					s = s.cycle(RedstoneTorchBlock.LIT);
 				return s;
 			}, false);
 		}

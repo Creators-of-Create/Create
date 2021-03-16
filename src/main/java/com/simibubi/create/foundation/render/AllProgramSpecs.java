@@ -19,6 +19,10 @@ import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
 import net.minecraft.util.ResourceLocation;
 
 public class AllProgramSpecs {
+    public static void init() {
+        // noop, make sure the static field are loaded.
+    }
+
     public static final ProgramSpec<BasicProgram> MODEL = register(ProgramSpec.builder("model", BasicProgram::new)
                                                                                  .addAttributes(ModelVertexAttributes.class)
                                                                                  .addAttributes(InstanceVertexAttributes.class)
@@ -89,10 +93,6 @@ public class AllProgramSpecs {
                                                                                   .setVert(Locations.CONTRAPTION_ACTOR)
                                                                                   .setFrag(Locations.CONTRAPTION)
                                                                                   .createProgramSpec());
-
-    public static class Contraption {
-
-    }
 
 
     public static class Locations {

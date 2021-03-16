@@ -14,10 +14,13 @@ import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.OptifineHandler;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 import net.minecraft.block.Block;
@@ -30,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -37,6 +41,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +53,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static KineticRenderer kineticRenderer;
+	public static WorldAttached<KineticRenderer> kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 	public static GhostBlocks ghostBlocks;
 
@@ -70,7 +75,8 @@ public class CreateClient {
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
-		kineticRenderer = new KineticRenderer();
+		AllProgramSpecs.init();
+		kineticRenderer = new WorldAttached<>(KineticRenderer::new);
 
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
@@ -192,8 +198,18 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers() {
-		CreateClient.bufferCache.invalidate();
-		CreateClient.kineticRenderer.invalidate();
+		invalidateRenderers(null);
+	}
+
+	public static void invalidateRenderers(@Nullable IWorld world) {
+		bufferCache.invalidate();
+
+		if (world != null) {
+			kineticRenderer.get(world).invalidate();
+		} else {
+			kineticRenderer.forEach(InstancedTileRenderer::invalidate);
+		}
+
 		ContraptionRenderDispatcher.invalidateAll();
 	}
 }

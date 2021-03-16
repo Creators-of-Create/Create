@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -28,10 +27,10 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.ClipboardHelper;
 import net.minecraft.client.GameSettings;
@@ -54,7 +53,7 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class PonderUI extends AbstractSimiScreen {
+public class PonderUI extends NavigatableSimiScreen {
 
 	public static int ponderTicks;
 	public static float ponderPartialTicksPaused;
@@ -62,6 +61,11 @@ public class PonderUI extends AbstractSimiScreen {
 	public static final String PONDERING = PonderLocalization.LANG_PREFIX + "pondering";
 	public static final String IDENTIFY_MODE = PonderLocalization.LANG_PREFIX + "identify_mode";
 	public static final String IN_CHAPTER = PonderLocalization.LANG_PREFIX + "in_chapter";
+	public static final String IDENTIFY = PonderLocalization.LANG_PREFIX + "identify";
+	public static final String PREVIOUS = PonderLocalization.LANG_PREFIX + "previous";
+	public static final String CLOSE = PonderLocalization.LANG_PREFIX + "close";
+	public static final String NEXT = PonderLocalization.LANG_PREFIX + "next";
+	public static final String REPLAY = PonderLocalization.LANG_PREFIX + "replay";
 
 	private List<PonderScene> scenes;
 	private List<PonderTag> tags;
@@ -83,7 +87,7 @@ public class PonderUI extends AbstractSimiScreen {
 	private int index = 0;
 	private PonderTag referredToByTag;
 
-	private PonderButton left, right, scan, chap, userMode;
+	private PonderButton left, right, scan, chap, userMode, close, replay;
 	private PonderProgressBar progressBar;
 	private int skipCooling = 0;
 
@@ -133,8 +137,8 @@ public class PonderUI extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		super.init();
 		widgets.clear();
+		super.init();
 
 		tagButtons = new ArrayList<>();
 		tagFades = new ArrayList<>();
@@ -187,7 +191,7 @@ public class PonderUI extends AbstractSimiScreen {
 			.fade(0, -1));
 
 		if (PonderIndex.EDITOR_MODE) {
-			widgets.add(userMode = new PonderButton(31, bY, () -> {
+			widgets.add(userMode = new PonderButton(width - 20 - 31, bY, () -> {
 				userViewMode = !userViewMode;
 			}).showing(AllIcons.I_MTD_USER_MODE)
 				.fade(0, -1));
@@ -199,7 +203,7 @@ public class PonderUI extends AbstractSimiScreen {
 			.fade(0, -1));
 
 		bX += 20 + spacing;
-		widgets.add(new PonderButton(bX, bY, this::onClose).showing(AllIcons.I_MTD_CLOSE)
+		widgets.add(close = new PonderButton(bX, bY, this::onClose).showing(AllIcons.I_MTD_CLOSE)
 			.shortcut(bindings.keyBindInventory)
 			.fade(0, -1));
 
@@ -209,7 +213,7 @@ public class PonderUI extends AbstractSimiScreen {
 			.fade(0, -1));
 
 		bX += 50 + spacing;
-		widgets.add(new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
+		widgets.add(replay = new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
 			.shortcut(bindings.keyBindBack)
 			.fade(0, -1));
 	}
@@ -460,6 +464,7 @@ public class PonderUI extends AbstractSimiScreen {
 		for (Widget widget : widgets)
 			noWidgetsHovered &= !widget.isMouseOver(mouseX, mouseY);
 
+		int tooltipColor = 0xffa3a3a3;
 		{
 			// Chapter title
 			RenderSystem.pushMatrix();
@@ -480,14 +485,15 @@ public class PonderUI extends AbstractSimiScreen {
 				.scale(2)
 				.render();
 
-			drawString(font, Lang.translate(PONDERING), x, y - 6, 0xffa3a3a3);
+			drawString(font, Lang.translate(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
 			x += 0;
 			// RenderSystem.translated(0, 3 * (indexDiff), 0);
 			RenderSystem.translated(x, y, 0);
 			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
 			RenderSystem.translated(0, 0, 5);
-			FontHelper.drawSplitString(font, title, 0, 0, left.x - 51, ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+			FontHelper.drawSplitString(font, title, 0, 0, left.x - 51,
+				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			RenderSystem.popMatrix();
 
 			if (chapter != null) {
@@ -496,12 +502,17 @@ public class PonderUI extends AbstractSimiScreen {
 				RenderSystem.translated(chap.x - 4 - 4, chap.y, 0);
 				UIRenderHelper.streak(180, 4, 10, 26, (int) (150 * fade), 0x101010);
 
-				drawRightAlignedString(font, Lang.translate(IN_CHAPTER), 0, 0, 0xffa3a3a3);
+				drawRightAlignedString(font, Lang.translate(IN_CHAPTER), 0, 0, tooltipColor);
 				drawRightAlignedString(font,
 					Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId()), 0, 12, 0xffeeeeee);
 
 				RenderSystem.popMatrix();
 			}
+
+			UIRenderHelper.breadcrumbArrow(width / 2 - 20, height - 51, 20, 20, 5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(width / 2 + 20, height - 51, -20, 20, -5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(width / 2 - 90, height - 51, 70, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(width / 2 + 90, height - 51, -70, 20, -5, 0x40aa9999, 0x10aa9999);
 		}
 
 		if (identifyMode) {
@@ -612,6 +623,21 @@ public class PonderUI extends AbstractSimiScreen {
 
 				RenderSystem.popMatrix();
 			});
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translated(0, 0, 500);
+		int tooltipY = height - 16;
+		if (scan.isHovered())
+			drawCenteredString(font, Lang.translate(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
+		if (index != 0 && left.isHovered())
+			drawCenteredString(font, Lang.translate(PREVIOUS), left.x + 10, tooltipY, tooltipColor);
+		if (close.isHovered())
+			drawCenteredString(font, Lang.translate(CLOSE), close.x + 10, tooltipY, tooltipColor);
+		if (index != scenes.size() - 1 && right.isHovered())
+			drawCenteredString(font, Lang.translate(NEXT), right.x + 10, tooltipY, tooltipColor);
+		if (replay.isHovered())
+			drawCenteredString(font, Lang.translate(REPLAY), replay.x + 10, tooltipY, tooltipColor);
+		RenderSystem.popMatrix();
 	}
 
 	protected void lowerButtonGroup(int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
@@ -838,14 +864,14 @@ public class PonderUI extends AbstractSimiScreen {
 	}
 
 	@Override
-	public boolean isEquivalentTo(AbstractSimiScreen other) {
+	public boolean isEquivalentTo(NavigatableSimiScreen other) {
 		if (other instanceof PonderUI)
 			return stack.isItemEqual(((PonderUI) other).stack);
 		return super.isEquivalentTo(other);
 	}
 
 	@Override
-	public void shareContextWith(AbstractSimiScreen other) {
+	public void shareContextWith(NavigatableSimiScreen other) {
 		if (other instanceof PonderUI) {
 			PonderUI ponderUI = (PonderUI) other;
 			ponderUI.referredToByTag = referredToByTag;

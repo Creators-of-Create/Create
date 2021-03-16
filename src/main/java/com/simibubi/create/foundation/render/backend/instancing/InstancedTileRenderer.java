@@ -6,8 +6,10 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -65,6 +67,10 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialType<M> materialType) {
         return (RenderMaterial<P, M>) materials.get(materialType);
+    }
+
+    public RenderMaterial<P, InstancedModel<ModelData>> basicMaterial() {
+        return getMaterial(RenderMaterials.MODELS);
     }
 
     @Nullable

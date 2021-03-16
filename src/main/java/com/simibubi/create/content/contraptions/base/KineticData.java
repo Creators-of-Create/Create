@@ -4,12 +4,13 @@ import java.nio.ByteBuffer;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
-public class KineticData<D extends KineticData<D>> extends InstanceData {
+public class KineticData<D extends KineticData<D>> extends InstanceData implements IFlatLight<D> {
     private float x;
     private float y;
     private float z;
@@ -65,11 +66,13 @@ public class KineticData<D extends KineticData<D>> extends InstanceData {
         return (D) this;
     }
 
+    @Override
     public D setBlockLight(int blockLight) {
         this.blockLight = (byte) ((blockLight & 0xF) << 4);
         return (D) this;
     }
 
+    @Override
     public D setSkyLight(int skyLight) {
         this.skyLight = (byte) ((skyLight & 0xF) << 4);
         return (D) this;

@@ -149,6 +149,24 @@ public class PonderIndex {
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
 				PonderTag.CONTRAPTION_ACTOR);
 
+		// Redstone
+		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)
+			.addStoryBoard("pulse_repeater", RedstoneScenes::pulseRepeater);
+		PonderRegistry.forComponents(AllBlocks.ADJUSTABLE_REPEATER)
+			.addStoryBoard("adjustable_repeater", RedstoneScenes::adjustableRepeater);
+		PonderRegistry.forComponents(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
+			.addStoryBoard("adjustable_pulse_repeater", RedstoneScenes::adjustablePulseRepeater);
+		PonderRegistry.forComponents(AllBlocks.POWERED_LATCH)
+			.addStoryBoard("powered_latch", RedstoneScenes::poweredLatch);
+		PonderRegistry.forComponents(AllBlocks.POWERED_TOGGLE_LATCH)
+			.addStoryBoard("powered_toggle_latch", RedstoneScenes::poweredToggleLatch);
+		PonderRegistry.forComponents(AllBlocks.ANALOG_LEVER)
+			.addStoryBoard("analog_lever", RedstoneScenes::analogLever);
+		PonderRegistry.forComponents(AllBlocks.NIXIE_TUBE)
+			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
+		PonderRegistry.forComponents(AllBlocks.REDSTONE_LINK)
+			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
+
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
 			DebugScenes.registerAll();
