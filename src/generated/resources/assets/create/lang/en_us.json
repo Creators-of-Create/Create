@@ -2020,6 +2020,11 @@
 	"create.ponder.funnel_transfer.text_2": "Chutes or Smart chutes might be more suitable for such purposes.",
 	"create.ponder.funnel_transfer.text_3": "Same applies for horizontal movement.\nA mechanical belt should help here.",
 
+	"create.ponder.furnace_engine.header": "Generating Rotational Force using the Furnace Engine",
+	"create.ponder.furnace_engine.text_1": "Furnace Engines generate Rotational Force while their attached Furnace is running",
+	"create.ponder.furnace_engine.text_2": "The provided Rotational Force has a very large stress capacity",
+	"create.ponder.furnace_engine.text_3": "Using a Blast Furnace will double the efficiency of the Engine",
+
 	"create.ponder.gantry_carriage.header": "Using Gantry Carriages",
 	"create.ponder.gantry_carriage.text_1": "Gantry Carriages can mount to and slide along a Gantry Shaft.",
 	"create.ponder.gantry_carriage.text_2": "Gantry setups can move attached Blocks.",
@@ -2191,6 +2196,17 @@
 	"create.ponder.rope_pulley_modes.header": "Movement Modes of the Rope Pulley",
 	"create.ponder.rope_pulley_modes.text_1": "Whenever Pulleys stop moving, the moved structure reverts to blocks",
 	"create.ponder.rope_pulley_modes.text_2": "It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.rotation_speed_controller.header": "Using the Rotational Speed Controller",
+	"create.ponder.rotation_speed_controller.text_1": "Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them",
+	"create.ponder.rotation_speed_controller.text_2": "Using the scroll input on its side, the conveyed speed can be configured",
+
+	"create.ponder.sequenced_gearshift.header": "Controlling Rotational Speed using Sequenced Gearshifts",
+	"create.ponder.sequenced_gearshift.text_1": "Seq. Gearshifts relay rotation by following a timed list of instructions",
+	"create.ponder.sequenced_gearshift.text_2": "Right-click it to open the Configuration UI",
+	"create.ponder.sequenced_gearshift.text_3": "Upon receiving a Redstone Signal, it will start running its configured sequence",
+	"create.ponder.sequenced_gearshift.text_4": "Once finished, it waits for the next Redstone Signal and starts over",
+	"create.ponder.sequenced_gearshift.text_5": "A redstone comparator can be used to read the current progress",
 
 	"create.ponder.shaft.header": "Relaying rotational force using Shafts",
 	"create.ponder.shaft.text_1": "Shafts will relay rotation in a straight line.",

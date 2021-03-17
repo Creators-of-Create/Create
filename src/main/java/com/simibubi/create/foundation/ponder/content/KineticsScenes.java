@@ -1,23 +1,32 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import java.io.File;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FurnaceBlock;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -280,7 +289,7 @@ public class KineticsScenes {
 		scene.title("gearbox", "Relaying rotational force using Gearboxes");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
-		
+
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.world.showSection(util.select.fromTo(4, 1, 6, 3, 2, 5), Direction.UP);
 		scene.idle(10);
@@ -687,6 +696,309 @@ public class KineticsScenes {
 			.placeNearTarget()
 			.pointAt(centerOf);
 		scene.idle(90);
+	}
+
+	public static void sequencedGearshift(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("sequenced_gearshift", "Controlling Rotational Speed using Sequenced Gearshifts");
+		scene.configureBasePlate(1, 0, 5);
+		scene.showBasePlate();
+
+		Selection redstone = util.select.fromTo(3, 1, 0, 3, 1, 1);
+
+		scene.world.showSection(util.select.position(6, 0, 3)
+			.add(redstone), Direction.UP);
+		scene.idle(5);
+		scene.world.showSection(util.select.fromTo(6, 1, 2, 4, 1, 2), Direction.DOWN);
+
+		BlockPos gearshiftPos = util.grid.at(3, 1, 2);
+		Selection gearshiftSelection = util.select.position(gearshiftPos);
+		BlockPos bearingPos = util.grid.at(1, 1, 2);
+		BlockPos buttonPos = util.grid.at(3, 1, 0);
+		Selection outputKinetics = util.select.fromTo(3, 1, 2, 1, 1, 2);
+
+		scene.world.setKineticSpeed(gearshiftSelection, 0);
+		scene.idle(10);
+
+		scene.world.showSection(gearshiftSelection, Direction.DOWN);
+		scene.idle(10);
+
+		scene.world.showSection(util.select.fromTo(2, 1, 2, 1, 1, 2), Direction.EAST);
+		scene.idle(10);
+
+		Vec3d top = util.vector.topOf(gearshiftPos);
+		scene.overlay.showText(60)
+			.text("Seq. Gearshifts relay rotation by following a timed list of instructions")
+			.attachKeyFrame()
+			.pointAt(top)
+			.placeNearTarget();
+		scene.idle(80);
+
+		scene.overlay.showControls(new InputWindowElement(top, Pointing.DOWN).rightClick(), 40);
+		scene.idle(7);
+		scene.overlay.showSelectionWithText(gearshiftSelection, 50)
+			.colored(PonderPalette.BLUE)
+			.text("Right-click it to open the Configuration UI")
+			.pointAt(top)
+			.placeNearTarget();
+		scene.idle(60);
+
+		ElementLink<WorldSectionElement> contraption =
+			scene.world.showIndependentSection(util.select.fromTo(0, 3, 2, 0, 0, 2), Direction.EAST);
+		scene.world.configureCenterOfRotation(contraption, util.vector.centerOf(bearingPos));
+
+		scene.idle(20);
+		scene.world.toggleRedstonePower(redstone);
+		scene.effects.indicateRedstone(buttonPos);
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 16);
+		scene.world.rotateBearing(bearingPos, 90, 40);
+		scene.world.rotateSection(contraption, 90, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.idle(20);
+		scene.world.toggleRedstonePower(redstone);
+		scene.idle(20);
+
+		scene.overlay.showText(80)
+			.text("Upon receiving a Redstone Signal, it will start running its configured sequence")
+			.attachKeyFrame()
+			.pointAt(top);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, -32);
+		scene.world.rotateBearing(bearingPos, -180, 40);
+		scene.world.rotateSection(contraption, -180, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.idle(40);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 0);
+		scene.idle(20);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 16);
+		scene.world.rotateBearing(bearingPos, 90, 40);
+		scene.world.rotateSection(contraption, 90, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.idle(40);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 0);
+
+		scene.idle(20);
+		scene.overlay.showText(70)
+			.text("Once finished, it waits for the next Redstone Signal and starts over")
+			.pointAt(util.vector.topOf(util.grid.at(3, 0, 1)));
+		scene.idle(80);
+
+		scene.idle(20);
+		scene.world.toggleRedstonePower(redstone);
+		scene.effects.indicateRedstone(buttonPos);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 16);
+		scene.world.rotateBearing(bearingPos, 90, 40);
+		scene.world.rotateSection(contraption, 90, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.idle(20);
+
+		scene.overlay.showText(60)
+			.text("A redstone comparator can be used to read the current progress")
+			.attachKeyFrame()
+			.pointAt(util.vector.topOf(util.grid.at(3, 0, 1)));
+
+		scene.world.hideSection(redstone, Direction.NORTH);
+		scene.idle(15);
+
+		BlockPos wire = util.grid.at(5, 1, 0);
+		Selection nixie = util.select.position(4, 1, 0);
+		ElementLink<WorldSectionElement> comparator =
+			scene.world.showIndependentSection(util.select.fromTo(5, 1, 1, 4, 1, 0), Direction.SOUTH);
+		scene.world.moveSection(comparator, util.vector.of(-2, 0, 0), 0);
+		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
+		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 1));
+
+		scene.idle(5);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, -32);
+		scene.world.rotateBearing(bearingPos, -180, 40);
+		scene.world.rotateSection(contraption, -180, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 2));
+		scene.idle(40);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 0);
+		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 3));
+		scene.idle(20);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.setKineticSpeed(outputKinetics, 16);
+		scene.world.rotateBearing(bearingPos, 90, 40);
+		scene.world.rotateSection(contraption, 90, 0, 0, 40);
+		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
+		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 4));
+		scene.idle(40);
+
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
+		scene.world.modifyBlock(wire, s -> s.with(RedstoneWireBlock.POWER, 0), false);
+		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
+		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
+		scene.world.setKineticSpeed(outputKinetics, 0);
+	}
+
+	public static void furnaceEngine(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("furnace_engine", "Generating Rotational Force using the Furnace Engine");
+		scene.configureBasePlate(0, 0, 6);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+
+		BlockPos furnacePos = util.grid.at(4, 1, 3);
+		BlockPos cogPos = util.grid.at(1, 1, 2);
+		BlockPos gaugePos = util.grid.at(1, 1, 1);
+
+		scene.idle(5);
+		Selection furnaceSelect = util.select.position(furnacePos);
+		scene.world.showSection(furnaceSelect, Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(furnacePos.west()), Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(furnacePos.west(3)), Direction.EAST);
+		scene.idle(10);
+
+		scene.overlay.showText(80)
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(furnacePos.west()))
+			.text("Furnace Engines generate Rotational Force while their attached Furnace is running");
+		scene.idle(90);
+
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.topOf(furnacePos), Pointing.DOWN).withItem(new ItemStack(Items.OAK_LOG)),
+			30);
+		scene.idle(5);
+		scene.overlay
+			.showControls(new InputWindowElement(util.vector.blockSurface(furnacePos, Direction.NORTH), Pointing.RIGHT)
+				.withItem(new ItemStack(Items.COAL)), 30);
+		scene.idle(7);
+		scene.world.cycleBlockProperty(furnacePos, FurnaceBlock.LIT);
+		scene.effects.emitParticles(util.vector.of(4.5, 1.2, 2.9), Emitter.simple(ParticleTypes.LAVA, Vec3d.ZERO), 4,
+			1);
+		scene.world.setKineticSpeed(util.select.fromTo(1, 1, 3, 1, 1, 1), 16);
+		scene.idle(40);
+
+		scene.world.showSection(util.select.position(cogPos), Direction.SOUTH);
+		scene.idle(15);
+		scene.effects.rotationSpeedIndicator(cogPos);
+		scene.world.showSection(util.select.position(gaugePos), Direction.SOUTH);
+		scene.idle(15);
+
+		scene.overlay.showText(80)
+			.attachKeyFrame()
+			.placeNearTarget()
+			.colored(PonderPalette.GREEN)
+			.pointAt(util.vector.blockSurface(gaugePos, Direction.WEST))
+			.text("The provided Rotational Force has a very large stress capacity");
+		scene.idle(90);
+
+		ElementLink<WorldSectionElement> engine =
+			scene.world.makeSectionIndependent(util.select.fromTo(3, 1, 3, 1, 1, 1));
+		scene.world.moveSection(engine, util.vector.of(0, 1, 0), 15);
+		scene.idle(10);
+		scene.world.hideSection(furnaceSelect, Direction.NORTH);
+		scene.idle(15);
+		scene.world.setBlock(furnacePos, Blocks.BLAST_FURNACE.getDefaultState()
+			.with(FurnaceBlock.FACING, Direction.NORTH)
+			.with(FurnaceBlock.LIT, true), false);
+		scene.world.showSection(furnaceSelect, Direction.NORTH);
+		scene.idle(10);
+		scene.world.moveSection(engine, util.vector.of(0, -1, 0), 15);
+		scene.idle(10);
+		scene.world.setKineticSpeed(util.select.fromTo(1, 1, 3, 1, 1, 1), 32);
+		scene.idle(5);
+		scene.effects.rotationSpeedIndicator(cogPos);
+
+		scene.overlay.showText(80)
+			.placeNearTarget()
+			.colored(PonderPalette.MEDIUM)
+			.pointAt(util.vector.topOf(furnacePos.west()))
+			.text("Using a Blast Furnace will double the efficiency of the Engine");
+
+	}
+
+	public static void speedController(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("rotation_speed_controller", "Using the Rotational Speed Controller");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		BlockPos cogPos = util.grid.at(1, 2, 1);
+		Selection gaugeSelect = util.select.position(1, 2, 3);
+
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.5f);
+		scene.world.setKineticSpeed(gaugeSelect, 0);
+		scene.world.showSection(util.select.fromTo(5, 1, 1, 2, 1, 1), Direction.DOWN);
+		scene.world.showSection(util.select.fromTo(1, 1, 3, 1, 2, 3), Direction.DOWN);
+		scene.idle(10);
+		ElementLink<WorldSectionElement> rsc =
+			scene.world.showIndependentSection(util.select.position(0, 1, 1), Direction.DOWN);
+		scene.world.moveSection(rsc, util.vector.of(1, 0, 0), 0);
+		ElementLink<WorldSectionElement> rsc2 =
+			scene.world.showIndependentSection(util.select.position(1, 1, 1), Direction.DOWN);
+		scene.world.moveSection(rsc2, util.vector.of(0, -100, 0), 0);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(1, 2, 1), Direction.DOWN);
+		scene.idle(15);
+		scene.effects.indicateSuccess(cogPos);
+		scene.world.moveSection(rsc2, util.vector.of(0, 100, 0), 0);
+		scene.world.moveSection(rsc, util.vector.of(0, -100, 0), 0);
+		scene.idle(5);
+		scene.world.showSection(util.select.position(1, 2, 2), Direction.DOWN);
+		scene.idle(10);
+		scene.world.setKineticSpeed(gaugeSelect, 8);
+		scene.effects.indicateSuccess(util.grid.at(1, 2, 3));
+
+		scene.overlay.showText(90)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(util.vector.blockSurface(cogPos, Direction.NORTH))
+			.text("Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them");
+		scene.idle(100);
+
+		Vec3d inputVec = util.vector.of(1.5, 1.75, 1);
+		scene.overlay.showFilterSlotInput(inputVec, 60);
+
+		scene.overlay.showText(70)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.pointAt(inputVec)
+			.text("Using the scroll input on its side, the conveyed speed can be configured");
+		scene.idle(80);
+
+		InputWindowElement input = new InputWindowElement(inputVec, Pointing.UP).scroll();
+		scene.overlay.showControls(input, 40);
+		scene.idle(15);
+		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), 4);
+		scene.effects.rotationSpeedIndicator(cogPos);
+		scene.idle(55);
+		scene.markAsFinished();
+
+		scene.overlay.showControls(input, 30);
+		scene.idle(15);
+		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), 4);
+		scene.effects.rotationSpeedIndicator(cogPos);
+		scene.idle(55);
+		
+		scene.overlay.showControls(input, 30);
+		scene.idle(15);
+		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), -.05f);
+		scene.effects.rotationSpeedIndicator(cogPos);
+		scene.idle(35);
 	}
 
 }

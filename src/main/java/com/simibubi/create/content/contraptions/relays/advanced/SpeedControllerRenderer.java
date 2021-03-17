@@ -41,11 +41,12 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		BlockPos pos = tileEntityIn.getPos();
 		World world = tileEntityIn.getWorld();
 		BlockState blockState = tileEntityIn.getBlockState();
+		boolean alongX = blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
 		SuperByteBuffer bracket = AllBlockPartials.SPEED_CONTROLLER_BRACKET.renderOn(blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
-			(float) (blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Math.PI : 0));
+			(float) (alongX ? Math.PI : Math.PI / 2));
 		bracket.light(WorldRenderer.getLightmapCoordinates(world, pos.up()));
 		bracket.renderInto(ms, builder);
 	}

@@ -45,6 +45,9 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
 			PonderTag.KINETIC_RELAYS);
 
+		PonderRegistry.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
+			.addStoryBoard("sequenced_gearshift", KineticsScenes::sequencedGearshift);
+
 		PonderRegistry.forComponents(AllBlocks.ENCASED_FAN)
 			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing)
@@ -66,6 +69,11 @@ public class PonderIndex {
 			ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
+
+		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE, AllBlocks.FLYWHEEL)
+			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
+		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
+			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
