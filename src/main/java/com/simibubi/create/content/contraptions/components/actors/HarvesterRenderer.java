@@ -43,24 +43,6 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 
-	public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-		RenderMaterial<?, InstancedModel<ContraptionActorData>> renderMaterial = contraption.getActorMaterial();
-
-		BlockState state = context.state;
-		InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state);
-
-		Direction facing = state.get(HORIZONTAL_FACING);
-		float originOffset = 1 / 16f;
-		Vector3f rotOffset = new Vector3f(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
-		model.getInstance(model.createInstance())
-			.setPosition(context.localPos)
-			.setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-			.setRotationOffset(0)
-			.setRotationCenter(rotOffset)
-			.setRotationAxis(-1, 0, 0)
-			.setLocalRotation(0, facing.getHorizontalAngle(), 0);
-	}
-
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
 		BlockState blockState = context.state;
@@ -90,7 +72,4 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 			.rotate(Direction.WEST, AngleHelper.rad(angle))
 			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z);
 	}
-
-	public static void transformHead(MatrixStack ms, float angle) {}
-
 }

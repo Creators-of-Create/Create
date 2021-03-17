@@ -22,23 +22,6 @@ public class DrillInstance extends SingleRotatingInstance {
         super(modelManager, tile);
     }
 
-    public static void addInstanceForContraption(RenderedContraption contraption, MovementContext context) {
-        RenderMaterial<?, InstancedModel<ContraptionActorData>> renderMaterial = contraption.getActorMaterial();
-
-        BlockState state = context.state;
-        InstancedModel<ContraptionActorData> model = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state);
-
-        Direction facing = state.get(DrillBlock.FACING);
-        float eulerX = AngleHelper.verticalAngle(facing) + ((facing.getAxis() == Direction.Axis.Y) ? 180 : 0);
-        float eulerY = facing.getHorizontalAngle();
-        model.getInstance(model.createInstance())
-             .setPosition(context.localPos)
-             .setBlockLight(contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos))
-             .setRotationOffset(0)
-             .setRotationAxis(0, 0, 1)
-             .setLocalRotation(eulerX, eulerY, 0);
-    }
-
     @Override
     protected InstancedModel<RotatingData> getModel() {
         return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthRotating(modelManager, tile.getBlockState());
