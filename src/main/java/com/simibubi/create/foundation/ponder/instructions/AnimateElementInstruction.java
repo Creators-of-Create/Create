@@ -48,6 +48,7 @@ public class AnimateElementInstruction<T extends PonderSceneElement> extends Tic
 			return;
 		if (remainingTicks == 0) {
 			setter.accept(element, target);
+			setter.accept(element, target);
 			return;
 		}
 		setter.accept(element, getter.apply(element)

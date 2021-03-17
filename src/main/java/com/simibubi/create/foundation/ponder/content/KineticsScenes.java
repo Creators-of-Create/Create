@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import java.io.File;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
@@ -854,7 +852,16 @@ public class KineticsScenes {
 	}
 
 	public static void furnaceEngine(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("furnace_engine", "Generating Rotational Force using the Furnace Engine");
+		furnaceEngine(scene, util, false);
+	}
+
+	public static void flywheel(SceneBuilder scene, SceneBuildingUtil util) {
+		furnaceEngine(scene, util, true);
+	}
+
+	private static void furnaceEngine(SceneBuilder scene, SceneBuildingUtil util, boolean flywheel) {
+		scene.title(flywheel ? "flywheel" : "furnace_engine",
+			"Generating Rotational Force using the " + (flywheel ? "Flywheel" : "Furnace Engine"));
 		scene.configureBasePlate(0, 0, 6);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
@@ -871,11 +878,13 @@ public class KineticsScenes {
 		scene.world.showSection(util.select.position(furnacePos.west(3)), Direction.EAST);
 		scene.idle(10);
 
+		String text = flywheel ? "Flywheels are required for generating rotational force with the Furnace Engine"
+			: "Furnace Engines generate Rotational Force while their attached Furnace is running";
 		scene.overlay.showText(80)
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.topOf(furnacePos.west()))
-			.text("Furnace Engines generate Rotational Force while their attached Furnace is running");
+			.pointAt(util.vector.topOf(furnacePos.west(flywheel ? 3 : 1)))
+			.text(text);
 		scene.idle(90);
 
 		scene.overlay.showControls(
@@ -993,7 +1002,7 @@ public class KineticsScenes {
 		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), 4);
 		scene.effects.rotationSpeedIndicator(cogPos);
 		scene.idle(55);
-		
+
 		scene.overlay.showControls(input, 30);
 		scene.idle(15);
 		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), -.05f);

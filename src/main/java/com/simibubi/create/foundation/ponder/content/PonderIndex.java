@@ -70,8 +70,10 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
-		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE, AllBlocks.FLYWHEEL)
+		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE)
 			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
+		PonderRegistry.forComponents(AllBlocks.FLYWHEEL)
+			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
 		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
@@ -141,6 +143,13 @@ public class PonderIndex {
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
 			.addStoryBoard("gantry/subgantry", GantryScenes::subgantry);
+
+		// Cart Assembler
+		PonderRegistry.forComponents(AllBlocks.CART_ASSEMBLER)
+			.addStoryBoard("cart_assembler/anchor", CartAssemblerScenes::anchor, PonderTag.MOVEMENT_ANCHOR)
+			.addStoryBoard("cart_assembler/modes", CartAssemblerScenes::modes)
+			.addStoryBoard("cart_assembler/dual", CartAssemblerScenes::dual)
+			.addStoryBoard("cart_assembler/rails", CartAssemblerScenes::rails);
 
 		// Movement Actors
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)

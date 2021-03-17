@@ -23,6 +23,7 @@ public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> e
 	protected void firstTick(PonderScene scene) {
 		super.firstTick(scene);
 		scene.addElement(element);
+		element.setVisible(true);
 		element.setFade(0);
 		element.setFadeVec(new Vec3d(fadeInFrom.getDirectionVec()).scale(.5f));
 		if (elementLink != null)
@@ -32,10 +33,13 @@ public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> e
 	@Override
 	public void tick(PonderScene scene) {
 		super.tick(scene);
-		float fade = (remainingTicks / (float) totalTicks);
+		float fade = totalTicks == 0 ? 1 : (remainingTicks / (float) totalTicks);
 		element.setFade(1 - fade * fade);
-		if (remainingTicks == 0)
+		if (remainingTicks == 0) {
+			if (totalTicks == 0)
+				element.setFade(1);
 			element.setFade(1);
+		}
 	}
 
 	public ElementLink<T> createLink(PonderScene scene) {

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 381",
+	"_": "Missing Localizations: 401",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1908,6 +1908,26 @@
 	"create.ponder.brass_funnel.text_3": "UNLOCALIZED: Scrolling on the filter slot allows for precise control over the extracted stack size.",
 	"create.ponder.brass_funnel.text_4": "UNLOCALIZED: Using items on the filter slot will restrict the funnel to only transfer matching stacks.",
 
+	"create.ponder.cart_assembler.header": "UNLOCALIZED: Moving Structures using Cart Assemblers",
+	"create.ponder.cart_assembler.text_1": "UNLOCALIZED: Powered Cart Assemblers mount attached structures to passing Minecarts",
+	"create.ponder.cart_assembler.text_2": "UNLOCALIZED: Without a redstone signal, it disassembles passing cart contraptions back into blocks",
+	"create.ponder.cart_assembler.text_3": "UNLOCALIZED: Using a Wrench on the Minecart will let you carry the Contraption elsewhere",
+
+	"create.ponder.cart_assembler_dual.header": "UNLOCALIZED: Assembling Carriage Contraptions",
+	"create.ponder.cart_assembler_dual.text_1": "UNLOCALIZED: Whenever two Cart Assembers share an attached structure...",
+	"create.ponder.cart_assembler_dual.text_2": "UNLOCALIZED: Powering either of them will create a Carriage Contraption",
+	"create.ponder.cart_assembler_dual.text_3": "UNLOCALIZED: The carts will behave like those connected via Minecart Coupling",
+
+	"create.ponder.cart_assembler_modes.header": "UNLOCALIZED: Orientation Settings for Minecart Contraptions",
+	"create.ponder.cart_assembler_modes.text_1": "UNLOCALIZED: Cart Contraptions will rotate to face towards their carts' motion",
+	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+
+	"create.ponder.cart_assembler_rails.header": "UNLOCALIZED: Other types of Minecarts and Rails",
+	"create.ponder.cart_assembler_rails.text_1": "UNLOCALIZED: Cart Assemblers on Regular Tracks will not affect the passing carts' motion",
+	"create.ponder.cart_assembler_rails.text_2": "UNLOCALIZED: When on Powered or Controller Rail, the carts will be held in place until it's Powered",
+	"create.ponder.cart_assembler_rails.text_3": "UNLOCALIZED: Other types of Minecarts can be used as the anchor",
+	"create.ponder.cart_assembler_rails.text_4": "UNLOCALIZED: Furnace Carts will keep themselves powered, pulling fuel from any attached inventories",
+
 	"create.ponder.chain_drive.header": "UNLOCALIZED: Relaying rotational force with Chain Drives",
 	"create.ponder.chain_drive.text_1": "UNLOCALIZED: Chain Drives relay rotation to each other in a row",
 	"create.ponder.chain_drive.text_2": "UNLOCALIZED: All shafts connected like this will rotate in the same direction",
@@ -1996,6 +2016,11 @@
 	"create.ponder.fan_source.header": "UNLOCALIZED: Generating Rotational Force using Encased Fans",
 	"create.ponder.fan_source.text_1": "UNLOCALIZED: Fans facing down into a source of heat can provide Rotational Force",
 	"create.ponder.fan_source.text_2": "UNLOCALIZED: When given a Redstone Signal, the Fans will start providing power",
+
+	"create.ponder.flywheel.header": "UNLOCALIZED: Generating Rotational Force using the Flywheel",
+	"create.ponder.flywheel.text_1": "UNLOCALIZED: Flywheels are required for generating rotational force with the Furnace Engine",
+	"create.ponder.flywheel.text_2": "UNLOCALIZED: The provided Rotational Force has a very large stress capacity",
+	"create.ponder.flywheel.text_3": "UNLOCALIZED: Using a Blast Furnace will double the efficiency of the Engine",
 
 	"create.ponder.funnel_compat.header": "UNLOCALIZED: Funnel compatibility",
 	"create.ponder.funnel_compat.text_1": "UNLOCALIZED: Funnels should also interact nicely with a handful of other components.",

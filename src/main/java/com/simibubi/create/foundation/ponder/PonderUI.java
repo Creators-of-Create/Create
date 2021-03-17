@@ -83,6 +83,9 @@ public class PonderUI extends NavigatableSimiScreen {
 	private ClipboardHelper clipboardHelper;
 	private BlockPos copiedBlockPos;
 
+	private LerpedFloat finishingFlash;
+	private int finishingFlashWarmup = 0;
+
 	private LerpedFloat lazyIndex;
 	private int index = 0;
 	private PonderTag referredToByTag;
@@ -133,6 +136,9 @@ public class PonderUI extends NavigatableSimiScreen {
 			.startWithValue(0)
 			.chase(1, .1f, Chaser.EXP);
 		clipboardHelper = new ClipboardHelper();
+		finishingFlash = LerpedFloat.linear()
+			.startWithValue(0)
+			.chase(0, .1f, Chaser.EXP);
 	}
 
 	@Override
@@ -250,9 +256,21 @@ public class PonderUI extends NavigatableSimiScreen {
 			if (skipCooling == 0)
 				activeScene.tick();
 		}
+
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
+		finishingFlash.tickChaser();
 		progressBar.tick();
+
+		if (activeScene.currentTime == activeScene.totalTime - 1)
+			finishingFlashWarmup = 30;
+		if (finishingFlashWarmup > 0) {
+			finishingFlashWarmup--;
+			if (finishingFlashWarmup == 0) {
+				finishingFlash.setValue(1);
+				finishingFlash.setValue(1);
+			}
+		}
 
 		if (!identifyMode) {
 			float lazyIndexValue = lazyIndex.getValue();
@@ -389,10 +407,26 @@ public class PonderUI extends NavigatableSimiScreen {
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
 			RenderSystem.scaled(1, -1, 1);
+
+			float flash = finishingFlash.getValue(partialTicks) * .9f;
+			float alpha = flash;
+			flash *= flash;
+			flash = ((flash * 2) - 1);
+			flash *= flash;
+			flash = 1 - flash;
+
 			for (int f = 0; f < 4; f++) {
 				RenderSystem.translated(story.basePlateSize, 0, 0);
 				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, 0, 1 / 1024f);
+				RenderSystem.translated(0, 0, -1 / 1024f);
+				if (flash > 0) {
+					RenderSystem.pushMatrix();
+					RenderSystem.scaled(1, .5 + flash * .75, 1);
+					GuiUtils.drawGradientRect(0, 0, -1, -story.basePlateSize, 0, 0x00_c6ffc9,
+						ColorHelper.applyAlpha(0xaa_c6ffc9, alpha));
+					RenderSystem.popMatrix();
+				}
+				RenderSystem.translated(0, 0, 2 / 1024f);
 				GuiUtils.drawGradientRect(0, 0, 0, -story.basePlateSize, 4, 0x66_000000, 0x00_000000);
 				RenderSystem.popMatrix();
 				RenderSystem.rotatef(-90, 0, 1, 0);

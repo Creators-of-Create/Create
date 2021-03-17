@@ -17,18 +17,23 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
+import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
+import com.simibubi.create.foundation.ponder.elements.MinecartElement;
+import com.simibubi.create.foundation.ponder.elements.MinecartElement.MinecartConstructor;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement.ParrotPose;
 import com.simibubi.create.foundation.ponder.elements.ParrotElement.SpinOnComponentPose;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.instructions.AnimateMinecartInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateParrotInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateTileEntityInstruction;
 import com.simibubi.create.foundation.ponder.instructions.AnimateWorldSectionInstruction;
 import com.simibubi.create.foundation.ponder.instructions.ChaseAABBInstruction;
+import com.simibubi.create.foundation.ponder.instructions.CreateMinecartInstruction;
 import com.simibubi.create.foundation.ponder.instructions.CreateParrotInstruction;
 import com.simibubi.create.foundation.ponder.instructions.DelayInstruction;
 import com.simibubi.create.foundation.ponder.instructions.DisplayWorldSectionInstruction;
@@ -328,12 +333,15 @@ public class SceneBuilder {
 		}
 
 		public void showCenteredScrollInput(BlockPos pos, Direction side, int duration) {
+			showScrollInput(scene.getSceneBuildingUtil().vector.blockSurface(pos, side), side, duration);
+		}
+
+		public void showScrollInput(Vec3d location, Direction side, int duration) {
 			Axis axis = side.getAxis();
 			float s = 1 / 16f;
 			float q = 1 / 4f;
 			Vec3d expands = new Vec3d(axis == Axis.X ? s : q, axis == Axis.Y ? s : q, axis == Axis.Z ? s : q);
-			addInstruction(new HighlightValueBoxInstruction(scene.getSceneBuildingUtil().vector.blockSurface(pos, side),
-				expands, duration));
+			addInstruction(new HighlightValueBoxInstruction(location, expands, duration));
 		}
 
 		public void showRepeaterScrollInput(BlockPos pos, int duration) {
@@ -357,6 +365,10 @@ public class SceneBuilder {
 
 		public void showOutline(PonderPalette color, Object slot, Selection selection, int duration) {
 			addInstruction(new OutlineSelectionInstruction(color, slot, selection, duration));
+		}
+
+		public <T extends AnimatedSceneElement> void hideElement(ElementLink<T> link, Direction direction) {
+			addInstruction(new FadeOutOfSceneInstruction<>(15, direction, link));
 		}
 
 	}
@@ -402,6 +414,22 @@ public class SceneBuilder {
 			addInstruction(AnimateParrotInstruction.move(link, offset, duration));
 		}
 
+		public ElementLink<MinecartElement> createCart(Vec3d location, float angle, MinecartConstructor type) {
+			ElementLink<MinecartElement> link = new ElementLink<>(MinecartElement.class);
+			MinecartElement cart = new MinecartElement(location, angle, type);
+			addInstruction(new CreateMinecartInstruction(10, Direction.DOWN, cart));
+			addInstruction(scene -> scene.linkElement(cart, link));
+			return link;
+		}
+
+		public void rotateCart(ElementLink<MinecartElement> link, float yRotation, int duration) {
+			addInstruction(AnimateMinecartInstruction.rotate(link, yRotation, duration));
+		}
+
+		public void moveCart(ElementLink<MinecartElement> link, Vec3d offset, int duration) {
+			addInstruction(AnimateMinecartInstruction.move(link, offset, duration));
+		}
+
 	}
 
 	public class WorldInstructions {
@@ -441,6 +469,13 @@ public class SceneBuilder {
 		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection) {
 			DisplayWorldSectionInstruction instruction =
 				new DisplayWorldSectionInstruction(15, fadeInDirection, selection, Optional.empty());
+			addInstruction(instruction);
+			return instruction.createLink(scene);
+		}
+
+		public ElementLink<WorldSectionElement> showIndependentSectionImmediately(Selection selection) {
+			DisplayWorldSectionInstruction instruction =
+				new DisplayWorldSectionInstruction(0, Direction.DOWN, selection, Optional.empty());
 			addInstruction(instruction);
 			return instruction.createLink(scene);
 		}
@@ -513,7 +548,7 @@ public class SceneBuilder {
 		public void movePulley(BlockPos pos, float distance, int duration) {
 			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
 		}
-		
+
 		public void moveDeployer(BlockPos pos, float distance, int duration) {
 			addInstruction(AnimateTileEntityInstruction.deployer(pos, distance, duration));
 		}
