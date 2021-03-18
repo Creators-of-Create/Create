@@ -150,6 +150,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 	@Override
 	public float getRotationSpeedModifier(Direction face) {
+		if (isVirtual())
+			return 1;
 		return (!hasSource() || face == getSourceFacing()) ? 1 : getModifier();
 	}
 

@@ -60,7 +60,8 @@ public class VecHelper {
 	}
 
 	public static boolean isVecPointingTowards(Vec3d vec, Direction direction) {
-		return new Vec3d(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
+		return new Vec3d(direction.getDirectionVec()).dotProduct(vec.normalize()) > 0;
+		//return new Vec3d(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
 	}
 
 	public static Vec3d getCenterOf(Vec3i pos) {

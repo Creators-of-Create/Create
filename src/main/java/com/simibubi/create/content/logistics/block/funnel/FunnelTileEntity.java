@@ -329,7 +329,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 	}
 
 	@Override
@@ -383,4 +383,10 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		TooltipHelper.addHint(tooltip, "hint.horizontal_funnel");
 		return true;
 	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
+
 }

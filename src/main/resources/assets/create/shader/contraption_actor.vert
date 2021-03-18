@@ -12,6 +12,7 @@ attribute float aOffset;
 attribute vec3 aAxis;
 attribute vec3 aInstanceRot;
 attribute vec3 aRotationCenter;
+attribute float aSpeed;
 
 
 varying float Diffuse;
@@ -57,11 +58,10 @@ mat4 rotation(vec3 rot) {
 }
 
 mat4 kineticRotation() {
-    const float speed = -20.;
-    float degrees = aOffset + uTime * speed * -3./10.;
+    float degrees = aOffset + uTime * aSpeed / 20.;
     float angle = fract(degrees / 360.) * PI * 2.;
 
-    return rotate(normalize(aAxis), angle);
+    return rotate(normalize(aAxis), -angle);
 }
 
 void main() {

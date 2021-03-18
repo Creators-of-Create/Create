@@ -30,6 +30,8 @@ public class ContraptionActorData extends InstanceData {
     private byte rotationCenterY = 64;
     private byte rotationCenterZ = 64;
 
+    private float speed;
+
     protected ContraptionActorData(InstancedModel<?> owner) {
         super(owner);
     }
@@ -54,6 +56,11 @@ public class ContraptionActorData extends InstanceData {
 
     public ContraptionActorData setRotationOffset(float rotationOffset) {
         this.rotationOffset = rotationOffset;
+        return this;
+    }
+
+    public ContraptionActorData setSpeed(float speed) {
+        this.speed = speed;
         return this;
     }
 
@@ -101,6 +108,7 @@ public class ContraptionActorData extends InstanceData {
         putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
         putVec3(buf, localRotationX, localRotationY, localRotationZ);
         putVec3(buf, rotationCenterX, rotationCenterY, rotationCenterZ);
+        put(buf, speed);
 
     }
 }

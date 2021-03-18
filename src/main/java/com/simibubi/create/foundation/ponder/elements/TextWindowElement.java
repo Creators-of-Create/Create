@@ -24,9 +24,9 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 	// from 0 to 200
 	int y;
-	
+
 	Vec3d vec;
-	
+
 	boolean nearScene = false;
 	int color = PonderPalette.WHITE.getColor();
 
@@ -52,7 +52,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			TextWindowElement.this.y = y;
 			return this;
 		}
-		
+
 		public Builder independent() {
 			return independent(0);
 		}
@@ -71,12 +71,13 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			TextWindowElement.this.nearScene = true;
 			return this;
 		}
-		
+
 		public Builder attachKeyFrame() {
-			scene.builder().addLazyKeyframe();
+			scene.builder()
+				.addLazyKeyframe();
 			return this;
 		}
-		
+
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		if (fade < 1 / 16f)
 			return;
 		Vec2f sceneToScreen = vec != null ? scene.getTransform()
-			.sceneToScreen(vec) : new Vec2f(0, (screen.height - 200) / 2 + y - 8);
+			.sceneToScreen(vec) : new Vec2f(screen.width / 2, (screen.height - 200) / 2 + y - 8);
 
 		float yDiff = (screen.height / 2 - sceneToScreen.y - 10) / 100f;
 		int targetX = (int) (screen.width * MathHelper.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
@@ -122,7 +123,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		}
 
 		FontHelper.drawSplitString(screen.getFontRenderer(), bakedText, targetX - 10, 3, textWidth,
-				ColorHelper.applyAlpha(brighterColor, fade));
+			ColorHelper.applyAlpha(brighterColor, fade));
 		RenderSystem.popMatrix();
 	}
 

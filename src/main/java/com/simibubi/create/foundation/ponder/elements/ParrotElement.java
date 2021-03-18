@@ -50,13 +50,17 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.lastTickPosX = 0;
 		entity.lastTickPosY = 0;
 		entity.lastTickPosZ = 0;
+		entity.prevRotationPitch = entity.rotationPitch = 0;
+		entity.prevRotationYaw = entity.rotationYaw = 180;
 	}
 
 	@Override
 	public void tick(PonderScene scene) {
 		super.tick(scene);
-		if (entity == null)
-			return;
+		if (entity == null) {
+			entity = pose.create(scene.getWorld());
+			entity.prevRotationYaw = entity.rotationYaw = 180;
+		}
 
 		entity.ticksExisted++;
 		entity.prevRotationYawHead = entity.rotationYawHead;
@@ -112,8 +116,10 @@ public class ParrotElement extends AnimatedSceneElement {
 		EntityRendererManager entityrenderermanager = Minecraft.getInstance()
 			.getRenderManager();
 
-		if (entity == null)
+		if (entity == null) {
 			entity = pose.create(world);
+			entity.prevRotationYaw = entity.rotationYaw = 180;
+		}
 
 		ms.push();
 		ms.translate(location.x, location.y, location.z);
@@ -209,10 +215,13 @@ public class ParrotElement extends AnimatedSceneElement {
 			double d1 = p_200602_2_.y - vec3d.y;
 			double d2 = p_200602_2_.z - vec3d.z;
 			double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-			entity.rotationPitch =
+			float targetPitch =
 				MathHelper.wrapDegrees((float) -(MathHelper.atan2(d1, d3) * (double) (180F / (float) Math.PI)));
-			entity.rotationYaw =
+			float targetYaw =
 				MathHelper.wrapDegrees((float) -(MathHelper.atan2(d2, d0) * (double) (180F / (float) Math.PI)) + 90);
+
+			entity.rotationPitch = AngleHelper.angleLerp(.4f, entity.rotationPitch, targetPitch);
+			entity.rotationYaw = AngleHelper.angleLerp(.4f, entity.rotationYaw, targetYaw);
 		}
 
 		protected abstract Vec3d getFacedVec(PonderScene scene);

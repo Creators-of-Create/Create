@@ -64,7 +64,7 @@ public class RenderedContraption {
     public RenderedContraption(World world, Contraption contraption) {
         this.contraption = contraption;
         this.lighter = contraption.makeLighter();
-        this.kinetics = new ContraptionKineticRenderer();
+        this.kinetics = new ContraptionKineticRenderer(this);
         this.renderWorld = setupRenderWorld(world, contraption);
 
         buildLayers();
@@ -84,10 +84,6 @@ public class RenderedContraption {
 
     public ContraptionLighter<?> getLighter() {
         return lighter;
-    }
-
-    public RenderMaterial<?, InstancedModel<ContraptionActorData>> getActorMaterial() {
-        return kinetics.getMaterial(KineticRenderMaterials.ACTORS);
     }
 
     public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
@@ -172,18 +168,7 @@ public class RenderedContraption {
     }
 
     private void buildActors() {
-        List<MutablePair<Template.BlockInfo, MovementContext>> actors = contraption.getActors();
-
-        for (MutablePair<Template.BlockInfo, MovementContext> actor : actors) {
-            Template.BlockInfo blockInfo = actor.left;
-            MovementContext context = actor.right;
-
-            MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
-
-            if (movementBehaviour != null) {
-                movementBehaviour.addInstance(this, context);
-            }
-        }
+        contraption.getActors().forEach(kinetics::createActor);
     }
 
     private static ContraptionModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {

@@ -76,7 +76,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 		super.tick();
 
 		if (world.isRemote) {
-			visualSpeed.target(getGeneratedSpeed());
+			float targetSpeed = isVirtual() ? speed : getGeneratedSpeed();
+			visualSpeed.target(targetSpeed);
 			visualSpeed.tick();
 			angle += visualSpeed.value * 3 / 10f;
 			angle %= 360;

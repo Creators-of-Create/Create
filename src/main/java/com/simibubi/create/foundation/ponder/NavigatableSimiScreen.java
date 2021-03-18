@@ -1,13 +1,5 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
@@ -17,11 +9,18 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -31,6 +30,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	public final LerpedFloat transition = LerpedFloat.linear()
 		.startWithValue(0)
 		.chase(0, .1f, LerpedFloat.Chaser.LINEAR);
+	protected final LerpedFloat arrowAnimation = LerpedFloat.linear()
+			.startWithValue(0)
+			.chase(0, 0.075f, LerpedFloat.Chaser.LINEAR);
 	protected PonderButton backTrack;
 
 	public NavigatableSimiScreen() {
@@ -50,6 +52,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	public void tick() {
 		super.tick();
 		transition.tickChaser();
+		arrowAnimation.tickChaser();
 	}
 
 	@Override
@@ -90,8 +93,13 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translated(0, 0, 500);
-		if (backTrack.isHovered())
+		if (backTrack.isHovered()) {
 			drawString(font, Lang.translate(THINK_BACK), 15, height - 16, 0xffa3a3a3);
+			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
+				arrowAnimation.setValue(1);
+				arrowAnimation.setValue(1);//called twice to also set the previous value to 1
+			}
+		}
 		RenderSystem.popMatrix();
 	}
 
@@ -149,8 +157,14 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		RenderSystem.translated(-depthPointX, -depthPointY, 0);
 
 		if (backTrack != null) {
-			UIRenderHelper.breadcrumbArrow(21, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(-19, height - 51, 40, 20, 5, 0x40aa9999, 0x10aa9999);
+			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
+			int maxX = backTrack.x + backTrack.getWidth();
+
+			if (x + 30 < backTrack.x)
+				UIRenderHelper.breadcrumbArrow(x + 30, height - 51, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
+
+			UIRenderHelper.breadcrumbArrow(x, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(x - 30, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
 		}
 	}
 

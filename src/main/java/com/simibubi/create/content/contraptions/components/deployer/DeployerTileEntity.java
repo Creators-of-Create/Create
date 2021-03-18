@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -53,6 +54,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	private LazyOptional<IItemHandlerModifiable> invHandler;
 	private ListNBT deferredInventoryList;
 
+	private LerpedFloat animatedOffset;
+
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
 	}
@@ -67,6 +70,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;
 		redstoneLocked = false;
+		animatedOffset = LerpedFloat.linear()
+			.startWithValue(0);
 	}
 
 	@Override
@@ -106,7 +111,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-
+		
 		if (getSpeed() == 0)
 			return;
 		if (!world.isRemote && player != null && player.blockBreakingProgress != null) {
@@ -365,11 +370,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap) && invHandler != null) 
+		if (isItemHandlerCap(cap) && invHandler != null)
 			return invHandler.cast();
 		return super.getCapability(cap, side);
 	}
-	
+
 	@Override
 	public boolean addToTooltip(List<String> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
@@ -386,4 +391,28 @@ public class DeployerTileEntity extends KineticTileEntity {
 	public boolean shouldRenderAsTE() {
 		return true;
 	}
+
+	public float getHandOffset(float partialTicks) {
+		if (isVirtual())
+			return animatedOffset.getValue(partialTicks);
+
+		float progress = 0;
+		int timerSpeed = getTimerSpeed();
+		AllBlockPartials handPose = getHandPose();
+
+		if (state == State.EXPANDING)
+			progress = 1 - (timer - partialTicks * timerSpeed) / 1000f;
+		if (state == State.RETRACTING)
+			progress = (timer - partialTicks * timerSpeed) / 1000f;
+		float handLength = handPose == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
+			: handPose == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (reach + handLength), 21 / 16f);
+
+		return distance;
+	}
+
+	public void setAnimatedOffset(float offset) {
+		animatedOffset.setValue(offset);
+	}
+
 }

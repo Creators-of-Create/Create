@@ -1907,6 +1907,26 @@
 	"create.ponder.brass_funnel.text_3": "Scrolling on the filter slot allows for precise control over the extracted stack size.",
 	"create.ponder.brass_funnel.text_4": "Using items on the filter slot will restrict the funnel to only transfer matching stacks.",
 
+	"create.ponder.cart_assembler.header": "Moving Structures using Cart Assemblers",
+	"create.ponder.cart_assembler.text_1": "Powered Cart Assemblers mount attached structures to passing Minecarts",
+	"create.ponder.cart_assembler.text_2": "Without a redstone signal, it disassembles passing cart contraptions back into blocks",
+	"create.ponder.cart_assembler.text_3": "Using a Wrench on the Minecart will let you carry the Contraption elsewhere",
+
+	"create.ponder.cart_assembler_dual.header": "Assembling Carriage Contraptions",
+	"create.ponder.cart_assembler_dual.text_1": "Whenever two Cart Assembers share an attached structure...",
+	"create.ponder.cart_assembler_dual.text_2": "Powering either of them will create a Carriage Contraption",
+	"create.ponder.cart_assembler_dual.text_3": "The carts will behave like those connected via Minecart Coupling",
+
+	"create.ponder.cart_assembler_modes.header": "Orientation Settings for Minecart Contraptions",
+	"create.ponder.cart_assembler_modes.text_1": "Cart Contraptions will rotate to face towards their carts' motion",
+	"create.ponder.cart_assembler_modes.text_2": "If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+
+	"create.ponder.cart_assembler_rails.header": "Other types of Minecarts and Rails",
+	"create.ponder.cart_assembler_rails.text_1": "Cart Assemblers on Regular Tracks will not affect the passing carts' motion",
+	"create.ponder.cart_assembler_rails.text_2": "When on Powered or Controller Rail, the carts will be held in place until it's Powered",
+	"create.ponder.cart_assembler_rails.text_3": "Other types of Minecarts can be used as the anchor",
+	"create.ponder.cart_assembler_rails.text_4": "Furnace Carts will keep themselves powered, pulling fuel from any attached inventories",
+
 	"create.ponder.chain_drive.header": "Relaying rotational force with Chain Drives",
 	"create.ponder.chain_drive.text_1": "Chain Drives relay rotation to each other in a row",
 	"create.ponder.chain_drive.text_2": "All shafts connected like this will rotate in the same direction",
@@ -1947,6 +1967,37 @@
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
 
+	"create.ponder.deployer.header": "Using the Deployer",
+	"create.ponder.deployer.text_1": "Given Rotational Force, a Deployer can imitate player interactions",
+	"create.ponder.deployer.text_10": "Right-click the front to give it an Item to use",
+	"create.ponder.deployer.text_11": "Items can also be inserted automatically",
+	"create.ponder.deployer.text_12": "Deployers carry a filter slot",
+	"create.ponder.deployer.text_13": "When a filter is set, it activates only while holding a matching item",
+	"create.ponder.deployer.text_14": "Only items matching the filter can now be inserted...",
+	"create.ponder.deployer.text_15": "...and only non-matching items will be extracted",
+	"create.ponder.deployer.text_2": "It will always interact with the position 2 blocks in front of itself",
+	"create.ponder.deployer.text_3": "Blocks directly in front will not obstruct it",
+	"create.ponder.deployer.text_4": "Deployers can:",
+	"create.ponder.deployer.text_5": "Place Blocks,",
+	"create.ponder.deployer.text_6": "Use Items,",
+	"create.ponder.deployer.text_7": "Activate Blocks,",
+	"create.ponder.deployer.text_8": "Harvest blocks",
+	"create.ponder.deployer.text_9": "and Attack Mobs",
+
+	"create.ponder.deployer_contraption.header": "Using Deployers on Contraptions",
+	"create.ponder.deployer_contraption.text_1": "Whenever Deployers are moved as part of an animated Contraption...",
+	"create.ponder.deployer_contraption.text_2": "They activate at each visited location, using items from inventories anywhere on the contraption",
+	"create.ponder.deployer_contraption.text_3": "The Filter slot can be used to specify which items to pull",
+
+	"create.ponder.deployer_modes.header": "Modes of the Deployer",
+	"create.ponder.deployer_modes.text_1": "By default, a Deployer imitates a Right-click interaction",
+	"create.ponder.deployer_modes.text_2": "Using a Wrench, it can be set to imitate a Left-click instead",
+
+	"create.ponder.deployer_redstone.header": "Controlling Deployers with Redstone",
+	"create.ponder.deployer_redstone.text_1": "When powered by Redstone, Deployers will not activate",
+	"create.ponder.deployer_redstone.text_2": "Before stopping, the Deployer will finish any started cycles",
+	"create.ponder.deployer_redstone.text_3": "Thus, a negative pulse can be used to trigger exactly one activation cycle",
+
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
 	"create.ponder.fan_direction.text_2": "Strength and Direction of Flow depends on the Rotational Input",
@@ -1964,6 +2015,11 @@
 	"create.ponder.fan_source.header": "Generating Rotational Force using Encased Fans",
 	"create.ponder.fan_source.text_1": "Fans facing down into a source of heat can provide Rotational Force",
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
+
+	"create.ponder.flywheel.header": "Generating Rotational Force using the Flywheel",
+	"create.ponder.flywheel.text_1": "Flywheels are required for generating rotational force with the Furnace Engine",
+	"create.ponder.flywheel.text_2": "The provided Rotational Force has a very large stress capacity",
+	"create.ponder.flywheel.text_3": "Using a Blast Furnace will double the efficiency of the Engine",
 
 	"create.ponder.funnel_compat.header": "Funnel compatibility",
 	"create.ponder.funnel_compat.text_1": "Funnels should also interact nicely with a handful of other components.",
@@ -1988,6 +2044,11 @@
 	"create.ponder.funnel_transfer.text_1": "Funnels cannot ever transfer between closed inventories directly.",
 	"create.ponder.funnel_transfer.text_2": "Chutes or Smart chutes might be more suitable for such purposes.",
 	"create.ponder.funnel_transfer.text_3": "Same applies for horizontal movement.\nA mechanical belt should help here.",
+
+	"create.ponder.furnace_engine.header": "Generating Rotational Force using the Furnace Engine",
+	"create.ponder.furnace_engine.text_1": "Furnace Engines generate Rotational Force while their attached Furnace is running",
+	"create.ponder.furnace_engine.text_2": "The provided Rotational Force has a very large stress capacity",
+	"create.ponder.furnace_engine.text_3": "Using a Blast Furnace will double the efficiency of the Engine",
 
 	"create.ponder.gantry_carriage.header": "Using Gantry Carriages",
 	"create.ponder.gantry_carriage.text_1": "Gantry Carriages can mount to and slide along a Gantry Shaft.",
@@ -2059,6 +2120,10 @@
 	"create.ponder.mechanical_drill_contraption.text_1": "Whenever Drills are moved as part of an animated Contraption...",
 	"create.ponder.mechanical_drill_contraption.text_2": "...they will break blocks the contraption runs them into",
 
+	"create.ponder.mechanical_harvester.header": "Using Mechanical Harvesters on Contraptions",
+	"create.ponder.mechanical_harvester.text_1": "Whenever Harvesters are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_harvester.text_2": "They will harvest and reset any mature crops on their way",
+
 	"create.ponder.mechanical_piston.header": "Moving Structures using Mechanical Pistons",
 	"create.ponder.mechanical_piston.text_1": "Mechanical Pistons can move blocks in front of them",
 	"create.ponder.mechanical_piston.text_2": "Speed and direction of movement depend on the Rotational Input",
@@ -2067,6 +2132,12 @@
 	"create.ponder.mechanical_piston_modes.header": "Movement Modes of the Mechanical Piston",
 	"create.ponder.mechanical_piston_modes.text_1": "Whenever Pistons stop moving, the moved structure reverts to blocks",
 	"create.ponder.mechanical_piston_modes.text_2": "It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.mechanical_plough.header": "Using Mechanical Ploughs on Contraptions",
+	"create.ponder.mechanical_plough.text_1": "Whenever Ploughs are moved as part of an animated Contraption...",
+	"create.ponder.mechanical_plough.text_2": "...they will break blocks without a solid collision hitbox",
+	"create.ponder.mechanical_plough.text_3": "Additionally, ploughs can create farmland",
+	"create.ponder.mechanical_plough.text_4": "...they can also launch entities without hurting them",
 
 	"create.ponder.mechanical_saw_breaker.header": "Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
@@ -2134,9 +2205,9 @@
 	"create.ponder.redstone_link.text_1": "Redstone Links can transmit redstone signals wirelessly",
 	"create.ponder.redstone_link.text_2": "Right-click while Sneaking to toggle receive mode",
 	"create.ponder.redstone_link.text_3": "A simple Right-click with a Wrench can do the same",
-	"create.ponder.redstone_link.text_4": "Receivers will emit the redstone power of transmitters within a range of 128 blocks",
+	"create.ponder.redstone_link.text_4": "Receivers emit the redstone power of transmitters within 128 blocks",
 	"create.ponder.redstone_link.text_5": "Placing items in the two slots can specify a Frequency",
-	"create.ponder.redstone_link.text_6": "Only the links with matching Frequency combinations will communicate",
+	"create.ponder.redstone_link.text_6": "Only the links with matching Frequencies will communicate",
 
 	"create.ponder.rope_pulley.header": "Moving Structures using Rope Pulleys",
 	"create.ponder.rope_pulley.text_1": "Rope Pulleys can move blocks vertically when given Rotational Force",
@@ -2150,6 +2221,17 @@
 	"create.ponder.rope_pulley_modes.header": "Movement Modes of the Rope Pulley",
 	"create.ponder.rope_pulley_modes.text_1": "Whenever Pulleys stop moving, the moved structure reverts to blocks",
 	"create.ponder.rope_pulley_modes.text_2": "It can be configured never to revert to solid blocks, or only at the location it started at",
+
+	"create.ponder.rotation_speed_controller.header": "Using the Rotational Speed Controller",
+	"create.ponder.rotation_speed_controller.text_1": "Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them",
+	"create.ponder.rotation_speed_controller.text_2": "Using the scroll input on its side, the conveyed speed can be configured",
+
+	"create.ponder.sequenced_gearshift.header": "Controlling Rotational Speed using Sequenced Gearshifts",
+	"create.ponder.sequenced_gearshift.text_1": "Seq. Gearshifts relay rotation by following a timed list of instructions",
+	"create.ponder.sequenced_gearshift.text_2": "Right-click it to open the Configuration UI",
+	"create.ponder.sequenced_gearshift.text_3": "Upon receiving a Redstone Signal, it will start running its configured sequence",
+	"create.ponder.sequenced_gearshift.text_4": "Once finished, it waits for the next Redstone Signal and starts over",
+	"create.ponder.sequenced_gearshift.text_5": "A redstone comparator can be used to read the current progress",
 
 	"create.ponder.shaft.header": "Relaying rotational force using Shafts",
 	"create.ponder.shaft.text_1": "Shafts will relay rotation in a straight line.",

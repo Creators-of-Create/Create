@@ -45,6 +45,9 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
 			PonderTag.KINETIC_RELAYS);
 
+		PonderRegistry.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
+			.addStoryBoard("sequenced_gearshift", KineticsScenes::sequencedGearshift);
+
 		PonderRegistry.forComponents(AllBlocks.ENCASED_FAN)
 			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing)
@@ -66,6 +69,13 @@ public class PonderIndex {
 			ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
+
+		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE)
+			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
+		PonderRegistry.forComponents(AllBlocks.FLYWHEEL)
+			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
+		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
+			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
@@ -134,6 +144,13 @@ public class PonderIndex {
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
 			.addStoryBoard("gantry/subgantry", GantryScenes::subgantry);
 
+		// Cart Assembler
+		PonderRegistry.forComponents(AllBlocks.CART_ASSEMBLER)
+			.addStoryBoard("cart_assembler/anchor", CartAssemblerScenes::anchor, PonderTag.MOVEMENT_ANCHOR)
+			.addStoryBoard("cart_assembler/modes", CartAssemblerScenes::modes)
+			.addStoryBoard("cart_assembler/dual", CartAssemblerScenes::dual)
+			.addStoryBoard("cart_assembler/rails", CartAssemblerScenes::rails);
+
 		// Movement Actors
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, PonderTag.CONTRAPTION_ACTOR)
@@ -148,6 +165,15 @@ public class PonderIndex {
 			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
 				PonderTag.CONTRAPTION_ACTOR);
+		PonderRegistry.forComponents(AllBlocks.DEPLOYER)
+			.addStoryBoard("deployer/filter", DeployerScenes::filter, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("deployer/modes", DeployerScenes::modes)
+			.addStoryBoard("deployer/redstone", DeployerScenes::redstone)
+			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_HARVESTER)
+			.addStoryBoard("harvester", MovementActorScenes::harvester);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PLOUGH)
+			.addStoryBoard("plough", MovementActorScenes::plough);
 
 		// Redstone
 		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)
@@ -208,6 +234,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_CRAFTER)
 			.add(AllBlocks.MECHANICAL_DRILL)
 			.add(AllBlocks.MECHANICAL_SAW)
+			.add(AllBlocks.DEPLOYER)
 			.add(AllBlocks.MECHANICAL_PUMP)
 			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllBlocks.MECHANICAL_PISTON)
@@ -320,7 +347,6 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.SEATS[0])
 			.add(AllBlocks.REDSTONE_CONTACT)
-			.add(AllBlocks.SAIL)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
 			.add(Blocks.DROPPER);

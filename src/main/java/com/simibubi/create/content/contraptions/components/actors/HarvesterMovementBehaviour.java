@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -29,6 +31,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
+import javax.annotation.Nullable;
+
 public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
@@ -42,9 +46,10 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		return true;
 	}
 
+	@Nullable
 	@Override
-	public void addInstance(RenderedContraption contraption, MovementContext context) {
-		HarvesterRenderer.addInstanceForContraption(contraption, context);
+	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+		return new HarvesterActorInstance(kr, context);
 	}
 
 	@Override

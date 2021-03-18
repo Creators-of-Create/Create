@@ -42,7 +42,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		Direction facing = state.get(DrillBlock.FACING);
 		
 		float speed = (float) (context.contraption.stalled
-			|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING)
+			|| !VecHelper.isVecPointingTowards(context.relativeMotion, facing
 				.getOpposite()) ? context.getAnimationSpeed() : 0);
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));

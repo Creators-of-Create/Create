@@ -121,6 +121,11 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		hasBracket = AllBlocks.LARGE_COGWHEEL.has(stateAbove) && stateAbove.get(CogWheelBlock.AXIS)
 			.isHorizontal();
 	}
+	
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
