@@ -31,6 +31,8 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
     float zRot;
     float zRotPole;
 
+    float progress = Float.NaN;
+
     public DeployerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
     }
@@ -57,13 +59,19 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
     @Override
     public void tick() {
 
-        updateHandPose();
+        boolean newHand = updateHandPose();
+
+        float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
+
+        if (!newHand && MathHelper.epsilonEquals(newProgress, progress)) return;
+
+        progress = newProgress;
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
         msr.translate(getFloatingPos())
-           .translate(getHandOffset(AnimationTickHolder.getPartialTicks()));
+           .translate(getHandOffset());
 
         transformModel(msr, pole, hand, yRot, zRot, zRotPole);
 
@@ -99,18 +107,20 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
         return true;
     }
 
-    protected Vec3d getHandOffset(float partialTicks) {
-        float progress = 0;
-        if (tile.state == DeployerTileEntity.State.EXPANDING)
-            progress = 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
-        if (tile.state == DeployerTileEntity.State.RETRACTING)
-            progress = (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
-
+    protected Vec3d getHandOffset() {
         float handLength = tile.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
                 : tile.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
         float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
         Vec3d offset = new Vec3d(facing.getDirectionVec()).scale(distance);
         return offset;
+    }
+
+    private float getProgress(float partialTicks) {
+        if (tile.state == DeployerTileEntity.State.EXPANDING)
+            return 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
+        if (tile.state == DeployerTileEntity.State.RETRACTING)
+            return (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
+        return 0;
     }
 
     static void transformModel(MatrixStacker msr, InstanceKey<ModelData> pole, InstanceKey<ModelData> hand, float yRot, float zRot, float zRotPole) {

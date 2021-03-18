@@ -147,9 +147,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	@SuppressWarnings("unchecked")
 	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
-		if (behaviours.containsKey(type))
-			return (T) behaviours.get(type);
-		return null;
+		return (T) behaviours.get(type);
 	}
 
 	protected boolean isItemHandlerCap(Capability<?> cap) {

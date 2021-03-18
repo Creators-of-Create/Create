@@ -9,6 +9,7 @@ public class CommonAttributes {
     public static final VertexAttribSpec VEC2 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 2);
     public static final VertexAttribSpec FLOAT = new VertexAttribSpec(GlPrimitiveType.FLOAT, 1);
 
+    public static final VertexAttribSpec QUATERNION = new VertexAttribSpec(GlPrimitiveType.FLOAT, 4);
     public static final VertexAttribSpec NORMAL = new VertexAttribSpec(GlPrimitiveType.BYTE, 3, true);
     public static final VertexAttribSpec UV = new VertexAttribSpec(GlPrimitiveType.FLOAT, 2);
 

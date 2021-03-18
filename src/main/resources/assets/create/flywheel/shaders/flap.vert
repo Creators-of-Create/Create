@@ -1,6 +1,10 @@
 #version 110
 #define PI 3.1415926538
 
+#flwinclude <"create:core/matutils.glsl">
+#flwinclude <"create:core/quaternion.glsl">
+#flwinclude <"create:core/diffuse.glsl">
+
 attribute vec3 aPos;
 attribute vec3 aNormal;
 attribute vec2 aTexCoords;
@@ -40,24 +44,6 @@ uniform vec3 uCameraPos;
 varying float FragDistance;
 #endif
 
-float diffuse(vec3 normal) {
-    float x = normal.x;
-    float y = normal.y;
-    float z = normal.z;
-    return min(x * x * .6 + y * y * ((3. + y) / 4.) + z * z * .8, 1.);
-}
-
-mat4 rotate(vec3 axis, float angle) {
-    float s = sin(angle);
-    float c = cos(angle);
-    float oc = 1. - c;
-
-    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.,
-    oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.,
-    oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.,
-    0.,                                 0.,                                 0.,                                 1.);
-}
-
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
 }
@@ -72,35 +58,32 @@ float getFlapAngle() {
     float which = step(0., aFlapness);
     float degrees = which * halfAngle + (1. - which) * angle; // branchless conditional multiply
 
-    return -toRad(degrees);
+    return degrees;
 }
 
 void main() {
     float flapAngle = getFlapAngle();
 
-    mat4 orientation = rotate(vec3(0., 1., 0.), toRad(aHorizontalAngle));
-    mat4 flapRotation = rotate(vec3(1., 0., 0.), flapAngle);
+    vec4 orientation = quat(vec3(0., 1., 0.), -aHorizontalAngle);
+    vec4 flapRotation = quat(vec3(1., 0., 0.), flapAngle);
 
-    vec4 worldPos = flapRotation * vec4(aPos - aPivot, 1.) + vec4(aPivot + aSegmentOffset, 0.);
-    worldPos = orientation * vec4(worldPos.xyz - .5, 1.) + vec4(aInstancePos + .5, 0.);
+    vec3 rotated = rotateVertexByQuat(aPos - aPivot, flapRotation) + aPivot + aSegmentOffset;
+    rotated = rotateVertexByQuat(rotated - .5, orientation) + aInstancePos + .5;
+
+    vec4 worldPos = vec4(rotated, 1.);
+    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, flapRotation), orientation);
 
     #ifdef CONTRAPTION
     worldPos = uModel * worldPos;
-    mat4 normalMat = uModel * orientation * flapRotation;
+    norm = modelToNormal(uModel) * norm;
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
     #if defined(USE_FOG)
     FragDistance = length(worldPos.xyz);
     #endif
-    #else
-    mat4 normalMat = orientation * flapRotation;
-
-    #if defined(USE_FOG)
+    #elif defined(USE_FOG)
     FragDistance = length(worldPos.xyz - uCameraPos);
     #endif
-    #endif
-
-    vec3 norm = normalize(normalMat * vec4(aNormal, 0.)).xyz;
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;

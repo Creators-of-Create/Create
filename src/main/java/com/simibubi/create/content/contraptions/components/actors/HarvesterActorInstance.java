@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
@@ -32,13 +33,14 @@ public class HarvesterActorInstance extends ActorInstance {
 
         harvester = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
+        float horizontalAngle = facing.getHorizontalAngle() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
         harvester.getInstance()
                  .setPosition(context.localPos)
                  .setBlockLight(localBlockLight())
                  .setRotationOffset(0)
                  .setRotationCenter(rotOffset)
                  .setRotationAxis(-1, 0, 0)
-                 .setLocalRotation(0, facing.getHorizontalAngle(), 0)
+                 .setLocalRotation(new Quaternion(Vector3f.POSITIVE_Y, horizontalAngle, true))
                  .setSpeed(getSpeed(facing));
     }
 

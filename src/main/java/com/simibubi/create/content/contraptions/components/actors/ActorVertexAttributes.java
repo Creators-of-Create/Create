@@ -10,7 +10,7 @@ public enum ActorVertexAttributes implements IVertexAttrib {
     LIGHT("aModelLight", CommonAttributes.LIGHT),
     OFFSET("aOffset", CommonAttributes.FLOAT),
     AXIS("aAxis", CommonAttributes.NORMAL),
-    INSTANCE_ROTATION("aInstanceRot", CommonAttributes.VEC3),
+    INSTANCE_ROTATION("aInstanceRot", CommonAttributes.QUATERNION),
     ROTATION_CENTER("aRotationCenter", CommonAttributes.NORMAL),
     SPEED("aSpeed", CommonAttributes.FLOAT),
     ;

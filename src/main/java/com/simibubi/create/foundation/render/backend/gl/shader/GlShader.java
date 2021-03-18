@@ -12,17 +12,10 @@ public class GlShader extends GlObject {
     public final ResourceLocation name;
     public final ShaderType type;
 
-    public GlShader(ShaderType type, ResourceLocation name, String source, PreProcessor preProcessor) {
+    public GlShader(ShaderType type, ResourceLocation name, String source) {
         this.type = type;
         this.name = name;
         int handle = GL20.glCreateShader(type.glEnum);
-
-        if (preProcessor != null) {
-            source = preProcessor.process(source);
-
-            if (Backend.SHADER_DEBUG_OUTPUT)
-                Backend.log.debug("Preprocessor run on " + name);// + ":\n" + source);
-        }
 
         GL20.glShaderSource(handle, source);
         GL20.glCompileShader(handle);

@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltData extends KineticData<BeltData> {
@@ -16,9 +17,10 @@ public class BeltData extends KineticData<BeltData> {
                                                     .addAttributes(BeltVertexAttributes.class)
                                                     .build();
 
-    private float rotX;
-    private float rotY;
-    private float rotZ;
+    private float qX;
+    private float qY;
+    private float qZ;
+    private float qW;
     private float sourceU;
     private float sourceV;
     private float minU;
@@ -31,10 +33,11 @@ public class BeltData extends KineticData<BeltData> {
         super(owner);
     }
 
-    public BeltData setRotation(float rotX, float rotY, float rotZ) {
-        this.rotX = rotX;
-        this.rotY = rotY;
-        this.rotZ = rotZ;
+    public BeltData setRotation(Quaternion q) {
+        this.qX = q.getX();
+        this.qY = q.getY();
+        this.qZ = q.getZ();
+        this.qW = q.getW();
         return this;
     }
 
@@ -61,7 +64,7 @@ public class BeltData extends KineticData<BeltData> {
     public void write(ByteBuffer buf) {
         super.write(buf);
 
-        putVec3(buf, rotX, rotY, rotZ);
+        putVec4(buf, qX, qY, qZ, qW);
 
         putVec2(buf, sourceU, sourceV);
         putVec4(buf, minU, minV, maxU, maxV);

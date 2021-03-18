@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
@@ -23,9 +24,10 @@ public class ContraptionActorData extends InstanceData {
     private byte rotationAxisX;
     private byte rotationAxisY;
     private byte rotationAxisZ;
-    private float localRotationX;
-    private float localRotationY;
-    private float localRotationZ;
+    private float qX;
+    private float qY;
+    private float qZ;
+    private float qW;
     private byte rotationCenterX = 64;
     private byte rotationCenterY = 64;
     private byte rotationCenterZ = 64;
@@ -88,15 +90,11 @@ public class ContraptionActorData extends InstanceData {
         return this;
     }
 
-    public ContraptionActorData setLocalRotation(Vector3f axis) {
-        setLocalRotation(axis.getX(), axis.getY(), axis.getZ());
-        return this;
-    }
-
-    public ContraptionActorData setLocalRotation(float localRotationX, float localRotationY, float localRotationZ) {
-        this.localRotationX = localRotationX;
-        this.localRotationY = localRotationY;
-        this.localRotationZ = localRotationZ;
+    public ContraptionActorData setLocalRotation(Quaternion q) {
+        this.qX = q.getX();
+        this.qY = q.getY();
+        this.qZ = q.getZ();
+        this.qW = q.getW();
         return this;
     }
 
@@ -106,7 +104,7 @@ public class ContraptionActorData extends InstanceData {
         putVec2(buf, blockLight, skyLight);
         put(buf, rotationOffset);
         putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
-        putVec3(buf, localRotationX, localRotationY, localRotationZ);
+        putVec4(buf, qX, qY, qZ, qW);
         putVec3(buf, rotationCenterX, rotationCenterY, rotationCenterZ);
         put(buf, speed);
 

@@ -13,9 +13,11 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
@@ -114,10 +116,10 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     private float getScrollSpeed() {
         float speed = tile.getSpeed();
         if (((facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ^ upward) ^
-                ((alongX && !diagonal) || (alongZ && diagonal)) ^ (vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE)) {
+                ((alongX && !diagonal) || (alongZ && diagonal))) {
             speed = -speed;
         }
-        if (sideways && (facing == Direction.SOUTH || facing == Direction.WEST))
+        if (sideways && (facing == Direction.SOUTH || facing == Direction.WEST) || (vertical && facing == Direction.EAST))
             speed = -speed;
 
         return speed;
@@ -155,15 +157,18 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     }
 
     private InstanceKey<BeltData> setup(InstanceKey<BeltData> key, boolean bottom, SpriteShiftEntry spriteShift) {
-        float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (beltSlope == BeltSlope.DOWNWARD ? 180 : 0);
-        float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
-        float rotZ = sideways ? 90 : ((vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ? 180 : 0);
+        boolean downward = beltSlope == BeltSlope.DOWNWARD;
+        float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (downward ? 180 : 0) + (sideways ? 90 : 0) + (vertical && alongZ ? 180 : 0);
+        float rotY = facing.getHorizontalAngle() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
+        float rotZ = (sideways ? 90 : 0) + (vertical && alongX ? 90 : 0);
+
+        Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
 
         key.getInstance()
            .setTileEntity(tile)
            .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
            .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-           .setRotation(rotX, rotY, rotZ)
+           .setRotation(q)
            .setRotationalSpeed(getScrollSpeed())
            .setRotationOffset(bottom ? 0.5f : 0f)
            .setScrollTexture(spriteShift)

@@ -108,7 +108,7 @@ public class AllProgramSpecs {
 
 
         private static ResourceLocation loc(String name) {
-            return new ResourceLocation(Create.ID, "shader/" + name);
+            return new ResourceLocation(Create.ID, name);
         }
     }
 }

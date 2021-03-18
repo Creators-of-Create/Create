@@ -1,5 +1,8 @@
 #version 110
 
+#flwinclude <"create:core/matutils.glsl">
+#flwinclude <"create:core/diffuse.glsl">
+
 attribute vec3 aPos;
 attribute vec3 aNormal;
 attribute vec2 aTexCoords;
@@ -31,23 +34,6 @@ uniform vec3 uCameraPos;
 #if defined(USE_FOG)
 varying float FragDistance;
 #endif
-
-mat3 modelToNormal(mat4 mat) {
-    // Discard the edges. This won't be accurate for scaled or skewed matrices,
-    // but we don't have to work with those often.
-    mat3 m;
-    m[0] = mat[0].xyz;
-    m[1] = mat[1].xyz;
-    m[2] = mat[2].xyz;
-    return m;
-}
-
-float diffuse(vec3 normal) {
-    float x = normal.x;
-    float y = normal.y;
-    float z = normal.z;
-    return min(x * x * .6 + y * y * ((3. + y) / 4.) + z * z * .8, 1.);
-}
 
 void main() {
     vec4 worldPos = aTransform * vec4(aPos, 1.);
