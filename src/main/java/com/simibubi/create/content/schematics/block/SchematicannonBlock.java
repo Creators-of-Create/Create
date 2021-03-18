@@ -71,4 +71,10 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 		return SchematicannonTileEntity.class;
 	}
 
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+			boolean isMoving) {
+		withTileEntityDo(worldIn, pos, te -> te.neighbourCheckCooldown = 0);
+	}
+
 }

@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.*;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;

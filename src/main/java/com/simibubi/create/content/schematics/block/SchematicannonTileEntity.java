@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -65,10 +65,10 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 
 public class SchematicannonTileEntity extends SmartTileEntity implements INamedContainerProvider, IInstanceRendered {
 
@@ -102,7 +102,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	public BlockPos target;
 	public BlockPos previousTarget;
-	public List<IItemHandler> attachedInventories;
+	public LinkedHashSet<LazyOptional<IItemHandler>> attachedInventories;
 	public List<LaunchedItem> flyingBlocks;
 	public MaterialChecklist checklist;
 
@@ -137,14 +137,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		setLazyTickRate(30);
-		attachedInventories = new LinkedList<>();
+		attachedInventories = new LinkedHashSet<>();
 		flyingBlocks = new LinkedList<>();
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
 		state = State.STOPPED;
 		printingEntityIndex = -1;
 		replaceMode = 2;
-		neighbourCheckCooldown = NEIGHBOUR_CHECKING;
 		checklist = new MaterialChecklist();
 	}
 
@@ -164,7 +163,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				LazyOptional<IItemHandler> capability =
 					tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 				if (capability.isPresent()) {
-					attachedInventories.add(capability.orElse(null));
+					attachedInventories.add(capability);
 				}
 			}
 		}
@@ -288,7 +287,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public void tick() {
 		super.tick();
 
-		if (neighbourCheckCooldown-- <= 0) {
+		if (state != State.STOPPED && neighbourCheckCooldown-- <= 0) {
 			neighbourCheckCooldown = NEIGHBOUR_CHECKING;
 			findInventories();
 		}
@@ -577,9 +576,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (hasCreativeCrate)
 			return true;
 
+		attachedInventories.removeIf(cap -> !cap.isPresent());
+
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
-			for (IItemHandler iItemHandler : attachedInventories) {
+			for (LazyOptional<IItemHandler> cap : attachedInventories) {
+				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				for (int slot = 0; slot < iItemHandler.getSlots(); slot++) {
 					ItemStack extractItem = iItemHandler.extractItem(slot, 1, true);
 					if (!ItemRequirement.validate(required, extractItem))
@@ -608,8 +610,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		boolean success = false;
 		if (usage == ItemUseType.CONSUME) {
 			int amountFound = 0;
-			for (IItemHandler iItemHandler : attachedInventories) {
-
+			for (LazyOptional<IItemHandler> cap : attachedInventories) {
+				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				amountFound += ItemHelper
 					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
 						required.getCount(), true)
@@ -625,7 +627,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		if (!simulate && success) {
 			int amountFound = 0;
-			for (IItemHandler iItemHandler : attachedInventories) {
+			for (LazyOptional<IItemHandler> cap : attachedInventories) {
+				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				amountFound += ItemHelper
 					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
 						required.getCount(), false)
@@ -916,7 +919,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			}
 		}
 		checklist.gathered.clear();
-		for (IItemHandler inventory : attachedInventories) {
+		findInventories();
+		for (LazyOptional<IItemHandler> cap : attachedInventories) {
+			if (!cap.isPresent())
+				continue;
+			IItemHandler inventory = cap.orElse(EmptyHandler.INSTANCE);
 			for (int slot = 0; slot < inventory.getSlots(); slot++) {
 				ItemStack stackInSlot = inventory.getStackInSlot(slot);
 				if (inventory.extractItem(slot, 1, true)
