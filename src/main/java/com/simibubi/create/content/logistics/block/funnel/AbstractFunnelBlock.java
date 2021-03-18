@@ -59,6 +59,9 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
+		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		if (behaviour != null)
+			behaviour.onNeighborChanged(fromPos);
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos))
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);

@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -49,6 +50,14 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 	@Override
 	public Class<ClockworkBearingTileEntity> getTileEntityClass() {
 		return ClockworkBearingTileEntity.class;
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		ActionResultType resultType = super.onWrenched(state, context);
+		if (!context.getWorld().isRemote && resultType.isAccepted())
+			withTileEntityDo(context.getWorld(), context.getPos(), ClockworkBearingTileEntity::disassemble);
+		return resultType;
 	}
 
 }

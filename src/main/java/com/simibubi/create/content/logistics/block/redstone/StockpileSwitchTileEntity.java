@@ -62,6 +62,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	public void updateCurrentLevel() {
 		boolean changed = false;
+		observedInventory.findNewCapability();
 		if (!observedInventory.hasInventory()) {
 			if (currentLevel == -1)
 				return;

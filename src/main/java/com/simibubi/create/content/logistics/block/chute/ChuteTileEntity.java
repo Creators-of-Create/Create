@@ -272,6 +272,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	public void blockBelowChanged() {
 		updateAirFlow = true;
+		capBelow = LazyOptional.empty();
 	}
 
 	private void spawnParticles(float itemMotion) {
