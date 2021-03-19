@@ -116,7 +116,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (world.isRemote && runningTicks == 20)
 				renderParticles();
 
-			if (!world.isRemote && runningTicks == 20) {
+			if ((!world.isRemote || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * 15 + 1, 1, 512);
 				} else {

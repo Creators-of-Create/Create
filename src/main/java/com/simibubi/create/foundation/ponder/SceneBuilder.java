@@ -367,10 +367,6 @@ public class SceneBuilder {
 			addInstruction(new OutlineSelectionInstruction(color, slot, selection, duration));
 		}
 
-		public <T extends AnimatedSceneElement> void hideElement(ElementLink<T> link, Direction direction) {
-			addInstruction(new FadeOutOfSceneInstruction<>(15, direction, link));
-		}
-
 	}
 
 	public class SpecialInstructions {
@@ -428,6 +424,10 @@ public class SceneBuilder {
 
 		public void moveCart(ElementLink<MinecartElement> link, Vec3d offset, int duration) {
 			addInstruction(AnimateMinecartInstruction.move(link, offset, duration));
+		}
+
+		public <T extends AnimatedSceneElement> void hideElement(ElementLink<T> link, Direction direction) {
+			addInstruction(new FadeOutOfSceneInstruction<>(15, direction, link));
 		}
 
 	}
@@ -689,11 +689,13 @@ public class SceneBuilder {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
 				TileEntity tileEntity = world.getTileEntity(beltLocation);
-				if (!(tileEntity instanceof BeltTileEntity))
+				if (!(tileEntity instanceof SmartTileEntity))
 					return;
-				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				SmartTileEntity beltTileEntity = (SmartTileEntity) tileEntity;
 				TransportedItemStackHandlerBehaviour transporter =
 					beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				if (transporter == null)
+					return;
 				transporter.handleCenteredProcessingOnAllItems(.52f, tis -> TransportedResult.removeItem());
 			});
 		}

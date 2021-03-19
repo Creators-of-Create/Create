@@ -237,7 +237,7 @@ public class CartAssemblerScenes {
 
 		scene.world.hideIndependentSection(contraption, Direction.UP);
 		scene.world.hideIndependentSection(anchor, Direction.UP);
-		scene.overlay.hideElement(cart, Direction.UP);
+		scene.special.hideElement(cart, Direction.UP);
 		scene.idle(25);
 
 		Vec3d blockSurface = util.vector.blockSurface(assemblerPos, Direction.NORTH)
@@ -440,7 +440,7 @@ public class CartAssemblerScenes {
 		scene.world.moveSection(anchor, util.vector.of(-2, 0, 0), 10);
 		scene.special.moveCart(cart, util.vector.of(-5, 0, 0), 25);
 		scene.idle(30);
-		scene.overlay.hideElement(cart, Direction.UP);
+		scene.special.hideElement(cart, Direction.UP);
 		scene.world.hideIndependentSection(contraption, Direction.UP);
 		scene.world.moveSection(anchor, util.vector.of(0, -3, 0), 0);
 		scene.idle(30);
@@ -482,7 +482,7 @@ public class CartAssemblerScenes {
 		scene.special.moveCart(cart, util.vector.of(-3, 0, 0), 15);
 
 		scene.idle(30);
-		scene.overlay.hideElement(cart, Direction.UP);
+		scene.special.hideElement(cart, Direction.UP);
 		scene.world.hideIndependentSection(anchor, Direction.UP);
 		scene.world.hideIndependentSection(contraption, Direction.UP);
 		scene.idle(20);

@@ -446,6 +446,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			// X AXIS
 			RenderSystem.pushMatrix();
 			RenderSystem.translated(4, -3, 0);
+			RenderSystem.translated(0, 0, -2 / 1024f);
 			for (int x = 0; x <= bounds.getXSize(); x++) {
 				RenderSystem.translated(-16, 0, 0);
 				font.drawString(x == bounds.getXSize() ? "x" : "" + x, 0, 0, 0xFFFFFFFF);

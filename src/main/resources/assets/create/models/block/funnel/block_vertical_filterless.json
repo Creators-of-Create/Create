@@ -4,7 +4,6 @@
 	"textures": {
 		"3": "create:block/brass_funnel_back",
 		"5": "create:block/brass_funnel_tall",
-		"7": "create:block/brass_funnel_plating",
 		"8": "create:block/brass_storage_block",
 		"9": "create:block/brass_funnel_slope",
 		"10": "create:block/funnel_closed",
@@ -113,8 +112,8 @@
 		},
 		{
 			"name": "Back",
-			"from": [1.95, -1.95, 1.95],
-			"to": [14.05, 2, 14.05],
+			"from": [1.925, -1.95, 1.925],
+			"to": [14.075, 2, 14.075],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0.025, 8]},
 			"faces": {
 				"north": {"uv": [2, 12, 14, 16], "texture": "#9"},
@@ -135,7 +134,6 @@
 			}
 		}
 	],
-	"display": {},
 	"groups": [
 		{
 			"name": "block_retracted",
@@ -162,7 +160,7 @@
 		{
 			"name": "Item Filter",
 			"origin": [8, 0, 8],
-			"children": [12, 13, 14, 15]
+			"children": []
 		}
 	]
 }

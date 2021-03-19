@@ -113,8 +113,8 @@
 		},
 		{
 			"name": "Back",
-			"from": [1.95, -1.95, 1.95],
-			"to": [14.05, 2, 14.05],
+			"from": [1.925, -1.95, 1.925],
+			"to": [14.075, 2, 14.075],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0.025, 8]},
 			"faces": {
 				"north": {"uv": [2, 12, 14, 16], "texture": "#9"},
@@ -179,7 +179,6 @@
 			}
 		}
 	],
-	"display": {},
 	"groups": [
 		{
 			"name": "block_retracted",

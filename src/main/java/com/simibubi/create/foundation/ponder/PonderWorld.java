@@ -206,6 +206,11 @@ public class PonderWorld extends SchematicWorld {
 		addParticle(makeParticle(data, x, y, z, mx, my, mz));
 	}
 
+	@Override
+	public void addOptionalParticle(IParticleData data, double x, double y, double z, double mx, double my, double mz) {
+		addParticle(data, x, y, z, mx, my, mz);
+	}
+
 	@Nullable
 	@SuppressWarnings("unchecked")
 	private <T extends IParticleData> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
@@ -297,5 +302,10 @@ public class PonderWorld extends SchematicWorld {
 	public boolean isBlockPresent(BlockPos pos) {
 		return true; // fix particle lighting
 	}
-	
+
+	@Override
+	public boolean isPlayerWithin(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
+		return true; // always enable spawner animations
+	}
+
 }

@@ -77,6 +77,25 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
+		// Gauges
+		PonderRegistry.addStoryBoard(AllBlocks.SPEEDOMETER, "gauges", KineticsScenes::speedometer);
+		PonderRegistry.addStoryBoard(AllBlocks.STRESSOMETER, "gauges", KineticsScenes::stressometer);
+
+		// Item Processing
+		PonderRegistry.addStoryBoard(AllBlocks.MILLSTONE, "millstone", ProcessingScenes::millstone);
+		PonderRegistry.addStoryBoard(AllBlocks.CRUSHING_WHEEL, "crushing_wheel", ProcessingScenes::crushingWheels);
+		PonderRegistry.addStoryBoard(AllBlocks.MECHANICAL_MIXER, "mechanical_mixer/mixing", ProcessingScenes::mixing);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PRESS)
+			.addStoryBoard("mechanical_press/pressing", ProcessingScenes::pressing)
+			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
+		PonderRegistry.forComponents(AllBlocks.BASIN)
+			.addStoryBoard("basin", ProcessingScenes::basin)
+			.addStoryBoard("mechanical_mixer/mixing", ProcessingScenes::mixing)
+			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
+		PonderRegistry.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
+			ProcessingScenes::emptyBlazeBurner);
+		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
+
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)

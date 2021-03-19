@@ -75,8 +75,14 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		float target = 0;
 		if (player != null) {
-			double dx = player.getX() - (getPos().getX() + 0.5);
-			double dz = player.getZ() - (getPos().getZ() + 0.5);
+			double x = player.getX();
+			double z = player.getZ();
+			if (isVirtual()) {
+				x = -4;
+				z = -10;
+			}
+			double dx = x - (getPos().getX() + 0.5);
+			double dz = z - (getPos().getZ() + 0.5);
 			target = AngleHelper.deg(-MathHelper.atan2(dz, dx)) - 90;
 		}
 		target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);

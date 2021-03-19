@@ -120,6 +120,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public void start(Mode mode) {
 		this.mode = mode;
 		running = true;
+		prevRunningTicks = 0;
 		runningTicks = 0;
 		pressedItems.clear();
 		sendData();
@@ -203,7 +204,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
 			runningTicks = CYCLE / 2;
 			// Pause the ticks until a packet is received
-			if (world.isRemote)
+			if (world.isRemote && !isVirtual())
 				runningTicks = -(CYCLE / 2);
 		}
 	}
@@ -342,7 +343,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		return Optional.of(AllTriggers.PRESS_COMPACT);
 	}
 
-	enum Mode {
+	public enum Mode {
 		WORLD(1), BELT(19f / 16f), BASIN(22f / 16f)
 
 		;
