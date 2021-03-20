@@ -5,8 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -14,7 +12,6 @@ import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
@@ -46,7 +43,7 @@ public class FluidValveInstance extends ShaftInstance implements ITickableInstan
         if (pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical())
             pointerRotationOffset = 90;
 
-        pointer = modelManager.basicMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, lastState).createInstance();
+        pointer = modelManager.getBasicMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, lastState).createInstance();
 
         updateLight();
         transformPointer((FluidValveTileEntity) tile);

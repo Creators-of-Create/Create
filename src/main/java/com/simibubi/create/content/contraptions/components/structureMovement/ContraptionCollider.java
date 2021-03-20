@@ -70,7 +70,6 @@ public class ContraptionCollider {
 		Vec3d contraptionPosition = contraptionEntity.getPositionVec();
 		Vec3d contraptionMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		Vec3d anchorVec = contraptionEntity.getAnchorVec();
-		Vec3d centerOfBlock = VecHelper.CENTER_OF_ORIGIN;
 		ContraptionRotationState rotation = null;
 
 		// After death, multiple refs to the client player may show up in the area
@@ -103,19 +102,10 @@ public class ContraptionCollider {
 			// Transform entity position and motion to local space
 			Vec3d entityPosition = entity.getPositionVec();
 			AxisAlignedBB entityBounds = entity.getBoundingBox();
-			Vec3d centerY = new Vec3d(0, entityBounds.getYSize() / 2, 0);
 			Vec3d motion = entity.getMotion();
 			float yawOffset = rotation.getYawOffset();
 
-			Vec3d position = entityPosition;
-			position = position.add(centerY);
-			position = position.subtract(centerOfBlock);
-			position = position.subtract(anchorVec);
-			position = VecHelper.rotate(position, -yawOffset, Axis.Y);
-			position = rotationMatrix.transform(position);
-			position = position.add(centerOfBlock);
-			position = position.subtract(centerY);
-			position = position.subtract(entityPosition);
+			Vec3d position = getWorldToLocalTranslation(entity, anchorVec, rotationMatrix, yawOffset);
 
 			// Find all potential block shapes to collide with
 			AxisAlignedBB localBB = entityBounds.offset(position)
@@ -262,6 +252,48 @@ public class ContraptionCollider {
 			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 		}
 
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Entity entity, AbstractContraptionEntity contraptionEntity) {
+		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(), contraptionEntity.getRotationState());
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Entity entity, Vec3d anchorVec, ContraptionRotationState rotation) {
+		return getWorldToLocalTranslation(entity, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Entity entity, Vec3d anchorVec, Matrix3d rotationMatrix, float yawOffset) {
+		Vec3d entityPosition = entity.getPositionVec();
+		Vec3d centerY = new Vec3d(0, entity.getBoundingBox().getYSize() / 2, 0);
+		Vec3d position = entityPosition;
+		position = position.add(centerY);
+		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
+		position = position.subtract(anchorVec);
+		position = VecHelper.rotate(position, -yawOffset, Axis.Y);
+		position = rotationMatrix.transform(position);
+		position = position.add(VecHelper.CENTER_OF_ORIGIN);
+		position = position.subtract(centerY);
+		position = position.subtract(entityPosition);
+		return position;
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Vec3d entity, AbstractContraptionEntity contraptionEntity) {
+		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(), contraptionEntity.getRotationState());
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Vec3d inPos, Vec3d anchorVec, ContraptionRotationState rotation) {
+		return getWorldToLocalTranslation(inPos, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
+	}
+
+	public static Vec3d getWorldToLocalTranslation(Vec3d inPos, Vec3d anchorVec, Matrix3d rotationMatrix, float yawOffset) {
+		Vec3d position = inPos;
+		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
+		position = position.subtract(anchorVec);
+		position = VecHelper.rotate(position, -yawOffset, Axis.Y);
+		position = rotationMatrix.transform(position);
+		position = position.add(VecHelper.CENTER_OF_ORIGIN);
+		position = position.subtract(inPos);
+		return position;
 	}
 
 	/** From Entity#getAllowedMovement **/

@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
-import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
@@ -18,7 +17,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
@@ -39,7 +37,7 @@ public class DeployerActorInstance extends ActorInstance {
     public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.basicMaterial();
+        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.getBasicMaterial();
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
@@ -73,7 +71,7 @@ public class DeployerActorInstance extends ActorInstance {
     }
 
     @Override
-    protected void tick() {
+    public void beginFrame() {
         double factor;
         if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
             factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;

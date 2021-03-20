@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
+import org.lwjgl.opengl.*;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -81,8 +79,12 @@ public class ContraptionRenderDispatcher {
     }
 
     public static void tick() {
+        if (Minecraft.getInstance().isGamePaused()) return;
+
         for (RenderedContraption contraption : renderers.values()) {
             contraption.getLighter().tick(contraption);
+
+            contraption.kinetics.tick();
         }
     }
 

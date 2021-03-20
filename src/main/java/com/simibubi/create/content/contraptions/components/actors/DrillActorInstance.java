@@ -48,11 +48,10 @@ public class DrillActorInstance extends ActorInstance {
     }
 
     @Override
-    protected void tick() {
+    public void beginFrame() {
         drillHead.getInstance().setSpeed(getSpeed(facing));
     }
 
-    @Override
     protected float getSpeed(Direction facing) {
         if (context.contraption.stalled || !VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
             return context.getAnimationSpeed();

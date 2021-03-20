@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.mixin;
 
 import com.simibubi.create.foundation.render.KineticRenderer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL20;
 import org.spongepowered.asm.mixin.Mixin;

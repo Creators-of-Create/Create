@@ -39,13 +39,18 @@ uniform vec3 uCameraPos;
 varying float FragDistance;
 #endif
 
-void main() {
+mat4 kineticRotation() {
     float degrees = aOffset + uTime * aSpeed * 3./10.;
-    vec4 kineticRot = quat(aAxis, degrees);
+    float angle = fract(degrees / 360.) * PI * 2.;
 
-    vec4 worldPos = vec4(rotateVertexByQuat(aPos - .5, kineticRot) + aInstancePos + .5, 1.);
+    return rotate(aAxis, angle);
+}
 
-    vec3 norm = rotateVertexByQuat(aNormal, kineticRot);
+void main() {
+    mat4 kineticRotation = kineticRotation();
+    vec4 worldPos = kineticRotation * vec4(aPos - .5, 1.) + vec4(aInstancePos + .5, 0.);
+
+    vec3 norm = modelToNormal(kineticRotation) * aNormal;
 
     #ifdef CONTRAPTION
     worldPos = uModel * worldPos;

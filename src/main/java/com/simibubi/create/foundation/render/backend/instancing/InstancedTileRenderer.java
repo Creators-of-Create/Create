@@ -69,7 +69,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return (RenderMaterial<P, M>) materials.get(materialType);
     }
 
-    public RenderMaterial<P, InstancedModel<ModelData>> basicMaterial() {
+    public RenderMaterial<P, InstancedModel<ModelData>> getBasicMaterial() {
         return getMaterial(RenderMaterials.MODELS);
     }
 

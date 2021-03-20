@@ -50,7 +50,7 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
 
-        pole = modelManager.basicMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, lastState).createInstance();
+        pole = modelManager.getBasicMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, lastState).createInstance();
 
         updateHandPose();
         relight(pos, pole.getInstance());
@@ -100,7 +100,7 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
 
         if (hand != null) hand.delete();
 
-        hand = modelManager.basicMaterial().getModel(currentHand, lastState).createInstance();
+        hand = modelManager.getBasicMaterial().getModel(currentHand, lastState).createInstance();
 
         relight(pos, hand.getInstance());
 
