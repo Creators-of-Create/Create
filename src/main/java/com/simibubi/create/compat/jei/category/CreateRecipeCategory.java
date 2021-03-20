@@ -1,10 +1,5 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
@@ -15,7 +10,6 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
-
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -28,6 +22,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
@@ -104,11 +103,10 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			ProcessingOutput output = results.get(slotIndex - 1);
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-					.formatted(TextFormatting.GOLD));
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100)).formatted(TextFormatting.GOLD));
 		});
 	}
-	
+
 	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
 			.map(this::withImprovedVisibility)
@@ -131,7 +129,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
 			if (fluid.getFluid()
 				.isEquivalentTo(AllFluids.POTION.get())) {
-				ITextComponent name = PotionFluidHandler.getPotionName(fluid);
+				ITextComponent name = fluid.getDisplayName();
 				if (tooltip.isEmpty())
 					tooltip.add(0, name);
 				else

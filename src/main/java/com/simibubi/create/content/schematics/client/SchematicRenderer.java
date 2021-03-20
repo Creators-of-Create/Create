@@ -1,21 +1,11 @@
 package com.simibubi.create.content.schematics.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -23,9 +13,13 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import org.lwjgl.opengl.GL11;
+
+import java.util.*;
 
 public class SchematicRenderer {
 
@@ -110,8 +104,12 @@ public class SchematicRenderer {
 					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
 					if (startedBufferBuilders.add(blockRenderLayer))
 						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+
+					TileEntity tileEntity = blockAccess.getTileEntity(localPos);
+
 					if (blockRendererDispatcher.renderModel(state, pos, blockAccess, ms, bufferBuilder, true,
-						minecraft.world.rand, EmptyModelData.INSTANCE)) {
+						minecraft.world.rand,
+						tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE)) {
 						usedBlockRenderLayers.add(blockRenderLayer);
 					}
 					blockstates.add(state);

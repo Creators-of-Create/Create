@@ -1,21 +1,16 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -27,15 +22,20 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class BeltTunnelTileEntity extends SmartTileEntity {
+import java.util.*;
 
-	public HashMap<Direction, InterpolatedChasingValue> flaps;
+public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
+
+	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
 	
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
@@ -43,7 +43,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
-		flaps = new HashMap<>();
+		flaps = new EnumMap<>(Direction.class);
 		sides = new HashSet<>();
 		flapsToSend = new LinkedList<>();
 	}
@@ -67,22 +67,6 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		compound.put("Sides", sidesNBT);
 		
 		super.write(compound, clientPacket);
-
-		if (!clientPacket)
-			return;
-
-		flapsNBT = new ListNBT();
-		if (!flapsToSend.isEmpty()) {
-			for (Pair<Direction, Boolean> pair : flapsToSend) {
-				CompoundNBT flap = new CompoundNBT();
-				flap.putInt("Flap", pair.getKey()
-					.getIndex());
-				flap.putBoolean("FlapInward", pair.getValue());
-				flapsNBT.add(flap);
-			}
-			compound.put("TriggerFlaps", flapsNBT);
-			flapsToSend.clear();
-		}
 	}
 
 	@Override
@@ -113,16 +97,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 
 		super.fromTag(state, compound, clientPacket);
 
-		if (!clientPacket)
-			return;
-		if (!compound.contains("TriggerFlaps"))
-			return;
-		flapsNBT = compound.getList("TriggerFlaps", NBT.TAG_COMPOUND);
-		for (INBT inbt : flapsNBT) {
-			CompoundNBT flap = (CompoundNBT) inbt;
-			Direction side = Direction.byIndex(flap.getInt("Flap"));
-			flap(side, flap.getBoolean("FlapInward"));
-		}
+		if (clientPacket)
+			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public void updateTunnelConnections() {
@@ -154,8 +130,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 					continue;
 
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
-				.target(0)
-				.withSpeed(.05f));
+															   .target(0)
+															   .withSpeed(.05f));
 		}
 		sendData();
 	}
@@ -174,7 +150,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-//		updateTunnelConnections();
+		updateTunnelConnections();
 	}
 
 	@Override
@@ -182,10 +158,16 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		super.tick();
 		if (!world.isRemote) {
 			if (!flapsToSend.isEmpty())
-				sendData();
+				sendFlaps();
 			return;
 		}
 		flaps.forEach((d, value) -> value.tick());
+	}
+
+	private void sendFlaps() {
+		AllPackets.channel.send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
+
+		flapsToSend.clear();
 	}
 
 	@Override
@@ -211,5 +193,4 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		}
 		return this.cap.cast();
 	}
-
 }

@@ -9,7 +9,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IWaterLoggable;
@@ -27,6 +26,7 @@ import net.minecraft.util.math.vector.Vector3d;
 public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	protected int initialOffset;
+	private float prevAnimatedOffset;
 
 	public PulleyTileEntity(TileEntityType<? extends PulleyTileEntity> type) {
 		super(type);
@@ -40,6 +40,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	@Override
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() + offset * offset;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		if (isVirtual())
+			prevAnimatedOffset = offset;
 	}
 
 	@Override
@@ -219,4 +226,20 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		return new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP);
 	}
 
+	@Override
+	public float getInterpolatedOffset(float partialTicks) {
+		if (isVirtual())
+			return MathHelper.lerp(partialTicks, prevAnimatedOffset, offset);
+		boolean moving = running && (movedContraption == null || !movedContraption.isStalled());
+		return super.getInterpolatedOffset(moving ? partialTicks : 0.5f);
+	}
+	
+	public void animateOffset(float forcedOffset) {
+		offset = forcedOffset;
+	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
 }

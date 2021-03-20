@@ -1,15 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
-import static net.minecraft.state.properties.BlockStateProperties.AXIS;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -20,7 +10,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.BulkScrol
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +20,10 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+
+import java.util.*;
+
+import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 public class ChassisTileEntity extends SmartTileEntity {
 
@@ -125,8 +118,6 @@ public class ChassisTileEntity extends SmartTileEntity {
 
 		// Collect group of connected linear chassis
 		for (Direction offset : Iterate.directions) {
-			if (offset.getAxis() == axis)
-				continue;
 			BlockPos current = pos.offset(offset);
 			if (visited.contains(current))
 				continue;

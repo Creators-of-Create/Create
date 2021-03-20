@@ -3,7 +3,7 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-        maven { url='https://dist.creeper.host/Sponge/maven' }
+        maven { url='https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -39,7 +39,7 @@ minecraft {
             workingDirectory project.file('run')
             // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
-//            jvmArgs '-XX:+UnlockCommercialFeatures'
+            jvmArgs '-XX:+UnlockCommercialFeatures'
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {

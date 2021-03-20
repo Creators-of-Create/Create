@@ -15,7 +15,7 @@ public class VertexFormat {
 
         int numAttributes = 0, stride = 0;
         for (IVertexAttrib attrib : allAttributes) {
-            VertexAttribSpec spec = attrib.attribSpec();
+            IAttribSpec spec = attrib.attribSpec();
             numAttributes += spec.getAttributeCount();
             stride += spec.getSize();
         }
@@ -34,7 +34,7 @@ public class VertexFormat {
     public void vertexAttribPointers(int index) {
         int offset = 0;
         for (IVertexAttrib attrib : this.allAttributes) {
-            VertexAttribSpec spec = attrib.attribSpec();
+            IAttribSpec spec = attrib.attribSpec();
             spec.vertexAttribPointer(stride, index, offset);
             index += spec.getAttributeCount();
             offset += spec.getSize();

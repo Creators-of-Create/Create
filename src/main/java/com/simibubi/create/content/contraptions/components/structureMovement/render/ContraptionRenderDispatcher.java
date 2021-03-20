@@ -1,13 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -15,29 +7,17 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.render.Compartment;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
+import com.simibubi.create.foundation.render.*;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -50,13 +30,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL40;
+
+import java.util.List;
+import java.util.Random;
 
 public class ContraptionRenderDispatcher {
     public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
     public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
     protected static PlacementSimulationWorld renderWorld;
-
-    private static boolean firstLayer = true;
 
     public static void notifyLightUpdate(IBlockDisplayReader world, LightType type, SectionPos pos) {
         for (RenderedContraption renderer : renderers.values()) {
@@ -64,8 +49,10 @@ public class ContraptionRenderDispatcher {
         }
     }
 
-    public static void renderTick() {
-        firstLayer = true;
+    public static void notifyLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.getLighter().lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+        }
     }
 
     public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
@@ -98,26 +85,23 @@ public class ContraptionRenderDispatcher {
         return contraption;
     }
 
+    public static void beginFrame(double camX, double camY, double camZ) {
+        for (RenderedContraption renderer : renderers.values()) {
+            renderer.beginFrame(camX, camY, camZ);
+        }
+    }
+
     public static void renderLayer(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
         removeDeadContraptions();
 
         if (renderers.isEmpty()) return;
-
-        if (firstLayer) {
-
-            for (RenderedContraption renderer : renderers.values()) {
-                renderer.beginFrame(camX, camY, camZ);
-            }
-
-            firstLayer = false;
-        }
 
         layer.startDrawing();
         GL11.glEnable(GL13.GL_TEXTURE_3D);
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         if (Backend.canUseVBOs()) {
-            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.CONTRAPTION_STRUCTURE);
+            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.C_STRUCTURE);
             structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
             for (RenderedContraption renderer : renderers.values()) {
                 renderer.doRenderLayer(layer, structureShader);
@@ -210,12 +194,10 @@ public class ContraptionRenderDispatcher {
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
         renderWorld.setTileEntities(c.presentTileEntities.values());
 
-        for (Template.BlockInfo info : c.getBlocks()
-                                        .values())
+        for (Template.BlockInfo info : c.getBlocks().values())
             renderWorld.setBlockState(info.pos, info.state);
 
-        for (Template.BlockInfo info : c.getBlocks()
-                                        .values()) {
+        for (Template.BlockInfo info : c.getBlocks().values()) {
             BlockState state = info.state;
 
             if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)

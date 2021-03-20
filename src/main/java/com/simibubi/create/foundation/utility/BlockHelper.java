@@ -173,20 +173,21 @@ public class BlockHelper {
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
-		FluidState FluidState = world.getFluidState(pos);
+
+		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
 			world.playEvent(2001, pos, Block.getStateId(state));
 		TileEntity tileentity = state.hasTileEntity() ? world.getTileEntity(pos) : null;
 
-		if (world.getGameRules()
-			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots && world instanceof ServerWorld) {
+		if (world instanceof ServerWorld && world.getGameRules()
+			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity))
 				droppedItemCallback.accept(itemStack);
 			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 		}
 
-		world.setBlockState(pos, FluidState.getBlockState());
+		world.setBlockState(pos, fluidState.getBlockState());
 	}
 
 	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {

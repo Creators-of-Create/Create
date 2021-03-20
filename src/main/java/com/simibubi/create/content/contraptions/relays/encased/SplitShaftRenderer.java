@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -32,7 +31,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
 		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTick();
+		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 
 		for (Direction direction : Iterate.directions) {
 			Axis axis = direction.getAxis();

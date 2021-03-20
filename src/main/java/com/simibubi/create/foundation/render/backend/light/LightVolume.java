@@ -2,11 +2,12 @@ package com.simibubi.create.foundation.render.backend.light;
 
 import java.nio.ByteBuffer;
 
+import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.gl.versioned.RGPixelFormat;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryUtil;
 
 import com.simibubi.create.foundation.render.backend.RenderWork;
@@ -15,7 +16,6 @@ import com.simibubi.create.foundation.render.backend.gl.GlTexture;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.LightType;
 
 public class LightVolume {
@@ -29,11 +29,15 @@ public class LightVolume {
 
     private final GlTexture glTexture;
 
+    private final RGPixelFormat pixelFormat;
+
     public LightVolume(GridAlignedBB sampleVolume) {
         setSampleVolume(sampleVolume);
 
+        pixelFormat = Backend.compat.pixelFormat;
+
         this.glTexture = new GlTexture(GL20.GL_TEXTURE_3D);
-        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * 2); // TODO: reduce this to span only sampleVolume
+        this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * pixelFormat.byteCount());
 
         // allocate space for the texture
         GL20.glActiveTexture(GL20.GL_TEXTURE4);
@@ -42,7 +46,7 @@ public class LightVolume {
         int sizeX = textureVolume.sizeX();
         int sizeY = textureVolume.sizeY();
         int sizeZ = textureVolume.sizeZ();
-        GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, GL40.GL_RG8, sizeX, sizeY, sizeZ, 0, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, 0);
+        GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, pixelFormat.internalFormat(), sizeX, sizeY, sizeZ, 0, pixelFormat.format(), GL20.GL_UNSIGNED_BYTE, 0);
 
         glTexture.unbind();
         GL20.glActiveTexture(GL20.GL_TEXTURE0);
@@ -127,6 +131,15 @@ public class LightVolume {
 
         if (type == LightType.BLOCK) copyBlock(world, changedVolume);
         else if (type == LightType.SKY) copySky(world, changedVolume);
+    }
+
+    public void notifyLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
+        GridAlignedBB changedVolume = GridAlignedBB.fromChunk(chunkX, chunkZ);
+        if (!changedVolume.intersects(sampleVolume))
+            return;
+        changedVolume.intersectAssign(sampleVolume); // compute the region contained by us that has dirty lighting data.
+
+        copyLight(world, changedVolume);
     }
 
     /**
@@ -223,7 +236,7 @@ public class LightVolume {
         // just in case something goes wrong or we accidentally call this before this volume is properly disposed of.
         if (lightData == null || removed) return;
 
-        GL13.glActiveTexture(GL40.GL_TEXTURE4);
+        GL13.glActiveTexture(GL20.GL_TEXTURE4);
         glTexture.bind();
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MIN_FILTER, GL13.GL_LINEAR);
         GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MAG_FILTER, GL13.GL_LINEAR);
@@ -246,7 +259,7 @@ public class LightVolume {
             int sizeY = textureVolume.sizeY();
             int sizeZ = textureVolume.sizeZ();
 
-            GL12.glTexSubImage3D(GL12.GL_TEXTURE_3D, 0, 0, 0, 0, sizeX, sizeY, sizeZ, GL40.GL_RG, GL40.GL_UNSIGNED_BYTE, lightData);
+            GL12.glTexSubImage3D(GL12.GL_TEXTURE_3D, 0, 0, 0, 0, sizeX, sizeY, sizeZ, pixelFormat.format(), GL20.GL_UNSIGNED_BYTE, lightData);
 
             GL20.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 4); // 4 is the default
             bufferDirty = false;
@@ -270,7 +283,7 @@ public class LightVolume {
         byte b = (byte) ((block & 0xF) << 4);
         byte s = (byte) ((sky & 0xF) << 4);
 
-        int i = index(x, y, z);
+        int i = posToIndex(x, y, z);
         lightData.put(i, b);
         lightData.put(i + 1, s);
     }
@@ -278,16 +291,16 @@ public class LightVolume {
     private void writeBlock(int x, int y, int z, int block) {
         byte b = (byte) ((block & 0xF) << 4);
 
-        lightData.put(index(x, y, z), b);
+        lightData.put(posToIndex(x, y, z), b);
     }
 
     private void writeSky(int x, int y, int z, int sky) {
         byte b = (byte) ((sky & 0xF) << 4);
 
-        lightData.put(index(x, y, z) + 1, b);
+        lightData.put(posToIndex(x, y, z) + 1, b);
     }
 
-    private int index(int x, int y, int z) {
-        return (x + textureVolume.sizeX() * (y + z * textureVolume.sizeY())) * 2;
+    private int posToIndex(int x, int y, int z) {
+        return (x + textureVolume.sizeX() * (y + z * textureVolume.sizeY())) * pixelFormat.byteCount();
     }
 }

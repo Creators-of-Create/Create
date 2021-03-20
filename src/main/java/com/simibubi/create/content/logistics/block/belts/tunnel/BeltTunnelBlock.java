@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -26,6 +25,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -209,6 +209,14 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		if (!world.isRemote)
 			world.setBlockState(context.getPos(), state.with(SHAPE, shape), 2);
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		Direction fromAxis = Direction.getFacingFromAxis(AxisDirection.POSITIVE, state.get(HORIZONTAL_AXIS));
+		Direction rotated = rotation.rotate(fromAxis);
+
+		return state.with(HORIZONTAL_AXIS, rotated.getAxis());
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.foundation.render.KineticRenderer;
+import net.minecraft.client.renderer.*;
+import net.minecraft.util.math.vector.Vector3d;
 import org.lwjgl.opengl.GL20;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,7 +35,7 @@ public class RenderHooksMixin {
      * layer-correct custom rendering. RenderWorldLast is not refined enough for rendering world objects.
      * This should probably be a forge event.
      */
-    @Inject(at = @At(value = "TAIL"), method = "renderLayer")
+    @Inject(at = @At("TAIL"), method = "renderLayer")
     private void renderLayer(RenderType type, MatrixStack stack, double camX, double camY, double camZ, CallbackInfo ci) {
         if (!Backend.available()) return;
 
@@ -46,13 +49,27 @@ public class RenderHooksMixin {
         GL20.glUseProgram(0);
     }
 
-    @Inject(at = @At(value = "TAIL"), method = "loadRenderers")
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")
+    private void setupFrame(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo info, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
+        Vector3d cameraPos = info.getProjectedView();
+        double camX = cameraPos.getX();
+        double camY = cameraPos.getY();
+        double camZ = cameraPos.getZ();
+
+        CreateClient.kineticRenderer.get(world).beginFrame(camX, camY, camZ);
+        ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
+    }
+
+    @Inject(at = @At("TAIL"), method = "loadRenderers")
     private void refresh(CallbackInfo ci) {
-        CreateClient.kineticRenderer.invalidate();
         ContraptionRenderDispatcher.invalidateAll();
         OptifineHandler.refresh();
         Backend.refresh();
 
-        if (Backend.canUseInstancing() && world != null) world.loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+        if (Backend.canUseInstancing() && world != null) {
+            KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+            kineticRenderer.invalidate();
+            world.loadedTileEntityList.forEach(kineticRenderer::add);
+        }
     }
 }

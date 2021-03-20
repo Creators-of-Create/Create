@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -27,7 +26,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		if (heatLevel == HeatLevel.NONE)
 			return;
 
-		float renderTick = AnimationTickHolder.getRenderTick() + (te.hashCode() % 13) * 16f;
+		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 13) * 16f;
 		float offset = (MathHelper.sin((float) ((renderTick / 16f) % (2 * Math.PI))) + .5f) / 16f;
 
 		AllBlockPartials blazeModel = AllBlockPartials.BLAZES.get(heatLevel);

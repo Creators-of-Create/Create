@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
@@ -9,10 +7,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -28,7 +24,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class AbstractFunnelBlock extends HorizontalBlock implements ITE<FunnelTileEntity>, IWrenchable {
+import javax.annotation.Nullable;
+
+public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -39,16 +37,13 @@ public abstract class AbstractFunnelBlock extends HorizontalBlock implements ITE
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getPlacementHorizontalFacing()
-			.getOpposite();
-		return getDefaultState().with(HORIZONTAL_FACING, facing)
-			.with(POWERED, context.getWorld()
-				.isBlockPowered(context.getPos()));
+		return getDefaultState().with(POWERED, context.getWorld()
+			.isBlockPowered(context.getPos()));
 	}
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(POWERED, HORIZONTAL_FACING));
+		super.fillStateContainer(builder.add(POWERED));
 	}
 
 	@Override
@@ -63,6 +58,9 @@ public abstract class AbstractFunnelBlock extends HorizontalBlock implements ITE
 		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
+		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		if (behaviour != null)
+			behaviour.onNeighborChanged(fromPos);
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos))
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
@@ -120,9 +118,7 @@ public abstract class AbstractFunnelBlock extends HorizontalBlock implements ITE
 		return ((AbstractFunnelBlock) state.getBlock()).getFacing(state);
 	}
 
-	protected Direction getFacing(BlockState state) {
-		return state.get(BlockStateProperties.HORIZONTAL_FACING);
-	}
+	protected abstract Direction getFacing(BlockState state);
 
 	@Override
 	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,

@@ -14,11 +14,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 
 public abstract class BufferedModel extends TemplateBuffer {
 
-    protected GlBuffer ebo;
     protected GlBuffer modelVBO;
     protected boolean removed;
 
-    public BufferedModel(BufferBuilder buf) {
+    protected BufferedModel(BufferBuilder buf) {
         super(buf);
         if (vertexCount > 0) init();
     }
@@ -28,8 +27,6 @@ public abstract class BufferedModel extends TemplateBuffer {
         modelVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
 
         modelVBO.with(vbo -> initModel());
-
-        ebo = createEBO();
     }
 
     protected void initModel() {
@@ -47,25 +44,6 @@ public abstract class BufferedModel extends TemplateBuffer {
         });
     }
 
-    protected final GlBuffer createEBO() {
-        GlBuffer ebo = new GlBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-
-        int indicesSize = vertexCount * GlPrimitiveType.USHORT.getSize();
-
-        ebo.bind();
-
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
-        ebo.map(indicesSize, indices -> {
-            for (int i = 0; i < vertexCount; i++) {
-                indices.putShort((short) i);
-            }
-        });
-
-        ebo.unbind();
-
-        return ebo;
-    }
-
     protected abstract void copyVertex(ByteBuffer to, int index);
 
     protected abstract VertexFormat getModelFormat();
@@ -75,7 +53,7 @@ public abstract class BufferedModel extends TemplateBuffer {
     }
 
     /**
-     * Renders this model, checking first if it should actually be rendered.
+     * Renders this model, checking first if there is anything to render.
      */
     public final void render() {
         if (vertexCount == 0 || removed) return;
@@ -84,23 +62,9 @@ public abstract class BufferedModel extends TemplateBuffer {
     }
 
     /**
-     * Override this.
+     * Set up any state and make the draw calls.
      */
-    protected void doRender() {
-        modelVBO.bind();
-        ebo.bind();
-
-        setupAttributes();
-        GL20.glDrawElements(GL20.GL_QUADS, vertexCount, GlPrimitiveType.USHORT.getGlConstant(), 0);
-
-        int numAttributes = getTotalShaderAttributeCount();
-        for (int i = 0; i <= numAttributes; i++) {
-            GL20.glDisableVertexAttribArray(i);
-        }
-
-        ebo.unbind();
-        modelVBO.unbind();
-    }
+    protected abstract void doRender();
 
     protected void setupAttributes() {
         int numAttributes = getTotalShaderAttributeCount();
@@ -111,7 +75,7 @@ public abstract class BufferedModel extends TemplateBuffer {
         getModelFormat().vertexAttribPointers(0);
     }
 
-    public void delete() {
+    public final void delete() {
         removed = true;
         if (vertexCount > 0) {
             RenderWork.enqueue(this::deleteInternal);

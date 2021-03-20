@@ -1,17 +1,17 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
-
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -22,6 +22,8 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+
+import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
 public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -73,6 +75,20 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			.isEmpty() && !(state.getBlock() instanceof FlowingFluidBlock)
 			&& !(world.getBlockState(breakingPos.down())
 				.getBlock() instanceof FarmlandBlock);
+	}
+
+	@Override
+	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
+		super.onBlockBroken(context, pos, brokenState);
+
+		if (brokenState.getBlock() == Blocks.SNOW && context.world instanceof ServerWorld) {
+			ServerWorld world = (ServerWorld) context.world;
+			brokenState.getDrops(new LootContext.Builder(world).withParameter(LootParameters.BLOCK_STATE, brokenState)
+				.withParameter(LootParameters.ORIGIN, Vector3d.ofCenter(pos))
+				.withParameter(LootParameters.THIS_ENTITY, getPlayer(context))
+				.withParameter(LootParameters.TOOL, new ItemStack(Items.IRON_SHOVEL)))
+				.forEach(s -> dropItem(context, s));
+		}
 	}
 
 	@Override

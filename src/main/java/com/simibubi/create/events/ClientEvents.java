@@ -1,8 +1,5 @@
 package com.simibubi.create.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -17,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -25,21 +23,22 @@ import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRen
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
+import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
+import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -56,6 +55,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -65,6 +65,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -83,6 +86,7 @@ public class ClientEvents {
 
 		AnimationTickHolder.tick();
 		FastRenderDispatcher.tick();
+		ScrollValueHandler.tick();
 
 		CreateClient.schematicSender.tick();
 		CreateClient.schematicAndQuillHandler.tick();
@@ -92,7 +96,8 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		ScreenOpener.tick();
+		PonderTooltipHandler.tick();
+		//ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
 		FilteringRenderer.tick();
@@ -121,14 +126,23 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
-			((ClientWorld) world).loadedTileEntityList.forEach(CreateClient.kineticRenderer::add);
+			KineticRenderer renderer = CreateClient.kineticRenderer.get(world);
+			renderer.invalidate();
+			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
+
+		/*
+		i was getting nullPointers when trying to call this during client setup,
+		so i assume minecraft's language manager isn't yet fully loaded at that time.
+		not sure where else to call this tho :S
+		*/
+		IHaveGoggleInformation.numberFormat.update();
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		if (event.getWorld().isRemote()) {
-			CreateClient.invalidateRenderers();
+			CreateClient.invalidateRenderers(event.getWorld());
 			AnimationTickHolder.reset();
 		}
 	}
@@ -136,6 +150,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
 		ms.push();
@@ -146,9 +161,8 @@ public class ClientEvents {
 		CreateClient.schematicHandler.render(ms, buffer);
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
-		CreateClient.outliner.renderOutlines(ms, buffer);
+		CreateClient.outliner.renderOutlines(ms, buffer, pt);
 //		LightVolumeDebugger.render(ms, buffer);
-//		CollisionDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -173,6 +187,11 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
+	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
+		PonderTooltipHandler.handleTooltipColor(event);
+	}
+
+	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
 			return;
@@ -194,6 +213,7 @@ public class ClientEvents {
 			itemTooltip.addAll(0, toolTip);
 		}
 
+		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
 	}
 
 	@SubscribeEvent
@@ -201,7 +221,6 @@ public class ClientEvents {
 		if (!isGameActive())
 			return;
 		TurntableHandler.gameRenderTick();
-		ContraptionRenderDispatcher.renderTick();
 	}
 
 	protected static boolean isGameActive() {

@@ -127,6 +127,8 @@ public class FilteringHandler {
 			return false;
 		if (!filtering.isCountVisible())
 			return false;
+		if (!filtering.isActive())
+			return false;
 		if (filtering.slotPositioning instanceof ValueBoxTransform.Sided)
 			((Sided) filtering.slotPositioning).fromSide(result.getFace());
 		if (!filtering.testHit(objectMouseOver.getHitVec()))

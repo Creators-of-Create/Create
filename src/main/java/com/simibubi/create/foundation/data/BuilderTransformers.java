@@ -1,15 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
-import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
-import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -22,17 +12,14 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
-import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
+import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
@@ -42,6 +29,14 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
+import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
+import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 public class BuilderTransformers {
 
@@ -85,6 +80,7 @@ public class BuilderTransformers {
 					TooltipHelper.referTo(v, AllBlocks.COPPER_VALVE_HANDLE);
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
+			.onRegister(ItemUseOverrides::addBlock)
 			.item()
 			.tag(AllItemTags.VALVE_HANDLES.tag)
 			.build();
@@ -97,41 +93,6 @@ public class BuilderTransformers {
 			.onRegister(connectedTextures(new EncasedCTBehaviour(ct)))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct)))
 			.simpleItem();
-	}
-
-	public static <B extends FunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> funnel(String type,
-		ResourceLocation particleTexture) {
-		return b -> {
-			return b.blockstate((c, p) -> {
-				Function<BlockState, ModelFile> model = s -> {
-					String powered = s.get(FunnelBlock.POWERED) ? "_powered" : "";
-					String extracting = s.get(FunnelBlock.EXTRACTING) ? "_push" : "_pull";
-					String face = s.get(FunnelBlock.FACE)
-						.getString();
-					return p.models()
-						.withExistingParent("block/" + type + "_funnel_" + face + extracting + powered,
-							p.modLoc("block/funnel/block_" + face))
-						.texture("particle", particleTexture)
-						.texture("7", p.modLoc("block/" + type + "_funnel_plating"))
-						.texture("6", p.modLoc("block/" + type + "_funnel" + powered))
-						.texture("5", p.modLoc("block/" + type + "_funnel_tall" + powered))
-						.texture("2_2", p.modLoc("block/" + type + "_funnel" + extracting))
-						.texture("3", p.modLoc("block/" + type + "_funnel_back"));
-				};
-				p.horizontalFaceBlock(c.get(), model);
-			})
-				.item(FunnelItem::new)
-				.model((c, p) -> {
-					p.withExistingParent("item/" + type + "_funnel", p.modLoc("block/funnel/item"))
-						.texture("particle", particleTexture)
-						.texture("7", p.modLoc("block/" + type + "_funnel_plating"))
-						.texture("2", p.modLoc("block/" + type + "_funnel_neutral"))
-						.texture("6", p.modLoc("block/" + type + "_funnel"))
-						.texture("5", p.modLoc("block/" + type + "_funnel_tall"))
-						.texture("3", p.modLoc("block/" + type + "_funnel_back"));
-				})
-				.build();
-		};
 	}
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(

@@ -2,8 +2,8 @@ package com.simibubi.create.content.schematics.client.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.LineOutline;
-
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 
@@ -35,7 +35,7 @@ public class RotateTool extends PlacementToolBase {
 			.colored(0xdddddd)
 			.lineWidth(1 / 16f);
 		line.set(start, end)
-			.render(ms, buffer);
+			.render(ms, buffer, AnimationTickHolder.getPartialTicks());
 
 		super.renderOnSchematic(ms, buffer);
 	}

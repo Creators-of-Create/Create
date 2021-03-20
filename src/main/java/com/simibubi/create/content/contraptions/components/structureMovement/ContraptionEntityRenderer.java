@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -39,7 +38,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		// Keep a copy of the transforms in order to determine correct lighting
-		MatrixStack msLocal = translateTo(entity, AnimationTickHolder.getRenderTick());
+		MatrixStack msLocal = translateTo(entity, AnimationTickHolder.getPartialTicks());
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 
 		ms.push();

@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -49,7 +48,7 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	private float getAnimatedHeadOffset() {
-		float cycle = (AnimationTickHolder.getRenderTick()) % 30;
+		float cycle = (AnimationTickHolder.getRenderTime()) % 30;
 		if (cycle < 10) {
 			float progress = cycle / 10;
 			return -(progress * progress * progress);

@@ -4,7 +4,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -14,10 +13,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.AxisDirection;
@@ -31,15 +27,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public abstract class FunnelBlock extends AbstractFunnelBlock {
+public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
-	public static final EnumProperty<AttachFace> FACE = BlockStateProperties.FACE;
 	public static final BooleanProperty EXTRACTING = BooleanProperty.create("extracting");
 
 	public FunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-		setDefaultState(getDefaultState().with(FACE, AttachFace.WALL)
-			.with(EXTRACTING, false));
+		setDefaultState(getDefaultState().with(EXTRACTING, false));
 	}
 
 	public abstract BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state);
@@ -53,13 +47,7 @@ public abstract class FunnelBlock extends AbstractFunnelBlock {
 		state = state.with(EXTRACTING, !sneak);
 
 		for (Direction direction : context.getNearestLookingDirections()) {
-			BlockState blockstate;
-			if (direction.getAxis() == Direction.Axis.Y)
-				blockstate = state.with(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR)
-					.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
-			else
-				blockstate = state.with(FACE, AttachFace.WALL)
-					.with(HORIZONTAL_FACING, direction.getOpposite());
+			BlockState blockstate = state.with(FACING, direction.getOpposite());
 			if (blockstate.isValidPosition(context.getWorld(), context.getPos()))
 				return blockstate.with(POWERED, state.get(POWERED));
 		}
@@ -69,7 +57,7 @@ public abstract class FunnelBlock extends AbstractFunnelBlock {
 
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(FACE, EXTRACTING));
+		super.fillStateContainer(builder.add(EXTRACTING));
 	}
 
 	@Override
@@ -138,25 +126,16 @@ public abstract class FunnelBlock extends AbstractFunnelBlock {
 	}
 
 	@Override
-	protected Direction getFacing(BlockState state) {
-		if (state.get(FACE) == AttachFace.CEILING)
-			return Direction.DOWN;
-		if (state.get(FACE) == AttachFace.FLOOR)
-			return Direction.UP;
-		return super.getFacing(state);
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		AttachFace attachFace = state.get(FACE);
-		return attachFace == AttachFace.CEILING ? AllShapes.FUNNEL_CEILING
-			: attachFace == AttachFace.FLOOR ? AllShapes.FUNNEL_FLOOR
-				: AllShapes.FUNNEL.get(state.get(HORIZONTAL_FACING));
+		Direction facing = state.get(FACING);
+		return facing == Direction.DOWN ? AllShapes.FUNNEL_CEILING
+			: facing == Direction.UP ? AllShapes.FUNNEL_FLOOR : AllShapes.FUNNEL_WALL.get(facing);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		if (context.getEntity() instanceof ItemEntity && state.get(FACE) == AttachFace.WALL)
+		if (context.getEntity() instanceof ItemEntity && getFacing(state).getAxis()
+			.isHorizontal())
 			return AllShapes.FUNNEL_COLLISION.get(getFacing(state));
 		return getShape(state, world, pos, context);
 	}
@@ -164,7 +143,8 @@ public abstract class FunnelBlock extends AbstractFunnelBlock {
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState p_196271_3_, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
-		if (state.get(FACE) != AttachFace.WALL || direction != Direction.DOWN)
+		if (getFacing(state).getAxis()
+			.isVertical() || direction != Direction.DOWN)
 			return state;
 		BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
 		if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))

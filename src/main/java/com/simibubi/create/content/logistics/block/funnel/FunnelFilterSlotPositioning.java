@@ -6,9 +6,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3d;
@@ -36,50 +34,24 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			}
 		}
 
-		if (state.getBlock() instanceof FunnelBlock) {
-			if (state.get(FunnelBlock.FACE) == AttachFace.WALL)
-				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
-			Vector3d southLocation = VecHelper.voxelSpace(8, funnelFacing == Direction.DOWN ? 6.5f : 9.5f, 13f);
-			return VecHelper.rotateCentered(southLocation,
-				AngleHelper.horizontalAngle(state.get(AbstractFunnelBlock.HORIZONTAL_FACING)), Axis.Y);
+		if (!funnelFacing.getAxis()
+			.isHorizontal()) {
+			Vector3d southLocation = VecHelper.voxelSpace(8, funnelFacing == Direction.DOWN ? 14 : 2, 15.5f);
+			return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 		}
 
-		return Vector3d.ZERO;
-
-//		if (!funnelFacing.getAxis()
-//			.isHorizontal()) {
-//			Vector3d southLocation = VecHelper.voxelSpace(8, funnelFacing == Direction.DOWN ? 3 : 13, 15.5f);
-//			return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
-//		}
-//
-//		Direction verticalDirection = DirectionHelper.rotateAround(getSide(), funnelFacing.rotateY()
-//			.getAxis());
-//		if (funnelFacing.getAxis() == Axis.Z)
-//			verticalDirection = verticalDirection.getOpposite();
-//		float yRot = -AngleHelper.horizontalAngle(verticalDirection) + 180;
-//		float xRot = -90;
-//		boolean alongX = funnelFacing.getAxis() == Axis.X;
-//		float zRotLast = alongX ^ funnelFacing.getAxisDirection() == AxisDirection.POSITIVE ? 180 : 0;
-//
-//		Vector3d vec = VecHelper.voxelSpace(8, 13, .5f);
-//		vec = vec.subtract(.5, .5, .5);
-//		vec = VecHelper.rotate(vec, zRotLast, Axis.Z);
-//		vec = VecHelper.rotate(vec, yRot, Axis.Y);
-//		vec = VecHelper.rotate(vec, alongX ? 0 : xRot, Axis.X);
-//		vec = VecHelper.rotate(vec, alongX ? xRot : 0, Axis.Z);
-//		vec = vec.add(.5, .5, .5);
-//		return vec;
+		return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
 	}
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
 		Direction facing = FunnelBlock.getFunnelFacing(state);
 
-//		if (facing.getAxis()
-//			.isVertical()) {
-//			super.rotate(state, ms);
-//			return;
-//		}
+		if (facing.getAxis()
+			.isVertical()) {
+			super.rotate(state, ms);
+			return;
+		}
 
 		boolean isBeltFunnel = state.getBlock() instanceof BeltFunnelBlock;
 		if (isBeltFunnel && state.get(BeltFunnelBlock.SHAPE) != Shape.EXTENDED) {
@@ -92,15 +64,13 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 		}
 
 		if (state.getBlock() instanceof FunnelBlock) {
-			if (state.get(FunnelBlock.FACE) == AttachFace.WALL) {
-				super.rotate(state, ms);
-				MatrixStacker.of(ms)
-					.rotateX(-22.5f);
-				return;
-			}
+			super.rotate(state, ms);
+			MatrixStacker.of(ms)
+				.rotateX(-22.5f);
+			return;
 		}
 
-		float yRot = AngleHelper.horizontalAngle(state.get(AbstractFunnelBlock.HORIZONTAL_FACING))
+		float yRot = AngleHelper.horizontalAngle(AbstractFunnelBlock.getFunnelFacing(state))
 			+ (facing == Direction.DOWN ? 180 : 0);
 		MatrixStacker.of(ms)
 			.rotateY(yRot)
@@ -113,6 +83,10 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 		if (facing == null)
 			return false;
+		if (facing.getAxis()
+			.isVertical())
+			return direction.getAxis()
+				.isHorizontal();
 		if (state.getBlock() instanceof BeltFunnelBlock && state.get(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
 			return direction == Direction.UP;
 		return direction == facing;

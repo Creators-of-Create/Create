@@ -26,14 +26,14 @@ public class Lang {
 
 	public static List<ITextComponent> translatedOptions(String prefix, String... keys) {
 		List<ITextComponent> result = new ArrayList<>(keys.length);
-		for (String key : keys) {
+		for (String key : keys)
 			result.add(translate(prefix + "." + key));
-		}
+
 		return result;
 	}
 
 	public static String asId(String name) {
-		return name.toLowerCase(Locale.ENGLISH);
+		return name.toLowerCase(Locale.ROOT);
 	}
 
 }

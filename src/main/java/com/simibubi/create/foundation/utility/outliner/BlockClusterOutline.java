@@ -30,7 +30,7 @@ public class BlockClusterOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		for (MergeEntry edge : cluster.visibleEdges) {
 			Vector3d start = Vector3d.of(edge.pos);
 			Direction direction = Direction.getFacingFromAxis(AxisDirection.POSITIVE, edge.axis);

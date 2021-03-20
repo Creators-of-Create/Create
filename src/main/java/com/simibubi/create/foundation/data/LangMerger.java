@@ -23,8 +23,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.utility.FilesHelper;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -45,12 +45,28 @@ public class LangMerger implements IDataProvider {
 	private Map<String, Map<String, String>> allLocalizedEntries;
 	private Map<String, MutableInt> missingTranslationTally;
 
+	private List<String> langIgnore;
+
 	public LangMerger(DataGenerator gen) {
 		this.gen = gen;
 		this.mergedLangData = new ArrayList<>();
+		this.langIgnore = new ArrayList<>();
 		this.allLocalizedEntries = new HashMap<>();
 		this.populatedLangData = new HashMap<>();
 		this.missingTranslationTally = new HashMap<>();
+		populateLangIgnore();
+	}
+
+	private void populateLangIgnore() {
+		// Key prefixes added here will NOT be transferred to lang templates
+		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
+	}
+
+	private boolean shouldIgnore(String key) {
+		for (String string : langIgnore)
+			if (key.startsWith(string))
+				return true;
+		return false;
 	}
 
 	@Override
@@ -128,6 +144,8 @@ public class LangMerger implements IDataProvider {
 			.stream()
 			.forEachOrdered(entry -> {
 				String key = entry.getKey();
+				if (shouldIgnore(key))
+					return;
 				String value = entry.getValue()
 					.getAsString();
 				if (!previousKey.getValue()
@@ -158,8 +176,10 @@ public class LangMerger implements IDataProvider {
 	}
 
 	protected boolean shouldAddLineBreak(String key, String previousKey) {
-		// Always put tooltips in their own paragraphs
+		// Always put tooltips and ponder scenes in their own paragraphs
 		if (key.endsWith(".tooltip"))
+			return true;
+		if (key.startsWith("create.ponder") && key.endsWith(PonderScene.TITLE_KEY))
 			return true;
 
 		key = key.replaceFirst("\\.", "");
@@ -201,14 +221,9 @@ public class LangMerger implements IDataProvider {
 	}
 
 	private void collectEntries() {
-		for (AllLangPartials partial : AllLangPartials.values()) {
-			String fileName = Lang.asId(partial.name());
-			String filepath = "assets/" + Create.ID + "/lang/default/" + fileName + ".json";
-			JsonElement element = FilesHelper.loadJsonResource(filepath);
-			if (element == null)
-				throw new IllegalStateException(String.format("Could not find default lang file: %s", filepath));
-			addAll(partial.getDisplay(), element.getAsJsonObject());
-		}
+		for (AllLangPartials partial : AllLangPartials.values())
+			addAll(partial.getDisplay(), partial.provide()
+				.getAsJsonObject());
 	}
 
 	private void save(DirectoryCache cache, List<Object> dataIn, int missingKeys, Path target, String message)

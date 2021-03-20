@@ -4,12 +4,13 @@
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
     "client": [
-        "OnRemoveTileMixin",
+        "AddRemoveTileMixin",
         "ShaderCloseMixin",
         "CancelTileEntityRenderMixin",
         "LightUpdateMixin",
         "RenderHooksMixin",
-        "FogColorTrackerMixin"
+        "FogColorTrackerMixin",
+        "NetworkLightUpdateMixin"
     ],
     "injectors": {
         "defaultRequire": 1

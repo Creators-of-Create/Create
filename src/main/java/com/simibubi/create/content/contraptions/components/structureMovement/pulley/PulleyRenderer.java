@@ -6,7 +6,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
@@ -41,9 +40,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	@Override
 	protected float getOffset(KineticTileEntity te, float partialTicks) {
 		PulleyTileEntity pulley = (PulleyTileEntity) te;
-		boolean running = pulley.running;
-		boolean moving = running && (pulley.movedContraption == null || !pulley.movedContraption.isStalled());
-		float offset = pulley.getInterpolatedOffset(moving ? partialTicks : 0.5f);
+		float offset = pulley.getInterpolatedOffset(partialTicks);
 
 		if (pulley.movedContraption != null) {
 			AbstractContraptionEntity e = pulley.movedContraption;
@@ -57,7 +54,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected boolean isRunning(KineticTileEntity te) {
-		return ((PulleyTileEntity) te).running;
+		return ((PulleyTileEntity) te).running || te.isVirtual();
 	}
 
 }

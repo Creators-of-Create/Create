@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
@@ -102,6 +103,10 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return new Couplerator<>(this);
+	}
+
+	public Stream<T> stream() {
+		return Stream.of(first, second);
 	}
 
 	private static class Couplerator<T> implements Iterator<T> {

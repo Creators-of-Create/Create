@@ -1,38 +1,18 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.components.actors.ContraptionActorData;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -46,6 +26,12 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import org.lwjgl.opengl.GL11;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class RenderedContraption {
     private final HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
@@ -64,7 +50,7 @@ public class RenderedContraption {
     public RenderedContraption(World world, Contraption contraption) {
         this.contraption = contraption;
         this.lighter = contraption.makeLighter();
-        this.kinetics = new ContraptionKineticRenderer();
+        this.kinetics = new ContraptionKineticRenderer(this);
         this.renderWorld = setupRenderWorld(world, contraption);
 
         buildLayers();
@@ -86,10 +72,6 @@ public class RenderedContraption {
         return lighter;
     }
 
-    public RenderMaterial<?, InstancedModel<ContraptionActorData>> getActorMaterial() {
-        return kinetics.getMaterial(KineticRenderMaterials.ACTORS);
-    }
-
     public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
         ContraptionModel structure = renderLayers.get(layer);
         if (structure != null) {
@@ -100,6 +82,8 @@ public class RenderedContraption {
     }
 
     public void beginFrame(double camX, double camY, double camZ) {
+        kinetics.beginFrame(camX, camY, camZ);
+
         AbstractContraptionEntity entity = contraption.entity;
         float pt = AnimationTickHolder.getPartialTicks();
 
@@ -170,18 +154,7 @@ public class RenderedContraption {
     }
 
     private void buildActors() {
-        List<MutablePair<Template.BlockInfo, MovementContext>> actors = contraption.getActors();
-
-        for (MutablePair<Template.BlockInfo, MovementContext> actor : actors) {
-            Template.BlockInfo blockInfo = actor.left;
-            MovementContext context = actor.right;
-
-            MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
-
-            if (movementBehaviour != null) {
-                movementBehaviour.addInstance(this, context);
-            }
-        }
+        contraption.getActors().forEach(kinetics::createActor);
     }
 
     private static ContraptionModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {

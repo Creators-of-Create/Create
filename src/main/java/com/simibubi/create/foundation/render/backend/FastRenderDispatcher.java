@@ -2,13 +2,11 @@ package com.simibubi.create.foundation.render.backend;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.lwjgl.opengl.GL11;
+import com.simibubi.create.foundation.render.KineticRenderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
-import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -41,14 +39,15 @@ public class FastRenderDispatcher {
     public static void tick() {
         ClientWorld world = Minecraft.getInstance().world;
 
-        CreateClient.kineticRenderer.tick();
+        KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+        kineticRenderer.tick();
 
         ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
         map
                 .forEach(te -> {
                     map.remove(te);
 
-                    CreateClient.kineticRenderer.update(te);
+                    kineticRenderer.update(te);
                 });
     }
 
@@ -57,7 +56,7 @@ public class FastRenderDispatcher {
     }
 
     public static boolean available(World world) {
-        return Backend.canUseInstancing() && !(world instanceof SchematicWorld);
+        return Backend.canUseInstancing() && Backend.isFlywheelWorld(world);
     }
 
     public static int getDebugMode() {
@@ -71,9 +70,12 @@ public class FastRenderDispatcher {
     public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
         if (!Backend.canUseInstancing()) return;
 
+        ClientWorld world = Minecraft.getInstance().world;
+        KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+
         layer.startDrawing();
 
-        CreateClient.kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
+        kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
 
         layer.endDrawing();
     }

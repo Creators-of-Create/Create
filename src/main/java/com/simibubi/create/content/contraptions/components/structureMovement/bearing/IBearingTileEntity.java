@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import com.simibubi.create.content.contraptions.components.structureMovement.DirectionalExtenderScrollOptionSlot;
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-
 import net.minecraft.util.Direction.Axis;
 
 public interface IBearingTileEntity extends IControlContraption {
@@ -20,5 +19,7 @@ public interface IBearingTileEntity extends IControlContraption {
 			return bearingAxis != axis;
 		});
 	}
+	
+	void setAngle(float forcedAngle);
 
 }

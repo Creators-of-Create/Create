@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.render.backend.light;
 
-import static com.simibubi.create.foundation.render.RenderMath.isPowerOf2;
+import static com.simibubi.create.foundation.render.backend.RenderUtil.isPowerOf2;
 
-import com.simibubi.create.foundation.render.RenderMath;
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -51,6 +51,17 @@ public class GridAlignedBB {
                                  pos.getWorldEndX() + 1,
                                  pos.getWorldEndY() + 1,
                                  pos.getWorldEndZ() + 1);
+    }
+
+    public static GridAlignedBB fromChunk(int sectionX, int sectionZ) {
+        int startX = sectionX << 4;
+        int startZ = sectionZ << 4;
+        return new GridAlignedBB(startX,
+                                 0,
+                                 startZ,
+                                 startX + 16,
+                                 256,
+                                 startZ + 16);
     }
 
     public static AxisAlignedBB toAABB(GridAlignedBB bb) {
@@ -131,9 +142,9 @@ public class GridAlignedBB {
         int sizeY = sizeY();
         int sizeZ = sizeZ();
 
-        int newSizeX = RenderMath.nextPowerOf2(sizeX);
-        int newSizeY = RenderMath.nextPowerOf2(sizeY);
-        int newSizeZ = RenderMath.nextPowerOf2(sizeZ);
+        int newSizeX = RenderUtil.nextPowerOf2(sizeX);
+        int newSizeY = RenderUtil.nextPowerOf2(sizeY);
+        int newSizeZ = RenderUtil.nextPowerOf2(sizeZ);
 
         int diffX = newSizeX - sizeX;
         int diffY = newSizeY - sizeY;
@@ -151,9 +162,9 @@ public class GridAlignedBB {
      * Grow this bounding box to have power of 2 side lengths, scaling from the minimum coords.
      */
     public void nextPowerOf2() {
-        int sizeX = RenderMath.nextPowerOf2(sizeX());
-        int sizeY = RenderMath.nextPowerOf2(sizeY());
-        int sizeZ = RenderMath.nextPowerOf2(sizeZ());
+        int sizeX = RenderUtil.nextPowerOf2(sizeX());
+        int sizeY = RenderUtil.nextPowerOf2(sizeY());
+        int sizeZ = RenderUtil.nextPowerOf2(sizeZ());
 
         this.maxX = this.minX + sizeX;
         this.maxY = this.minY + sizeY;
@@ -256,6 +267,10 @@ public class GridAlignedBB {
                 }
             }
         }
+    }
+
+    public AxisAlignedBB toAABB() {
+        return toAABB(this);
     }
 
     @Override

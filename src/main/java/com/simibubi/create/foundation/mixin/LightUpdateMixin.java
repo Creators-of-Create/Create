@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.mixin;
 
 import java.util.Map;
 
+import com.simibubi.create.CreateClient;
+import net.minecraft.client.world.ClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,6 +34,7 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
     @Inject(at = @At("HEAD"), method = "markLightChanged")
     private void onLightUpdate(LightType type, SectionPos pos, CallbackInfo ci) {
         ClientChunkProvider thi = ((ClientChunkProvider) (Object) this);
+        ClientWorld world = (ClientWorld) thi.getWorld();
 
         Chunk chunk = thi.getChunk(pos.getSectionX(), pos.getSectionZ(), false);
 
@@ -43,9 +46,12 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
                  .stream()
                  .filter(entry -> SectionPos.toChunk(entry.getKey().getY()) == sectionY)
                  .map(Map.Entry::getValue)
-                 .filter(tile -> tile instanceof ILightListener)
-                 .map(tile -> (ILightListener) tile)
-                 .forEach(ILightListener::onChunkLightUpdate);
+                 .forEach(tile -> {
+                CreateClient.kineticRenderer.get(world).onLightUpdate(tile);
+
+                if (tile instanceof ILightListener)
+                    ((ILightListener) tile).onChunkLightUpdate();
+            });
         }
 
         ContraptionRenderDispatcher.notifyLightUpdate((IBlockDisplayReader) thi.getWorld(), type, pos);

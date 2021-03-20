@@ -1,14 +1,13 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
-import java.util.Vector;
-
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants.NBT;
+
+import java.util.Vector;
 
 public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
@@ -151,6 +150,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 	@Override
 	public float getRotationSpeedModifier(Direction face) {
+		if (isVirtual())
+			return 1;
 		return (!hasSource() || face == getSourceFacing()) ? 1 : getModifier();
 	}
 

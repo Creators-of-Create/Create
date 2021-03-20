@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -12,7 +10,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -42,9 +39,9 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		Direction facing = state.get(DrillBlock.FACING);
 		
 		float speed = (float) (context.contraption.stalled
-			|| !VecHelper.isVecPointingTowards(context.relativeMotion, state.get(FACING)
+			|| !VecHelper.isVecPointingTowards(context.relativeMotion, facing
 				.getOpposite()) ? context.getAnimationSpeed() : 0);
-		float time = AnimationTickHolder.getRenderTick() / 20;
+		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
 		for (MatrixStack m : matrixStacks)

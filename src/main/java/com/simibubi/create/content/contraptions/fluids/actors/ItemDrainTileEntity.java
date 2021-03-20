@@ -1,9 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -15,7 +12,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -24,13 +20,19 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemDrainTileEntity extends SmartTileEntity {
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	public static final int FILLING_TIME = 20;
 
@@ -63,12 +65,12 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 
 		if (!getHeldItemStack().isEmpty())
 			return inserted;
-		
+
 		if (inserted.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(world, inserted)) {
 			returned = ItemHandlerHelper.copyStackWithSize(inserted, inserted.getCount() - 1);
 			inserted = ItemHandlerHelper.copyStackWithSize(inserted, 1);
 		}
-		
+
 		if (simulate)
 			return returned;
 
@@ -91,15 +93,18 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+
 		if (heldItem == null) {
 			processingTicks = 0;
 			return;
 		}
 
+		boolean onClient = world.isRemote && !isVirtual();
+		
 		if (processingTicks > 0) {
 			heldItem.prevBeltPosition = .5f;
 			boolean wasAtBeginning = processingTicks == FILLING_TIME;
-			if (!world.isRemote || processingTicks < FILLING_TIME)
+			if (!onClient || processingTicks < FILLING_TIME)
 				processingTicks--;
 			if (!continueProcessing()) {
 				processingTicks = 0;
@@ -118,7 +123,7 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 		if (heldItem.beltPosition > 1) {
 			heldItem.beltPosition = 1;
 
-			if (world.isRemote)
+			if (onClient)
 				return;
 
 			Direction side = heldItem.insertedFrom;
@@ -187,7 +192,7 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 			if (!EmptyingByBasin.canItemBeEmptied(world, heldItem.stack))
 				return;
 			heldItem.beltPosition = .5f;
-			if (world.isRemote)
+			if (onClient)
 				return;
 			processingTicks = FILLING_TIME;
 			sendData();
@@ -196,7 +201,7 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 	}
 
 	protected boolean continueProcessing() {
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return true;
 		if (processingTicks < 5)
 			return true;
@@ -280,6 +285,11 @@ public class ItemDrainTileEntity extends SmartTileEntity {
 				.cast();
 
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 }

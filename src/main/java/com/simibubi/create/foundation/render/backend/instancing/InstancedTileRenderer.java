@@ -1,28 +1,31 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
-    public static WorldAttached<ConcurrentHashMap<TileEntity, Integer>> addedLastTick = new WorldAttached<>(ConcurrentHashMap::new);
+    protected ArrayList<TileEntity> queuedAdditions = new ArrayList<>(64);
 
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
+
+    protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
@@ -35,22 +38,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public abstract void registerMaterials();
 
     public void tick() {
-        ClientWorld world = Minecraft.getInstance().world;
-
         int ticks = AnimationTickHolder.getTicks();
-
-        ConcurrentHashMap<TileEntity, Integer> map = addedLastTick.get(world);
-        map
-                .entrySet()
-                .stream()
-                .filter(it -> ticks - it.getValue() > 10)
-                .map(Map.Entry::getKey)
-                .forEach(te -> {
-                    map.remove(te);
-
-                    onLightUpdate(te);
-                });
-
 
         // Clean up twice a second. This doesn't have to happen every tick,
         // but this does need to be run to ensure we don't miss anything.
@@ -59,9 +47,30 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
+    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+        queuedAdditions.forEach(this::add);
+        queuedAdditions.clear();
+        tickableInstances.values().forEach(ITickableInstance::tick);
+    }
+
+    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
+        render(layer, viewProjection, camX, camY, camZ, null);
+    }
+
+    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
+        for (RenderMaterial<P, ?> material : materials.values()) {
+            if (material.canRenderInLayer(layer))
+                material.render(layer, viewProjection, camX, camY, camZ, callback);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialType<M> materialType) {
         return (RenderMaterial<P, M>) materials.get(materialType);
+    }
+
+    public RenderMaterial<P, InstancedModel<ModelData>> basicMaterial() {
+        return getMaterial(RenderMaterials.MODELS);
     }
 
     @Nullable
@@ -72,7 +81,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (!Backend.canUseInstancing()) return null;
+        if (!Backend.canUseInstancing() || !canCreateInstance(tile)) return null;
 
         TileEntityInstance<?> instance = instances.get(tile);
 
@@ -82,8 +91,10 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
             if (renderer != null) {
-                addedLastTick.get(tile.getWorld()).put(tile, AnimationTickHolder.getTicks());
                 instances.put(tile, renderer);
+
+                if (renderer instanceof ITickableInstance)
+                    tickableInstances.put(tile, (ITickableInstance) renderer);
             }
 
             return renderer;
@@ -111,6 +122,12 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
+    public <T extends TileEntity> void queueAdd(T tile) {
+        if (!Backend.canUseInstancing()) return;
+
+        queuedAdditions.add(tile);
+    }
+
     public <T extends TileEntity> void update(T tile) {
         if (!Backend.canUseInstancing()) return;
 
@@ -131,6 +148,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             if (instance != null) {
                 instance.remove();
                 instances.remove(tile);
+                tickableInstances.remove(tile);
             }
         }
     }
@@ -144,16 +162,24 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             material.delete();
         }
         instances.clear();
+        tickableInstances.clear();
     }
 
-    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
-        render(layer, viewProjection, camX, camY, camZ, null);
-    }
+    public boolean canCreateInstance(TileEntity tile) {
+        if (tile.isRemoved()) return false;
 
-    public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
-        for (RenderMaterial<P, ?> material : materials.values()) {
-            if (material.canRenderInLayer(layer))
-                material.render(layer, viewProjection, camX, camY, camZ, callback);
+        World world = tile.getWorld();
+
+        if (world == null) return false;
+
+        if (world == Minecraft.getInstance().world) {
+            BlockPos pos = tile.getPos();
+
+            IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
+
+            return existingChunk != null;
         }
+
+        return world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel();
     }
 }

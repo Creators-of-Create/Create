@@ -1,19 +1,12 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
-import static java.lang.Math.abs;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -22,6 +15,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -34,7 +28,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class FluidTankTileEntity extends SmartTileEntity {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static java.lang.Math.abs;
+
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	private static final int MAX_SIZE = 3;
 
@@ -89,14 +89,14 @@ public class FluidTankTileEntity extends SmartTileEntity {
 			if (syncCooldown == 0 && queuedSync)
 				sendData();
 		}
-		
+
 		if (lastKnownPos == null)
 			lastKnownPos = getPos();
 		else if (!lastKnownPos.equals(pos) && pos != null) {
 			onPositionChanged();
 			return;
 		}
-		
+
 		if (updateConnectivity)
 			updateConnectivity();
 		if (fluidLevel != null)
@@ -104,10 +104,8 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	public boolean isController() {
-		return controller == null ||
-				pos.getX() == controller.getX() &&
-				pos.getY() == controller.getY() &&
-				pos.getZ() == controller.getZ();
+		return controller == null
+			|| pos.getX() == controller.getX() && pos.getY() == controller.getY() && pos.getZ() == controller.getZ();
 	}
 
 	@Override
@@ -285,6 +283,7 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	private AxisAlignedBB cachedBoundingBox;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
@@ -313,9 +312,15 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	}
 
 	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		return containedFluidTooltip(tooltip, isPlayerSneaking,
+			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+	}
+
+	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
-		
+
 		BlockPos controllerBefore = controller;
 		int prevSize = width;
 		int prevHeight = height;
@@ -438,11 +443,11 @@ public class FluidTankTileEntity extends SmartTileEntity {
 	public static int getMaxHeight() {
 		return AllConfigs.SERVER.fluids.fluidTankMaxHeight.get();
 	}
-	
+
 	public InterpolatedChasingValue getFluidLevel() {
 		return fluidLevel;
 	}
-	
+
 	public void setFluidLevel(InterpolatedChasingValue fluidLevel) {
 		this.fluidLevel = fluidLevel;
 	}

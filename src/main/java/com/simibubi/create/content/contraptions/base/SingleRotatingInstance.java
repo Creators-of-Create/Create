@@ -1,34 +1,25 @@
 package com.simibubi.create.content.contraptions.base;
 
-import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
-
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+
+import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
-    public static void register(TileEntityType<? extends KineticTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, SingleRotatingInstance::new));
-    }
 
     protected InstanceKey<RotatingData> rotatingModelKey;
 
-    public SingleRotatingInstance(InstancedTileRenderer modelManager, KineticTileEntity tile) {
+    public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
     @Override
     protected void init() {
         Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
-        rotatingModelKey = getModel().setupInstance(setupFunc(tile.getSpeed(), axis));
+        rotatingModelKey = setup(getModel().createInstance(), tile.getSpeed(), axis);
     }
 
     @Override
@@ -39,7 +30,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     @Override
     public void updateLight() {
-        rotatingModelKey.modifyInstance(this::relight);
+        relight(pos, rotatingModelKey.getInstance());
     }
 
     @Override

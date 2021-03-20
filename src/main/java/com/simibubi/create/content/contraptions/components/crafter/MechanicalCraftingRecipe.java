@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
-
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -34,6 +33,11 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	@Override
 	public IRecipeType<?> getType() {
 		return AllRecipeTypes.MECHANICAL_CRAFTING.type;
+	}
+	
+	@Override
+	public boolean isDynamic() {
+		return true;
 	}
 	
 	@Override

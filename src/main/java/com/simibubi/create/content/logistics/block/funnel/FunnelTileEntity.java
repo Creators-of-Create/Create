@@ -1,8 +1,5 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
@@ -11,9 +8,13 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -21,12 +22,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -35,11 +34,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation {
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour invManipulation;
@@ -47,7 +51,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
 
-	int sendFlap;
 	InterpolatedChasingValue flap;
 
 	static enum Mode {
@@ -260,7 +263,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 		if (!(blockState.getBlock() instanceof FunnelBlock))
 			return false;
-		return blockState.get(FunnelBlock.FACE) == AttachFace.FLOOR;
+		return FunnelBlock.getFunnelFacing(blockState) == Direction.UP;
 	}
 
 	private boolean supportsFiltering() {
@@ -282,8 +285,11 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	public void flap(boolean inward) {
-		sendFlap = inward ? 1 : -1;
-		sendData();
+		if (!world.isRemote) {
+			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
+		} else {
+			flap.set(inward ? 1 : -1);
+		}
 	}
 
 	public boolean hasFlap() {
@@ -315,20 +321,15 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.putInt("TransferCooldown", extractionCooldown);
-		if (clientPacket && sendFlap != 0) {
-			compound.putInt("Flap", sendFlap);
-			sendFlap = 0;
-		}
 	}
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
-		if (clientPacket && compound.contains("Flap")) {
-			int direction = compound.getInt("Flap");
-			flap.set(direction);
-		}
+
+		if (clientPacket)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 	}
 
 	@Override
@@ -380,6 +381,11 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 
 		TooltipHelper.addHint(tooltip, "hint.horizontal_funnel");
+		return true;
+	}
+
+	@Override
+	public boolean shouldRenderAsTE() {
 		return true;
 	}
 

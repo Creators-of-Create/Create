@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -30,7 +29,7 @@ public class AnimatedMixer extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		float animation = ((MathHelper.sin(AnimationTickHolder.getRenderTick() / 32f) + 1) / 5) + .5f;
+		float animation = ((MathHelper.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
 		GuiGameElement.of(AllBlockPartials.MECHANICAL_MIXER_POLE)
 			.atLocal(0, animation, 0)

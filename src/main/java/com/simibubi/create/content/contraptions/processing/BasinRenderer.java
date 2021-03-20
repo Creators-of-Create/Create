@@ -1,18 +1,11 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.foundation.utility.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -27,6 +20,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+
+import java.util.Random;
 
 public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
@@ -72,8 +67,9 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 			if (fluidLevel > 0) {
 				ms.translate(0,
-					(MathHelper.sin(AnimationTickHolder.getRenderTick() / 12f + anglePartition * itemCount) + 1.5f) * 1
-						/ 32f,
+					(MathHelper.sin(
+						AnimationTickHolder.getRenderTime(basin.getWorld()) / 12f + anglePartition * itemCount) + 1.5f)
+						* 1 / 32f,
 					0);
 			}
 

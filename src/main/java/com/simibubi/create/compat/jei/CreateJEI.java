@@ -1,5 +1,38 @@
 package com.simibubi.create.compat.jei;
 
+import com.google.common.base.Predicates;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.category.*;
+import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
+import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
+import com.simibubi.create.content.logistics.item.filter.FilterScreen;
+import com.simibubi.create.content.schematics.block.SchematicTableScreen;
+import com.simibubi.create.content.schematics.block.SchematicannonScreen;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CRecipes;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IIngredientManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.*;
+import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModList;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,63 +40,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Predicates;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
-import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
-import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
-import com.simibubi.create.compat.jei.category.BlockzapperUpgradeCategory;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.compat.jei.category.CrushingCategory;
-import com.simibubi.create.compat.jei.category.FanBlastingCategory;
-import com.simibubi.create.compat.jei.category.FanSmokingCategory;
-import com.simibubi.create.compat.jei.category.FanWashingCategory;
-import com.simibubi.create.compat.jei.category.ItemDrainCategory;
-import com.simibubi.create.compat.jei.category.MechanicalCraftingCategory;
-import com.simibubi.create.compat.jei.category.MillingCategory;
-import com.simibubi.create.compat.jei.category.MixingCategory;
-import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
-import com.simibubi.create.compat.jei.category.PackingCategory;
-import com.simibubi.create.compat.jei.category.PolishingCategory;
-import com.simibubi.create.compat.jei.category.PressingCategory;
-import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
-import com.simibubi.create.compat.jei.category.SawingCategory;
-import com.simibubi.create.compat.jei.category.SpoutCategory;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
-import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
-import com.simibubi.create.content.contraptions.processing.BasinRecipe;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
-import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
-import com.simibubi.create.content.schematics.block.SchematicannonScreen;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CRecipes;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
-
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.IGuiHandlerRegistration;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
-import mezz.jei.api.runtime.IIngredientManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.ModList;
 
 @JeiPlugin
 @SuppressWarnings("unused")
@@ -226,8 +202,12 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		registration.addGuiContainerHandler(AdjustableCrateScreen.class, new SlotMover<>());
-		registration.addGuiContainerHandler(SchematicannonScreen.class, new SlotMover<>());
+		SlotMover slotMover = new SlotMover();
+		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
+		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
+		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
+		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
+		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
 	}
 

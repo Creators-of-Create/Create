@@ -1,34 +1,24 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
-    public static void register(TileEntityType<? extends EncasedFanTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, FanInstance::new));
-    }
 
     protected InstanceKey<RotatingData> shaft;
     protected InstanceKey<RotatingData> fan;
 
-    public FanInstance(InstancedTileRenderer modelManager, EncasedFanTileEntity tile) {
+    public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
         super(modelManager, tile);
     }
 
@@ -42,30 +32,22 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         InstancedModel<RotatingData> fanInner =
                 AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, lastState, direction.getOpposite());
 
-        shaft = shaftHalf.setupInstance(data -> {
-            BlockPos behind = pos.offset(direction.getOpposite());
-            int blockLight = world.getLightLevel(LightType.BLOCK, behind);
-            int skyLight = world.getLightLevel(LightType.SKY, behind);
+        shaft = shaftHalf.createInstance();
+        shaft.getInstance()
+             .setRotationalSpeed(tile.getSpeed())
+             .setRotationOffset(getRotationOffset(axis))
+             .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+             .setTileEntity(tile);
 
-            data.setRotationalSpeed(tile.getSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                .setTileEntity(tile)
-                .setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
-        fan = fanInner.setupInstance(data -> {
-            BlockPos inFront = pos.offset(direction);
-            int blockLight = world.getLightLevel(LightType.BLOCK, inFront);
-            int skyLight = world.getLightLevel(LightType.SKY, inFront);
 
-            data.setRotationalSpeed(getFanSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                .setTileEntity(tile)
-                .setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
+        fan = fanInner.createInstance();
+        fan.getInstance()
+           .setRotationalSpeed(getFanSpeed())
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+           .setTileEntity(tile);
+
+        updateLight();
     }
 
     private float getFanSpeed() {
@@ -82,32 +64,22 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         Direction.Axis axis = lastState.get(FACING).getAxis();
         updateRotation(shaft, axis);
 
-        fan.modifyInstance(data -> {
-            data.setColor(tile.network)
-                .setRotationalSpeed(getFanSpeed())
-                .setRotationOffset(getRotationOffset(axis))
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
-        });
+        fan.getInstance()
+           .setColor(tile.network)
+           .setRotationalSpeed(getFanSpeed())
+           .setRotationOffset(getRotationOffset(axis))
+           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
     }
 
     @Override
     public void updateLight() {
         final Direction direction = lastState.get(FACING);
 
-        shaft.modifyInstance(data -> {
-            BlockPos behind = pos.offset(direction.getOpposite());
-            int blockLight = world.getLightLevel(LightType.BLOCK, behind);
-            int skyLight = world.getLightLevel(LightType.SKY, behind);
-            data.setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
-        fan.modifyInstance(data -> {
-            BlockPos inFront = pos.offset(direction);
-            int blockLight = world.getLightLevel(LightType.BLOCK, inFront);
-            int skyLight = world.getLightLevel(LightType.SKY, inFront);
-            data.setBlockLight(blockLight)
-                .setSkyLight(skyLight);
-        });
+        BlockPos behind = pos.offset(direction.getOpposite());
+        relight(behind, shaft.getInstance());
+
+        BlockPos inFront = pos.offset(direction);
+        relight(inFront, fan.getInstance());
     }
 
     @Override

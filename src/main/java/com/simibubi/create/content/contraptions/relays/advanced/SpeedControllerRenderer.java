@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -41,11 +40,12 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		BlockPos pos = tileEntityIn.getPos();
 		World world = tileEntityIn.getWorld();
 		BlockState blockState = tileEntityIn.getBlockState();
+		boolean alongX = blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
 		SuperByteBuffer bracket = AllBlockPartials.SPEED_CONTROLLER_BRACKET.renderOn(blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
-			(float) (blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Math.PI : 0));
+			(float) (alongX ? Math.PI : Math.PI / 2));
 		bracket.light(WorldRenderer.getLightmapCoordinates(world, pos.up()));
 		bracket.renderInto(ms, builder);
 	}

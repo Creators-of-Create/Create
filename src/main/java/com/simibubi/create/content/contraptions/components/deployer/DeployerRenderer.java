@@ -1,15 +1,11 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -20,7 +16,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,6 +34,9 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
+import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
+
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
 	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -50,11 +48,17 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		int light, int overlay) {
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
+
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
 
 	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+
+		if (te.heldItem.isEmpty()) return;
+
 		BlockState deployerState = te.getBlockState();
 		Vector3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.push();
@@ -89,7 +93,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
 			transform = TransformType.GROUND;
-			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AnimationTickHolder.getRenderTick()));
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AnimationTickHolder.getRenderTime(te.getWorld())));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
@@ -123,18 +127,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	}
 
 	protected Vector3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
-		float progress = 0;
-		if (te.state == State.EXPANDING)
-			progress = 1 - (te.timer - partialTicks * te.getTimerSpeed()) / 1000f;
-		if (te.state == State.RETRACTING)
-			progress = (te.timer - partialTicks * te.getTimerSpeed()) / 1000f;
-
-		float handLength = te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
-			: te.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (te.reach + handLength), 21 / 16f);
-		Vector3d offset = Vector3d.of(blockState.get(FACING)
-			.getDirectionVec()).scale(distance);
-		return offset;
+		float distance = te.getHandOffset(partialTicks);
+		return Vector3d.of(blockState.get(FACING).getDirectionVec()).scale(distance);
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
@@ -166,8 +160,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockPos pos = BlockPos.ZERO;
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		World world = context.world;
-		AllBlockPartials handPose =
-			mode == Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
+		AllBlockPartials handPose = getHandPose(mode);
 
 		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
 		SuperByteBuffer hand = handPose.renderOn(blockState);
@@ -176,7 +169,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
-			factor = MathHelper.sin(AnimationTickHolder.getRenderTick() * .5f) * .25f + .25f;
+			factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
 		} else {
 			Vector3d center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);
@@ -196,6 +189,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.renderInto(ms, builder);
 		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
 			.renderInto(ms, builder);
+	}
+
+	static AllBlockPartials getHandPose(DeployerTileEntity.Mode mode) {
+		return mode == DeployerTileEntity.Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
 	}
 
 }

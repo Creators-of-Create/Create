@@ -6,7 +6,6 @@ import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRender
 import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
@@ -97,7 +96,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 
 		// cog
 		ms.push();
-		float angle = AnimationTickHolder.getRenderTick() * -2;
+		float angle = AnimationTickHolder.getRenderTime() * -2;
 		if (leftHand || rightHand)
 			angle += 360 * animation;
 		angle %= 360;

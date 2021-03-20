@@ -1,29 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -34,7 +10,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryPinionBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
@@ -52,23 +29,12 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.NBTProcessors;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.utility.*;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
@@ -85,12 +51,12 @@ import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.palette.HashMapPalette;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -106,6 +72,16 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.registries.GameData;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
@@ -177,9 +153,10 @@ public abstract class Contraption {
 		return contraption;
 	}
 
-	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection) throws AssemblyException {
+	public boolean searchMovedStructure(World world, BlockPos pos, @Nullable Direction forcedDirection)
+		throws AssemblyException {
 		initialPassengers.clear();
-		Queue<BlockPos> frontier = new LinkedList<>();
+		Queue<BlockPos> frontier = new UniqueLinkedList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		anchor = pos;
 
@@ -292,11 +269,19 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.GANTRY_PINION.has(state))
+		if (AllBlocks.GANTRY_CARRIAGE.has(state))
 			moveGantryPinion(world, pos, frontier, visited, state);
 
 		if (AllBlocks.GANTRY_SHAFT.has(state))
 			moveGantryShaft(world, pos, frontier, visited, state);
+
+		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
+			Direction offset = state.get(StickerBlock.FACING);
+			BlockPos attached = pos.offset(offset);
+			if (!visited.contains(attached)
+				&& !BlockMovementTraits.notSupportive(world.getBlockState(attached), offset.getOpposite()))
+				frontier.add(attached);
+		}
 
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
@@ -353,7 +338,8 @@ public abstract class Contraption {
 			boolean brittle = BlockMovementTraits.isBrittle(blockState);
 			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
 			if (canStick) {
-				if (state.getPushReaction() == PushReaction.PUSH_ONLY || blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+				if (state.getPushReaction() == PushReaction.PUSH_ONLY
+					|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
 					canStick = false;
 				}
 				if (BlockMovementTraits.notSupportive(state, offset)) {
@@ -364,7 +350,8 @@ public abstract class Contraption {
 				}
 			}
 
-			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue || (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
+			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue
+				|| (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -424,7 +411,7 @@ public abstract class Contraption {
 
 	protected void moveGantryPinion(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		BlockPos offset = pos.offset(state.get(GantryPinionBlock.FACING));
+		BlockPos offset = pos.offset(state.get(GantryCarriageBlock.FACING));
 		if (!visited.contains(offset))
 			frontier.add(offset);
 		Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
@@ -448,7 +435,7 @@ public abstract class Contraption {
 				if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState)
 					&& offsetState.get(GantryShaftBlock.FACING) == facing)
 					frontier.add(offset);
-				else if (AllBlocks.GANTRY_PINION.has(offsetState) && offsetState.get(GantryPinionBlock.FACING) == d)
+				else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState) && offsetState.get(GantryCarriageBlock.FACING) == d)
 					frontier.add(offset);
 			}
 		}
@@ -504,7 +491,8 @@ public abstract class Contraption {
 		}
 	}
 
-	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) throws AssemblyException {
+	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
+		BlockState state) throws AssemblyException {
 		Direction direction = state.get(MechanicalPistonBlock.FACING);
 		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
@@ -626,8 +614,9 @@ public abstract class Contraption {
 		specialRenderedTileEntities.clear();
 
 		INBT blocks = nbt.get("Blocks");
-		//used to differentiate between the 'old' and the paletted serialization
-		boolean usePalettedDeserialization = blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
+		// used to differentiate between the 'old' and the paletted serialization
+		boolean usePalettedDeserialization =
+			blocks != null && blocks.getId() == 10 && ((CompoundNBT) blocks).contains("Palette");
 		readBlocksCompound(blocks, world, usePalettedDeserialization);
 
 		actors.clear();
@@ -713,16 +702,16 @@ public abstract class Contraption {
 		}
 
 		ListNBT superglueNBT = new ListNBT();
-		for (Pair<BlockPos, Direction> glueEntry : superglue) {
-			CompoundNBT c = new CompoundNBT();
-			c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
-			c.putByte("Direction", (byte) glueEntry.getValue()
-				.getIndex());
-			superglueNBT.add(c);
-		}
-
 		ListNBT storageNBT = new ListNBT();
 		if (!spawnPacket) {
+			for (Pair<BlockPos, Direction> glueEntry : superglue) {
+				CompoundNBT c = new CompoundNBT();
+				c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
+				c.putByte("Direction", (byte) glueEntry.getValue()
+					.getIndex());
+				superglueNBT.add(c);
+			}
+
 			for (BlockPos pos : storage.keySet()) {
 				CompoundNBT c = new CompoundNBT();
 				MountedStorage mountedStorage = storage.get(pos);
@@ -835,16 +824,7 @@ public abstract class Contraption {
 				TileEntity te = TileEntity.createFromTag(info.state, tag);
 				if (te == null)
 					return;
-				te.setLocation(new WrappedWorld(world) {
-
-					@Override
-					public BlockState getBlockState(BlockPos pos) {
-						if (!pos.equals(te.getPos()))
-							return Blocks.AIR.getDefaultState();
-						return info.state;
-					}
-
-				}, te.getPos());
+				te.setLocation(new ContraptionTileWorld(world, te, info), te.getPos());
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -902,7 +882,7 @@ public abstract class Contraption {
 					iterator.remove();
 				world.removeTileEntity(add);
 				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS
-					| BlockFlags.BLOCK_UPDATE;
+					| BlockFlags.BLOCK_UPDATE | BlockFlags.RERENDER_MAIN_THREAD;
 				if (blockIn instanceof IWaterLoggable && oldState.contains(BlockStateProperties.WATERLOGGED)
 					&& oldState.get(BlockStateProperties.WATERLOGGED)
 						.booleanValue()) {
@@ -913,10 +893,16 @@ public abstract class Contraption {
 			}
 		}
 		for (BlockInfo block : blocks.values()) {
-			BlockPos add = block.pos.add(anchor).add(offset);
-			if (!shouldUpdateAfterMovement(block))
-				continue;
-			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
+			BlockPos add = block.pos.add(anchor)
+				.add(offset);
+//			if (!shouldUpdateAfterMovement(block))
+//				continue;
+			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
+			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
+			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), flags, 512);
+			block.state.updateDiagonalNeighbors(world, add, flags & -2);
+//			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
+//				BlockFlags.IS_MOVING | BlockFlags.DEFAULT); this method did strange logspamming with POI-related blocks
 		}
 	}
 
@@ -1063,31 +1049,32 @@ public abstract class Contraption {
 	}
 
 	protected boolean shouldUpdateAfterMovement(BlockInfo info) {
+		if (PointOfInterestType.forState(info.state)
+			.isPresent())
+			return false;
 		return true;
 	}
 
 	public void expandBoundsAroundAxis(Axis axis) {
-		AxisAlignedBB bb = bounds;
-		double maxXDiff = Math.max(bb.maxX - 1, -bb.minX);
-		double maxYDiff = Math.max(bb.maxY - 1, -bb.minY);
-		double maxZDiff = Math.max(bb.maxZ - 1, -bb.minZ);
-		double maxDiff = 0;
+		Set<BlockPos> blocks = getBlocks().keySet();
 
-		if (axis == Axis.X)
-			maxDiff = Math.max(maxZDiff, maxYDiff);
-		if (axis == Axis.Y)
-			maxDiff = Math.max(maxZDiff, maxXDiff);
-		if (axis == Axis.Z)
-			maxDiff = Math.max(maxXDiff, maxYDiff);
+		int radius = (int) (Math.ceil(Math.sqrt(getRadius(blocks, axis))));
 
-		Vector3d vec = Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
-			.getDirectionVec());
-		Vector3d planeByNormal = VecHelper.axisAlingedPlaneOf(vec);
-		Vector3d min = vec.mul(bb.minX, bb.minY, bb.minZ)
-			.add(planeByNormal.scale(-maxDiff));
-		Vector3d max = vec.mul(bb.maxX, bb.maxY, bb.maxZ)
-			.add(planeByNormal.scale(maxDiff + 1));
-		bounds = new AxisAlignedBB(min, max);
+		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
+
+		GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(bounds);
+		if (axis == Direction.Axis.X) {
+			betterBounds.maxX = contraptionBounds.maxX;
+			betterBounds.minX = contraptionBounds.minX;
+		} else if (axis == Direction.Axis.Y) {
+			betterBounds.maxY = contraptionBounds.maxY;
+			betterBounds.minY = contraptionBounds.minY;
+		} else if (axis == Direction.Axis.Z) {
+			betterBounds.maxZ = contraptionBounds.maxZ;
+			betterBounds.minZ = contraptionBounds.minZ;
+		}
+
+		bounds = betterBounds.toAABB();
 	}
 
 	public void addExtraInventories(Entity entity) {}
@@ -1139,4 +1126,51 @@ public abstract class Contraption {
 		return new EmptyLighter(this);
 	}
 
+	public static float getRadius(Set<BlockPos> blocks, Direction.Axis axis) {
+		switch (axis) {
+		case X:
+			return getMaxDistSqr(blocks, BlockPos::getY, BlockPos::getZ);
+		case Y:
+			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
+		case Z:
+			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
+		}
+
+		throw new IllegalStateException("Impossible axis");
+	}
+
+	public static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+		float maxDistSq = -1;
+		for (BlockPos pos : blocks) {
+			float a = one.get(pos);
+			float b = other.get(pos);
+
+			float distSq = a * a + b * b;
+
+
+			if (distSq > maxDistSq) maxDistSq = distSq;
+		}
+
+		return maxDistSq;
+	}
+
+	private static class ContraptionTileWorld extends WrappedWorld implements IFlywheelWorld {
+
+		private final TileEntity te;
+		private final BlockInfo info;
+
+		public ContraptionTileWorld(World world, TileEntity te, BlockInfo info) {
+			super(world);
+			this.te = te;
+			this.info = info;
+		}
+
+		@Override
+		public BlockState getBlockState(BlockPos pos) {
+			if (!pos.equals(te.getPos()))
+				return Blocks.AIR.getDefaultState();
+			return info.state;
+		}
+
+	}
 }

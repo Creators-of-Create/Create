@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
 import com.simibubi.create.AllContainerTypes;
-
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +23,7 @@ public class FilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected void addFilterSlots() {
-		int x = 23;
+		int x = -27;
 		int y = 20;
 
 		for (int row = 0; row < 2; ++row)

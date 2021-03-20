@@ -8,12 +8,9 @@ import com.simibubi.create.content.contraptions.components.actors.PortableStorag
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
@@ -23,25 +20,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-
-import net.minecraft.block.AbstractPressurePlateBlock;
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CarpetBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.block.GrindstoneBlock;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.HorizontalFaceBlock;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.block.RedstoneDiodeBlock;
-import net.minecraft.block.RedstoneWallTorchBlock;
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.block.WallTorchBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BellAttachment;
@@ -199,6 +178,10 @@ public class BlockMovementTraits {
 				.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(direction));
+		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
+			return direction == state.get(StickerBlock.FACING)
+				&& !notSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
+		}
 		return false;
 	}
 
@@ -232,6 +215,8 @@ public class BlockMovementTraits {
 		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
 				.getAxis();
+		if (AllBlocks.STICKER.has(state) && !state.get(StickerBlock.EXTENDED))
+			return facing == state.get(StickerBlock.FACING);
 		return isBrittle(state);
 	}
 

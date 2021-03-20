@@ -1,14 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import java.util.UUID;
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -41,27 +38,26 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import java.util.UUID;
+
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 	private static DamageSource lastActiveDamageSource;
 
-	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier = 
-		new LazyValue<Multimap<Attribute, AttributeModifier>>(() -> 
-			// Holding an ExtendoGrip
-			ImmutableMultimap.of(
-				ForgeMod.REACH_DISTANCE.get(),
-				new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
-					AttributeModifier.Operation.ADDITION))
-		);
+	public static final AttributeModifier singleRangeAttributeModifier = new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3, AttributeModifier.Operation.ADDITION);
+	public static final AttributeModifier doubleRangeAttributeModifier = new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5, AttributeModifier.Operation.ADDITION);
 
-	static LazyValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = 
-		new LazyValue<Multimap<Attribute, AttributeModifier>>(() -> 
-			// Holding two ExtendoGrips o.O
-			ImmutableMultimap.of(
-				ForgeMod.REACH_DISTANCE.get(),
-				new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
-					AttributeModifier.Operation.ADDITION))
-		);
+	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier =
+			new LazyValue<>(() ->
+					// Holding an ExtendoGrip
+					ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier)
+			);
+
+	static LazyValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier =
+			new LazyValue<>(() ->
+					// Holding two ExtendoGrips o.O
+					ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier)
+			);
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties.maxStackSize(1)

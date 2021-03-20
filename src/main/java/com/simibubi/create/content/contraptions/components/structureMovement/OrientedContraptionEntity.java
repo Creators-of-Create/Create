@@ -1,12 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
-
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
@@ -15,12 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.MatrixStacker;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.foundation.utility.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -45,6 +33,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+
 /**
  * Ex: Minecarts, Couplings <br>
  * Oriented Contraption Entities can rotate freely around two axes
@@ -63,6 +57,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	protected boolean forceAngle;
 	private boolean isSerializingFurnaceCart;
 	private boolean attachedExtraInventories;
+	private boolean manuallyPlaced;
 
 	public float prevYaw;
 	public float yaw;
@@ -90,6 +85,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		entity.setContraption(contraption);
 		initialOrientation.ifPresent(entity::setInitialOrientation);
 		entity.startAtInitialYaw();
+		return entity;
+	}
+
+	public static OrientedContraptionEntity createAtYaw(World world, Contraption contraption,
+		Optional<Direction> initialOrientation, float initialYaw) {
+		OrientedContraptionEntity entity = create(world, contraption, initialOrientation);
+		entity.startAtYaw(initialYaw);
+		entity.manuallyPlaced = true;
 		return entity;
 	}
 
@@ -152,6 +155,11 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		if (compound.contains("InitialOrientation"))
 			setInitialOrientation(NBTHelper.readEnum(compound, "InitialOrientation", Direction.class));
+
+		yaw = compound.getFloat("Yaw");
+		pitch = compound.getFloat("Pitch");
+		manuallyPlaced = compound.getBoolean("Placed");
+
 		if (compound.contains("ForceYaw"))
 			startAtYaw(compound.getFloat("ForceYaw"));
 
@@ -162,9 +170,6 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				targetYaw = prevYaw = yaw += yawFromVector(motionBeforeStall);
 			setMotion(Vector3d.ZERO);
 		}
-
-		yaw = compound.getFloat("Yaw");
-		pitch = compound.getFloat("Pitch");
 
 		setCouplingId(compound.contains("OnCoupling") ? compound.getUniqueId("OnCoupling") : null);
 	}
@@ -186,6 +191,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			forceAngle = false;
 		}
 
+		compound.putBoolean("Placed", manuallyPlaced);
 		compound.putFloat("Yaw", yaw);
 		compound.putFloat("Pitch", pitch);
 
@@ -196,7 +202,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
-		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent())
+		if (key == INITIAL_ORIENTATION && isInitialOrientationPresent() && !manuallyPlaced)
 			startAtInitialYaw();
 	}
 
@@ -355,14 +361,16 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		boolean rotating = false;
 		Vector3d movementVector = riding.getMotion();
-
+		Vector3d locationDiff = riding.getPositionVec()
+			.subtract(riding.prevPosX, riding.prevPosY, riding.prevPosZ);
 		if (!(riding instanceof AbstractMinecartEntity))
-			movementVector = getPositionVec().subtract(prevPosX, prevPosY, prevPosZ);
+			movementVector = locationDiff;
 		Vector3d motion = movementVector.normalize();
 
 		if (!isInitialOrientationPresent() && !world.isRemote) {
-			if (motion.length() > 0) {
-				Direction facingFromVector = Direction.getFacingFromVector(motion.x, motion.y, motion.z);
+			if (locationDiff.length() > 0) {
+				Direction facingFromVector =
+					Direction.getFacingFromVector(locationDiff.x, locationDiff.y, locationDiff.z);
 				if (initialYawOffset != -1)
 					facingFromVector = Direction.fromAngle(facingFromVector.getHorizontalAngle() - initialYawOffset);
 				if (facingFromVector.getAxis()
@@ -518,12 +526,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		for (MatrixStack stack : matrixStacks)
 			MatrixStacker.of(stack)
-						 .nudge(getEntityId())
-						 .centre()
-						 .rotateY(angleYaw)
-						 .rotateZ(anglePitch)
-						 .rotateY(angleInitialYaw)
-						 .unCentre();
+				.nudge(getEntityId())
+				.centre()
+				.rotateY(angleYaw)
+				.rotateZ(anglePitch)
+				.rotateY(angleInitialYaw)
+				.unCentre();
 	}
 
 	@OnlyIn(Dist.CLIENT)

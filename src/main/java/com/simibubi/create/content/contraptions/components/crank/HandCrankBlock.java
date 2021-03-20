@@ -6,7 +6,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -55,11 +54,6 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		boolean handEmpty = player.getHeldItem(handIn)
-			.isEmpty();
-
-		if (!handEmpty && player.isSneaking())
-			return ActionResultType.PASS;
 
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isSneaking()));
 		player.addExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());

@@ -7,6 +7,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Debug;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -24,13 +25,23 @@ public class TileEntityRenderHelper {
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
 		MatrixStack localTransform, IRenderTypeBuffer buffer) {
-
 		renderTileEntities(world, null, customRenderTEs, ms, localTransform, buffer);
 	}
+	
+	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
+		MatrixStack localTransform, IRenderTypeBuffer buffer, float pt) {
+		renderTileEntities(world, null, customRenderTEs, ms, localTransform, buffer, pt);
+	}
 
-	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
-										  MatrixStack localTransform, IRenderTypeBuffer buffer) {
-		float pt = AnimationTickHolder.getPartialTicks();
+	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld,
+		Iterable<TileEntity> customRenderTEs, MatrixStack ms, MatrixStack localTransform, IRenderTypeBuffer buffer) {
+		renderTileEntities(world, renderWorld, customRenderTEs, ms, localTransform, buffer,
+			AnimationTickHolder.getPartialTicks());
+	}
+	
+	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld,
+		Iterable<TileEntity> customRenderTEs, MatrixStack ms, MatrixStack localTransform, IRenderTypeBuffer buffer,
+		float pt) {
 		Matrix4f matrix = localTransform.peek()
 			.getModel();
 

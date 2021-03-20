@@ -1,15 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
@@ -20,7 +10,6 @@ import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -48,6 +37,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
@@ -58,7 +52,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected Contraption contraption;
 	protected boolean initialized;
-	private boolean prevPosInvalid;
+	protected boolean prevPosInvalid;
 	private boolean ticking;
 
 	public AbstractContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
@@ -253,6 +247,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			BlockInfo blockInfo = pair.left;
 			MovementBehaviour actor = AllMovementBehaviours.of(blockInfo.state);
 
+			Vector3d oldMotion = context.motion;
 			Vector3d actorPosition = toGlobalVector(VecHelper.getCenterOf(blockInfo.pos)
 				.add(actor.getActiveAreaOffset(context)), 1);
 			BlockPos gridPosition = new BlockPos(actorPosition);
@@ -261,8 +256,6 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
-
-			Vector3d oldMotion = context.motion;
 			if (!actor.isActive(context))
 				continue;
 			if (newPosVisited && !context.stall) {
@@ -648,5 +641,26 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 
 	}
+
+	//@Override //TODO find 1.16 replacement
+	//public void updateAquatics() {
+		/*
+		Override this with an empty method to reduce enormous calculation time when contraptions are in water
+		WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
+		- Fluids will not try to change contraption movement direction
+		- this.inWater and this.isInWater() will return unreliable data
+		- entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
+		- fall distance is not reset when the contraption is in water
+		- this.eyesInWater and this.canSwim() will always be false
+		- swimming state will never be updated
+		 */
+	//	extinguish();
+	//}
+
+	@Override
+	public void setFire(int p_70015_1_) {
+		 // Contraptions no longer catch fire
+	}
+
 
 }

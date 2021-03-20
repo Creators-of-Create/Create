@@ -1,8 +1,5 @@
 package com.simibubi.create.content.schematics.client.tools;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
@@ -15,7 +12,6 @@ import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,6 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
+
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class SchematicToolBase implements ISchematicTool {
 
@@ -143,7 +142,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			.colored(0x6886c5)
 			.withFaceTexture(AllSpecialTextures.CHECKERED)
 			.lineWidth(1 / 16f);
-		outline.render(ms, buffer);
+		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
 		outline.getParams()
 			.clearTextures();
 		ms.pop();

@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -12,24 +8,18 @@ import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-
 import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
-    public static void register(TileEntityType<? extends BeltTileEntity> type) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                InstancedTileRenderRegistry.instance.register(type, BeltInstance::new));
-    }
 
     private boolean upward;
     private boolean diagonal;
@@ -72,9 +62,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
             InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
-            Consumer<BeltData> setupFunc = setupFunc(bottom, spriteShift);
 
-            keys.add(beltModel.setupInstance(setupFunc));
+            keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
             if (diagonal) break;
         }
@@ -82,7 +71,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         if (tile.hasPulley()) {
             InstancedModel<RotatingData> pulleyModel = getPulleyModel();
 
-            pulleyKey = pulleyModel.setupInstance(setupFunc(tile.getSpeed(), getRotationAxis()));
+            pulleyKey = setup(pulleyModel.createInstance(), tile.getSpeed(), getRotationAxis());
         }
     }
 
@@ -94,9 +83,10 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         for (InstanceKey<BeltData> key : keys) {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
-            key.modifyInstance(data -> data.setScrollTexture(spriteShiftEntry)
-                                           .setColor(tile.network)
-                                           .setRotationalSpeed(getScrollSpeed()));
+            key.getInstance()
+               .setScrollTexture(spriteShiftEntry)
+               .setColor(tile.network)
+               .setRotationalSpeed(getScrollSpeed());
             bottom = false;
         }
 
@@ -107,11 +97,9 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
     @Override
     public void updateLight() {
-        for (InstanceKey<BeltData> key : keys) {
-            key.modifyInstance(this::relight);
-        }
+        relight(pos, keys.stream().map(InstanceKey::getInstance));
 
-        if (pulleyKey != null) pulleyKey.modifyInstance(this::relight);
+        if (pulleyKey != null) relight(pos, pulleyKey.getInstance());
     }
 
     @Override
@@ -125,10 +113,10 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     private float getScrollSpeed() {
         float speed = tile.getSpeed();
         if (((facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ^ upward) ^
-                ((alongX && !diagonal) || (alongZ && diagonal)) ^ (vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE)) {
+                ((alongX && !diagonal) || (alongZ && diagonal))) {
             speed = -speed;
         }
-        if (sideways && (facing == Direction.SOUTH || facing == Direction.WEST))
+        if (sideways && (facing == Direction.SOUTH || facing == Direction.WEST) || (vertical && facing == Direction.EAST))
             speed = -speed;
 
         return speed;
@@ -165,22 +153,25 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return dir;
     }
 
-    private Consumer<BeltData> setupFunc(boolean bottom, SpriteShiftEntry spriteShift) {
-        return data -> {
-            float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (beltSlope == BeltSlope.DOWNWARD ? 180 : 0);
-            float rotY = facing.getHorizontalAngle() + (upward ? 180 : 0) + (sideways ? 90 : 0);
-            float rotZ = sideways ? 90 : ((vertical && facing.getAxisDirection() == Direction.AxisDirection.NEGATIVE) ? 180 : 0);
+    private InstanceKey<BeltData> setup(InstanceKey<BeltData> key, boolean bottom, SpriteShiftEntry spriteShift) {
+        boolean downward = beltSlope == BeltSlope.DOWNWARD;
+        float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (downward ? 180 : 0) + (sideways ? 90 : 0) + (vertical && alongZ ? 180 : 0);
+        float rotY = facing.getHorizontalAngle() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
+        float rotZ = (sideways ? 90 : 0) + (vertical && alongX ? 90 : 0);
 
-            BlockPos pos = tile.getPos();
-            data.setTileEntity(tile)
-                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-                .setRotation(rotX, rotY, rotZ)
-                .setRotationalSpeed(getScrollSpeed())
-                .setRotationOffset(bottom ? 0.5f : 0f)
-                .setScrollTexture(spriteShift)
-                .setScrollMult(diagonal ? 3f / 8f : 0.5f);
-        };
+        Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
+
+        key.getInstance()
+           .setTileEntity(tile)
+           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
+           .setRotation(q)
+           .setRotationalSpeed(getScrollSpeed())
+           .setRotationOffset(bottom ? 0.5f : 0f)
+           .setScrollTexture(spriteShift)
+           .setScrollMult(diagonal ? 3f / 8f : 0.5f);
+
+        return key;
     }
 
 }

@@ -1,12 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
-import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
-import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
-
+import com.simibubi.create.content.contraptions.components.structureMovement.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -60,7 +55,7 @@ public class GantryContraption extends TranslatingContraption {
 
 	@Override
 	protected boolean shouldUpdateAfterMovement(BlockInfo info) {
-		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_PINION.has(info.state);
+		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_CARRIAGE.has(info.state);
 	}
 
 	@Override

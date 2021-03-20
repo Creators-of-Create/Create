@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -15,7 +14,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 	@Override
 	protected void render(ItemStack stack, SymmetryWandModel model, PartialItemModelRenderer renderer, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
-		float worldTime = AnimationTickHolder.getRenderTick() / 20;
+		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 		int maxLight = 0xF000F0;
 
 		renderer.render(model.getBakedModel(), light);

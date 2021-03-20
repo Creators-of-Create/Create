@@ -50,7 +50,7 @@ public class ProgramSpec<P extends GlProgram> {
     public static class Builder<P extends GlProgram> {
         private ResourceLocation vert;
         private ResourceLocation frag;
-        private ShaderConstants defines = null;
+        private ShaderConstants defines = ShaderConstants.EMPTY;
 
         private final ResourceLocation name;
         private final GlProgram.ProgramFactory<P> factory;

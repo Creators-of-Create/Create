@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -67,7 +66,7 @@ public class DeployTool extends PlacementToolBase {
 			.translateBack(origin);
 
 		AABBOutline outline = schematicHandler.getOutline();
-		outline.render(ms, buffer);
+		outline.render(ms, buffer, pt);
 		outline.getParams()
 			.clearTextures();
 		ms.pop();

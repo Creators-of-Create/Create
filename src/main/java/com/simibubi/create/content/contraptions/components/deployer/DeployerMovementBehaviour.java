@@ -1,19 +1,16 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.NBTHelper;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -23,6 +20,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants.NBT;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
@@ -168,7 +170,18 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
+		if (!FastRenderDispatcher.available())
+			DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 
+	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+		return new DeployerActorInstance(kr, context);
+	}
 }

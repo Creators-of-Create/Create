@@ -24,6 +24,9 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	private int lazyTickRate;
 	private int lazyTickCounter;
 
+	// Used for simulating this TE in a client-only setting
+	private boolean virtualMode;
+
 	public SmartTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		behaviours = new HashMap<>();
@@ -145,17 +148,23 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	@SuppressWarnings("unchecked")
 	public <T extends TileEntityBehaviour> T getBehaviour(BehaviourType<T> type) {
-		if (behaviours.containsKey(type))
-			return (T) behaviours.get(type);
-		return null;
+		return (T) behaviours.get(type);
 	}
-	
+
 	protected boolean isItemHandlerCap(Capability<?> cap) {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
-	
+
 	protected boolean isFluidHandlerCap(Capability<?> cap) {
 		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+	}
+	
+	public void markVirtual() {
+		virtualMode = true;
+	}
+	
+	public boolean isVirtual() {
+		return virtualMode;
 	}
 
 }

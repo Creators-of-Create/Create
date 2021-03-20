@@ -1,10 +1,5 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
@@ -21,7 +16,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
@@ -37,6 +31,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArmTileEntity extends KineticTileEntity {
 
@@ -78,12 +76,16 @@ public class ArmTileEntity extends KineticTileEntity {
 		interactionPointTag = new ListNBT();
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
-		baseAngle = new InterpolatedAngle();
-		lowerArmAngle = new InterpolatedAngle();
-		upperArmAngle = new InterpolatedAngle();
-		headAngle = new InterpolatedAngle();
-		clawAngle = new InterpolatedAngle();
 		previousTarget = ArmAngleTarget.NO_TARGET;
+		baseAngle = new InterpolatedAngle();
+		baseAngle.set(previousTarget.baseAngle);
+		lowerArmAngle = new InterpolatedAngle();
+		lowerArmAngle.set(previousTarget.lowerArmAngle);
+		upperArmAngle = new InterpolatedAngle();
+		upperArmAngle.set(previousTarget.upperArmAngle);
+		headAngle = new InterpolatedAngle();
+		headAngle.set(previousTarget.headAngle);
+		clawAngle = new InterpolatedAngle();
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;

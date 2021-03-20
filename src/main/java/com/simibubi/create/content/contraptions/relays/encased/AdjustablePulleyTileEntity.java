@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -50,6 +49,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (world.isRemote)
+			return;
 		if (signalChanged) {
 			signalChanged = false;
 			analogSignalChanged(world.getRedstonePowerFromNeighbors(pos));

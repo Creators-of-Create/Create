@@ -4,7 +4,6 @@
 	"ambientocclusion": false,
 	"textures": {
 		"18": "create:block/deployer",
-		"particle": "create:block/gearbox_top",
 		"mechanical_press_head": "create:block/mechanical_press_head",
 		"mechanical_press_pole": "create:block/mechanical_press_pole"
 	},
@@ -51,15 +50,15 @@
 		},
 		{
 			"from": [6, 6, 14],
-			"to": [10, 9, 18],
+			"to": [10, 9.95, 18],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 5]},
 			"faces": {
 				"north": {"uv": [0, 0, 4, 3], "texture": "#mechanical_press_head"},
-				"east": {"uv": [0, 0, 4, 3], "texture": "#mechanical_press_head"},
+				"east": {"uv": [3, 0, 7, 4], "texture": "#mechanical_press_head"},
 				"south": {"uv": [0, 0, 4, 3], "texture": "#mechanical_press_head"},
-				"west": {"uv": [0, 0, 4, 3], "texture": "#mechanical_press_head"},
+				"west": {"uv": [3, 0, 7, 4], "texture": "#mechanical_press_head"},
 				"up": {"uv": [0, 0, 4, 4], "rotation": 270, "texture": "#mechanical_press_head"},
-				"down": {"uv": [0, 0, 4, 4], "rotation": 90, "texture": "#mechanical_press_head"}
+				"down": {"uv": [4, 8, 8, 12], "rotation": 90, "texture": "#mechanical_press_head"}
 			}
 		},
 		{

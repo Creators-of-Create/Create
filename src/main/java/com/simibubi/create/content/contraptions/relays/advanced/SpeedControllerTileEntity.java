@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
-import java.util.List;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -13,11 +11,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
+
+import java.util.List;
 
 public class SpeedControllerTileEntity extends KineticTileEntity {
 
@@ -115,6 +114,11 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		BlockState stateAbove = world.getBlockState(pos.up());
 		hasBracket = AllBlocks.LARGE_COGWHEEL.has(stateAbove) && stateAbove.get(CogWheelBlock.AXIS)
 			.isHorizontal();
+	}
+	
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {

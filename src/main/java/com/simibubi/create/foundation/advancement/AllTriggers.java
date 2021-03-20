@@ -1,9 +1,5 @@
 package com.simibubi.create.foundation.advancement;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.simibubi.create.content.logistics.InWorldProcessing;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
@@ -15,13 +11,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
+
 public class AllTriggers {
 
 	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
-	public static final RegistryTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
-	public static final RegistryTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
-	public static final EnumTrigger<InWorldProcessing.Type> FAN_PROCESSING = add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
+	public static final StringSerializableTrigger<Fluid> INFINITE_FLUID = add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
+	public static final StringSerializableTrigger<Block> BRACKET_APPLY_TRIGGER = add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
+	public static final StringSerializableTrigger<InWorldProcessing.Type> FAN_PROCESSING = add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
 
 	public static final SimpleTrigger
 			ROTATION = simple("rotation"), 

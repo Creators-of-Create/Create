@@ -1,21 +1,12 @@
 package com.simibubi.create.content.contraptions.base;
 
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
-import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
@@ -23,7 +14,6 @@ import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendere
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
@@ -43,7 +33,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+
+import javax.annotation.Nullable;
+import java.util.List;
+
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -75,7 +70,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	@Override
 	public void initialize() {
-		if (hasNetwork()) {
+		if (hasNetwork() && !world.isRemote) {
 			KineticNetwork network = getOrCreateNetwork();
 			if (!network.initialized)
 				network.initFromTE(capacity, stress, networkSize);
@@ -224,6 +219,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
+		cachedBoundingBox = null;
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
 			super.fromTag(state, compound, clientPacket);
@@ -529,29 +525,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void onLoad() {
-		super.onLoad();
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.add(this));
-	}
-
-	@Override
-	public void onChunkUnloaded() {
-		if (world != null && world.isRemote)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.remove(this));
-	}
-
-	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.removed) {
 			FastRenderDispatcher.enqueueUpdate(this);
 		}
-	}
-
-	@Override
-	public void onChunkLightUpdate() {
-		CreateClient.kineticRenderer.onLightUpdate(this);
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;

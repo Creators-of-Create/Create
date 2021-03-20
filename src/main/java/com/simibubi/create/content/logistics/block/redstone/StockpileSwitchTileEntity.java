@@ -1,13 +1,10 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.List;
-
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,6 +12,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.List;
 
 public class StockpileSwitchTileEntity extends SmartTileEntity {
 
@@ -63,6 +62,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	public void updateCurrentLevel() {
 		boolean changed = false;
+		observedInventory.findNewCapability();
 		if (!observedInventory.hasInventory()) {
 			if (currentLevel == -1)
 				return;

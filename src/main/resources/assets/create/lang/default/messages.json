@@ -172,13 +172,16 @@
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
 	"create.gui.goggles.pole_length": "Pole Length:",
+	"create.gui.goggles.fluid_container": "Fluid Container Info:",
+	"create.gui.goggles.fluid_container.capacity": "Capacity: ",
 
 	"create.gui.assembly.exception": "This Contraption was unable to assemble:",
-	"create.gui.assembly.exception.unmovableBlock": "Unmovable Block (%4$s) at [%1$s %2$s %3$s]",
-	"create.gui.assembly.exception.chunkNotLoaded": "The Block at [%1$s %2$s %3$s] was not in a loaded chunk",
+	"create.gui.assembly.exception.unmovableBlock": "Unmovable Block (%4$s) at [%1$s,%2$s,%3$s]",
+	"create.gui.assembly.exception.chunkNotLoaded": "The Block at [%1$s,%2$s,%3$s] was not in a loaded chunk",
 	"create.gui.assembly.exception.structureTooLarge": "There are too many Blocks included in the contraption.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.tooManyPistonPoles": "There are too many extension Poles attached to this Piston.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "The Piston is missing some extension Poles",
+	"create.gui.assembly.exception.not_enough_sails": "Attached structure does not include enough sail-like blocks: %1$s\nA minimum of %2$s are required",
 
 	"create.gui.gauge.info_header": "Gauge Information:",
 	"create.gui.speedometer.title": "Rotation Speed",

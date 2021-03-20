@@ -1,9 +1,15 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
+import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public abstract class TileEntityInstance<T extends TileEntity> {
 
@@ -42,7 +48,7 @@ public abstract class TileEntityInstance<T extends TileEntity> {
      * Update changed instance data using the {@link InstanceKey}s you got in {@link #init()}.
      * You don't have to update light data. That should be done in {@link #updateLight()}
      */
-    protected abstract void onUpdate();
+    protected void onUpdate() { }
 
     /**
      * Called when a light update occurs in the world. If your model needs it, update light here.
@@ -53,4 +59,24 @@ public abstract class TileEntityInstance<T extends TileEntity> {
      * Call {@link InstanceKey#delete()} on all acquired keys.
      */
     public abstract void remove();
+
+    public BlockPos getFloatingPos() {
+        return pos.subtract(modelManager.getOriginCoordinate());
+    }
+
+    protected <L extends IFlatLight<?>> void relight(BlockPos pos, IFlatLight<?>... models) {
+        relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
+    }
+
+    protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<IFlatLight<?>> models) {
+        relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
+    }
+
+    protected <L extends IFlatLight<?>> void relight(int block, int sky, IFlatLight<?>... models) {
+        relight(block, sky, Arrays.stream(models));
+    }
+
+    protected <L extends IFlatLight<?>> void relight(int block, int sky, Stream<IFlatLight<?>> models) {
+        models.forEach(model -> model.setBlockLight(block).setSkyLight(sky));
+    }
 }

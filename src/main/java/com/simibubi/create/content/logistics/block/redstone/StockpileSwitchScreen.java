@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -13,13 +11,14 @@ import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
-
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+
+import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
 
 public class StockpileSwitchScreen extends AbstractSimiScreen {
 

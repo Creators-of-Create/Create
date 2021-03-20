@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -15,7 +10,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,11 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
@@ -39,6 +30,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
@@ -55,6 +51,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	private LazyOptional<IItemHandlerModifiable> invHandler;
 	private ListNBT deferredInventoryList;
 
+	private LerpedFloat animatedOffset;
+
 	enum State {
 		WAITING, EXPANDING, RETRACTING, DUMPING;
 	}
@@ -69,6 +67,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;
 		redstoneLocked = false;
+		animatedOffset = LerpedFloat.linear()
+			.startWithValue(0);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-
+		
 		if (getSpeed() == 0)
 			return;
 		if (!world.isRemote && player != null && player.blockBreakingProgress != null) {
@@ -362,11 +362,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap) && invHandler != null) 
+		if (isItemHandlerCap(cap) && invHandler != null)
 			return invHandler.cast();
 		return super.getCapability(cap, side);
 	}
-	
+
 	@Override
 	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
@@ -383,4 +383,28 @@ public class DeployerTileEntity extends KineticTileEntity {
 	public boolean shouldRenderAsTE() {
 		return true;
 	}
+
+	public float getHandOffset(float partialTicks) {
+		if (isVirtual())
+			return animatedOffset.getValue(partialTicks);
+
+		float progress = 0;
+		int timerSpeed = getTimerSpeed();
+		AllBlockPartials handPose = getHandPose();
+
+		if (state == State.EXPANDING)
+			progress = 1 - (timer - partialTicks * timerSpeed) / 1000f;
+		if (state == State.RETRACTING)
+			progress = (timer - partialTicks * timerSpeed) / 1000f;
+		float handLength = handPose == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
+			: handPose == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (reach + handLength), 21 / 16f);
+
+		return distance;
+	}
+
+	public void setAnimatedOffset(float offset) {
+		animatedOffset.setValue(offset);
+	}
+
 }

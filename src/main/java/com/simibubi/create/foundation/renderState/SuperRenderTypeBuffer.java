@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.renderState;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedMap;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -13,9 +15,11 @@ import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 
 public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 
+	public static BlockPos vertexSortingOrigin = BlockPos.ZERO;
 	static SuperRenderTypeBuffer instance;
 
 	public static SuperRenderTypeBuffer getInstance() {
@@ -65,6 +69,7 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 
 		// Visible clones from net.minecraft.client.renderer.RenderTypeBuffers
 		static final RegionRenderCacheBuilder blockBuilders = new RegionRenderCacheBuilder();
+
 		static final SortedMap<RenderType, BufferBuilder> createEntityBuilders() {
 			return Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
 				map.put(Atlases.getEntitySolid(), blockBuilders.get(RenderType.getSolid()));
@@ -86,7 +91,6 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 				});
 			});
 		}
-			
 
 		private static void assign(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, RenderType type) {
 			map.put(type, new BufferBuilder(type.getExpectedBufferSize()));
@@ -94,6 +98,20 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 
 		protected SuperRenderTypeBufferPhase() {
 			super(new BufferBuilder(256), createEntityBuilders());
+		}
+
+		public void draw(RenderType p_228462_1_) {
+			BlockPos v = vertexSortingOrigin;
+			BufferBuilder bufferbuilder = layerBuffers.getOrDefault(p_228462_1_, this.fallbackBuffer);
+			boolean flag = Objects.equals(this.currentLayer, p_228462_1_.asOptional());
+			if (flag || bufferbuilder != this.fallbackBuffer) {
+				if (this.activeConsumers.remove(bufferbuilder)) {
+					p_228462_1_.draw(bufferbuilder, v.getX(), v.getY(), v.getZ());
+					if (flag) {
+						this.currentLayer = Optional.empty();
+					}
+				}
+			}
 		}
 
 	}

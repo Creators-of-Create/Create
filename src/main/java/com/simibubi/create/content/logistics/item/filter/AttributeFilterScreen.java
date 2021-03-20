@@ -1,10 +1,5 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
@@ -17,7 +12,6 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
-
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,6 +19,11 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterContainer> {
 
@@ -62,7 +61,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	protected void init() {
 		super.init();
-		int x = guiLeft;
+		int x = guiLeft - 50;
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
@@ -165,7 +164,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
 		this.setZOffset(200);
 		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 22, guiTop + 57,
+		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft - 27, guiTop + 57,
 			String.valueOf(selectedAttributes.size() - 1));
 		this.setZOffset(0);
 		this.itemRenderer.zLevel = 0.0F;

@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -30,7 +29,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 
 		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
 		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTick();
+		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();

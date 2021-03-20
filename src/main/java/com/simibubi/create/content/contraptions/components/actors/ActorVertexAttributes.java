@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
@@ -9,8 +10,9 @@ public enum ActorVertexAttributes implements IVertexAttrib {
     LIGHT("aModelLight", CommonAttributes.LIGHT),
     OFFSET("aOffset", CommonAttributes.FLOAT),
     AXIS("aAxis", CommonAttributes.NORMAL),
-    INSTANCE_ROTATION("aInstanceRot", CommonAttributes.VEC3),
+    INSTANCE_ROTATION("aInstanceRot", CommonAttributes.QUATERNION),
     ROTATION_CENTER("aRotationCenter", CommonAttributes.NORMAL),
+    SPEED("aSpeed", CommonAttributes.FLOAT),
     ;
 
     private final String name;
@@ -27,7 +29,7 @@ public enum ActorVertexAttributes implements IVertexAttrib {
     }
 
     @Override
-    public VertexAttribSpec attribSpec() {
+    public IAttribSpec attribSpec() {
         return spec;
     }
 

@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -18,7 +14,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -27,8 +22,12 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class ClockworkBearingTileEntity extends KineticTileEntity implements IBearingTileEntity, IDisplayAssemblyExceptions {
+import java.util.List;
+
+public class ClockworkBearingTileEntity extends KineticTileEntity
+	implements IBearingTileEntity, IDisplayAssemblyExceptions {
 
 	protected ControlledContraptionEntity hourHand;
 	protected ControlledContraptionEntity minuteHand;
@@ -40,8 +39,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	protected boolean running;
 	protected boolean assembleNextTick;
 	protected AssemblyException lastException;
-
 	protected ScrollOptionBehaviour<ClockHands> operationMode;
+
+	private float prevForcedAngle;
 
 	public ClockworkBearingTileEntity(TileEntityType<? extends ClockworkBearingTileEntity> type) {
 		super(type);
@@ -67,6 +67,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 		super.tick();
 
 		if (world.isRemote) {
+			prevForcedAngle = hourAngle;
 			clientMinuteAngleDiff /= 2;
 			clientHourAngleDiff /= 2;
 		}
@@ -342,6 +343,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
+		if (isVirtual())
+			return MathHelper.lerp(partialTicks, prevForcedAngle, hourAngle);
 		if (hourHand == null || hourHand.isStalled())
 			partialTicks = 0;
 		return MathHelper.lerp(partialTicks, hourAngle, hourAngle + getHourArmSpeed());
@@ -414,5 +417,9 @@ public class ClockworkBearingTileEntity extends KineticTileEntity implements IBe
 	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
+	}
+
+	public void setAngle(float forcedAngle) {
+		hourAngle = forcedAngle;
 	}
 }

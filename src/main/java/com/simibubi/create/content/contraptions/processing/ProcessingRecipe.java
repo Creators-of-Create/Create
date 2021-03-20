@@ -1,20 +1,11 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
-
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -26,6 +17,12 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -179,6 +176,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	@Override
 	public ResourceLocation getId() {
 		return id;
+	}
+	
+	@Override
+	public boolean isDynamic() {
+		return true;
 	}
 
 	@Override

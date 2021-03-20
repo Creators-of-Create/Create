@@ -20,7 +20,7 @@ public enum ModelVertexAttributes implements IVertexAttrib {
     }
 
     @Override
-    public VertexAttribSpec attribSpec() {
+    public IAttribSpec attribSpec() {
         return spec;
     }
 

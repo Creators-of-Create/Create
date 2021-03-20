@@ -1,12 +1,5 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
@@ -22,17 +15,8 @@ import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
-
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BambooBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CactusBlock;
-import net.minecraft.block.ChorusPlantBlock;
-import net.minecraft.block.KelpBlock;
-import net.minecraft.block.KelpTopBlock;
-import net.minecraft.block.StemGrownBlock;
-import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -59,6 +43,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @ParametersAreNonnullByDefault
@@ -125,7 +115,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (inventory.remainingTime > 0)
 			spawnParticles(inventory.getStackInSlot(0));
 
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
@@ -313,7 +303,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		if (inventory.isEmpty())
 			return;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		List<? extends IRecipe<?>> recipes = getRecipes();

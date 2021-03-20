@@ -60,7 +60,8 @@ public class VecHelper {
 	}
 
 	public static boolean isVecPointingTowards(Vector3d vec, Direction direction) {
-		return Vector3d.of(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
+		return Vector3d.of(direction.getDirectionVec()).dotProduct(vec.normalize()) > 0;
+		//return new Vec3d(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
 	}
 
 	public static Vector3d getCenterOf(Vector3i pos) {
@@ -122,6 +123,11 @@ public class VecHelper {
 	public static Vector3d clamp(Vector3d vec, float maxLength) {
 		return vec.length() > maxLength ? vec.normalize()
 			.scale(maxLength) : vec;
+	}
+
+	public static Vector3d lerp(float p, Vector3d from, Vector3d to) {
+		return from.add(to.subtract(from)
+			.scale(p));
 	}
 
 	public static Vector3d clampComponentWise(Vector3d vec, float maxLength) {

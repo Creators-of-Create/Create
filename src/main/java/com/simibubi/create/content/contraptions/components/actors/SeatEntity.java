@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllEntityTypes;
-
 import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -15,6 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -63,8 +63,9 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	protected boolean canBeRidden(Entity p_184228_1_) {
-		return true;
+	protected boolean canBeRidden(Entity entity) {
+		// Fake Players (tested with deployers) have a BUNCH of weird issues, don't let them ride seats
+		return !(entity instanceof FakePlayer);
 	}
 
 	@Override

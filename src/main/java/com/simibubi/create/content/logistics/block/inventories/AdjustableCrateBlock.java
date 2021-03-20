@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.item.ItemHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -111,7 +110,7 @@ public class AdjustableCrateBlock extends CrateBlock {
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof AdjustableCrateTileEntity) {
-			AdjustableCrateTileEntity flexcrateTileEntity = (AdjustableCrateTileEntity) te;
+			AdjustableCrateTileEntity flexcrateTileEntity = ((AdjustableCrateTileEntity) te).getMainCrate();
 			return ItemHelper.calcRedstoneFromInventory(flexcrateTileEntity.inventory);
 		}
 		return 0;

@@ -2,7 +2,6 @@ package com.simibubi.create.content.curiosities;
 
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,7 @@ public class ChromaticCompoundColor implements IItemColor {
 	public int getColor(ItemStack stack, int layer) {
 		Minecraft mc = Minecraft.getInstance();
 		float pt = AnimationTickHolder.getPartialTicks();
-		float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI) + (AnimationTickHolder.getRenderTick() / 10f);
+		float progress = (float) ((mc.player.getYaw(pt)) / 180 * Math.PI) + (AnimationTickHolder.getRenderTime() / 10f);
 		if (layer == 0)
 			return ColorHelper.mixColors(0x6e5773, 0x6B3074, ((float) MathHelper.sin(progress) + 1) / 2);
 		if (layer == 1)

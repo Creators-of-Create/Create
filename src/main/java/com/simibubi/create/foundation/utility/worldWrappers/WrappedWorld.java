@@ -10,6 +10,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.multiplayer.ClientChunkProvider;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -35,17 +37,17 @@ import net.minecraft.world.storage.MapData;
 public class WrappedWorld extends World {
 
 	protected World world;
-	private WrappedChunkProvider provider;
+	private AbstractChunkProvider provider;
 
-	public WrappedWorld(World world, WrappedChunkProvider provider) {
-		this(world);
+	public WrappedWorld(World world, AbstractChunkProvider provider) {
+		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,
+				world.isRemote, world.isDebugWorld(), 0);
+		this.world = world;
 		this.provider = provider;
 	}
 
 	public WrappedWorld(World world) {
-		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,
-			world.isRemote, world.isDebugWorld(), 0);
-		this.world = world;
+		this(world, null);
 	}
 
 	public World getWorld() {

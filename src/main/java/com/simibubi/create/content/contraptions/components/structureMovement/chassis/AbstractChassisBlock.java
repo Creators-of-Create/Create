@@ -5,7 +5,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,12 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -59,7 +53,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (isSlimeBall && state.get(affectedSide)) {
 			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
-				if (glueableSide != null && !state.get(glueableSide)) {
+				if (glueableSide != null && !state.get(glueableSide) && glueAllowedOnSide(worldIn, pos, state, face)) {
 					if (worldIn.isRemote) {
 						Vector3d vec = hit.getHitVec();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -78,6 +72,8 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return ActionResultType.PASS;
 		if (state.get(affectedSide) == isSlimeBall)
 			return ActionResultType.PASS;
+		if (!glueAllowedOnSide(worldIn, pos, state, hit.getFace()))
+			return ActionResultType.PASS;
 		if (worldIn.isRemote) {
 			Vector3d vec = hit.getHitVec();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -94,6 +90,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (rotation == Rotation.NONE)
 			return state;
 
+		@SuppressWarnings("deprecation")
 		BlockState rotated = super.rotate(state, rotation);
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);
@@ -140,5 +137,9 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	public abstract BooleanProperty getGlueableSide(BlockState state, Direction face);
+
+	protected boolean glueAllowedOnSide(IBlockReader world, BlockPos pos, BlockState state, Direction side) {
+		return true;
+	}
 
 }

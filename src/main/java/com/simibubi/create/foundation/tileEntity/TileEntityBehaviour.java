@@ -5,7 +5,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -47,7 +46,7 @@ public abstract class TileEntityBehaviour {
 
 	}
 
-	public void onNeighborChanged(Direction direction) {
+	public void onNeighborChanged(BlockPos neighborPos) {
 
 	}
 

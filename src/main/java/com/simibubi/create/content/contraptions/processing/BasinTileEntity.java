@@ -1,19 +1,11 @@
 package com.simibubi.create.content.contraptions.processing;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -25,16 +17,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.LerpedFloat;
-import com.simibubi.create.foundation.utility.LerpedFloat.Chaser;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -49,6 +34,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -64,7 +50,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class BasinTileEntity extends SmartTileEntity {
+import javax.annotation.Nonnull;
+import java.util.*;
+
+public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
 	private boolean areFluidsMoving;
 	LerpedFloat ingredientRotationSpeed;
@@ -438,7 +427,7 @@ public class BasinTileEntity extends SmartTileEntity {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
 			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
-				.isItemEqual(itemStack)) 
+				.isItemEqual(itemStack))
 				continue;
 
 			if (simulate || direction == Direction.DOWN) {
@@ -599,6 +588,12 @@ public class BasinTileEntity extends SmartTileEntity {
 		this.areFluidsMoving = areFluidsMoving;
 		ingredientRotationSpeed.chase(areFluidsMoving ? 20 : 0, .1f, Chaser.EXP);
 		return areFluidsMoving;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		return containedFluidTooltip(tooltip, isPlayerSneaking,
+			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

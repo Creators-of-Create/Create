@@ -4,7 +4,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
@@ -69,6 +68,12 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	@Override
 	public Class<SchematicannonTileEntity> getTileEntityClass() {
 		return SchematicannonTileEntity.class;
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+			boolean isMoving) {
+		withTileEntityDo(worldIn, pos, te -> te.neighbourCheckCooldown = 0);
 	}
 
 }

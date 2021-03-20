@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -19,7 +17,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -38,6 +36,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 
+import java.util.Random;
+
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -46,7 +46,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	@Override
 	public boolean isGlobalRenderer(BeltTileEntity te) {
-		return BeltBlock.canTransportObjects(te.getBlockState());
+		return te.isController();
 	}
 
 	@Override
@@ -71,11 +71,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
 			boolean alongX = facing.getAxis() == Axis.X;
 
-			MatrixStacker msr = MatrixStacker.of(ms);
+			MatrixStack localTransforms = new MatrixStack();
+			MatrixStacker msr = MatrixStacker.of(localTransforms);
 			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-			float renderTick = AnimationTickHolder.getRenderTick();
+			float renderTick = AnimationTickHolder.getRenderTime(te.getWorld());
 
-			ms.push();
 			msr.centre();
 			msr.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0));
 			msr.rotateZ(sideways ? 90 : 0);
@@ -110,19 +110,20 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 					float spriteSize = spriteShift.getTarget().getMaxV() - spriteShift.getTarget().getMinV();
 
-					double scroll = speed * time / (36 * 16) + (bottom ? 0.5 : 0.0);
+					double scroll = speed * time / (31.5 * 16) + (bottom ? 0.5 : 0.0);
 					scroll = scroll - Math.floor(scroll);
 					scroll = scroll * spriteSize * scrollMult;
 
 					beltBuffer.shiftUVScrolling(spriteShift, (float) scroll);
 				}
 
-				beltBuffer.renderInto(ms, vb);
+				beltBuffer
+						.transform(localTransforms)
+						.renderInto(ms, vb);
 
 				// Diagonal belt do not have a separate bottom model
 				if (diagonal) break;
 			}
-			ms.pop();
 
 			if (te.hasPulley()) {
 				// TODO 1.15 find a way to cache this model matrix computation
@@ -190,6 +191,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
+		boolean onContraption = te.getWorld() instanceof WrappedWorld;
+
 		for (TransportedItemStack transported : te.getInventory()
 			.getTransportedItems()) {
 			ms.push();
@@ -204,7 +207,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				sideOffset = transported.sideOffset;
 			}
 
-			int stackLight = getPackedLight(te, offset);
+			int stackLight = onContraption ? light : getPackedLight(te, offset);
 
 			if (offset < .5)
 				verticalMovement = 0;

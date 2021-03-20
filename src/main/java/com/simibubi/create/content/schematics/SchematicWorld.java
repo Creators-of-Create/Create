@@ -1,18 +1,8 @@
 package com.simibubi.create.content.schematics;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
+import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,29 +17,30 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.EmptyTickList;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.ITickList;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
-	private Map<BlockPos, BlockState> blocks;
-	private Map<BlockPos, TileEntity> tileEntities;
-	private List<TileEntity> renderedTileEntities;
-	private List<Entity> entities;
-	private MutableBoundingBox bounds;
+	protected Map<BlockPos, BlockState> blocks;
+	protected Map<BlockPos, TileEntity> tileEntities;
+	protected List<TileEntity> renderedTileEntities;
+	protected List<Entity> entities;
+	protected MutableBoundingBox bounds;
+
 	public BlockPos anchor;
 	public boolean renderMode;
 
 	public SchematicWorld(World original) {
 		this(BlockPos.ZERO, original);
 	}
-	
+
 	public SchematicWorld(BlockPos anchor, World original) {
 		super(original);
 		this.blocks = new HashMap<>();
@@ -114,12 +105,8 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 		if (pos.getY() - bounds.minY == -1 && !renderMode)
 			return Blocks.GRASS_BLOCK.getDefaultState();
-		if (getBounds().isVecInside(pos) && blocks.containsKey(pos)) {
-			BlockState blockState = blocks.get(pos);
-			if (BlockHelper.hasBlockStateProperty(blockState, BlockStateProperties.LIT))
-				blockState = blockState.with(BlockStateProperties.LIT, false);
-			return blockState;
-		}
+		if (getBounds().isVecInside(pos) && blocks.containsKey(pos))
+			return processBlockStateForPrinting(blocks.get(pos));
 		return Blocks.AIR.getDefaultState();
 	}
 
@@ -180,9 +167,23 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState arg1, int arg2) {
-		pos = pos.subtract(anchor);
+		pos = pos.toImmutable()
+			.subtract(anchor);
 		bounds.expandTo(new MutableBoundingBox(pos, pos));
 		blocks.put(pos, arg1);
+		if (tileEntities.containsKey(pos)) {
+			TileEntity tileEntity = tileEntities.get(pos);
+			if (!tileEntity.getType()
+				.isValidBlock(arg1.getBlock())) {
+				tileEntities.remove(pos);
+				renderedTileEntities.remove(tileEntity);
+			}
+		}
+
+		TileEntity tileEntity = getTileEntity(pos);
+		if (tileEntity != null)
+			tileEntities.put(pos, tileEntity);
+
 		return true;
 	}
 
@@ -202,6 +203,12 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
 	public Iterable<TileEntity> getRenderedTileEntities() {
 		return renderedTileEntities;
+	}
+
+	protected BlockState processBlockStateForPrinting(BlockState state) {
+		if (state.getBlock() instanceof AbstractFurnaceBlock && state.contains(BlockStateProperties.LIT))
+			state = state.with(BlockStateProperties.LIT, false);
+		return state;
 	}
 
 	@Override

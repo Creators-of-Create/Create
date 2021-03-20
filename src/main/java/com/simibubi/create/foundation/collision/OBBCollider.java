@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.collision;
 
-import static com.simibubi.create.foundation.collision.CollisionDebugger.showDebugLine;
+import net.minecraft.util.math.vector.Vector3d;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
-
-import net.minecraft.util.math.vector.Vector3d;
 
 
 
@@ -62,7 +61,6 @@ public class OBBCollider {
 		if (diff > 0)
 			return true;
 
-//		boolean isBestSeperation = distance != 0 && -(diff) <= abs(bestSeparation.getValue());
 		boolean isBestSeperation = checkCount == 2; // Debug specific separations
 
 		if (isBestSeperation) {
@@ -70,17 +68,6 @@ public class OBBCollider {
 			double value = sTL * abs(diff);
 			mf.axis = axis.normalize();
 			mf.separation = value;
-
-			// Visualize values
-			if (CollisionDebugger.AABB != null) {
-				Vector3d normalizedAxis = axis.normalize();
-				showDebugLine(Vector3d.ZERO, normalizedAxis.scale(TL), 0xbb00bb, "tl", 4);
-				showDebugLine(Vector3d.ZERO, normalizedAxis.scale(sTL * rA), 0xff4444, "ra", 3);
-				showDebugLine(normalizedAxis.scale(sTL * (distance - rB)), normalizedAxis.scale(TL), 0x4444ff, "rb", 2);
-				showDebugLine(normalizedAxis.scale(sTL * (distance - rB)),
-					normalizedAxis.scale(sTL * (distance - rB) + value), 0xff9966, "separation", 1);
-				System.out.println("TL:" + TL + ", rA: " + rA + ", rB: " + rB);
-			}
 		}
 
 		return false;

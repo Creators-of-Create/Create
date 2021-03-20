@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.block.connected;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -55,10 +54,9 @@ public abstract class ConnectedTextureBehaviour {
 		if (textureEntry == null)
 			return context;
 
-		Axis axis = face.getAxis();
 		boolean positive = face.getAxisDirection() == AxisDirection.POSITIVE;
-		Direction h = axis == Axis.X ? Direction.SOUTH : Direction.WEST;
-		Direction v = axis.isHorizontal() ? Direction.UP : Direction.NORTH;
+		Direction h = getRightDirection(reader, pos, state, face);
+		Direction v = getUpDirection(reader, pos, state, face);
 		h = positive ? h.getOpposite() : h;
 		if (face == Direction.DOWN) {
 			v = v.getOpposite();
@@ -93,6 +91,16 @@ public abstract class ConnectedTextureBehaviour {
 		}
 
 		return context;
+	}
+
+	protected Direction getUpDirection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+		Axis axis = face.getAxis();
+		return axis.isHorizontal() ? Direction.UP : Direction.NORTH;
+	}
+
+	protected Direction getRightDirection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+		Axis axis = face.getAxis();
+		return axis == Axis.X ? Direction.SOUTH : Direction.WEST;
 	}
 
 	private boolean testConnection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face,

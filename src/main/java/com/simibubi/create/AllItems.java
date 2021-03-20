@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.contraptions.goggles.GogglesModel;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
@@ -67,6 +68,74 @@ public class AllItems {
 		REGISTRATE.startSection(MATERIALS);
 	}
 
+	public static final ItemEntry<Item> WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"),
+		CINDER_FLOUR = ingredient("cinder_flour"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
+		ROSE_QUARTZ = ingredient("rose_quartz"), POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"),
+		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
+		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube"),
+		INTEGRATED_CIRCUIT = ingredient("integrated_circuit");
+
+	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
+		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
+			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+			.register();
+
+	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
+		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.register();
+
+	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(6)
+			.saturation(0.3F)
+			.build()))
+		.lang("Bar of Chocolate")
+		.register();
+
+	public static final ItemEntry<Item> SWEET_ROLL = REGISTRATE.item("sweet_roll", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(6)
+			.saturation(0.8F)
+			.build()))
+		.register();
+
+	public static final ItemEntry<Item> CHOCOLATE_BERRIES = REGISTRATE.item("chocolate_glazed_berries", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(7)
+			.saturation(0.8F)
+			.build()))
+		.register();
+
+	public static final ItemEntry<Item> HONEYED_APPLE = REGISTRATE.item("honeyed_apple", Item::new)
+		.properties(p -> p.food(new Food.Builder().hunger(8)
+			.saturation(0.8F)
+			.build()))
+		.register();
+
+	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
+		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.properties(p -> p.maxStackSize(16))
+		.lang("Builder's Tea")
+		.register();
+
+	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
+		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), CREATE_INGOTS.tag),
+		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
+		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
+
+	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
+		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.model(AssetLookup.existingItemModel())
+			.onRegister(CreateRegistrate.itemColors(() -> ChromaticCompoundColor::new))
+			.register();
+
+	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)
+		.properties(p -> p.rarity(Rarity.UNCOMMON))
+		.register();
+
+	public static final ItemEntry<RefinedRadianceItem> REFINED_RADIANCE =
+		REGISTRATE.item("refined_radiance", RefinedRadianceItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.register();
+
 	public static final ItemEntry<Item> COPPER_NUGGET =
 		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), NUGGETS.tag),
 		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), NUGGETS.tag),
@@ -90,59 +159,6 @@ public class AllItems {
 		CRUSHED_QUICKSILVER = compatCrushedOre("quicksilver"), CRUSHED_BAUXITE = compatCrushedOre("aluminum"),
 		CRUSHED_URANIUM = compatCrushedOre("uranium"), CRUSHED_NICKEL = compatCrushedOre("nickel");
 
-	public static final ItemEntry<Item> ANDESITE_ALLOY = ingredient("andesite_alloy"),
-		COPPER_INGOT = taggedIngredient("copper_ingot", forgeItemTag("ingots/copper"), CREATE_INGOTS.tag),
-		ZINC_INGOT = taggedIngredient("zinc_ingot", forgeItemTag("ingots/zinc"), CREATE_INGOTS.tag),
-		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag),
-
-		WHEAT_FLOUR = ingredient("wheat_flour"), DOUGH = ingredient("dough"), CINDER_FLOUR = ingredient("cinder_flour"),
-		POWDERED_OBSIDIAN = ingredient("powdered_obsidian"), ROSE_QUARTZ = ingredient("rose_quartz"),
-		POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"), PROPELLER = ingredient("propeller"),
-		WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
-		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover");
-
-	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
-		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
-			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-			.register();
-
-	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.register();
-
-	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(5)
-			.saturation(0.6F)
-			.build()))
-		.lang("Bar of Chocolate")
-		.register();
-
-	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
-		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.properties(p -> p.maxStackSize(16))
-		.lang("Builder's Tea")
-		.register();
-
-	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
-		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.model(AssetLookup.existingItemModel())
-			.onRegister(CreateRegistrate.itemColors(() -> ChromaticCompoundColor::new))
-			.register();
-
-	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)
-		.properties(p -> p.rarity(Rarity.UNCOMMON))
-		.register();
-
-	public static final ItemEntry<RefinedRadianceItem> REFINED_RADIANCE =
-		REGISTRATE.item("refined_radiance", RefinedRadianceItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.register();
-
-	public static final ItemEntry<Item>
-
-	ELECTRON_TUBE = ingredient("electron_tube"), INTEGRATED_CIRCUIT = ingredient("integrated_circuit");
-
 	// Kinetics
 
 	static {
@@ -165,6 +181,12 @@ public class AllItems {
 			.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block"))
 			.register();
 
+	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
+		.properties(p -> p.maxStackSize(1))
+		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
+		.lang("Engineer's Goggles")
+		.register();
+
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
 		.register();
 
@@ -185,12 +207,6 @@ public class AllItems {
 		.properties(p -> p.maxStackSize(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchModel::new))
 		.model(AssetLookup.itemModelWithPartials())
-		.register();
-
-	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
-		.properties(p -> p.maxStackSize(1))
-		.model(AssetLookup.existingItemModel())
-		.lang("Engineer's Goggles")
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =

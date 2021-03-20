@@ -5,7 +5,6 @@ import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.particle.IAnimatedSprite;
@@ -58,7 +57,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		super.tick();
 		radius += (radius2 - radius) * .1f;
 	}
-	
+
 	@Override
 	public void buildGeometry(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
 		if (!isVisible)
@@ -67,8 +66,10 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	}
 
 	public void move(double x, double y, double z) {
-		float time = AnimationTickHolder.getTicks();
+		float time = AnimationTickHolder.getTicks(world);
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / maxAge));
+		if (speed < 0 && axis.isVertical())
+			angle += 180;
 		Vector3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
 		posX = position.x;
 		posY = position.y;
@@ -84,10 +85,11 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 
 		public Particle makeParticle(RotationIndicatorParticleData data, ClientWorld worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
-			ClientPlayerEntity player = Minecraft.getInstance().player;
-			boolean visible = player != null && GogglesItem.canSeeParticles(player);
+			Minecraft mc = Minecraft.getInstance();
+			ClientPlayerEntity player = mc.player;
+			boolean visible = worldIn != mc.world || player != null && GogglesItem.canSeeParticles(player);
 			return new RotationIndicatorParticle(worldIn, x, y, z, data.color, data.radius1, data.radius2, data.speed,
-					data.getAxis(), data.lifeSpan, visible, this.spriteSet);
+				data.getAxis(), data.lifeSpan, visible, this.spriteSet);
 		}
 	}
 

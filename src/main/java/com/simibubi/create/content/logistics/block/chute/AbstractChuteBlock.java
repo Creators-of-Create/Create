@@ -1,14 +1,11 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -29,6 +26,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nullable;
 
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 
@@ -156,9 +156,10 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
 		BlockPos neighbourPos, boolean p_220069_6_) {
-		if (pos.down()
-			.equals(neighbourPos))
+		if (pos.down().equals(neighbourPos))
 			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
+		else if (pos.up().equals(neighbourPos))
+			withTileEntityDo(world, pos, chute -> chute.capAbove = LazyOptional.empty());
 	}
 
 	public abstract BlockState updateChuteState(BlockState state, BlockState above, IBlockReader world, BlockPos pos);

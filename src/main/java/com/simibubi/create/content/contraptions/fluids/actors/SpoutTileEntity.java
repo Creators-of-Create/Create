@@ -1,14 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -19,7 +12,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
@@ -32,6 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -41,9 +34,15 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 
-public class SpoutTileEntity extends SmartTileEntity {
-	private static final boolean IS_TIC_LOADED = ModList.get()
-		.isLoaded("tconstruct");
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
+
+public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+	private static final boolean IS_TIC_LOADED = ModList.get().isLoaded("tconstruct");
 	private static final Class<?> CASTING_FLUID_HANDLER_CLASS;
 	static {
 		Class<?> testClass;
@@ -70,12 +69,12 @@ public class SpoutTileEntity extends SmartTileEntity {
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (cachedBoundingBox == null) {
+		if (cachedBoundingBox == null)
 			cachedBoundingBox = super.getRenderBoundingBox().expand(0, -2, 0);
-		}
 		return cachedBoundingBox;
 	}
 
@@ -137,9 +136,10 @@ public class SpoutTileEntity extends SmartTileEntity {
 		}
 
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, world, pos, 5);
-		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out).isEmpty())
+		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out)
+			.isEmpty())
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, world, pos, 5);
-		
+
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
 		sendSplash = true;
@@ -282,4 +282,8 @@ public class SpoutTileEntity extends SmartTileEntity {
 		return -1;
 	}
 
+	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+	}
 }

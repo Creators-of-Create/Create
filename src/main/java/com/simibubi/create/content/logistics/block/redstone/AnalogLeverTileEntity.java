@@ -1,20 +1,20 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import java.util.List;
-
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+import java.util.List;
+
+public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IInstanceRendered {
 
 	int state = 0;
 	int lastChange;
@@ -49,6 +49,12 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 		}
 		if (world.isRemote)
 			clientState.tick();
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+
 	}
 
 	private void updateOutput() {

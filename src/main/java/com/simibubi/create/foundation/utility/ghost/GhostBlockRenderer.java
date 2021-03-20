@@ -142,7 +142,8 @@ public abstract class GhostBlockRenderer {
 			Vector3f vector3f = new Vector3f((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
 			Matrix4f matrix4f = p_227890_1_.getModel();
 			vector3f.transform(p_227890_1_.getNormal());
-			int j = aint.length / 8;
+			int vertexSize = DefaultVertexFormats.BLOCK.getIntegerSize();
+			int j = aint.length / vertexSize;
 
 			try (MemoryStack memorystack = MemoryStack.stackPush()) {
 				ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormats.BLOCK.getSize());
@@ -150,7 +151,7 @@ public abstract class GhostBlockRenderer {
 
 				for (int k = 0; k < j; ++k) {
 					((Buffer) intbuffer).clear();
-					intbuffer.put(aint, k * 8, 8);
+					intbuffer.put(aint, k * vertexSize, vertexSize);
 					float f = bytebuffer.getFloat(0);
 					float f1 = bytebuffer.getFloat(4);
 					float f2 = bytebuffer.getFloat(8);
