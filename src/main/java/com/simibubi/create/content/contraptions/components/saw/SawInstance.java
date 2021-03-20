@@ -8,13 +8,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Rotation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class SawInstance extends SingleRotatingInstance {
 
@@ -24,8 +20,8 @@ public class SawInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        if (lastState.get(FACING).getAxis().isHorizontal())
-            return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState.rotate(tile.getWorld(), tile.getPos(), Rotation.CLOCKWISE_180));
+        if (blockState.get(FACING).getAxis().isHorizontal())
+            return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState.rotate(tile.getWorld(), tile.getPos(), Rotation.CLOCKWISE_180));
         else
             return rotatingMaterial().getModel(KineticTileEntityRenderer.KINETIC_TILE, shaft(getRotationAxis()));
     }

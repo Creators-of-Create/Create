@@ -37,7 +37,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected float getRotationOffset(final Direction.Axis axis) {
-        float offset = CogWheelBlock.isLargeCog(lastState) ? 11.25f : 0;
+        float offset = CogWheelBlock.isLargeCog(blockState) ? 11.25f : 0;
         double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
                 + ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
         if (d == 0) {
@@ -52,7 +52,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     public Direction.Axis getRotationAxis() {
-        return ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        return ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
     }
 
     protected final RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial() {

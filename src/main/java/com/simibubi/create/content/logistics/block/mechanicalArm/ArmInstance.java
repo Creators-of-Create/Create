@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
@@ -19,16 +18,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
-public class ArmInstance extends SingleRotatingInstance implements ITickableInstance {
+public class ArmInstance extends SingleRotatingInstance implements IDynamicInstance {
 
     private InstanceKey<ModelData> base;
     private InstanceKey<ModelData> lowerBody;
@@ -51,13 +45,13 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
 
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
-        base = mat.getModel(AllBlockPartials.ARM_BASE, lastState).createInstance();
-        lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, lastState).createInstance();
-        upperBody = mat.getModel(AllBlockPartials.ARM_UPPER_BODY, lastState).createInstance();
-        head = mat.getModel(AllBlockPartials.ARM_HEAD, lastState).createInstance();
-        claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, lastState).createInstance();
+        base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
+        lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();
+        upperBody = mat.getModel(AllBlockPartials.ARM_UPPER_BODY, blockState).createInstance();
+        head = mat.getModel(AllBlockPartials.ARM_HEAD, blockState).createInstance();
+        claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, blockState).createInstance();
 
-        InstancedModel<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, lastState);
+        InstancedModel<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
         InstanceKey<ModelData> clawGrip1 = clawHalfModel.createInstance();
         InstanceKey<ModelData> clawGrip2 = clawHalfModel.createInstance();
 
@@ -65,12 +59,12 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
         models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 
         firstTick = true;
-        tick();
+        beginFrame();
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         ArmTileEntity arm = (ArmTileEntity) tile;
 
         boolean settled = arm.baseAngle.settled() && arm.lowerArmAngle.settled() && arm.upperArmAngle.settled() && arm.headAngle.settled();
@@ -107,7 +101,7 @@ public class ArmInstance extends SingleRotatingInstance implements ITickableInst
         msr.translate(getFloatingPos());
         msr.centre();
 
-        if (lastState.get(ArmBlock.CEILING))
+        if (blockState.get(ArmBlock.CEILING))
             msr.rotateX(180);
 
         ArmRenderer.transformBase(msr, baseAngle);

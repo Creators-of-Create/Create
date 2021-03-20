@@ -5,6 +5,7 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 
 import java.util.List;
 
+import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -15,7 +16,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 
-public class AdjustableRepeaterTileEntity extends SmartTileEntity {
+public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IInstanceRendered {
 
 	public int state;
 	public boolean charging;
@@ -119,5 +120,4 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity {
 
 		state += charging ? 1 : -1;
 	}
-
 }

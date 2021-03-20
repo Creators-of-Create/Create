@@ -1,17 +1,14 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
@@ -20,16 +17,11 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements ITickableInstance {
+public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
 
     protected Direction facing;
     protected boolean connectedLeft;
@@ -57,16 +49,16 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     @Override
     protected void init() {
-        facing = lastState.get(BlockStateProperties.HORIZONTAL_FACING);
+        facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
-        Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         shaft = setup(shaftModel().createInstance(), tile.getSpeed(), axis);
 
-        wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontalModel(modelManager, lastState.rotate(Rotation.CLOCKWISE_90)).createInstance();
+        wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontalModel(modelManager, blockState.rotate(Rotation.CLOCKWISE_90)).createInstance();
 
-        connection = FlywheelBlock.getConnection(lastState);
+        connection = FlywheelBlock.getConnection(blockState);
         if (connection != null) {
-            connectedLeft = lastState.get(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
+            connectedLeft = blockState.get(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
 
             boolean flipAngle = connection.getAxis() == Direction.Axis.X ^ connection.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
 
@@ -74,10 +66,10 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
             RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
-            upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, lastState).createInstance();
-            lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, lastState).createInstance();
-            upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING, lastState).createInstance();
-            lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING, lastState).createInstance();
+            upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
+            lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
+            upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING, blockState).createInstance();
+            lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING, blockState).createInstance();
 
             connectors = Lists.newArrayList(upperRotating, lowerRotating, upperSliding, lowerSliding);
         } else {
@@ -89,7 +81,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
 
         float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -144,7 +136,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     @Override
     protected void onUpdate() {
-        Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         updateRotation(shaft, axis);
     }
 
@@ -167,7 +159,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     protected InstancedModel<RotatingData> shaftModel() {
-        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, facing.getOpposite());
+        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, facing.getOpposite());
     }
 
     protected void transformConnector(MatrixStacker ms, boolean upper, boolean rotating, float angle, boolean flip) {

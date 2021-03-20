@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
 import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -17,24 +16,24 @@ public abstract class TileEntityInstance<T extends TileEntity> {
     protected final T tile;
     protected final World world;
     protected final BlockPos pos;
-    protected BlockState lastState;
+    protected BlockState blockState;
 
     public TileEntityInstance(InstancedTileRenderer<?> modelManager, T tile) {
         this.modelManager = modelManager;
         this.tile = tile;
         this.world = tile.getWorld();
         this.pos = tile.getPos();
-        this.lastState = tile.getBlockState();
+        this.blockState = tile.getBlockState();
         init();
     }
 
     public final void update() {
         BlockState currentState = tile.getBlockState();
-        if (lastState == currentState) {
+        if (blockState == currentState) {
             onUpdate();
         } else {
             remove();
-            lastState = currentState;
+            blockState = currentState;
             init();
         }
     }

@@ -8,14 +8,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
@@ -25,7 +21,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        Direction facing = lastState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
+        Direction facing = blockState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
         Supplier<MatrixStack> ms = () -> {
             MatrixStack stack = new MatrixStack();
@@ -39,6 +35,6 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
             stacker.unCentre();
             return stack;
         };
-        return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, lastState, facing, ms);
+        return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, ms);
     }
 }

@@ -8,16 +8,11 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
@@ -30,13 +25,13 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     protected void init() {
-        final Direction direction = lastState.get(FACING);
-        final Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        final Direction direction = blockState.get(FACING);
+        final Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
 
         InstancedModel<RotatingData> shaftHalf =
-                AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, direction.getOpposite());
+                AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite());
         InstancedModel<RotatingData> fanInner =
-                AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, lastState, direction.getOpposite());
+                AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite());
 
         shaft = shaftHalf.createInstance();
         shaft.getInstance()
@@ -67,7 +62,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     protected void onUpdate() {
-        Direction.Axis axis = lastState.get(FACING).getAxis();
+        Direction.Axis axis = blockState.get(FACING).getAxis();
         updateRotation(shaft, axis);
 
         fan.getInstance()
@@ -79,7 +74,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     public void updateLight() {
-        final Direction direction = lastState.get(FACING);
+        final Direction direction = blockState.get(FACING);
 
         BlockPos behind = pos.offset(direction.getOpposite());
         relight(behind, shaft.getInstance());

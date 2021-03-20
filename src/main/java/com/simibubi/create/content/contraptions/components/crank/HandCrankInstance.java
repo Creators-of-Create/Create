@@ -4,21 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.content.logistics.block.redstone.AnalogLeverInstance;
-import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.Block;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class HandCrankInstance extends SingleRotatingInstance implements ITickableInstance {
+public class HandCrankInstance extends SingleRotatingInstance implements IDynamicInstance {
 
     private InstanceKey<ModelData> crank;
     private Direction facing;
@@ -31,22 +25,22 @@ public class HandCrankInstance extends SingleRotatingInstance implements ITickab
     protected void init() {
         super.init();
 
-        Block block = lastState.getBlock();
+        Block block = blockState.getBlock();
         AllBlockPartials renderedHandle = null;
         if (block instanceof HandCrankBlock)
             renderedHandle = ((HandCrankBlock) block).getRenderedHandle();
         if (renderedHandle == null)
             return;
 
-        facing = lastState.get(BlockStateProperties.FACING);
-        InstancedModel<ModelData> model = renderedHandle.renderOnDirectionalSouthModel(modelManager, lastState, facing.getOpposite());
+        facing = blockState.get(BlockStateProperties.FACING);
+        InstancedModel<ModelData> model = renderedHandle.renderOnDirectionalSouthModel(modelManager, blockState, facing.getOpposite());
         crank = model.createInstance();
 
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         if (crank == null) return;
 
         HandCrankTileEntity crankTile = (HandCrankTileEntity) tile;

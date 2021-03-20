@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.renderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -21,8 +22,10 @@ public abstract class ColoredOverlayTileEntityRenderer<T extends TileEntity> ext
 	@Override
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
-		SuperByteBuffer render = render(te.getWorld(), te.getPos(), te.getBlockState(), getOverlayBuffer(te),
-				getColor(te, partialTicks));
+
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
+		SuperByteBuffer render = render(getOverlayBuffer(te), getColor(te, partialTicks), light);
 		render.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
@@ -30,10 +33,8 @@ public abstract class ColoredOverlayTileEntityRenderer<T extends TileEntity> ext
 
 	protected abstract SuperByteBuffer getOverlayBuffer(T te);
 
-	public static SuperByteBuffer render(World world, BlockPos pos, BlockState state, SuperByteBuffer buffer,
-			int color) {
-		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(world, state, pos);
-		return buffer.color(color).light(packedLightmapCoords);
+	public static SuperByteBuffer render(SuperByteBuffer buffer, int color, int light) {
+		return buffer.color(color).light(light);
 	}
 
 }

@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-public class DeployerInstance extends ShaftInstance implements ITickableInstance {
+public class DeployerInstance extends ShaftInstance implements IDynamicInstance {
 
     DeployerTileEntity tile;
 
@@ -42,22 +42,22 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
         super.init();
 
         this.tile = (DeployerTileEntity) super.tile;
-        facing = lastState.get(FACING);
+        facing = blockState.get(FACING);
 
-        boolean rotatePole = lastState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
+        boolean rotatePole = blockState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
 
         yRot = AngleHelper.horizontalAngle(facing);
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
 
-        pole = modelManager.getBasicMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, lastState).createInstance();
+        pole = modelManager.getBasicMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
         updateHandPose();
         relight(pos, pole.getInstance());
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
 
         boolean newHand = updateHandPose();
 
@@ -100,7 +100,7 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
 
         if (hand != null) hand.delete();
 
-        hand = modelManager.getBasicMaterial().getModel(currentHand, lastState).createInstance();
+        hand = modelManager.getBasicMaterial().getModel(currentHand, blockState).createInstance();
 
         relight(pos, hand.getInstance());
 

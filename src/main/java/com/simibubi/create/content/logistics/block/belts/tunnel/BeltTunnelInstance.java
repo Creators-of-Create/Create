@@ -6,18 +6,15 @@ import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements ITickableInstance {
+public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
 
 
     private Map<Direction, ArrayList<InstanceKey<FlapData>>> tunnelFlaps;
@@ -31,7 +28,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
         tunnelFlaps = new EnumMap<>(Direction.class);
 
         InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(AllBlockPartials.BELT_TUNNEL_FLAP, lastState);
+                                                     .getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);
@@ -71,7 +68,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         tunnelFlaps.forEach((direction, keys) -> {
             InterpolatedValue flapValue = tile.flaps.get(direction);
             if (flapValue == null) {

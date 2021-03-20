@@ -1,27 +1,15 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements ITickableInstance {
+public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
     private InstanceKey<ModelData> connector;
     private InstanceKey<ModelData> pipe;
@@ -35,14 +23,14 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
-        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, lastState).createInstance();
-        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, lastState).createInstance();
+        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
+        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
 
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         float partialTicks = AnimationTickHolder.getPartialTicks();
 
         double[] cannonAngles = SchematicannonRenderer.getCannonAngles(tile, pos, partialTicks);

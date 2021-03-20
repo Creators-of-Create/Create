@@ -5,19 +5,14 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class PressInstance extends ShaftInstance implements ITickableInstance {
+public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
     private InstanceKey<ModelData> pressHead;
 
@@ -30,7 +25,7 @@ public class PressInstance extends ShaftInstance implements ITickableInstance {
         super.init();
 
         pressHead = modelManager.getMaterial(RenderMaterials.MODELS)
-                                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, lastState)
+                                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
                                 .createInstance();
 
         updateLight();
@@ -38,7 +33,7 @@ public class PressInstance extends ShaftInstance implements ITickableInstance {
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         MechanicalPressTileEntity press = (MechanicalPressTileEntity) tile;
         if (!press.running)
             return;

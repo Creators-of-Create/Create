@@ -8,17 +8,13 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
@@ -33,7 +29,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected void init() {
         keys = new EnumMap<>(Direction.class);
 
-        final Direction.Axis boxAxis = lastState.get(BlockStateProperties.AXIS);
+        final Direction.Axis boxAxis = blockState.get(BlockStateProperties.AXIS);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);
@@ -44,7 +40,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             if (boxAxis == axis)
                 continue;
 
-            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, direction);
+            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction);
 
             InstanceKey<RotatingData> key = shaft.createInstance();
 

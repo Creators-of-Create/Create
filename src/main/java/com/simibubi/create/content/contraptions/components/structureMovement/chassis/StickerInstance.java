@@ -9,13 +9,9 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements ITickableInstance {
+public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements IDynamicInstance {
 
     float lastOffset = Float.NaN;
 
@@ -27,24 +23,24 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     @Override
     protected void init() {
-        head = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.STICKER_HEAD, lastState).createInstance();
+        head = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
 
         updateLight();
     }
 
     @Override
-    public void tick() {
-        lastState = world.getBlockState(pos);
+    public void beginFrame() {
+        blockState = world.getBlockState(pos);
 
         float offset = tile.piston.getValue(AnimationTickHolder.getPartialTicks());
 
         if (tile.getWorld() != Minecraft.getInstance().world)
-            offset = lastState.get(StickerBlock.EXTENDED) ? 1 : 0;
+            offset = blockState.get(StickerBlock.EXTENDED) ? 1 : 0;
 
         if (Math.abs(offset - lastOffset) < 1e-4)
             return;
 
-        Direction facing = lastState.get(StickerBlock.FACING);
+        Direction facing = blockState.get(StickerBlock.FACING);
         MatrixStack stack = new MatrixStack();
         MatrixStacker.of(stack)
                      .translate(getFloatingPos())

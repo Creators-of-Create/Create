@@ -4,7 +4,6 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
@@ -26,6 +25,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
 
     protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
+    protected Map<TileEntity, IDynamicInstance> dynamicInstances = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
@@ -45,12 +45,18 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (ticks % 10 == 0) {
             clean();
         }
+
+        if (tickableInstances.size() > 0)
+            tickableInstances.values().forEach(ITickableInstance::tick);
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        queuedAdditions.forEach(this::add);
-        queuedAdditions.clear();
-        tickableInstances.values().forEach(ITickableInstance::tick);
+        if (queuedAdditions.size() > 0) {
+            queuedAdditions.forEach(this::add);
+            queuedAdditions.clear();
+        }
+        if (dynamicInstances.size() > 0)
+            dynamicInstances.values().forEach(IDynamicInstance::beginFrame);
     }
 
     public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
@@ -93,8 +99,11 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             if (renderer != null) {
                 instances.put(tile, renderer);
 
+                if (renderer instanceof IDynamicInstance)
+                    dynamicInstances.put(tile, (IDynamicInstance) renderer);
+
                 if (renderer instanceof ITickableInstance)
-                    tickableInstances.put(tile, (ITickableInstance) renderer);
+                    tickableInstances.put(tile, ((ITickableInstance) renderer));
             }
 
             return renderer;
@@ -148,6 +157,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             if (instance != null) {
                 instance.remove();
                 instances.remove(tile);
+                dynamicInstances.remove(tile);
                 tickableInstances.remove(tile);
             }
         }
@@ -162,7 +172,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             material.delete();
         }
         instances.clear();
-        tickableInstances.clear();
+        dynamicInstances.clear();
     }
 
     public boolean canCreateInstance(TileEntity tile) {

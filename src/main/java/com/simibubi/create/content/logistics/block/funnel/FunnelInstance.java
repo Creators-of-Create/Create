@@ -5,15 +5,12 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 import java.util.ArrayList;
 
-public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements ITickableInstance {
+public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
 
     private ArrayList<InstanceKey<FlapData>> flaps;
 
@@ -27,15 +24,15 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
         if (!tile.hasFlap()) return;
 
-        AllBlockPartials flapPartial = (lastState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+        AllBlockPartials flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
                 : AllBlockPartials.BELT_FUNNEL_FLAP);
         InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(flapPartial, lastState);
+                                                     .getModel(flapPartial, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);
 
-        Direction direction = FunnelBlock.getFunnelFacing(lastState);
+        Direction direction = FunnelBlock.getFunnelFacing(blockState);
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
         float horizontalAngle = direction.getOpposite().getHorizontalAngle();
@@ -62,7 +59,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         if (flaps == null) return;
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());

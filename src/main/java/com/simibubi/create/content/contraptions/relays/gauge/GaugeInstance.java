@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 
-public abstract class GaugeInstance extends ShaftInstance implements ITickableInstance {
+public abstract class GaugeInstance extends ShaftInstance implements IDynamicInstance {
 
     protected ArrayList<DialFace> faces;
 
@@ -33,9 +33,9 @@ public abstract class GaugeInstance extends ShaftInstance implements ITickableIn
         faces = new ArrayList<>(2);
 
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
-        GaugeBlock gaugeBlock = (GaugeBlock) lastState.getBlock();
+        GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        InstancedModel<ModelData> dialModel = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_DIAL, lastState);
+        InstancedModel<ModelData> dialModel = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_DIAL, blockState);
         InstancedModel<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
@@ -45,7 +45,7 @@ public abstract class GaugeInstance extends ShaftInstance implements ITickableIn
         float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
         for (Direction facing : Iterate.directions) {
-            if (!gaugeBlock.shouldRenderHeadOnFace(world, pos, lastState, facing))
+            if (!gaugeBlock.shouldRenderHeadOnFace(world, pos, blockState, facing))
                 continue;
 
             DialFace face = makeFace(facing, dialModel, headModel);
@@ -63,7 +63,7 @@ public abstract class GaugeInstance extends ShaftInstance implements ITickableIn
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
 
         if (MathHelper.epsilonEquals(gaugeTile.prevDialState, gaugeTile.dialState))
@@ -156,7 +156,7 @@ public abstract class GaugeInstance extends ShaftInstance implements ITickableIn
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_SPEED, lastState);
+            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
         }
     }
 
@@ -167,7 +167,7 @@ public abstract class GaugeInstance extends ShaftInstance implements ITickableIn
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_STRESS, lastState);
+            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
         }
     }
 }

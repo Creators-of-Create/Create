@@ -6,23 +6,18 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class GantryCarriageInstance extends ShaftInstance implements ITickableInstance {
+public class GantryCarriageInstance extends ShaftInstance implements IDynamicInstance {
 
     private InstanceKey<ModelData> gantryCogs;
 
@@ -35,17 +30,17 @@ public class GantryCarriageInstance extends ShaftInstance implements ITickableIn
         super.init();
 
         gantryCogs = modelManager.getMaterial(RenderMaterials.MODELS)
-                                 .getModel(AllBlockPartials.GANTRY_COGS, lastState)
+                                 .getModel(AllBlockPartials.GANTRY_COGS, blockState)
                                  .createInstance();
 
         updateLight();
     }
 
     @Override
-    public void tick() {
-        lastState = tile.getBlockState();
-        Direction facing = lastState.get(GantryCarriageBlock.FACING);
-        Boolean alongFirst = lastState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
+    public void beginFrame() {
+        blockState = tile.getBlockState();
+        Direction facing = blockState.get(GantryCarriageBlock.FACING);
+        Boolean alongFirst = blockState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
         Direction.Axis rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
         BlockPos visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getPos()
                 : tile.getPos()

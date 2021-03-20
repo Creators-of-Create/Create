@@ -2,8 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.components.flywheel.FlyWheelInstance;
-import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
@@ -12,12 +10,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.state.properties.AttachFace;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
-public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements ITickableInstance {
+public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
     protected InstanceKey<ModelData> handle;
     protected InstanceKey<ModelData> indicator;
@@ -33,19 +28,19 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     protected void init() {
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
-        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, lastState).createInstance();
-        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, lastState).createInstance();
+        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
+        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
 
-        AttachFace face = lastState.get(AnalogLeverBlock.FACE);
+        AttachFace face = blockState.get(AnalogLeverBlock.FACE);
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
-        rY = AngleHelper.horizontalAngle(lastState.get(AnalogLeverBlock.HORIZONTAL_FACING));
+        rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
 
         setupModel();
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         if (!tile.clientState.settled())
             setupModel();
     }
