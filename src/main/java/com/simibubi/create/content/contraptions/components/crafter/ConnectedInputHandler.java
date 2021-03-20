@@ -35,7 +35,7 @@ public class ConnectedInputHandler {
 
 	public static boolean shouldConnect(World world, BlockPos pos, Direction face, Direction direction) {
 		BlockState refState = world.getBlockState(pos);
-		if (!BlockHelper.hasBlockStateProperty(refState, HORIZONTAL_FACING))
+		if (!refState.contains(HORIZONTAL_FACING))
 			return false;
 		Direction refDirection = refState.get(HORIZONTAL_FACING);
 		if (direction.getAxis() == refDirection.getAxis())

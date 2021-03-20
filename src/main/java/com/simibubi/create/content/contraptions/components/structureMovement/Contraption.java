@@ -934,7 +934,7 @@ public abstract class Contraption {
 					Block.spawnDrops(state, world, targetPos, null);
 					continue;
 				}
-				if (state.getBlock() instanceof IWaterLoggable && BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED)) {
+				if (state.getBlock() instanceof IWaterLoggable && state.contains(BlockStateProperties.WATERLOGGED)) {
 					FluidState FluidState = world.getFluidState(targetPos);
 					state = state.with(BlockStateProperties.WATERLOGGED,
 						FluidState.getFluid() == Fluids.WATER);

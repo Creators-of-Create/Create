@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility.placement;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -20,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -164,13 +166,13 @@ public class PlacementHelpers {
 
 			//mc.fontRenderer.drawString(text, x, y, 0xFFFFFF | opacity);
 
-			drawDirectionIndicator(event.getPartialTicks(), screenX, screenY, progress);
+			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
 			//matrix.pop();
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void drawDirectionIndicator(float partialTicks, float centerX, float centerY, float progress) {
+	private static void drawDirectionIndicator(MatrixStack ms, float partialTicks, float centerX, float centerY, float progress) {
 		float r = .8f;
 		float g = .8f;
 		float b = .8f;
@@ -207,22 +209,22 @@ public class PlacementHelpers {
 
 		boolean flag = AllConfigs.CLIENT.smoothPlacementIndicator.get();
 		if (flag)
-			fadedArrow(centerX, centerY, r, g, b, a, length, snappedAngle);
+			fadedArrow(ms, centerX, centerY, r, g, b, a, length, snappedAngle);
 
 		else
-			textured(centerX, centerY, a, snappedAngle);
+			textured(ms, centerX, centerY, a, snappedAngle);
 	}
 
-	private static void fadedArrow(float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
-		RenderSystem.pushMatrix();
+	private static void fadedArrow(MatrixStack ms, float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
+		ms.push();
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
-		RenderSystem.translated(centerX, centerY, 0);
-		RenderSystem.rotatef(angle.get(0), 0, 0, 1);
+		ms.translate(centerX, centerY, 0);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle.get(0)));
 		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
@@ -244,11 +246,11 @@ public class PlacementHelpers {
 		RenderSystem.disableBlend();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
-	private static void textured(float centerX, float centerY, float alpha, float snappedAngle) {
-		RenderSystem.pushMatrix();
+	private static void textured(MatrixStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
+		ms.push();
 		RenderSystem.enableTexture();
 		//RenderSystem.disableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
@@ -259,11 +261,11 @@ public class PlacementHelpers {
 		RenderSystem.color4f(1f, 1f, 1f, 1f);
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
-		RenderSystem.translated(centerX, centerY, 0);
+		ms.translate(centerX, centerY, 0);
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
 		//RenderSystem.translated(0, 10, 0);
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, 1);
-		RenderSystem.scaled(12, 12, 0);
+		ms.scale(12, 12, 0);
 
 		float index = snappedAngle / 22.5f;
 		float tex_size = 16f/256f;
@@ -290,7 +292,7 @@ public class PlacementHelpers {
 
 		RenderSystem.disableBlend();
 		//RenderSystem.enableAlphaTest();
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 }

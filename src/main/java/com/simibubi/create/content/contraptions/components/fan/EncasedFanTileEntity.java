@@ -94,11 +94,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			.isIn(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
-		if (BlockHelper.hasBlockStateProperty(checkState, BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
+		if (checkState.contains(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
 			.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 			return false;
 
-		if (BlockHelper.hasBlockStateProperty(checkState, BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
+		if (checkState.contains(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
 			return false;
 
 		return true;

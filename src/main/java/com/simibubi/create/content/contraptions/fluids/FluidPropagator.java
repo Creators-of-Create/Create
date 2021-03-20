@@ -161,7 +161,7 @@ public class FluidPropagator {
 			return false;
 		if (!(connectedState.getMaterial()
 			.isReplaceable() && connectedState.getBlockHardness(reader, connectedPos) != -1)
-			&& !BlockHelper.hasBlockStateProperty(connectedState, BlockStateProperties.WATERLOGGED))
+			&& !connectedState.contains(BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;
 	}

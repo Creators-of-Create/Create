@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -212,7 +213,7 @@ public class PonderWorld extends SchematicWorld {
 		double mz) {
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
 		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleFactories.get(key);
-		return null;//return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, this, x, y, z, mx, my, mz); TODO 1.16
+		return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, WrappedClientWorld.of(this), x, y, z, mx, my, mz);
 	}
 
 	public void addParticle(Particle p) {
@@ -297,5 +298,8 @@ public class PonderWorld extends SchematicWorld {
 	public boolean isBlockPresent(BlockPos pos) {
 		return true; // fix particle lighting
 	}
-	
+
+	@Override
+	public void markChunkDirty(BlockPos p_175646_1_, TileEntity p_175646_2_) {
+	}
 }

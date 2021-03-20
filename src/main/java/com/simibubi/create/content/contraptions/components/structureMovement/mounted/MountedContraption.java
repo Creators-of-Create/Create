@@ -58,7 +58,7 @@ public class MountedContraption extends Contraption {
 	@Override
 	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		BlockState state = world.getBlockState(pos);
-		if (!BlockHelper.hasBlockStateProperty(state, RAIL_SHAPE))
+		if (!state.contains(RAIL_SHAPE))
 			return false;
 		if (!searchMovedStructure(world, pos, null))
 			return false;

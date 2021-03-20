@@ -26,6 +26,7 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -155,8 +156,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
-				RenderSystem.pushMatrix();
-				RenderSystem.multMatrix(matrixStack.peek().getModel());
+				matrixStack.push();
+				matrixStack.peek().getModel().multiply(matrixStack.peek().getModel());
 				RenderSystem.enableDepthTest();
 				RenderHelper.enable();
 				Minecraft minecraft = Minecraft.getInstance();
@@ -166,7 +167,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 				itemRenderer.renderItemOverlayIntoGUI(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
 				RenderHelper.disableStandardItemLighting();
-				RenderSystem.popMatrix();
+				matrixStack.pop();
 			}
 
 			matrixStack.pop();

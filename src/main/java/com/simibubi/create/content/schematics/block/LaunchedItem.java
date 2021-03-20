@@ -130,9 +130,9 @@ public abstract class LaunchedItem {
 		@Override
 		void place(World world) {
 			// Piston
-			if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.EXTENDED))
+			if (state.contains(BlockStateProperties.EXTENDED))
 				state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
-			if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED))
+			if (state.contains(BlockStateProperties.WATERLOGGED))
 				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
 			if (AllBlocks.BELT.has(state)) {

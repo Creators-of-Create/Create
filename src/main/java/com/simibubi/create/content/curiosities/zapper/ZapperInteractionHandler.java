@@ -62,19 +62,19 @@ public class ZapperInteractionHandler {
 			return false;
 		if (newState.hasTileEntity() && !AllBlockTags.SAFE_NBT.matches(newState))
 			return false;
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.DOUBLE_BLOCK_HALF))
+		if (newState.contains(BlockStateProperties.DOUBLE_BLOCK_HALF))
 			return false;
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.ATTACHED))
+		if (newState.contains(BlockStateProperties.ATTACHED))
 			return false;
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.HANGING))
+		if (newState.contains(BlockStateProperties.HANGING))
 			return false;
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.BED_PART))
+		if (newState.contains(BlockStateProperties.BED_PART))
 			return false;
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.STAIRS_SHAPE))
+		if (newState.contains(BlockStateProperties.STAIRS_SHAPE))
 			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.PERSISTENT))
+		if (newState.contains(BlockStateProperties.PERSISTENT))
 			newState = newState.with(BlockStateProperties.PERSISTENT, true);
-		if (BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.WATERLOGGED))
+		if (newState.contains(BlockStateProperties.WATERLOGGED))
 			newState = newState.with(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundNBT data = null;

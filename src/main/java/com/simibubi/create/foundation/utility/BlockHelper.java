@@ -76,31 +76,31 @@ public class BlockHelper {
 	}
 
 	public static BlockState setZeroAge(BlockState blockState) {
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_1))
+		if (blockState.contains(BlockStateProperties.AGE_0_1))
 			return blockState.with(BlockStateProperties.AGE_0_1, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_2))
+		if (blockState.contains(BlockStateProperties.AGE_0_2))
 			return blockState.with(BlockStateProperties.AGE_0_2, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_3))
+		if (blockState.contains(BlockStateProperties.AGE_0_3))
 			return blockState.with(BlockStateProperties.AGE_0_3, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_5))
+		if (blockState.contains(BlockStateProperties.AGE_0_5))
 			return blockState.with(BlockStateProperties.AGE_0_5, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_7))
+		if (blockState.contains(BlockStateProperties.AGE_0_7))
 			return blockState.with(BlockStateProperties.AGE_0_7, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_15))
+		if (blockState.contains(BlockStateProperties.AGE_0_15))
 			return blockState.with(BlockStateProperties.AGE_0_15, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.AGE_0_25))
+		if (blockState.contains(BlockStateProperties.AGE_0_25))
 			return blockState.with(BlockStateProperties.AGE_0_25, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.HONEY_LEVEL))
+		if (blockState.contains(BlockStateProperties.HONEY_LEVEL))
 			return blockState.with(BlockStateProperties.HONEY_LEVEL, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.HATCH_0_2))
+		if (blockState.contains(BlockStateProperties.HATCH_0_2))
 			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.STAGE_0_1))
+		if (blockState.contains(BlockStateProperties.STAGE_0_1))
 			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.LEVEL_0_3))
+		if (blockState.contains(BlockStateProperties.LEVEL_0_3))
 			return blockState.with(BlockStateProperties.LEVEL_0_3, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.LEVEL_0_8))
+		if (blockState.contains(BlockStateProperties.LEVEL_0_8))
 			return blockState.with(BlockStateProperties.LEVEL_0_8, 0);
-		if (hasBlockStateProperty(blockState, BlockStateProperties.EXTENDED))
+		if (blockState.contains(BlockStateProperties.EXTENDED))
 			return blockState.with(BlockStateProperties.EXTENDED, false);
 		return blockState;
 	}
@@ -110,15 +110,15 @@ public class BlockHelper {
 		Item required = getRequiredItem(block).getItem();
 
 		boolean needsTwo =
-			hasBlockStateProperty(block, BlockStateProperties.SLAB_TYPE) && block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
+			block.contains(BlockStateProperties.SLAB_TYPE) && block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
 
 		if (needsTwo)
 			amount *= 2;
 
-		if (hasBlockStateProperty(block, BlockStateProperties.EGGS_1_4))
+		if (block.contains(BlockStateProperties.EGGS_1_4))
 			amount *= block.get(BlockStateProperties.EGGS_1_4);
 
-		if (hasBlockStateProperty(block, BlockStateProperties.PICKLES_1_4))
+		if (block.contains(BlockStateProperties.PICKLES_1_4))
 			amount *= block.get(BlockStateProperties.PICKLES_1_4);
 
 		{
@@ -197,10 +197,6 @@ public class BlockHelper {
 	
 	public static boolean noCollisionInSpace(IBlockReader reader, BlockPos pos) {
 		return reader.getBlockState(pos).getCollisionShape(reader, pos).isEmpty();
-	}
-
-	public static boolean hasBlockStateProperty(BlockState state, Property<?> p) {
-		return state.method_28500(p).isPresent();
 	}
 
 	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_, Direction p_220056_3_) {

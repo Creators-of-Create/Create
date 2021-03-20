@@ -203,13 +203,13 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	public interface InterfaceProvider {
 
 		public static InterfaceProvider towardBlockFacing() {
-			return (w, p, s) -> new BlockFace(p, BlockHelper.hasBlockStateProperty(s, BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
+			return (w, p, s) -> new BlockFace(p, s.contains(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
 				: s.get(BlockStateProperties.HORIZONTAL_FACING));
 		}
 
 		public static InterfaceProvider oppositeOfBlockFacing() {
 			return (w, p, s) -> new BlockFace(p,
-				(BlockHelper.hasBlockStateProperty(s, BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
+				(s.contains(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
 					: s.get(BlockStateProperties.HORIZONTAL_FACING)).getOpposite());
 		}
 

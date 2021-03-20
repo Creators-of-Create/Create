@@ -158,33 +158,33 @@ public class StructureTransform {
 			return state;
 		}
 
-		if (BlockHelper.hasBlockStateProperty(state, FACING)) {
+		if (state.contains(FACING)) {
 			Direction newFacing = transformFacing(state.get(FACING));
-			if (BlockHelper.hasBlockStateProperty(state, DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) {
+			if (state.contains(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE)) {
 				if (rotationAxis == newFacing.getAxis() && rotation.ordinal() % 2 == 1)
 					state = state.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
 			}
 			state = state.with(FACING, newFacing);
 
-		} else if (BlockHelper.hasBlockStateProperty(state, AXIS)) {
+		} else if (state.contains(AXIS)) {
 			state = state.with(AXIS, transformAxis(state.get(AXIS)));
 
 		} else if (halfTurn) {
 
-			if (BlockHelper.hasBlockStateProperty(state, FACING)) {
+			if (state.contains(FACING)) {
 				Direction stateFacing = state.get(FACING);
 				if (stateFacing.getAxis() == rotationAxis)
 					return state;
 			}
 
-			if (BlockHelper.hasBlockStateProperty(state, HORIZONTAL_FACING)) {
+			if (state.contains(HORIZONTAL_FACING)) {
 				Direction stateFacing = state.get(HORIZONTAL_FACING);
 				if (stateFacing.getAxis() == rotationAxis)
 					return state;
 			}
 
 			state = state.rotate(rotation);
-			if (BlockHelper.hasBlockStateProperty(state, SlabBlock.TYPE) && state.get(SlabBlock.TYPE) != SlabType.DOUBLE)
+			if (state.contains(SlabBlock.TYPE) && state.get(SlabBlock.TYPE) != SlabType.DOUBLE)
 				state = state.with(SlabBlock.TYPE,
 					state.get(SlabBlock.TYPE) == SlabType.BOTTOM ? SlabType.TOP : SlabType.BOTTOM);
 		}

@@ -39,7 +39,7 @@ public abstract class AbstractSimiScreen extends Screen {
 			: Minecraft.getInstance()
 				.getRenderPartialTicks();
 
-		RenderSystem.pushMatrix();
+		ms.push();
 
 		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 		renderWindow(ms, mouseX, mouseY, partialTicks);
@@ -49,7 +49,7 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			widget.renderToolTip(ms, mouseX, mouseY);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {

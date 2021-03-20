@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -83,13 +84,13 @@ public class UIRenderHelper {
 		int c3 = a3 | color;
 		int c4 = a4 | color;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(x, y, 0);
-		RenderSystem.rotatef(angle - 90, 0, 0, 1);
+		ms.push();
+		ms.translate(x, y, 0);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle - 90));
 
 		streak(ms, width/2, length, c1, c2, c3, c4);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	private static void streak(MatrixStack ms, int width, int height, int c1, int c2, int c3, int c4) {
@@ -102,13 +103,13 @@ public class UIRenderHelper {
 	}
 
 	//draws a wide chevron-style breadcrumb arrow pointing left
-	public static void breadcrumbArrow(int x, int y, int width, int height, int indent, int startColor, int endColor) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(x - indent, y, 0);
+	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int width, int height, int indent, int startColor, int endColor) {
+		matrixStack.push();
+		matrixStack.translate(x - indent, y, 0);
 
 		breadcrumbArrow(width, height, indent, startColor, endColor);
 
-		RenderSystem.popMatrix();
+		matrixStack.pop();
 	}
 
 	private static void breadcrumbArrow(int width, int height, int indent, int c1, int c2) {

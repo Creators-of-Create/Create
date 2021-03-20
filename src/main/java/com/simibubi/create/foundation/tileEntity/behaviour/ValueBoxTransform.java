@@ -47,9 +47,9 @@ public abstract class ValueBoxTransform {
 
 	protected Vector3d rotateHorizontally(BlockState state, Vector3d vec) {
 		float yRot = 0;
-		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.FACING))
+		if (state.contains(BlockStateProperties.FACING))
 			yRot = AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING));
-		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HORIZONTAL_FACING))
+		if (state.contains(BlockStateProperties.HORIZONTAL_FACING))
 			yRot = AngleHelper.horizontalAngle(state.get(BlockStateProperties.HORIZONTAL_FACING));
 		return VecHelper.rotateCentered(vec, yRot, Axis.Y);
 	}

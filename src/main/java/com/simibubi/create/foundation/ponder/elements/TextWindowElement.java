@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
@@ -109,26 +108,26 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		int boxHeight = screen.getFontRenderer()
 			.getWordWrappedHeight(bakedText, boxWidth);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0, sceneToScreen.y, 400);
+		ms.push();
+		ms.translate(0, sceneToScreen.y, 400);
 
 		PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
 		int brighterColor = ColorHelper.mixAlphaColors(color, 0xFFffffdd, 1 / 2f);
 		if (vec != null) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(sceneToScreen.x, 0, 0);
+			ms.push();
+			ms.translate(sceneToScreen.x, 0, 0);
 			double lineTarget = (targetX - sceneToScreen.x) * fade;
-			RenderSystem.scaled(lineTarget, 1, 1);
+			ms.scale((float) lineTarget, 1, 1);
 			Matrix4f model = ms.peek().getModel();
 			GuiUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
 			GuiUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 
 		FontHelper.drawSplitString(screen.getFontRenderer(), bakedText, targetX - 10, 3, textWidth,
 			ColorHelper.applyAlpha(brighterColor, fade));
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	public int getColor() {

@@ -135,22 +135,22 @@ public class PonderTag implements IScreenRenderable {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(x, y, 0);
+		ms.push();
+		ms.translate(x, y, 0);
 		if (icon != null) {
 			Minecraft.getInstance()
 				.getTextureManager()
 				.bindTexture(icon);
-			RenderSystem.scaled(0.25, 0.25, 1);
+			ms.scale(0.25f, 0.25f, 1);
 			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex sheet width and height
 			AbstractGui.drawTexture(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
-			RenderSystem.translated(-4, -4, 0);
-			RenderSystem.scaled(1.5, 1.5, 1.5);
+			ms.translate(-4, -4, 0);
+			ms.scale(1.5f, 1.5f, 1.5f);
 			GuiGameElement.of(itemIcon)
 				.render(ms);
 		}
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	// Load class

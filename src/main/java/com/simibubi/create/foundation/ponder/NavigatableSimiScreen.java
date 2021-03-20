@@ -92,8 +92,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (backTrack == null)
 			return;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 500);
+		ms.push();
+		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
 			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, 0xffa3a3a3);
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
@@ -101,7 +101,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 				arrowAnimation.setValue(1);//called twice to also set the previous value to 1
 			}
 		}
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Override
@@ -119,14 +119,14 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		// draw last screen into buffer
 		if (lastScreen != null && lastScreen != this) {
-			RenderSystem.pushMatrix();// 1
+			ms.push();// 1
 			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
 			UIRenderHelper.prepFramebufferSize();
-			RenderSystem.pushMatrix();// 2
-			RenderSystem.translated(0, 0, -1000);
+			ms.push();// 2
+			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindFramebuffer(true);
 			lastScreen.render(ms, mouseX, mouseY, 10);
-			RenderSystem.popMatrix();// 2
+			ms.pop();// 2
 
 			// use the buffer texture
 			Minecraft.getInstance()
@@ -144,28 +144,28 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 			// transitionV is 1/-1 when the older screen is hidden
 			// transitionV is 0 when the older screen is still fully visible
-			RenderSystem.translated(dpx, dpy, 0);
-			RenderSystem.scaled(scale, scale, 1);
-			RenderSystem.translated(-dpx, -dpy, 0);
+			ms.translate(dpx, dpy, 0);
+			ms.scale((float) scale, (float) scale, 1);
+			ms.translate(-dpx, -dpy, 0);
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
-			RenderSystem.popMatrix();// 1
+			ms.pop();// 1
 		}
 
 		// modify current screen as well
 		scale = transitionValue > 0 ? 1 - 0.5 * (1 - transitionValue) : 1 + .5 * (1 + transitionValue);
-		RenderSystem.translated(depthPointX, depthPointY, 0);
-		RenderSystem.scaled(scale, scale, 1);
-		RenderSystem.translated(-depthPointX, -depthPointY, 0);
+		ms.translate(depthPointX, depthPointY, 0);
+		ms.scale((float) scale, (float) scale, 1);
+		ms.translate(-depthPointX, -depthPointY, 0);
 
 		if (backTrack != null) {
 			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(x + 30, height - 51, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
 
-			UIRenderHelper.breadcrumbArrow(x, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(x - 30, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
 		}
 	}
 
@@ -219,18 +219,18 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (x.getValue() < 25)
 			x.setValue(25);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 600);
+		ms.push();
+		ms.translate(0, 0, 600);
 		names.forEach(s -> {
 			int sWidth = textRenderer.getStringWidth(s);
-			UIRenderHelper.breadcrumbArrow(x.getValue(), y.getValue(), sWidth + spacing, 14, spacing / 2, 0xdd101010,
+			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), sWidth + spacing, 14, spacing / 2, 0xdd101010,
 				0x44101010);
 			textRenderer.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
 			first.setFalse();
 
 			x.add(sWidth + spacing);
 		});
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	private static String screenTitle(Screen screen) {

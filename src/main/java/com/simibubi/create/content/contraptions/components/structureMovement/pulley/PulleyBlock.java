@@ -112,7 +112,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         @Override
         public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-            if (!isMoving && (!BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED) || !BlockHelper.hasBlockStateProperty(newState, BlockStateProperties.WATERLOGGED) || state.get(BlockStateProperties.WATERLOGGED) == newState.get(BlockStateProperties.WATERLOGGED))) {
+            if (!isMoving && (!state.contains(BlockStateProperties.WATERLOGGED) || !newState.contains(BlockStateProperties.WATERLOGGED) || state.get(BlockStateProperties.WATERLOGGED) == newState.get(BlockStateProperties.WATERLOGGED))) {
                 onRopeBroken(worldIn, pos.up());
                 if (!worldIn.isRemote) {
                     BlockState above = worldIn.getBlockState(pos.up());

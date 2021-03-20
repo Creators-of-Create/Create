@@ -109,8 +109,8 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			height = 24;
 		}
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(sceneToScreen.x + xFade, sceneToScreen.y + yFade, 400);
+		ms.push();
+		ms.translate(sceneToScreen.x + xFade, sceneToScreen.y + yFade, 400);
 
 		PonderUI.renderSpeechBox(ms, 0, 0, width, height, false, direction, true);
 
@@ -119,11 +119,11 @@ public class InputWindowElement extends AnimatedOverlayElement {
 				ColorHelper.applyAlpha(PonderPalette.WHITE.getColor(), fade));
 
 		if (hasIcon) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(keyWidth, 0, 0);
-			RenderSystem.scaled(1.5, 1.5, 1.5);
+			ms.push();
+			ms.translate(keyWidth, 0, 0);
+			ms.scale(1.5f, 1.5f, 1.5f);
 			icon.draw(ms, 0, 0);
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 
 		if (hasItem) {
@@ -134,7 +134,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			RenderSystem.disableDepthTest();
 		}
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 }

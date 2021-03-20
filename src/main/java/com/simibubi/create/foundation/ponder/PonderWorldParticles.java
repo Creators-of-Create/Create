@@ -70,9 +70,8 @@ public class PonderWorldParticles {
 			RenderSystem.enableDepthTest();
 			RenderSystem.enableFog();
 		};
-		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.peek()
-			.getModel());
+		ms.push();
+		ms.peek().getModel().multiply(ms.peek().getModel());
 
 		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) { // Forge: allow custom
 																				// IParticleRenderType's
@@ -93,7 +92,7 @@ public class PonderWorldParticles {
 			}
 		}
 
-		RenderSystem.popMatrix();
+		ms.pop();
 		RenderSystem.depthMask(true);
 		RenderSystem.disableBlend();
 		RenderSystem.defaultAlphaFunc();

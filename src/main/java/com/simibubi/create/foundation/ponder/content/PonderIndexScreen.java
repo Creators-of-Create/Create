@@ -7,7 +7,6 @@ import java.util.Objects;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -156,25 +155,25 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		int y = (int) (height * chapterYmult);
 
 		if (!chapters.isEmpty()) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(x, y, 0);
+			ms.push();
+			ms.translate(x, y, 0);
 
 			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
 			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
 
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 
 		x = (int) (width * itemXmult);
 		y = (int) (height * itemYmult);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(x, y, 0);
+		ms.push();
+		ms.translate(x, y, 0);
 
 		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220, 0x101010);
 		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, 0xffddeeff);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Override
@@ -182,12 +181,12 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		if (hoveredItem.isEmpty())
 			return;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 200);
+		ms.push();
+		ms.translate(0, 0, 200);
 
 		renderTooltip(ms, hoveredItem, mouseX, mouseY);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Override

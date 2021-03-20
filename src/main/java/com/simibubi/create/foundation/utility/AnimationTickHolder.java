@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.IWorld;
 
@@ -34,6 +35,8 @@ public class AnimationTickHolder {
 	}
 	
 	public static int getTicks(IWorld world) {
+		if (world instanceof WrappedClientWorld)
+			return getTicks(((WrappedClientWorld) world).getWrappedWorld());
 		return world instanceof PonderWorld ? PonderUI.ponderTicks : getTicks();
 	}
 	

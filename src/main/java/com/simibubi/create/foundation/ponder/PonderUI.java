@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -384,17 +385,16 @@ public class PonderUI extends NavigatableSimiScreen {
 		buffer.draw();
 
 		MutableBoundingBox bounds = story.getBounds();
-		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.peek()
-			.getModel());
+		ms.push();
+		ms.peek().getModel().multiply(ms.peek().getModel());
 
 		// kool shadow fx
 		{
 			RenderSystem.enableCull();
 			RenderSystem.enableDepthTest();
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
-			RenderSystem.scaled(1, -1, 1);
+			ms.push();
+			ms.translate(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
+			ms.translate(1, -1, 1);
 
 			float flash = finishingFlash.getValue(partialTicks) * .9f;
 			float alpha = flash;
@@ -404,22 +404,22 @@ public class PonderUI extends NavigatableSimiScreen {
 			flash = 1 - flash;
 
 			for (int f = 0; f < 4; f++) {
-				RenderSystem.translated(story.basePlateSize, 0, 0);
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, 0, -1 / 1024f);
+				ms.translate(story.basePlateSize, 0, 0);
+				ms.push();
+				ms.translate(0, 0, -1 / 1024f);
 				if (flash > 0) {
-					RenderSystem.pushMatrix();
-					RenderSystem.scaled(1, .5 + flash * .75, 1);
+					ms.push();
+					ms.scale(1, .5f + flash * .75f, 1);
 					GuiUtils.drawGradientRect(ms.peek().getModel(),0, 0, -1, -story.basePlateSize, 0, 0x00_c6ffc9,
 						ColorHelper.applyAlpha(0xaa_c6ffc9, alpha));
-					RenderSystem.popMatrix();
+					ms.pop();
 				}
-				RenderSystem.translated(0, 0, 2 / 1024f);
+				ms.translate(0, 0, 2 / 1024f);
 				GuiUtils.drawGradientRect(ms.peek().getModel(), 0, 0, 0, -story.basePlateSize, 4, 0x66_000000, 0x00_000000);
-				RenderSystem.popMatrix();
-				RenderSystem.rotatef(-90, 0, 1, 0);
+				ms.pop();
+				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
 			}
-			RenderSystem.popMatrix();
+			ms.pop();
 			RenderSystem.disableCull();
 			RenderSystem.disableDepthTest();
 		}
@@ -427,50 +427,50 @@ public class PonderUI extends NavigatableSimiScreen {
 		// coords for debug
 		if (PonderIndex.EDITOR_MODE && !userViewMode) {
 
-			RenderSystem.scaled(-1, -1, 1);
-			RenderSystem.scaled(1 / 16d, 1 / 16d, 1 / 16d);
-			RenderSystem.translated(1, -8, -1 / 64f);
+			ms.scale(-1, -1, 1);
+			ms.scale(1 / 16f, 1 / 16f, 1 / 16f);
+			ms.translate(1, -8, -1 / 64f);
 
 			// X AXIS
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(4, -3, 0);
+			ms.push();
+			ms.translate(4, -3, 0);
 			for (int x = 0; x <= bounds.getXSize(); x++) {
-				RenderSystem.translated(-16, 0, 0);
+				ms.translate(-16, 0, 0);
 				textRenderer.draw(ms, x == bounds.getXSize() ? "x" : "" + x, 0, 0, 0xFFFFFFFF);
 			}
-			RenderSystem.popMatrix();
+			ms.pop();
 
 			// Z AXIS
-			RenderSystem.pushMatrix();
-			RenderSystem.scaled(-1, 1, 1);
-			RenderSystem.translated(0, -3, -4);
-			RenderSystem.rotatef(-90, 0, 1, 0);
-			RenderSystem.translated(-8, -2, 2 / 64f);
+			ms.push();
+			ms.scale(-1, 1, 1);
+			ms.translate(0, -3, -4);
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
+			ms.translate(-8, -2, 2 / 64f);
 			for (int z = 0; z <= bounds.getZSize(); z++) {
-				RenderSystem.translated(16, 0, 0);
+				ms.translate(16, 0, 0);
 				textRenderer.draw(ms, z == bounds.getZSize() ? "z" : "" + z, 0, 0, 0xFFFFFFFF);
 			}
-			RenderSystem.popMatrix();
+			ms.pop();
 
 			// DIRECTIONS
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(bounds.getXSize() * -8, 0, bounds.getZSize() * 8);
-			RenderSystem.rotatef(-90, 0, 1, 0);
+			ms.push();
+			ms.translate(bounds.getXSize() * -8, 0, bounds.getZSize() * 8);
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
 			for (Direction d : Iterate.horizontalDirections) {
-				RenderSystem.rotatef(90, 0, 1, 0);
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(0, 0, bounds.getZSize() * 16);
-				RenderSystem.rotatef(-90, 1, 0, 0);
+				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
+				ms.push();
+				ms.translate(0, 0, bounds.getZSize() * 16);
+				ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(-90));
 				textRenderer.draw(ms, d.name().substring(0, 1), 0, 0, 0x66FFFFFF);
 				textRenderer.draw(ms, "|", 2, 10, 0x44FFFFFF);
 				textRenderer.draw(ms, ".", 2, 14, 0x22FFFFFF);
-				RenderSystem.popMatrix();
+				ms.pop();
 			}
-			RenderSystem.popMatrix();
+			ms.pop();
 			buffer.draw();
 		}
 
-		RenderSystem.popMatrix();
+		ms.pop();
 
 		ms.pop();
 	}
@@ -489,8 +489,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		int tooltipColor = 0xffa3a3a3;
 		{
 			// Chapter title
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(0, 0, 800);
+			ms.push();
+			ms.translate(0, 0, 800);
 			int x = 31 + 20 + 8;
 			int y = 31;
 
@@ -510,36 +510,36 @@ public class PonderUI extends NavigatableSimiScreen {
 			textRenderer.draw(ms, Lang.translate(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
 			x += 0;
-			// RenderSystem.translated(0, 3 * (indexDiff), 0);
-			RenderSystem.translated(x, y, 0);
-			RenderSystem.rotatef(indexDiff * -75, 1, 0, 0);
-			RenderSystem.translated(0, 0, 5);
+			// ms.translate(0, 3 * (indexDiff), 0);
+			ms.translate(x, y, 0);
+			ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(indexDiff * -75));
+			ms.translate(0, 0, 5);
 			FontHelper.drawSplitString(textRenderer, title, 0, 0, left.x - 51,
 				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
-			RenderSystem.popMatrix();
+			ms.pop();
 
 			if (chapter != null) {
-				RenderSystem.pushMatrix();
+				ms.push();
 
-				RenderSystem.translated(chap.x - 4 - 4, chap.y, 0);
+				ms.translate(chap.x - 4 - 4, chap.y, 0);
 				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade), 0x101010);
 
 				drawRightAlignedString(textRenderer, ms, Lang.translate(IN_CHAPTER).getString(), 0, 0, tooltipColor);
 				drawRightAlignedString(textRenderer, ms, Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId()).getString(), 0, 12, 0xffeeeeee);
 
-				RenderSystem.popMatrix();
+				ms.pop();
 			}
 
-			UIRenderHelper.breadcrumbArrow(width / 2 - 20, height - 51, 20, 20, 5, 0x40aa9999, 0x20aa9999);
-			UIRenderHelper.breadcrumbArrow(width / 2 + 20, height - 51, -20, 20, -5, 0x40aa9999, 0x20aa9999);
-			UIRenderHelper.breadcrumbArrow(width / 2 - 90, height - 51, 70, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(width / 2 + 90, height - 51, -70, 20, -5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 20, height - 51, 20, 20, 5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 20, height - 51, -20, 20, -5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 90, height - 51, 70, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 90, height - 51, -70, 20, -5, 0x40aa9999, 0x10aa9999);
 		}
 
 		if (identifyMode) {
 			if (noWidgetsHovered && mouseY < height - 80) {
-				RenderSystem.pushMatrix();
-				RenderSystem.translated(mouseX, mouseY, 100);
+				ms.push();
+				ms.translate(mouseX, mouseY, 100);
 				if (hoveredTooltipItem.isEmpty()) {
 					IFormattableTextComponent text = Lang.translate(
 							IDENTIFY_MODE,
@@ -556,13 +556,13 @@ public class PonderUI extends NavigatableSimiScreen {
 				} else
 					renderTooltip(ms, hoveredTooltipItem, 0, 0);
 				if (hoveredBlockPos != null && PonderIndex.EDITOR_MODE && !userViewMode) {
-					RenderSystem.translated(0, -15, 0);
+					ms.translate(0, -15, 0);
 					boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
 					IFormattableTextComponent coords = new StringTextComponent(hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
 							.formatted(copied ? TextFormatting.GREEN : TextFormatting.GOLD);
 					renderTooltip(ms, coords, 0, 0);
 				}
-				RenderSystem.popMatrix();
+				ms.pop();
 			}
 			scan.flash();
 		} else {
@@ -579,12 +579,12 @@ public class PonderUI extends NavigatableSimiScreen {
 		{
 			// Scene overlay
 			float scenePT = skipCooling > 0 ? 0 : partialTicks;
-			RenderSystem.pushMatrix();
-			RenderSystem.translated(0, 0, 100);
-			renderOverlay(index, scenePT);
+			ms.push();
+			ms.translate(0, 0, 100);
+			renderOverlay(ms, index, scenePT);
 			if (indexDiff > 1 / 512f)
-				renderOverlay(lazyIndexValue < index ? index - 1 : index + 1, scenePT);
-			RenderSystem.popMatrix();
+				renderOverlay(ms, lazyIndexValue < index ? index - 1 : index + 1, scenePT);
+			ms.pop();
 		}
 
 		// Widgets
@@ -614,7 +614,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			.getGuiScaleFactor();
 		IntStream.range(0, tagButtons.size())
 			.forEach(i -> {
-				RenderSystem.pushMatrix();
+				ms.push();
 				LerpedFloat chase = tagFades.get(i);
 				PonderButton button = tagButtons.get(i);
 				if (button.isMouseOver(mouseX, mouseY)) {
@@ -631,7 +631,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				int x = button.x + button.getWidth() + 4;
 				int y = button.y - 2;
-				RenderSystem.translated(x, y + 5 * (1 - fade), 800);
+				ms.translate(x, y + 5 * (1 - fade), 800);
 
 				float fadedWidth = 200 * chase.getValue(partialTicks);
 				UIRenderHelper.streak(ms, 0, 0, 12, 26, (int) fadedWidth, 0x101010);
@@ -645,11 +645,11 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-				RenderSystem.popMatrix();
+				ms.pop();
 			});
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translated(0, 0, 500);
+		ms.push();
+		ms.translate(0, 0, 500);
 		int tooltipY = height - 16;
 		if (scan.isHovered())
 			drawCenteredText(ms, textRenderer, Lang.translate(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
@@ -661,7 +661,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			drawCenteredText(ms, textRenderer, Lang.translate(NEXT), right.x + 10, tooltipY, tooltipColor);
 		if (replay.isHovered())
 			drawCenteredText(ms, textRenderer, Lang.translate(REPLAY), replay.x + 10, tooltipY, tooltipColor);
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	protected void lowerButtonGroup(MatrixStack ms, int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
@@ -670,24 +670,23 @@ public class PonderUI extends NavigatableSimiScreen {
 		int bX = (width - bWidth) / 2 + (index - 1) * (bWidth + 8);
 		int bY = height - bHeight - 31;
 
-		RenderSystem.pushMatrix();
+		ms.push();
 		if (fade < fadeIn.getChaseTarget())
-			RenderSystem.translated(0, (1 - fade) * 5, 0);
+			ms.translate(0, (1 - fade) * 5, 0);
 		boolean hovered = isMouseOver(mouseX, mouseY, bX, bY, bWidth, bHeight);
 		renderBox(ms, bX, bY, bWidth, bHeight, hovered);
 		icon.draw(ms, bX + 2, bY + 2);
 		drawCenteredText(ms, textRenderer, key.getBoundKeyLocalizedText(), bX + bWidth / 2 + 8, bY + bHeight - 6, 0xff606060);
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
-	private void renderOverlay(int i, float partialTicks) {
+	private void renderOverlay(MatrixStack ms, int i, float partialTicks) {
 		if (identifyMode)
 			return;
-		RenderSystem.pushMatrix();
+		ms.push();
 		PonderScene story = scenes.get(i);
-		MatrixStack ms = new MatrixStack();
 		story.renderOverlay(this, ms, partialTicks);
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Override
@@ -799,7 +798,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	public static void renderSpeechBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted, Pointing pointing,
 		boolean returnWithLocalTransform) {
 		if (!returnWithLocalTransform)
-			RenderSystem.pushMatrix();
+			ms.push();
 
 		int boxX = x;
 		int boxY = y;
@@ -844,20 +843,20 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		renderBox(ms, boxX, boxY, w, h, highlighted);
 
-		RenderSystem.pushMatrix();
+		ms.push();
 		AllGuiTextures toRender = highlighted ? AllGuiTextures.SPEECH_TOOLTIP_HIGHLIGHT : AllGuiTextures.SPEECH_TOOLTIP;
-		RenderSystem.translated(divotX + divotRadius, divotY + divotRadius, 10);
-		RenderSystem.rotatef(divotRotation, 0, 0, 1);
-		RenderSystem.translated(-divotRadius, -divotRadius, 0);
+		ms.translate(divotX + divotRadius, divotY + divotRadius, 10);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(divotRotation));
+		ms.translate(-divotRadius, -divotRadius, 0);
 		toRender.draw(ms, 0, 0);
-		RenderSystem.popMatrix();
+		ms.pop();
 
 		if (returnWithLocalTransform) {
-			RenderSystem.translated(boxX, boxY, 0);
+			ms.translate(boxX, boxY, 0);
 			return;
 		}
 
-		RenderSystem.popMatrix();
+		ms.pop();
 
 	}
 

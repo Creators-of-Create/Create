@@ -23,12 +23,12 @@ public class PonderChapter implements IScreenRenderable {
 
 	@Override
 	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
-		RenderSystem.pushMatrix();
+		ms.push();
 		Minecraft.getInstance().getTextureManager().bindTexture(icon);
-		RenderSystem.scaled(0.25, 0.25, 1);
+		ms.scale(0.25f, 0.25f, 1);
 		//x and y offset, blit z offset, tex x and y, tex width and height, entire tex sheet width and height
 		AbstractGui.drawTexture(ms, x, y, 0, 0, 0, 64, 64, 64, 64);
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	@Nonnull

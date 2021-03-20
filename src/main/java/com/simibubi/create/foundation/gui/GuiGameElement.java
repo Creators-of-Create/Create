@@ -237,13 +237,13 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			RenderSystem.pushMatrix();
+			ms.push();
 			RenderHelper.disableStandardItemLighting();
 			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
 				.getFluid(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xf000f0, true);
 			buffer.draw(RenderType.getTranslucent());
 			RenderHelper.enable();
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 	}
 

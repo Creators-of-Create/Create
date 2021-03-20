@@ -88,7 +88,7 @@ public class BlockMovementTraits {
 	 */
 	public static boolean isBrittle(BlockState state) {
 		Block block = state.getBlock();
-		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HANGING))
+		if (state.contains(BlockStateProperties.HANGING))
 			return true;
 
 		if (block instanceof LadderBlock)
@@ -149,7 +149,7 @@ public class BlockMovementTraits {
 			if (attachFace == AttachFace.WALL)
 				return direction.getOpposite() == state.get(HorizontalFaceBlock.HORIZONTAL_FACING);
 		}
-		if (BlockHelper.hasBlockStateProperty(state, BlockStateProperties.HANGING))
+		if (state.contains(BlockStateProperties.HANGING))
 			return direction == (state.get(BlockStateProperties.HANGING) ? Direction.UP : Direction.DOWN);
 		if (block instanceof AbstractRailBlock)
 			return direction == Direction.DOWN;

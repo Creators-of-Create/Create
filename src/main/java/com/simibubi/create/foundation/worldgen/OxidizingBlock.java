@@ -55,7 +55,7 @@ public class OxidizingBlock extends Block {
 				if (!worldIn.isBlockPresent(neighbourPos))
 					continue;
 				BlockState neighborState = worldIn.getBlockState(neighbourPos);
-				if (BlockHelper.hasBlockStateProperty(neighborState, OXIDIZATION) && neighborState.get(OXIDIZATION) != 0) {
+				if (neighborState.contains(OXIDIZATION) && neighborState.get(OXIDIZATION) != 0) {
 					neighbors.add(neighborState.get(OXIDIZATION));
 				}
 				if (BlockHelper.hasBlockSolidSide(neighborState, worldIn, neighbourPos, facing.getOpposite())) {

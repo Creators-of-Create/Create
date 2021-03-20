@@ -249,7 +249,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		BlockState blockState = getBlockState();
 		if (!(contraption.getContraption() instanceof BearingContraption))
 			return;
-		if (!BlockHelper.hasBlockStateProperty(blockState, FACING))
+		if (!blockState.contains(FACING))
 			return;
 
 		this.movedContraption = contraption;

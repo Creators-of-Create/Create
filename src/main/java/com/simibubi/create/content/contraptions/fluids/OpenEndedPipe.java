@@ -72,7 +72,7 @@ public class OpenEndedPipe extends FlowSource {
 
 		BlockState state = world.getBlockState(outputPos);
 		FluidState fluidState = state.getFluidState();
-		boolean waterlog = BlockHelper.hasBlockStateProperty(state, BlockStateProperties.WATERLOGGED);
+		boolean waterlog = state.contains(BlockStateProperties.WATERLOGGED);
 
 		if (!waterlog && !state.getMaterial()
 			.isReplaceable())

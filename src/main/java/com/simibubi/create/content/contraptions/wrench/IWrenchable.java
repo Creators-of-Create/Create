@@ -69,31 +69,31 @@ public interface IWrenchable {
 		BlockState newState = originalState;
 
 		if (targetedFace.getAxis() == Direction.Axis.Y) {
-			if (BlockHelper.hasBlockStateProperty(originalState, HorizontalAxisKineticBlock.HORIZONTAL_AXIS))
+			if (originalState.contains(HorizontalAxisKineticBlock.HORIZONTAL_AXIS))
 				return originalState.with(HorizontalAxisKineticBlock.HORIZONTAL_AXIS, DirectionHelper
 					.rotateAround(VoxelShaper.axisAsFace(originalState.get(HorizontalAxisKineticBlock.HORIZONTAL_AXIS)),
 						targetedFace.getAxis())
 					.getAxis());
-			if (BlockHelper.hasBlockStateProperty(originalState, HorizontalKineticBlock.HORIZONTAL_FACING))
+			if (originalState.contains(HorizontalKineticBlock.HORIZONTAL_FACING))
 				return originalState.with(HorizontalKineticBlock.HORIZONTAL_FACING, DirectionHelper
 					.rotateAround(originalState.get(HorizontalKineticBlock.HORIZONTAL_FACING), targetedFace.getAxis()));
 		}
 
-		if (BlockHelper.hasBlockStateProperty(originalState, RotatedPillarKineticBlock.AXIS))
+		if (originalState.contains(RotatedPillarKineticBlock.AXIS))
 			return originalState.with(RotatedPillarKineticBlock.AXIS,
 				DirectionHelper
 					.rotateAround(VoxelShaper.axisAsFace(originalState.get(RotatedPillarKineticBlock.AXIS)),
 						targetedFace.getAxis())
 					.getAxis());
 
-		if (!BlockHelper.hasBlockStateProperty(originalState, DirectionalKineticBlock.FACING))
+		if (!originalState.contains(DirectionalKineticBlock.FACING))
 			return originalState;
 
 		Direction stateFacing = originalState.get(DirectionalKineticBlock.FACING);
 
 		if (stateFacing.getAxis()
 			.equals(targetedFace.getAxis())) {
-			if (BlockHelper.hasBlockStateProperty(originalState, DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE))
+			if (originalState.contains(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE))
 				return originalState.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
 			else
 				return originalState;
@@ -102,7 +102,7 @@ public interface IWrenchable {
 				newState = newState.with(DirectionalKineticBlock.FACING,
 					DirectionHelper.rotateAround(newState.get(DirectionalKineticBlock.FACING), targetedFace.getAxis()));
 				if (targetedFace.getAxis() == Direction.Axis.Y
-					&& BlockHelper.hasBlockStateProperty(newState, DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE))
+					&& newState.contains(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE))
 					newState = newState.cycle(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
 			} while (newState.get(DirectionalKineticBlock.FACING)
 				.getAxis()

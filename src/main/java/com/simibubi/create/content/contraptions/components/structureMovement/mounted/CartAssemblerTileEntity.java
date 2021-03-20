@@ -78,7 +78,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 				if (d.getAxis()
 					.isVertical())
 					return false;
-				if (!BlockHelper.hasBlockStateProperty(state, CartAssemblerBlock.RAIL_SHAPE))
+				if (!state.contains(CartAssemblerBlock.RAIL_SHAPE))
 					return false;
 				RailShape railShape = state.get(CartAssemblerBlock.RAIL_SHAPE);
 				return (d.getAxis() == Axis.X) == (railShape == RailShape.NORTH_SOUTH);

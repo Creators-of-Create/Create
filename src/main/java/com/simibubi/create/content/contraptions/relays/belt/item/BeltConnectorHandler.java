@@ -51,7 +51,7 @@ public class BeltConnectorHandler {
 
 			BlockPos first = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
 
-			if (!BlockHelper.hasBlockStateProperty(world.getBlockState(first), BlockStateProperties.AXIS))
+			if (!world.getBlockState(first).contains(BlockStateProperties.AXIS))
 				continue;
 			Axis axis = world.getBlockState(first)
 				.get(BlockStateProperties.AXIS);
