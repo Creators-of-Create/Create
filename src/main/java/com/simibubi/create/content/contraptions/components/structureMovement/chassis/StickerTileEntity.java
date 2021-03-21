@@ -70,6 +70,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 		if (isAttachedToBlock() && target == 0 && piston.getChaseTarget() == 1)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.kineticRenderer.get(world).update(this));
 	}
 
 	public boolean isAttachedToBlock() {
