@@ -35,9 +35,9 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 			if (!type.isInstance(tileEntity))
 				return;
 			CompoundNBT apply = data.apply(tileEntity.write(new CompoundNBT()));
-			tileEntity.read(apply);
 			if (tileEntity instanceof SyncedTileEntity)
 				((SyncedTileEntity) tileEntity).readClientUpdate(apply);
+			tileEntity.read(apply);
 		});
 	}
 

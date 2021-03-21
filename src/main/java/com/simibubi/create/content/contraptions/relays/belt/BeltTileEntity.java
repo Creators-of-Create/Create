@@ -237,7 +237,8 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 
 		if (casingBefore == casing)
 			return;
-		requestModelDataUpdate();
+		if (!isVirtual())
+			requestModelDataUpdate();
 		if (hasWorld())
 			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 16);
 	}
@@ -290,10 +291,8 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 	}
 
 	public boolean isController() {
-		return controller != null &&
-				pos.getX() == controller.getX() &&
-				pos.getY() == controller.getY() &&
-				pos.getZ() == controller.getZ();
+		return controller != null && pos.getX() == controller.getX() && pos.getY() == controller.getY()
+			&& pos.getZ() == controller.getZ();
 	}
 
 	public float getBeltMovementSpeed() {

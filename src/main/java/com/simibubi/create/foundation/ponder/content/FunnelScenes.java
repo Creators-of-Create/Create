@@ -332,7 +332,7 @@ public class FunnelScenes {
 				scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, funnel, redstoneBB, 80);
 				scene.overlay.showText(80)
 					.colored(PonderPalette.RED)
-					.text("Redstone power will prevent any funnel from acting.")
+					.text("Redstone power will prevent any funnel from acting")
 					.pointAt(util.vector.blockSurface(funnel, Direction.DOWN));
 			} else {
 				scene.idle(4);

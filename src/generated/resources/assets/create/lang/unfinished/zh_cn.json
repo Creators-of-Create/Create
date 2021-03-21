@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 474",
+	"_": "Missing Localizations: 492",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1907,7 +1907,7 @@
 	"create.ponder.belt_directions.text_3": "UNLOCALIZED: 2. They can connect diagonally",
 	"create.ponder.belt_directions.text_4": "UNLOCALIZED: 3. They can connect vertically",
 	"create.ponder.belt_directions.text_5": "UNLOCALIZED: 4. And they can connect vertical shafts horizontally",
-	"create.ponder.belt_directions.text_6": "UNLOCALIZED: These are all possible directions.\nBelts can span any Length between 2 and 20 blocks",
+	"create.ponder.belt_directions.text_6": "UNLOCALIZED: These are all possible directions. Belts can span any Length between 2 and 20 blocks",
 
 	"create.ponder.belt_transport.header": "UNLOCALIZED: Using Mechanical Belts for Logistics",
 	"create.ponder.belt_transport.text_1": "UNLOCALIZED: Moving belts will transport Items and other Entities",
@@ -1957,6 +1957,16 @@
 	"create.ponder.chain_gearshift.text_4": "UNLOCALIZED: In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift",
 	"create.ponder.chain_gearshift.text_5": "UNLOCALIZED: Using analog signals, the ratio can be adjusted more precisely between 1 and 2",
 	"create.ponder.chain_gearshift.text_6": "UNLOCALIZED: 12 RPM",
+
+	"create.ponder.chute.header": "UNLOCALIZED: Transporting Items downward via Chutes",
+	"create.ponder.chute.text_1": "UNLOCALIZED: Chutes can transport items vertically from and to inventories",
+	"create.ponder.chute.text_2": "UNLOCALIZED: Using the Wrench, a window can be created",
+	"create.ponder.chute.text_3": "UNLOCALIZED: Placing chutes targeting the side faces of another will make it diagonal",
+
+	"create.ponder.chute_upward.header": "UNLOCALIZED: Transporting Items upward via Chutes",
+	"create.ponder.chute_upward.text_1": "UNLOCALIZED: Using Encased Fans at the top or bottom, a Chute can move items upward",
+	"create.ponder.chute_upward.text_2": "UNLOCALIZED: Inspecting chutes with Engineers' Goggles reveals information about the movement direction",
+	"create.ponder.chute_upward.text_3": "UNLOCALIZED: On the 'blocked' end, items will have to be inserted/taken from the sides",
 
 	"create.ponder.clockwork_bearing.header": "UNLOCALIZED: Animating Structures using Clockwork Bearings",
 	"create.ponder.clockwork_bearing.text_1": "UNLOCALIZED: Clockwork Bearings attach to blocks in front of them",
@@ -2022,6 +2032,12 @@
 	"create.ponder.deployer_redstone.text_2": "UNLOCALIZED: Before stopping, the Deployer will finish any started cycles",
 	"create.ponder.deployer_redstone.text_3": "UNLOCALIZED: Thus, a negative pulse can be used to trigger exactly one activation cycle",
 
+	"create.ponder.depot.header": "UNLOCALIZED: Using Depots",
+	"create.ponder.depot.text_1": "UNLOCALIZED: Depots can serve as 'stationary' belt elements",
+	"create.ponder.depot.text_2": "UNLOCALIZED: Right-Click to manually place or remove Items from it",
+	"create.ponder.depot.text_3": "UNLOCALIZED: Just like Mechanical Belts, it can provide items to processing",
+	"create.ponder.depot.text_4": "UNLOCALIZED: ...as well as provide Items to Mechanical Arms",
+
 	"create.ponder.empty_blaze_burner.header": "UNLOCALIZED: Using Empty Blaze Burners",
 	"create.ponder.empty_blaze_burner.text_1": "UNLOCALIZED: Right-click a Blaze with the empty burner to capture it",
 	"create.ponder.empty_blaze_burner.text_2": "UNLOCALIZED: Alternatively, Blazes can be collected from their Spawners directly",
@@ -2069,7 +2085,7 @@
 	"create.ponder.funnel_intro.text_1": "UNLOCALIZED: Funnels are ideal for transferring items from and to inventories.",
 
 	"create.ponder.funnel_redstone.header": "UNLOCALIZED: Redstone control",
-	"create.ponder.funnel_redstone.text_1": "UNLOCALIZED: Redstone power will prevent any funnel from acting.",
+	"create.ponder.funnel_redstone.text_1": "UNLOCALIZED: Redstone power will prevent any funnel from acting",
 
 	"create.ponder.funnel_transfer.header": "UNLOCALIZED: Direct transfer",
 	"create.ponder.funnel_transfer.text_1": "UNLOCALIZED: Funnels cannot ever transfer between closed inventories directly.",
@@ -2294,6 +2310,12 @@
 
 	"create.ponder.shaft_casing.header": "UNLOCALIZED: Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "UNLOCALIZED: Brass or Andesite Casing can be used to decorate Shafts",
+
+	"create.ponder.smart_chute.header": "UNLOCALIZED: Filtering Items using Smart Chutes",
+	"create.ponder.smart_chute.text_1": "UNLOCALIZED: Smart Chutes are vertical chutes with additional control",
+	"create.ponder.smart_chute.text_2": "UNLOCALIZED: Items in the filter slot specify what exactly they can extract and transfer",
+	"create.ponder.smart_chute.text_3": "UNLOCALIZED: Use the Mouse Wheel to specify the extracted stack size",
+	"create.ponder.smart_chute.text_4": "UNLOCALIZED: Redstone power will prevent Smart Chutes from acting.",
 
 	"create.ponder.speedometer.header": "UNLOCALIZED: Monitoring Kinetic information using the Speedometer",
 	"create.ponder.speedometer.text_1": "UNLOCALIZED: The Speedometer displays the current Speed of the attached components",

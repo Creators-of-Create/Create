@@ -107,6 +107,12 @@ public class BeltInventory {
 			// Don't move if held by processing (client)
 			if (world.isRemote && currentItem.locked)
 				continue;
+			
+			// Don't move if held by external components
+			if (currentItem.lockedExternally) {
+				currentItem.lockedExternally = false;
+				continue;
+			}
 
 			// Don't move if other items are waiting in front
 			float currentPos = currentItem.beltPosition;

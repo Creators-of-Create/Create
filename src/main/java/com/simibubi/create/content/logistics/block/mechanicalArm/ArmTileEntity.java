@@ -66,7 +66,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	protected int lastOutputIndex = -1;
 	protected boolean redstoneLocked;
 
-	enum Phase {
+	public enum Phase {
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
 
@@ -108,9 +108,15 @@ public class ArmTileEntity extends KineticTileEntity {
 		initInteractionPoints();
 		boolean targetReached = tickMovementProgress();
 
-		if (world.isRemote)
+		if (chasedPointProgress < 1) {
+			if (phase == Phase.MOVE_TO_INPUT) {
+				ArmInteractionPoint point = getTargetedInteractionPoint();
+				if (point != null)
+					point.keepAlive(world);
+			}
 			return;
-		if (chasedPointProgress < 1)
+		}
+		if (world.isRemote)
 			return;
 		
 		if (phase == Phase.MOVE_TO_INPUT)

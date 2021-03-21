@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
@@ -25,6 +26,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -87,7 +89,12 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				}).showing(new ItemStack(i));
 			if (!canClick)
-				button.noClickEvent();
+				if (i.getRegistryName()
+					.getNamespace()
+					.equals(Create.ID))
+					button.customColors(0x70984500, 0x70692400);
+				else
+					button.customColors(0x505000FF, 0x50300077);
 
 			button.fade(1);
 			widgets.add(button);
@@ -96,9 +103,10 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		if (!tag.getMainItem()
 			.isEmpty()) {
-			final boolean canClick = PonderRegistry.all.containsKey(tag.getMainItem()
+			ResourceLocation registryName = tag.getMainItem()
 				.getItem()
-				.getRegistryName());
+				.getRegistryName();
+			final boolean canClick = PonderRegistry.all.containsKey(registryName);
 			PonderButton button =
 				new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
 					if (!canClick)
@@ -107,7 +115,11 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
 				}).showing(tag.getMainItem());
 			if (!canClick)
-				button.noClickEvent();
+				if (registryName.getNamespace()
+					.equals(Create.ID))
+					button.customColors(0x70984500, 0x70692400);
+				else
+					button.customColors(0x505000FF, 0x50300077);
 
 			button.fade(1);
 			widgets.add(button);
@@ -202,7 +214,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		RenderSystem.translated(0, 0, 100);
 		FontHelper.drawSplitString(font, desc, x, y, w, 0xeeeeee);
 		RenderSystem.popMatrix();
-		
+
 	}
 
 	protected void renderItems(int mouseX, int mouseY, float partialTicks) {
@@ -301,7 +313,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			return tag == ((PonderTagScreen) other).tag;
 		return super.isEquivalentTo(other);
 	}
-	
+
 	@Override
 	public boolean isPauseScreen() {
 		return true;

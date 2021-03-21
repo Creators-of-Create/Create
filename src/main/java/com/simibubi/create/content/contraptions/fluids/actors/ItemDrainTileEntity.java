@@ -99,7 +99,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		}
 
 		boolean onClient = world.isRemote && !isVirtual();
-		
+
 		if (processingTicks > 0) {
 			heldItem.prevBeltPosition = .5f;
 			boolean wasAtBeginning = processingTicks == FILLING_TIME;
@@ -129,13 +129,17 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
 				.tryExportingToBeltFunnel(heldItem.stack, side.getOpposite());
-			if (tryExportingToBeltFunnel.getCount() != heldItem.stack.getCount()) {
-				if (tryExportingToBeltFunnel.isEmpty())
-					heldItem = null;
-				else
-					heldItem.stack = tryExportingToBeltFunnel;
-				notifyUpdate();
-				return;
+			if (tryExportingToBeltFunnel != null) {
+				if (tryExportingToBeltFunnel.getCount() != heldItem.stack.getCount()) {
+					if (tryExportingToBeltFunnel.isEmpty())
+						heldItem = null;
+					else
+						heldItem.stack = tryExportingToBeltFunnel;
+					notifyUpdate();
+					return;
+				}
+				if (!tryExportingToBeltFunnel.isEmpty())
+					return;
 			}
 
 			BlockPos nextPosition = pos.offset(side);

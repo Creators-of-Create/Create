@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -12,6 +13,7 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -149,6 +151,7 @@ public class BearingScenes {
 		scene.title("windmill_structure", "Windmill Contraptions");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
+		scene.world.modifyEntities(SuperGlueEntity.class, Entity::remove);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 

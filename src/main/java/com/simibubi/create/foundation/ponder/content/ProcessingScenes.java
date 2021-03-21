@@ -618,14 +618,14 @@ public class ProcessingScenes {
 		scene.idle(7);
 		scene.world.setBlock(util.grid.at(3, 1, 2), AllBlocks.LIT_BLAZE_BURNER.getDefaultState(), true);
 		scene.idle(10);
-		scene.overlay.showText(90)
+		scene.overlay.showText(70)
 			.text("For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel")
 			.attachKeyFrame()
 			.pointAt(util.vector.blockSurface(center.east()
 				.up(), Direction.UP))
 			.placeNearTarget();
-		scene.idle(70);
-		scene.overlay.showText(90)
+		scene.idle(80);
+		scene.overlay.showText(60)
 			.colored(PonderPalette.RED)
 			.text("However, these are not suitable for industrial heating")
 			.pointAt(util.vector.blockSurface(center.east()

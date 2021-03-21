@@ -95,6 +95,14 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
 			ProcessingScenes::emptyBlazeBurner);
 		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
+		PonderRegistry.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
+
+		// Chutes
+		PonderRegistry.forComponents(AllBlocks.CHUTE)
+			.addStoryBoard("chute/downward", ChuteScenes::downward, PonderTag.LOGISTICS)
+			.addStoryBoard("chute/upward", ChuteScenes::upward);
+		PonderRegistry.forComponents(AllBlocks.CHUTE, AllBlocks.SMART_CHUTE)
+			.addStoryBoard("chute/smart", ChuteScenes::smart);
 
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
@@ -287,10 +295,10 @@ public class PonderIndex {
 			.add(AllBlocks.MILLSTONE)
 			.add(AllBlocks.DEPLOYER)
 			.add(AllBlocks.MECHANICAL_SAW)
-			.add(Blocks.COMPOSTER)
 			.add(AllBlocks.BLAZE_BURNER)
-			.add(Blocks.JUKEBOX)
-			.add(AllBlocks.CRUSHING_WHEEL);
+			.add(AllBlocks.CRUSHING_WHEEL)
+			.add(Blocks.COMPOSTER)
+			.add(Blocks.JUKEBOX);
 
 		PonderRegistry.tags.forTag(PonderTag.LOGISTICS)
 			.add(AllItems.BELT_CONNECTOR)

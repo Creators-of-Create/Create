@@ -16,6 +16,7 @@ import com.simibubi.create.content.contraptions.particle.RotationIndicatorPartic
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
@@ -56,6 +57,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -759,6 +761,16 @@ public class SceneBuilder {
 				consumer.accept(nbt);
 				return nbt;
 			}, reDrawBlocks));
+		}
+
+		public void instructArm(BlockPos armLocation, ArmTileEntity.Phase phase, ItemStack heldItem,
+			int targetedPoint) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmTileEntity.class, compound -> {
+				NBTHelper.writeEnum(compound, "Phase", phase);
+				compound.put("HeldItem", heldItem.serializeNBT());
+				compound.putInt("TargetPointIndex", targetedPoint);
+				compound.putFloat("MovementProgress", 0);
+			});
 		}
 
 		public void flapFunnel(BlockPos position, boolean outward) {

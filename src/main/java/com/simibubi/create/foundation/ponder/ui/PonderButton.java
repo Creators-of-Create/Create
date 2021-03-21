@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
@@ -25,7 +26,7 @@ public class PonderButton extends AbstractSimiWidget {
 	private float fade;
 	private KeyBinding shortcut;
 	private LerpedFloat flash;
-	private boolean noClickEvent;
+	private Couple<Integer> customPassiveBorder;
 
 	public static final int SIZE = 20;
 
@@ -54,8 +55,8 @@ public class PonderButton extends AbstractSimiWidget {
 		return this;
 	}
 
-	public PonderButton noClickEvent() {
-		this.noClickEvent = true;
+	public PonderButton customColors(int start, int end) {
+		this.customPassiveBorder = Couple.create(start, end);
 		return this;
 	}
 
@@ -103,10 +104,10 @@ public class PonderButton extends AbstractSimiWidget {
 			fade *= 3 * flashValue + Math.sin((PonderUI.ponderTicks + partialTicks) / 6);
 
 		int backgroundColor = ColorHelper.applyAlpha(0xdd000000, fade);
-		int borderColorStart =
-			ColorHelper.applyAlpha(noClickEvent ? 0x70984500 : isHovered ? 0x70ffffff : 0x40aa9999, fade);
-		int borderColorEnd =
-			ColorHelper.applyAlpha(noClickEvent ? 0x70692400 : isHovered ? 0x30ffffff : 0x20aa9999, fade);
+		int borderColorStart = customPassiveBorder != null ? customPassiveBorder.getFirst() : isHovered ? 0x70ffffff : 0x40aa9999;
+		int borderColorEnd = customPassiveBorder != null ? customPassiveBorder.getSecond() : isHovered ? 0x30ffffff : 0x20aa9999;
+		borderColorStart = ColorHelper.applyAlpha(borderColorStart, fade);
+		borderColorEnd = ColorHelper.applyAlpha(borderColorEnd, fade);
 
 		PonderUI.renderBox(x, y, width, height, backgroundColor, borderColorStart, borderColorEnd);
 		RenderSystem.translated(0, 0, 800);

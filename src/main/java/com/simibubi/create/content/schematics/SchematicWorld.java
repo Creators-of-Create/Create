@@ -94,7 +94,7 @@ public class SchematicWorld extends WrappedWorld {
 			try {
 				TileEntity tileEntity = blockState.createTileEntity(this);
 				if (tileEntity != null) {
-					tileEntity.setLocation(this, pos);
+					onTEadded(tileEntity, pos);
 					tileEntities.put(pos, tileEntity);
 					renderedTileEntities.add(tileEntity);
 				}
@@ -104,6 +104,10 @@ public class SchematicWorld extends WrappedWorld {
 			}
 		}
 		return null;
+	}
+	
+	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
+		tileEntity.setLocation(this, pos);
 	}
 
 	@Override

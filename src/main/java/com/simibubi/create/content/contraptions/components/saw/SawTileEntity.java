@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
@@ -57,15 +59,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private static final Object cuttingRecipesKey = new Object();
-	public static final LazyValue<IRecipeType<?>> woodcuttingRecipeType = new LazyValue<>(() -> Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation("druidcraft", "woodcutting")));
+	public static final LazyValue<IRecipeType<?>> woodcuttingRecipeType =
+		new LazyValue<>(() -> Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation("druidcraft", "woodcutting")));
 
 	public ProcessingInventory inventory;
 	private int recipeIndex;
@@ -151,10 +151,14 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 				continue;
 			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
 				.tryExportingToBeltFunnel(stack, itemMovementFacing.getOpposite());
-			if (tryExportingToBeltFunnel.getCount() != stack.getCount()) {
-				inventory.setStackInSlot(slot, tryExportingToBeltFunnel);
-				notifyUpdate();
-				return;
+			if (tryExportingToBeltFunnel != null) {
+				if (tryExportingToBeltFunnel.getCount() != stack.getCount()) {
+					inventory.setStackInSlot(slot, tryExportingToBeltFunnel);
+					notifyUpdate();
+					return;
+				}
+				if (!tryExportingToBeltFunnel.isEmpty())
+					return;
 			}
 		}
 
@@ -277,19 +281,19 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private List<? extends IRecipe<?>> getRecipes() {
 		/*
-		Predicate<IRecipe<?>> types = AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get()
-			? RecipeConditions.isOfType(IRecipeType.STONECUTTING, AllRecipeTypes.CUTTING.getType())
-			: RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
-
+		 * Predicate<IRecipe<?>> types =
+		 * AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ?
+		 * RecipeConditions.isOfType(IRecipeType.STONECUTTING,
+		 * AllRecipeTypes.CUTTING.getType()) :
+		 * RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
+		 * 
 		 */
 
-		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(
-			AllRecipeTypes.CUTTING.getType(),
+		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),
 			AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ? IRecipeType.STONECUTTING : null,
-			AllConfigs.SERVER.recipes.allowWoodcuttingOnSaw.get() ?  woodcuttingRecipeType.getValue() : null
-			);
+			AllConfigs.SERVER.recipes.allowWoodcuttingOnSaw.get() ? woodcuttingRecipeType.getValue() : null);
 
-			List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world, types);
+		List<IRecipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, world, types);
 		return startedSearch.stream()
 			.filter(RecipeConditions.outputMatchesFilter(filtering))
 			.filter(RecipeConditions.firstIngredientMatches(inventory.getStackInSlot(0)))

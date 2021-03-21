@@ -98,6 +98,8 @@ public class DepotTileEntity extends SmartTileEntity {
 				continue;
 			ItemStack afterInsert =
 				getBehaviour(DirectBeltInputBehaviour.TYPE).tryExportingToBeltFunnel(previousItem, null);
+			if (afterInsert == null)
+				return false;
 			if (previousItem.getCount() != afterInsert.getCount()) {
 				processingOutputBuffer.setStackInSlot(slot, afterInsert);
 				notifyUpdate();
@@ -108,6 +110,8 @@ public class DepotTileEntity extends SmartTileEntity {
 		ItemStack previousItem = heldItem.stack;
 		ItemStack afterInsert =
 			getBehaviour(DirectBeltInputBehaviour.TYPE).tryExportingToBeltFunnel(previousItem, null);
+		if (afterInsert == null)
+			return false;
 		if (previousItem.getCount() != afterInsert.getCount()) {
 			if (afterInsert.isEmpty())
 				heldItem = null;
