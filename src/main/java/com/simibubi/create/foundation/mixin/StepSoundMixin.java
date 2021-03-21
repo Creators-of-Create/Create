@@ -1,14 +1,21 @@
 package com.simibubi.create.foundation.mixin;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.particles.BlockParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,75 +23,110 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.ref.Reference;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Mixin(Entity.class)
 public abstract class StepSoundMixin {
 
-    @Shadow public boolean collided;
+	@Shadow
+	public boolean collided;
 
-    @Shadow public World world;
+	@Shadow
+	public World world;
 
-    @Shadow public abstract BlockPos getPosition();
+	@Shadow
+	protected Random rand;
 
-    @Shadow public abstract Vec3d getPositionVec();
+	@Shadow
+	private float nextStepDistance;
 
-    @Shadow private float nextStepDistance;
+	@Shadow
+	public abstract BlockPos getPosition();
 
-    @Shadow protected abstract float determineNextStepDistance();
+	@Shadow
+	public abstract Vec3d getPositionVec();
 
-    @Shadow public abstract AxisAlignedBB getBoundingBox();
+	@Shadow
+	protected abstract float determineNextStepDistance();
 
-    @Shadow protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
+	@Shadow
+	public abstract AxisAlignedBB getBoundingBox();
 
-    @Inject(at = @At(
-            value = "JUMP",
-            opcode = 154, //IFNE
-            ordinal = 4
-            ),
-            method = "move"
-    )
-    private void movementMixin(MoverType mover, Vec3d movement, CallbackInfo ci) {
-        Entity thi = (Entity) (Object) this;
+	@Shadow
+	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
 
-        World entityWorld = world;
+	private Set<AbstractContraptionEntity> getIntersectingContraptions(Entity entity) {
+		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(entity.world)
+			.values()
+			.stream()
+			.map(Reference::get)
+			.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(entity))
+			.collect(Collectors.toSet());
 
-        Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(entityWorld)
-                                                                                               .values()
-                                                                                               .stream()
-                                                                                               .map(Reference::get)
-                                                                                               .filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(thi)).collect(Collectors.toSet());
+		contraptions.addAll(entity.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, getBoundingBox().grow(1f)));
+		return contraptions;
+	}
 
-        contraptions.addAll(entityWorld.getEntitiesWithinAABB(AbstractContraptionEntity.class, getBoundingBox().grow(1f)));
+	private void forCollision(Vec3d anchorPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
+		Entity thi = (Entity) (Object) this;
+		getIntersectingContraptions(thi).forEach(cEntity -> {
+			Vec3d localPos = ContraptionCollider.getWorldToLocalTranslation(anchorPos, cEntity);
 
-        Vec3d worldPos = thi.getPositionVector().add(0, -0.2, 0);
+			localPos = anchorPos.add(localPos);
 
-        boolean stepped = false;
-        for (AbstractContraptionEntity cEntity : contraptions) {
-            Vec3d localPos = ContraptionCollider.getWorldToLocalTranslation(worldPos, cEntity);
+			BlockPos blockPos = new BlockPos(localPos);
+			Contraption contraption = cEntity.getContraption();
+			Template.BlockInfo info = contraption.getBlocks().get(blockPos);
 
-            localPos = worldPos.add(localPos);
+			if (info != null) {
+				BlockState blockstate = info.state;
+				action.accept(contraption, blockstate, blockPos);
+			}
+		});
+	}
 
-            BlockPos blockPos = new BlockPos(localPos);
-            Contraption contraption = cEntity.getContraption();
-            Template.BlockInfo info = contraption.getBlocks().get(blockPos);
+	@Inject(at = @At(
+		value = "JUMP",
+		opcode = 154, //IFNE
+		ordinal = 4
+	),
+		method = "move"
+	)
+	private void movementMixin(MoverType mover, Vec3d movement, CallbackInfo ci) {
+		Entity thi = (Entity) (Object) this;
+		World entityWorld = world;
+		Vec3d worldPos = thi.getPositionVector().add(0, -0.2, 0);
+		AtomicBoolean stepped = new AtomicBoolean(false);
 
-            if (info != null) {
-                BlockState blockstate = info.state;
+		forCollision(worldPos, (contraption, blockstate, blockPos) -> {
+			this.world = contraption.getContraptionWorld();
+			this.playStepSound(blockPos, blockstate);
+			stepped.set(true);
+		});
 
-                this.world = contraption.getContraptionWorld();
+		if (stepped.get())
+			this.nextStepDistance = this.determineNextStepDistance();
 
-                this.playStepSound(blockPos, blockstate);
+		world = entityWorld;
+	}
 
-                stepped = true;
-            }
-        }
+	@Inject(method = {"Lnet/minecraft/entity/Entity;createRunningParticles()V"}, at = @At(value = "TAIL"))
+	private void createRunningParticlesMixin(CallbackInfo ci) {
+		Entity thi = (Entity) (Object) this;
+		Vec3d worldPos = thi.getPositionVector().add(0, -0.2, 0);
+		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
-        if (stepped)
-            this.nextStepDistance = this.determineNextStepDistance();
-
-        world = entityWorld;
-    }
-
+		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
+			if (!blockstate.addRunningEffects(world, blockpos, thi) && blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
+				Vec3d vec3d = thi.getMotion();
+				this.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
+					thi.getX() + ((double) rand.nextFloat() - 0.5D) * (double) thi.getWidth(),
+					thi.getY() + 0.1D, thi.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) thi.getWidth(),
+					vec3d.x * -4.0D, 1.5D, vec3d.z * -4.0D);
+			}
+		});
+	}
 }
