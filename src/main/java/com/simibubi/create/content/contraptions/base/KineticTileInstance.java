@@ -17,11 +17,22 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis) {
-        key.getInstance()
-           .setColor(tile.network)
-           .setRotationalSpeed(tile.getSpeed())
+        updateRotation(key, axis, tile.getSpeed());
+    }
+
+    protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis, float speed) {
+        updateRotation(key.getInstance(), axis, speed);
+    }
+
+    protected final void updateRotation(RotatingData key, Direction.Axis axis, float speed) {
+        key.setColor(tile.network)
+           .setRotationalSpeed(speed)
            .setRotationOffset(getRotationOffset(axis))
            .setRotationAxis(axis);
+    }
+
+    protected final void updateRotation(RotatingData key, Direction.Axis axis) {
+        updateRotation(key, axis, tile.getSpeed());
     }
 
     protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed, Direction.Axis axis) {

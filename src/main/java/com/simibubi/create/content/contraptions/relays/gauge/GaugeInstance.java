@@ -18,17 +18,12 @@ import java.util.ArrayList;
 
 public abstract class GaugeInstance extends ShaftInstance implements IDynamicInstance {
 
-    protected ArrayList<DialFace> faces;
+    protected final ArrayList<DialFace> faces;
 
     protected MatrixStack ms;
 
     protected GaugeInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         faces = new ArrayList<>(2);
 

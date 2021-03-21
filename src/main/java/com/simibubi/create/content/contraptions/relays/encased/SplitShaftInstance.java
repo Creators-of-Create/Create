@@ -17,14 +17,11 @@ import net.minecraft.util.Direction;
 
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
 
-    protected ArrayList<InstanceKey<RotatingData>> keys;
+    protected final ArrayList<InstanceKey<RotatingData>> keys;
 
     public SplitShaftInstance(InstancedTileRenderer<?> modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         keys = new ArrayList<>(2);
 
         Block block = blockState.getBlock();
@@ -43,7 +40,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         Block block = blockState.getBlock();
         final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(blockState);
 

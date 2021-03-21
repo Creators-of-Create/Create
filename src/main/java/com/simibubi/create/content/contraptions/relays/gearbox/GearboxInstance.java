@@ -18,15 +18,12 @@ import net.minecraft.world.LightType;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
-    protected EnumMap<Direction, InstanceKey<RotatingData>> keys;
+    protected final EnumMap<Direction, InstanceKey<RotatingData>> keys;
     protected Direction sourceFacing;
 
     public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         keys = new EnumMap<>(Direction.class);
 
         final Direction.Axis boxAxis = blockState.get(BlockStateProperties.AXIS);
@@ -78,7 +75,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         updateSourceFacing();
         for (Map.Entry<Direction, InstanceKey<RotatingData>> key : keys.entrySet()) {
             Direction direction = key.getKey();

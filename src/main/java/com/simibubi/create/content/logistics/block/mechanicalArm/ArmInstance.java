@@ -24,24 +24,19 @@ import java.util.ArrayList;
 
 public class ArmInstance extends SingleRotatingInstance implements IDynamicInstance {
 
-    private InstanceKey<ModelData> base;
-    private InstanceKey<ModelData> lowerBody;
-    private InstanceKey<ModelData> upperBody;
-    private InstanceKey<ModelData> head;
-    private InstanceKey<ModelData> claw;
-    private ArrayList<InstanceKey<ModelData>> clawGrips;
+    final InstanceKey<ModelData> base;
+    final InstanceKey<ModelData> lowerBody;
+    final InstanceKey<ModelData> upperBody;
+    final InstanceKey<ModelData> head;
+    final InstanceKey<ModelData> claw;
+    private final ArrayList<InstanceKey<ModelData>> clawGrips;
 
-    private ArrayList<InstanceKey<ModelData>> models;
+    private final ArrayList<InstanceKey<ModelData>> models;
 
     private boolean firstTick = true;
 
     public ArmInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
@@ -58,8 +53,6 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
         clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
         models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 
-        firstTick = true;
-        beginFrame();
         updateLight();
     }
 

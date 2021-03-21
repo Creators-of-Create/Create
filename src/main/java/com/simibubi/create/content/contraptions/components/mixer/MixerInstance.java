@@ -14,16 +14,11 @@ import net.minecraft.util.Direction;
 
 public class MixerInstance extends ShaftlessCogInstance implements IDynamicInstance {
 
-    private InstanceKey<RotatingData> mixerHead;
-    private InstanceKey<ModelData> mixerPole;
+    private final InstanceKey<RotatingData> mixerHead;
+    private final InstanceKey<ModelData> mixerPole;
 
     public MixerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         mixerHead = rotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
                                       .createInstance();

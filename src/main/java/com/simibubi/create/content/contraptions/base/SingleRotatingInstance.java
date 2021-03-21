@@ -11,20 +11,17 @@ import net.minecraft.util.Direction;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
-    protected InstanceKey<RotatingData> rotatingModelKey;
+    protected final InstanceKey<RotatingData> rotatingModelKey;
 
     public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         rotatingModelKey = setup(getModel().createInstance(), tile.getSpeed(), axis);
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         updateRotation(rotatingModelKey, axis);
     }

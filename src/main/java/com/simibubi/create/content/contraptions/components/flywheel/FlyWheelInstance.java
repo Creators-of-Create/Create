@@ -23,21 +23,22 @@ import net.minecraft.util.math.MathHelper;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
 
-    protected Direction facing;
+    protected final Direction facing;
+    protected final Direction connection;
+
     protected boolean connectedLeft;
     protected float connectorAngleMult;
 
-    protected Direction connection;
+    protected final InstanceKey<RotatingData> shaft;
 
-    protected InstanceKey<RotatingData> shaft;
+    protected final InstanceKey<ModelData> wheel;
 
-    protected InstanceKey<ModelData> wheel;
+    protected List<InstanceKey<ModelData>> connectors;
     protected InstanceKey<ModelData> upperRotating;
     protected InstanceKey<ModelData> lowerRotating;
     protected InstanceKey<ModelData> upperSliding;
     protected InstanceKey<ModelData> lowerSliding;
 
-    protected List<InstanceKey<ModelData>> connectors;
 
     protected float lastAngle = Float.NaN;
 
@@ -45,10 +46,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
         Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
@@ -77,7 +75,6 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         }
 
         updateLight();
-        firstFrame = true;
     }
 
     @Override
@@ -135,7 +132,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     @Override
-    protected void onUpdate() {
+    protected void update() {
         Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         updateRotation(shaft, axis);
     }

@@ -19,32 +19,33 @@ import net.minecraft.util.math.BlockPos;
 
 public class GantryCarriageInstance extends ShaftInstance implements IDynamicInstance {
 
-    private InstanceKey<ModelData> gantryCogs;
+    private final InstanceKey<ModelData> gantryCogs;
+
+    final Direction facing;
+    final Boolean alongFirst;
+    final Direction.Axis rotationAxis;
+    final BlockPos visualPos;
 
     public GantryCarriageInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         gantryCogs = modelManager.getMaterial(RenderMaterials.MODELS)
                                  .getModel(AllBlockPartials.GANTRY_COGS, blockState)
                                  .createInstance();
+
+        facing = blockState.get(GantryCarriageBlock.FACING);
+        alongFirst = blockState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
+        rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
+
+        visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getPos()
+                : tile.getPos()
+                      .offset(facing.getOpposite());
 
         updateLight();
     }
 
     @Override
     public void beginFrame() {
-        blockState = tile.getBlockState();
-        Direction facing = blockState.get(GantryCarriageBlock.FACING);
-        Boolean alongFirst = blockState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
-        Direction.Axis rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
-        BlockPos visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getPos()
-                : tile.getPos()
-                    .offset(facing.getOpposite());
         float angleForTe = GantryCarriageRenderer.getAngleForTe(tile, visualPos, rotationAxis);
 
         Direction.Axis gantryAxis = Direction.Axis.X;

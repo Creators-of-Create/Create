@@ -14,15 +14,10 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 
 public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
-    private InstanceKey<ModelData> pressHead;
+    private final InstanceKey<ModelData> pressHead;
 
     public PressInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         pressHead = modelManager.getMaterial(RenderMaterials.MODELS)
                                 .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)

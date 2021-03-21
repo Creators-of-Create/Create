@@ -18,28 +18,21 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 public class DeployerInstance extends ShaftInstance implements IDynamicInstance {
 
-    DeployerTileEntity tile;
+    final DeployerTileEntity tile;
+    final Direction facing;
+    final float yRot;
+    final float zRot;
+    final float zRotPole;
 
-    Direction facing;
+    protected final InstanceKey<ModelData> pole;
 
-    InstanceKey<ModelData> pole;
+    protected InstanceKey<ModelData> hand;
 
     AllBlockPartials currentHand;
-    InstanceKey<ModelData> hand;
-
-    float yRot;
-    float zRot;
-    float zRotPole;
-
     float progress = Float.NaN;
 
     public DeployerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         this.tile = (DeployerTileEntity) super.tile;
         facing = blockState.get(FACING);

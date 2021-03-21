@@ -3,12 +3,13 @@ package com.simibubi.create.content.logistics.block;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
 import java.nio.ByteBuffer;
 
-public class FlapData extends InstanceData {
+public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
     public static VertexFormat FORMAT = VertexFormat.builder()
                                                     .addAttributes(FlapVertexAttributes.class)
@@ -61,11 +62,13 @@ public class FlapData extends InstanceData {
         return this;
     }
 
+    @Override
     public FlapData setBlockLight(int blockLight) {
         this.blockLight = (byte) ((blockLight & 0xF) << 4);
         return this;
     }
 
+    @Override
     public FlapData setSkyLight(int skyLight) {
         this.skyLight = (byte) ((skyLight & 0xF) << 4);
         return this;

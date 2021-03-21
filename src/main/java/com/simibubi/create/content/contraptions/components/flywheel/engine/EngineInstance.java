@@ -19,12 +19,9 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     public EngineInstance(InstancedTileRenderer<?> modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         Block block = blockState
-                        .getBlock();
+                .getBlock();
         if (!(block instanceof EngineBlock))
             return;
 

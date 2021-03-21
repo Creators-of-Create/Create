@@ -16,15 +16,11 @@ import java.util.Map;
 
 public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
 
-
-    private Map<Direction, ArrayList<InstanceKey<FlapData>>> tunnelFlaps;
+    private final Map<Direction, ArrayList<InstanceKey<FlapData>>> tunnelFlaps;
 
     public BeltTunnelInstance(InstancedTileRenderer<?> modelManager, BeltTunnelTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         tunnelFlaps = new EnumMap<>(Direction.class);
 
         InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
@@ -81,9 +77,6 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
             }
         });
     }
-
-    @Override
-    protected void onUpdate() { }
 
     @Override
     public void updateLight() {

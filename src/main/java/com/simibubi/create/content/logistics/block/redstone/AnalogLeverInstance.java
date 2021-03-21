@@ -14,18 +14,15 @@ import net.minecraft.util.Direction;
 
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
-    protected InstanceKey<ModelData> handle;
-    protected InstanceKey<ModelData> indicator;
+    protected final InstanceKey<ModelData> handle;
+    protected final InstanceKey<ModelData> indicator;
 
-    private float rX;
-    private float rY;
+    final float rX;
+    final float rY;
 
     public AnalogLeverInstance(InstancedTileRenderer<?> modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();

@@ -22,23 +22,20 @@ import net.minecraft.world.LightType;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
-    private boolean upward;
-    private boolean diagonal;
-    private boolean sideways;
-    private boolean vertical;
-    private boolean alongX;
-    private boolean alongZ;
-    private BeltSlope beltSlope;
-    private Direction facing;
+    boolean upward;
+    boolean diagonal;
+    boolean sideways;
+    boolean vertical;
+    boolean alongX;
+    boolean alongZ;
+    BeltSlope beltSlope;
+    Direction facing;
     protected ArrayList<InstanceKey<BeltData>> keys;
     protected InstanceKey<RotatingData> pulleyKey;
 
     public BeltInstance(InstancedTileRenderer<?> modelManager, BeltTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         if (!AllBlocks.BELT.has(blockState))
             return;
 
@@ -77,7 +74,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         DyeColor color = tile.color.orElse(null);
 
         boolean bottom = true;

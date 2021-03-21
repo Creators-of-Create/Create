@@ -11,15 +11,11 @@ import net.minecraft.util.Direction;
 
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
-    private InstanceKey<ModelData> connector;
-    private InstanceKey<ModelData> pipe;
+    private final InstanceKey<ModelData> connector;
+    private final InstanceKey<ModelData> pipe;
 
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
-    }
-
-    @Override
-    protected void init() {
 
         RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
 

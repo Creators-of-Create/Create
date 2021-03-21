@@ -9,16 +9,13 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 
 public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRepeaterTileEntity> implements ITickableInstance {
 
-    protected InstanceKey<ModelData> indicator;
+    protected final InstanceKey<ModelData> indicator;
 
     protected int previousState;
 
     public AdjustableRepeaterInstance(InstancedTileRenderer<?> modelManager, AdjustableRepeaterTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         indicator = modelManager.getBasicMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
         MatrixStack ms = new MatrixStack();

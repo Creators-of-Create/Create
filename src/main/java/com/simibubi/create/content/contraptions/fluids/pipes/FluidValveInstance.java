@@ -19,17 +19,12 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
 
     protected InstanceKey<ModelData> pointer;
 
-    protected double xRot;
-    protected double yRot;
-    protected int pointerRotationOffset;
+    protected final double xRot;
+    protected final double yRot;
+    protected final int pointerRotationOffset;
 
     public FluidValveInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         Direction facing = blockState.get(FluidValveBlock.FACING);
 
@@ -39,9 +34,8 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
         Direction.Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
         Direction.Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
 
-        pointerRotationOffset = 0;
-        if (pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical())
-            pointerRotationOffset = 90;
+        boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical();
+        pointerRotationOffset = twist ? 90 : 0;
 
         pointer = modelManager.getBasicMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
 

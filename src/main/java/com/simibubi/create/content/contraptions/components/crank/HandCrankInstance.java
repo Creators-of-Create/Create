@@ -19,11 +19,6 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
 
     public HandCrankInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         Block block = blockState.getBlock();
         AllBlockPartials renderedHandle = null;

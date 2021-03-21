@@ -12,14 +12,11 @@ import java.util.ArrayList;
 
 public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
 
-    private ArrayList<InstanceKey<FlapData>> flaps;
+    private final ArrayList<InstanceKey<FlapData>> flaps;
 
     public FunnelInstance(InstancedTileRenderer<?> modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         flaps = new ArrayList<>(4);
 
         if (!tile.hasFlap()) return;
@@ -71,16 +68,8 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
     @Override
     public void updateLight() {
-        if (flaps == null) return;
-
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
-
-        for (InstanceKey<FlapData> it : flaps) {
-            it.getInstance()
-              .setBlockLight(blockLight)
-              .setSkyLight(skyLight);
-       }
+        if (flaps != null)
+            relight(pos, flaps.stream().map(InstanceKey::getInstance));
     }
 
     @Override

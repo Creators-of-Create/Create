@@ -79,11 +79,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return getMaterial(RenderMaterials.MODELS);
     }
 
-    @Nullable
-    public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile) {
-        return getInstance(tile, true);
-    }
-
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
@@ -127,7 +122,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (!Backend.canUseInstancing()) return;
 
         if (tile instanceof IInstanceRendered) {
-            getInstance(tile);
+            getInstance(tile, true);
         }
     }
 
@@ -143,8 +138,16 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (tile instanceof IInstanceRendered) {
             TileEntityInstance<? super T> instance = getInstance(tile, false);
 
-            if (instance != null)
-                instance.update();
+            if (instance != null) {
+
+                if (instance.shouldReset()) {
+                    removeInternal(tile, instance);
+
+                    getInstance(tile, true);
+                } else {
+                    instance.update();
+                }
+            }
         }
     }
 
@@ -152,15 +155,23 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (!Backend.canUseInstancing()) return;
 
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> instance = getInstance(tile, false);
-
-            if (instance != null) {
-                instance.remove();
-                instances.remove(tile);
-                dynamicInstances.remove(tile);
-                tickableInstances.remove(tile);
-            }
+            removeInternal(tile);
         }
+    }
+
+    private <T extends TileEntity> void removeInternal(T tile) {
+        TileEntityInstance<? super T> instance = getInstance(tile, false);
+
+        if (instance != null) {
+            removeInternal(tile, instance);
+        }
+    }
+
+    private <T extends TileEntity> void removeInternal(T tile, TileEntityInstance<? super T> instance) {
+        instance.remove();
+        instances.remove(tile);
+        dynamicInstances.remove(tile);
+        tickableInstances.remove(tile);
     }
 
     public void clean() {
