@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.FontHelper;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
@@ -87,7 +86,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		if (fade < 1 / 16f)
 			return;
 		Vec2f sceneToScreen = vec != null ? scene.getTransform()
-			.sceneToScreen(vec) : new Vec2f(screen.width / 2, (screen.height - 200) / 2 + y - 8);
+			.sceneToScreen(vec, partialTicks) : new Vec2f(screen.width / 2, (screen.height - 200) / 2 + y - 8);
 
 		float yDiff = (screen.height / 2 - sceneToScreen.y - 10) / 100f;
 		int targetX = (int) (screen.width * MathHelper.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
@@ -122,8 +121,11 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			RenderSystem.popMatrix();
 		}
 
-		FontHelper.drawSplitString(screen.getFontRenderer(), bakedText, targetX - 10, 3, textWidth,
-			ColorHelper.applyAlpha(brighterColor, fade));
+		for (int i = 0; i < list.size(); i++) {
+			String s = list.get(i);
+			screen.getFontRenderer()
+				.drawString(s, targetX - 10, 3 + 9 * i, ColorHelper.applyAlpha(brighterColor, fade));
+		}
 		RenderSystem.popMatrix();
 	}
 

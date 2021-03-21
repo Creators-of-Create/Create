@@ -246,7 +246,7 @@ public class ParrotElement extends AnimatedSceneElement {
 			double mouseX = minecraft.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
 			double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
 			return scene.getTransform()
-				.screenToScene(mouseX, mouseY, 300);
+				.screenToScene(mouseX, mouseY, 300, 0);
 		}
 
 	}

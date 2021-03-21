@@ -37,7 +37,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalCrafterTileEntity extends KineticTileEntity {
@@ -46,7 +45,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		IDLE, ACCEPTING, ASSEMBLING, EXPORTING, WAITING, CRAFTING, INSERTING;
 	}
 
-	static class Inventory extends SmartInventory {
+	public static class Inventory extends SmartInventory {
 
 		private MechanicalCrafterTileEntity te;
 
@@ -57,11 +56,11 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			whenContentsChanged(slot -> {
 				if (getStackInSlot(slot).isEmpty())
 					return;
-				if(te.phase == Phase.IDLE)
+				if (te.phase == Phase.IDLE)
 					te.checkCompletedRecipe(false);
 			});
 		}
-		
+
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 			if (te.phase != Phase.IDLE)
@@ -70,9 +69,9 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				return stack;
 			return super.insertItem(slot, stack, simulate);
 		}
-		
+
 	}
-	
+
 	protected Inventory inventory;
 	protected GroupedItems groupedItems = new GroupedItems();
 	protected ConnectedInput input = new ConnectedInput();
@@ -87,13 +86,15 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	private InvManipulationBehaviour inserting;
 	private EdgeInteractionBehaviour connectivity;
 
+	private ItemStack scriptedResult = ItemStack.EMPTY;
+
 	public MechanicalCrafterTileEntity(TileEntityType<? extends MechanicalCrafterTileEntity> type) {
 		super(type);
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();
 		inventory = new Inventory(this);
-		
+
 		// Does not get serialized due to active checking in tick
 		wasPoweredBefore = true;
 	}
@@ -118,7 +119,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	public BlockFace getTargetFace(World world, BlockPos pos, BlockState state) {
 		return new BlockFace(pos, MechanicalCrafterBlock.getTargetDirection(state));
 	}
-	
+
 	public Direction getTargetDirection() {
 		return MechanicalCrafterBlock.getTargetDirection(getBlockState());
 	}
@@ -145,7 +146,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		compound.putBoolean("Cover", covered);
 
 		super.write(compound, clientPacket);
-		
+
 		if (clientPacket && reRender) {
 			compound.putBoolean("Redraw", true);
 			reRender = false;
@@ -156,7 +157,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected void read(CompoundNBT compound, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
-		
+
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		input.read(compound.getCompound("ConnectedInput"));
 		groupedItems = GroupedItems.read(compound.getCompound("GroupedItems"));
@@ -169,7 +170,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
 		super.read(compound, clientPacket);
-		
+
 		if (!clientPacket)
 			return;
 		if (compound.contains("Redraw"))
@@ -205,10 +206,13 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		if (phase == Phase.ACCEPTING)
 			return;
 
+		boolean onClient = world.isRemote;
+		boolean runLogic = !onClient || isVirtual();
+
 		if (wasPoweredBefore != world.isBlockPowered(pos)) {
 			wasPoweredBefore = world.isBlockPowered(pos);
 			if (wasPoweredBefore) {
-				if (world.isRemote)
+				if (!runLogic)
 					return;
 				checkCompletedRecipe(true);
 			}
@@ -218,7 +222,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			countDown -= getCountDownSpeed();
 			if (countDown < 0) {
 				countDown = 0;
-				if (world.isRemote)
+				if (!runLogic)
 					return;
 				if (RecipeGridHandler.getTargetingCrafter(this) != null) {
 					phase = Phase.EXPORTING;
@@ -226,9 +230,11 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 					sendData();
 					return;
 				}
-				ItemStack result = RecipeGridHandler.tryToApplyRecipe(world, groupedItems);
-				if (result != null) {
 
+				ItemStack result =
+					isVirtual() ? scriptedResult : RecipeGridHandler.tryToApplyRecipe(world, groupedItems);
+
+				if (result != null) {
 					List<ItemStack> containers = new ArrayList<>();
 					groupedItems.grid.values()
 						.forEach(stack -> {
@@ -236,6 +242,9 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 								containers.add(stack.getContainerItem()
 									.copy());
 						});
+
+					if (isVirtual())
+						groupedItemsBeforeCraft = groupedItems;
 
 					groupedItems = new GroupedItems(result);
 					for (int i = 0; i < containers.size(); i++) {
@@ -260,7 +269,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 			if (countDown < 0) {
 				countDown = 0;
-				if (world.isRemote)
+				if (!runLogic)
 					return;
 
 				MechanicalCrafterTileEntity targetingCrafter = RecipeGridHandler.getTargetingCrafter(this);
@@ -283,7 +292,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 		if (phase == Phase.CRAFTING) {
 
-			if (world.isRemote) {
+			if (onClient) {
 				Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 				float progress = countDown / 2000f;
 				Vec3d facingVec = new Vec3d(facing.getDirectionVec());
@@ -319,7 +328,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			countDown -= getCountDownSpeed();
 			if (countDown < 0) {
 				countDown = 0;
-				if (world.isRemote)
+				if (!runLogic)
 					return;
 				tryInsert();
 				return;
@@ -327,7 +336,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		}
 
 		if (phase == Phase.INSERTING) {
-			if (!world.isRemote && isTargetingBelt())
+			if (runLogic && isTargetingBelt())
 				tryInsert();
 			return;
 		}
@@ -364,7 +373,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				stack.setCount(remainder.getCount());
 				continue;
 			}
-			
+
 			inserted.add(pair);
 		}
 
@@ -410,7 +419,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 		if (phase == Phase.IDLE && craftingItemPresent())
 			checkCompletedRecipe(false);
@@ -431,7 +440,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	protected void checkCompletedRecipe(boolean poweredStart) {
 		if (getSpeed() == 0)
 			return;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 		List<MechanicalCrafterTileEntity> chain = RecipeGridHandler.getAllCraftersOfChainIf(this,
 			poweredStart ? MechanicalCrafterTileEntity::craftingItemPresent
@@ -471,11 +480,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (getBlockState().get(HORIZONTAL_FACING) == side)
-				return LazyOptional.empty();
+		if (isItemHandlerCap(cap))
 			return invSupplier.cast();
-		}
 		return super.getCapability(cap, side);
 	}
 
@@ -493,6 +499,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
+	}
+
+	public void setScriptedResult(ItemStack scriptedResult) {
+		this.scriptedResult = scriptedResult;
 	}
 
 }

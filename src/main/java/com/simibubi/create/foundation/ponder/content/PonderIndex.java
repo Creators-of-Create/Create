@@ -97,6 +97,13 @@ public class PonderIndex {
 		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
 		PonderRegistry.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
 
+		// Crafters
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER)
+			.addStoryBoard("mechanical_crafter/setup", CrafterScenes::setup)
+			.addStoryBoard("mechanical_crafter/connect", CrafterScenes::connect);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER, AllItems.CRAFTER_SLOT_COVER)
+			.addStoryBoard("mechanical_crafter/covers", CrafterScenes::covers);
+
 		// Chutes
 		PonderRegistry.forComponents(AllBlocks.CHUTE)
 			.addStoryBoard("chute/downward", ChuteScenes::downward, PonderTag.LOGISTICS)
@@ -148,6 +155,10 @@ public class PonderIndex {
 			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
 				PonderTag.MOVEMENT_ANCHOR);
+		PonderRegistry.forComponents(AllBlocks.SAIL)
+			.addStoryBoard("sail", BearingScenes::sail);
+		PonderRegistry.forComponents(AllBlocks.SAIL_FRAME)
+			.addStoryBoard("sail", BearingScenes::sailFrame);
 
 		// Mechanical Bearing
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_BEARING)
@@ -331,6 +342,11 @@ public class PonderIndex {
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.CREATIVE_FLUID_TANK)
 			.add(AllBlocks.CREATIVE_MOTOR);
+
+		PonderRegistry.tags.forTag(PonderTag.SAILS)
+			.add(AllBlocks.SAIL)
+			.add(AllBlocks.SAIL_FRAME)
+			.add(Blocks.WHITE_WOOL);
 
 		PonderRegistry.tags.forTag(PonderTag.REDSTONE)
 			.add(AllBlocks.NIXIE_TUBE)

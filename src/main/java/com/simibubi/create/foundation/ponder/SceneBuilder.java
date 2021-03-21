@@ -10,6 +10,8 @@ import java.util.function.UnaryOperator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
@@ -775,6 +777,17 @@ public class SceneBuilder {
 
 		public void flapFunnel(BlockPos position, boolean outward) {
 			modifyTileEntity(position, FunnelTileEntity.class, funnel -> funnel.flap(!outward));
+		}
+
+		public void setCraftingResult(BlockPos crafter, ItemStack output) {
+			modifyTileEntity(crafter, MechanicalCrafterTileEntity.class, mct -> mct.setScriptedResult(output));
+		}
+
+		public void connectCrafterInvs(BlockPos position1, BlockPos position2) {
+			addInstruction(s -> {
+				ConnectedInputHandler.toggleConnection(s.getWorld(), position1, position2);
+				s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+			});
 		}
 
 	}

@@ -93,7 +93,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		if (fade < 1 / 16f)
 			return;
 		Vec2f sceneToScreen = scene.getTransform()
-			.sceneToScreen(sceneSpace);
+			.sceneToScreen(sceneSpace, partialTicks);
 
 		if (hasIcon) {
 			width += 24;
