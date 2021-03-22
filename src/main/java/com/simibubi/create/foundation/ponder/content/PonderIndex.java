@@ -132,6 +132,13 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.STICKER)
 			.addStoryBoard("sticker", RedstoneScenes::sticker, PonderTag.CONTRAPTION_ASSEMBLY);
 
+		// Mechanical Arm
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_ARM)
+			.addStoryBoard("mechanical_arm/setup", ArmScenes::setup, PonderTag.ARM_TARGETS)
+			.addStoryBoard("mechanical_arm/filter", ArmScenes::filtering)
+			.addStoryBoard("mechanical_arm/modes", ArmScenes::modes)
+			.addStoryBoard("mechanical_arm/redstone", ArmScenes::redstone);
+
 		// Mechanical Piston
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, PonderTag.KINETIC_APPLIANCES,
@@ -296,6 +303,7 @@ public class PonderIndex {
 			.add(AllBlocks.CREATIVE_FLUID_TANK);
 
 		PonderRegistry.tags.forTag(PonderTag.ARM_TARGETS)
+			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllItems.BELT_CONNECTOR)
 			.add(AllBlocks.CHUTE)
 			.add(AllBlocks.DEPOT)

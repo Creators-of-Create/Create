@@ -61,6 +61,12 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		items.clear();
 		PonderRegistry.tags.getItems(tag)
 			.stream()
+			.filter(rl -> tag.getMainItem()
+				.isEmpty()
+				|| tag.getMainItem()
+					.getItem()
+					.getRegistryName()
+					.equals(rl))
 			.map(key -> {
 				Item item = ForgeRegistries.ITEMS.getValue(key);
 				if (item == null) {

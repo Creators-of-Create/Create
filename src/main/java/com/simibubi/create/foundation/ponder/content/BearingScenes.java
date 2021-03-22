@@ -618,7 +618,7 @@ public class BearingScenes {
 			.placeNearTarget();
 		scene.idle(40);
 		scene.world.configureCenterOfRotation(plank, util.vector.centerOf(bearingPos));
-
+		
 		if (!frame) {
 			scene.world.rotateBearing(bearingPos, 180, 75);
 			scene.world.rotateSection(plank, 0, 180, 0, 75);
@@ -633,11 +633,11 @@ public class BearingScenes {
 			scene.overlay.showControls(input, 30);
 			scene.idle(7);
 			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
-				.with(SailBlock.FACING, Direction.WEST), true);
+				.with(SailBlock.FACING, Direction.WEST), false);
 			scene.idle(10);
 			scene.overlay.showText(40)
 				.colored(PonderPalette.BLUE)
-				.text("Right Click with Dye to paint them")
+				.text("Right-Click with Dye to paint them")
 				.attachKeyFrame()
 				.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
 				.placeNearTarget();
@@ -647,7 +647,32 @@ public class BearingScenes {
 			scene.world.replaceBlocks(util.select.fromTo(2, 2, 1, 2, 4, 1),
 				AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
 					.with(SailBlock.FACING, Direction.WEST),
-				true);
+				false);
+
+			scene.idle(20);
+			scene.world.rotateBearing(bearingPos, 90, 33);
+			scene.world.rotateSection(plank, 0, 90, 0, 33);
+			scene.idle(40);
+
+			input =
+				new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.NORTH), Pointing.RIGHT)
+					.withItem(new ItemStack(Items.SHEARS));
+
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.setBlock(util.grid.at(3, 3, 2), AllBlocks.SAIL_FRAME.getDefaultState()
+				.with(SailBlock.FACING, Direction.NORTH), false);
+			scene.idle(10);
+			scene.overlay.showText(40)
+				.text("Right-Click with Shears to turn them back into frames")
+				.attachKeyFrame()
+				.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
+				.placeNearTarget();
+			scene.idle(20);
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.replaceBlocks(util.select.fromTo(3, 2, 2, 3, 4, 2), AllBlocks.SAIL_FRAME.getDefaultState()
+				.with(SailBlock.FACING, Direction.NORTH), false);
 			scene.idle(20);
 		}
 

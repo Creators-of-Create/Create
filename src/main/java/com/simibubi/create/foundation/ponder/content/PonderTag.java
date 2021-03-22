@@ -61,7 +61,7 @@ public class PonderTag implements IScreenRenderable {
 
 		SAILS = new PonderTag("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
 			.defaultLang("Sails for Windmill Bearings",
-				"Blocks that count towards the strength of a Windmill Contraption when assembled"),
+				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
 
 //		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
 //

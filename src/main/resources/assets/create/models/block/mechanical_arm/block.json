@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
+		"2": "create:block/brass_casing_belt",
 		"6": "create:block/crafter_top",
 		"7": "create:block/brass_block",
 		"particle": "create:block/crafter_top"
@@ -9,15 +10,15 @@
 	"elements": [
 		{
 			"name": "Base",
-			"from": [2, 0, 2],
-			"to": [14, 6, 14],
+			"from": [0, 0, 0],
+			"to": [16, 6, 16],
 			"faces": {
-				"north": {"uv": [2, 0, 14, 6], "texture": "#6"},
-				"east": {"uv": [2, 0, 14, 6], "texture": "#6"},
-				"south": {"uv": [2, 0, 14, 6], "texture": "#6"},
-				"west": {"uv": [2, 0, 14, 6], "texture": "#6"},
-				"up": {"uv": [2, 2, 14, 14], "texture": "#7"},
-				"down": {"uv": [2, 2, 14, 14], "texture": "#6"}
+				"north": {"uv": [8, 12.5, 16, 15.5], "texture": "#2"},
+				"east": {"uv": [8, 12.5, 16, 15.5], "texture": "#2"},
+				"south": {"uv": [8, 12.5, 16, 15.5], "texture": "#2"},
+				"west": {"uv": [8, 12.5, 16, 15.5], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#7"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#6"}
 			}
 		}
 	],

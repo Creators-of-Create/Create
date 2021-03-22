@@ -498,7 +498,7 @@ public class ArmTileEntity extends KineticTileEntity {
 		@Override
 		protected Vec3d getLocalOffset(BlockState state) {
 			int yPos = state.get(ArmBlock.CEILING) ? 16 - 3 : 3;
-			Vec3d location = VecHelper.voxelSpace(8, yPos, 14.5);
+			Vec3d location = VecHelper.voxelSpace(8, yPos, 15.95);
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
 			return location;
 		}
