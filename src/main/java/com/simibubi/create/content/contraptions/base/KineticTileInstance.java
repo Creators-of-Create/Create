@@ -25,10 +25,10 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected final void updateRotation(RotatingData key, Direction.Axis axis, float speed) {
-        key.setColor(tile.network)
-           .setRotationalSpeed(speed)
-           .setRotationOffset(getRotationOffset(axis))
-           .setRotationAxis(axis);
+        key.setRotationAxis(axis)
+                .setRotationOffset(getRotationOffset(axis))
+                .setRotationalSpeed(speed)
+                .setColor(tile.network);
     }
 
     protected final void updateRotation(RotatingData key, Direction.Axis axis) {
@@ -37,12 +37,12 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed, Direction.Axis axis) {
         key.getInstance()
-           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-           .setTileEntity(tile)
-           .setRotationalSpeed(speed)
-           .setRotationOffset(getRotationOffset(axis))
-           .setRotationAxis(axis);
+                .setRotationAxis(axis)
+                .setRotationalSpeed(speed)
+                .setRotationOffset(getRotationOffset(axis))
+                .setTileEntity(tile)
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
+                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos));
 
         return key;
     }

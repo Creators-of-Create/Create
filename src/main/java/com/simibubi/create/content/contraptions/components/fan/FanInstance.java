@@ -7,10 +7,8 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -31,8 +29,13 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
         shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite()).createInstance();
         fan = AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite()).createInstance();
 
-        updateRotation(shaft.getInstance().setTileEntity(tile), axis);
-        updateRotation(fan.getInstance().setTileEntity(tile), axis, getFanSpeed());
+        RotatingData shaftInstance = shaft.getInstance();
+        shaftInstance.setTileEntity(tile);
+        updateRotation(shaftInstance, axis);
+
+        RotatingData fanInstance = fan.getInstance();
+        fanInstance.setTileEntity(tile);
+        updateRotation(fanInstance, axis, getFanSpeed());
 
         updateLight();
     }

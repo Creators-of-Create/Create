@@ -5,10 +5,8 @@ import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
-public enum KineticVertexAttributes implements IVertexAttrib {
+public enum KineticAttributes implements IVertexAttrib {
     INSTANCE_POSITION("aInstancePos", CommonAttributes.VEC3),
-    LIGHT("aLight", CommonAttributes.LIGHT),
-    NETWORK_COLOR("aNetworkTint", CommonAttributes.RGB),
     SPEED("aSpeed", CommonAttributes.FLOAT),
     OFFSET("aOffset", CommonAttributes.FLOAT),
     ;
@@ -16,7 +14,7 @@ public enum KineticVertexAttributes implements IVertexAttrib {
     private final String name;
     private final VertexAttribSpec spec;
 
-    KineticVertexAttributes(String name, VertexAttribSpec spec) {
+    KineticAttributes(String name, VertexAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }

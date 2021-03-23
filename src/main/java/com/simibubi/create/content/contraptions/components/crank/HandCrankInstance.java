@@ -50,7 +50,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
                      .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis), angle)
                      .unCentre();
 
-        crank.getInstance().setTransformNoCopy(ms);
+        crank.getInstance().setTransform(ms);
     }
 
     @Override

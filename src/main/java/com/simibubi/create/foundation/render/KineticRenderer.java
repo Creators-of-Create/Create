@@ -3,20 +3,20 @@ package com.simibubi.create.foundation.render;
 import java.util.ArrayList;
 
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.base.RotatingInstancedModel;
+import com.simibubi.create.content.contraptions.base.RotatingModel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
-import com.simibubi.create.content.logistics.block.FlapInstancedModel;
+import com.simibubi.create.content.logistics.block.FlapModel;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.BasicInstancedModel;
-import net.minecraft.client.Minecraft;
+import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
+import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
+
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -28,11 +28,12 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
 
     @Override
     public void registerMaterials() {
-        materials.put(RenderMaterials.MODELS, new RenderMaterial<>(this, AllProgramSpecs.MODEL, BasicInstancedModel::new));
+        materials.put(RenderMaterials.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.MODEL, TransformedModel::new));
+        materials.put(RenderMaterials.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.ORIENTED, OrientedModel::new));
 
         materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.BELT, BeltInstancedModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.ROTATING, RotatingInstancedModel::new));
-        materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.FLAPS, FlapInstancedModel::new));
+        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.ROTATING, RotatingModel::new));
+        materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.FLAPS, FlapModel::new));
     }
 
     @Override

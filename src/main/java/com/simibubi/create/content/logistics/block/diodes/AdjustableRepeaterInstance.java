@@ -16,7 +16,7 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
     public AdjustableRepeaterInstance(InstancedTileRenderer<?> modelManager, AdjustableRepeaterTileEntity tile) {
         super(modelManager, tile);
 
-        indicator = modelManager.getBasicMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
+        indicator = modelManager.transformMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker.of(ms).translate(getFloatingPos());

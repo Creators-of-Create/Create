@@ -62,7 +62,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
             connectorAngleMult = flipAngle ? -1 : 1;
 
-            RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
+            RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
 
             upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
             lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
@@ -125,7 +125,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
            .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, facing.getAxis()), AngleHelper.rad(angle))
            .unCentre();
 
-        wheel.getInstance().setTransformNoCopy(ms);
+        wheel.getInstance().setTransform(ms);
 
         lastAngle = angle;
         firstFrame = false;

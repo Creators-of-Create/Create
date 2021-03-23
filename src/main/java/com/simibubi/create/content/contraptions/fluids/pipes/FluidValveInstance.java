@@ -37,7 +37,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
         boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical();
         pointerRotationOffset = twist ? 90 : 0;
 
-        pointer = modelManager.getBasicMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
+        pointer = modelManager.transformMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
 
         updateLight();
         transformPointer((FluidValveTileEntity) tile);

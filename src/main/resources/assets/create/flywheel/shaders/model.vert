@@ -7,10 +7,10 @@ attribute vec3 aPos;
 attribute vec3 aNormal;
 attribute vec2 aTexCoords;
 
-attribute mat4 aTransform;
-attribute mat3 aNormalMat;
 attribute vec2 aLight;
 attribute vec4 aColor;
+attribute mat4 aTransform;
+attribute mat3 aNormalMat;
 
 varying vec2 TexCoords;
 varying vec4 Color;
@@ -38,11 +38,11 @@ varying float FragDistance;
 void main() {
     vec4 worldPos = aTransform * vec4(aPos, 1.);
 
-    mat3 normalMat = aNormalMat;
+    vec3 norm = aNormalMat * aNormal;
 
 #ifdef CONTRAPTION
     worldPos = uModel * worldPos;
-    normalMat *= modelToNormal(uModel);
+    norm = modelToNormal(uModel) * norm;
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
     #if defined(USE_FOG)
@@ -52,7 +52,7 @@ void main() {
     FragDistance = length(worldPos.xyz - uCameraPos);
 #endif
 
-    vec3 norm = normalize(normalMat * aNormal);
+    norm = normalize(norm);
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;

@@ -30,7 +30,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
         Direction facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
-        this.frame = modelManager.getMaterial(RenderMaterials.MODELS).getModel(frame, blockState).createInstance();
+        this.frame = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(frame, blockState).createInstance();
 
         float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 
@@ -45,7 +45,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
            .translate(0, 0, -1);
 
         this.frame.getInstance()
-                  .setTransformNoCopy(ms);
+                  .setTransform(ms);
 
         updateLight();
     }

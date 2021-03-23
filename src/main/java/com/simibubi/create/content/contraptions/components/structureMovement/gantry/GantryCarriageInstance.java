@@ -29,7 +29,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
     public GantryCarriageInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        gantryCogs = modelManager.getMaterial(RenderMaterials.MODELS)
+        gantryCogs = modelManager.getMaterial(RenderMaterials.TRANSFORMED)
                                  .getModel(AllBlockPartials.GANTRY_COGS, blockState)
                                  .createInstance();
 
@@ -72,7 +72,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
                      .translate(0, 9 / 16f, 0)
                      .unCentre();
 
-        gantryCogs.getInstance().setTransformNoCopy(ms);
+        gantryCogs.getInstance().setTransform(ms);
     }
 
     @Override

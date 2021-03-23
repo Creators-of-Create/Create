@@ -23,7 +23,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     public AnalogLeverInstance(InstancedTileRenderer<?> modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
+        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
@@ -62,7 +62,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
            .translate(-1 / 2f, -1 / 16f, -1 / 2f);
 
         handle.getInstance()
-              .setTransformNoCopy(ms);
+              .setTransform(ms);
     }
 
     @Override

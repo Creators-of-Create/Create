@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL20;
 
 public class ContraptionModel extends BufferedModel {
     public static final VertexFormat FORMAT = VertexFormat.builder()
-                                                             .addAttributes(ContraptionVertexAttributes.class)
+                                                             .addAttributes(ContraptionAttributes.class)
                                                              .build();
 
     protected GlPrimitiveType eboIndexType;

@@ -42,12 +42,12 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             InstanceKey<RotatingData> key = shaft.createInstance();
 
             key.getInstance()
-               .setBlockLight(blockLight)
-               .setSkyLight(skyLight)
-               .setRotationalSpeed(getSpeed(direction))
-               .setRotationOffset(getRotationOffset(axis))
-               .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-               .setTileEntity(tile);
+                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+                    .setRotationalSpeed(getSpeed(direction))
+                    .setRotationOffset(getRotationOffset(axis))
+                    .setTileEntity(tile)
+                    .setBlockLight(blockLight)
+                    .setSkyLight(skyLight);
 
             keys.put(direction, key);
         }
@@ -82,11 +82,11 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             Direction.Axis axis = direction.getAxis();
 
             key.getValue()
-               .getInstance()
-               .setColor(tile.network)
-               .setRotationalSpeed(getSpeed(direction))
-               .setRotationOffset(getRotationOffset(axis))
-               .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
+                    .getInstance()
+                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+                    .setRotationalSpeed(getSpeed(direction))
+                    .setRotationOffset(getRotationOffset(axis))
+                    .setColor(tile.network);
         }
     }
 

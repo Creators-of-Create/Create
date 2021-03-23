@@ -1,25 +1,22 @@
-package com.simibubi.create.content.logistics.block;
+package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
-public enum FlapVertexAttributes implements IVertexAttrib {
-    INSTANCE_POSITION("aInstancePos",CommonAttributes.VEC3),
-    LIGHT("aLight", CommonAttributes.LIGHT),
-    SEGMENT_OFFSET("aSegmentOffset", CommonAttributes.VEC3),
-    PIVOT("aPivot", CommonAttributes.VEC3),
-    HORIZONTAL_ANGLE("aHorizontalAngle", CommonAttributes.FLOAT),
-    INTENSITY("aIntensity", CommonAttributes.FLOAT),
-    FLAP_SCALE("aFlapScale", CommonAttributes.FLOAT),
-    FLAPNESS("aFlapness", CommonAttributes.FLOAT),
+public enum ContraptionAttributes implements IVertexAttrib {
+    VERTEX_POSITION("aPos", CommonAttributes.VEC3),
+    NORMAL("aNormal", CommonAttributes.NORMAL),
+    TEXTURE("aTexCoords", CommonAttributes.UV),
+    COLOR("aColor", CommonAttributes.RGBA),
+    MODEL_LIGHT("aModelLight", CommonAttributes.LIGHT),
     ;
 
     private final String name;
     private final VertexAttribSpec spec;
 
-    FlapVertexAttributes(String name, VertexAttribSpec spec) {
+    ContraptionAttributes(String name, VertexAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }
@@ -36,11 +33,11 @@ public enum FlapVertexAttributes implements IVertexAttrib {
 
     @Override
     public int getDivisor() {
-        return 1;
+        return 0;
     }
 
     @Override
     public int getBufferIndex() {
-        return 1;
+        return 0;
     }
 }

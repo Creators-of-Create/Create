@@ -17,7 +17,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
+        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
@@ -54,7 +54,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         msr.translate(-.5f, -15 / 16f, -.5f);
         msr.translate(0, -recoil / 100, 0);
 
-        pipe.getInstance().setTransformNoCopy(ms);
+        pipe.getInstance().setTransform(ms);
     }
 
     @Override

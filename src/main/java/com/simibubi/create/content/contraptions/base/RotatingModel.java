@@ -3,11 +3,18 @@ package com.simibubi.create.content.contraptions.base;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.impl.BasicAttributes;
 
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class RotatingInstancedModel extends InstancedModel<RotatingData> {
-    public RotatingInstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
+public class RotatingModel extends InstancedModel<RotatingData> {
+    public static VertexFormat FORMAT = VertexFormat.builder()
+            .addAttributes(BasicAttributes.class)
+            .addAttributes(KineticAttributes.class)
+            .addAttributes(RotatingAttributes.class)
+            .build();
+
+    public RotatingModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(renderer, buf);
     }
 
@@ -18,7 +25,7 @@ public class RotatingInstancedModel extends InstancedModel<RotatingData> {
 
     @Override
     protected VertexFormat getInstanceFormat() {
-        return RotatingData.FORMAT;
+        return FORMAT;
     }
 
 }

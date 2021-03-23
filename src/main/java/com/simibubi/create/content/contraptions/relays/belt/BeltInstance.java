@@ -160,14 +160,14 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
 
         key.getInstance()
-           .setTileEntity(tile)
-           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-           .setRotation(q)
-           .setRotationalSpeed(getScrollSpeed())
-           .setRotationOffset(bottom ? 0.5f : 0f)
-           .setScrollTexture(spriteShift)
-           .setScrollMult(diagonal ? 3f / 8f : 0.5f);
+                .setScrollTexture(spriteShift)
+                .setScrollMult(diagonal ? 3f / 8f : 0.5f)
+                .setRotation(q)
+                .setRotationalSpeed(getScrollSpeed())
+                .setRotationOffset(bottom ? 0.5f : 0f)
+                .setTileEntity(tile)
+                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos));
 
         return key;
     }

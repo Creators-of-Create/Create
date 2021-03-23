@@ -26,7 +26,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
         mixerHead.getInstance()
                  .setRotationAxis(Direction.Axis.Y);
 
-        mixerPole = modelManager.getMaterial(RenderMaterials.MODELS)
+        mixerPole = modelManager.getMaterial(RenderMaterials.TRANSFORMED)
                                 .getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState)
                                 .createInstance();
 
@@ -68,7 +68,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
         msr.translate(getFloatingPos());
         msr.translate(0, -renderedHeadOffset, 0);
 
-        mixerPole.getInstance().setTransformNoCopy(ms);
+        mixerPole.getInstance().setTransform(ms);
     }
 
     private float getRenderedHeadOffset(MechanicalMixerTileEntity mixer) {

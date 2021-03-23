@@ -7,50 +7,45 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class RenderUtil {
-    public static int nextPowerOf2(int a)  {
-        int h = Integer.highestOneBit(a);
-        return (h == a) ? h : (h << 1);
-    }
+	public static int nextPowerOf2(int a)  {
+		int h = Integer.highestOneBit(a);
+		return (h == a) ? h : (h << 1);
+	}
 
-    public static boolean isPowerOf2(int n) {
-        int b = n & (n - 1);
-        return b == 0 && n != 0;
-    }
+	public static boolean isPowerOf2(int n) {
+		int b = n & (n - 1);
+		return b == 0 && n != 0;
+	}
 
-    // GPUs want matrices in column major order.
+	// GPUs want matrices in column major order.
 
-    public static void writeMat3(ByteBuffer buf, Matrix3f mat) {
-        buf.putFloat(mat.a00);
-        buf.putFloat(mat.a10);
-        buf.putFloat(mat.a20);
-        buf.putFloat(mat.a01);
-        buf.putFloat(mat.a11);
-        buf.putFloat(mat.a21);
-        buf.putFloat(mat.a02);
-        buf.putFloat(mat.a12);
-        buf.putFloat(mat.a22);
-    }
-
-    public static void writeMat4(ByteBuffer buf, Matrix4f mat) {
-        buf.putFloat(mat.a00);
-        buf.putFloat(mat.a10);
-        buf.putFloat(mat.a20);
-        buf.putFloat(mat.a30);
-        buf.putFloat(mat.a01);
-        buf.putFloat(mat.a11);
-        buf.putFloat(mat.a21);
-        buf.putFloat(mat.a31);
-        buf.putFloat(mat.a02);
-        buf.putFloat(mat.a12);
-        buf.putFloat(mat.a22);
-        buf.putFloat(mat.a32);
-        buf.putFloat(mat.a03);
-        buf.putFloat(mat.a13);
-        buf.putFloat(mat.a23);
-        buf.putFloat(mat.a33);
-
-
-
-
-    }
+	public static float[] bufferMatrices(Matrix4f model, Matrix3f normal) {
+		return new float[] {
+				model.a00,
+				model.a10,
+				model.a20,
+				model.a30,
+				model.a01,
+				model.a11,
+				model.a21,
+				model.a31,
+				model.a02,
+				model.a12,
+				model.a22,
+				model.a32,
+				model.a03,
+				model.a13,
+				model.a23,
+				model.a33,
+				normal.a00,
+				normal.a10,
+				normal.a20,
+				normal.a01,
+				normal.a11,
+				normal.a21,
+				normal.a02,
+				normal.a12,
+				normal.a22,
+		};
+	}
 }

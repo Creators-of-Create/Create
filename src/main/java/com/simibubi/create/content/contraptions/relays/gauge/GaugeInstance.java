@@ -30,7 +30,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        InstancedModel<ModelData> dialModel = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        InstancedModel<ModelData> dialModel = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_DIAL, blockState);
         InstancedModel<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
@@ -151,7 +151,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
+            return modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
         }
     }
 
@@ -162,7 +162,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
+            return modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
         }
     }
 }

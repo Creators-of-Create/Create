@@ -24,7 +24,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
     public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
 
-        head = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
+        head = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
 
         fakeWorld = tile.getWorld() != Minecraft.getInstance().world;
         facing = blockState.get(StickerBlock.FACING);
@@ -54,7 +54,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
                      .translate(0, (offset * offset) * 4 / 16f, 0);
 
         head.getInstance()
-            .setTransformNoCopy(stack);
+            .setTransform(stack);
 
         lastOffset = offset;
     }

@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.render.backend.instancing;
 
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.RenderUtil;
@@ -14,13 +13,13 @@ import org.lwjgl.opengl.GL20;
 import com.simibubi.create.foundation.render.backend.BufferedModel;
 import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlVertexArray;
-import com.simibubi.create.foundation.render.backend.gl.attrib.ModelVertexAttributes;
+import com.simibubi.create.foundation.render.backend.instancing.impl.ModelAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;
 
 public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
-    public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelVertexAttributes.class).build();
+    public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
 
     public final InstancedTileRenderer<?> renderer;
 

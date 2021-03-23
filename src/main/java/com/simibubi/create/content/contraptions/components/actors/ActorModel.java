@@ -6,18 +6,22 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRen
 
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class RotatingActorModel extends InstancedModel<ContraptionActorData> {
-    public RotatingActorModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
+public class ActorModel extends InstancedModel<ActorData> {
+    public static VertexFormat FORMAT = VertexFormat.builder()
+            .addAttributes(ActorVertexAttributes.class)
+            .build();
+
+    public ActorModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(renderer, buf);
     }
 
     @Override
     protected VertexFormat getInstanceFormat() {
-        return ContraptionActorData.FORMAT;
+        return FORMAT;
     }
 
     @Override
-    protected ContraptionActorData newInstance() {
-        return new ContraptionActorData(this);
+    protected ActorData newInstance() {
+        return new ActorData(this);
     }
 }

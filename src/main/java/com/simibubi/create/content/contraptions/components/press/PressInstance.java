@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -19,9 +18,7 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
     public PressInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        pressHead = modelManager.getMaterial(RenderMaterials.MODELS)
-                                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
-                                .createInstance();
+        pressHead = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontalModel(dispatcher, blockState).createInstance();
 
         updateLight();
         transformModels((MechanicalPressTileEntity) tile);
@@ -46,7 +43,7 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
         msr.translate(0, -renderedHeadOffset, 0);
 
         pressHead.getInstance()
-                 .setTransformNoCopy(ms);
+                 .setTransform(ms);
     }
 
     private float getRenderedHeadOffset(MechanicalPressTileEntity press) {

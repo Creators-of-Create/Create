@@ -2,18 +2,19 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.base.RotatingInstancedModel;
-import com.simibubi.create.content.contraptions.components.actors.ContraptionActorData;
-import com.simibubi.create.content.contraptions.components.actors.RotatingActorModel;
+import com.simibubi.create.content.contraptions.base.RotatingModel;
+import com.simibubi.create.content.contraptions.components.actors.ActorData;
+import com.simibubi.create.content.contraptions.components.actors.ActorModel;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
-import com.simibubi.create.content.logistics.block.FlapInstancedModel;
+import com.simibubi.create.content.logistics.block.FlapModel;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.BasicInstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
+import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 
 public class ContraptionKineticRenderer extends InstancedTileRenderer<ContraptionProgram> {
 
-    protected ArrayList<ActorInstance> actors = new ArrayList<>();
+    protected ArrayList<com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance> actors = new ArrayList<>();
 
     public final RenderedContraption contraption;
 
@@ -33,35 +34,36 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
 
     @Override
     public void registerMaterials() {
-        materials.put(RenderMaterials.MODELS, new RenderMaterial<>(this, AllProgramSpecs.C_MODEL, BasicInstancedModel::new));
+        materials.put(RenderMaterials.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.C_MODEL, TransformedModel::new));
+        materials.put(RenderMaterials.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.C_ORIENTED, OrientedModel::new));
 
         materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.C_BELT, BeltInstancedModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.C_ROTATING, RotatingInstancedModel::new));
-        materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.C_FLAPS, FlapInstancedModel::new));
-        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(this, AllProgramSpecs.C_ACTOR, RotatingActorModel::new));
+        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.C_ROTATING, RotatingModel::new));
+        materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.C_FLAPS, FlapModel::new));
+        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(this, AllProgramSpecs.C_ACTOR, ActorModel::new));
     }
 
     @Override
     public void tick() {
-        actors.forEach(ActorInstance::tick);
+        actors.forEach(com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance::tick);
     }
 
     @Override
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
         super.beginFrame(cameraX, cameraY, cameraZ);
 
-        actors.forEach(ActorInstance::beginFrame);
+        actors.forEach(com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance::beginFrame);
     }
 
     @Nullable
-    public ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {
+    public com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {
         Template.BlockInfo blockInfo = actor.getLeft();
         MovementContext context = actor.getRight();
 
         MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 
         if (movementBehaviour != null && movementBehaviour.hasSpecialInstancedRendering()) {
-            ActorInstance instance = movementBehaviour.createInstance(this, context);
+            com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance instance = movementBehaviour.createInstance(this, context);
 
             actors.add(instance);
 
@@ -71,7 +73,7 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
         return null;
     }
 
-    public RenderMaterial<?, InstancedModel<ContraptionActorData>> getActorMaterial() {
+    public RenderMaterial<?, InstancedModel<ActorData>> getActorMaterial() {
         return getMaterial(KineticRenderMaterials.ACTORS);
     }
 
