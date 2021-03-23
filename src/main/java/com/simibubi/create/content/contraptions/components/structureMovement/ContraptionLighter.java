@@ -40,13 +40,15 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
     public abstract GridAlignedBB getContraptionBounds();
 
     @Override
-    public void onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
+    public boolean onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
         lightVolume.notifyLightUpdate(world, type, changed);
+        return false;
     }
 
     @Override
-    public void onLightPacket(ILightReader world, int chunkX, int chunkZ) {
+    public boolean onLightPacket(ILightReader world, int chunkX, int chunkZ) {
         lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+        return false;
     }
 
     protected void startListening() {

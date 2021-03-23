@@ -1094,7 +1094,7 @@ public abstract class Contraption {
 
 		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
 
-		GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(bounds);
+		GridAlignedBB contraptionBounds = GridAlignedBB.from(bounds);
 		if (axis == Direction.Axis.X) {
 			betterBounds.maxX = contraptionBounds.maxX;
 			betterBounds.minX = contraptionBounds.minX;

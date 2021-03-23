@@ -23,7 +23,9 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandle
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.light.ILightListener;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
+import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -46,6 +48,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
@@ -57,7 +60,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity implements ILightListener {
+public class BeltTileEntity extends KineticTileEntity implements LightUpdateListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -73,8 +76,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 	public CompoundNBT trackerUpdateTag;
 
 	// client
-	public byte blockLight = -1;
-	public byte skyLight = -1;
+	public byte[] light;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -109,8 +111,9 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 
 		initializeItemHandler();
 
-		if (blockLight == -1)
-			updateLight();
+		if (light == null && isController())
+			LightUpdater.getInstance().startListening(getBeltVolume(), this);
+			initializeLight();
 
 		// Move Items
 		if (!isController())
@@ -514,22 +517,67 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 	}
 
 	@Override
-	public void onChunkLightUpdate() {
-		updateLight();
-	}
-
-	@Override
 	public boolean shouldRenderAsTE() {
 		return isController();
 	}
 
-	private void updateLight() {
-		if (world != null) {
-			skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
-			blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
-		} else {
-			skyLight = -1;
-			blockLight = -1;
+	@Override
+	public boolean onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
+		if (this.removed) {
+			return true;
+		}
+
+		GridAlignedBB beltVolume = getBeltVolume();
+
+		if (beltVolume.intersects(changed)) {
+			GridAlignedBB section = changed.intersect(beltVolume);
+
+			if (type == LightType.BLOCK)
+				section.forEachContained(this::updateBlockLight);
+
+			if (type == LightType.SKY)
+				section.forEachContained(this::updateSkyLight);
+		}
+
+		return false;
+	}
+
+	private GridAlignedBB getBeltVolume() {
+		BlockPos endPos = controller.offset(getBeltFacing(), beltLength - 1);
+
+		return GridAlignedBB.from(pos, endPos);
+	}
+
+	private void updateBlockLight(int x, int y, int z) {
+		int segment = posToSegment(x, y, z) * 2;
+
+		light[segment] = (byte) world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
+	}
+
+	private void updateSkyLight(int x, int y, int z) {
+		int segment = posToSegment(x, y, z) * 2;
+
+		light[segment + 1] = (byte) world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
+	}
+
+	private int posToSegment(int x, int y, int z) {
+		int dX = Math.abs(controller.getX() - x);
+		int dY = Math.abs(controller.getY() - y);
+		int dZ = Math.abs(controller.getZ() - z);
+		return dY + dX + dZ;
+	}
+
+	private void initializeLight() {
+		light = new byte[beltLength * 2];
+
+		Direction facing = getBeltFacing();
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 0; i < beltLength; i++) {
+			int segment = 2 * i;
+			light[segment] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+			light[segment + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
+
+			pos.move(facing);
 		}
 	}
 }

@@ -11,16 +11,22 @@ public interface LightUpdateListener {
 
 	/**
 	 * Called when a light updates in a chunk the implementor cares about.
+	 *
+	 * @return true if this object is no longer valid and should not receive any more updates.
 	 */
-	void onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed);
+	boolean onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed);
 
 	/**
 	 * Called when the server sends light data to the client.
+	 *
+	 * @return true if this object is no longer valid and should not receive any more updates.
 	 */
-	default void onLightPacket(ILightReader world, int chunkX, int chunkZ) {
-		GridAlignedBB changedVolume = GridAlignedBB.fromChunk(chunkX, chunkZ);
+	default boolean onLightPacket(ILightReader world, int chunkX, int chunkZ) {
+		GridAlignedBB changedVolume = GridAlignedBB.from(chunkX, chunkZ);
 
-		onLightUpdate(world, LightType.BLOCK, changedVolume);
-		onLightUpdate(world, LightType.SKY, changedVolume);
+		if (onLightUpdate(world, LightType.BLOCK, changedVolume))
+			return true;
+
+		return onLightUpdate(world, LightType.SKY, changedVolume);
 	}
 }

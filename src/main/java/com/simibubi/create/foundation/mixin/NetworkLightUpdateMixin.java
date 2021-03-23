@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.mixin;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
-import com.simibubi.create.foundation.render.backend.light.ILightListener;
 import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.client.Minecraft;
@@ -39,9 +38,6 @@ public class NetworkLightUpdateMixin {
                         .values()
                         .forEach(tile -> {
                             CreateClient.kineticRenderer.get(world).onLightUpdate(tile);
-
-                            if (tile instanceof ILightListener)
-                                ((ILightListener) tile).onChunkLightUpdate();
                         });
             }
 

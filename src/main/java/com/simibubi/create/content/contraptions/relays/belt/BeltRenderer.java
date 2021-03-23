@@ -294,10 +294,10 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	}
 
 	protected int getPackedLight(BeltTileEntity controller, float beltPos) {
-		BeltTileEntity belt = BeltHelper.getBeltForOffset(controller, beltPos);
+		int segment = (int) Math.floor(beltPos) * 2;
 
-		if (belt == null) return 0;
+		if (controller.light == null || segment >= controller.light.length) return 0;
 
-		return (belt.skyLight << 20) | (belt.blockLight << 4);
+		return (controller.light[segment + 1] << 20) | (controller.light[segment] << 4);
 	}
 }
