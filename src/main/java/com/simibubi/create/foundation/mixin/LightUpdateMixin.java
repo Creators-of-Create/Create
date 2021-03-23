@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.light.ILightListener;
+import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.util.math.SectionPos;
@@ -54,6 +55,6 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
             });
         }
 
-        ContraptionRenderDispatcher.notifyLightUpdate(world, type, pos);
+        LightUpdater.getInstance().onLightUpdate(world, type, pos.asLong());
     }
 }

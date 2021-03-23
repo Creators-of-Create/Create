@@ -1,10 +1,15 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import net.minecraft.world.ILightReader;
+import net.minecraft.world.LightType;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
+import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.render.backend.light.LightVolume;
 
-public abstract class ContraptionLighter<C extends Contraption> {
+public abstract class ContraptionLighter<C extends Contraption> implements LightUpdateListener {
     protected final C contraption;
     public final LightVolume lightVolume;
 
@@ -21,14 +26,8 @@ public abstract class ContraptionLighter<C extends Contraption> {
 
         lightVolume.initialize(contraption.entity.world);
         scheduleRebuild = true;
-    }
 
-    protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
-        bounds.grow(1); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
-        bounds.minY = Math.max(bounds.minY, 0);
-        bounds.maxY = Math.min(bounds.maxY, 255);
-
-        return bounds;
+        startListening();
     }
 
     public void tick(RenderedContraption owner) {
@@ -39,4 +38,26 @@ public abstract class ContraptionLighter<C extends Contraption> {
     }
 
     public abstract GridAlignedBB getContraptionBounds();
+
+    @Override
+    public void onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
+        lightVolume.notifyLightUpdate(world, type, changed);
+    }
+
+    @Override
+    public void onLightPacket(ILightReader world, int chunkX, int chunkZ) {
+        lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+    }
+
+    protected void startListening() {
+        LightUpdater.getInstance().startListening(bounds, this);
+    }
+
+    protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
+        bounds.grow(1); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
+        bounds.minY = Math.max(bounds.minY, 0);
+        bounds.maxY = Math.min(bounds.maxY, 255);
+
+        return bounds;
+    }
 }

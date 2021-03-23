@@ -25,6 +25,8 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
         if (!contraptionBounds.sameAs(bounds)) {
             lightVolume.move(contraption.entity.world, contraptionBoundsToVolume(contraptionBounds));
             bounds = contraptionBounds;
+
+            startListening();
         }
     }
 

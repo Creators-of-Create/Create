@@ -123,17 +123,21 @@ public class LightVolume {
         }
     }
 
-    public void notifyLightUpdate(ILightReader world, LightType type, SectionPos location) {
-        GridAlignedBB changedVolume = GridAlignedBB.fromSection(location);
+    public void notifyLightUpdate(ILightReader world, LightType type, GridAlignedBB changedVolume) {
+        if (removed)
+            return;
+
         if (!changedVolume.intersects(sampleVolume))
             return;
-        changedVolume.intersectAssign(sampleVolume); // compute the region contained by us that has dirty lighting data.
+        changedVolume = changedVolume.intersect(sampleVolume); // compute the region contained by us that has dirty lighting data.
 
         if (type == LightType.BLOCK) copyBlock(world, changedVolume);
         else if (type == LightType.SKY) copySky(world, changedVolume);
     }
 
     public void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
+        if (removed) return;
+
         GridAlignedBB changedVolume = GridAlignedBB.fromChunk(chunkX, chunkZ);
         if (!changedVolume.intersects(sampleVolume))
             return;

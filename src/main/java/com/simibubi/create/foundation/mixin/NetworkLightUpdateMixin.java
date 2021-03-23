@@ -1,13 +1,19 @@
 package com.simibubi.create.foundation.mixin;
 
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.render.backend.light.ILightListener;
+import com.simibubi.create.foundation.render.backend.light.LightUpdater;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.play.server.SUpdateLightPacket;
+import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.chunk.Chunk;
+
+import java.util.Map;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,14 +36,16 @@ public class NetworkLightUpdateMixin {
 
             if (chunk != null) {
                 chunk.getTileEntityMap()
-                     .values()
-                     .stream()
-                     .filter(tile -> tile instanceof ILightListener)
-                     .map(tile -> (ILightListener) tile)
-                     .forEach(ILightListener::onChunkLightUpdate);
+                        .values()
+                        .forEach(tile -> {
+                            CreateClient.kineticRenderer.get(world).onLightUpdate(tile);
+
+                            if (tile instanceof ILightListener)
+                                ((ILightListener) tile).onChunkLightUpdate();
+                        });
             }
 
-            ContraptionRenderDispatcher.notifyLightPacket(world, chunkX, chunkZ);
+            LightUpdater.getInstance().onLightPacket(world, chunkX, chunkZ);
         });
     }
 }

@@ -17,6 +17,6 @@ public abstract class ActorInstance {
     public void beginFrame() { }
 
     protected int localBlockLight() {
-        return modelManager.contraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos);
+        return modelManager.getContraption().renderWorld.getLightLevel(LightType.BLOCK, context.localPos);
     }
 }

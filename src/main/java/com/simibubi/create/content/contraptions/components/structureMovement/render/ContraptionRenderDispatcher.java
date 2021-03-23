@@ -54,12 +54,6 @@ public class ContraptionRenderDispatcher {
     public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
     protected static PlacementSimulationWorld renderWorld;
 
-    public static void notifyLightUpdate(ILightReader world, LightType type, SectionPos pos) {
-        for (RenderedContraption renderer : renderers.values()) {
-            renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
-        }
-    }
-
     public static void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
         for (RenderedContraption renderer : renderers.values()) {
             renderer.getLighter().lightVolume.notifyLightPacket(world, chunkX, chunkZ);

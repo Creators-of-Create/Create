@@ -20,16 +20,17 @@ import net.minecraft.world.gen.feature.template.Template;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class ContraptionKineticRenderer extends InstancedTileRenderer<ContraptionProgram> {
 
     protected ArrayList<com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance> actors = new ArrayList<>();
 
-    public final RenderedContraption contraption;
+    private final WeakReference<RenderedContraption> contraption;
 
     ContraptionKineticRenderer(RenderedContraption contraption) {
-        this.contraption = contraption;
+        this.contraption = new WeakReference<>(contraption);
     }
 
     @Override
@@ -75,6 +76,10 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
 
     public RenderMaterial<?, InstancedModel<ActorData>> getActorMaterial() {
         return getMaterial(KineticRenderMaterials.ACTORS);
+    }
+
+    public RenderedContraption getContraption() {
+        return contraption.get();
     }
 
     @Override
