@@ -91,6 +91,22 @@ public class GridAlignedBB {
                 maxZ == other.maxZ;
     }
 
+    public void fixMinMax() {
+        int minX = Math.min(this.minX, this.maxX);
+        int minY = Math.min(this.minY, this.maxY);
+        int minZ = Math.min(this.minZ, this.maxZ);
+        int maxX = Math.max(this.minX, this.maxX);
+        int maxY = Math.max(this.minY, this.maxY);
+        int maxZ = Math.max(this.minZ, this.maxZ);
+
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+    }
+
     public int sizeX() {
         return maxX - minX;
     }

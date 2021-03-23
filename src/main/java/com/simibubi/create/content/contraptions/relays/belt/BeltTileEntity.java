@@ -44,10 +44,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -111,13 +108,15 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 
 		initializeItemHandler();
 
-		if (light == null && isController())
-			LightUpdater.getInstance().startListening(getBeltVolume(), this);
-			initializeLight();
-
 		// Move Items
 		if (!isController())
 			return;
+
+		if (light == null && world.isRemote) {
+			initializeLight();
+			LightUpdater.getInstance().startListening(getBeltVolume(), this);
+		}
+
 		getInventory().tick();
 
 		if (getSpeed() == 0)
@@ -530,54 +529,63 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 		GridAlignedBB beltVolume = getBeltVolume();
 
 		if (beltVolume.intersects(changed)) {
-			GridAlignedBB section = changed.intersect(beltVolume);
-
 			if (type == LightType.BLOCK)
-				section.forEachContained(this::updateBlockLight);
+				updateBlockLight();
 
 			if (type == LightType.SKY)
-				section.forEachContained(this::updateSkyLight);
+				updateSkyLight();
 		}
 
 		return false;
 	}
 
 	private GridAlignedBB getBeltVolume() {
-		BlockPos endPos = controller.offset(getBeltFacing(), beltLength - 1);
+		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
 
-		return GridAlignedBB.from(pos, endPos);
-	}
-
-	private void updateBlockLight(int x, int y, int z) {
-		int segment = posToSegment(x, y, z) * 2;
-
-		light[segment] = (byte) world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
-	}
-
-	private void updateSkyLight(int x, int y, int z) {
-		int segment = posToSegment(x, y, z) * 2;
-
-		light[segment + 1] = (byte) world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
-	}
-
-	private int posToSegment(int x, int y, int z) {
-		int dX = Math.abs(controller.getX() - x);
-		int dY = Math.abs(controller.getY() - y);
-		int dZ = Math.abs(controller.getZ() - z);
-		return dY + dX + dZ;
+		GridAlignedBB bb = GridAlignedBB.from(pos, endPos);
+		bb.fixMinMax();
+		return bb;
 	}
 
 	private void initializeLight() {
 		light = new byte[beltLength * 2];
 
-		Direction facing = getBeltFacing();
-		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
-		for (int i = 0; i < beltLength; i++) {
-			int segment = 2 * i;
-			light[segment] = (byte) world.getLightLevel(LightType.BLOCK, pos);
-			light[segment + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
-			pos.move(facing);
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 0; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+			light[i + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
+		}
+	}
+
+	private void updateBlockLight() {
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 0; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
+		}
+	}
+
+	private void updateSkyLight() {
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 1; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.SKY, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
 		}
 	}
 }
