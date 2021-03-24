@@ -36,6 +36,7 @@ import net.minecraft.item.crafting.SmokingRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.BlastFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.SmokerTileEntity;
@@ -69,7 +70,7 @@ public class InWorldProcessing {
 				return Type.SPLASHING;
 			Block block = blockState.getBlock();
 			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				|| (block == Blocks.CAMPFIRE && blockState.get(CampfireBlock.LIT))
+				|| (BlockTags.CAMPFIRES.contains(block) && blockState.method_28500(CampfireBlock.LIT).orElse(false))
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
