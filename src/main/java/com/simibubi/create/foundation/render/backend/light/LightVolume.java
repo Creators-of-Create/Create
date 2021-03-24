@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.render.backend.gl.GlTexture;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 
@@ -138,7 +137,7 @@ public class LightVolume {
     public void notifyLightPacket(ILightReader world, int chunkX, int chunkZ) {
         if (removed) return;
 
-        GridAlignedBB changedVolume = GridAlignedBB.fromChunk(chunkX, chunkZ);
+        GridAlignedBB changedVolume = GridAlignedBB.from(chunkX, chunkZ);
         if (!changedVolume.intersects(sampleVolume))
             return;
         changedVolume.intersectAssign(sampleVolume); // compute the region contained by us that has dirty lighting data.

@@ -114,12 +114,9 @@ public class LightUpdater {
 
 		if (set == null || set.isEmpty()) return;
 
-		GridAlignedBB chunkBox = GridAlignedBB.fromSection(SectionPos.from(sectionPos));
+		GridAlignedBB chunkBox = GridAlignedBB.from(SectionPos.from(sectionPos));
 
-		for (LightUpdateListener listener : set) {
-			listener.onLightUpdate(world, type, chunkBox.copy());
-		}
-
+		set.removeIf(listener -> listener.onLightUpdate(world, type, chunkBox.copy()));
 	}
 
 	/**
@@ -136,10 +133,7 @@ public class LightUpdater {
 
 		if (set == null || set.isEmpty()) return;
 
-		for (LightUpdateListener listener : set) {
-			listener.onLightPacket(world, chunkX, chunkZ);
-		}
-
+		set.removeIf(listener -> listener.onLightPacket(world, chunkX, chunkZ));
 	}
 
 	private LongRBTreeSet clearChunks(LightUpdateListener listener) {

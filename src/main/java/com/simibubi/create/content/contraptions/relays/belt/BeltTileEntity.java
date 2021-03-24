@@ -23,7 +23,9 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandle
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.light.ILightListener;
+import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
+import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -42,10 +44,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
+import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
@@ -57,7 +57,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity implements ILightListener {
+public class BeltTileEntity extends KineticTileEntity implements LightUpdateListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -73,8 +73,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 	public CompoundNBT trackerUpdateTag;
 
 	// client
-	public byte blockLight = -1;
-	public byte skyLight = -1;
+	public byte[] light;
 
 	public static enum CasingType {
 		NONE, ANDESITE, BRASS;
@@ -109,12 +108,15 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 
 		initializeItemHandler();
 
-		if (blockLight == -1)
-			updateLight();
-
 		// Move Items
 		if (!isController())
 			return;
+
+		if (light == null && world.isRemote) {
+			initializeLight();
+			LightUpdater.getInstance().startListening(getBeltVolume(), this);
+		}
+
 		getInventory().tick();
 
 		if (getSpeed() == 0)
@@ -514,22 +516,76 @@ public class BeltTileEntity extends KineticTileEntity implements ILightListener 
 	}
 
 	@Override
-	public void onChunkLightUpdate() {
-		updateLight();
-	}
-
-	@Override
 	public boolean shouldRenderAsTE() {
 		return isController();
 	}
 
-	private void updateLight() {
-		if (world != null) {
-			skyLight = (byte) world.getLightLevel(LightType.SKY, pos);
-			blockLight = (byte) world.getLightLevel(LightType.BLOCK, pos);
-		} else {
-			skyLight = -1;
-			blockLight = -1;
+	@Override
+	public boolean onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
+		if (this.removed) {
+			return true;
+		}
+
+		GridAlignedBB beltVolume = getBeltVolume();
+
+		if (beltVolume.intersects(changed)) {
+			if (type == LightType.BLOCK)
+				updateBlockLight();
+
+			if (type == LightType.SKY)
+				updateSkyLight();
+		}
+
+		return false;
+	}
+
+	private GridAlignedBB getBeltVolume() {
+		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
+
+		GridAlignedBB bb = GridAlignedBB.from(pos, endPos);
+		bb.fixMinMax();
+		return bb;
+	}
+
+	private void initializeLight() {
+		light = new byte[beltLength * 2];
+
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 0; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+			light[i + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
+		}
+	}
+
+	private void updateBlockLight() {
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 0; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
+		}
+	}
+
+	private void updateSkyLight() {
+		Vec3i vec = getBeltFacing().getDirectionVec();
+		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+
+		BlockPos.Mutable pos = new BlockPos.Mutable(controller);
+		for (int i = 1; i < beltLength * 2; i += 2) {
+			light[i] = (byte) world.getLightLevel(LightType.SKY, pos);
+
+			pos.move(vec.getX(), verticality, vec.getZ());
 		}
 	}
 }

@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.light.ILightListener;
 import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.client.multiplayer.ClientChunkProvider;
@@ -49,9 +48,6 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
                  .map(Map.Entry::getValue)
                  .forEach(tile -> {
                 CreateClient.kineticRenderer.get(world).onLightUpdate(tile);
-
-                if (tile instanceof ILightListener)
-                    ((ILightListener) tile).onChunkLightUpdate();
             });
         }
 
