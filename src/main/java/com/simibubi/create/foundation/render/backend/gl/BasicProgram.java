@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
 import org.lwjgl.opengl.GL20;
 
@@ -53,9 +54,6 @@ public class BasicProgram extends GlProgram {
     }
 
     protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {
-        Backend.MATRIX_BUFFER.position(0);
-        mat.write(Backend.MATRIX_BUFFER);
-        Backend.MATRIX_BUFFER.rewind();
-        GL20.glUniformMatrix4fv(uniform, false, Backend.MATRIX_BUFFER);
+        GL20.glUniformMatrix4fv(uniform, false, RenderUtil.writeMatrix(mat));
     }
 }

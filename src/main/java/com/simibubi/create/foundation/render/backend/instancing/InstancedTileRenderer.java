@@ -39,14 +39,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public abstract void registerMaterials();
 
     public void tick() {
-        int ticks = AnimationTickHolder.getTicks();
-
-        // Clean up twice a second. This doesn't have to happen every tick,
-        // but this does need to be run to ensure we don't miss anything.
-        if (ticks % 10 == 0) {
-            clean();
-        }
-
         if (tickableInstances.size() > 0)
             tickableInstances.values().forEach(ITickableInstance::tick);
     }
@@ -187,16 +179,13 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return renderer;
     }
 
-    private void clean() {
-        instances.keySet().removeIf(TileEntity::isRemoved);
-    }
-
     public void invalidate() {
         for (RenderMaterial<?, ?> material : materials.values()) {
             material.delete();
         }
         instances.clear();
         dynamicInstances.clear();
+        tickableInstances.clear();
     }
 
     public boolean canCreateInstance(TileEntity tile) {
