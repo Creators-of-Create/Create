@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(World.class)
+@Mixin(value = World.class, priority = 1042)
 public class AddRemoveTileMixin {
 
     @Shadow @Final public boolean isRemote;
