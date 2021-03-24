@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -14,27 +15,22 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.util.Direction;
 
-public class MixerInstance extends ShaftlessCogInstance implements ITickableInstance {
+public class MixerInstance extends ShaftlessCogInstance implements IDynamicInstance {
 
-    private InstanceKey<RotatingData> mixerHead;
-    private InstanceKey<ModelData> mixerPole;
+    private final InstanceKey<RotatingData> mixerHead;
+    private final InstanceKey<ModelData> mixerPole;
 
     public MixerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
 
-    @Override
-    protected void init() {
-        super.init();
-
-        mixerHead = rotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, lastState)
+        mixerHead = rotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
                                       .createInstance();
 
         mixerHead.getInstance()
                  .setRotationAxis(Direction.Axis.Y);
 
-        mixerPole = modelManager.getMaterial(RenderMaterials.MODELS)
-                                .getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, lastState)
+        mixerPole = modelManager.getMaterial(RenderMaterials.TRANSFORMED)
+                                .getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState)
                                 .createInstance();
 
 
@@ -47,7 +43,7 @@ public class MixerInstance extends ShaftlessCogInstance implements ITickableInst
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) tile;
 
         float renderedHeadOffset = getRenderedHeadOffset(mixer);
@@ -75,7 +71,7 @@ public class MixerInstance extends ShaftlessCogInstance implements ITickableInst
         msr.translate(getFloatingPos());
         msr.translate(0, -renderedHeadOffset, 0);
 
-        mixerPole.getInstance().setTransformNoCopy(ms);
+        mixerPole.getInstance().setTransform(ms);
     }
 
     private float getRenderedHeadOffset(MechanicalMixerTileEntity mixer) {

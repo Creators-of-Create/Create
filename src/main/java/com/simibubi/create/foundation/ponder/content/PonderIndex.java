@@ -77,6 +77,40 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
+		// Gauges
+		PonderRegistry.addStoryBoard(AllBlocks.SPEEDOMETER, "gauges", KineticsScenes::speedometer);
+		PonderRegistry.addStoryBoard(AllBlocks.STRESSOMETER, "gauges", KineticsScenes::stressometer);
+
+		// Item Processing
+		PonderRegistry.addStoryBoard(AllBlocks.MILLSTONE, "millstone", ProcessingScenes::millstone);
+		PonderRegistry.addStoryBoard(AllBlocks.CRUSHING_WHEEL, "crushing_wheel", ProcessingScenes::crushingWheels);
+		PonderRegistry.addStoryBoard(AllBlocks.MECHANICAL_MIXER, "mechanical_mixer/mixing", ProcessingScenes::mixing);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PRESS)
+			.addStoryBoard("mechanical_press/pressing", ProcessingScenes::pressing)
+			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
+		PonderRegistry.forComponents(AllBlocks.BASIN)
+			.addStoryBoard("basin", ProcessingScenes::basin)
+			.addStoryBoard("mechanical_mixer/mixing", ProcessingScenes::mixing)
+			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
+		PonderRegistry.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
+			ProcessingScenes::emptyBlazeBurner);
+		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
+		PonderRegistry.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
+
+		// Crafters
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER)
+			.addStoryBoard("mechanical_crafter/setup", CrafterScenes::setup)
+			.addStoryBoard("mechanical_crafter/connect", CrafterScenes::connect);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER, AllItems.CRAFTER_SLOT_COVER)
+			.addStoryBoard("mechanical_crafter/covers", CrafterScenes::covers);
+
+		// Chutes
+		PonderRegistry.forComponents(AllBlocks.CHUTE)
+			.addStoryBoard("chute/downward", ChuteScenes::downward, PonderTag.LOGISTICS)
+			.addStoryBoard("chute/upward", ChuteScenes::upward);
+		PonderRegistry.forComponents(AllBlocks.CHUTE, AllBlocks.SMART_CHUTE)
+			.addStoryBoard("chute/smart", ChuteScenes::smart);
+
 		// Funnels
 		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
 		PonderRegistry.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
@@ -97,6 +131,13 @@ public class PonderIndex {
 			.addStoryBoard("super_glue", ChassisScenes::superGlue, PonderTag.CONTRAPTION_ASSEMBLY);
 		PonderRegistry.forComponents(AllBlocks.STICKER)
 			.addStoryBoard("sticker", RedstoneScenes::sticker, PonderTag.CONTRAPTION_ASSEMBLY);
+
+		// Mechanical Arm
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_ARM)
+			.addStoryBoard("mechanical_arm/setup", ArmScenes::setup, PonderTag.ARM_TARGETS)
+			.addStoryBoard("mechanical_arm/filter", ArmScenes::filtering)
+			.addStoryBoard("mechanical_arm/modes", ArmScenes::modes)
+			.addStoryBoard("mechanical_arm/redstone", ArmScenes::redstone);
 
 		// Mechanical Piston
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
@@ -121,6 +162,10 @@ public class PonderIndex {
 			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
 				PonderTag.MOVEMENT_ANCHOR);
+		PonderRegistry.forComponents(AllBlocks.SAIL)
+			.addStoryBoard("sail", BearingScenes::sail);
+		PonderRegistry.forComponents(AllBlocks.SAIL_FRAME)
+			.addStoryBoard("sail", BearingScenes::sailFrame);
 
 		// Mechanical Bearing
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_BEARING)
@@ -258,6 +303,7 @@ public class PonderIndex {
 			.add(AllBlocks.CREATIVE_FLUID_TANK);
 
 		PonderRegistry.tags.forTag(PonderTag.ARM_TARGETS)
+			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllItems.BELT_CONNECTOR)
 			.add(AllBlocks.CHUTE)
 			.add(AllBlocks.DEPOT)
@@ -268,10 +314,10 @@ public class PonderIndex {
 			.add(AllBlocks.MILLSTONE)
 			.add(AllBlocks.DEPLOYER)
 			.add(AllBlocks.MECHANICAL_SAW)
-			.add(Blocks.COMPOSTER)
 			.add(AllBlocks.BLAZE_BURNER)
-			.add(Blocks.JUKEBOX)
-			.add(AllBlocks.CRUSHING_WHEEL);
+			.add(AllBlocks.CRUSHING_WHEEL)
+			.add(Blocks.COMPOSTER)
+			.add(Blocks.JUKEBOX);
 
 		PonderRegistry.tags.forTag(PonderTag.LOGISTICS)
 			.add(AllItems.BELT_CONNECTOR)
@@ -304,6 +350,11 @@ public class PonderIndex {
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.CREATIVE_FLUID_TANK)
 			.add(AllBlocks.CREATIVE_MOTOR);
+
+		PonderRegistry.tags.forTag(PonderTag.SAILS)
+			.add(AllBlocks.SAIL)
+			.add(AllBlocks.SAIL_FRAME)
+			.add(Blocks.WHITE_WOOL);
 
 		PonderRegistry.tags.forTag(PonderTag.REDSTONE)
 			.add(AllBlocks.NIXIE_TUBE)

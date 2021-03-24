@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -12,6 +13,10 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +28,7 @@ public class BearingScenes {
 		scene.title("windmill_source", "Generating Rotational Force using Windmill Bearings");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
-		
+
 		scene.world.showSection(util.select.fromTo(1, 0, 1, 5, 0, 5), Direction.UP);
 		scene.world.setBlock(util.grid.at(2, -1, 0), AllBlocks.SAIL.getDefaultState()
 			.with(SailBlock.FACING, Direction.NORTH), false);
@@ -149,6 +154,7 @@ public class BearingScenes {
 		scene.title("windmill_structure", "Windmill Contraptions");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
+		scene.world.modifyEntities(SuperGlueEntity.class, Entity::remove);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 
@@ -277,7 +283,7 @@ public class BearingScenes {
 		scene.title("bearing_modes", "Movement Modes of the Mechanical Bearing");
 		scene.configureBasePlate(1, 1, 6);
 		scene.setSceneOffsetY(-1);
-		
+
 		Selection sideCog = util.select.position(util.grid.at(7, 0, 3));
 		Selection cogColumn = util.select.fromTo(6, 1, 3, 6, 4, 3);
 		Selection cogAndClutch = util.select.fromTo(5, 3, 1, 5, 4, 2);
@@ -561,6 +567,118 @@ public class BearingScenes {
 			if (i == 29)
 				scene.world.rotateSection(hourHand, 0, 0, 30, 20);
 		}
+	}
+
+	public static void sail(SceneBuilder scene, SceneBuildingUtil util) {
+		sails(scene, util, false);
+	}
+
+	public static void sailFrame(SceneBuilder scene, SceneBuildingUtil util) {
+		sails(scene, util, true);
+	}
+
+	private static void sails(SceneBuilder scene, SceneBuildingUtil util, boolean frame) {
+		String plural = frame ? "Sail Frames" : "Sails";
+		scene.title(frame ? "sail_frame" : "sail", "Assembling Windmills using " + plural);
+		scene.configureBasePlate(0, 0, 5);
+		scene.scaleSceneView(0.9f);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		BlockPos bearingPos = util.grid.at(2, 1, 2);
+		scene.world.showSection(util.select.position(bearingPos), Direction.DOWN);
+		scene.idle(5);
+		ElementLink<WorldSectionElement> plank =
+			scene.world.showIndependentSection(util.select.position(bearingPos.up()), Direction.DOWN);
+		scene.idle(10);
+
+		for (int i = 0; i < 3; i++) {
+			for (Direction d : Iterate.horizontalDirections) {
+				BlockPos location = bearingPos.up(i + 1)
+					.offset(d);
+				if (frame)
+					scene.world.modifyBlock(location, s -> AllBlocks.SAIL_FRAME.getDefaultState()
+						.with(SailBlock.FACING, s.get(SailBlock.FACING)), false);
+				scene.world.showSectionAndMerge(util.select.position(location), d.getOpposite(), plank);
+				scene.idle(2);
+			}
+		}
+
+		scene.overlay.showText(70)
+			.text(plural + " are handy blocks to create Windmills with")
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 3, 2), Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame();
+		scene.idle(80);
+
+		scene.overlay.showSelectionWithText(util.select.position(bearingPos.up()), 80)
+			.colored(PonderPalette.GREEN)
+			.text("They will attach to blocks and each other without the need of Super Glue or Chassis Blocks")
+			.attachKeyFrame()
+			.placeNearTarget();
+		scene.idle(40);
+		scene.world.configureCenterOfRotation(plank, util.vector.centerOf(bearingPos));
+		
+		if (!frame) {
+			scene.world.rotateBearing(bearingPos, 180, 75);
+			scene.world.rotateSection(plank, 0, 180, 0, 75);
+			scene.idle(76);
+			scene.world.rotateBearing(bearingPos, 180, 0);
+			scene.world.rotateSection(plank, 0, 180, 0, 0);
+			scene.rotateCameraY(-30);
+			scene.idle(10);
+			InputWindowElement input =
+				new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.NORTH), Pointing.RIGHT)
+					.withItem(new ItemStack(Items.BLUE_DYE));
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
+				.with(SailBlock.FACING, Direction.WEST), false);
+			scene.idle(10);
+			scene.overlay.showText(40)
+				.colored(PonderPalette.BLUE)
+				.text("Right-Click with Dye to paint them")
+				.attachKeyFrame()
+				.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
+				.placeNearTarget();
+			scene.idle(20);
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.replaceBlocks(util.select.fromTo(2, 2, 1, 2, 4, 1),
+				AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
+					.with(SailBlock.FACING, Direction.WEST),
+				false);
+
+			scene.idle(20);
+			scene.world.rotateBearing(bearingPos, 90, 33);
+			scene.world.rotateSection(plank, 0, 90, 0, 33);
+			scene.idle(40);
+
+			input =
+				new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.NORTH), Pointing.RIGHT)
+					.withItem(new ItemStack(Items.SHEARS));
+
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.setBlock(util.grid.at(3, 3, 2), AllBlocks.SAIL_FRAME.getDefaultState()
+				.with(SailBlock.FACING, Direction.NORTH), false);
+			scene.idle(10);
+			scene.overlay.showText(40)
+				.text("Right-Click with Shears to turn them back into frames")
+				.attachKeyFrame()
+				.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
+				.placeNearTarget();
+			scene.idle(20);
+			scene.overlay.showControls(input, 30);
+			scene.idle(7);
+			scene.world.replaceBlocks(util.select.fromTo(3, 2, 2, 3, 4, 2), AllBlocks.SAIL_FRAME.getDefaultState()
+				.with(SailBlock.FACING, Direction.NORTH), false);
+			scene.idle(20);
+		}
+
+		scene.world.rotateBearing(bearingPos, 720, 300);
+		scene.world.rotateSection(plank, 0, 720, 0, 300);
+
 	}
 
 }

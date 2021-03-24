@@ -1,21 +1,14 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.content.contraptions.base.KineticData;
-import com.simibubi.create.content.contraptions.base.KineticVertexAttributes;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.math.vector.Quaternion;
 
 import java.nio.ByteBuffer;
 
-public class BeltData extends KineticData<BeltData> {
-    public static VertexFormat FORMAT = VertexFormat.builder()
-                                                    .addAttributes(KineticVertexAttributes.class)
-                                                    .addAttributes(BeltVertexAttributes.class)
-                                                    .build();
-
+public class BeltData extends KineticData {
     private float qX;
     private float qY;
     private float qZ;

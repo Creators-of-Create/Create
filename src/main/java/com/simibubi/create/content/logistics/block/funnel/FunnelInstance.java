@@ -10,29 +10,26 @@ import net.minecraft.world.LightType;
 
 import java.util.ArrayList;
 
-public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements ITickableInstance {
+public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
 
-    private ArrayList<InstanceKey<FlapData>> flaps;
+    private final ArrayList<InstanceKey<FlapData>> flaps;
 
     public FunnelInstance(InstancedTileRenderer<?> modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         flaps = new ArrayList<>(4);
 
         if (!tile.hasFlap()) return;
 
-        AllBlockPartials flapPartial = (lastState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+        AllBlockPartials flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
                 : AllBlockPartials.BELT_FUNNEL_FLAP);
         InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(flapPartial, lastState);
+                                                     .getModel(flapPartial, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);
 
-        Direction direction = FunnelBlock.getFunnelFacing(lastState);
+        Direction direction = FunnelBlock.getFunnelFacing(blockState);
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
         float horizontalAngle = direction.getOpposite().getHorizontalAngle();
@@ -59,7 +56,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         if (flaps == null) return;
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
@@ -71,16 +68,8 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
     @Override
     public void updateLight() {
-        if (flaps == null) return;
-
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
-
-        for (InstanceKey<FlapData> it : flaps) {
-            it.getInstance()
-              .setBlockLight(blockLight)
-              .setSkyLight(skyLight);
-       }
+        if (flaps != null)
+            relight(pos, flaps.stream().map(InstanceKey::getInstance));
     }
 
     @Override

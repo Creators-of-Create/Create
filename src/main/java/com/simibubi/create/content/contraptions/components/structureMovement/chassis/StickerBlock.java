@@ -114,10 +114,10 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	}
 
 	private void func_226946_a_(Entity p_226946_1_) {
-		Vector3d vec3d = p_226946_1_.getMotion();
-		if (vec3d.y < 0.0D) {
+		Vector3d Vector3d = p_226946_1_.getMotion();
+		if (Vector3d.y < 0.0D) {
 			double d0 = p_226946_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226946_1_.setMotion(vec3d.x, -vec3d.y * d0, vec3d.z);
+			p_226946_1_.setMotion(Vector3d.x, -Vector3d.y * d0, Vector3d.z);
 		}
 	}
 
@@ -146,13 +146,13 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	@Override
 	public boolean addRunningEffects(BlockState state, World world, BlockPos pos, Entity entity) {
 		if (state.get(FACING) == Direction.UP) {
-			Vector3d vec3d = entity.getMotion();
+			Vector3d Vector3d = entity.getMotion();
 			world.addParticle(
 				new BlockParticleData(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.getDefaultState()).setPos(pos),
 				entity.getX() + ((double) world.rand.nextFloat() - 0.5D) * (double) entity.getWidth(),
 				entity.getY() + 0.1D,
-				entity.getZ() + ((double) world.rand.nextFloat() - 0.5D) * (double) entity.getWidth(), vec3d.x * -4.0D,
-				1.5D, vec3d.z * -4.0D);
+				entity.getZ() + ((double) world.rand.nextFloat() - 0.5D) * (double) entity.getWidth(), Vector3d.x * -4.0D,
+				1.5D, Vector3d.z * -4.0D);
 			return true;
 		}
 		return super.addRunningEffects(state, world, pos, entity);

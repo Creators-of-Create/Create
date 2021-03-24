@@ -12,7 +12,7 @@ public class PistonLighter extends ContraptionLighter<PistonContraption> {
 
     @Override
     public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bounds = GridAlignedBB.fromAABB(contraption.bounds);
+        GridAlignedBB bounds = GridAlignedBB.from(contraption.bounds);
         bounds.translate(contraption.anchor);
 
         int length = contraption.extensionLength;

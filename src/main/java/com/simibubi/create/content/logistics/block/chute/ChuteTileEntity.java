@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
@@ -154,7 +155,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				if (!handleDownwardOutput(true))
 					nextOffset = .5f;
 				else if (nextOffset < 0) {
-					handleDownwardOutput(world.isRemote);
+					handleDownwardOutput(world.isRemote && !isVirtual());
 					return;
 				}
 			}
@@ -165,7 +166,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				if (!handleUpwardOutput(true))
 					nextOffset = .5f;
 				else if (nextOffset > 1) {
-					handleUpwardOutput(world.isRemote);
+					handleUpwardOutput(world.isRemote && !isVirtual());
 					return;
 				}
 			}
@@ -379,6 +380,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			.isHorizontal())
 			return false;
 
+		if (FunnelBlock.getFunnelFacing(world.getBlockState(pos.down())) == Direction.DOWN)
+			return false;
 		if (Block.hasSolidSideOnTop(world, pos.down()))
 			return false;
 
@@ -433,6 +436,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return true;
 		}
 
+		if (FunnelBlock.getFunnelFacing(world.getBlockState(pos.up())) == Direction.UP)
+			return false;
 		if (BlockHelper.hasBlockSolidSide(stateAbove, world, pos.up(), Direction.DOWN))
 			return false;
 		if (!inputChutes.isEmpty())

@@ -1,23 +1,17 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
+import com.simibubi.create.foundation.render.backend.instancing.impl.BasicData;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 
 import java.nio.ByteBuffer;
 
-public class KineticData<D extends KineticData<D>> extends InstanceData implements IFlatLight<D> {
+public class KineticData extends BasicData {
     private float x;
     private float y;
     private float z;
-    private byte blockLight;
-    private byte skyLight;
-    private byte r;
-    private byte g;
-    private byte b;
     private float rotationalSpeed;
     private float rotationOffset;
 
@@ -25,25 +19,25 @@ public class KineticData<D extends KineticData<D>> extends InstanceData implemen
         super(owner);
     }
 
-    public D setTileEntity(KineticTileEntity te) {
+    public KineticData setTileEntity(KineticTileEntity te) {
         setPosition(te.getPos());
         if (te.hasSource()) {
             setColor(te.network);
         }else {
             setColor(0xFF, 0xFF, 0x00);
         }
-        return (D) this;
+        return this;
     }
 
-    public D setPosition(BlockPos pos) {
+    public KineticData setPosition(BlockPos pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public D setPosition(Vector3f pos) {
+    public KineticData setPosition(Vector3f pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public D setPosition(int x, int y, int z) {
+    public KineticData setPosition(int x, int y, int z) {
         BlockPos origin = owner.renderer.getOriginCoordinate();
 
         return setPosition((float) (x - origin.getX()),
@@ -51,75 +45,62 @@ public class KineticData<D extends KineticData<D>> extends InstanceData implemen
                            (float) (z - origin.getZ()));
     }
 
-    public D setPosition(float x, float y, float z) {
+    public KineticData setPosition(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        return (D) this;
+        return this;
     }
 
-    public D nudge(float x, float y, float z) {
+    public KineticData nudge(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
-        return (D) this;
+        return this;
     }
 
-    @Override
-    public D setBlockLight(int blockLight) {
-        this.blockLight = (byte) ((blockLight & 0xF) << 4);
-        return (D) this;
-    }
-
-    @Override
-    public D setSkyLight(int skyLight) {
-        this.skyLight = (byte) ((skyLight & 0xF) << 4);
-        return (D) this;
-    }
-
-    public D setColor(Long l) {
+    public KineticData setColor(Long l) {
         if (l != null)
             return setColor(l.longValue());
-        else
-            return setColor(0xFF, 0xFF, 0xFF);
+        else {
+            setColor(0xFF, 0xFF, 0xFF);
+            return this;
+        }
     }
 
-    private D setColor(long l) {
+    private KineticData setColor(long l) {
         int color = ColorHelper.colorFromLong(l);
         byte r = (byte) ((color >> 16) & 0xFF);
         byte g = (byte) ((color >> 8) & 0xFF);
         byte b = (byte) (color & 0xFF);
-        return setColor(r, g, b);
+        setColor(r, g, b);
+
+        return this;
     }
 
-    public D setColor(int r, int g, int b) {
-        return setColor((byte) r, (byte) g, (byte) b);
-    }
-
-    public D setColor(byte r, byte g, byte b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        return (D) this;
-    }
-
-    public D setRotationalSpeed(float rotationalSpeed) {
+    public KineticData setRotationalSpeed(float rotationalSpeed) {
         this.rotationalSpeed = rotationalSpeed;
-        return (D) this;
+        return this;
     }
 
-    public D setRotationOffset(float rotationOffset) {
+    public KineticData setRotationOffset(float rotationOffset) {
         this.rotationOffset = rotationOffset;
-        return (D) this;
+        return this;
     }
 
 
     @Override
     public void write(ByteBuffer buf) {
-        putVec3(buf, x, y, z);
-        putVec2(buf, blockLight, skyLight);
-        putVec3(buf, r, g, b);
-        put(buf, rotationalSpeed);
-        put(buf, rotationOffset);
+        super.write(buf);
+
+        buf.asFloatBuffer().put(new float[] {
+                x,
+                y,
+                z,
+                rotationalSpeed,
+                rotationOffset
+        });
+
+        buf.position(buf.position() + 5 * 4);
     }
 }

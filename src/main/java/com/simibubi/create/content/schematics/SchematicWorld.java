@@ -87,7 +87,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 			try {
 				TileEntity tileEntity = blockState.createTileEntity(this);
 				if (tileEntity != null) {
-					tileEntity.setLocation(this, pos);
+					onTEadded(tileEntity, pos);
 					tileEntities.put(pos, tileEntity);
 					renderedTileEntities.add(tileEntity);
 				}
@@ -97,6 +97,10 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 			}
 		}
 		return null;
+	}
+	
+	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
+		tileEntity.setLocation(this, pos);
 	}
 
 	@Override

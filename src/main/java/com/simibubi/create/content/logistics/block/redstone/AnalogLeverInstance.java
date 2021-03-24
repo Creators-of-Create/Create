@@ -12,35 +12,32 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 
-public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements ITickableInstance {
+public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
-    protected InstanceKey<ModelData> handle;
-    protected InstanceKey<ModelData> indicator;
+    protected final InstanceKey<ModelData> handle;
+    protected final InstanceKey<ModelData> indicator;
 
-    private float rX;
-    private float rY;
+    final float rX;
+    final float rY;
 
     public AnalogLeverInstance(InstancedTileRenderer<?> modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
+        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
 
-        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, lastState).createInstance();
-        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, lastState).createInstance();
+        handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
+        indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
 
-        AttachFace face = lastState.get(AnalogLeverBlock.FACE);
+        AttachFace face = blockState.get(AnalogLeverBlock.FACE);
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
-        rY = AngleHelper.horizontalAngle(lastState.get(AnalogLeverBlock.HORIZONTAL_FACING));
+        rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
 
         setupModel();
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         if (!tile.clientState.settled())
             setupModel();
     }
@@ -65,7 +62,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
            .translate(-1 / 2f, -1 / 16f, -1 / 2f);
 
         handle.getInstance()
-              .setTransformNoCopy(ms);
+              .setTransform(ms);
     }
 
     @Override

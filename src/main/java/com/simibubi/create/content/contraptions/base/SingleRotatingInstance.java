@@ -10,21 +10,18 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
-    protected InstanceKey<RotatingData> rotatingModelKey;
+    protected final InstanceKey<RotatingData> rotatingModelKey;
 
     public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
-        Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         rotatingModelKey = setup(getModel().createInstance(), tile.getSpeed(), axis);
     }
 
     @Override
-    public void onUpdate() {
-        Direction.Axis axis = ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+    public void update() {
+        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
         updateRotation(rotatingModelKey, axis);
     }
 
@@ -39,7 +36,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
     }
 
     protected BlockState getRenderedBlockState() {
-        return lastState;
+        return blockState;
     }
 
     protected InstancedModel<RotatingData> getModel() {

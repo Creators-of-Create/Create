@@ -295,8 +295,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		double mouseX = client.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
 		double mouseY = client.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
 		SceneTransform t = activeScene.getTransform();
-		Vector3d vec1 = t.screenToScene(mouseX, mouseY, 1000);
-		Vector3d vec2 = t.screenToScene(mouseX, mouseY, -100);
+		Vector3d vec1 = t.screenToScene(mouseX, mouseY, 1000, 0);
+		Vector3d vec2 = t.screenToScene(mouseX, mouseY, -100, 0);
 		Pair<ItemStack, BlockPos> pair = activeScene.rayTraceScene(vec1, vec2);
 		hoveredTooltipItem = pair.getFirst();
 		hoveredBlockPos = pair.getSecond();
@@ -380,7 +380,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.push();
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms, partialTicks, false);
-		story.transform.updateSceneRVE();
+		story.transform.updateSceneRVE(partialTicks);
 		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
@@ -434,6 +434,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			// X AXIS
 			ms.push();
 			ms.translate(4, -3, 0);
+			ms.translate(0, 0, -2 / 1024f);
 			for (int x = 0; x <= bounds.getXSize(); x++) {
 				ms.translate(-16, 0, 0);
 				textRenderer.draw(ms, x == bounds.getXSize() ? "x" : "" + x, 0, 0, 0xFFFFFFFF);
@@ -685,7 +686,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			return;
 		ms.push();
 		PonderScene story = scenes.get(i);
-		story.renderOverlay(this, ms, partialTicks);
+		story.renderOverlay(this, ms, skipCooling > 0 ? 0 : identifyMode ? ponderPartialTicksPaused : partialTicks);
 		ms.pop();
 	}
 

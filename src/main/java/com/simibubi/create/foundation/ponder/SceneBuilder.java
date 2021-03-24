@@ -10,12 +10,15 @@ import java.util.function.UnaryOperator;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
 import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
@@ -56,6 +59,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -367,10 +371,6 @@ public class SceneBuilder {
 			addInstruction(new OutlineSelectionInstruction(color, slot, selection, duration));
 		}
 
-		public <T extends AnimatedSceneElement> void hideElement(ElementLink<T> link, Direction direction) {
-			addInstruction(new FadeOutOfSceneInstruction<>(15, direction, link));
-		}
-
 	}
 
 	public class SpecialInstructions {
@@ -428,6 +428,10 @@ public class SceneBuilder {
 
 		public void moveCart(ElementLink<MinecartElement> link, Vector3d offset, int duration) {
 			addInstruction(AnimateMinecartInstruction.move(link, offset, duration));
+		}
+
+		public <T extends AnimatedSceneElement> void hideElement(ElementLink<T> link, Direction direction) {
+			addInstruction(new FadeOutOfSceneInstruction<>(15, direction, link));
 		}
 
 	}
@@ -689,11 +693,13 @@ public class SceneBuilder {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
 				TileEntity tileEntity = world.getTileEntity(beltLocation);
-				if (!(tileEntity instanceof BeltTileEntity))
+				if (!(tileEntity instanceof SmartTileEntity))
 					return;
-				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				SmartTileEntity beltTileEntity = (SmartTileEntity) tileEntity;
 				TransportedItemStackHandlerBehaviour transporter =
 					beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				if (transporter == null)
+					return;
 				transporter.handleCenteredProcessingOnAllItems(.52f, tis -> TransportedResult.removeItem());
 			});
 		}
@@ -759,8 +765,29 @@ public class SceneBuilder {
 			}, reDrawBlocks));
 		}
 
+		public void instructArm(BlockPos armLocation, ArmTileEntity.Phase phase, ItemStack heldItem,
+			int targetedPoint) {
+			modifyTileNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmTileEntity.class, compound -> {
+				NBTHelper.writeEnum(compound, "Phase", phase);
+				compound.put("HeldItem", heldItem.serializeNBT());
+				compound.putInt("TargetPointIndex", targetedPoint);
+				compound.putFloat("MovementProgress", 0);
+			});
+		}
+
 		public void flapFunnel(BlockPos position, boolean outward) {
 			modifyTileEntity(position, FunnelTileEntity.class, funnel -> funnel.flap(!outward));
+		}
+
+		public void setCraftingResult(BlockPos crafter, ItemStack output) {
+			modifyTileEntity(crafter, MechanicalCrafterTileEntity.class, mct -> mct.setScriptedResult(output));
+		}
+
+		public void connectCrafterInvs(BlockPos position1, BlockPos position2) {
+			addInstruction(s -> {
+				ConnectedInputHandler.toggleConnection(s.getWorld(), position1, position2);
+				s.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+			});
 		}
 
 	}

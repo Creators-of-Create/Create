@@ -138,8 +138,8 @@ public abstract class GhostBlockRenderer {
 		//IVertexBuilder
 		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry p_227890_1_, BakedQuad p_227890_2_, float[] p_227890_3_, float p_227890_4_, float p_227890_5_, float p_227890_6_, int[] p_227890_7_, int p_227890_8_) {
 			int[] aint = p_227890_2_.getVertexData();
-			Vector3i vec3i = p_227890_2_.getFace().getDirectionVec();
-			Vector3f vector3f = new Vector3f((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
+			Vector3i Vector3i = p_227890_2_.getFace().getDirectionVec();
+			Vector3f vector3f = new Vector3f((float) Vector3i.getX(), (float) Vector3i.getY(), (float) Vector3i.getZ());
 			Matrix4f matrix4f = p_227890_1_.getModel();
 			vector3f.transform(p_227890_1_.getNormal());
 			int vertexSize = DefaultVertexFormats.BLOCK.getIntegerSize();

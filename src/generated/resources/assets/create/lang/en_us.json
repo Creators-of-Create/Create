@@ -1877,6 +1877,17 @@
 	"create.ponder.analog_lever.text_2": "Right-click to increase its analog power output",
 	"create.ponder.analog_lever.text_3": "Right-click while Sneaking to decrease the power output again",
 
+	"create.ponder.basin.header": "Processing Items in the Basin",
+	"create.ponder.basin.text_1": "A Basin can hold Items and Fluids for Processing",
+	"create.ponder.basin.text_2": "After a processing step, basins try to output below to the side of them",
+	"create.ponder.basin.text_3": "When a valid component is present, the Basin will show an output faucet",
+	"create.ponder.basin.text_4": "A number of options are applicable here",
+	"create.ponder.basin.text_5": "Outputs will be caught by the inventory below",
+	"create.ponder.basin.text_6": "Without output faucet, the Basin will retain items created in its processing",
+	"create.ponder.basin.text_7": "This can be useful if outputs should be re-used as ingredients",
+	"create.ponder.basin.text_8": "Desired outputs will then have to be extracted from the basin",
+	"create.ponder.basin.text_9": "A Filter might be necessary to avoid pulling out un-processed items",
+
 	"create.ponder.bearing_modes.header": "Movement Modes of the Mechanical Bearing",
 	"create.ponder.bearing_modes.text_1": "When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle",
 	"create.ponder.bearing_modes.text_2": "It can be configured never to revert to solid blocks, or only near the angle it started at",
@@ -1899,11 +1910,17 @@
 	"create.ponder.belt_directions.text_3": "2. They can connect diagonally",
 	"create.ponder.belt_directions.text_4": "3. They can connect vertically",
 	"create.ponder.belt_directions.text_5": "4. And they can connect vertical shafts horizontally",
-	"create.ponder.belt_directions.text_6": "These are all possible directions.\nBelts can span any Length between 2 and 20 blocks",
+	"create.ponder.belt_directions.text_6": "These are all possible directions. Belts can span any Length between 2 and 20 blocks",
 
 	"create.ponder.belt_transport.header": "Using Mechanical Belts for Logistics",
 	"create.ponder.belt_transport.text_1": "Moving belts will transport Items and other Entities",
 	"create.ponder.belt_transport.text_2": "Right-Click with an empty hand to take items off a belt",
+
+	"create.ponder.blaze_burner.header": "Feeding Blaze Burners",
+	"create.ponder.blaze_burner.text_1": "Blaze Burners can provide Heat to Items processed in a Basin",
+	"create.ponder.blaze_burner.text_2": "For this, the Blaze has to be fed with flammable items",
+	"create.ponder.blaze_burner.text_3": "With a Blaze Cake, the Burner can reach an even stronger level of heat",
+	"create.ponder.blaze_burner.text_4": "The feeding process can be automated using Deployers or Mechanical Arms",
 
 	"create.ponder.brass_funnel.header": "The Brass Funnel",
 	"create.ponder.brass_funnel.text_1": "Andesite Funnels can only ever extract single items.",
@@ -1944,6 +1961,16 @@
 	"create.ponder.chain_gearshift.text_5": "Using analog signals, the ratio can be adjusted more precisely between 1 and 2",
 	"create.ponder.chain_gearshift.text_6": "12 RPM",
 
+	"create.ponder.chute.header": "Transporting Items downward via Chutes",
+	"create.ponder.chute.text_1": "Chutes can transport items vertically from and to inventories",
+	"create.ponder.chute.text_2": "Using the Wrench, a window can be created",
+	"create.ponder.chute.text_3": "Placing chutes targeting the side faces of another will make it diagonal",
+
+	"create.ponder.chute_upward.header": "Transporting Items upward via Chutes",
+	"create.ponder.chute_upward.text_1": "Using Encased Fans at the top or bottom, a Chute can move items upward",
+	"create.ponder.chute_upward.text_2": "Inspecting chutes with Engineers' Goggles reveals information about the movement direction",
+	"create.ponder.chute_upward.text_3": "On the 'blocked' end, items will have to be inserted/taken from the sides",
+
 	"create.ponder.clockwork_bearing.header": "Animating Structures using Clockwork Bearings",
 	"create.ponder.clockwork_bearing.text_1": "Clockwork Bearings attach to blocks in front of them",
 	"create.ponder.clockwork_bearing.text_2": "Upon receiving Rotational Force, the structure will be rotated according to the hour of the day",
@@ -1970,6 +1997,12 @@
 	"create.ponder.creative_motor.header": "Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
+
+	"create.ponder.crushing_wheels.header": "Processing Items with Crushing Wheels",
+	"create.ponder.crushing_wheels.text_1": "A pair of Crushing Wheels can grind items very effectively",
+	"create.ponder.crushing_wheels.text_2": "Their Rotational Input has to make them spin into each other",
+	"create.ponder.crushing_wheels.text_3": "Items thrown or inserted into the top will get processed",
+	"create.ponder.crushing_wheels.text_4": "Items can be inserted and picked up through automated means as well",
 
 	"create.ponder.deployer.header": "Using the Deployer",
 	"create.ponder.deployer.text_1": "Given Rotational Force, a Deployer can imitate player interactions",
@@ -2001,6 +2034,19 @@
 	"create.ponder.deployer_redstone.text_1": "When powered by Redstone, Deployers will not activate",
 	"create.ponder.deployer_redstone.text_2": "Before stopping, the Deployer will finish any started cycles",
 	"create.ponder.deployer_redstone.text_3": "Thus, a negative pulse can be used to trigger exactly one activation cycle",
+
+	"create.ponder.depot.header": "Using Depots",
+	"create.ponder.depot.text_1": "Depots can serve as 'stationary' belt elements",
+	"create.ponder.depot.text_2": "Right-Click to manually place or remove Items from it",
+	"create.ponder.depot.text_3": "Just like Mechanical Belts, it can provide items to processing",
+	"create.ponder.depot.text_4": "...as well as provide Items to Mechanical Arms",
+
+	"create.ponder.empty_blaze_burner.header": "Using Empty Blaze Burners",
+	"create.ponder.empty_blaze_burner.text_1": "Right-click a Blaze with the empty burner to capture it",
+	"create.ponder.empty_blaze_burner.text_2": "Alternatively, Blazes can be collected from their Spawners directly",
+	"create.ponder.empty_blaze_burner.text_3": "You now have an ideal heat source for various machines",
+	"create.ponder.empty_blaze_burner.text_4": "For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
+	"create.ponder.empty_blaze_burner.text_5": "However, these are not suitable for industrial heating",
 
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
@@ -2042,7 +2088,7 @@
 	"create.ponder.funnel_intro.text_1": "Funnels are ideal for transferring items from and to inventories.",
 
 	"create.ponder.funnel_redstone.header": "Redstone control",
-	"create.ponder.funnel_redstone.text_1": "Redstone power will prevent any funnel from acting.",
+	"create.ponder.funnel_redstone.text_1": "Redstone power will prevent any funnel from acting",
 
 	"create.ponder.funnel_transfer.header": "Direct transfer",
 	"create.ponder.funnel_transfer.text_1": "Funnels cannot ever transfer between closed inventories directly.",
@@ -2128,6 +2174,12 @@
 	"create.ponder.mechanical_harvester.text_1": "Whenever Harvesters are moved as part of an animated Contraption...",
 	"create.ponder.mechanical_harvester.text_2": "They will harvest and reset any mature crops on their way",
 
+	"create.ponder.mechanical_mixer.header": "Processing Items with the Mechanical Mixer",
+	"create.ponder.mechanical_mixer.text_1": "With a Mixer and Basin, some Crafting Recipes can be automated",
+	"create.ponder.mechanical_mixer.text_2": "Available recipes include any Shapeless Crafting Recipe, plus a couple extra ones",
+	"create.ponder.mechanical_mixer.text_3": "Some of those recipes may require the heat of a Blaze Burner",
+	"create.ponder.mechanical_mixer.text_4": "The filter slot can be used in case two recipes are conflicting.",
+
 	"create.ponder.mechanical_piston.header": "Moving Structures using Mechanical Pistons",
 	"create.ponder.mechanical_piston.text_1": "Mechanical Pistons can move blocks in front of them",
 	"create.ponder.mechanical_piston.text_2": "Speed and direction of movement depend on the Rotational Input",
@@ -2143,6 +2195,18 @@
 	"create.ponder.mechanical_plough.text_3": "Additionally, ploughs can create farmland",
 	"create.ponder.mechanical_plough.text_4": "...they can also launch entities without hurting them",
 
+	"create.ponder.mechanical_press.header": "Processing Items with the Mechanical Press",
+	"create.ponder.mechanical_press.text_1": "The Mechanical Press can process items provided beneath it",
+	"create.ponder.mechanical_press.text_2": "The Input items can be dropped or placed on a Depot under the Press",
+	"create.ponder.mechanical_press.text_3": "When items are provided on a belt...",
+	"create.ponder.mechanical_press.text_4": "The Press will hold and process them automatically",
+
+	"create.ponder.mechanical_press_compacting.header": "Compacting items with the Mechanical Press",
+	"create.ponder.mechanical_press_compacting.text_1": "Pressing items held in a Basin will cause them to be Compacted",
+	"create.ponder.mechanical_press_compacting.text_2": "Compacting includes any filled 2x2 or 3x3 Crafting Recipe, plus a couple extra ones",
+	"create.ponder.mechanical_press_compacting.text_3": "Some of those recipes may require the heat of a Blaze Burner",
+	"create.ponder.mechanical_press_compacting.text_4": "The filter slot can be used in case two recipes are conflicting.",
+
 	"create.ponder.mechanical_saw_breaker.header": "Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
 	"create.ponder.mechanical_saw_breaker.text_2": "In order to cut the tree fully, the Saw has to break the last block connecting it to the ground",
@@ -2157,6 +2221,13 @@
 	"create.ponder.mechanical_saw_processing.text_3": "Saws can work in-line with Mechanical Belts",
 	"create.ponder.mechanical_saw_processing.text_4": "When an ingredient has multiple possible outcomes, the filter slot can specify it",
 	"create.ponder.mechanical_saw_processing.text_5": "Without filter, the Saw would cycle through all outcomes instead",
+
+	"create.ponder.millstone.header": "Processing Items in the Millstone",
+	"create.ponder.millstone.text_1": "Millstones process items by grinding them",
+	"create.ponder.millstone.text_2": "They can be powered from the side using cogwheels",
+	"create.ponder.millstone.text_3": "Throw or Insert items at the top",
+	"create.ponder.millstone.text_4": "After some time, the result can be obtained via Right-click",
+	"create.ponder.millstone.text_5": "The outputs can also be extracted by automation",
 
 	"create.ponder.piston_pole.header": "Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "Without attached Poles, a Mechanical Piston cannot move",
@@ -2243,6 +2314,17 @@
 	"create.ponder.shaft_casing.header": "Encasing Shafts",
 	"create.ponder.shaft_casing.text_1": "Brass or Andesite Casing can be used to decorate Shafts",
 
+	"create.ponder.smart_chute.header": "Filtering Items using Smart Chutes",
+	"create.ponder.smart_chute.text_1": "Smart Chutes are vertical chutes with additional control",
+	"create.ponder.smart_chute.text_2": "Items in the filter slot specify what exactly they can extract and transfer",
+	"create.ponder.smart_chute.text_3": "Use the Mouse Wheel to specify the extracted stack size",
+	"create.ponder.smart_chute.text_4": "Redstone power will prevent Smart Chutes from acting.",
+
+	"create.ponder.speedometer.header": "Monitoring Kinetic information using the Speedometer",
+	"create.ponder.speedometer.text_1": "The Speedometer displays the current Speed of the attached components",
+	"create.ponder.speedometer.text_2": "When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
+	"create.ponder.speedometer.text_3": "Comparators can emit analog Restone Signals relative to the Speedometer's measurements",
+
 	"create.ponder.stabilized_bearings.header": "Stabilized Contraptions",
 	"create.ponder.stabilized_bearings.text_1": "Whenever Mechanical Bearings are themselves part of a moving Structure..",
 	"create.ponder.stabilized_bearings.text_2": "..they will attempt to keep themselves upright",
@@ -2254,6 +2336,11 @@
 	"create.ponder.sticker.text_2": "Upon receiving a signal, it will toggle its state",
 	"create.ponder.sticker.text_3": "If it is now moved in a contraption, the block will move with it",
 	"create.ponder.sticker.text_4": "Toggled once again, the block is no longer attached",
+
+	"create.ponder.stressometer.header": "Monitoring Kinetic information using the Stressometer",
+	"create.ponder.stressometer.text_1": "The Stressometer displays the current Stress Capacity of the attached kinetic network",
+	"create.ponder.stressometer.text_2": "When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
+	"create.ponder.stressometer.text_3": "Comparators can emit analog Restone Signals relative to the Stressometer's measurements",
 
 	"create.ponder.super_glue.header": "Attaching blocks using Super Glue",
 	"create.ponder.super_glue.text_1": "Super Glue can be used between any two blocks",

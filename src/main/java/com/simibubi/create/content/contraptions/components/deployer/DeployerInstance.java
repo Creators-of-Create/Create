@@ -1,81 +1,90 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.RenderMaterials;
+import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-public class DeployerInstance extends ShaftInstance implements ITickableInstance {
+public class DeployerInstance extends ShaftInstance implements IDynamicInstance, ITickableInstance {
 
-    DeployerTileEntity tile;
+    final DeployerTileEntity tile;
+    final Direction facing;
+    final float yRot;
+    final float zRot;
+    final float zRotPole;
 
-    Direction facing;
+    protected final InstanceKey<OrientedData> pole;
 
-    InstanceKey<ModelData> pole;
+    protected InstanceKey<OrientedData> hand;
 
     AllBlockPartials currentHand;
-    InstanceKey<ModelData> hand;
-
-    float yRot;
-    float zRot;
-    float zRotPole;
-
     float progress = Float.NaN;
+    private boolean newHand = false;
 
     public DeployerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
 
         this.tile = (DeployerTileEntity) super.tile;
-        facing = lastState.get(FACING);
+        facing = blockState.get(FACING);
 
-        boolean rotatePole = lastState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
+        boolean rotatePole = blockState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
 
         yRot = AngleHelper.horizontalAngle(facing);
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
 
-        pole = modelManager.basicMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, lastState).createInstance();
+        pole = RenderMaterials.ORIENTED.get(modelManager).getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
         updateHandPose();
         relight(pos, pole.getInstance());
+
+        updateRotation(pole, hand, yRot, zRot, zRotPole);
     }
 
     @Override
     public void tick() {
+        newHand = updateHandPose();
+    }
 
-        boolean newHand = updateHandPose();
+    @Override
+    public void beginFrame() {
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
         if (!newHand && MathHelper.epsilonEquals(newProgress, progress)) return;
 
         progress = newProgress;
+        newHand = false;
 
-        MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
+                : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+        float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
+        Vector3i facingVec = facing.getDirectionVec();
+        BlockPos blockPos = getFloatingPos();
 
-        msr.translate(getFloatingPos())
-           .translate(getHandOffset());
+        float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
+        float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
+        float z = blockPos.getZ() + ((float) facingVec.getZ()) * distance;
 
-        transformModel(msr, pole, hand, yRot, zRot, zRotPole);
+        pole.getInstance().setPosition(x, y, z);
+        hand.getInstance().setPosition(x, y, z);
 
     }
 
@@ -102,18 +111,12 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
 
         if (hand != null) hand.delete();
 
-        hand = modelManager.basicMaterial().getModel(currentHand, lastState).createInstance();
+        hand = RenderMaterials.ORIENTED.get(modelManager).getModel(currentHand, blockState).createInstance();
 
         relight(pos, hand.getInstance());
+        updateRotation(pole, hand, yRot, zRot, zRotPole);
 
         return true;
-    }
-
-    protected Vector3d getHandOffset() {
-        float handLength = tile.getHandPose() == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
-                : tile.getHandPose() == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-        float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
-        return Vector3d.of(facing.getDirectionVec()).scale(distance);
     }
 
     private float getProgress(float partialTicks) {
@@ -124,20 +127,15 @@ public class DeployerInstance extends ShaftInstance implements ITickableInstance
         return 0;
     }
 
-    static void transformModel(MatrixStacker msr, InstanceKey<ModelData> pole, InstanceKey<ModelData> hand, float yRot, float zRot, float zRotPole) {
+    static void updateRotation(InstanceKey<OrientedData> pole, InstanceKey<OrientedData> hand, float yRot, float zRot, float zRotPole) {
 
-        msr.centre();
-        msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
-        msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
+        Quaternion q = Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRot);
+        q.multiply(Direction.UP.getUnitVector().getDegreesQuaternion(yRot));
 
-        msr.push();
-        msr.rotate(Direction.SOUTH, (float) ((zRotPole) / 180 * Math.PI));
-        msr.unCentre();
-        pole.getInstance().setTransform(msr.unwrap());
-        msr.pop();
+        hand.getInstance().setRotation(q);
 
-        msr.unCentre();
+        q.multiply(Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRotPole));
 
-        hand.getInstance().setTransform(msr.unwrap());
+        pole.getInstance().setRotation(q);
     }
 }

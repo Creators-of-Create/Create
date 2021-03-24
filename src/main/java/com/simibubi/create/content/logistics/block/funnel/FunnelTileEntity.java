@@ -263,6 +263,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 		if (!(blockState.getBlock() instanceof FunnelBlock))
 			return false;
+		if (blockState.get(FunnelBlock.EXTRACTING))
+			return false;
 		return FunnelBlock.getFunnelFacing(blockState) == Direction.UP;
 	}
 

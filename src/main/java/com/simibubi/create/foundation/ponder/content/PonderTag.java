@@ -60,6 +60,10 @@ public class PonderTag implements IScreenRenderable {
 			.defaultLang("Block Attachment Utility",
 				"Tools and Components used to assemble structures moved as an animated Contraption"),
 
+		SAILS = new PonderTag("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
+			.defaultLang("Sails for Windmill Bearings",
+				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
+
 //		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
 //
 //		OPEN_INVENTORY = new PonderTag("open_inventory").item(AllBlocks.BASIN.get()

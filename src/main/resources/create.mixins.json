@@ -3,17 +3,9 @@
     "package": "com.simibubi.create.foundation.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
-    "client": [
-        "AddRemoveTileMixin",
-        "ShaderCloseMixin",
-        "CancelTileEntityRenderMixin",
-        "LightUpdateMixin",
-        "RenderHooksMixin",
-        "FogColorTrackerMixin",
-        "NetworkLightUpdateMixin"
-    ],
+    "client": ["AddRemoveTileMixin", "CancelTileEntityRenderMixin", "FogColorTrackerMixin", "LightUpdateMixin", "NetworkLightUpdateMixin", "RenderHooksMixin", "ShaderCloseMixin"],
     "injectors": {
         "defaultRequire": 1
     },
-    "minVersion": "0.8"
+    "minVersion": "0.8", "mixins": ["StepSoundMixin"]
 }

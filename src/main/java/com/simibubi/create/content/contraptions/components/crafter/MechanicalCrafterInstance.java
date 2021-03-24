@@ -20,7 +20,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        Direction facing = lastState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
+        Direction facing = blockState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
         Supplier<MatrixStack> ms = () -> {
             MatrixStack stack = new MatrixStack();
@@ -34,6 +34,6 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
             stacker.unCentre();
             return stack;
         };
-        return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, lastState, facing, ms);
+        return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, ms);
     }
 }

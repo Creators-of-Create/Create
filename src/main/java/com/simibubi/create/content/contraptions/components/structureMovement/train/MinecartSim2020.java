@@ -106,10 +106,10 @@ public class MinecartSim2020 {
 		}
 
 		Pair<Vector3i, Vector3i> pair = MATRIX.get(railshape);
-		Vector3i vec3i = pair.getFirst();
-		Vector3i vec3i1 = pair.getSecond();
-		double d4 = (double) (vec3i1.getX() - vec3i.getX());
-		double d5 = (double) (vec3i1.getZ() - vec3i.getZ());
+		Vector3i Vector3i = pair.getFirst();
+		Vector3i Vector3i1 = pair.getSecond();
+		double d4 = (double) (Vector3i1.getX() - Vector3i.getX());
+		double d5 = (double) (Vector3i1.getZ() - Vector3i.getZ());
 //		double d6 = Math.sqrt(d4 * d4 + d5 * d5);
 		double d7 = forcedMovement.x * d4 + forcedMovement.z * d5;
 		if (d7 < 0.0D) {
@@ -117,10 +117,10 @@ public class MinecartSim2020 {
 			d5 = -d5;
 		}
 
-		double d23 = (double) cartPos.getX() + 0.5D + (double) vec3i.getX() * 0.5D;
-		double d10 = (double) cartPos.getZ() + 0.5D + (double) vec3i.getZ() * 0.5D;
-		double d12 = (double) cartPos.getX() + 0.5D + (double) vec3i1.getX() * 0.5D;
-		double d13 = (double) cartPos.getZ() + 0.5D + (double) vec3i1.getZ() * 0.5D;
+		double d23 = (double) cartPos.getX() + 0.5D + (double) Vector3i.getX() * 0.5D;
+		double d10 = (double) cartPos.getZ() + 0.5D + (double) Vector3i.getZ() * 0.5D;
+		double d12 = (double) cartPos.getX() + 0.5D + (double) Vector3i1.getX() * 0.5D;
+		double d13 = (double) cartPos.getZ() + 0.5D + (double) Vector3i1.getZ() * 0.5D;
 		d4 = d12 - d23;
 		d5 = d13 - d10;
 		double d14;
@@ -145,12 +145,12 @@ public class MinecartSim2020 {
 		y = cart.getY();
 		z = cart.getZ();
 
-		if (vec3i.getY() != 0 && MathHelper.floor(x) - cartPos.getX() == vec3i.getX()
-			&& MathHelper.floor(z) - cartPos.getZ() == vec3i.getZ()) {
-			cart.setPosition(x, y + (double) vec3i.getY(), z);
-		} else if (vec3i1.getY() != 0 && MathHelper.floor(x) - cartPos.getX() == vec3i1.getX()
-			&& MathHelper.floor(z) - cartPos.getZ() == vec3i1.getZ()) {
-			cart.setPosition(x, y + (double) vec3i1.getY(), z);
+		if (Vector3i.getY() != 0 && MathHelper.floor(x) - cartPos.getX() == Vector3i.getX()
+			&& MathHelper.floor(z) - cartPos.getZ() == Vector3i.getZ()) {
+			cart.setPosition(x, y + (double) Vector3i.getY(), z);
+		} else if (Vector3i1.getY() != 0 && MathHelper.floor(x) - cartPos.getX() == Vector3i1.getX()
+			&& MathHelper.floor(z) - cartPos.getZ() == Vector3i1.getZ()) {
+			cart.setPosition(x, y + (double) Vector3i1.getY(), z);
 		}
 
 		x = cart.getX();

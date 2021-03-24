@@ -15,27 +15,38 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis) {
-        key.getInstance()
-           .setColor(tile.network)
-           .setRotationalSpeed(tile.getSpeed())
-           .setRotationOffset(getRotationOffset(axis))
-           .setRotationAxis(axis);
+        updateRotation(key, axis, tile.getSpeed());
+    }
+
+    protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis, float speed) {
+        updateRotation(key.getInstance(), axis, speed);
+    }
+
+    protected final void updateRotation(RotatingData key, Direction.Axis axis, float speed) {
+        key.setRotationAxis(axis)
+                .setRotationOffset(getRotationOffset(axis))
+                .setRotationalSpeed(speed)
+                .setColor(tile.network);
+    }
+
+    protected final void updateRotation(RotatingData key, Direction.Axis axis) {
+        updateRotation(key, axis, tile.getSpeed());
     }
 
     protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed, Direction.Axis axis) {
         key.getInstance()
-           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-           .setTileEntity(tile)
-           .setRotationalSpeed(speed)
-           .setRotationOffset(getRotationOffset(axis))
-           .setRotationAxis(axis);
+                .setRotationAxis(axis)
+                .setRotationalSpeed(speed)
+                .setRotationOffset(getRotationOffset(axis))
+                .setTileEntity(tile)
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
+                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos));
 
         return key;
     }
 
     protected float getRotationOffset(final Direction.Axis axis) {
-        float offset = CogWheelBlock.isLargeCog(lastState) ? 11.25f : 0;
+        float offset = CogWheelBlock.isLargeCog(blockState) ? 11.25f : 0;
         double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
                 + ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
         if (d == 0) {
@@ -50,7 +61,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     public Direction.Axis getRotationAxis() {
-        return ((IRotate) lastState.getBlock()).getRotationAxis(lastState);
+        return ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
     }
 
     protected final RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial() {

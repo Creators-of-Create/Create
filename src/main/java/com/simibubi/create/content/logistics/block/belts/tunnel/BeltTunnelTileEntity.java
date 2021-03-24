@@ -1,5 +1,14 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
@@ -29,9 +38,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.*;
 
 public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -98,7 +104,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		super.fromTag(state, compound, clientPacket);
 
 		if (clientPacket)
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public void updateTunnelConnections() {
@@ -170,6 +176,11 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		flapsToSend.clear();
 	}
 
+	@Override
+	public boolean shouldRenderAsTE() {
+		return true;
+	}
+	
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 

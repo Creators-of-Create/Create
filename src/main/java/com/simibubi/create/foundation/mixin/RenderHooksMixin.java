@@ -1,8 +1,11 @@
 package com.simibubi.create.foundation.mixin;
 
 import com.simibubi.create.foundation.render.KineticRenderer;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL20;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,6 +61,11 @@ public class RenderHooksMixin {
 
         CreateClient.kineticRenderer.get(world).beginFrame(camX, camY, camZ);
         ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
+    }
+
+    @Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
+    private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
+        CreateClient.kineticRenderer.get(world).update(world.getTileEntity(pos));
     }
 
     @Inject(at = @At("TAIL"), method = "loadRenderers")

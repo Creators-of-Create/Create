@@ -9,28 +9,24 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.util.Direction;
 
-public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements ITickableInstance {
+public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
-    private InstanceKey<ModelData> connector;
-    private InstanceKey<ModelData> pipe;
+    private final InstanceKey<ModelData> connector;
+    private final InstanceKey<ModelData> pipe;
 
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
+        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.MODELS);
-
-        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, lastState).createInstance();
-        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, lastState).createInstance();
+        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
+        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
 
         updateLight();
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         float partialTicks = AnimationTickHolder.getPartialTicks();
 
         double[] cannonAngles = SchematicannonRenderer.getCannonAngles(tile, pos, partialTicks);
@@ -58,7 +54,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         msr.translate(-.5f, -15 / 16f, -.5f);
         msr.translate(0, -recoil / 100, 0);
 
-        pipe.getInstance().setTransformNoCopy(ms);
+        pipe.getInstance().setTransform(ms);
     }
 
     @Override

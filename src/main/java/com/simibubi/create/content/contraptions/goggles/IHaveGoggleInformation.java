@@ -1,6 +1,12 @@
 package com.simibubi.create.content.contraptions.goggles;
 
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -9,11 +15,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
@@ -36,7 +37,8 @@ public interface IHaveGoggleInformation {
 	}
 
 	static String format(double d) {
-		return numberFormat.get().format(d);
+		return numberFormat.get()
+			.format(d);
 	}
 
 	default boolean containedFluidTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
@@ -73,7 +75,13 @@ public interface IHaveGoggleInformation {
 			isEmpty = false;
 		}
 
-		if (tank.getTanks() > 1 || !isEmpty)
+		if (tank.getTanks() > 1) {
+			if (isEmpty)
+				tooltip.remove(tooltip.size() - 1);
+			return true;
+		}
+		
+		if (!isEmpty)
 			return true;
 
 		ITextComponent capacity = Lang.translate("gui.goggles.fluid_container.capacity").formatted(TextFormatting.GRAY);
@@ -96,7 +104,10 @@ public interface IHaveGoggleInformation {
 		}
 
 		public void update() {
-			format = NumberFormat.getInstance(Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getJavaLocale());
+			format = NumberFormat.getInstance(Minecraft.getInstance()
+				.getLanguageManager()
+				.getCurrentLanguage()
+				.getJavaLocale());
 			format.setMaximumFractionDigits(2);
 			format.setMinimumFractionDigits(0);
 			format.setGroupingUsed(true);

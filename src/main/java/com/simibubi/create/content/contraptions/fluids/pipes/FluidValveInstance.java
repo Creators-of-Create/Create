@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
@@ -15,42 +15,36 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
-public class FluidValveInstance extends ShaftInstance implements ITickableInstance {
+public class FluidValveInstance extends ShaftInstance implements IDynamicInstance {
 
     protected InstanceKey<ModelData> pointer;
 
-    protected double xRot;
-    protected double yRot;
-    protected int pointerRotationOffset;
+    protected final double xRot;
+    protected final double yRot;
+    protected final int pointerRotationOffset;
 
     public FluidValveInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
 
-    @Override
-    protected void init() {
-        super.init();
-
-        Direction facing = lastState.get(FluidValveBlock.FACING);
+        Direction facing = blockState.get(FluidValveBlock.FACING);
 
         yRot = AngleHelper.horizontalAngle(facing);
         xRot = facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90;
 
-        Direction.Axis pipeAxis = FluidValveBlock.getPipeAxis(lastState);
+        Direction.Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
         Direction.Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
 
-        pointerRotationOffset = 0;
-        if (pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical())
-            pointerRotationOffset = 90;
+        boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical();
+        pointerRotationOffset = twist ? 90 : 0;
 
-        pointer = modelManager.basicMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, lastState).createInstance();
+        pointer = modelManager.transformMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
 
         updateLight();
         transformPointer((FluidValveTileEntity) tile);
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
 
         FluidValveTileEntity valve = (FluidValveTileEntity) tile;
 

@@ -1,3 +1,10 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-public class MaterialType<M> { }
+import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
+
+public class MaterialType<M extends InstancedModel<?>> {
+
+	public <P extends BasicProgram> RenderMaterial<?, M> get(InstancedTileRenderer<P> renderer) {
+		return renderer.getMaterial(this);
+	}
+}

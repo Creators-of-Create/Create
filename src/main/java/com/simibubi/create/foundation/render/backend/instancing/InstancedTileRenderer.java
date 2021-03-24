@@ -4,12 +4,12 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -26,6 +26,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
 
     protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
+    protected Map<TileEntity, IDynamicInstance> dynamicInstances = new HashMap<>();
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
@@ -45,12 +46,18 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (ticks % 10 == 0) {
             clean();
         }
+
+        if (tickableInstances.size() > 0)
+            tickableInstances.values().forEach(ITickableInstance::tick);
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        queuedAdditions.forEach(this::add);
-        queuedAdditions.clear();
-        tickableInstances.values().forEach(ITickableInstance::tick);
+        if (queuedAdditions.size() > 0) {
+            queuedAdditions.forEach(this::addInternal);
+            queuedAdditions.clear();
+        }
+        if (dynamicInstances.size() > 0)
+            dynamicInstances.values().forEach(IDynamicInstance::beginFrame);
     }
 
     public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
@@ -69,35 +76,25 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return (RenderMaterial<P, M>) materials.get(materialType);
     }
 
-    public RenderMaterial<P, InstancedModel<ModelData>> basicMaterial() {
-        return getMaterial(RenderMaterials.MODELS);
+    public RenderMaterial<P, InstancedModel<ModelData>> transformMaterial() {
+        return getMaterial(RenderMaterials.TRANSFORMED);
     }
 
-    @Nullable
-    public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile) {
-        return getInstance(tile, true);
+    public RenderMaterial<P, InstancedModel<OrientedData>> orientedMaterial() {
+        return getMaterial(RenderMaterials.ORIENTED);
     }
 
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-        if (!Backend.canUseInstancing() || !canCreateInstance(tile)) return null;
+        if (!Backend.canUseInstancing()) return null;
 
         TileEntityInstance<?> instance = instances.get(tile);
 
         if (instance != null) {
             return (TileEntityInstance<? super T>) instance;
-        } else if (create) {
-            TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
-
-            if (renderer != null) {
-                instances.put(tile, renderer);
-
-                if (renderer instanceof ITickableInstance)
-                    tickableInstances.put(tile, (ITickableInstance) renderer);
-            }
-
-            return renderer;
+        } else if (create && canCreateInstance(tile)) {
+            return createInternal(tile);
         } else {
             return null;
         }
@@ -118,7 +115,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (!Backend.canUseInstancing()) return;
 
         if (tile instanceof IInstanceRendered) {
-            getInstance(tile);
+            addInternal(tile);
         }
     }
 
@@ -134,8 +131,16 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (tile instanceof IInstanceRendered) {
             TileEntityInstance<? super T> instance = getInstance(tile, false);
 
-            if (instance != null)
-                instance.update();
+            if (instance != null) {
+
+                if (instance.shouldReset()) {
+                    removeInternal(tile, instance);
+
+                    createInternal(tile);
+                } else {
+                    instance.update();
+                }
+            }
         }
     }
 
@@ -143,17 +148,46 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         if (!Backend.canUseInstancing()) return;
 
         if (tile instanceof IInstanceRendered) {
-            TileEntityInstance<? super T> instance = getInstance(tile, false);
-
-            if (instance != null) {
-                instance.remove();
-                instances.remove(tile);
-                tickableInstances.remove(tile);
-            }
+            removeInternal(tile);
         }
     }
 
-    public void clean() {
+    private void addInternal(TileEntity tile) {
+        getInstance(tile, true);
+    }
+
+    private <T extends TileEntity> void removeInternal(T tile) {
+        TileEntityInstance<? super T> instance = getInstance(tile, false);
+
+        if (instance != null) {
+            removeInternal(tile, instance);
+        }
+    }
+
+    private void removeInternal(TileEntity tile, TileEntityInstance<?> instance) {
+        instance.remove();
+        instances.remove(tile);
+        dynamicInstances.remove(tile);
+        tickableInstances.remove(tile);
+    }
+
+    private <T extends TileEntity> TileEntityInstance<? super T> createInternal(T tile) {
+        TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
+
+        if (renderer != null) {
+            instances.put(tile, renderer);
+
+            if (renderer instanceof IDynamicInstance)
+                dynamicInstances.put(tile, (IDynamicInstance) renderer);
+
+            if (renderer instanceof ITickableInstance)
+                tickableInstances.put(tile, ((ITickableInstance) renderer));
+        }
+
+        return renderer;
+    }
+
+    private void clean() {
         instances.keySet().removeIf(TileEntity::isRemoved);
     }
 
@@ -162,7 +196,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
             material.delete();
         }
         instances.clear();
-        tickableInstances.clear();
+        dynamicInstances.clear();
     }
 
     public boolean canCreateInstance(TileEntity tile) {

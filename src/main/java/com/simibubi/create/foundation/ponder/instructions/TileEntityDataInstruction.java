@@ -37,9 +37,9 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 				return;
 			CompoundNBT apply = data.apply(tileEntity.write(new CompoundNBT()));
 			BlockState state = world.getBlockState(pos);
-			tileEntity.fromTag(state, apply);
 			if (tileEntity instanceof SyncedTileEntity)
 				((SyncedTileEntity) tileEntity).readClientUpdate(state, apply);
+			tileEntity.fromTag(state, apply);
 		});
 	}
 

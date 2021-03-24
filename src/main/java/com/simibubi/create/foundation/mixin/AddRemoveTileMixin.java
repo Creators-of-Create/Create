@@ -33,7 +33,13 @@ public class AddRemoveTileMixin {
      * to a change in block state, even on the client. By hooking into this method,
      * we gain easy access to the information while having no impact on performance.
      */
-    @Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"), method = "removeTileEntity", locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(at = @At(
+            value = "INVOKE_ASSIGN",
+            target = "Lnet/minecraft/world/World;getTileEntity(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;"
+            ),
+            method = "removeTileEntity",
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
     private void onRemoveTile(BlockPos pos, CallbackInfo ci, TileEntity te) {
         if (isRemote) {
             World thi = (World)(Object) this;
@@ -49,7 +55,11 @@ public class AddRemoveTileMixin {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;clear()V", ordinal = 0), method = "tickBlockEntities")
+    @Inject(at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Set;clear()V", ordinal = 0
+            ),
+            method = "tickBlockEntities")
     private void onChunkUnload(CallbackInfo ci) {
         if (isRemote) {
             World thi = (World)(Object) this;

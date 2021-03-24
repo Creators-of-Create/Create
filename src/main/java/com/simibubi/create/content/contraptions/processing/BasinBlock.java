@@ -21,6 +21,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -35,6 +36,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -94,6 +99,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
 					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return ActionResultType.SUCCESS;
+				if (heldItem.getItem().equals(Items.SPONGE) &&
+						!te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler ->
+								iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE)).orElse(FluidStack.EMPTY).isEmpty()) {
+					return ActionResultType.SUCCESS;
+				}
 				return ActionResultType.PASS;
 			}
 

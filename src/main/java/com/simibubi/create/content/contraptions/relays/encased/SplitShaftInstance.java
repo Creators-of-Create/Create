@@ -16,24 +16,21 @@ import java.util.ArrayList;
 
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
 
-    protected ArrayList<InstanceKey<RotatingData>> keys;
+    protected final ArrayList<InstanceKey<RotatingData>> keys;
 
     public SplitShaftInstance(InstancedTileRenderer<?> modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         keys = new ArrayList<>(2);
 
-        Block block = lastState.getBlock();
-        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(lastState);
+        Block block = blockState.getBlock();
+        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(blockState);
 
         float speed = tile.getSpeed();
 
         for (Direction dir : Iterate.directionsInAxis(boxAxis)) {
 
-            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, dir);
+            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, dir);
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
@@ -42,9 +39,9 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
     }
 
     @Override
-    public void onUpdate() {
-        Block block = lastState.getBlock();
-        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(lastState);
+    public void update() {
+        Block block = blockState.getBlock();
+        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(blockState);
 
         Direction[] directions = Iterate.directionsInAxis(boxAxis);
 
@@ -55,7 +52,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
     @Override
     public void updateLight() {
-        keys.forEach(key -> relight(pos, ((InstanceKey<? extends KineticData<?>>) key).getInstance()));
+        keys.forEach(key -> relight(pos, ((InstanceKey<? extends KineticData>) key).getInstance()));
     }
 
     @Override
@@ -68,9 +65,9 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
         Direction.Axis axis = dir.getAxis();
 
         key.getInstance()
-           .setColor(tile.network)
-           .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
-           .setRotationOffset(getRotationOffset(axis))
-           .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
+                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+                .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
+                .setRotationOffset(getRotationOffset(axis))
+                .setColor(tile.network);
     }
 }

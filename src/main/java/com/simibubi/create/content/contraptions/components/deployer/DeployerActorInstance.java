@@ -37,7 +37,7 @@ public class DeployerActorInstance extends ActorInstance {
     public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.basicMaterial();
+        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.transformMaterial();
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
@@ -62,16 +62,16 @@ public class DeployerActorInstance extends ActorInstance {
         int blockLight = localBlockLight();
 
         shaft.getInstance()
-             .setBlockLight(blockLight)
-             .setRotationAxis(axis)
-             .setPosition(context.localPos);
+                .setRotationAxis(axis)
+                .setPosition(context.localPos)
+                .setBlockLight(blockLight);
 
         pole.getInstance().setBlockLight(blockLight);
         hand.getInstance().setBlockLight(blockLight);
     }
 
     @Override
-    protected void tick() {
+    public void beginFrame() {
         double factor;
         if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
             factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
@@ -91,6 +91,23 @@ public class DeployerActorInstance extends ActorInstance {
         msr.translate(context.localPos)
            .translate(offset);
 
-        DeployerInstance.transformModel(msr, pole, hand, yRot, zRot, zRotPole);
+        transformModel(msr, pole, hand, yRot, zRot, zRotPole);
+    }
+
+    static void transformModel(MatrixStacker msr, InstanceKey<ModelData> pole, InstanceKey<ModelData> hand, float yRot, float zRot, float zRotPole) {
+
+        msr.centre();
+        msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
+        msr.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
+
+        msr.push();
+        msr.rotate(Direction.SOUTH, (float) ((zRotPole) / 180 * Math.PI));
+        msr.unCentre();
+        pole.getInstance().setTransform(msr.unwrap());
+        msr.pop();
+
+        msr.unCentre();
+
+        hand.getInstance().setTransform(msr.unwrap());
     }
 }

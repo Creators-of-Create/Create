@@ -110,6 +110,8 @@ public abstract class Contraption {
 	public List<TileEntity> maybeInstancedTileEntities;
 	public List<TileEntity> specialRenderedTileEntities;
 
+	protected ContraptionWorld world;
+
 	public Contraption() {
 		blocks = new HashMap<>();
 		storage = new HashMap<>();
@@ -125,6 +127,14 @@ public abstract class Contraption {
 		specialRenderedTileEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
+	}
+
+	public ContraptionWorld getContraptionWorld() {
+		if (world == null) {
+			world = new ContraptionWorld(entity.world, this);
+		}
+
+		return world;
 	}
 
 	public abstract boolean assemble(World world, BlockPos pos) throws AssemblyException;
@@ -1062,7 +1072,7 @@ public abstract class Contraption {
 
 		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
 
-		GridAlignedBB contraptionBounds = GridAlignedBB.fromAABB(bounds);
+		GridAlignedBB contraptionBounds = GridAlignedBB.from(bounds);
 		if (axis == Direction.Axis.X) {
 			betterBounds.maxX = contraptionBounds.maxX;
 			betterBounds.minX = contraptionBounds.minX;

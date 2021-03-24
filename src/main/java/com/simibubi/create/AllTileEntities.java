@@ -97,6 +97,7 @@ import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterInstance;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
@@ -114,8 +115,6 @@ import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 public class AllTileEntities {
 
@@ -595,6 +594,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER = Create.registrate()
 		.tileEntity("adjustable_repeater", AdjustableRepeaterTileEntity::new)
+		.instance(() -> AdjustableRepeaterInstance::new)
 		.validBlocks(AllBlocks.ADJUSTABLE_REPEATER)
 		.renderer(() -> AdjustableRepeaterRenderer::new)
 		.register();
@@ -602,6 +602,7 @@ public class AllTileEntities {
 	public static final TileEntityEntry<AdjustablePulseRepeaterTileEntity> ADJUSTABLE_PULSE_REPEATER =
 		Create.registrate()
 			.tileEntity("adjustable_pulse_repeater", AdjustablePulseRepeaterTileEntity::new)
+			.instance(() -> AdjustableRepeaterInstance::new)
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();

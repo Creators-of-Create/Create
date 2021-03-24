@@ -1,12 +1,16 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
+import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -1008,6 +1012,99 @@ public class KineticsScenes {
 		scene.world.multiplyKineticSpeed(util.select.fromTo(1, 2, 1, 1, 2, 3), -.05f);
 		scene.effects.rotationSpeedIndicator(cogPos);
 		scene.idle(35);
+	}
+
+	public static void speedometer(SceneBuilder scene, SceneBuildingUtil util) {
+		gauge(scene, util, true);
+	}
+
+	public static void stressometer(SceneBuilder scene, SceneBuildingUtil util) {
+		gauge(scene, util, false);
+	}
+
+	private static void gauge(SceneBuilder scene, SceneBuildingUtil util, boolean speed) {
+		String component = speed ? "Speedometer" : "Stressometer";
+		String title = "Monitoring Kinetic information using the " + component;
+		scene.title(speed ? "speedometer" : "stressometer", title);
+		scene.configureBasePlate(1, 0, 5);
+
+		BlockPos gaugePos = util.grid.at(2, 1, 3);
+
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		for (int x = 6; x >= 0; x--) {
+			scene.idle(2);
+			scene.world.showSection(util.select.position(x, 1, 3), Direction.DOWN);
+		}
+		scene.idle(10);
+
+		scene.world.setBlock(gaugePos, (speed ? AllBlocks.SPEEDOMETER : AllBlocks.STRESSOMETER).getDefaultState()
+			.with(GaugeBlock.FACING, Direction.UP), true);
+		scene.world.setKineticSpeed(util.select.position(gaugePos), 32);
+		scene.idle(10);
+
+		scene.overlay.showText(80)
+			.text("The " + component + " displays the current " + (speed ? "Speed" : "Stress Capacity")
+				+ " of the attached " + (speed ? "components" : "kinetic network"))
+			.attachKeyFrame()
+			.pointAt(util.vector.topOf(gaugePos))
+			.placeNearTarget();
+		scene.idle(90);
+
+		if (speed) {
+			scene.world.multiplyKineticSpeed(util.select.everywhere(), 4);
+			scene.effects.rotationSpeedIndicator(util.grid.at(6, 1, 3));
+			scene.idle(5);
+			scene.effects.indicateSuccess(gaugePos);
+
+		} else {
+			BlockState state = AllBlocks.CRUSHING_WHEEL.getDefaultState()
+				.with(CrushingWheelBlock.AXIS, Axis.X);
+			scene.world.setBlock(util.grid.at(5, 1, 3), state, true);
+			scene.world.setKineticSpeed(util.select.position(5, 1, 3), 32);
+			scene.world.modifyTileNBT(util.select.position(gaugePos), StressGaugeTileEntity.class,
+				nbt -> nbt.putFloat("Value", .5f));
+			scene.effects.indicateRedstone(gaugePos);
+			scene.idle(20);
+			scene.world.setBlock(util.grid.at(4, 1, 3), state, true);
+			scene.world.setKineticSpeed(util.select.position(4, 1, 3), 32);
+			scene.world.modifyTileNBT(util.select.position(gaugePos), StressGaugeTileEntity.class,
+				nbt -> nbt.putFloat("Value", .9f));
+			scene.effects.indicateRedstone(gaugePos);
+			scene.idle(10);
+		}
+
+		scene.idle(30);
+
+		Vector3d blockSurface = util.vector.blockSurface(gaugePos, Direction.NORTH);
+		scene.overlay.showControls(
+			new InputWindowElement(blockSurface, Pointing.RIGHT).withItem(AllItems.GOGGLES.asStack()), 40);
+		scene.idle(7);
+		scene.overlay.showText(80)
+			.text("When wearing Engineers' Goggles, the player can get more detailed information from the Gauge")
+			.attachKeyFrame()
+			.colored(PonderPalette.MEDIUM)
+			.pointAt(blockSurface)
+			.placeNearTarget();
+		scene.idle(100);
+
+		Selection comparator = util.select.fromTo(2, 1, 1, 2, 1, 2);
+		scene.world.showSection(comparator, Direction.SOUTH);
+		scene.idle(10);
+		scene.world.toggleRedstonePower(comparator);
+		scene.effects.indicateRedstone(util.grid.at(2, 1, 2));
+		scene.idle(20);
+
+		scene.overlay.showText(120)
+			.text("Comparators can emit analog Restone Signals relative to the " + component + "'s measurements")
+			.attachKeyFrame()
+			.colored(PonderPalette.RED)
+			.pointAt(util.vector.centerOf(2, 1, 2)
+				.add(0, -0.35, 0))
+			.placeNearTarget();
+		scene.idle(130);
+		scene.markAsFinished();
 	}
 
 }

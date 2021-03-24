@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;

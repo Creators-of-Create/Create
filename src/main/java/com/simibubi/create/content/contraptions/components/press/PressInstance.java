@@ -4,36 +4,28 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
-public class PressInstance extends ShaftInstance implements ITickableInstance {
+public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
-    private InstanceKey<ModelData> pressHead;
+    private final InstanceKey<ModelData> pressHead;
 
     public PressInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
-    }
 
-    @Override
-    protected void init() {
-        super.init();
-
-        pressHead = modelManager.getMaterial(RenderMaterials.MODELS)
-                                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, lastState)
-                                .createInstance();
+        pressHead = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontalModel(dispatcher, blockState).createInstance();
 
         updateLight();
         transformModels((MechanicalPressTileEntity) tile);
     }
 
     @Override
-    public void tick() {
+    public void beginFrame() {
         MechanicalPressTileEntity press = (MechanicalPressTileEntity) tile;
         if (!press.running)
             return;
@@ -51,7 +43,7 @@ public class PressInstance extends ShaftInstance implements ITickableInstance {
         msr.translate(0, -renderedHeadOffset, 0);
 
         pressHead.getInstance()
-                 .setTransformNoCopy(ms);
+                 .setTransform(ms);
     }
 
     private float getRenderedHeadOffset(MechanicalPressTileEntity press) {

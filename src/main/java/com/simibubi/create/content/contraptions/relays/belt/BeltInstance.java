@@ -21,30 +21,27 @@ import java.util.function.Supplier;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
-    private boolean upward;
-    private boolean diagonal;
-    private boolean sideways;
-    private boolean vertical;
-    private boolean alongX;
-    private boolean alongZ;
-    private BeltSlope beltSlope;
-    private Direction facing;
+    boolean upward;
+    boolean diagonal;
+    boolean sideways;
+    boolean vertical;
+    boolean alongX;
+    boolean alongZ;
+    BeltSlope beltSlope;
+    Direction facing;
     protected ArrayList<InstanceKey<BeltData>> keys;
     protected InstanceKey<RotatingData> pulleyKey;
 
     public BeltInstance(InstancedTileRenderer<?> modelManager, BeltTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
-        if (!AllBlocks.BELT.has(lastState))
+        if (!AllBlocks.BELT.has(blockState))
             return;
 
         keys = new ArrayList<>(2);
 
-        beltSlope = lastState.get(BeltBlock.SLOPE);
-        facing = lastState.get(BeltBlock.HORIZONTAL_FACING);
+        beltSlope = blockState.get(BeltBlock.SLOPE);
+        facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
         upward = beltSlope == BeltSlope.UPWARD;
         diagonal = beltSlope.isDiagonal();
         sideways = beltSlope == BeltSlope.SIDEWAYS;
@@ -52,7 +49,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         alongX = facing.getAxis() == Direction.Axis.X;
         alongZ = facing.getAxis() == Direction.Axis.Z;
 
-        BeltPart part = lastState.get(BeltBlock.PART);
+        BeltPart part = blockState.get(BeltBlock.PART);
         boolean start = part == BeltPart.START;
         boolean end = part == BeltPart.END;
         DyeColor color = tile.color.orElse(null);
@@ -61,7 +58,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             AllBlockPartials beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-            InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, lastState);
+            InstancedModel<BeltData> beltModel = beltPartial.renderOnBelt(modelManager, blockState);
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -76,7 +73,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         DyeColor color = tile.color.orElse(null);
 
         boolean bottom = true;
@@ -141,11 +138,11 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             return modelTransform;
         };
 
-        return rotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, lastState, dir, ms);
+        return rotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {
-        Direction dir = lastState.get(BeltBlock.HORIZONTAL_FACING)
+        Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
                                   .rotateY();
         if (beltSlope == BeltSlope.SIDEWAYS)
             dir = Direction.UP;
@@ -162,14 +159,14 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
 
         key.getInstance()
-           .setTileEntity(tile)
-           .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-           .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-           .setRotation(q)
-           .setRotationalSpeed(getScrollSpeed())
-           .setRotationOffset(bottom ? 0.5f : 0f)
-           .setScrollTexture(spriteShift)
-           .setScrollMult(diagonal ? 3f / 8f : 0.5f);
+                .setScrollTexture(spriteShift)
+                .setScrollMult(diagonal ? 3f / 8f : 0.5f)
+                .setRotation(q)
+                .setRotationalSpeed(getScrollSpeed())
+                .setRotationOffset(bottom ? 0.5f : 0f)
+                .setTileEntity(tile)
+                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
+                .setSkyLight(world.getLightLevel(LightType.SKY, pos));
 
         return key;
     }

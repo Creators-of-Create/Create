@@ -25,12 +25,14 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
         if (!contraptionBounds.sameAs(bounds)) {
             lightVolume.move(contraption.entity.world, contraptionBoundsToVolume(contraptionBounds));
             bounds = contraptionBounds;
+
+            startListening();
         }
     }
 
     @Override
     public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bb = GridAlignedBB.fromAABB(contraption.bounds);
+        GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
 
         bb.translate(contraption.entity.getBlockPos());
 

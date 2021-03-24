@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.render.backend.RenderUtil;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.math.vector.Vector3i;
 
@@ -34,7 +35,7 @@ public class GridAlignedBB {
         return new GridAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
     }
 
-    public static GridAlignedBB fromAABB(AxisAlignedBB aabb) {
+    public static GridAlignedBB from(AxisAlignedBB aabb) {
         int minX = (int) Math.floor(aabb.minX);
         int minY = (int) Math.floor(aabb.minY);
         int minZ = (int) Math.floor(aabb.minZ);
@@ -44,7 +45,7 @@ public class GridAlignedBB {
         return new GridAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public static GridAlignedBB fromSection(SectionPos pos) {
+    public static GridAlignedBB from(SectionPos pos) {
         return new GridAlignedBB(pos.getWorldStartX(),
                                  pos.getWorldStartY(),
                                  pos.getWorldStartZ(),
@@ -53,7 +54,16 @@ public class GridAlignedBB {
                                  pos.getWorldEndZ() + 1);
     }
 
-    public static GridAlignedBB fromChunk(int sectionX, int sectionZ) {
+    public static GridAlignedBB from(BlockPos start, BlockPos end) {
+        return new GridAlignedBB(start.getX(),
+                                 start.getY(),
+                                 start.getZ(),
+                                 end.getX() + 1,
+                                 end.getY() + 1,
+                                 end.getZ() + 1);
+    }
+
+    public static GridAlignedBB from(int sectionX, int sectionZ) {
         int startX = sectionX << 4;
         int startZ = sectionZ << 4;
         return new GridAlignedBB(startX,
@@ -79,6 +89,22 @@ public class GridAlignedBB {
                 maxX == other.maxX &&
                 maxY == other.maxY &&
                 maxZ == other.maxZ;
+    }
+
+    public void fixMinMax() {
+        int minX = Math.min(this.minX, this.maxX);
+        int minY = Math.min(this.minY, this.maxY);
+        int minZ = Math.min(this.minZ, this.maxZ);
+        int maxX = Math.max(this.minX, this.maxX);
+        int maxY = Math.max(this.minY, this.maxY);
+        int maxZ = Math.max(this.minZ, this.maxZ);
+
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
     }
 
     public int sizeX() {

@@ -12,7 +12,7 @@ public class AnchoredLighter extends ContraptionLighter<Contraption> {
 
     @Override
     public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bb = GridAlignedBB.fromAABB(contraption.bounds);
+        GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
         bb.translate(contraption.anchor);
         return bb;
     }

@@ -19,7 +19,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -277,7 +276,7 @@ public class AllBlockPartials {
 						 .unCentre();
 			return stack;
 		};
-		return dispatcher.getMaterial(RenderMaterials.MODELS).getModel(this, referenceState, facing, ms);
+		return dispatcher.getMaterial(RenderMaterials.TRANSFORMED).getModel(this, referenceState, facing, ms);
 	}
 
 }

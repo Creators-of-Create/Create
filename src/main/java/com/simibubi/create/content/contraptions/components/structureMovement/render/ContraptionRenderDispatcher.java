@@ -1,5 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.util.List;
+import java.util.Random;
+
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.IBlockDisplayReader;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.opengl.*;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -7,47 +15,43 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.*;
+import com.simibubi.create.foundation.render.AllProgramSpecs;
+import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockModelRenderer;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
-
-import java.util.List;
-import java.util.Random;
 
 public class ContraptionRenderDispatcher {
     public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
     public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
     protected static PlacementSimulationWorld renderWorld;
-
-    public static void notifyLightUpdate(IBlockDisplayReader world, LightType type, SectionPos pos) {
-        for (RenderedContraption renderer : renderers.values()) {
-            renderer.getLighter().lightVolume.notifyLightUpdate(world, type, pos);
-        }
-    }
 
     public static void notifyLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
         for (RenderedContraption renderer : renderers.values()) {
@@ -56,7 +60,7 @@ public class ContraptionRenderDispatcher {
     }
 
     public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-                                             IRenderTypeBuffer buffer) {
+                                          IRenderTypeBuffer buffer) {
         PlacementSimulationWorld renderWorld = null;
         if (Backend.canUseVBOs()) {
             RenderedContraption renderer = getRenderer(world, c);
@@ -68,8 +72,12 @@ public class ContraptionRenderDispatcher {
     }
 
     public static void tick() {
+        if (Minecraft.getInstance().isGamePaused()) return;
+
         for (RenderedContraption contraption : renderers.values()) {
             contraption.getLighter().tick(contraption);
+
+            contraption.kinetics.tick();
         }
     }
 
@@ -157,7 +165,7 @@ public class ContraptionRenderDispatcher {
     }
 
     public static void renderStructure(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-                                          IRenderTypeBuffer buffer) {
+                                       IRenderTypeBuffer buffer) {
         SuperByteBufferCache bufferCache = CreateClient.bufferCache;
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
@@ -187,17 +195,19 @@ public class ContraptionRenderDispatcher {
         ForgeHooksClient.setRenderLayer(layer);
         MatrixStack ms = new MatrixStack();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-                                                      .getBlockRendererDispatcher();
+            .getBlockRendererDispatcher();
         BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
         Random random = new Random();
         BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
         renderWorld.setTileEntities(c.presentTileEntities.values());
 
-        for (Template.BlockInfo info : c.getBlocks().values())
+        for (Template.BlockInfo info : c.getBlocks()
+            .values())
             renderWorld.setBlockState(info.pos, info.state);
 
-        for (Template.BlockInfo info : c.getBlocks().values()) {
+        for (Template.BlockInfo info : c.getBlocks()
+            .values()) {
             BlockState state = info.state;
 
             if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
@@ -209,7 +219,7 @@ public class ContraptionRenderDispatcher {
             ms.push();
             ms.translate(info.pos.getX(), info.pos.getY(), info.pos.getZ());
             blockRenderer.renderModel(renderWorld, originalModel, state, info.pos, ms, builder, true, random, 42,
-                                      OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+                OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
             ms.pop();
         }
 
@@ -232,7 +242,7 @@ public class ContraptionRenderDispatcher {
             for (MatrixStack m : matrixStacks) {
                 m.push();
                 MatrixStacker.of(m)
-                             .translate(blockInfo.pos);
+                    .translate(blockInfo.pos);
             }
 
             MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);

@@ -20,6 +20,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public int insertedAt;
 	public Direction insertedFrom;
 	public boolean locked;
+	public boolean lockedExternally;
 
 	public float prevBeltPosition;
 	public float prevSideOffset;
@@ -73,7 +74,10 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		nbt.putInt("InSegment", insertedAt);
 		nbt.putInt("Angle", angle);
 		nbt.putInt("InDirection", insertedFrom.getIndex());
-		nbt.putBoolean("Locked", locked);
+		if (locked)
+			nbt.putBoolean("Locked", locked);
+		if (lockedExternally)
+			nbt.putBoolean("LockedExternally", lockedExternally);
 		return nbt;
 	}
 
@@ -87,6 +91,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		stack.angle = nbt.getInt("Angle");
 		stack.insertedFrom = Direction.byIndex(nbt.getInt("InDirection"));
 		stack.locked = nbt.getBoolean("Locked");
+		stack.lockedExternally = nbt.getBoolean("LockedExternally");
 		return stack;
 	}
 

@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
@@ -13,37 +13,39 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.MathHelper;
 
-public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements ITickableInstance {
+public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements IDynamicInstance {
 
     float lastOffset = Float.NaN;
+    final Direction facing;
+    final boolean fakeWorld;
+    final int offset;
 
-    private InstanceKey<ModelData> head;
+    private final InstanceKey<ModelData> head;
 
     public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
-        head = modelManager.getMaterial(RenderMaterials.MODELS).getModel(AllBlockPartials.STICKER_HEAD, lastState).createInstance();
+        head = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
+
+        fakeWorld = tile.getWorld() != Minecraft.getInstance().world;
+        facing = blockState.get(StickerBlock.FACING);
+        offset = blockState.get(StickerBlock.EXTENDED) ? 1 : 0;
 
         updateLight();
     }
 
     @Override
-    public void tick() {
-        lastState = world.getBlockState(pos);
-
+    public void beginFrame() {
         float offset = tile.piston.getValue(AnimationTickHolder.getPartialTicks());
 
-        if (tile.getWorld() != Minecraft.getInstance().world)
-            offset = lastState.get(StickerBlock.EXTENDED) ? 1 : 0;
+        if (fakeWorld)
+            offset = this.offset;
 
-        if (Math.abs(offset - lastOffset) < 1e-4)
+        if (MathHelper.epsilonEquals(offset, lastOffset))
             return;
 
-        Direction facing = lastState.get(StickerBlock.FACING);
         MatrixStack stack = new MatrixStack();
         MatrixStacker.of(stack)
                      .translate(getFloatingPos())
@@ -55,7 +57,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
                      .translate(0, (offset * offset) * 4 / 16f, 0);
 
         head.getInstance()
-            .setTransformNoCopy(stack);
+            .setTransform(stack);
 
         lastOffset = offset;
     }

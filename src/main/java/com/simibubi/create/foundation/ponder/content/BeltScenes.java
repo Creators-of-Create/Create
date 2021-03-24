@@ -6,10 +6,14 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -23,6 +27,7 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.DyeColor;
@@ -299,7 +304,7 @@ public class BeltScenes {
 		scene.idle(10);
 
 		scene.overlay.showText(160)
-			.text("These are all possible directions.\nBelts can span any Length between 2 and 20 blocks");
+			.text("These are all possible directions. Belts can span any Length between 2 and 20 blocks");
 		scene.markAsFinished();
 	}
 
@@ -459,6 +464,114 @@ public class BeltScenes {
 			.text("A wrench can be used to remove the casing")
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(beltPos.south(), Direction.WEST));
+	}
+
+	public static void depot(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("depot", "Using Depots");
+		scene.configureBasePlate(0, 0, 5);
+		scene.showBasePlate();
+		scene.idle(5);
+		scene.world.setBlock(util.grid.at(3, 2, 2), Blocks.WATER.getDefaultState(), false);
+
+		BlockPos depotPos = util.grid.at(2, 1, 2);
+		scene.world.showSection(util.select.position(2, 1, 2), Direction.DOWN);
+		Vector3d topOf = util.vector.topOf(depotPos);
+		scene.overlay.showText(60)
+			.attachKeyFrame()
+			.text("Depots can serve as 'stationary' belt elements")
+			.placeNearTarget()
+			.pointAt(topOf);
+		scene.idle(70);
+
+		scene.overlay.showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick()
+			.withItem(AllBlocks.COPPER_BLOCK.asStack()), 20);
+		scene.idle(7);
+		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, AllBlocks.COPPER_BLOCK.asStack());
+		scene.idle(10);
+		scene.overlay.showText(70)
+			.attachKeyFrame()
+			.text("Right-Click to manually place or remove Items from it")
+			.placeNearTarget()
+			.pointAt(topOf);
+		scene.idle(80);
+
+		scene.overlay.showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick(), 20);
+		scene.idle(7);
+		scene.world.removeItemsFromBelt(depotPos);
+		scene.effects.indicateSuccess(depotPos);
+		scene.idle(20);
+
+		scene.world.showSection(util.select.position(depotPos.up(2)), Direction.SOUTH);
+		scene.overlay.showText(70)
+			.attachKeyFrame()
+			.text("Just like Mechanical Belts, it can provide items to processing")
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(depotPos.up(2), Direction.WEST));
+		ItemStack bottle = new ItemStack(Items.BUCKET);
+		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, bottle);
+		scene.idle(20);
+		scene.world.modifyTileNBT(util.select.position(depotPos.up(2)), SpoutTileEntity.class,
+			nbt -> nbt.putInt("ProcessingTicks", 20));
+		scene.idle(20);
+		scene.world.removeItemsFromBelt(depotPos);
+		scene.world.createItemOnBeltLike(depotPos, Direction.UP, new ItemStack(Items.WATER_BUCKET));
+		scene.world.modifyTileNBT(util.select.position(depotPos.up(2)), SpoutTileEntity.class,
+			nbt -> nbt.putBoolean("Splash", true));
+		scene.idle(30);
+		scene.world.removeItemsFromBelt(depotPos);
+		scene.world.hideSection(util.select.position(depotPos.up(2)), Direction.SOUTH);
+		scene.idle(20);
+		ElementLink<WorldSectionElement> spout = scene.world.showIndependentSection(util.select.position(depotPos.up(2)
+			.west()), Direction.SOUTH);
+		scene.world.moveSection(spout, util.vector.of(1, 0, 0), 0);
+
+		BlockPos pressPos = depotPos.up(2)
+			.west();
+		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, copper);
+		Vector3d depotCenter = util.vector.centerOf(depotPos);
+		scene.idle(10);
+
+		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
+		scene.world.modifyTileEntity(pressPos, type, pte -> pte.start(Mode.BELT));
+		scene.idle(15);
+		scene.world.modifyTileEntity(pressPos, type,
+			pte -> pte.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+		scene.world.removeItemsFromBelt(depotPos);
+		ItemStack sheet = AllItems.COPPER_SHEET.asStack();
+		scene.world.createItemOnBeltLike(depotPos, Direction.UP, sheet);
+
+		scene.idle(20);
+		scene.world.hideIndependentSection(spout, Direction.SOUTH);
+		scene.idle(10);
+
+		Selection fanSelect = util.select.fromTo(4, 1, 3, 5, 2, 2)
+			.add(util.select.position(3, 1, 2))
+			.add(util.select.position(5, 0, 2));
+		scene.world.showSection(fanSelect, Direction.SOUTH);
+		ElementLink<WorldSectionElement> water =
+			scene.world.showIndependentSection(util.select.position(3, 1, 0), Direction.SOUTH);
+		scene.world.moveSection(water, util.vector.of(0, 1, 2), 0);
+		scene.idle(30);
+
+		scene.world.hideSection(fanSelect, Direction.SOUTH);
+		scene.world.hideIndependentSection(water, Direction.SOUTH);
+		scene.idle(30);
+
+		scene.world.showSection(util.select.fromTo(2, 1, 4, 2, 1, 5)
+			.add(util.select.position(2, 0, 5)), Direction.DOWN);
+		BlockPos armPos = util.grid.at(2, 1, 4);
+		scene.overlay.showText(70)
+			.attachKeyFrame()
+			.text("...as well as provide Items to Mechanical Arms")
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(armPos, Direction.WEST));
+		scene.idle(20);
+
+		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 0);
+		scene.idle(37);
+		scene.world.removeItemsFromBelt(depotPos);
+		scene.world.instructArm(armPos, Phase.SEARCH_OUTPUTS, sheet, -1);
 	}
 
 }

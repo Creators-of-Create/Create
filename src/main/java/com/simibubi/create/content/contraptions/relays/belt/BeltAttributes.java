@@ -1,22 +1,21 @@
-package com.simibubi.create.content.contraptions.components.structureMovement.render;
+package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
-public enum ContraptionVertexAttributes implements IVertexAttrib {
-    VERTEX_POSITION("aPos", CommonAttributes.VEC3),
-    NORMAL("aNormal", CommonAttributes.NORMAL),
-    TEXTURE("aTexCoords", CommonAttributes.UV),
-    COLOR("aColor", CommonAttributes.RGBA),
-    MODEL_LIGHT("aModelLight", CommonAttributes.LIGHT),
+public enum BeltAttributes implements IVertexAttrib {
+    INSTANCE_ROTATION("aInstanceRot", CommonAttributes.QUATERNION),
+    SOURCE_TEX("aSourceTexture", CommonAttributes.UV),
+    SCROLL_TEX("aScrollTexture", CommonAttributes.VEC4),
+    SCROLL_MULT("aScrollMult", CommonAttributes.NORMALIZED_BYTE),
     ;
 
     private final String name;
     private final VertexAttribSpec spec;
 
-    ContraptionVertexAttributes(String name, VertexAttribSpec spec) {
+    BeltAttributes(String name, VertexAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }
@@ -33,11 +32,11 @@ public enum ContraptionVertexAttributes implements IVertexAttrib {
 
     @Override
     public int getDivisor() {
-        return 0;
+        return 1;
     }
 
     @Override
     public int getBufferIndex() {
-        return 0;
+        return 1;
     }
 }

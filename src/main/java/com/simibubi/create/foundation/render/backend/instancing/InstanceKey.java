@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import java.util.function.Consumer;
-
 public class InstanceKey<D extends InstanceData> {
     public static final int INVALID = -1;
 

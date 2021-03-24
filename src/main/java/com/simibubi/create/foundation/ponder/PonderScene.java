@@ -453,14 +453,14 @@ public class PonderScene {
 			return ms;
 		}
 
-		public void updateSceneRVE() {
-			Vector3d v = screenToScene(width / 2, height / 2, 500);
+
+		public void updateSceneRVE(float pt) {
+			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
 			renderViewEntity.setPosition(v.x, v.y, v.z);
 		}
 
-		public Vector3d screenToScene(double x, double y, int depth) {
-			refreshMatrix();
-			float pt = AnimationTickHolder.getPartialTicks();
+		public Vector3d screenToScene(double x, double y, int depth, float pt) {
+			refreshMatrix(pt);
 			Vector3d vec = new Vector3d(x, y, depth);
 
 			vec = vec.subtract(width / 2, height / 2, 200 + offset);
@@ -481,17 +481,17 @@ public class PonderScene {
 			return vec;
 		}
 
-		public Vector2f sceneToScreen(Vector3d vec) {
-			refreshMatrix();
+		public Vector2f sceneToScreen(Vector3d vec, float pt) {
+			refreshMatrix(pt);
 			Vector4f vec4 = new Vector4f((float) vec.x, (float) vec.y, (float) vec.z, 1);
 			vec4.transform(cachedMat);
 			return new Vector2f(vec4.getX(), vec4.getY());
 		}
 
-		protected void refreshMatrix() {
+		protected void refreshMatrix(float pt) {
 			if (cachedMat != null)
 				return;
-			cachedMat = apply(new MatrixStack()).peek()
+			cachedMat = apply(new MatrixStack(), pt, false).peek()
 				.getModel();
 		}
 

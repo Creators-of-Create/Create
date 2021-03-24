@@ -17,18 +17,15 @@ import java.util.Map;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
-    protected EnumMap<Direction, InstanceKey<RotatingData>> keys;
+    protected final EnumMap<Direction, InstanceKey<RotatingData>> keys;
     protected Direction sourceFacing;
 
     public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
         keys = new EnumMap<>(Direction.class);
 
-        final Direction.Axis boxAxis = lastState.get(BlockStateProperties.AXIS);
+        final Direction.Axis boxAxis = blockState.get(BlockStateProperties.AXIS);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);
@@ -39,17 +36,17 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             if (boxAxis == axis)
                 continue;
 
-            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, lastState, direction);
+            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction);
 
             InstanceKey<RotatingData> key = shaft.createInstance();
 
             key.getInstance()
-               .setBlockLight(blockLight)
-               .setSkyLight(skyLight)
-               .setRotationalSpeed(getSpeed(direction))
-               .setRotationOffset(getRotationOffset(axis))
-               .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-               .setTileEntity(tile);
+                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+                    .setRotationalSpeed(getSpeed(direction))
+                    .setRotationOffset(getRotationOffset(axis))
+                    .setTileEntity(tile)
+                    .setBlockLight(blockLight)
+                    .setSkyLight(skyLight);
 
             keys.put(direction, key);
         }
@@ -77,18 +74,18 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     }
 
     @Override
-    public void onUpdate() {
+    public void update() {
         updateSourceFacing();
         for (Map.Entry<Direction, InstanceKey<RotatingData>> key : keys.entrySet()) {
             Direction direction = key.getKey();
             Direction.Axis axis = direction.getAxis();
 
             key.getValue()
-               .getInstance()
-               .setColor(tile.network)
-               .setRotationalSpeed(getSpeed(direction))
-               .setRotationOffset(getRotationOffset(axis))
-               .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector());
+                    .getInstance()
+                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+                    .setRotationalSpeed(getSpeed(direction))
+                    .setRotationOffset(getRotationOffset(axis))
+                    .setColor(tile.network);
         }
     }
 

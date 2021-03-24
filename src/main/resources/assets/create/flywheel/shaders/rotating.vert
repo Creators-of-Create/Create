@@ -9,9 +9,9 @@ attribute vec3 aPos;
 attribute vec3 aNormal;
 attribute vec2 aTexCoords;
 
-attribute vec3 aInstancePos;
 attribute vec2 aLight;
-attribute vec3 aNetworkTint;
+attribute vec4 aColor;
+attribute vec3 aInstancePos;
 attribute float aSpeed;
 attribute float aOffset;
 attribute vec3 aAxis;
@@ -39,17 +39,22 @@ uniform vec3 uCameraPos;
 varying float FragDistance;
 #endif
 
-void main() {
+mat4 kineticRotation() {
     float degrees = aOffset + uTime * aSpeed * 3./10.;
-    vec4 kineticRot = quat(aAxis, degrees);
+    float angle = fract(degrees / 360.) * PI * 2.;
 
-    vec4 worldPos = vec4(rotateVertexByQuat(aPos - .5, kineticRot) + aInstancePos + .5, 1.);
+    return rotate(aAxis, angle);
+}
 
-    vec3 norm = rotateVertexByQuat(aNormal, kineticRot);
+void main() {
+    mat4 kineticRotation = kineticRotation();
+    vec4 worldPos = kineticRotation * vec4(aPos - .5, 1.) + vec4(aInstancePos + .5, 0.);
+
+    vec3 norm = modelToNormal(kineticRotation) * aNormal;
 
     #ifdef CONTRAPTION
     worldPos = uModel * worldPos;
-    norm = modelToNormal(uModel) * norm;
+    norm = normalize(modelToNormal(uModel) * norm);
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
     #if defined(USE_FOG)
@@ -72,7 +77,7 @@ void main() {
     }
     #else
     if (uDebug == 1) {
-        Color = vec4(aNetworkTint, 1.);
+        Color = aColor;
     } else if (uDebug == 2) {
         Color = vec4(norm, 1.);
     } else {

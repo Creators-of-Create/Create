@@ -19,21 +19,18 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     public EngineInstance(InstancedTileRenderer<?> modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
-    }
 
-    @Override
-    protected void init() {
-        Block block = lastState
-                        .getBlock();
+        Block block = blockState
+                .getBlock();
         if (!(block instanceof EngineBlock))
             return;
 
         EngineBlock engineBlock = (EngineBlock) block;
         AllBlockPartials frame = engineBlock.getFrameModel();
 
-        Direction facing = lastState.get(BlockStateProperties.HORIZONTAL_FACING);
+        Direction facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
-        this.frame = modelManager.getMaterial(RenderMaterials.MODELS).getModel(frame, lastState).createInstance();
+        this.frame = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(frame, blockState).createInstance();
 
         float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 
@@ -48,7 +45,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
            .translate(0, 0, -1);
 
         this.frame.getInstance()
-                  .setTransformNoCopy(ms);
+                  .setTransform(ms);
 
         updateLight();
     }

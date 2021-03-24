@@ -9,9 +9,9 @@ attribute vec3 aPos;
 attribute vec3 aNormal;
 attribute vec2 aTexCoords;
 
-attribute vec3 aInstancePos;
 attribute vec2 aLight;
-attribute vec3 aNetworkTint;
+attribute vec4 aColor;
+attribute vec3 aInstancePos;
 attribute float aSpeed;
 attribute float aOffset;
 attribute vec4 aInstanceRot;
@@ -77,7 +77,7 @@ void main() {
     }
     #else
     if (uDebug == 1) {
-        Color = vec4(aNetworkTint, 1.);
+        Color = aColor;
     } else if (uDebug == 2) {
         Color = vec4(norm, 1.);
     } else {

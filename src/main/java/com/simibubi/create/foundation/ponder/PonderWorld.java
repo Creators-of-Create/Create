@@ -93,14 +93,14 @@ public class PonderWorld extends SchematicWorld {
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
 		originalTileEntities.forEach((k, v) -> {
 			TileEntity te = TileEntity.createFromTag(originalBlocks.get(k), v.write(new CompoundNBT()));
-			te.setLocation(this, te.getPos());
+			onTEadded(te, te.getPos());
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
 		});
 		originalEntities.forEach(e -> EntityType.loadEntityUnchecked(e.serializeNBT(), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
-		fixVirtualTileEntities();
+		fixBeltTileEntities();
 	}
 
 	public void restoreBlocks(Selection selection) {
@@ -207,6 +207,11 @@ public class PonderWorld extends SchematicWorld {
 		addParticle(makeParticle(data, x, y, z, mx, my, mz));
 	}
 
+	@Override
+	public void addOptionalParticle(IParticleData data, double x, double y, double z, double mx, double my, double mz) {
+		addParticle(data, x, y, z, mx, my, mz);
+	}
+
 	@Nullable
 	@SuppressWarnings("unchecked")
 	private <T extends IParticleData> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
@@ -221,16 +226,20 @@ public class PonderWorld extends SchematicWorld {
 			particles.addParticle(p);
 	}
 
-	public void fixVirtualTileEntities() {
-		for (TileEntity tileEntity : tileEntities.values()) {
-			if (!(tileEntity instanceof SmartTileEntity))
-				continue;
-			SmartTileEntity smartTileEntity = (SmartTileEntity) tileEntity;
-			smartTileEntity.markVirtual();
+	@Override
+	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
+		super.onTEadded(tileEntity, pos);
+		if (!(tileEntity instanceof SmartTileEntity))
+			return;
+		SmartTileEntity smartTileEntity = (SmartTileEntity) tileEntity;
+		smartTileEntity.markVirtual();
+	}
 
-			if (!(smartTileEntity instanceof BeltTileEntity))
+	public void fixBeltTileEntities() {
+		for (TileEntity tileEntity : tileEntities.values()) {
+			if (!(tileEntity instanceof BeltTileEntity))
 				continue;
-			BeltTileEntity beltTileEntity = (BeltTileEntity) smartTileEntity;
+			BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
 			if (!beltTileEntity.isController())
 				continue;
 			BlockPos controllerPos = tileEntity.getPos();
@@ -301,5 +310,10 @@ public class PonderWorld extends SchematicWorld {
 
 	@Override
 	public void markChunkDirty(BlockPos p_175646_1_, TileEntity p_175646_2_) {
+	}
+
+	@Override
+	public boolean isPlayerWithin(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
+		return true; // always enable spawner animations
 	}
 }

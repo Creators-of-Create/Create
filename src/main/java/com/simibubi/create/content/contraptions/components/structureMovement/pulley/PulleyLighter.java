@@ -15,7 +15,7 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
     @Override
     public GridAlignedBB getContraptionBounds() {
 
-        GridAlignedBB bounds = GridAlignedBB.fromAABB(contraption.bounds);
+        GridAlignedBB bounds = GridAlignedBB.from(contraption.bounds);
 
         World world = contraption.entity.world;
 

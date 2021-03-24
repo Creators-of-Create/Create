@@ -1,18 +1,19 @@
-package com.simibubi.create.content.contraptions.base;
+package com.simibubi.create.foundation.render.backend.instancing.impl;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
 
-public enum RotatingVertexAttributes implements IVertexAttrib {
-    AXIS("aAxis", CommonAttributes.NORMAL),
+public enum OrientedAttributes implements IVertexAttrib {
+    INSTANCE_POS("aInstancePos", CommonAttributes.VEC3),
+    PIVOT("aPivot", CommonAttributes.VEC3),
+    ROTATION("aRotation", CommonAttributes.QUATERNION),
     ;
 
     private final String name;
-    private final VertexAttribSpec spec;
+    private final IAttribSpec spec;
 
-    RotatingVertexAttributes(String name, VertexAttribSpec spec) {
+    OrientedAttributes(String name, IAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }
@@ -29,11 +30,11 @@ public enum RotatingVertexAttributes implements IVertexAttrib {
 
     @Override
     public int getDivisor() {
-        return 1;
+        return 0;
     }
 
     @Override
     public int getBufferIndex() {
-        return 1;
+        return 0;
     }
 }

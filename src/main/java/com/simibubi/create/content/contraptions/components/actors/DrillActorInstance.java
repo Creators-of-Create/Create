@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
@@ -13,15 +12,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 
-public class DrillActorInstance extends ActorInstance {
+public class DrillActorInstance extends com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance {
 
-    InstanceKey<ContraptionActorData> drillHead;
+    InstanceKey<ActorData> drillHead;
     private Direction facing;
 
     public DrillActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<?, InstancedModel<ContraptionActorData>> renderMaterial = modelManager.getActorMaterial();
+        RenderMaterial<?, InstancedModel<ActorData>> renderMaterial = modelManager.getActorMaterial();
 
         BlockState state = context.state;
 
@@ -48,11 +47,10 @@ public class DrillActorInstance extends ActorInstance {
     }
 
     @Override
-    protected void tick() {
+    public void beginFrame() {
         drillHead.getInstance().setSpeed(getSpeed(facing));
     }
 
-    @Override
     protected float getSpeed(Direction facing) {
         if (context.contraption.stalled || !VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
             return context.getAnimationSpeed();

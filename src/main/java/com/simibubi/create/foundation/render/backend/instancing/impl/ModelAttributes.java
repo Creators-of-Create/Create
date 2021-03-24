@@ -1,6 +1,11 @@
-package com.simibubi.create.foundation.render.backend.gl.attrib;
+package com.simibubi.create.foundation.render.backend.instancing.impl;
 
-public enum ModelVertexAttributes implements IVertexAttrib {
+import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
+import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
+
+public enum ModelAttributes implements IVertexAttrib {
     VERTEX_POSITION("aPos", CommonAttributes.VEC3),
     NORMAL("aNormal", CommonAttributes.NORMAL),
     TEXTURE("aTexCoords", CommonAttributes.UV),
@@ -9,7 +14,7 @@ public enum ModelVertexAttributes implements IVertexAttrib {
     private final String name;
     private final VertexAttribSpec spec;
 
-    ModelVertexAttributes(String name, VertexAttribSpec spec) {
+    ModelAttributes(String name, VertexAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }
