@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class ContraptionKineticRenderer extends InstancedTileRenderer<ContraptionProgram> {
 
-    protected ArrayList<com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance> actors = new ArrayList<>();
+    protected ArrayList<ActorInstance> actors = new ArrayList<>();
 
     private final WeakReference<RenderedContraption> contraption;
 
@@ -46,25 +46,25 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
 
     @Override
     public void tick() {
-        actors.forEach(com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance::tick);
+        actors.forEach(ActorInstance::tick);
     }
 
     @Override
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
         super.beginFrame(cameraX, cameraY, cameraZ);
 
-        actors.forEach(com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance::beginFrame);
+        actors.forEach(ActorInstance::beginFrame);
     }
 
     @Nullable
-    public com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {
+    public ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {
         Template.BlockInfo blockInfo = actor.getLeft();
         MovementContext context = actor.getRight();
 
         MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 
         if (movementBehaviour != null && movementBehaviour.hasSpecialInstancedRendering()) {
-            com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance instance = movementBehaviour.createInstance(this, context);
+            ActorInstance instance = movementBehaviour.createInstance(this, context);
 
             actors.add(instance);
 

@@ -44,10 +44,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        if (queuedAdditions.size() > 0) {
-            queuedAdditions.forEach(this::addInternal);
-            queuedAdditions.clear();
-        }
+        processQueuedAdditions();
         if (dynamicInstances.size() > 0)
             dynamicInstances.values().forEach(IDynamicInstance::beginFrame);
     }
@@ -111,12 +108,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
-    public <T extends TileEntity> void queueAdd(T tile) {
-        if (!Backend.canUseInstancing()) return;
-
-        queuedAdditions.add(tile);
-    }
-
     public <T extends TileEntity> void update(T tile) {
         if (!Backend.canUseInstancing()) return;
 
@@ -141,6 +132,19 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
         if (tile instanceof IInstanceRendered) {
             removeInternal(tile);
+        }
+    }
+
+    public synchronized <T extends TileEntity> void queueAdd(T tile) {
+        if (!Backend.canUseInstancing()) return;
+
+        queuedAdditions.add(tile);
+    }
+
+    protected synchronized void processQueuedAdditions() {
+        if (queuedAdditions.size() > 0) {
+            queuedAdditions.forEach(this::addInternal);
+            queuedAdditions.clear();
         }
     }
 
