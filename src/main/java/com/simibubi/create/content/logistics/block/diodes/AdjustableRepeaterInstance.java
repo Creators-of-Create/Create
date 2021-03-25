@@ -16,18 +16,16 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
     public AdjustableRepeaterInstance(InstancedTileRenderer<?> modelManager, AdjustableRepeaterTileEntity tile) {
         super(modelManager, tile);
 
-        indicator = modelManager.transformMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
+        indicator = modelManager.getTransformMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
         MatrixStack ms = new MatrixStack();
-        MatrixStacker.of(ms).translate(getFloatingPos());
+        MatrixStacker.of(ms).translate(getInstancePosition());
 
         indicator.getInstance()
                  .setTransform(ms)
                  .setColor(getColor());
 
         previousState = tile.state;
-
-        updateLight();
     }
 
     @Override

@@ -69,7 +69,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         if (tile.hasPulley()) {
             InstancedModel<RotatingData> pulleyModel = getPulleyModel();
 
-            pulleyKey = setup(pulleyModel.createInstance(), tile.getSpeed(), getRotationAxis());
+            pulleyKey = setup(pulleyModel.createInstance());
         }
     }
 
@@ -83,13 +83,13 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
             key.getInstance()
                .setScrollTexture(spriteShiftEntry)
-               .setColor(tile.network)
+               .setColor(tile)
                .setRotationalSpeed(getScrollSpeed());
             bottom = false;
         }
 
         if (pulleyKey != null) {
-            updateRotation(pulleyKey, getRotationAxis());
+            updateRotation(pulleyKey.getInstance());
         }
     }
 
@@ -139,7 +139,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             return modelTransform;
         };
 
-        return rotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
+        return getRotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {
@@ -159,13 +159,14 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
         Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
 
-        key.getInstance()
-                .setScrollTexture(spriteShift)
-                .setScrollMult(diagonal ? 3f / 8f : 0.5f)
-                .setRotation(q)
-                .setRotationalSpeed(getScrollSpeed())
-                .setRotationOffset(bottom ? 0.5f : 0f)
-                .setTileEntity(tile)
+		key.getInstance()
+				.setScrollTexture(spriteShift)
+				.setScrollMult(diagonal ? 3f / 8f : 0.5f)
+				.setRotation(q)
+				.setRotationalSpeed(getScrollSpeed())
+				.setRotationOffset(bottom ? 0.5f : 0f)
+                .setColor(tile)
+                .setPosition(getInstancePosition())
                 .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
                 .setSkyLight(world.getLightLevel(LightType.SKY, pos));
 

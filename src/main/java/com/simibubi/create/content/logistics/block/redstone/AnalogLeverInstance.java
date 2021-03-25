@@ -2,7 +2,6 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -23,7 +22,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     public AnalogLeverInstance(InstancedTileRenderer<?> modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
+        RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
@@ -33,7 +32,6 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
 
         setupModel();
-        updateLight();
     }
 
     @Override
@@ -46,7 +44,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
         transform(msr);
 
         float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());

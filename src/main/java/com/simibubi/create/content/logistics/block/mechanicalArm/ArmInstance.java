@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
@@ -38,7 +37,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	public ArmInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
 
-		RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
+		RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
 
 		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
 		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();
@@ -52,8 +51,6 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
-
-		updateLight();
 	}
 
 	@Override
@@ -91,7 +88,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 		MatrixStack msLocal = new MatrixStack();
 		MatrixStacker msr = MatrixStacker.of(msLocal);
-		msr.translate(getFloatingPos());
+		msr.translate(getInstancePosition());
 		msr.centre();
 
 		if (blockState.get(ArmBlock.CEILING))
@@ -147,7 +144,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	@Override
 	protected InstancedModel<RotatingData> getModel() {
-		return AllBlockPartials.ARM_COG.renderOnRotating(modelManager, tile.getBlockState());
+		return AllBlockPartials.ARM_COG.renderOnRotating(renderer, tile.getBlockState());
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -29,7 +28,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
     public GantryCarriageInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        gantryCogs = modelManager.getMaterial(RenderMaterials.TRANSFORMED)
+        gantryCogs = getTransformMaterial()
                                  .getModel(AllBlockPartials.GANTRY_COGS, blockState)
                                  .createInstance();
 
@@ -40,8 +39,6 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
         visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getPos()
                 : tile.getPos()
                       .offset(facing.getOpposite());
-
-        updateLight();
     }
 
     @Override
@@ -62,7 +59,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker.of(ms)
-                     .translate(getFloatingPos())
+                     .translate(getInstancePosition())
                      .centre()
                      .rotateY(AngleHelper.horizontalAngle(facing))
                      .rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
@@ -77,7 +74,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
     @Override
     public void updateLight() {
-        relight(pos, gantryCogs.getInstance());
+        relight(pos, gantryCogs.getInstance(), rotatingModel.getInstance());
     }
 
     @Override

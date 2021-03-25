@@ -8,41 +8,55 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends TileEntityInstance<T> {
 
+    protected final Direction.Axis axis;
+
     public KineticTileInstance(InstancedTileRenderer<?> modelManager, T tile) {
         super(modelManager, tile);
+
+        axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
     }
 
-    protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis) {
-        updateRotation(key, axis, tile.getSpeed());
+    protected final void updateRotation(RotatingData instance) {
+        updateRotation(instance, getRotationAxis(), getTileSpeed());
     }
 
-    protected final void updateRotation(InstanceKey<RotatingData> key, Direction.Axis axis, float speed) {
-        updateRotation(key.getInstance(), axis, speed);
+    protected final void updateRotation(RotatingData instance, Direction.Axis axis) {
+        updateRotation(instance, axis, getTileSpeed());
     }
 
-    protected final void updateRotation(RotatingData key, Direction.Axis axis, float speed) {
-        key.setRotationAxis(axis)
+    protected final void updateRotation(RotatingData instance, float speed) {
+        updateRotation(instance, getRotationAxis(), speed);
+    }
+
+    protected final void updateRotation(RotatingData instance, Direction.Axis axis, float speed) {
+        instance.setRotationAxis(axis)
                 .setRotationOffset(getRotationOffset(axis))
                 .setRotationalSpeed(speed)
-                .setColor(tile.network);
+                .setColor(tile);
     }
 
-    protected final void updateRotation(RotatingData key, Direction.Axis axis) {
-        updateRotation(key, axis, tile.getSpeed());
+    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key) {
+        return setup(key, getRotationAxis(), getTileSpeed());
     }
 
-    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed, Direction.Axis axis) {
+    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, Direction.Axis axis) {
+        return setup(key, axis, getTileSpeed());
+    }
+
+    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed) {
+        return setup(key, getRotationAxis(), speed);
+    }
+
+    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, Direction.Axis axis, float speed) {
         key.getInstance()
                 .setRotationAxis(axis)
                 .setRotationalSpeed(speed)
                 .setRotationOffset(getRotationOffset(axis))
-                .setTileEntity(tile)
-                .setSkyLight(world.getLightLevel(LightType.SKY, pos))
-                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos));
+                .setColor(tile)
+                .setPosition(getInstancePosition());
 
         return key;
     }
@@ -57,16 +71,24 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return offset;
     }
 
+    protected Direction.Axis getRotationAxis() {
+        return axis;
+    }
+
+    protected float getTileSpeed() {
+        return tile.getSpeed();
+    }
+
+    protected BlockState shaft() {
+        return shaft(getRotationAxis());
+    }
+
+    protected final RenderMaterial<?, InstancedModel<RotatingData>> getRotatingMaterial() {
+        return renderer.getMaterial(KineticRenderMaterials.ROTATING);
+    }
+
     public static BlockState shaft(Direction.Axis axis) {
         return AllBlocks.SHAFT.getDefaultState()
-                              .with(ShaftBlock.AXIS, axis);
-    }
-
-    public Direction.Axis getRotationAxis() {
-        return ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-    }
-
-    protected final RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial() {
-        return modelManager.getMaterial(KineticRenderMaterials.ROTATING);
+                .with(ShaftBlock.AXIS, axis);
     }
 }

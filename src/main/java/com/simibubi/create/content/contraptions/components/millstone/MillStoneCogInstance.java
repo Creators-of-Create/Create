@@ -15,6 +15,6 @@ public class MillStoneCogInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        return AllBlockPartials.MILLSTONE_COG.renderOnRotating(modelManager, tile.getBlockState());
+        return AllBlockPartials.MILLSTONE_COG.renderOnRotating(renderer, tile.getBlockState());
     }
 }

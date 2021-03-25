@@ -18,7 +18,7 @@ public class ShaftInstance extends SingleRotatingInstance {
 
 	@Override
 	protected BlockState getRenderedBlockState() {
-		return shaft(getRotationAxis());
+		return shaft();
 	}
 
 }

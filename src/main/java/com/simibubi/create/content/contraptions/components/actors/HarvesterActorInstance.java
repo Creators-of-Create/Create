@@ -36,7 +36,7 @@ public class HarvesterActorInstance extends ActorInstance {
     public HarvesterActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<?, InstancedModel<ModelData>> renderMaterial = modelManager.transformMaterial();
+        RenderMaterial<?, InstancedModel<ModelData>> renderMaterial = modelManager.getTransformMaterial();
 
         BlockState state = context.state;
 

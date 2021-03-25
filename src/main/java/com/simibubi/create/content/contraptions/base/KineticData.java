@@ -20,16 +20,6 @@ public class KineticData extends BasicData {
         super(owner);
     }
 
-    public KineticData setTileEntity(KineticTileEntity te) {
-        setPosition(te.getPos());
-        if (te.hasSource()) {
-            setColor(te.network);
-        }else {
-            setColor(0xFF, 0xFF, 0x00);
-        }
-        return this;
-    }
-
     public KineticData setPosition(BlockPos pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -39,11 +29,9 @@ public class KineticData extends BasicData {
     }
 
     public KineticData setPosition(int x, int y, int z) {
-        BlockPos origin = owner.renderer.getOriginCoordinate();
-
-        return setPosition((float) (x - origin.getX()),
-                           (float) (y - origin.getY()),
-                           (float) (z - origin.getZ()));
+        return setPosition((float) (x),
+                           (float) (y),
+                           (float) (z));
     }
 
     public KineticData setPosition(float x, float y, float z) {
@@ -57,6 +45,15 @@ public class KineticData extends BasicData {
         this.x += x;
         this.y += y;
         this.z += z;
+        return this;
+    }
+
+    public KineticData setColor(KineticTileEntity te) {
+        if (te.hasSource()) {
+            setColor(te.network);
+        }else {
+            setColor(0xFF, 0xFF, 0x00);
+        }
         return this;
     }
 

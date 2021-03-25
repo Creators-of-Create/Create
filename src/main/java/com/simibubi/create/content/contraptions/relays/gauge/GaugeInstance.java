@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
@@ -30,12 +29,12 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        InstancedModel<ModelData> dialModel = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        InstancedModel<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
         InstancedModel<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
 
         float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
@@ -49,8 +48,6 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
             face.setupTransform(msr, progress);
         }
-
-        updateLight();
     }
 
     private DialFace makeFace(Direction face, InstancedModel<ModelData> dialModel, InstancedModel<ModelData> headModel) {
@@ -151,7 +148,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
+            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
         }
     }
 
@@ -162,7 +159,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         @Override
         protected InstancedModel<ModelData> getHeadModel() {
-            return modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
+            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
         }
     }
 }

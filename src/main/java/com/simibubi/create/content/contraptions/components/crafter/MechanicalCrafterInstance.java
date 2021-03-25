@@ -35,6 +35,6 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
             stacker.unCentre();
             return stack;
         };
-        return rotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, ms);
+        return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, ms);
     }
 }

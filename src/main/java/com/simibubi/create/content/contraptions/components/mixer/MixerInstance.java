@@ -5,7 +5,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -20,13 +19,13 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
     public MixerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        mixerHead = rotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
+        mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
                                       .createInstance();
 
         mixerHead.getInstance()
                  .setRotationAxis(Direction.Axis.Y);
 
-        mixerPole = modelManager.getMaterial(RenderMaterials.TRANSFORMED)
+        mixerPole = getTransformMaterial()
                                 .getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState)
                                 .createInstance();
 
@@ -36,7 +35,6 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 
         transformPole(renderedHeadOffset);
         transformHead(mixer, renderedHeadOffset);
-        updateLight();
     }
 
     @Override
@@ -56,7 +54,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
         float speed = mixer.getRenderedHeadRotationSpeed(AnimationTickHolder.getPartialTicks());
 
         mixerHead.getInstance()
-                 .setPosition(pos)
+                 .setPosition(getInstancePosition())
                  .nudge(0, -renderedHeadOffset, 0)
                  .setRotationalSpeed(speed * 2);
     }
@@ -65,7 +63,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
         MatrixStack ms = new MatrixStack();
 
         MatrixStacker msr = MatrixStacker.of(ms);
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
         msr.translate(0, -renderedHeadOffset, 0);
 
         mixerPole.getInstance().setTransform(ms);

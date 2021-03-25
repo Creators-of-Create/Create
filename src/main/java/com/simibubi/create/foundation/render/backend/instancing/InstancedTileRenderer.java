@@ -68,11 +68,11 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return (RenderMaterial<P, M>) materials.get(materialType);
     }
 
-    public RenderMaterial<P, InstancedModel<ModelData>> transformMaterial() {
+    public RenderMaterial<P, InstancedModel<ModelData>> getTransformMaterial() {
         return getMaterial(RenderMaterials.TRANSFORMED);
     }
 
-    public RenderMaterial<P, InstancedModel<OrientedData>> orientedMaterial() {
+    public RenderMaterial<P, InstancedModel<OrientedData>> getOrientedMaterial() {
         return getMaterial(RenderMaterials.ORIENTED);
     }
 
@@ -167,6 +167,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
         if (renderer != null) {
+            renderer.updateLight();
             instances.put(tile, renderer);
 
             if (renderer instanceof IDynamicInstance)

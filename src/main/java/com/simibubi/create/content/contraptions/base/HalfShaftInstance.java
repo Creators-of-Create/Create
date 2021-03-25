@@ -15,7 +15,7 @@ public class HalfShaftInstance extends SingleRotatingInstance {
     @Override
     protected InstancedModel<RotatingData> getModel() {
         Direction dir = getShaftDirection();
-        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, dir);
+        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(renderer, blockState, dir);
     }
 
     protected Direction getShaftDirection() {

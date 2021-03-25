@@ -20,7 +20,6 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
         pressHead = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontalModel(dispatcher, blockState).createInstance();
 
-        updateLight();
         transformModels((MechanicalPressTileEntity) tile);
     }
 
@@ -39,7 +38,7 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
         MatrixStack ms = new MatrixStack();
 
         MatrixStacker msr = MatrixStacker.of(ms);
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
         msr.translate(0, -renderedHeadOffset, 0);
 
         pressHead.getInstance()

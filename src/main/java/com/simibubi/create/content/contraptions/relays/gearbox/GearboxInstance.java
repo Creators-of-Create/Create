@@ -44,8 +44,8 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             key.getInstance()
                     .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
                     .setRotationalSpeed(getSpeed(direction))
-                    .setRotationOffset(getRotationOffset(axis))
-                    .setTileEntity(tile)
+                    .setRotationOffset(getRotationOffset(axis)).setColor(tile)
+                    .setPosition(getInstancePosition())
                     .setBlockLight(blockLight)
                     .setSkyLight(skyLight);
 
@@ -81,12 +81,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
             Direction direction = key.getKey();
             Direction.Axis axis = direction.getAxis();
 
-            key.getValue()
-                    .getInstance()
-                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                    .setRotationalSpeed(getSpeed(direction))
-                    .setRotationOffset(getRotationOffset(axis))
-                    .setColor(tile.network);
+            updateRotation(key.getValue().getInstance(), axis, getSpeed(direction));
         }
     }
 

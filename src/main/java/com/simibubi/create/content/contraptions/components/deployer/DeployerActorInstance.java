@@ -37,7 +37,7 @@ public class DeployerActorInstance extends ActorInstance {
     public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.transformMaterial();
+        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.getTransformMaterial();
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
@@ -56,7 +56,7 @@ public class DeployerActorInstance extends ActorInstance {
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
         shaft = modelManager.getMaterial(KineticRenderMaterials.ROTATING)
-                            .getModel(KineticTileEntityRenderer.KINETIC_TILE, KineticTileInstance.shaft(axis))
+                            .getModel(KineticTileInstance.shaft(axis))
                             .createInstance();
 
         int blockLight = localBlockLight();

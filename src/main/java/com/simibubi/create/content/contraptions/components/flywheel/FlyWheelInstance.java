@@ -6,10 +6,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
@@ -49,8 +47,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
         facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
-        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-        shaft = setup(shaftModel().createInstance(), tile.getSpeed(), axis);
+        shaft = setup(shaftModel().createInstance());
 
         wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontalModel(modelManager, blockState.rotate(Rotation.CLOCKWISE_90)).createInstance();
 
@@ -62,7 +59,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
             connectorAngleMult = flipAngle ? -1 : 1;
 
-            RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
+            RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
 
             upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
             lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
@@ -73,8 +70,6 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         } else {
             connectors = Collections.emptyList();
         }
-
-        updateLight();
     }
 
     @Override
@@ -90,7 +85,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
 
         if (connection != null) {
             float rotation = angle * connectorAngleMult;
@@ -133,8 +128,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     @Override
     protected void update() {
-        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-        updateRotation(shaft, axis);
+        updateRotation(shaft.getInstance());
     }
 
     @Override
@@ -156,7 +150,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     protected InstancedModel<RotatingData> shaftModel() {
-        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, facing.getOpposite());
+        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(renderer, blockState, facing.getOpposite());
     }
 
     protected void transformConnector(MatrixStacker ms, boolean upper, boolean rotating, float angle, boolean flip) {
