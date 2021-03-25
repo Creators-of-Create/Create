@@ -196,6 +196,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
         if (world == null) return false;
 
+        if (world.isAirBlock(tile.getPos())) return false;
+
         if (world == Minecraft.getInstance().world) {
             BlockPos pos = tile.getPos();
 
