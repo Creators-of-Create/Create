@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -30,43 +31,54 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 	@Override
 	protected void renderSafe(DepotTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+		renderItemsOf(te, partialTicks, ms, buffer, light, overlay, te.depotBehaviour);
+	}
 
-		TransportedItemStack transported = te.heldItem;
+	public static void renderItemsOf(SmartTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+		int light, int overlay, DepotBehaviour depotBehaviour) {
+
+		TransportedItemStack transported = depotBehaviour.heldItem;
 		MatrixStacker msr = MatrixStacker.of(ms);
 		Vec3d itemPosition = VecHelper.getCenterOf(te.getPos());
 
 		ms.push();
 		ms.translate(.5f, 15 / 16f, .5f);
 
-		// Render main item
-		if (transported != null) {
+		if (transported != null)
+			depotBehaviour.incoming.add(transported);
+
+		// Render main items
+		for (TransportedItemStack tis : depotBehaviour.incoming) {
 			ms.push();
 			msr.nudge(0);
-			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
-			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
+			float offset = MathHelper.lerp(partialTicks, tis.prevBeltPosition, tis.beltPosition);
+			float sideOffset = MathHelper.lerp(partialTicks, tis.prevSideOffset, tis.sideOffset);
 
-			if (transported.insertedFrom.getAxis()
+			if (tis.insertedFrom.getAxis()
 				.isHorizontal()) {
-				Vec3d offsetVec = new Vec3d(transported.insertedFrom.getOpposite()
+				Vec3d offsetVec = new Vec3d(tis.insertedFrom.getOpposite()
 					.getDirectionVec()).scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
-				boolean alongX = transported.insertedFrom.rotateY()
+				boolean alongX = tis.insertedFrom.rotateY()
 					.getAxis() == Axis.X;
 				if (!alongX)
 					sideOffset *= -1;
 				ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 			}
 
-			ItemStack itemStack = transported.stack;
-			int angle = transported.angle;
+			ItemStack itemStack = tis.stack;
+			int angle = tis.angle;
 			Random r = new Random(0);
 			renderItem(ms, buffer, light, overlay, itemStack, angle, r, itemPosition);
 			ms.pop();
 		}
 
+		if (transported != null)
+			depotBehaviour.incoming.remove(transported);
+
 		// Render output items
-		for (int i = 0; i < te.processingOutputBuffer.getSlots(); i++) {
-			ItemStack stack = te.processingOutputBuffer.getStackInSlot(i);
+		for (int i = 0; i < depotBehaviour.processingOutputBuffer.getSlots(); i++) {
+			ItemStack stack = depotBehaviour.processingOutputBuffer.getStackInSlot(i);
 			if (stack.isEmpty())
 				continue;
 			ms.push();

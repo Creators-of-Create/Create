@@ -132,7 +132,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	public void updateTunnel(IWorld world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
-		if (tunnel != newTunnel) {
+		if (tunnel != newTunnel && !world.isRemote()) {
 			world.setBlockState(pos, newTunnel, 3);
 			TileEntity te = world.getTileEntity(pos);
 			if (te != null && (te instanceof BeltTunnelTileEntity))

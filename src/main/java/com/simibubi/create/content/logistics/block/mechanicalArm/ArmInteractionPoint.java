@@ -228,7 +228,7 @@ public abstract class ArmInteractionPoint {
 
 		@Override
 		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
-			return AllBlocks.DEPOT.has(state);
+			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state);
 		}
 
 	}

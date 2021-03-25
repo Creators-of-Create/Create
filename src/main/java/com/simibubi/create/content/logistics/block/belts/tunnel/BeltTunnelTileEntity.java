@@ -101,9 +101,9 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
 			sides.addAll(flaps.keySet());
-
+		
 		super.read(compound, clientPacket);
-
+		
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
 	}

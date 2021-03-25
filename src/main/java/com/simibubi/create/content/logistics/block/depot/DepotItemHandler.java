@@ -8,9 +8,9 @@ import net.minecraftforge.items.IItemHandler;
 public class DepotItemHandler implements IItemHandler {
 
 	private static final int MAIN_SLOT = 0;
-	private DepotTileEntity te;
+	private DepotBehaviour te;
 
-	public DepotItemHandler(DepotTileEntity te) {
+	public DepotItemHandler(DepotBehaviour te) {
 		this.te = te;
 	}
 
@@ -29,16 +29,15 @@ public class DepotItemHandler implements IItemHandler {
 		if (slot != MAIN_SLOT)
 			return stack;
 		if (!te.getHeldItemStack()
-			.isEmpty())
+			.isEmpty() && !te.canMergeItems())
 			return stack;
-		if (!te.isOutputEmpty())
+		if (!te.isOutputEmpty() && !te.canMergeItems())
 			return stack;
-		if (!simulate) {
-			te.setHeldItem(new TransportedItemStack(stack));
-			te.markDirty();
-			te.sendData();
-		}
-		return ItemStack.EMPTY;
+
+		ItemStack remainder = te.insert(new TransportedItemStack(stack), simulate);
+		if (!simulate && remainder != stack)
+			te.tileEntity.notifyUpdate();
+		return remainder;
 	}
 
 	@Override
@@ -55,15 +54,14 @@ public class DepotItemHandler implements IItemHandler {
 			te.heldItem.stack = stack;
 			if (stack.isEmpty())
 				te.heldItem = null;
-			te.markDirty();
-			te.sendData();
+			te.tileEntity.notifyUpdate();
 		}
 		return extracted;
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return 64;
+		return slot == MAIN_SLOT ? te.maxStackSize.get() : 64;
 	}
 
 	@Override

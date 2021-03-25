@@ -35,7 +35,9 @@ public class ScrollValueRenderer {
 		ScrollValueBehaviour behaviour = TileEntityBehaviour.get(world, pos, ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(Minecraft.getInstance().player.getHeldItemMainhand()))
+		if (!behaviour.isActive())
+			return;
+		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
 			return;
 		boolean highlight = behaviour.testHit(target.getHitVec());
 

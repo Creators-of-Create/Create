@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -33,6 +34,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	Function<Integer, String> formatter;
 	Function<Integer, String> unit;
 	Function<StepContext, Integer> step;
+	private Supplier<Boolean> isActive;
 	boolean needsWrench;
 
 	public ScrollValueBehaviour(String label, SmartTileEntity te, ValueBoxTransform slot) {
@@ -47,6 +49,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		formatter = i -> Integer.toString(i);
 		step = (c) -> 1;
 		value = 0;
+		isActive = () -> true;
 		ticksUntilScrollPacket = -1;
 	}
 
@@ -122,6 +125,11 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.unit = unit;
 		return this;
 	}
+	
+	public ScrollValueBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
+		isActive = condition;
+		return this;
+	}
 
 	public ScrollValueBehaviour withStepFunction(Function<StepContext, Integer> step) {
 		this.step = step;
@@ -158,6 +166,10 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
+	}
+	
+	public boolean isActive() {
+		return isActive.get();
 	}
 
 	public boolean testHit(Vec3d hit) {

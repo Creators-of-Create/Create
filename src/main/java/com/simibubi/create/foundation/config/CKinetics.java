@@ -15,6 +15,7 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt kineticValidationFrequency = i(60, 5, "kineticValidationFrequency", Comments.kineticValidationFrequency);
 	public ConfigFloat crankHungerMultiplier = f(.01f, 0, 1, "crankHungerMultiplier", Comments.crankHungerMultiplier);
 	public ConfigInt minimumWindmillSails = i(8, 0, "minimumWindmillSails", Comments.minimumWindmillSails);
+	public ConfigInt maxEjectorDistance = i(32, 0, "maxEjectorDistance", Comments.maxEjectorDistance);
 
 	public ConfigGroup fan = group(1, "encasedFan", "Encased Fan");
 	public ConfigInt fanPushDistance = i(20, 5, "fanPushDistance", Comments.fanPushDistance);
@@ -81,6 +82,7 @@ public class CKinetics extends ConfigBase {
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency = "Game ticks between Kinetic Blocks checking whether their source is still valid.";
 		static String minimumWindmillSails = "Amount of sail-type blocks required for a windmill to assemble successfully.";
+		static String maxEjectorDistance = "Max Distance in blocks a Weighted Ejector can throw";
 	}
 
 	public static enum DeployerAggroSetting {

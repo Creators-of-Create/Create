@@ -443,6 +443,12 @@
 	"create.mechanical_arm.deposit_to": "Deposit items to %1$s",
 	"create.mechanical_arm.summary": "Mechanical Arm has %1$s input(s) and %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "%1$s selected interaction point(s) removed due to range limitations.",
+		
+	"create.weighted_ejector.target_set": "Target Selected",
+	"create.weighted_ejector.target_not_valid": "Ejecting to Adjacent block (Target was not Valid)",
+	"create.weighted_ejector.no_target": "Ejecting to Adjacent block (No Target was Selected)",
+	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
+	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
 	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
 

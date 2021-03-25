@@ -1,18 +1,23 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.logistics.block.FlapData;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
-import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
+import com.simibubi.create.content.logistics.block.FlapData;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.minecraft.util.Direction;
+import net.minecraft.world.LightType;
 
 public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
 
@@ -62,6 +67,11 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
             tunnelFlaps.put(direction, flaps);
         });
     }
+    
+	@Override
+	public boolean shouldReset() {
+		return super.shouldReset() || tunnelFlaps.size() != tile.flaps.size();
+	}
 
     @Override
     public void beginFrame() {

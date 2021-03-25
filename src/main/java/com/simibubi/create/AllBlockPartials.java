@@ -123,6 +123,8 @@ public class AllBlockPartials {
 		
 		GOGGLES = get("goggles"),
 		
+		EJECTOR_TOP = get("weighted_ejector/top"),
+		
 		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
 		COUPLING_RING = getEntity("minecart_coupling/ring"),
 		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
