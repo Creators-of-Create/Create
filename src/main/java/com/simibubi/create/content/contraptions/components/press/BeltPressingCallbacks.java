@@ -1,18 +1,16 @@
 package com.simibubi.create.content.contraptions.components.press;
 
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
-
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 
-import net.minecraft.item.ItemStack;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
 
 public class BeltPressingCallbacks {
 
@@ -45,13 +43,25 @@ public class BeltPressingCallbacks {
 		if (!recipe.isPresent())
 			return PASS;
 
-		ItemStack out = recipe.get()
+		List<TransportedItemStack> collect = InWorldProcessing.applyRecipeOn(transported.stack, recipe.get())
+				.stream()
+				.map(stack -> {
+					TransportedItemStack copy = transported.copy();
+					copy.stack = stack;
+					return copy;
+				}).collect(Collectors.toList());
+
+		if (collect.isEmpty())
+			handler.handleProcessingOnItem(transported, TransportedItemStackHandlerBehaviour.TransportedResult.removeItem());
+		else
+			handler.handleProcessingOnItem(transported, TransportedItemStackHandlerBehaviour.TransportedResult.convertTo(collect));
+		/*ItemStack out = recipe.get()
 			.getRecipeOutput()
 			.copy();
 		List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transported.stack, out);
 		if (multipliedOutput.isEmpty())
 			transported.stack = ItemStack.EMPTY;
-		transported.stack = multipliedOutput.get(0);
+		transported.stack = multipliedOutput.get(0);*/
 		pressTe.sendData();
 		return HOLD;
 	}
