@@ -75,13 +75,12 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.push();
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
 		renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
-		GuiGameElement.of(item).atLocal(posX + 10, posY, 450).render(ms);
-		ms.pop();
+		GuiGameElement.of(item).at(posX + 10, posY - 16, 450).render(ms);
+		GuiGameElement.of(item).at(0, 0, 450).render(ms);
 	}
 }

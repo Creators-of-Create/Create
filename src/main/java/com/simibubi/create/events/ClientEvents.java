@@ -52,6 +52,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -118,6 +119,11 @@ public class ClientEvents {
 		CreateClient.outliner.tickOutlines();
 		CreateClient.ghostBlocks.tickGhosts();
 		ContraptionRenderDispatcher.tick();
+	}
+
+	@SubscribeEvent
+	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
+		CreateClient.checkGraphicsFanciness();
 	}
 
 	@SubscribeEvent

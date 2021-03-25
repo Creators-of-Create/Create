@@ -153,7 +153,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			0xffffff);
 
 		GuiGameElement.of(renderedItem)
-			.at(guiLeft + background.width + 10, guiTop + 180, -150)
+			.at(guiLeft + background.width + 10, guiTop + 100, -150)
 			.scale(5)
 			.render(matrixStack);
 	}

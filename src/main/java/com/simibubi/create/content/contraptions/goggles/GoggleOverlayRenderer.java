@@ -141,15 +141,11 @@ public class GoggleOverlayRenderer {
 				.getScaledHeight());
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
 		int posY = tooltipScreen.height / 2 + AllConfigs.CLIENT.overlayOffsetY.get();
-		// tooltipScreen.renderTooltip(tooltip, tooltipScreen.width / 2,
-		// tooltipScreen.height / 2);
 		tooltipScreen.renderTooltip(ms, tooltip, posX, posY);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
-		// GuiGameElement.of(item).at(tooltipScreen.width / 2 + 10, tooltipScreen.height
-		// / 2 - 16).render();
 		GuiGameElement.of(item)
-			.atLocal(posX + 10, posY, 450)
+			.at(posX + 10, posY - 16, 450)
 			.render(ms);
 		ms.pop();
 	}

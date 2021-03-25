@@ -57,7 +57,6 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 	@Override
 	public void draw(SandPaperPolishingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		matrixStack.push();
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 28);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 28);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 21);
@@ -73,11 +72,10 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		CompoundNBT tag = renderedSandpaper.getOrCreateTag();
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
-		matrixStack.translate(0, 30, 0);
-		matrixStack.scale(2, 2, 2);
-		matrixStack.translate(getBackground().getWidth() / 4 - 8, 1, 0);
-		GuiGameElement.of(renderedSandpaper).render(matrixStack);
-		matrixStack.pop();
+		GuiGameElement.of(renderedSandpaper)
+				.at(getBackground().getWidth() / 2 - 16, 0, 0)
+				.scale(2)
+				.render(matrixStack);
 	}
 
 }

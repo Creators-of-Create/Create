@@ -491,7 +491,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		{
 			// Chapter title
 			ms.push();
-			ms.translate(0, 0, 800);
+			ms.translate(0, 0, 100);
 			int x = 31 + 20 + 8;
 			int y = 31;
 
@@ -515,7 +515,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			ms.translate(x, y, 0);
 			ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(indexDiff * -75));
 			ms.translate(0, 0, 5);
-			FontHelper.drawSplitString(textRenderer, title, 0, 0, left.x - 51,
+			FontHelper.drawSplitString(ms, textRenderer, title, 0, 0, left.x - 51,
 				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
 			ms.pop();
 

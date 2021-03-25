@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -73,6 +74,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		overlayReset(() -> Actions::overlayReset),
 		experimentalRendering(() -> Actions::experimentalRendering),
 		openPonder(() -> Actions::openPonder),
+		fabulousWarning(() -> Actions::fabulousWarning)
 
 		;
 
@@ -159,6 +161,12 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 
 			ScreenOpener.transitionTo(PonderUI.of(id));
 
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void fabulousWarning(String value) {
+			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
+			Minecraft.getInstance().ingameGUI.addChatMessage(ChatType.CHAT, new StringTextComponent("Disabled Fabulous graphics warning"), Minecraft.getInstance().player.getUniqueID());
 		}
 
 		private static IFormattableTextComponent boolToText(boolean b) {

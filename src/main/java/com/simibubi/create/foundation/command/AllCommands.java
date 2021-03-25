@@ -24,6 +24,7 @@ public class AllCommands {
 				//general purpose
 				.then(new ToggleExperimentalRenderingCommand().register())
 				.then(new ToggleDebugCommand().register())
+				.then(FabulousWarningCommand.register())
 				.then(OverlayConfigCommand.register())
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())

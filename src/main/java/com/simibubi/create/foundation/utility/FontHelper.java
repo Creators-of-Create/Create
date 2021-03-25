@@ -4,6 +4,7 @@ import java.text.BreakIterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
@@ -52,9 +53,9 @@ public final class FontHelper {
 		return lines;
 	}
 
-	public static void drawSplitString(FontRenderer font, String text, int x, int y, int width, int color) {
+	public static void drawSplitString(MatrixStack ms, FontRenderer font, String text, int x, int y, int width, int color) {
 		List<String> list = cutString(font, text, width);
-		Matrix4f matrix4f = TransformationMatrix.identity().getMatrix();
+		Matrix4f matrix4f = ms.peek().getModel();
 
 		for (String s : list) {
 			float f = (float) x;

@@ -304,7 +304,7 @@ public class GuiGameElement {
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			matrixStack.translate((float) 0, (float) 0, 100.0F + renderer.zLevel);
-			matrixStack.translate(8.0F, 8.0F, 0.0F);
+			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
 			IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance()
 				.getBufferBuilders()

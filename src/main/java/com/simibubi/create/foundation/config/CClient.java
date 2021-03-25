@@ -19,6 +19,7 @@ public class CClient extends ConfigBase {
 	public ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX", "Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY", "Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
 	public ConfigBool smoothPlacementIndicator = b(false, "smoothPlacementIndicator", "Use an alternative indicator when showing where the assisted placement ends up relative to your crosshair");
+	public ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning", "Setting this to true will prevent Create from sending you a warning when playing with Fabulous graphics enabled");
 
 	@Override
 	public String getName() {

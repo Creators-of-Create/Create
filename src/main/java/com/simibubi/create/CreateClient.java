@@ -9,6 +9,7 @@ import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
@@ -28,11 +29,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.settings.GraphicsFanciness;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.Item;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -211,5 +220,25 @@ public class CreateClient {
 		}
 
 		ContraptionRenderDispatcher.invalidateAll();
+	}
+
+	public static void checkGraphicsFanciness() {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null)
+			return;
+
+		if (mc.gameSettings.graphicsMode != GraphicsFanciness.FABULOUS)
+			return;
+
+		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
+			return;
+
+		IFormattableTextComponent text = TextComponentUtils.bracketed(new StringTextComponent("WARN")).formatted(TextFormatting.GOLD)
+				.append(new StringTextComponent(" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
+				.styled(style -> style
+						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click here to disable this warning"))));
+
+		mc.ingameGUI.addChatMessage(ChatType.CHAT, text, mc.player.getUniqueID());
 	}
 }

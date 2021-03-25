@@ -111,7 +111,7 @@ public class PonderButton extends AbstractSimiWidget {
 		borderColorEnd = ColorHelper.applyAlpha(borderColorEnd, fade);
 
 		PonderUI.renderBox(ms, x, y, width, height, backgroundColor, borderColorStart, borderColorEnd);
-		ms.translate(0, 0, 800);
+		ms.translate(0, 0, 100);
 
 		if (icon != null) {
 			RenderSystem.enableBlend();
@@ -124,7 +124,7 @@ public class PonderButton extends AbstractSimiWidget {
 		}
 		if (item != null) {
 			ms.push();
-			ms.translate(0, 0, -800);
+			ms.translate(0, 0, -100);
 			GuiGameElement.of(item)
 				.at(x - 2, y - 2)
 				.scale(1.5f)

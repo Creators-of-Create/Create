@@ -151,12 +151,10 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		textRenderer.drawWithShadow(matrixStack, handler.getCurrentSchematicName(),
 			x + 93 - textRenderer.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 3, 0xffffff);
 
-		matrixStack.push();
-		matrixStack.translate(guiLeft + 200, guiTop + 130, 0);
-		matrixStack.scale(3, 3, 3);
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
-			.render(matrixStack);
-		matrixStack.pop();
+				.at(guiLeft + 200, guiTop + 82, 0)
+				.scale(3)
+				.render(matrixStack);
 	}
 
 	@Override

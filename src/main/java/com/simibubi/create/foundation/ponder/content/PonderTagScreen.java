@@ -220,7 +220,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		PonderUI.renderBox(ms, x - 3, y - 3, w + 6, h + 6, false);
 		ms.translate(0, 0, 100);
-		FontHelper.drawSplitString(textRenderer, desc, x, y, w, 0xeeeeee);
+		FontHelper.drawSplitString(ms, textRenderer, desc, x, y, w, 0xeeeeee);
 		ms.pop();
 	}
 

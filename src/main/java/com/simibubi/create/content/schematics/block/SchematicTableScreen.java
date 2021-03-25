@@ -121,7 +121,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			textRenderer.drawWithShadow(matrixStack, noSchematics, mainLeft + 54, mainTop + 26, 0xd3d3d3);
 
 		GuiGameElement.of(renderedItem)
-			.at(mainLeft + 217, mainTop + 98, -150)
+			.at(mainLeft + 217, mainTop + 50, -150)
 			.scale(3)
 			.render(matrixStack);
 
