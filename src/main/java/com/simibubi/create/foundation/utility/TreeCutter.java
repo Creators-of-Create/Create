@@ -208,7 +208,7 @@ public class TreeCutter {
 	}
 
 	private static boolean isLeaf(BlockState state) {
-		return state.has(LeavesBlock.DISTANCE) || state.isIn(BlockTags.LEAVES);
+		return state.has(LeavesBlock.DISTANCE);
 	}
 
 }
