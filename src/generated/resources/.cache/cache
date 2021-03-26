@@ -3696,6 +3696,7 @@ ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/items/storage_blocks/br
 f6c8f34ceb475546dba5cc6ff288863ea795d20b data/forge/tags/items/storage_blocks/copper.json
 7f71a774800111e50b42de0e6159ed2d2a807d32 data/forge/tags/items/storage_blocks/zinc.json
 1376cd1f92903a1c4e1422719b1aa102438a216e data/minecraft/advancements/createchromatic_age.json
+2072c51afc5bbc6c9d64fd086803193d8a3c40de data/minecraft/tags/blocks/base_stone_overworld.json
 508730d3822c54d355329bf6a33d58071653afad data/minecraft/tags/blocks/beacon_base_blocks.json
 69f596fcb065e26b02ce246760432b5174191b76 data/minecraft/tags/blocks/impermeable.json
 378b01e288301e0835d3d25167889077a2070780 data/minecraft/tags/blocks/rails.json

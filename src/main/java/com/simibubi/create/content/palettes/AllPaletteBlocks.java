@@ -114,6 +114,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> LIMESTONE =
 		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE, true)
+			.tag(BlockTags.BASE_STONE_OVERWORLD)
 			.register();
 
 	public static final PalettesVariantEntry LIMESTONE_VARIANTS =
@@ -121,6 +122,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> WEATHERED_LIMESTONE =
 		REGISTRATE.baseBlock("weathered_limestone", Block::new, () -> Blocks.SANDSTONE, true)
+			.tag(BlockTags.BASE_STONE_OVERWORLD)
 			.register();
 
 	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS = new PalettesVariantEntry(
@@ -128,6 +130,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> DOLOMITE =
 		REGISTRATE.baseBlock("dolomite", Block::new, () -> Blocks.QUARTZ_BLOCK, true)
+			.tag(BlockTags.BASE_STONE_OVERWORLD)
 			.register();
 
 	public static final PalettesVariantEntry DOLOMITE_VARIANTS =
@@ -135,6 +138,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> GABBRO =
 		REGISTRATE.baseBlock("gabbro", Block::new, () -> Blocks.ANDESITE, true)
+			.tag(BlockTags.BASE_STONE_OVERWORLD)
 			.register();
 
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
@@ -146,6 +150,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
+		.tag(BlockTags.BASE_STONE_OVERWORLD)
 		.onRegister(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
 		.loot((p, g) -> p.registerLootTable(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
 		.blockstate(palettesCubeAll())
