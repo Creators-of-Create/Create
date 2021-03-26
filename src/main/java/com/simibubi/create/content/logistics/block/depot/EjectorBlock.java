@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -50,9 +51,15 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_,
+		BlockPos p_220069_5_, boolean p_220069_6_) {
+		withTileEntityDo(world, pos, EjectorTileEntity::updateSignal);
+	}
+	
+	@Override
 	public void onFallenUpon(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
 		Optional<EjectorTileEntity> tileEntityOptional = getTileEntityOptional(p_180658_1_, p_180658_2_);
-		if (tileEntityOptional.isPresent()) {
+		if (tileEntityOptional.isPresent() && !p_180658_3_.bypassesLandingEffects()) {
 			p_180658_3_.handleFallDamage(p_180658_4_, 0.0F);
 			return;
 		}
@@ -67,6 +74,8 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 			return;
 		if (!entityIn.isAlive())
 			return;
+		if (entityIn.bypassesLandingEffects())
+			return;
 		if (entityIn instanceof ItemEntity) {
 			SharedDepotBlockMethods.onLanded(worldIn, entityIn);
 			return;
@@ -78,6 +87,8 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 
 		EjectorTileEntity ejectorTileEntity = teProvider.get();
 		if (ejectorTileEntity.getState() == State.RETRACTING)
+			return;
+		if (ejectorTileEntity.powered)
 			return;
 		if (ejectorTileEntity.launcher.getHorizontalDistance() == 0)
 			return;
@@ -97,7 +108,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 			}
 		}
 
-		ejectorTileEntity.launchAll();
+		ejectorTileEntity.activate();
 		ejectorTileEntity.notifyUpdate();
 		if (entityIn.world.isRemote)
 			AllPackets.channel.sendToServer(new EjectorTriggerPacket(ejectorTileEntity.getPos()));

@@ -58,6 +58,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 	DepotBehaviour depotBehaviour;
 	EntityLauncher launcher;
 	LerpedFloat lidProgress;
+	boolean powered;
+	boolean launch;
 	State state;
 
 	public enum State {
@@ -71,6 +73,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 			.startWithValue(1);
 		state = State.RETRACTING;
 		launchedItems = new ArrayList<>();
+		powered = false;
 	}
 
 	@Override
@@ -92,10 +95,24 @@ public class EjectorTileEntity extends KineticTileEntity {
 		depotBehaviour.addSubBehaviours(behaviours);
 	}
 
-	public void launchAll() {
-		if (state != State.CHARGED && !(world.isRemote && state == State.LAUNCHING))
-			return;
+	@Override
+	public void initialize() {
+		super.initialize();
+		updateSignal();
+	}
 
+	public void activate() {
+		launch = true;
+		nudgeEntities();
+	}
+
+	protected boolean cannotLaunch() {
+		return state != State.CHARGED && !(world.isRemote && state == State.LAUNCHING);
+	}
+
+	public void activateDeferred() {
+		if (cannotLaunch())
+			return;
 		Direction facing = getFacing();
 		List<Entity> entities =
 			world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f));
@@ -135,12 +152,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 			AllPackets.channel.sendToServer(new EjectorElytraPacket(pos));
 		}
 
-		lidProgress.chase(1, .8f, Chaser.EXP);
-		state = State.LAUNCHING;
-
 		if (!world.isRemote) {
-			world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .5f, 1f);
-			world.playSound(null, pos, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, .125f, 1.4f);
+			lidProgress.chase(1, .8f, Chaser.EXP);
+			state = State.LAUNCHING;
+			world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .35f, 1f);
+			world.playSound(null, pos, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, .1f, 1.4f);
 		}
 	}
 
@@ -187,6 +203,9 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return;
 		}
 
+		if (!world.isRemote)
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), 0);
+
 		if (depotBehaviour.heldItem != null) {
 			launchedItems.add(IntAttached.withZero(heldItemStack));
 			depotBehaviour.removeHeldItem();
@@ -218,8 +237,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		boolean doLogic = !world.isRemote || isVirtual();
 		State prevState = state;
-
 		float maxTime = Math.max(3, (float) launcher.getTotalFlyingTicks());
+
+		if (launch) {
+			launch = false;
+			activateDeferred();
+		}
 
 		for (Iterator<IntAttached<ItemStack>> iterator = launchedItems.iterator(); iterator.hasNext();) {
 			IntAttached<ItemStack> intAttached = iterator.next();
@@ -241,11 +264,19 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		if (state == State.CHARGED) {
 			lidProgress.setValue(0);
+			lidProgress.updateChaseSpeed(0);
 			if (doLogic)
 				ejectIfTriggered();
 		}
 
 		if (state == State.RETRACTING) {
+			lidProgress.updateChaseSpeed(0);
+			if (lidProgress.getValue() == 0 && doLogic) {
+				state = State.CHARGED;
+				lidProgress.setValue(0);
+				sendData();
+			}
+			
 			float value = MathHelper.clamp(lidProgress.getValue() - getWindUpSpeed(), 0, 1);
 			lidProgress.setValue(value);
 
@@ -255,24 +286,22 @@ public class EjectorTileEntity extends KineticTileEntity {
 			if (((int) world.getGameTime()) % soundRate == 0 && doLogic)
 				world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
 					pitch);
-
-			if (lidProgress.getValue() == 0 && doLogic) {
-				state = State.CHARGED;
-				lidProgress.setValue(0);
-
-				List<Entity> entities =
-					world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f));
-				for (Entity entity : entities)
-					if (!(entity instanceof PlayerEntity))
-						entity.setPosition(entity.getX(), entity.getY() + volume, entity.getZ());
-			}
 		}
 
 		if (state != prevState)
 			notifyUpdate();
 	}
 
+	protected void nudgeEntities() {
+		for (Entity entity : world.getEntitiesWithinAABB(Entity.class,
+			new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f)))
+			if (!(entity instanceof PlayerEntity))
+				entity.setPosition(entity.getX(), entity.getY() + .125f, entity.getZ());
+	}
+
 	protected void ejectIfTriggered() {
+		if (powered)
+			return;
 		int presentStackSize = depotBehaviour.getPresentStackSize();
 		if (presentStackSize == 0)
 			return;
@@ -280,11 +309,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return;
 
 		Direction funnelFacing = getFacing().getOpposite();
+		ItemStack held = depotBehaviour.getHeldItemStack();
 		if (AbstractFunnelBlock.getFunnelFacing(world.getBlockState(pos.up())) == funnelFacing) {
 			DirectBeltInputBehaviour directOutput = getBehaviour(DirectBeltInputBehaviour.TYPE);
 			if (depotBehaviour.heldItem != null) {
-				ItemStack tryFunnel =
-					directOutput.tryExportingToBeltFunnel(depotBehaviour.getHeldItemStack(), funnelFacing, true);
+				ItemStack tryFunnel = directOutput.tryExportingToBeltFunnel(held, funnelFacing, true);
 				if (tryFunnel == null || !tryFunnel.isEmpty())
 					return;
 			}
@@ -294,11 +323,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		// Do not eject if target cannot accept held item
 		if (targetOpenInv != null && depotBehaviour.heldItem != null
-			&& targetOpenInv.handleInsertion(depotBehaviour.getHeldItemStack(), Direction.UP, true)
-				.isItemEqual(depotBehaviour.getHeldItemStack()))
+			&& targetOpenInv.handleInsertion(held, Direction.UP, true)
+				.getCount() == held.getCount())
 			return;
 
-		launchAll();
+		activate();
 		notifyUpdate();
 	}
 
@@ -368,6 +397,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		super.write(compound, clientPacket);
 		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
 		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
+		compound.putBoolean("Powered", powered);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.put("Lid", lidProgress.writeNBT());
 		compound.put("LaunchedItems",
@@ -386,10 +416,19 @@ public class EjectorTileEntity extends KineticTileEntity {
 			launcher.clamp(AllConfigs.SERVER.kinetics.maxEjectorDistance.get());
 		}
 
+		powered = compound.getBoolean("Powered");
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		lidProgress.readNBT(compound.getCompound("Lid"), clientPacket);
 		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", NBT.TAG_COMPOUND),
 			nbt -> IntAttached.read(nbt, ItemStack::read));
+	}
+
+	public void updateSignal() {
+		boolean shoudPower = world.isBlockPowered(pos);
+		if (shoudPower == powered)
+			return;
+		powered = shoudPower;
+		sendData();
 	}
 
 	public void setTarget(int horizontalDistance, int verticalDistance) {

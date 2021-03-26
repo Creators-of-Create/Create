@@ -23,7 +23,7 @@ public class EjectorTriggerPacket extends TileEntityConfigurationPacket<EjectorT
 
 	@Override
 	protected void applySettings(EjectorTileEntity te) {
-		te.launchAll();
+		te.activate();
 	}
 
 }

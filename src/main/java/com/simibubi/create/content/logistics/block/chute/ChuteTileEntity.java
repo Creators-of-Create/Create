@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.chute;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -61,7 +62,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation { // , IAirCurrentSource {
 
-//	public AirCurrent airCurrent;
+	//	public AirCurrent airCurrent;
 
 	float pull;
 	float push;
@@ -92,7 +93,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		capAbove = LazyOptional.empty();
 		capBelow = LazyOptional.empty();
 		bottomPullDistance = 0;
-//		airCurrent = new AirCurrent(this);
+		//		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
 	}
 
@@ -178,7 +179,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	private void updateAirFlow(float itemSpeed) {
 		updateAirFlow = false;
-//		airCurrent.rebuild();
+		//		airCurrent.rebuild();
 		if (itemSpeed > 0 && world != null && !world.isRemote) {
 			float speed = pull - push;
 			beltBelow = null;
@@ -208,14 +209,14 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				beltBelowOffset = i - 1;
 				break;
 			}
-			this.bottomPullDistance = flowLimit;
+			this.bottomPullDistance = Math.max(0, flowLimit);
 		}
 		sendData();
 	}
 
 	private void findEntities(float itemSpeed) {
-//		if (getSpeed() != 0)
-//			airCurrent.findEntities();
+		//		if (getSpeed() != 0)
+		//			airCurrent.findEntities();
 		if (bottomPullDistance <= 0 && !getItem().isEmpty() || itemSpeed <= 0 || world == null || world.isRemote)
 			return;
 		if (!canCollectItemsFromBelow())
@@ -267,8 +268,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		extractFromBelt(itemSpeed);
-//		if (getSpeed() != 0)
-//			airCurrent.tick();
+		//		if (getSpeed() != 0)
+		//			airCurrent.tick();
 	}
 
 	public void blockBelowChanged() {
@@ -323,29 +324,40 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private void handleInputFromAbove() {
 		if (!capAbove.isPresent())
 			capAbove = grabCapability(Direction.UP);
-		if (capAbove.isPresent()) {
-			int count = getExtractionAmount();
-			if (count == 0)
-				item =
-					ItemHelper.extract(capAbove.orElse(null), this::canAcceptItem, ExtractionCountMode.UPTO, 16, false);
-			else
-				item = ItemHelper.extract(capAbove.orElse(null), this::canAcceptItem, ExtractionCountMode.EXACTLY,
-					count, false);
+		if (!capAbove.isPresent())
+			return;
+
+		int count = getExtractionAmount();
+		IItemHandler inv = capAbove.orElse(null);
+		Predicate<ItemStack> canAccept = this::canAcceptItem;
+		if (count == 0) {
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, 16, false);
+			return;
 		}
+
+		if (!ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, true)
+			.isEmpty())
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, false);
 	}
 
 	private void handleInputFromBelow() {
 		if (!capBelow.isPresent())
 			capBelow = grabCapability(Direction.DOWN);
-		if (capBelow.isPresent()) {
-			int count = getExtractionAmount();
-			if (count == 0)
-				item =
-					ItemHelper.extract(capBelow.orElse(null), this::canAcceptItem, ExtractionCountMode.UPTO, 16, false);
-			else
-				item = ItemHelper.extract(capBelow.orElse(null), this::canAcceptItem, ExtractionCountMode.EXACTLY,
-					count, false);
+		if (!capBelow.isPresent())
+			return;
+
+		int count = getExtractionAmount();
+		IItemHandler inv = capBelow.orElse(null);
+		Predicate<ItemStack> canAccept = this::canAcceptItem;
+
+		if (count == 0) {
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, 16, false);
+			return;
 		}
+
+		if (!ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, true)
+			.isEmpty())
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, false);
 	}
 
 	private boolean handleDownwardOutput(boolean simulate) {
@@ -359,9 +371,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			capBelow = grabCapability(Direction.DOWN);
 		if (capBelow.isPresent()) {
 			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capBelow.orElse(null), item, simulate);
+			ItemStack held = getItem();
 			if (!simulate)
 				setItem(remainder);
-			if (remainder.isEmpty())
+			if (remainder.getCount() != held.getCount())
 				return true;
 			if (direction == Direction.DOWN)
 				return false;
@@ -409,10 +422,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (!capAbove.isPresent())
 				capAbove = grabCapability(Direction.UP);
 			if (capAbove.isPresent()) {
+				int countBefore = item.getCount();
 				ItemStack remainder = ItemHandlerHelper.insertItemStacked(capAbove.orElse(null), item, simulate);
 				if (!simulate)
-					setItem(ItemStack.EMPTY);
-				return remainder.isEmpty();
+					item = remainder;
+				return countBefore != remainder.getCount();
 			}
 		}
 
@@ -521,8 +535,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		super.read(compound, clientPacket);
 
-//		if (clientPacket)
-//			airCurrent.rebuild();
+		//		if (clientPacket)
+		//			airCurrent.rebuild();
 
 		if (hasWorld() && world != null && world.isRemote && !previousItem.equals(item, false) && !item.isEmpty()) {
 			if (world.rand.nextInt(3) != 0)
@@ -718,47 +732,47 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return item;
 	}
 
-//	@Override
-//	@Nullable
-//	public AirCurrent getAirCurrent() {
-//		return airCurrent;
-//	}
-//
-//	@Nullable
-//	@Override
-//	public World getAirCurrentWorld() {
-//		return world;
-//	}
-//
-//	@Override
-//	public BlockPos getAirCurrentPos() {
-//		return pos;
-//	}
-//
-//	@Override
-//	public float getSpeed() {
-//		if (getBlockState().get(ChuteBlock.SHAPE) == Shape.NORMAL && getBlockState().get(ChuteBlock.FACING) != Direction.DOWN)
-//			return 0;
-//		return pull + push;
-//	}
-//
-//	@Override
-//	@Nullable
-//	public Direction getAirFlowDirection() {
-//		float speed = getSpeed();
-//		if (speed == 0)
-//			return null;
-//		return speed > 0 ? Direction.UP : Direction.DOWN;
-//	}
-//
-//	@Override
-//	public boolean isSourceRemoved() {
-//		return removed;
-//	}
-//
-//	@Override
-//	public Direction getAirflowOriginSide() {
-//		return world != null && !(world.getTileEntity(pos.down()) instanceof IAirCurrentSource)
-//			&& getBlockState().get(ChuteBlock.FACING) == Direction.DOWN ? Direction.DOWN : Direction.UP;
-//	}
+	//	@Override
+	//	@Nullable
+	//	public AirCurrent getAirCurrent() {
+	//		return airCurrent;
+	//	}
+	//
+	//	@Nullable
+	//	@Override
+	//	public World getAirCurrentWorld() {
+	//		return world;
+	//	}
+	//
+	//	@Override
+	//	public BlockPos getAirCurrentPos() {
+	//		return pos;
+	//	}
+	//
+	//	@Override
+	//	public float getSpeed() {
+	//		if (getBlockState().get(ChuteBlock.SHAPE) == Shape.NORMAL && getBlockState().get(ChuteBlock.FACING) != Direction.DOWN)
+	//			return 0;
+	//		return pull + push;
+	//	}
+	//
+	//	@Override
+	//	@Nullable
+	//	public Direction getAirFlowDirection() {
+	//		float speed = getSpeed();
+	//		if (speed == 0)
+	//			return null;
+	//		return speed > 0 ? Direction.UP : Direction.DOWN;
+	//	}
+	//
+	//	@Override
+	//	public boolean isSourceRemoved() {
+	//		return removed;
+	//	}
+	//
+	//	@Override
+	//	public Direction getAirflowOriginSide() {
+	//		return world != null && !(world.getTileEntity(pos.down()) instanceof IAirCurrentSource)
+	//			&& getBlockState().get(ChuteBlock.FACING) == Direction.DOWN ? Direction.DOWN : Direction.UP;
+	//	}
 }

@@ -63,7 +63,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			.stream()
 			.filter(rl -> tag.getMainItem()
 				.isEmpty()
-				|| tag.getMainItem()
+				|| !tag.getMainItem()
 					.getItem()
 					.getRegistryName()
 					.equals(rl))

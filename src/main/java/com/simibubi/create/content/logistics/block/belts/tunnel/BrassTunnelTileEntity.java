@@ -2,7 +2,10 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -188,11 +191,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 	}
 
 	private static Random rand = new Random();
+	private static Map<Pair<BrassTunnelTileEntity, Direction>, ItemStack> distributed = new IdentityHashMap<>();
+	private static Set<Pair<BrassTunnelTileEntity, Direction>> full = new HashSet<>();
 
 	private void distribute(List<Pair<BrassTunnelTileEntity, Direction>> validTargets) {
 		int amountTargets = validTargets.size();
 		if (amountTargets == 0)
 			return;
+
+		distributed.clear();
+		full.clear();
 
 		int indexStart = previousOutputIndex % amountTargets;
 		SelectionMode mode = selectionMode.get();
@@ -204,55 +212,94 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		if (mode == SelectionMode.PREFER_NEAREST || mode == SelectionMode.SYNCHRONIZE)
 			indexStart = 0;
 
-		ItemStack toDistribute = null;
-		int leftovers = 0;
-		int remainingOutputs = amountTargets;
+		ItemStack toDistribute = stackToDistribute.copy();
+		for (boolean distributeAgain : Iterate.trueAndFalse) {
+			ItemStack toDistributeThisCycle = null;
+			int remainingOutputs = amountTargets;
+			int leftovers = 0;
 
-		for (boolean simulate : Iterate.trueAndFalse) {
-			if (remainingOutputs == 0)
-				return;
-			
-			leftovers = 0;
-			int index = indexStart;
-			int stackSize = stackToDistribute.getCount();
-			int splitStackSize = stackSize / remainingOutputs;
-			int splitRemainder = stackSize % remainingOutputs;
-			int visited = 0;
+			for (boolean simulate : Iterate.trueAndFalse) {
+				if (remainingOutputs == 0)
+					break;
 
-			toDistribute = stackToDistribute.copy();
-			if (!(force || split) && simulate)
-				continue;
-			
-			while (visited < amountTargets) {
-				Pair<BrassTunnelTileEntity, Direction> pair = validTargets.get(index);
-				BrassTunnelTileEntity tunnel = pair.getKey();
-				Direction side = pair.getValue();
-				index = (index + 1) % amountTargets;
-				visited++;
+				leftovers = 0;
+				int index = indexStart;
+				int stackSize = toDistribute.getCount();
+				int splitStackSize = stackSize / remainingOutputs;
+				int splitRemainder = stackSize % remainingOutputs;
+				int visited = 0;
 
-				int count = split ? splitStackSize + (splitRemainder > 0 ? 1 : 0) : stackSize;
-				ItemStack toOutput = ItemHandlerHelper.copyStackWithSize(toDistribute, count);
-				ItemStack remainder = insertIntoTunnel(tunnel, side, toOutput, simulate);
-
-				if (remainder == null || remainder.getCount() == count) {
-					if (force)
-						return;
-					if (split && simulate)
-						remainingOutputs--;
+				toDistributeThisCycle = toDistribute.copy();
+				if (!(force || split) && simulate)
 					continue;
-				}
 
-				leftovers += remainder.getCount();
-				toDistribute.shrink(count);
-				if (toDistribute.isEmpty())
-					break;
-				splitRemainder--;
-				if (!split)
-					break;
+				while (visited < amountTargets) {
+					Pair<BrassTunnelTileEntity, Direction> pair = validTargets.get(index);
+					BrassTunnelTileEntity tunnel = pair.getKey();
+					Direction side = pair.getValue();
+					index = (index + 1) % amountTargets;
+					visited++;
+
+					if (full.contains(pair)) {
+						if (split && simulate)
+							remainingOutputs--;
+						continue;
+					}
+
+					int count = split ? splitStackSize + (splitRemainder > 0 ? 1 : 0) : stackSize;
+					ItemStack toOutput = ItemHandlerHelper.copyStackWithSize(toDistributeThisCycle, count);
+
+					// Grow by 1 to determine if target is full even after a successful transfer
+					boolean testWithIncreasedCount = distributed.containsKey(pair);
+					int increasedCount = testWithIncreasedCount ? distributed.get(pair)
+						.getCount() : 0;
+					if (testWithIncreasedCount)
+						toOutput.grow(increasedCount);
+
+					ItemStack remainder = insertIntoTunnel(tunnel, side, toOutput, true);
+
+					if (remainder == null || remainder.getCount() == (testWithIncreasedCount ? count + 1 : count)) {
+						if (force)
+							return;
+						if (split && simulate)
+							remainingOutputs--;
+						if (!simulate)
+							full.add(pair);
+						continue;
+					} else if (!remainder.isEmpty() && !simulate) {
+						full.add(pair);
+					}
+
+					if (!simulate) {
+						toOutput.shrink(remainder.getCount());
+						distributed.put(pair, toOutput);
+					}
+
+					leftovers += remainder.getCount();
+					toDistributeThisCycle.shrink(count);
+					if (toDistributeThisCycle.isEmpty())
+						break;
+					splitRemainder--;
+					if (!split)
+						break;
+				}
 			}
+
+			toDistribute.setCount(toDistributeThisCycle.getCount() + leftovers);
+			if (leftovers == 0 && distributeAgain)
+				break;
+			if (!split)
+				break;
 		}
 
-		stackToDistribute = ItemHandlerHelper.copyStackWithSize(stackToDistribute, toDistribute.getCount() + leftovers);
+		int failedTransferrals = 0;
+		for (Entry<Pair<BrassTunnelTileEntity, Direction>, ItemStack> entry : distributed.entrySet()) {
+			Pair<BrassTunnelTileEntity, Direction> pair = entry.getKey();
+			failedTransferrals += insertIntoTunnel(pair.getKey(), pair.getValue(), entry.getValue(), false).getCount();
+		}
+
+		toDistribute.grow(failedTransferrals);
+		stackToDistribute = ItemHandlerHelper.copyStackWithSize(stackToDistribute, toDistribute.getCount());
 		previousOutputIndex++;
 		previousOutputIndex %= amountTargets;
 		notifyUpdate();
@@ -418,25 +465,34 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		if (!AllBlocks.BRASS_TUNNEL.has(blockState))
 			return;
 
-		for (Direction direction : Iterate.horizontalDirections) {
-			if (direction == movementFacing && below.getSpeed() == 0)
+		boolean prioritizeSides = tunnelTE == this;
+
+		for (boolean sidePass : Iterate.trueAndFalse) {
+			if (!prioritizeSides && sidePass)
 				continue;
-			if (direction == movementFacing.getOpposite())
-				continue;
-			if (tunnelTE.sides.contains(direction)) {
-				BlockPos offset = tunnelTE.pos.down()
-					.offset(direction);
-				DirectBeltInputBehaviour inputBehaviour =
-					TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
-				if (inputBehaviour == null) {
-					if (direction == movementFacing)
-						if (!Block.hasSolidSide(world.getBlockState(offset), world, offset, direction.getOpposite()))
-							validOutputs.add(Pair.of(tunnelTE, direction));
+			for (Direction direction : Iterate.horizontalDirections) {
+				if (direction == movementFacing && below.getSpeed() == 0)
+					continue;
+				if (prioritizeSides && sidePass == (direction.getAxis() == movementFacing.getAxis()))
+					continue;
+				if (direction == movementFacing.getOpposite())
+					continue;
+				if (tunnelTE.sides.contains(direction)) {
+					BlockPos offset = tunnelTE.pos.down()
+						.offset(direction);
+					DirectBeltInputBehaviour inputBehaviour =
+						TileEntityBehaviour.get(world, offset, DirectBeltInputBehaviour.TYPE);
+					if (inputBehaviour == null) {
+						if (direction == movementFacing)
+							if (!Block.hasSolidSide(world.getBlockState(offset), world, offset,
+								direction.getOpposite()))
+								validOutputs.add(Pair.of(tunnelTE, direction));
+						continue;
+					}
+					if (inputBehaviour.canInsertFromSide(direction))
+						validOutputs.add(Pair.of(tunnelTE, direction));
 					continue;
 				}
-				if (inputBehaviour.canInsertFromSide(direction))
-					validOutputs.add(Pair.of(tunnelTE, direction));
-				continue;
 			}
 		}
 	}
