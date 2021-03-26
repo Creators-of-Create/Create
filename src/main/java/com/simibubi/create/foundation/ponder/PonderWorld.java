@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -35,6 +36,7 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -55,6 +57,7 @@ public class PonderWorld extends SchematicWorld {
 	protected Map<BlockPos, TileEntity> originalTileEntities;
 	protected Map<BlockPos, Integer> blockBreakingProgressions;
 	protected List<Entity> originalEntities;
+	private LazyValue<ClientWorld> asClientWorld = new LazyValue<>(() -> WrappedClientWorld.of(this));
 
 	protected PonderWorldParticles particles;
 	private final Map<ResourceLocation, IParticleFactory<?>> particleFactories;
@@ -218,7 +221,7 @@ public class PonderWorld extends SchematicWorld {
 		double mz) {
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
 		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleFactories.get(key);
-		return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, WrappedClientWorld.of(this), x, y, z, mx, my, mz);
+		return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, asClientWorld.getValue(), x, y, z, mx, my, mz);
 	}
 
 	public void addParticle(Particle p) {
