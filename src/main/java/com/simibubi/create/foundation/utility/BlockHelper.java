@@ -2,10 +2,16 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableInt;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,10 +19,15 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.SlabType;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -26,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IPlantable;
 
 public class BlockHelper {
 
@@ -164,7 +176,7 @@ public class BlockHelper {
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
-		
+
 		IFluidState ifluidstate = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
@@ -185,9 +197,63 @@ public class BlockHelper {
 		return Block.hasSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader,
 			fromPos.offset(toDirection), toDirection.getOpposite());
 	}
-	
+
 	public static boolean noCollisionInSpace(IBlockReader reader, BlockPos pos) {
-		return reader.getBlockState(pos).getCollisionShape(reader, pos).isEmpty();
+		return reader.getBlockState(pos)
+			.getCollisionShape(reader, pos)
+			.isEmpty();
+	}
+
+	public static void placeSchematicBlock(World world, BlockState state, BlockPos target, ItemStack stack,
+		@Nullable CompoundNBT data) {
+		// Piston
+		if (state.has(BlockStateProperties.EXTENDED))
+			state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
+		if (state.has(BlockStateProperties.WATERLOGGED))
+			state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
+
+		if (AllBlocks.BELT.has(state)) {
+			world.setBlockState(target, state, 2);
+			return;
+		} else if (state.getBlock() == Blocks.COMPOSTER)
+			state = Blocks.COMPOSTER.getDefaultState();
+		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
+			state = ((IPlantable) state.getBlock()).getPlant(world, target);
+
+		if (world.dimension.doesWaterVaporize() && state.getFluidState()
+			.getFluid()
+			.isIn(FluidTags.WATER)) {
+			int i = target.getX();
+			int j = target.getY();
+			int k = target.getZ();
+			world.playSound(null, target, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+				2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+
+			for (int l = 0; l < 8; ++l) {
+				world.addParticle(ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(),
+					0.0D, 0.0D, 0.0D);
+			}
+			Block.spawnDrops(state, world, target);
+			return;
+		}
+		world.setBlockState(target, state, 18);
+		if (data != null) {
+			TileEntity tile = world.getTileEntity(target);
+			if (tile != null) {
+				data.putInt("x", target.getX());
+				data.putInt("y", target.getY());
+				data.putInt("z", target.getZ());
+				if (tile instanceof KineticTileEntity)
+					((KineticTileEntity) tile).warnOfMovement();
+				tile.read(data);
+			}
+		}
+
+		try {
+			state.getBlock()
+				.onBlockPlacedBy(world, target, state, null, stack);
+		} catch (Exception e) {
+		}
 	}
 
 }
