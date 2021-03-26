@@ -89,7 +89,7 @@ public class ChromaticCompoundItem extends Item {
 		if (y < 0 && y - yMotion < -10 && config.enableShadowSteelRecipe.get()) {
 			ItemStack newStack = AllItems.SHADOW_STEEL.asStack();
 			newStack.setCount(stack.getCount());
-			data.putBoolean("FromVoid", true);
+			data.putBoolean("JustCreated", true);
 			entity.setItem(newStack);
 		}
 
@@ -102,7 +102,7 @@ public class ChromaticCompoundItem extends Item {
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setMotion(entity.getMotion());
 			newEntity.getPersistentData()
-				.putBoolean("FromLight", true);
+				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
 			world.addEntity(newEntity);
 
@@ -119,10 +119,8 @@ public class ChromaticCompoundItem extends Item {
 		int entityZ = MathHelper.floor(entity.getZ());
 		int localWorldHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, entityX, entityZ);
 
-		BlockPos.Mutable testPos = new BlockPos.Mutable(
-				entityX,
-				Math.min(MathHelper.floor(entity.getY()), localWorldHeight),
-				entityZ);
+		BlockPos.Mutable testPos =
+			new BlockPos.Mutable(entityX, Math.min(MathHelper.floor(entity.getY()), localWorldHeight), entityZ);
 
 		while (testPos.getY() > 0) {
 			testPos.move(Direction.DOWN);
@@ -132,11 +130,13 @@ public class ChromaticCompoundItem extends Item {
 			if (state.getBlock() == Blocks.BEACON) {
 				TileEntity te = world.getTileEntity(testPos);
 
-				if (!(te instanceof BeaconTileEntity)) break;
+				if (!(te instanceof BeaconTileEntity))
+					break;
 
 				BeaconTileEntity bte = (BeaconTileEntity) te;
 
-				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty()) isOverBeacon = true;
+				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty())
+					isOverBeacon = true;
 
 				break;
 			}
@@ -145,7 +145,7 @@ public class ChromaticCompoundItem extends Item {
 		if (isOverBeacon) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			newStack.setCount(stack.getCount());
-			data.putBoolean("FromLight", true);
+			data.putBoolean("JustCreated", true);
 			entity.setItem(newStack);
 			return false;
 		}
