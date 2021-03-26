@@ -122,10 +122,7 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
-import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
-import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
-import com.simibubi.create.content.logistics.block.depot.EjectorRenderer;
-import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
+import com.simibubi.create.content.logistics.block.depot.*;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterInstance;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
@@ -617,7 +614,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<EjectorTileEntity> WEIGHTED_EJECTOR = Create.registrate()
 		.tileEntity("weighted_ejector", EjectorTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> EjectorInstance::new)
 		.validBlocks(AllBlocks.WEIGHTED_EJECTOR)
 		.renderer(() -> EjectorRenderer::new)
 		.register();

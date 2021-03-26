@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -22,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class EjectorRenderer extends KineticTileEntityRenderer {
 
+	static final Vec3d pivot = VecHelper.voxelSpace(0, 11.25, 0.75);
+
 	public EjectorRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
@@ -37,15 +40,16 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		EjectorTileEntity ejector = (EjectorTileEntity) te;
-		SuperByteBuffer model = AllBlockPartials.EJECTOR_TOP.renderOn(te.getBlockState());
 		IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.getSolid());
-		Vec3d rotationOffset = VecHelper.voxelSpace(0, 11.25, 0.75);
 		float lidProgress = ((EjectorTileEntity) te).getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		applyLidAngle(te, rotationOffset, angle, model.matrixStacker());
-		model.light(light)
-			.renderInto(ms, vertexBuilder);
+		if (!FastRenderDispatcher.available(te.getWorld())) {
+			SuperByteBuffer model = AllBlockPartials.EJECTOR_TOP.renderOn(te.getBlockState());
+			applyLidAngle(te, angle, model.matrixStacker());
+			model.light(light)
+					.renderInto(ms, vertexBuilder);
+		}
 
 		MatrixStacker msr = MatrixStacker.of(ms);
 
@@ -70,7 +74,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			return;
 
 		ms.push();
-		applyLidAngle(te, rotationOffset, angle, msr);
+		applyLidAngle(te, angle, msr);
 		msr.centre()
 			.rotateY(-180 - AngleHelper.horizontalAngle(te.getBlockState()
 				.get(EjectorBlock.HORIZONTAL_FACING)))
@@ -79,7 +83,11 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		ms.pop();
 	}
 
-	protected void applyLidAngle(KineticTileEntity te, Vec3d rotationOffset, float angle, MatrixStacker matrixStacker) {
+	static void applyLidAngle(KineticTileEntity te, float angle, MatrixStacker matrixStacker) {
+		applyLidAngle(te, pivot, angle, matrixStacker);
+	}
+
+	static void applyLidAngle(KineticTileEntity te, Vec3d rotationOffset, float angle, MatrixStacker matrixStacker) {
 		matrixStacker.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
 				.get(EjectorBlock.HORIZONTAL_FACING)))
