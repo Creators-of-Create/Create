@@ -175,7 +175,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			if (compound.contains("CurrentPos"))
 				currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
 		}
-		
+
 		// Gui information
 		statusMsg = compound.getString("Status");
 		schematicProgress = compound.getFloat("Progress");
@@ -185,17 +185,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
 		printingEntityIndex = compound.getInt("EntityProgress");
-		
+
 		missingItem = null;
 		if (compound.contains("MissingItem"))
 			missingItem = ItemStack.read(compound.getCompound("MissingItem"));
-		
+
 		// Settings
 		CompoundNBT options = compound.getCompound("Options");
 		replaceMode = options.getInt("ReplaceMode");
 		skipMissing = options.getBoolean("SkipMissing");
 		replaceTileEntities = options.getBoolean("ReplaceTileEntities");
-		
+
 		// Printer & Flying Blocks
 		if (compound.contains("Target"))
 			target = NBTUtil.readBlockPos(compound.getCompound("Target"));
@@ -250,7 +250,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 					compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
 			}
 		}
-		
+
 		// Gui information
 		compound.putFloat("Progress", schematicProgress);
 		compound.putFloat("PaperProgress", bookPrintingProgress);
@@ -260,17 +260,17 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		compound.putInt("AmountPlaced", blocksPlaced);
 		compound.putInt("AmountToPlace", blocksToPlace);
 		compound.putInt("EntityProgress", printingEntityIndex);
-		
+
 		if (missingItem != null)
 			compound.put("MissingItem", missingItem.serializeNBT());
-		
+
 		// Settings
 		CompoundNBT options = new CompoundNBT();
 		options.putInt("ReplaceMode", replaceMode);
 		options.putBoolean("SkipMissing", skipMissing);
 		options.putBoolean("ReplaceTileEntities", replaceTileEntities);
 		compound.put("Options", options);
-		
+
 		// Printer & Flying Blocks
 		if (target != null)
 			compound.put("Target", NBTUtil.writeBlockPos(target));
@@ -375,11 +375,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		if (missingItem == null && !positionNotLoaded) {
-			advanceCurrentPos();
+			do {
+				advanceCurrentPos();
+				if (state == State.STOPPED)
+					return;
 
-			// End reached
-			if (state == State.STOPPED)
-				return;
+			} while (!blockReader.getBounds()
+				.isVecInside(currentPos));
 
 			sendUpdate = true;
 			target = schematicAnchor.add(currentPos);
@@ -710,10 +712,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (world == null)
 			return false;
 		BlockState toReplace = world.getBlockState(pos);
-		boolean placingAir = state.getBlock().isAir(state, world, pos);
+		boolean placingAir = state.getBlock()
+			.isAir(state, world, pos);
 
 		BlockState toReplaceOther = null;
-		if (state.contains(BlockStateProperties.BED_PART) && state.contains(BlockStateProperties.HORIZONTAL_FACING) && state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
+		if (state.contains(BlockStateProperties.BED_PART) && state.contains(BlockStateProperties.HORIZONTAL_FACING)
+			&& state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
 			toReplaceOther = world.getBlockState(pos.offset(state.get(BlockStateProperties.HORIZONTAL_FACING)));
 		if (state.contains(BlockStateProperties.DOUBLE_BLOCK_HALF)
 			&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
@@ -726,11 +730,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			return false;
 		if (toReplace == state)
 			return false;
-		if (toReplace.getBlockHardness(world, pos) == -1 || (toReplaceOther != null && toReplaceOther.getBlockHardness(world, pos) == -1))
+		if (toReplace.getBlockHardness(world, pos) == -1
+			|| (toReplaceOther != null && toReplaceOther.getBlockHardness(world, pos) == -1))
 			return false;
 		if (pos.withinDistance(getPos(), 2f))
 			return false;
-		if (!replaceTileEntities && (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
+		if (!replaceTileEntities
+			&& (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
 			return false;
 
 		if (shouldIgnoreBlockState(state))
@@ -741,10 +747,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (replaceMode == 2 && !placingAir)
 			return true;
 		if (replaceMode == 1
-			&& (state.isNormalCube(blockReader, pos.subtract(schematicAnchor)) || (!toReplace.isNormalCube(world, pos) && (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos))))
+			&& (state.isNormalCube(blockReader, pos.subtract(schematicAnchor)) || (!toReplace.isNormalCube(world, pos)
+				&& (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos))))
 			&& !placingAir)
 			return true;
-		if (replaceMode == 0 && !toReplace.isNormalCube(world, pos) && (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos)) && !placingAir)
+		if (replaceMode == 0 && !toReplace.isNormalCube(world, pos)
+			&& (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos)) && !placingAir)
 			return true;
 
 		return false;
@@ -754,7 +762,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		// Block doesnt have a mapping (Water, lava, etc)
 		if (state.getBlock() == Blocks.STRUCTURE_VOID)
 			return true;
-		
+
 		ItemRequirement requirement = ItemRequirement.of(state);
 		if (requirement.isEmpty())
 			return false;
@@ -851,7 +859,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundNBT data) {
-		if (state.getBlock().isAir(state, world, target))
+		if (state.getBlock()
+			.isAir(state, world, target))
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getPos(), target, stack, state, data));
 		playFiringSound();

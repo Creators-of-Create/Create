@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import net.minecraft.util.math.MathHelper;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -17,6 +19,8 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	protected final InstanceKey<ModelData> plate;
 
+	private float lastProgress = Float.NaN;
+
 	public EjectorInstance(InstancedTileRenderer<?> dispatcher, EjectorTileEntity tile) {
 		super(dispatcher, tile);
 		this.tile = tile;
@@ -29,21 +33,12 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	@Override
 	public void beginFrame() {
+		float lidProgress = getLidProgress();
 
-		if (tile.lidProgress.settled()) return;
+		if (MathHelper.epsilonEquals(lidProgress, lastProgress)) return;
 
-		pivotPlate();
-	}
-
-	private void pivotPlate() {
-		float lidProgress = tile.getLidProgress(AnimationTickHolder.getPartialTicks());
-		float angle = lidProgress * 70;
-
-		MatrixStack ms = new MatrixStack();
-
-		EjectorRenderer.applyLidAngle(tile, angle, MatrixStacker.of(ms).translate(getInstancePosition()));
-
-		plate.getInstance().setTransform(ms);
+		pivotPlate(lidProgress);
+		lastProgress = lidProgress;
 	}
 
 	@Override
@@ -56,5 +51,23 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 	public void remove() {
 		super.remove();
 		plate.delete();
+	}
+
+	private void pivotPlate() {
+		pivotPlate(getLidProgress());
+	}
+
+	private float getLidProgress() {
+		return tile.getLidProgress(AnimationTickHolder.getPartialTicks());
+	}
+
+	private void pivotPlate(float lidProgress) {
+		float angle = lidProgress * 70;
+
+		MatrixStack ms = new MatrixStack();
+
+		EjectorRenderer.applyLidAngle(tile, angle, MatrixStacker.of(ms).translate(getInstancePosition()));
+
+		plate.getInstance().setTransform(ms);
 	}
 }

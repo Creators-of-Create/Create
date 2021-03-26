@@ -883,7 +883,7 @@
 	"create.schematicAndQuill.noTarget": "Halte [Strg] zur Auswahl von Luft.",
 	"create.schematicAndQuill.abort": "Auswahl zurückgesetzt.",
 	"create.schematicAndQuill.title": "Bauplanname:",
-	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "Mein Bauplan",
 	"create.schematicAndQuill.saved": "Gespeichert als %1$s",
 
