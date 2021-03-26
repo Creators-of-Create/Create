@@ -108,7 +108,13 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		hovered = clicked(mouseX, mouseY);
 
 		ms.push();
-		ms.translate(0, 0, 400);
+		ms.translate(0, 0, 150);
+		/*  ponderButtons are at z+400
+		*   renderBox is at z+100
+		*   gradients have to be in front of the box so z>+100
+		* */
+
+		ms.push();
 		PonderUI.renderBox(ms, x, y, width, height, false);
 		ms.pop();
 
@@ -117,11 +123,13 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		ms.push();
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 500, 0, 3, 1, 4, 0x80ffeedd, 0x80ffeedd);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 500, 0, 4, 1, 5, 0x50ffeedd, 0x50ffeedd);
+		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 3, 1, 4, 0x80ffeedd, 0x80ffeedd);
+		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 4, 1, 5, 0x50ffeedd, 0x50ffeedd);
 		ms.pop();
 
 		renderKeyframes(ms, mouseX, partialTicks);
+
+		ms.pop();
 
 		ms.pop();
 	}

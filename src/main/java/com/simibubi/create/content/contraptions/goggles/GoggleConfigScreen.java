@@ -8,6 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -79,8 +80,11 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		int posY = this.height / 2 + offsetY;
 		renderTooltip(ms, tooltip, posX, posY);
 
+		//UIRenderHelper.breadcrumbArrow(ms, 50, 50, 100, 50, 20, 10, 0x80aa9999, 0x10aa9999);
+		//UIRenderHelper.breadcrumbArrow(ms, 100, 80, 0, -50, 20, -10, 0x80aa9999, 0x10aa9999);
+
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item).at(posX + 10, posY - 16, 450).render(ms);
-		GuiGameElement.of(item).at(0, 0, 450).render(ms);
+		//GuiGameElement.of(item).at(0, 0, 450).render(ms);
 	}
 }

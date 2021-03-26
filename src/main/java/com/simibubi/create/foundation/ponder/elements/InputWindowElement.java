@@ -115,6 +115,8 @@ public class InputWindowElement extends AnimatedOverlayElement {
 
 		PonderUI.renderSpeechBox(ms, 0, 0, width, height, false, direction, true);
 
+		ms.translate(0, 0, 100);
+
 		if (hasText)
 			font.draw(ms, text, 2, (height - font.FONT_HEIGHT) / 2f + 2,
 				ColorHelper.applyAlpha(PonderPalette.WHITE.getColor(), fade));
@@ -123,7 +125,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			ms.push();
 			ms.translate(keyWidth, 0, 0);
 			ms.scale(1.5f, 1.5f, 1.5f);
-			icon.draw(ms, 0, 0);
+			icon.draw(ms, screen, 0, 0);
 			ms.pop();
 		}
 
