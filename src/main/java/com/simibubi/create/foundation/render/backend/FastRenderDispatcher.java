@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
@@ -37,10 +38,13 @@ public class FastRenderDispatcher {
     }
 
     public static void tick() {
-        ClientWorld world = Minecraft.getInstance().world;
+        Minecraft mc = Minecraft.getInstance();
+        ClientWorld world = mc.world;
 
         KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
-        kineticRenderer.tick();
+
+        Entity renderViewEntity = mc.renderViewEntity;
+        kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 
         ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
         map

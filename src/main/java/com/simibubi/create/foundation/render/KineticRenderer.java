@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
 import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
 
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
@@ -42,7 +43,7 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
     }
 
     @Override
-    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+    public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
         int cX = MathHelper.floor(cameraX);
         int cY = MathHelper.floor(cameraY);
         int cZ = MathHelper.floor(cameraZ);
@@ -62,7 +63,7 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
             instancedTiles.forEach(this::add);
         }
 
-        super.beginFrame(cameraX, cameraY, cameraZ);
+        super.beginFrame(info, cameraX, cameraY, cameraZ);
     }
 
     @Override

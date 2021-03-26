@@ -20,12 +20,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -87,8 +82,8 @@ public class RenderedContraption {
         }
     }
 
-    public void beginFrame(double camX, double camY, double camZ) {
-        kinetics.beginFrame(camX, camY, camZ);
+    public void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
+        kinetics.beginFrame(info, camX, camY, camZ);
 
         AbstractContraptionEntity entity = contraption.entity;
         float pt = AnimationTickHolder.getPartialTicks();

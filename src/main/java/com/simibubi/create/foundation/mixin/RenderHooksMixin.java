@@ -4,7 +4,6 @@ import com.simibubi.create.foundation.render.KineticRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL20;
@@ -57,8 +56,8 @@ public class RenderHooksMixin {
         double camY = cameraPos.getY();
         double camZ = cameraPos.getZ();
 
-        CreateClient.kineticRenderer.get(world).beginFrame(camX, camY, camZ);
-        ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
+        CreateClient.kineticRenderer.get(world).beginFrame(info, camX, camY, camZ);
+        ContraptionRenderDispatcher.beginFrame(info, camX, camY, camZ);
     }
 
     @Inject(at = @At("TAIL"), method = "checkBlockRerender")

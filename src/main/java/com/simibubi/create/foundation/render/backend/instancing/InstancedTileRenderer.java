@@ -10,11 +10,9 @@ import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -30,6 +28,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
+    protected int frame;
+
     protected InstancedTileRenderer() {
         registerMaterials();
     }
@@ -38,15 +38,74 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
     public abstract void registerMaterials();
 
-    public void tick() {
-        if (tickableInstances.size() > 0)
-            tickableInstances.values().forEach(ITickableInstance::tick);
+    public void tick(double cameraX, double cameraY, double cameraZ) {
+        // integer camera pos
+        int cX = (int) cameraX;
+        int cY = (int) cameraY;
+        int cZ = (int) cameraZ;
+
+        if (tickableInstances.size() > 0) {
+            for (ITickableInstance instance : tickableInstances.values()) {
+                if (!instance.decreaseTickRateWithDistance()) {
+                    instance.tick();
+                    continue;
+                }
+
+                BlockPos pos = instance.getWorldPosition();
+
+                int dX = pos.getX() - cX;
+                int dY = pos.getY() - cY;
+                int dZ = pos.getZ() - cZ;
+
+                int dSq = dX * dX + dY * dY + dZ * dZ;
+
+                int divisor = (dSq / 1024) + 1;
+
+                if (frame % divisor == 0)
+                    instance.tick();
+            }
+        }
     }
 
-    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
+    public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
+        frame++;
         processQueuedAdditions();
-        if (dynamicInstances.size() > 0)
-            dynamicInstances.values().forEach(IDynamicInstance::beginFrame);
+
+        Vector3f look = info.getHorizontalPlane();
+        float lookX = look.getX();
+        float lookY = look.getY();
+        float lookZ = look.getZ();
+
+        // integer camera pos
+        int cX = (int) cameraX;
+        int cY = (int) cameraY;
+        int cZ = (int) cameraZ;
+
+        if (dynamicInstances.size() > 0) {
+            for (IDynamicInstance dyn : dynamicInstances.values()) {
+                if (!dyn.decreaseFramerateWithDistance()) {
+                    dyn.beginFrame();
+                    continue;
+                }
+
+                BlockPos pos = dyn.getWorldPosition();
+
+                int dX = pos.getX() - cX;
+                int dY = pos.getY() - cY;
+                int dZ = pos.getZ() - cZ;
+
+                float dot = dX * lookX + dY * lookY + dZ * lookZ;
+
+                if (dot < 0) continue; // is it behind the camera?
+
+                int dSq = dX * dX + dY * dY + dZ * dZ;
+
+                int divisor = (dSq / 1024) + 1; // https://www.desmos.com/calculator/aaycpludsy
+
+                if (frame % divisor == 0)
+                    dyn.beginFrame();
+            }
+        }
     }
 
     public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
