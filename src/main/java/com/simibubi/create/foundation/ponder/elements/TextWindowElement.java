@@ -125,6 +125,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			ms.pop();
 		}
 
+		ms.translate(0, 0, 400);
 		FontHelper.drawSplitString(ms, screen.getFontRenderer(), bakedText, targetX - 10, 3, textWidth,
 			ColorHelper.applyAlpha(brighterColor, fade));
 		ms.pop();
