@@ -883,7 +883,7 @@
 	"create.schematicAndQuill.noTarget": "Houd [Ctrl] ingedrukt om een Lucht block te kiezen.",
 	"create.schematicAndQuill.abort": "Keuze verwijderd.",
 	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
-	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "Mijn Bouwtekening",
 	"create.schematicAndQuill.saved": "Opgeslagen als %1$s",
 

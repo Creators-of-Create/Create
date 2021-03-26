@@ -1,6 +1,16 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -8,23 +18,33 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants.NBT;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.items.IItemHandler;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
@@ -52,6 +72,12 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
+		World world = context.world;
+
+		ItemStack filter = getFilter(context);
+		if (AllItems.SCHEMATIC.isIn(filter)) 
+			activateAsSchematicPrinter(context, pos, player, world, filter);
+
 		Vector3d facingVec = Vector3d.of(context.state.get(DeployerBlock.FACING)
 			.getDirectionVec());
 		facingVec = context.rotation.apply(facingVec);
@@ -60,6 +86,61 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		player.rotationPitch = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
+	}
+
+	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player, World world,
+		ItemStack filter) {
+		if (!filter.hasTag())
+			return;
+		if (!world.getBlockState(pos)
+			.getMaterial()
+			.isReplaceable())
+			return;
+
+		CompoundNBT tag = filter.getTag();
+		if (!tag.getBoolean("Deployed"))
+			return;
+		SchematicWorld schematicWorld = SchematicInstances.get(world, filter);
+		if (!schematicWorld.getBounds()
+			.isVecInside(pos.subtract(schematicWorld.anchor)))
+			return;
+		BlockState blockState = schematicWorld.getBlockState(pos);
+		ItemRequirement requirement = ItemRequirement.of(blockState);
+		if (requirement.isInvalid() || requirement.isEmpty())
+			return;
+		if (AllBlocks.BELT.has(blockState))
+			return;
+
+		List<ItemStack> requiredItems = requirement.getRequiredItems();
+		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
+		IItemHandler iItemHandler = context.contraption.inventory;
+
+		for (ItemStack required : requiredItems) {
+			int amountFound = ItemHelper
+				.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+					required.getCount(), true)
+				.getCount();
+			if (amountFound < required.getCount())
+				return;
+		}
+
+		for (ItemStack required : requiredItems)
+			ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+				required.getCount(), false);
+
+		CompoundNBT data = null;
+		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (tile != null) {
+				data = tile.write(new CompoundNBT());
+				data = NBTProcessors.process(tile, data, true);
+			}
+		}
+
+		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, pos);
+		BlockHelper.placeSchematicBlock(world, blockState, pos, firstRequired, data);
+		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
+			blocksnapshot.restore(true, false);
 	}
 
 	@Override
@@ -109,6 +190,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (player.getHeldItemMainhand()
 			.isEmpty()) {
 			ItemStack filter = getFilter(context);
+			if (AllItems.SCHEMATIC.isIn(filter))
+				return;
 			ItemStack held = ItemHelper.extract(context.contraption.inventory,
 				stack -> FilterItem.test(context.world, stack, filter), 1, false);
 			player.setHeldItem(Hand.MAIN_HAND, held);

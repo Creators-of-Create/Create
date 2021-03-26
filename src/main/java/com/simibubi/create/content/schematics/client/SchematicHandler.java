@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -206,7 +207,10 @@ public class SchematicHandler {
 			return;
 		if (mc.objectMouseOver instanceof BlockRayTraceResult) {
 			BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) mc.objectMouseOver;
-			if (AllBlocks.SCHEMATICANNON.has(mc.world.getBlockState(blockRayTraceResult.getPos())))
+			BlockState clickedBlock = mc.world.getBlockState(blockRayTraceResult.getPos());
+			if (AllBlocks.SCHEMATICANNON.has(clickedBlock))
+				return;
+			if (AllBlocks.DEPLOYER.has(clickedBlock))
 				return;
 		}
 		currentTool.getTool()

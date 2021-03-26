@@ -3,32 +3,23 @@ package com.simibubi.create.content.schematics.block;
 import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.Constants;
 
 public abstract class LaunchedItem {
@@ -129,46 +120,7 @@ public abstract class LaunchedItem {
 
 		@Override
 		void place(World world) {
-			// Piston
-			if (state.contains(BlockStateProperties.EXTENDED))
-				state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
-			if (state.contains(BlockStateProperties.WATERLOGGED))
-				state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
-
-			if (AllBlocks.BELT.has(state)) {
-				world.setBlockState(target, state, 2);
-				return;
-			}
-			else if (state.getBlock() == Blocks.COMPOSTER)
-				state = Blocks.COMPOSTER.getDefaultState();
-			else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
-				state = ((IPlantable) state.getBlock()).getPlant(world, target);
-
-			if (world.getDimension().isUltrawarm() && state.getFluidState().getFluid().isIn(FluidTags.WATER)) {
-				int i = target.getX();
-				int j = target.getY();
-				int k = target.getZ();
-				world.playSound(null, target, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
-
-				for (int l = 0; l < 8; ++l) {
-					world.addParticle(ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(), 0.0D, 0.0D, 0.0D);
-				}
-				Block.spawnDrops(state, world, target);
-				return;
-			}
-			world.setBlockState(target, state, 18);
-			if (data != null) {
-				TileEntity tile = world.getTileEntity(target);
-				if (tile != null) {
-					data.putInt("x", target.getX());
-					data.putInt("y", target.getY());
-					data.putInt("z", target.getZ());
-					if (tile instanceof KineticTileEntity)
-						((KineticTileEntity) tile).warnOfMovement();
-					tile.fromTag(state, data);
-				}
-			}
-			state.getBlock().onBlockPlacedBy(world, target, state, null, stack);
+			BlockHelper.placeSchematicBlock(world, state, target, stack, data);
 		}
 
 	}

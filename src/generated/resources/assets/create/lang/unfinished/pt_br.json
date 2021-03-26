@@ -883,7 +883,7 @@
 	"create.schematicAndQuill.noTarget": "Seguro [Ctrl] para selecionar Blocos de Ar.",
 	"create.schematicAndQuill.abort": "Seleção removida.",
 	"create.schematicAndQuill.title": "UNLOCALIZED: Schematic Name:",
-	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Deploy Immediately",
+	"create.schematicAndQuill.convert": "UNLOCALIZED: Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "Meu Esquema",
 	"create.schematicAndQuill.saved": "Salvo como %1$s",
 
