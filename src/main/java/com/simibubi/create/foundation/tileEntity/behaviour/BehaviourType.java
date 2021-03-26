@@ -18,4 +18,8 @@ public class BehaviourType<T extends TileEntityBehaviour> {
 		return name;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode() * 31 * 493286711; // Better hash table distribution
+	}
 }
