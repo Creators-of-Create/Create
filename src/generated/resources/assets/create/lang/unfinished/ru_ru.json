@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 557",
+	"_": "Missing Localizations: 561",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1024,6 +1024,10 @@
 	"create.item_attributes.added_by.inverted": "не был добавлен %1$s",
 	"create.item_attributes.has_enchant": "зачарован на %1$s",
 	"create.item_attributes.has_enchant.inverted": "не зачарован на %1$s",
+	"create.item_attributes.color": "UNLOCALIZED: is dyed %1$s",
+	"create.item_attributes.color.inverted": "UNLOCALIZED: is not dyed %1$s",
+	"create.item_attributes.max_enchanted": "UNLOCALIZED: is enchanted at max level",
+	"create.item_attributes.max_enchanted.inverted": "UNLOCALIZED: is not enchanted at max level",
 	"create.item_attributes.has_fluid": "содержит %1$s",
 	"create.item_attributes.has_fluid.inverted": "не содержит %1$s",
 	"create.item_attributes.has_name": "имеет нестандартное имя %1$s",

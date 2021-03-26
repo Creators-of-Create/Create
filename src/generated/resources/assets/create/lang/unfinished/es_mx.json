@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1436",
+	"_": "Missing Localizations: 1440",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1024,6 +1024,10 @@
 	"create.item_attributes.added_by.inverted": "UNLOCALIZED: was not added by %1$s",
 	"create.item_attributes.has_enchant": "UNLOCALIZED: is enchanted with %1$s",
 	"create.item_attributes.has_enchant.inverted": "UNLOCALIZED: is not enchanted with %1$s",
+	"create.item_attributes.color": "UNLOCALIZED: is dyed %1$s",
+	"create.item_attributes.color.inverted": "UNLOCALIZED: is not dyed %1$s",
+	"create.item_attributes.max_enchanted": "UNLOCALIZED: is enchanted at max level",
+	"create.item_attributes.max_enchanted.inverted": "UNLOCALIZED: is not enchanted at max level",
 	"create.item_attributes.has_fluid": "UNLOCALIZED: contains %1$s",
 	"create.item_attributes.has_fluid.inverted": "UNLOCALIZED: does not contain %1$s",
 	"create.item_attributes.has_name": "UNLOCALIZED: has the custom name %1$s",
