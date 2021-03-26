@@ -15,6 +15,6 @@ public class PumpCogInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouthRotating(modelManager, tile.getBlockState());
+        return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouthRotating(renderer, tile.getBlockState());
     }
 }

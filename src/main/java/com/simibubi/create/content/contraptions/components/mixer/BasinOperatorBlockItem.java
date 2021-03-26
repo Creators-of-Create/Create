@@ -24,7 +24,7 @@ public class BasinOperatorBlockItem extends BlockItem {
 		BlockState placedOnState = context.getWorld()
 			.getBlockState(placedOnPos);
 		if (AllBlocks.BASIN.has(placedOnState) || AllBlocks.BELT.has(placedOnState)
-			|| AllBlocks.DEPOT.has(placedOnState)) {
+			|| AllBlocks.DEPOT.has(placedOnState) || AllBlocks.WEIGHTED_EJECTOR.has(placedOnState)) {
 			if (context.getWorld()
 				.getBlockState(placedOnPos.up(2))
 				.getMaterial()

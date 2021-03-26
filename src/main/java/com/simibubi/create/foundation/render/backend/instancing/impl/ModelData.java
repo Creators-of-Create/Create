@@ -16,7 +16,7 @@ public class ModelData extends BasicData {
     }
 
     public ModelData setTransform(MatrixStack stack) {
-        matrices = RenderUtil.bufferMatrices(stack.peek().getModel(), stack.peek().getNormal());
+        matrices = RenderUtil.writeMatrixStack(stack);
         return this;
     }
 

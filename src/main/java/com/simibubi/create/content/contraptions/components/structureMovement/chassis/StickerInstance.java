@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -27,13 +26,11 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
     public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
 
-        head = modelManager.getMaterial(RenderMaterials.TRANSFORMED).getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
+        head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
 
         fakeWorld = tile.getWorld() != Minecraft.getInstance().world;
         facing = blockState.get(StickerBlock.FACING);
         offset = blockState.get(StickerBlock.EXTENDED) ? 1 : 0;
-
-        updateLight();
     }
 
     @Override
@@ -48,7 +45,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
         MatrixStack stack = new MatrixStack();
         MatrixStacker.of(stack)
-                     .translate(getFloatingPos())
+                     .translate(getInstancePosition())
                      .nudge(tile.hashCode())
                      .centre()
                      .rotateY(AngleHelper.horizontalAngle(facing))

@@ -15,6 +15,6 @@ public class DrillInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthRotating(modelManager, tile.getBlockState());
+        return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouthRotating(renderer, tile.getBlockState());
     }
 }

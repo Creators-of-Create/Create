@@ -1,7 +1,18 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.contraptions.base.*;
-import com.simibubi.create.content.contraptions.components.actors.*;
+import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
+import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
+import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
+import com.simibubi.create.content.contraptions.components.actors.DrillInstance;
+import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
+import com.simibubi.create.content.contraptions.components.actors.DrillTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterRenderer;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterInstance;
@@ -60,8 +71,19 @@ import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheel
 import com.simibubi.create.content.contraptions.fluids.PumpCogInstance;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
-import com.simibubi.create.content.contraptions.fluids.actors.*;
-import com.simibubi.create.content.contraptions.fluids.pipes.*;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutRenderer;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveInstance;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveRenderer;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.TransparentStraightPipeRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankRenderer;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
@@ -77,7 +99,13 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltInstance;
 import com.simibubi.create.content.contraptions.relays.belt.BeltRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.*;
+import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+import com.simibubi.create.content.contraptions.relays.encased.SplitShaftInstance;
+import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeInstance;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
@@ -94,8 +122,7 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
-import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
-import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
+import com.simibubi.create.content.logistics.block.depot.*;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterInstance;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
@@ -108,7 +135,14 @@ import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTile
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInstance;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
-import com.simibubi.create.content.logistics.block.redstone.*;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverInstance;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
@@ -576,6 +610,13 @@ public class AllTileEntities {
 		.tileEntity("depot", DepotTileEntity::new)
 		.validBlocks(AllBlocks.DEPOT)
 		.renderer(() -> DepotRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<EjectorTileEntity> WEIGHTED_EJECTOR = Create.registrate()
+		.tileEntity("weighted_ejector", EjectorTileEntity::new)
+		.instance(() -> EjectorInstance::new)
+		.validBlocks(AllBlocks.WEIGHTED_EJECTOR)
+		.renderer(() -> EjectorRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<FunnelTileEntity> FUNNEL = Create.registrate()

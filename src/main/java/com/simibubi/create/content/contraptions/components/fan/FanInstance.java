@@ -16,27 +16,18 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     protected final InstanceKey<RotatingData> shaft;
     protected final InstanceKey<RotatingData> fan;
-    final Direction.Axis axis;
     final Direction direction;
 
     public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
         super(modelManager, tile);
 
         direction = blockState.get(FACING);
-        axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
 
         shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite()).createInstance();
         fan = AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouthRotating(modelManager, blockState, direction.getOpposite()).createInstance();
 
-        RotatingData shaftInstance = shaft.getInstance();
-        shaftInstance.setTileEntity(tile);
-        updateRotation(shaftInstance, axis);
-
-        RotatingData fanInstance = fan.getInstance();
-        fanInstance.setTileEntity(tile);
-        updateRotation(fanInstance, axis, getFanSpeed());
-
-        updateLight();
+        setup(shaft);
+        setup(fan, getFanSpeed());
     }
 
     private float getFanSpeed() {
@@ -50,8 +41,8 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     protected void update() {
-        updateRotation(shaft, axis);
-        updateRotation(fan, axis, getFanSpeed());
+        updateRotation(shaft.getInstance());
+        updateRotation(fan.getInstance(), getFanSpeed());
     }
 
     @Override

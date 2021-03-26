@@ -1,11 +1,22 @@
 package com.simibubi.create.foundation.networking;
 
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
+import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
-import com.simibubi.create.content.contraptions.components.structureMovement.sync.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionFluidPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionInteractionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.LimbSwingUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
@@ -13,18 +24,26 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Config
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
 import com.simibubi.create.content.curiosities.zapper.ZapperBeamPacket;
+import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
+import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
+import com.simibubi.create.content.logistics.block.depot.EjectorTriggerPacket;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmPlacementPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
-import com.simibubi.create.content.schematics.packet.*;
+import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
+import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
+import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
+import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
+import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.command.ConfigureConfigPacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -35,13 +54,6 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
 
 public enum AllPackets {
 
@@ -64,6 +76,9 @@ public enum AllPackets {
 	INSTANT_SCHEMATIC(InstantSchematicPacket.class, InstantSchematicPacket::new, PLAY_TO_SERVER),
 	SYNC_SCHEMATIC(SchematicSyncPacket.class, SchematicSyncPacket::new, PLAY_TO_SERVER),
 	LEFT_CLICK(LeftClickPacket.class, LeftClickPacket::new, PLAY_TO_SERVER),
+	PLACE_EJECTOR(EjectorPlacementPacket.class, EjectorPlacementPacket::new, PLAY_TO_SERVER),
+	TRIGGER_EJECTOR(EjectorTriggerPacket.class, EjectorTriggerPacket::new, PLAY_TO_SERVER),
+	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),

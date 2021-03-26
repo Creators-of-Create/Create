@@ -4,35 +4,32 @@ import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
 
 import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
-    protected final InstanceKey<RotatingData> rotatingModelKey;
+    protected final InstanceKey<RotatingData> rotatingModel;
 
     public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
 
-        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-        rotatingModelKey = setup(getModel().createInstance(), tile.getSpeed(), axis);
+        rotatingModel = setup(getModel().createInstance());
     }
 
     @Override
     public void update() {
-        Direction.Axis axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
-        updateRotation(rotatingModelKey, axis);
+        updateRotation(rotatingModel.getInstance());
     }
 
     @Override
     public void updateLight() {
-        relight(pos, rotatingModelKey.getInstance());
+        relight(pos, rotatingModel.getInstance());
     }
 
     @Override
     public void remove() {
-        rotatingModelKey.delete();
+        rotatingModel.delete();
     }
 
     protected BlockState getRenderedBlockState() {
@@ -40,6 +37,6 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
     }
 
     protected InstancedModel<RotatingData> getModel() {
-        return rotatingMaterial().getModel(KINETIC_TILE, getRenderedBlockState());
+        return getRotatingMaterial().getModel(getRenderedBlockState());
     }
 }

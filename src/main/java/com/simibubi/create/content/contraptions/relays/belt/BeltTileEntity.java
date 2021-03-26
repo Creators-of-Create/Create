@@ -538,18 +538,19 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 	}
 
 	private void initializeLight() {
-		light = new byte[beltLength * 2];
+		if (beltLength > 0) {
+			light = new byte[beltLength * 2];
 
-		Vector3i vec = getBeltFacing().getDirectionVec();
-		BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
-		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+			Vector3i vec = getBeltFacing().getDirectionVec();
+			BeltSlope slope = getBlockState().get(BeltBlock.SLOPE);
+			int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
-		BlockPos.Mutable pos = new BlockPos.Mutable(controller.getX(), controller.getY(), controller.getZ());
-		for (int i = 0; i < beltLength * 2; i += 2) {
-			light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
-			light[i + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
-
-			pos.move(vec.getX(), verticality, vec.getZ());
+			BlockPos.Mutable pos = new BlockPos.Mutable(controller.getX(), controller.getY(), controller.getZ());
+			for (int i = 0; i < beltLength * 2; i += 2) {
+				light[i] = (byte) world.getLightLevel(LightType.BLOCK, pos);
+				light[i + 1] = (byte) world.getLightLevel(LightType.SKY, pos);
+				pos.move(vec.getX(), verticality, vec.getZ());
+			}
 		}
 	}
 

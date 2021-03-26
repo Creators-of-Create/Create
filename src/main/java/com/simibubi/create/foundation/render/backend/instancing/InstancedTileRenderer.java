@@ -39,23 +39,12 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public abstract void registerMaterials();
 
     public void tick() {
-        int ticks = AnimationTickHolder.getTicks();
-
-        // Clean up twice a second. This doesn't have to happen every tick,
-        // but this does need to be run to ensure we don't miss anything.
-        if (ticks % 10 == 0) {
-            clean();
-        }
-
         if (tickableInstances.size() > 0)
             tickableInstances.values().forEach(ITickableInstance::tick);
     }
 
     public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        if (queuedAdditions.size() > 0) {
-            queuedAdditions.forEach(this::addInternal);
-            queuedAdditions.clear();
-        }
+        processQueuedAdditions();
         if (dynamicInstances.size() > 0)
             dynamicInstances.values().forEach(IDynamicInstance::beginFrame);
     }
@@ -76,11 +65,11 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return (RenderMaterial<P, M>) materials.get(materialType);
     }
 
-    public RenderMaterial<P, InstancedModel<ModelData>> transformMaterial() {
+    public RenderMaterial<P, InstancedModel<ModelData>> getTransformMaterial() {
         return getMaterial(RenderMaterials.TRANSFORMED);
     }
 
-    public RenderMaterial<P, InstancedModel<OrientedData>> orientedMaterial() {
+    public RenderMaterial<P, InstancedModel<OrientedData>> getOrientedMaterial() {
         return getMaterial(RenderMaterials.ORIENTED);
     }
 
@@ -119,12 +108,6 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
-    public <T extends TileEntity> void queueAdd(T tile) {
-        if (!Backend.canUseInstancing()) return;
-
-        queuedAdditions.add(tile);
-    }
-
     public <T extends TileEntity> void update(T tile) {
         if (!Backend.canUseInstancing()) return;
 
@@ -152,6 +135,19 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         }
     }
 
+    public synchronized <T extends TileEntity> void queueAdd(T tile) {
+        if (!Backend.canUseInstancing()) return;
+
+        queuedAdditions.add(tile);
+    }
+
+    protected synchronized void processQueuedAdditions() {
+        if (queuedAdditions.size() > 0) {
+            queuedAdditions.forEach(this::addInternal);
+            queuedAdditions.clear();
+        }
+    }
+
     private void addInternal(TileEntity tile) {
         getInstance(tile, true);
     }
@@ -175,6 +171,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
 
         if (renderer != null) {
+            renderer.updateLight();
             instances.put(tile, renderer);
 
             if (renderer instanceof IDynamicInstance)
@@ -187,16 +184,13 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         return renderer;
     }
 
-    private void clean() {
-        instances.keySet().removeIf(TileEntity::isRemoved);
-    }
-
     public void invalidate() {
         for (RenderMaterial<?, ?> material : materials.values()) {
             material.delete();
         }
         instances.clear();
         dynamicInstances.clear();
+        tickableInstances.clear();
     }
 
     public boolean canCreateInstance(TileEntity tile) {
@@ -205,6 +199,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         World world = tile.getWorld();
 
         if (world == null) return false;
+
+        if (world.isAirBlock(tile.getPos())) return false;
 
         if (world == Minecraft.getInstance().world) {
             BlockPos pos = tile.getPos();

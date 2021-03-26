@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "create:block/weighted_ejector/block"
+    },
+    "facing=south": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 90
+    }
+  }
+}

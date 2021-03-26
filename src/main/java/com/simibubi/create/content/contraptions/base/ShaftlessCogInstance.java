@@ -12,6 +12,6 @@ public class ShaftlessCogInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        return AllBlockPartials.SHAFTLESS_COGWHEEL.renderOnRotating(modelManager, tile.getBlockState());
+        return AllBlockPartials.SHAFTLESS_COGWHEEL.renderOnRotating(renderer, tile.getBlockState());
     }
 }

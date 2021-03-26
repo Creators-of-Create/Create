@@ -21,6 +21,7 @@ import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
+import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -115,6 +116,7 @@ public class ClientEvents {
 		ExtendoGripRenderHandler.tick();
 //		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
+		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
 		CreateClient.outliner.tickOutlines();
 		CreateClient.ghostBlocks.tickGhosts();

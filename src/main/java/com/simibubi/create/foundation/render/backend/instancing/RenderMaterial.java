@@ -56,7 +56,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
         this.layerPredicate = layerPredicate;
         registerCompartment(Compartment.PARTIAL);
         registerCompartment(Compartment.DIRECTIONAL_PARTIAL);
-        registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+        registerCompartment(Compartment.GENERIC_TILE);
     }
 
     public boolean canRenderInLayer(RenderType layer) {
@@ -120,8 +120,8 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
                    () -> buildModel(partial.get(), referenceState, modelTransform.get()));
     }
 
-    public MODEL getModel(Compartment<BlockState> compartment, BlockState toRender) {
-        return get(compartment, toRender, () -> buildModel(toRender));
+    public MODEL getModel(BlockState toRender) {
+        return get(Compartment.GENERIC_TILE, toRender, () -> buildModel(toRender));
     }
 
     public <T> MODEL get(Compartment<T> compartment, T key, Supplier<MODEL> supplier) {

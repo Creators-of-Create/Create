@@ -1,30 +1,14 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.base.Predicates;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.logistics.InWorldProcessing;
-import com.simibubi.create.content.logistics.item.filter.attribute.BookAuthorAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.BookCopyAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
-import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.*;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
-
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -45,6 +29,12 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public interface ItemAttribute {
 
@@ -55,6 +45,7 @@ public interface ItemAttribute {
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute hasColor = register(ColorAttribute.EMPTY);
 	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
 	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
@@ -130,8 +121,9 @@ public interface ItemAttribute {
 		RENAMED(ItemStack::hasDisplayName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
-		NOT_STACKABLE(Predicates.not(ItemStack::isStackable)),
+		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
+		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
@@ -153,6 +145,13 @@ public interface ItemAttribute {
 			return w.getRecipeManager()
 				.getRecipe(type, RECIPE_WRAPPER, w)
 				.isPresent();
+		}
+
+		private static boolean maxEnchanted(ItemStack s) {
+			return EnchantmentHelper.getEnchantments(s)
+				.entrySet()
+				.stream()
+				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
 		}
 
 		private StandardTraits(BiPredicate<ItemStack, World> test) {

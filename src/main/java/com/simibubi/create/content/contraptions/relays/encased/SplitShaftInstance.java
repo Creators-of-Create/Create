@@ -23,19 +23,18 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
         keys = new ArrayList<>(2);
 
-        Block block = blockState.getBlock();
-        final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(blockState);
-
         float speed = tile.getSpeed();
 
-        for (Direction dir : Iterate.directionsInAxis(boxAxis)) {
+        for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
             InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, dir);
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
-            keys.add(setup(half.createInstance(), splitSpeed, boxAxis));
+            keys.add(setup(half.createInstance(), splitSpeed));
         }
+
+        updateLight();
     }
 
     @Override
@@ -46,13 +45,13 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
         Direction[] directions = Iterate.directionsInAxis(boxAxis);
 
         for (int i : Iterate.zeroAndOne) {
-            updateRotation(keys.get(i), directions[i]);
+            updateRotation(keys.get(i).getInstance(), tile.getSpeed() * tile.getRotationSpeedModifier(directions[i]));
         }
     }
 
     @Override
     public void updateLight() {
-        keys.forEach(key -> relight(pos, ((InstanceKey<? extends KineticData>) key).getInstance()));
+        relight(pos, keys.stream().map(InstanceKey::getInstance));
     }
 
     @Override
@@ -61,13 +60,4 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
         keys.clear();
     }
 
-    protected void updateRotation(InstanceKey<RotatingData> key, Direction dir) {
-        Direction.Axis axis = dir.getAxis();
-
-        key.getInstance()
-                .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                .setRotationalSpeed(tile.getSpeed() * tile.getRotationSpeedModifier(dir))
-                .setRotationOffset(getRotationOffset(axis))
-                .setColor(tile.network);
-    }
 }

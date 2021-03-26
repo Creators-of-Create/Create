@@ -2,7 +2,6 @@ package com.simibubi.create.content.schematics.block;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -17,12 +16,10 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = modelManager.getMaterial(RenderMaterials.TRANSFORMED);
+        RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
-
-        updateLight();
     }
 
     @Override
@@ -39,7 +36,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
-        msr.translate(getFloatingPos());
+        msr.translate(getInstancePosition());
 
         ms.push();
         msr.centre();

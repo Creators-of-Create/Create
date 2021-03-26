@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -16,7 +15,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
@@ -50,7 +48,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
 
-        pole = RenderMaterials.ORIENTED.get(modelManager).getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
+        pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
         updateHandPose();
         relight(pos, pole.getInstance());
@@ -77,7 +75,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
                 : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
         float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
         Vector3i facingVec = facing.getDirectionVec();
-        BlockPos blockPos = getFloatingPos();
+        BlockPos blockPos = getInstancePosition();
 
         float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
         float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
@@ -111,7 +109,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         if (hand != null) hand.delete();
 
-        hand = RenderMaterials.ORIENTED.get(modelManager).getModel(currentHand, blockState).createInstance();
+        hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
 
         relight(pos, hand.getInstance());
         updateRotation(pole, hand, yRot, zRot, zRotPole);

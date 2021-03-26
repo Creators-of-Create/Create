@@ -4,6 +4,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 
 public class BrassTunnelBlock extends BeltTunnelBlock {
 
-	public BrassTunnelBlock(Properties properties) {
+	public BrassTunnelBlock(AbstractBlock.Properties properties) {
 		super(properties);
 	}
 

@@ -129,7 +129,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			Direction side = heldItem.insertedFrom;
 
 			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
-				.tryExportingToBeltFunnel(heldItem.stack, side.getOpposite());
+				.tryExportingToBeltFunnel(heldItem.stack, side.getOpposite(), false);
 			if (tryExportingToBeltFunnel != null) {
 				if (tryExportingToBeltFunnel.getCount() != heldItem.stack.getCount()) {
 					if (tryExportingToBeltFunnel.isEmpty())

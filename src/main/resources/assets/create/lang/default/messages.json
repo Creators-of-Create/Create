@@ -379,6 +379,10 @@
 
 	"create.item_attributes.has_enchant": "is enchanted with %1$s",
 	"create.item_attributes.has_enchant.inverted": "is not enchanted with %1$s",
+	"create.item_attributes.color": "is dyed %1$s",
+	"create.item_attributes.color.inverted": "is not dyed %1$s",
+	"create.item_attributes.max_enchanted": "is enchanted at max level",
+	"create.item_attributes.max_enchanted.inverted": "is not enchanted at max level",
 	"create.item_attributes.has_fluid": "contains %1$s",
 	"create.item_attributes.has_fluid.inverted": "does not contain %1$s",
 	"create.item_attributes.has_name": "has the custom name %1$s",
@@ -443,6 +447,12 @@
 	"create.mechanical_arm.deposit_to": "Deposit items to %1$s",
 	"create.mechanical_arm.summary": "Mechanical Arm has %1$s input(s) and %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "%1$s selected interaction point(s) removed due to range limitations.",
+		
+	"create.weighted_ejector.target_set": "Target Selected",
+	"create.weighted_ejector.target_not_valid": "Ejecting to Adjacent block (Target was not Valid)",
+	"create.weighted_ejector.no_target": "Ejecting to Adjacent block (No Target was Selected)",
+	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
+	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
 	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
 

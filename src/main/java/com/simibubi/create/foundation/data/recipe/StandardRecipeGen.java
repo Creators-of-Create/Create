@@ -307,7 +307,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P")
 				.patternLine("A")
 				.patternLine("P")),
-			
+
 		GANTRY_PINION = create(AllBlocks.GANTRY_CARRIAGE).unlockedBy(I::andesiteCasing)
 			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
 				.key('S', I.cog())
@@ -586,6 +586,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShaped(b -> b.key('A', I.andesite())
 				.key('I', I.andesiteCasing())
 				.patternLine("A")
+				.patternLine("I")),
+
+		WEIGHTED_EJECTOR = create(AllBlocks.WEIGHTED_EJECTOR).unlockedBy(I::andesiteCasing)
+			.viaShaped(b -> b.key('A', AllItems.GOLDEN_SHEET.get())
+				.key('D', AllBlocks.DEPOT.get())
+				.key('I', I.cog())
+				.patternLine("A")
+				.patternLine("D")
 				.patternLine("I")),
 
 		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)

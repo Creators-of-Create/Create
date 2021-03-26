@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A",
+    "D",
+    "I"
+  ],
+  "key": {
+    "A": {
+      "item": "create:golden_sheet"
+    },
+    "D": {
+      "item": "create:depot"
+    },
+    "I": {
+      "item": "create:cogwheel"
+    }
+  },
+  "result": {
+    "item": "create:weighted_ejector"
+  }
+}

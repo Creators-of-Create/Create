@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
@@ -20,8 +19,8 @@ public class SawInstance extends SingleRotatingInstance {
     @Override
     protected InstancedModel<RotatingData> getModel() {
         if (blockState.get(FACING).getAxis().isHorizontal())
-            return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState.rotate(tile.getWorld(), tile.getPos(), Rotation.CLOCKWISE_180));
+            return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(renderer, blockState.rotate(tile.getWorld(), tile.getPos(), Rotation.CLOCKWISE_180));
         else
-            return rotatingMaterial().getModel(KineticTileEntityRenderer.KINETIC_TILE, shaft(getRotationAxis()));
+            return getRotatingMaterial().getModel(shaft());
     }
 }

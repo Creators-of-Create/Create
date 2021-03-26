@@ -137,7 +137,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			if (stack.isEmpty())
 				continue;
 			ItemStack tryExportingToBeltFunnel = getBehaviour(DirectBeltInputBehaviour.TYPE)
-				.tryExportingToBeltFunnel(stack, itemMovementFacing.getOpposite());
+				.tryExportingToBeltFunnel(stack, itemMovementFacing.getOpposite(), false);
 			if (tryExportingToBeltFunnel != null) {
 				if (tryExportingToBeltFunnel.getCount() != stack.getCount()) {
 					inventory.setStackInSlot(slot, tryExportingToBeltFunnel);
