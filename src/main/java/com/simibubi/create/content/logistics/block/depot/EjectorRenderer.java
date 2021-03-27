@@ -33,7 +33,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 	public boolean isGlobalRenderer(KineticTileEntity p_188185_1_) {
 		return true;
 	}
-	
+
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
@@ -48,17 +48,22 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			SuperByteBuffer model = AllBlockPartials.EJECTOR_TOP.renderOn(te.getBlockState());
 			applyLidAngle(te, angle, model.matrixStacker());
 			model.light(light)
-					.renderInto(ms, vertexBuilder);
+				.renderInto(ms, vertexBuilder);
 		}
 
 		MatrixStacker msr = MatrixStacker.of(ms);
 
+		float maxTime =
+			(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
 		for (IntAttached<ItemStack> intAttached : ejector.launchedItems) {
-			ms.push();
 			float time = intAttached.getFirst() + partialTicks;
+			if (time > maxTime)
+				continue;
+
+			ms.push();
 			Vec3d launchedItemLocation = ejector.getLaunchedItemLocation(time);
 			msr.translate(launchedItemLocation.subtract(new Vec3d(te.getPos())));
-			Vec3d itemRotOffset = VecHelper.voxelSpace(0,3,0);
+			Vec3d itemRotOffset = VecHelper.voxelSpace(0, 3, 0);
 			msr.translate(itemRotOffset);
 			msr.rotateY(AngleHelper.horizontalAngle(ejector.getFacing()));
 			msr.rotateX(time * 40);
