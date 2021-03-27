@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.placement.Placement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,6 +90,8 @@ public class Create {
 
 		modEventBus.addListener(Create::init);
 		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, Create::onBiomeLoad);
+		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
+		modEventBus.addGenericListener(Placement.class, AllWorldFeatures::registerDecoratorFeatures);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);

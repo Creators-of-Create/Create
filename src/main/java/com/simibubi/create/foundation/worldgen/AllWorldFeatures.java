@@ -14,9 +14,11 @@ import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllWorldFeatures {
 
@@ -57,10 +59,10 @@ public class AllWorldFeatures {
 	public static final int forcedUpdateVersion = 2;
 
 	public static void registerFeatures() {
-		ForgeRegistries.FEATURES.register(ConfigDrivenOreFeature.INSTANCE);
-		ForgeRegistries.DECORATORS.register(ConfigDrivenDecorator.INSTANCE);
+		// ForgeRegistries.FEATURES.register(ConfigDrivenOreFeature.INSTANCE);
+		// ForgeRegistries.DECORATORS.register(ConfigDrivenDecorator.INSTANCE);
 		entries.entrySet()
-			.forEach((entry) -> {
+			.forEach(entry -> {
 				Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, Create.ID + "_" + entry.getKey(),
 					entry.getValue()
 						.getFeature());
@@ -90,4 +92,11 @@ public class AllWorldFeatures {
 
 	public static void register() {}
 
+	public static void registerOreFeatures(RegistryEvent.Register<Feature<?>> event) {
+		event.getRegistry().register(ConfigDrivenOreFeature.INSTANCE);
+	}
+
+	public static void registerDecoratorFeatures(RegistryEvent.Register<Placement<?>> event) {
+		event.getRegistry().register(ConfigDrivenDecorator.INSTANCE);
+	}
 }
