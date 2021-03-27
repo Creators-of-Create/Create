@@ -54,6 +54,8 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         relight(pos, pole.getInstance());
 
         updateRotation(pole, hand, yRot, zRot, zRotPole);
+
+        beginFrame();
     }
 
     @Override

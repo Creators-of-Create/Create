@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 
 import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
 import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
+
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,14 +48,13 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
         materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(this, AllProgramSpecs.C_ACTOR, ActorModel::new));
     }
 
-    @Override
     public void tick() {
         actors.forEach(ActorInstance::tick);
     }
 
     @Override
-    public void beginFrame(double cameraX, double cameraY, double cameraZ) {
-        super.beginFrame(cameraX, cameraY, cameraZ);
+    public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
+        super.beginFrame(info, cameraX, cameraY, cameraZ);
 
         actors.forEach(ActorInstance::beginFrame);
     }

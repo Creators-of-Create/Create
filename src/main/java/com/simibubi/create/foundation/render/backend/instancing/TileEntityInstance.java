@@ -30,12 +30,13 @@ import java.util.stream.Stream;
  *
  * @param <T> The type of {@link TileEntity} your class is an instance of.
  */
-public abstract class TileEntityInstance<T extends TileEntity> {
+public abstract class TileEntityInstance<T extends TileEntity> implements IInstance {
 
     protected final InstancedTileRenderer<?> renderer;
     protected final T tile;
     protected final World world;
     protected final BlockPos pos;
+    protected final BlockPos instancePos;
     protected final BlockState blockState;
 
     public TileEntityInstance(InstancedTileRenderer<?> renderer, T tile) {
@@ -44,6 +45,7 @@ public abstract class TileEntityInstance<T extends TileEntity> {
         this.world = tile.getWorld();
         this.pos = tile.getPos();
         this.blockState = tile.getBlockState();
+        this.instancePos = pos.subtract(renderer.getOriginCoordinate());
     }
 
     /**
@@ -89,7 +91,12 @@ public abstract class TileEntityInstance<T extends TileEntity> {
      *         represents should be rendered at to appear in the correct location.
      */
     public BlockPos getInstancePosition() {
-        return pos.subtract(renderer.getOriginCoordinate());
+        return instancePos;
+    }
+
+    @Override
+    public BlockPos getWorldPosition() {
+        return pos;
     }
 
     protected void relight(BlockPos pos, IFlatLight<?>... models) {

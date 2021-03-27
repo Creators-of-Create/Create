@@ -17,11 +17,13 @@ import net.minecraft.util.Direction;
 
 public class HandCrankInstance extends SingleRotatingInstance implements IDynamicInstance {
 
+    private final HandCrankTileEntity tile;
     private InstanceKey<ModelData> crank;
     private Direction facing;
 
-    public HandCrankInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public HandCrankInstance(InstancedTileRenderer<?> modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
+        this.tile = tile;
 
         Block block = blockState.getBlock();
         AllBlockPartials renderedHandle = null;
@@ -33,16 +35,20 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
         facing = blockState.get(BlockStateProperties.FACING);
         InstancedModel<ModelData> model = renderedHandle.renderOnDirectionalSouthModel(modelManager, blockState, facing.getOpposite());
         crank = model.createInstance();
+
+        rotateCrank();
     }
 
     @Override
     public void beginFrame() {
         if (crank == null) return;
 
-        HandCrankTileEntity crankTile = (HandCrankTileEntity) tile;
+        rotateCrank();
+    }
 
+    private void rotateCrank() {
         Direction.Axis axis = facing.getAxis();
-        float angle = (crankTile.independentAngle + AnimationTickHolder.getPartialTicks() * crankTile.chasingVelocity) / 360;
+        float angle = (tile.independentAngle + AnimationTickHolder.getPartialTicks() * tile.chasingVelocity) / 360;
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker.of(ms)

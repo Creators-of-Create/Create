@@ -1,15 +1,5 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +17,16 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.function.Predicate;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllShapes;
+import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
 import static com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock.AXIS;
 
@@ -169,6 +169,10 @@ public class CogwheelBlockItem extends BlockItem {
 				for (Direction dir : directions) {
 					BlockPos newPos = pos.offset(dir)
 						.offset(side);
+
+					if (hasLargeCogwheelNeighbor(world, newPos, dir.getAxis()) || hasSmallCogwheelNeighbor(world, newPos, dir.getAxis()))
+						continue;
+
 					if (!world.getBlockState(newPos)
 						.getMaterial()
 						.isReplaceable())
@@ -225,30 +229,6 @@ public class CogwheelBlockItem extends BlockItem {
 					.subtract(ray.getHitVec()
 						.align(Iterate.axisSet)));
 		}
-
-		static public boolean hasLargeCogwheelNeighbor(World world, BlockPos pos, Direction.Axis axis) {
-			for (Direction dir : Iterate.directions) {
-				if (dir.getAxis() == axis)
-					continue;
-
-				if (AllBlocks.LARGE_COGWHEEL.has(world.getBlockState(pos.offset(dir))))
-					return true;
-			}
-
-			return false;
-		}
-
-		static public boolean hasSmallCogwheelNeighbor(World world, BlockPos pos, Direction.Axis axis) {
-			for (Direction dir : Iterate.directions) {
-				if (dir.getAxis() == axis)
-					continue;
-
-				if (AllBlocks.COGWHEEL.has(world.getBlockState(pos.offset(dir))))
-					return true;
-			}
-
-			return false;
-		}
 	}
 
 	@MethodsReturnNonnullByDefault
@@ -294,8 +274,8 @@ public class CogwheelBlockItem extends BlockItem {
 					.isReplaceable())
 					continue;
 
-				if (DiagonalCogHelper.hasLargeCogwheelNeighbor(world, newPos, newAxis)
-					|| DiagonalCogHelper.hasSmallCogwheelNeighbor(world, newPos, newAxis))
+				if (hasLargeCogwheelNeighbor(world, newPos, newAxis)
+					|| hasSmallCogwheelNeighbor(world, newPos, newAxis))
 					return PlacementOffset.fail();
 
 				return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));
@@ -303,5 +283,29 @@ public class CogwheelBlockItem extends BlockItem {
 
 			return PlacementOffset.fail();
 		}
+
+	}
+	static public boolean hasLargeCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
+		for (Direction dir : Iterate.directions) {
+			if (dir.getAxis() == axis)
+				continue;
+
+			if (AllBlocks.LARGE_COGWHEEL.has(world.getBlockState(pos.offset(dir))))
+				return true;
+		}
+
+		return false;
+	}
+
+	static public boolean hasSmallCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
+		for (Direction dir : Iterate.directions) {
+			if (dir.getAxis() == axis)
+				continue;
+
+			if (AllBlocks.COGWHEEL.has(world.getBlockState(pos.offset(dir))))
+				return true;
+		}
+
+		return false;
 	}
 }

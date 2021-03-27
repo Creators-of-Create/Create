@@ -31,6 +31,8 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
         fakeWorld = tile.getWorld() != Minecraft.getInstance().world;
         facing = blockState.get(StickerBlock.FACING);
         offset = blockState.get(StickerBlock.EXTENDED) ? 1 : 0;
+
+        animateHead(offset);
     }
 
     @Override
@@ -43,6 +45,12 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
         if (MathHelper.epsilonEquals(offset, lastOffset))
             return;
 
+        animateHead(offset);
+
+        lastOffset = offset;
+    }
+
+    private void animateHead(float offset) {
         MatrixStack stack = new MatrixStack();
         MatrixStacker.of(stack)
                      .translate(getInstancePosition())
@@ -55,8 +63,6 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
         head.getInstance()
             .setTransform(stack);
-
-        lastOffset = offset;
     }
 
     @Override
