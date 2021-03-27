@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility.placement;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -150,24 +152,12 @@ public class PlacementHelpers {
 
 		if (player != null && animationTick > 0) {
 			MainWindow res = event.getWindow();
-			//MatrixStack matrix = event.getMatrix();
-			//String text = "(  )";
 
-			//matrix.push();
-			//matrix.translate(res.getScaledWidth() / 2F, res.getScaledHeight() / 2f - 4, 0);
 			float screenY = res.getScaledHeight() / 2f;
 			float screenX = res.getScaledWidth() / 2f;
-			//float y = screenY - 3.5f;
-			//float x = screenX;
-			//x -= mc.fontRenderer.getStringWidth(text)/2f - 0.25f;
-
 			float progress = Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
-			//int opacity = ((int) (255 * (progress * progress))) << 24;
-
-			//mc.fontRenderer.drawString(text, x, y, 0xFFFFFF | opacity);
 
 			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
-			//matrix.pop();
 		}
 	}
 
@@ -205,13 +195,11 @@ public class PlacementHelpers {
 		float snappedAngle = (snapSize * Math.round(angle.get(0f) / snapSize)) % 360f;
 
 		float length = 10;
-		//TOD O if the target is off screen, use length to show a meaningful distance
 
-		boolean flag = AllConfigs.CLIENT.smoothPlacementIndicator.get();
-		if (flag)
+		CClient.PlacementIndicatorSetting mode = AllConfigs.CLIENT.placementIndicator.get();
+		if (mode == CClient.PlacementIndicatorSetting.TRIANGLE)
 			fadedArrow(ms, centerX, centerY, r, g, b, a, length, snappedAngle);
-
-		else
+		else if (mode == CClient.PlacementIndicatorSetting.TEXTURE)
 			textured(ms, centerX, centerY, a, snappedAngle);
 	}
 
@@ -231,15 +219,17 @@ public class PlacementHelpers {
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_COLOR);
 
-		bufferbuilder.vertex(0, - (10 + length), 0).color(r, g, b, a).endVertex();
+		Matrix4f mat = ms.peek().getModel();
 
-		bufferbuilder.vertex(-9, -3, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(-6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(-3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(0, -8.5, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(9, -3, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, 0, - (10 + length), 0).color(r, g, b, a).endVertex();
+
+		bufferbuilder.vertex(mat, -9, -3, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, -6, -6, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, -3, -8, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, 0, -8.5f, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, 3, -8, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, 6, -6, 0).color(r, g, b, 0f).endVertex();
+		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
 
 		tessellator.draw();
 		RenderSystem.shadeModel(GL11.GL_FLAT);
@@ -252,19 +242,13 @@ public class PlacementHelpers {
 	private static void textured(MatrixStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
 		ms.push();
 		RenderSystem.enableTexture();
-		//RenderSystem.disableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
 		RenderSystem.enableBlend();
-		//RenderSystem.disableAlphaTest();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.color4f(1f, 1f, 1f, 1f);
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		ms.translate(centerX, centerY, 0);
-		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
-		//RenderSystem.translated(0, 10, 0);
-		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, 1);
 		ms.scale(12, 12, 0);
 
 		float index = snappedAngle / 22.5f;
@@ -279,19 +263,16 @@ public class PlacementHelpers {
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEXTURE);
 
-
-		buffer.vertex(-1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty).endVertex();
-		buffer.vertex(-1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty + th).endVertex();
-		buffer.vertex(1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty + th).endVertex();
-		buffer.vertex(1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty).endVertex();
+		Matrix4f mat = ms.peek().getModel();
+		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty).endVertex();
+		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty + th).endVertex();
+		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty + th).endVertex();
+		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty).endVertex();
 
 		tessellator.draw();
+
 		RenderSystem.shadeModel(GL11.GL_FLAT);
-
-		//RenderSystem.enableTexture();
-
 		RenderSystem.disableBlend();
-		//RenderSystem.enableAlphaTest();
 		ms.pop();
 	}
 
