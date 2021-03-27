@@ -21,7 +21,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -241,8 +240,7 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public Predicate<BlockState> getStatePredicate() {
-			return s -> !AllBlocks.COGWHEEL.has(s) && s.getBlock() instanceof IRotate
-				&& ((IRotate) s.getBlock()).hasIntegratedCogwheel(null, null, null);
+			return s -> !AllBlocks.COGWHEEL.has(s) && ICogWheel.isSmallCog(s);
 		}
 
 		@Override
@@ -285,7 +283,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 	}
-	static public boolean hasLargeCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
+	public static boolean hasLargeCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
 		for (Direction dir : Iterate.directions) {
 			if (dir.getAxis() == axis)
 				continue;
@@ -297,7 +295,7 @@ public class CogwheelBlockItem extends BlockItem {
 		return false;
 	}
 
-	static public boolean hasSmallCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
+	public static boolean hasSmallCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
 		for (Direction dir : Iterate.directions) {
 			if (dir.getAxis() == axis)
 				continue;

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -48,7 +49,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		BlockState above = context.getWorld()
 			.getBlockState(context.getPos()
 				.up());
-		if (CogWheelBlock.isLargeCog(above) && above.get(CogWheelBlock.AXIS)
+		if (ICogWheel.isLargeCog(above) && above.get(CogWheelBlock.AXIS)
 			.isHorizontal())
 			return getDefaultState().with(HORIZONTAL_AXIS, above.get(CogWheelBlock.AXIS) == Axis.X ? Axis.Z : Axis.X);
 		return super.getStateForPlacement(context);

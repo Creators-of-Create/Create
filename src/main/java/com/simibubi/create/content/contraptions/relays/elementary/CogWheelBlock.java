@@ -24,11 +24,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class CogWheelBlock extends AbstractShaftBlock {
+public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel{
 
 	boolean isLarge;
 
-	private CogWheelBlock(boolean large, Properties properties) {
+	protected CogWheelBlock(boolean large, Properties properties) {
 		super(properties);
 		isLarge = large;
 	}
@@ -41,12 +41,14 @@ public class CogWheelBlock extends AbstractShaftBlock {
 		return new CogWheelBlock(true, properties);
 	}
 
-	public static boolean isSmallCog(BlockState state) {
-		return AllBlocks.COGWHEEL.has(state);
+	@Override
+	public boolean isLargeCog() {
+		return isLarge;
 	}
 
-	public static boolean isLargeCog(BlockState state) {
-		return AllBlocks.LARGE_COGWHEEL.has(state);
+	@Override
+	public boolean isSmallCog() {
+		return !isLarge;
 	}
 
 	@Override
@@ -65,11 +67,9 @@ public class CogWheelBlock extends AbstractShaftBlock {
 			if (blockState.has(AXIS) && facing.getAxis() == blockState.get(AXIS))
 				continue;
 
-			boolean smallCog = isSmallCog(blockState);
-			if (!smallCog && blockState.getBlock() instanceof IRotate)
-				smallCog = ((IRotate) blockState.getBlock()).hasIntegratedCogwheel(worldIn, offsetPos, blockState);
+			boolean smallCog = ICogWheel.isSmallCog(blockState);
 
-			if (isLargeCog(blockState) || isLarge && smallCog)
+			if (ICogWheel.isLargeCog(blockState) || isLarge && smallCog)
 				return false;
 		}
 		return true;
@@ -100,8 +100,7 @@ public class CogWheelBlock extends AbstractShaftBlock {
 				.with(AXIS, stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X);
 		}
 
-		if (!(block instanceof IRotate)
-			|| !(((IRotate) block).hasIntegratedCogwheel(world, placedOnPos, placedAgainst))) {
+		if (!ICogWheel.isSmallCog(placedAgainst)) {
 			Axis preferredAxis = getPreferredAxis(context);
 			if (preferredAxis != null)
 				return this.getDefaultState()
@@ -128,12 +127,5 @@ public class CogWheelBlock extends AbstractShaftBlock {
 
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
 		items.add(new ItemStack(this));
-	}
-
-	// IRotate
-
-	@Override
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
-		return !isLarge;
 	}
 }
