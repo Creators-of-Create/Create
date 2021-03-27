@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
+import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
@@ -40,6 +41,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -131,8 +134,8 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		if (world.isRemote() && world instanceof ClientWorld) {
-			CreateClient.invalidateRenderers();
+		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
+			CreateClient.invalidateRenderers(world);
 			AnimationTickHolder.reset();
 			KineticRenderer renderer = CreateClient.kineticRenderer.get(world);
 			renderer.invalidate();
