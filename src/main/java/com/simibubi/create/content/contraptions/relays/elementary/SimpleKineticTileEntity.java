@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import java.util.List;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -34,7 +33,7 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 	@Override
 	public List<BlockPos> addPropagationLocations(IRotate block, BlockState state, List<BlockPos> neighbours) {
-		if (!AllBlocks.LARGE_COGWHEEL.has(state))
+		if (!ICogWheel.isLargeCog(state))
 			return super.addPropagationLocations(block, state, neighbours);
 
 		BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
