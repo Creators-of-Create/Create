@@ -28,7 +28,6 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 		plate = getTransformMaterial().getModel(AllBlockPartials.EJECTOR_TOP, blockState).createInstance();
 
 		pivotPlate();
-		updateLight();
 	}
 
 	@Override

@@ -14,25 +14,25 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
     private final InstanceKey<ModelData> pressHead;
+    private final MechanicalPressTileEntity press;
 
-    public PressInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+    public PressInstance(InstancedTileRenderer<?> dispatcher, MechanicalPressTileEntity tile) {
         super(dispatcher, tile);
+        press = tile;
 
         pressHead = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontalModel(dispatcher, blockState).createInstance();
-
-        transformModels((MechanicalPressTileEntity) tile);
+        transformModels();
     }
 
     @Override
     public void beginFrame() {
-        MechanicalPressTileEntity press = (MechanicalPressTileEntity) tile;
         if (!press.running)
             return;
 
-        transformModels(press);
+        transformModels();
     }
 
-    private void transformModels(MechanicalPressTileEntity press) {
+    private void transformModels() {
         float renderedHeadOffset = getRenderedHeadOffset(press);
 
         MatrixStack ms = new MatrixStack();

@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.instancing.*;
@@ -31,10 +30,11 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	private final ArrayList<InstanceKey<ModelData>> clawGrips;
 
 	private final ArrayList<InstanceKey<ModelData>> models;
+	private final ArmTileEntity arm;
 
 	private boolean firstTick = true;
 
-	public ArmInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+	public ArmInstance(InstancedTileRenderer<?> modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
 
 		RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
@@ -51,40 +51,41 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
+		arm = tile;
+
+		animateArm(false);
 	}
 
 	@Override
 	public void beginFrame() {
-		ArmTileEntity arm = (ArmTileEntity) tile;
 
 		boolean settled = arm.baseAngle.settled() && arm.lowerArmAngle.settled() && arm.upperArmAngle.settled() && arm.headAngle.settled();
 		boolean rave = arm.phase == ArmTileEntity.Phase.DANCING;
 
 		if (!settled || rave || firstTick)
-			transformModels(arm, rave);
+			animateArm(rave);
 
 		if (settled)
 			firstTick = false;
 	}
 
-	private void transformModels(ArmTileEntity arm, boolean rave) {
+	private void animateArm(boolean rave) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		int color = 0xFFFFFF;
 
-		float baseAngle = arm.baseAngle.get(pt);
-		float lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
-		float upperArmAngle = arm.upperArmAngle.get(pt) - 90;
-		float headAngle = arm.headAngle.get(pt);
+		float baseAngle = this.arm.baseAngle.get(pt);
+		float lowerArmAngle = this.arm.lowerArmAngle.get(pt) - 135;
+		float upperArmAngle = this.arm.upperArmAngle.get(pt) - 90;
+		float headAngle = this.arm.headAngle.get(pt);
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(arm.getWorld()) + (tile.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
 			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
 		}
-
 
 		MatrixStack msLocal = new MatrixStack();
 		MatrixStacker msr = MatrixStacker.of(msLocal);
@@ -116,7 +117,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		claw.getInstance()
 				.setTransform(msLocal);
 
-		ItemStack item = arm.heldItem;
+		ItemStack item = this.arm.heldItem;
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 				.getItemRenderer();
 		boolean hasItem = !item.isEmpty();

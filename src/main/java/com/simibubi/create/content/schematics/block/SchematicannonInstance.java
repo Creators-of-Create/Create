@@ -20,6 +20,8 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
+
+        beginFrame();
     }
 
     @Override

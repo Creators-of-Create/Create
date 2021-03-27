@@ -34,8 +34,6 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
             keys.add(setup(half.createInstance(), splitSpeed));
         }
-
-        updateLight();
     }
 
     @Override
