@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.function.Predicate;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
@@ -99,7 +98,7 @@ public class CogwheelBlockItem extends BlockItem {
 							continue;
 						if (blockState.get(CogWheelBlock.AXIS) != axis)
 							continue;
-						if (AllBlocks.LARGE_COGWHEEL.has(blockState) == large)
+						if (ICogWheel.isLargeCog(blockState) == large)
 							continue;
 						AllTriggers.triggerFor(AllTriggers.SHIFTING_GEARS, player);
 					}
@@ -113,7 +112,7 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
-			return AllBlocks.COGWHEEL::isIn;
+			return ((Predicate<ItemStack>) ICogWheel::isSmallCogItem).and(ICogWheel::isDedicatedCogItem);
 		}
 
 		@Override
@@ -128,7 +127,7 @@ public class CogwheelBlockItem extends BlockItem {
 				for (Direction dir : directions) {
 					BlockPos newPos = pos.offset(dir);
 
-					if (hasLargeCogwheelNeighbor(world, newPos, state.get(AXIS)))
+					if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, state.get(AXIS)))
 						continue;
 
 					if (!world.getBlockState(newPos)
@@ -152,7 +151,7 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
-			return AllBlocks.LARGE_COGWHEEL::isIn;
+			return ((Predicate<ItemStack>) ICogWheel::isLargeCogItem).and(ICogWheel::isDedicatedCogItem);
 		}
 
 		@Override
@@ -169,7 +168,7 @@ public class CogwheelBlockItem extends BlockItem {
 					BlockPos newPos = pos.offset(dir)
 						.offset(side);
 
-					if (hasLargeCogwheelNeighbor(world, newPos, dir.getAxis()) || hasSmallCogwheelNeighbor(world, newPos, dir.getAxis()))
+					if (!CogWheelBlock.isValidCogwheelPosition(true, world, newPos, dir.getAxis()))
 						continue;
 
 					if (!world.getBlockState(newPos)
@@ -211,7 +210,7 @@ public class CogwheelBlockItem extends BlockItem {
 					.isReplaceable())
 					continue;
 
-				if (AllBlocks.COGWHEEL.has(state) && hasSmallCogwheelNeighbor(world, newPos, state.get(AXIS)))
+				if (!CogWheelBlock.isValidCogwheelPosition(ICogWheel.isLargeCog(state), world, newPos, state.get(AXIS)))
 					continue;
 
 				return PlacementOffset.success(newPos, s -> s.with(AXIS, state.get(AXIS)));
@@ -235,12 +234,12 @@ public class CogwheelBlockItem extends BlockItem {
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
-			return AllBlocks.LARGE_COGWHEEL::isIn;
+			return ((Predicate<ItemStack>) ICogWheel::isLargeCogItem).and(ICogWheel::isDedicatedCogItem);
 		}
 
 		@Override
 		public Predicate<BlockState> getStatePredicate() {
-			return s -> !AllBlocks.COGWHEEL.has(s) && ICogWheel.isSmallCog(s);
+			return s -> !ICogWheel.isDedicatedCogWheel(s.getBlock()) && ICogWheel.isSmallCog(s);
 		}
 
 		@Override
@@ -272,8 +271,7 @@ public class CogwheelBlockItem extends BlockItem {
 					.isReplaceable())
 					continue;
 
-				if (hasLargeCogwheelNeighbor(world, newPos, newAxis)
-					|| hasSmallCogwheelNeighbor(world, newPos, newAxis))
+				if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, newAxis))
 					return PlacementOffset.fail();
 
 				return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));
@@ -282,28 +280,5 @@ public class CogwheelBlockItem extends BlockItem {
 			return PlacementOffset.fail();
 		}
 
-	}
-	public static boolean hasLargeCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
-		for (Direction dir : Iterate.directions) {
-			if (dir.getAxis() == axis)
-				continue;
-
-			if (AllBlocks.LARGE_COGWHEEL.has(world.getBlockState(pos.offset(dir))))
-				return true;
-		}
-
-		return false;
-	}
-
-	public static boolean hasSmallCogwheelNeighbor(World world, BlockPos pos, Axis axis) {
-		for (Direction dir : Iterate.directions) {
-			if (dir.getAxis() == axis)
-				continue;
-
-			if (AllBlocks.COGWHEEL.has(world.getBlockState(pos.offset(dir))))
-				return true;
-		}
-
-		return false;
 	}
 }

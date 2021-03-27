@@ -59,8 +59,12 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.get(AXIS));
+	}
+
+	public static boolean isValidCogwheelPosition(boolean large, IWorldReader worldIn, BlockPos pos, Axis cogAxis) {
 		for (Direction facing : Iterate.directions) {
-			if (facing.getAxis() == state.get(AXIS))
+			if (facing.getAxis() == cogAxis)
 				continue;
 
 			BlockPos offsetPos = pos.offset(facing);
@@ -68,7 +72,7 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 			if (blockState.has(AXIS) && facing.getAxis() == blockState.get(AXIS))
 				continue;
 
-			if (ICogWheel.isLargeCog(blockState) || isLargeCog() && ICogWheel.isSmallCog(blockState))
+			if (ICogWheel.isLargeCog(blockState) || large && ICogWheel.isSmallCog(blockState))
 				return false;
 		}
 		return true;
@@ -111,5 +115,10 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	@Override
 	public float getParticleInitialRadius() {
 		return isLargeCog() ? 1f : .75f;
+	}
+
+	@Override
+	public boolean isDedicatedCogWheel() {
+		return true;
 	}
 }
