@@ -38,6 +38,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -93,9 +94,9 @@ public class ContraptionRenderDispatcher {
         return contraption;
     }
 
-    public static void beginFrame(double camX, double camY, double camZ) {
+    public static void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
         for (RenderedContraption renderer : renderers.values()) {
-            renderer.beginFrame(camX, camY, camZ);
+            renderer.beginFrame(info, camX, camY, camZ);
         }
     }
 

@@ -59,8 +59,8 @@ public class RenderHooksMixin {
         double camY = cameraPos.getY();
         double camZ = cameraPos.getZ();
 
-        CreateClient.kineticRenderer.get(world).beginFrame(camX, camY, camZ);
-        ContraptionRenderDispatcher.beginFrame(camX, camY, camZ);
+        CreateClient.kineticRenderer.get(world).beginFrame(info, camX, camY, camZ);
+        ContraptionRenderDispatcher.beginFrame(info, camX, camY, camZ);
     }
 
     @Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")

@@ -16,10 +16,23 @@ package com.simibubi.create.foundation.render.backend.instancing;
  *     </li>
  * </ul>
  */
-public interface ITickableInstance {
+public interface ITickableInstance extends IInstance {
 
 	/**
 	 * Called every tick.
 	 */
 	void tick();
+
+	/**
+	 * As a further optimization, tickable instances that are far away are ticked less often.
+	 * This behavior can be disabled by returning false.
+	 *
+	 * <br> You might want to opt out of this if you want your animations to remain smooth
+	 * even when far away from the camera. It is recommended to keep this as is, however.
+	 *
+	 * @return <code>true</code> if your instance should be slow ticked.
+	 */
+	default boolean decreaseTickRateWithDistance() {
+		return true;
+	}
 }

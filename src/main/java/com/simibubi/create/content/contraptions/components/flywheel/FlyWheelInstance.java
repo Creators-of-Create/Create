@@ -36,10 +36,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     protected InstanceKey<ModelData> upperSliding;
     protected InstanceKey<ModelData> lowerSliding;
 
-
     protected float lastAngle = Float.NaN;
-
-    protected boolean firstFrame = true;
 
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
         super(modelManager, tile);
@@ -69,6 +66,8 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         } else {
             connectors = Collections.emptyList();
         }
+
+        animate(tile.angle);
     }
 
     @Override
@@ -79,8 +78,14 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         float speed = tile.visualSpeed.get(partialTicks) * 3 / 10f;
         float angle = tile.angle + speed * partialTicks;
 
-        if (!firstFrame && Math.abs(angle - lastAngle) < 0.001) return;
+        if (Math.abs(angle - lastAngle) < 0.001) return;
 
+        animate(angle);
+
+        lastAngle = angle;
+    }
+
+    private void animate(float angle) {
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
@@ -120,9 +125,6 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
            .unCentre();
 
         wheel.getInstance().setTransform(ms);
-
-        lastAngle = angle;
-        firstFrame = false;
     }
 
     @Override

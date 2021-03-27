@@ -31,16 +31,16 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
         rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
 
-        setupModel();
+        animateLever();
     }
 
     @Override
     public void beginFrame() {
         if (!tile.clientState.settled())
-            setupModel();
+            animateLever();
     }
 
-    protected void setupModel() {
+    protected void animateLever() {
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
 
