@@ -302,22 +302,27 @@ public class EjectorTileEntity extends KineticTileEntity {
 		}
 
 		if (state == State.RETRACTING) {
-			lidProgress.updateChaseSpeed(0);
-			if (lidProgress.getValue() == 0 && doLogic) {
-				state = State.CHARGED;
-				lidProgress.setValue(0);
-				sendData();
+			if (lidProgress.getChaseTarget() == 1 && !lidProgress.settled()) {
+				lidProgress.tickChaser();
+			} else {
+				lidProgress.updateChaseTarget(0);
+				lidProgress.updateChaseSpeed(0);
+				if (lidProgress.getValue() == 0 && doLogic) {
+					state = State.CHARGED;
+					lidProgress.setValue(0);
+					sendData();
+				}
+
+				float value = MathHelper.clamp(lidProgress.getValue() - getWindUpSpeed(), 0, 1);
+				lidProgress.setValue(value);
+
+				int soundRate = (int) (1 / (getWindUpSpeed() * 5)) + 1;
+				float volume = .125f;
+				float pitch = 1.5f - lidProgress.getValue();
+				if (((int) world.getGameTime()) % soundRate == 0 && doLogic)
+					world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
+						pitch);
 			}
-
-			float value = MathHelper.clamp(lidProgress.getValue() - getWindUpSpeed(), 0, 1);
-			lidProgress.setValue(value);
-
-			int soundRate = (int) (1 / (getWindUpSpeed() * 5)) + 1;
-			float volume = .125f;
-			float pitch = 1.5f - lidProgress.getValue();
-			if (((int) world.getGameTime()) % soundRate == 0 && doLogic)
-				world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
-					pitch);
 		}
 
 		if (state != prevState)
@@ -509,10 +514,6 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 	public void setTarget(int horizontalDistance, int verticalDistance) {
 		launcher.set(Math.max(1, horizontalDistance), verticalDistance);
-		if (horizontalDistance == 0 && verticalDistance == 0) {
-			state = State.CHARGED;
-			lidProgress.startWithValue(0);
-		}
 		sendData();
 	}
 

@@ -480,15 +480,16 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();
-	
-	public static final BlockEntry<EjectorBlock> WEIGHTED_EJECTOR = REGISTRATE.block("weighted_ejector", EjectorBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(Block.Properties::nonOpaque)
-		.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
-		.transform(StressConfigDefaults.setImpact(2.0))
-		.item(EjectorItem::new)
-		.transform(customItemModel())
-		.register();
+
+	public static final BlockEntry<EjectorBlock> WEIGHTED_EJECTOR =
+		REGISTRATE.block("weighted_ejector", EjectorBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(Block.Properties::nonOpaque)
+			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
+			.transform(StressConfigDefaults.setImpact(2.0))
+			.item(EjectorItem::new)
+			.transform(customItemModel())
+			.register();
 
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
@@ -906,6 +907,15 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
+	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
+		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.onRegister(addMovementBehaviour(new ContactMovementBehaviour()))
+			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.item()
+			.transform(customItemModel("_", "block"))
+			.register();
+
 	public static final BlockEntry<HarvesterBlock> MECHANICAL_HARVESTER =
 		REGISTRATE.block("mechanical_harvester", HarvesterBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -1148,15 +1158,6 @@ public class AllBlocks {
 		REGISTRATE.block("brass_tunnel", BrassTunnelBlock::new)
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
 			.onRegister(connectedTextures(new BrassTunnelCTBehaviour()))
-			.register();
-
-	public static final BlockEntry<RedstoneContactBlock> REDSTONE_CONTACT =
-		REGISTRATE.block("redstone_contact", RedstoneContactBlock::new)
-			.initialProperties(SharedProperties::stone)
-			.onRegister(addMovementBehaviour(new ContactMovementBehaviour()))
-			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.item()
-			.transform(customItemModel("_", "block"))
 			.register();
 
 	public static final BlockEntry<ContentObserverBlock> CONTENT_OBSERVER =

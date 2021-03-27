@@ -369,7 +369,6 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
-		SuperRenderTypeBuffer.vertexSortingOrigin = new BlockPos(0, 0, 800);
 		renderScene(mouseX, mouseY, index, partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
@@ -388,12 +387,20 @@ public class PonderUI extends NavigatableSimiScreen {
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
 
+		RenderSystem.pushMatrix();
+		
+		// has to be outside of MS transforms, important for vertex sorting
+		RenderSystem.translated(0, 0, 800);
+
 		ms.push();
+		ms.translate(0, 0, -800);
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms, partialTicks, false);
 		story.transform.updateSceneRVE(partialTicks);
 		story.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
+
+		RenderSystem.popMatrix();
 
 		MutableBoundingBox bounds = story.getBounds();
 		RenderSystem.pushMatrix();
@@ -931,12 +938,6 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	public void coolDownAfterSkip() {
 		skipCooling = 15;
-	}
-
-	@Override
-	public void removed() {
-		super.removed();
-		SuperRenderTypeBuffer.vertexSortingOrigin = BlockPos.ZERO;
 	}
 
 }
