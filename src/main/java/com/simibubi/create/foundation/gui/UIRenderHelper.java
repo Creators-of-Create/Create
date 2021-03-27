@@ -103,16 +103,16 @@ public class UIRenderHelper {
 	}
 
 	//draws a wide chevron-style breadcrumb arrow pointing left
-	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int width, int height, int indent, int startColor, int endColor) {
+	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, int startColor, int endColor) {
 		matrixStack.push();
-		matrixStack.translate(x - indent, y, 0);
+		matrixStack.translate(x - indent, y, z);
 
-		breadcrumbArrow(width, height, indent, startColor, endColor);
+		breadcrumbArrow(matrixStack, width, height, indent, startColor, endColor);
 
 		matrixStack.pop();
 	}
 
-	private static void breadcrumbArrow(int width, int height, int indent, int c1, int c2) {
+	private static void breadcrumbArrow(MatrixStack ms, int width, int height, int indent, int c1, int c2) {
 
 		/*
 		* 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
@@ -125,16 +125,18 @@ public class UIRenderHelper {
 		*
 		* */
 
-		double x0 = 0, y0 = height / 2d;
-		double x1 = indent, y1 = 0;
-		double x2 = indent, y2 = height / 2d;
-		double x3 = indent, y3 = height;
-		double x4 = width, y4 = 0;
-		double x5 = width, y5 = height / 2d;
-		double x6 = width, y6 = height;
-		double x7 = indent + width, y7 = 0;
-		double x8 = indent + width, y8 = height;
+		float x0 = 0, y0 = height / 2f;
+		float x1 = indent, y1 = 0;
+		float x2 = indent, y2 = height / 2f;
+		float x3 = indent, y3 = height;
+		float x4 = width, y4 = 0;
+		float x5 = width, y5 = height / 2f;
+		float x6 = width, y6 = height;
+		float x7 = indent + width, y7 = 0;
+		float x8 = indent + width, y8 = height;
 
+		indent = Math.abs(indent);
+		width = Math.abs(width);
 		int fc1 = ColorHelper.mixAlphaColors(c1, c2, 0);
 		int fc2 = ColorHelper.mixAlphaColors(c1, c2, (indent)/(width + 2f * indent));
 		int fc3 = ColorHelper.mixAlphaColors(c1, c2, (indent + width)/(width + 2f * indent));
@@ -142,41 +144,44 @@ public class UIRenderHelper {
 
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
+		RenderSystem.disableCull();
 		RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		Matrix4f model = ms.peek().getModel();
 		bufferbuilder.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR);
 
-		bufferbuilder.vertex(x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
 
-		bufferbuilder.vertex(x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
 
-		bufferbuilder.vertex(x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
 
-		bufferbuilder.vertex(x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
 
-		bufferbuilder.vertex(x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x7, y7, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x7, y7, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
 
-		bufferbuilder.vertex(x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(x8, y8, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x8, y8, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
 
 		tessellator.draw();
 		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
+		RenderSystem.enableCull();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
 	}

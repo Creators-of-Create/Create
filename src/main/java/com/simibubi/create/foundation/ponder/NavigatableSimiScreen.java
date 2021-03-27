@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.ponder;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -115,7 +114,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		Screen lastScreen = ScreenOpener.getPreviouslyRenderedScreen();
 		float transitionValue = transition.getValue(partialTicks);
-		double scale = 1 + 0.5 * transitionValue;
+		float scale = 1 + 0.5f * transitionValue;
 
 		// draw last screen into buffer
 		if (lastScreen != null && lastScreen != this) {
@@ -152,7 +151,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		}
 
 		// modify current screen as well
-		scale = transitionValue > 0 ? 1 - 0.5 * (1 - transitionValue) : 1 + .5 * (1 + transitionValue);
+		scale = transitionValue > 0 ? 1 - 0.5f * (1 - transitionValue) : 1 + .5f * (1 + transitionValue);
 		ms.translate(depthPointX, depthPointY, 0);
 		ms.scale((float) scale, (float) scale, 1);
 		ms.translate(-depthPointX, -depthPointY, 0);
@@ -162,10 +161,10 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
 
-			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 30, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
 		}
 	}
 
@@ -223,7 +222,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.translate(0, 0, 600);
 		names.forEach(s -> {
 			int sWidth = textRenderer.getStringWidth(s);
-			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), sWidth + spacing, 14, spacing / 2, 0xdd101010,
+			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2, 0xdd101010,
 				0x44101010);
 			textRenderer.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
 			first.setFalse();

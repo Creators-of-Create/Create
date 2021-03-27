@@ -62,12 +62,6 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		items.clear();
 		PonderRegistry.tags.getItems(tag)
 			.stream()
-			.filter(rl -> tag.getMainItem()
-				.isEmpty()
-				|| !tag.getMainItem()
-					.getItem()
-					.getRegistryName()
-					.equals(rl))
 			.map(key -> {
 				Item item = ForgeRegistries.ITEMS.getValue(key);
 				if (item == null) {
@@ -79,6 +73,9 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			})
 			.filter(Objects::nonNull)
 			.forEach(items::add);
+
+		if (!tag.getMainItem().isEmpty())
+			items.remove(tag.getMainItem().getItem());
 
 		int rowCount = MathHelper.clamp((int) Math.ceil(items.size() / 11d), 1, 3);
 		LayoutHelper layout = LayoutHelper.centeredHorizontal(items.size(), rowCount, 28, 28, 8);
@@ -108,22 +105,21 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			layout.next();
 		}
 
-		if (!tag.getMainItem()
-			.isEmpty()) {
+		if (!tag.getMainItem().isEmpty()) {
 			ResourceLocation registryName = tag.getMainItem()
-				.getItem()
-				.getRegistryName();
+					.getItem()
+					.getRegistryName();
 			final boolean canClick = PonderRegistry.all.containsKey(registryName);
 			PonderButton button =
-				new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
-					if (!canClick)
-						return;
-					centerScalingOn(mouseX, mouseY);
-					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
-				}).showing(tag.getMainItem());
+					new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
+						if (!canClick)
+							return;
+						centerScalingOn(mouseX, mouseY);
+						ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
+					}).showing(tag.getMainItem());
 			if (!canClick)
 				if (registryName.getNamespace()
-					.equals(Create.ID))
+						.equals(Create.ID))
 					button.customColors(0x70984500, 0x70692400);
 				else
 					button.customColors(0x505000FF, 0x50300077);
@@ -184,14 +180,14 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.translate(width / 2 - 120, height * mainYmult - 40, 0);
 
 		ms.push();
-		ms.translate(0, 0, 800);
+		//ms.translate(0, 0, 800);
 		int x = 31 + 20 + 8;
 		int y = 31;
 
 		String title = tag.getTitle();
 
 		int streakHeight = 35;
-		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (240), 0x101010);
+		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240, 0x101010);
 		PonderUI.renderBox(ms, 21, 21, 30, 30, false);
 
 		textRenderer.draw(ms, Lang.translate(PonderUI.PONDERING), x, y - 6, 0xffa3a3a3);
@@ -203,7 +199,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.pop();
 
 		ms.push();
-		ms.translate(23, 23, 0);
+		ms.translate(23, 23, 10);
 		ms.scale(1.66f, 1.66f, 1.66f);
 		tag.draw(ms, this, 0, 0);
 		ms.pop();
@@ -241,6 +237,8 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 //		UIRenderHelper.streak(0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 180, 0x101010);
 		drawCenteredString(ms, textRenderer, relatedTitle, sWidth / 2, itemArea.getY() - 20, 0xeeeeee);
+
+		ms.translate(0,0, -200);
 
 		UIRenderHelper.streak(ms, 0, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75, 0x101010);
 		UIRenderHelper.streak(ms, 180, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75, 0x101010);

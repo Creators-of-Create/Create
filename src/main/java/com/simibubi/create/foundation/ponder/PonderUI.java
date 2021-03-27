@@ -386,7 +386,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		MutableBoundingBox bounds = story.getBounds();
 		ms.push();
-		ms.peek().getModel().multiply(ms.peek().getModel());
+		//ms.peek().getModel().multiply(ms.peek().getModel());
 
 		// kool shadow fx
 		{
@@ -394,7 +394,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			RenderSystem.enableDepthTest();
 			ms.push();
 			ms.translate(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
-			ms.translate(1, -1, 1);
+			ms.scale(1, -1, 1);
 
 			float flash = finishingFlash.getValue(partialTicks) * .9f;
 			float alpha = flash;
@@ -531,10 +531,10 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.pop();
 			}
 
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 20, height - 51, 20, 20, 5, 0x40aa9999, 0x20aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 20, height - 51, -20, 20, -5, 0x40aa9999, 0x20aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 90, height - 51, 70, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 90, height - 51, -70, 20, -5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 20, height - 51, 0, 20, 20, 5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 20, height - 51, 0, -20, 20, -5, 0x40aa9999, 0x20aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 90, height - 51, 0, 70, 20, 5, 0x40aa9999, 0x10aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 90, height - 51, 0, -70, 20, -5, 0x40aa9999, 0x10aa9999);
 		}
 
 		if (identifyMode) {

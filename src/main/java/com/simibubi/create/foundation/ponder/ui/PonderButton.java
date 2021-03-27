@@ -110,6 +110,7 @@ public class PonderButton extends AbstractSimiWidget {
 		borderColorStart = ColorHelper.applyAlpha(borderColorStart, fade);
 		borderColorEnd = ColorHelper.applyAlpha(borderColorEnd, fade);
 
+		ms.translate(0, 0, 300);
 		PonderUI.renderBox(ms, x, y, width, height, backgroundColor, borderColorStart, borderColorEnd);
 		ms.translate(0, 0, 100);
 
