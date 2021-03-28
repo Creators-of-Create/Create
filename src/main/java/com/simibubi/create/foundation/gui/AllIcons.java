@@ -123,7 +123,8 @@ public class AllIcons implements IScreenRenderable {
 		I_MTD_RIGHT = next(),
 		I_MTD_SCAN = next(),
 		I_MTD_REPLAY = next(),
-		I_MTD_USER_MODE = next();
+		I_MTD_USER_MODE = next(),
+		I_MTD_SLOW_MODE = next();
 	
 	public AllIcons(int x, int y) {
 		iconX = x * 16;
