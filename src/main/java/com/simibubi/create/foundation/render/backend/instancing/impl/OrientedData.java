@@ -35,14 +35,6 @@ public class OrientedData extends BasicData {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());
 	}
 
-	public OrientedData setPosition(int x, int y, int z) {
-		BlockPos origin = owner.renderer.getOriginCoordinate();
-
-		return setPosition((float) (x - origin.getX()),
-				(float) (y - origin.getY()),
-				(float) (z - origin.getZ()));
-	}
-
 	public OrientedData setPosition(float x, float y, float z) {
 		this.posX = x;
 		this.posY = y;

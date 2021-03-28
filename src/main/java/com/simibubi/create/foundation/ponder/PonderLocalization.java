@@ -80,6 +80,7 @@ public class PonderLocalization {
 		addGeneral(object, PonderUI.PREVIOUS, "Previous Scene");
 		addGeneral(object, PonderUI.REPLAY, "Replay");
 		addGeneral(object, PonderUI.THINK_BACK, "Think Back");
+		addGeneral(object, PonderUI.SLOW_TEXT, "Comfy Reading");
 
 		shared.forEach((k, v) -> object.addProperty(Create.ID + "." + langKeyForShared(k), v));
 		tag.forEach((k, v) -> {

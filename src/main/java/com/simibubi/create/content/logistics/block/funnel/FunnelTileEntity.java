@@ -1,17 +1,14 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
@@ -27,18 +24,12 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -342,48 +333,6 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	public void onTransfer(ItemStack stack) {
 		AllBlocks.CONTENT_OBSERVER.get()
 			.onFunnelTransfer(world, pos, stack);
-	}
-
-	@Override
-	// Hint players not to use funnels like 0.2 transposers
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
-		if (isPlayerSneaking)
-			return false;
-		BlockState state = getBlockState();
-		if (!(state.getBlock() instanceof FunnelBlock))
-			return false;
-		Direction funnelFacing = FunnelBlock.getFunnelFacing(state);
-
-		if (world.getBlockState(pos.offset(funnelFacing.getOpposite()))
-			.getMaterial()
-			.isReplaceable())
-			return false;
-
-		BlockPos inputPos = pos.offset(funnelFacing);
-		TileEntity tileEntity = world.getTileEntity(inputPos);
-		if (tileEntity == null)
-			return false;
-		if (tileEntity instanceof BeltTileEntity)
-			return false;
-		if (tileEntity instanceof SawTileEntity)
-			return false;
-		if (tileEntity instanceof ChuteTileEntity)
-			return false;
-
-		LazyOptional<IItemHandler> capability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		if (!capability.isPresent())
-			return false;
-
-		if (funnelFacing == Direction.DOWN) {
-			TooltipHelper.addHint(tooltip, "hint.upward_funnel");
-			return true;
-		}
-		if (!funnelFacing.getAxis()
-			.isHorizontal())
-			return false;
-
-		TooltipHelper.addHint(tooltip, "hint.horizontal_funnel");
-		return true;
 	}
 
 	@Override

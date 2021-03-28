@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 561",
+	"_": "Missing Localizations: 562",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1127,10 +1127,6 @@
 	"create.hint.hose_pulley": "Целевой водный резервуар считается бесконечным.",
 	"create.hint.mechanical_arm_no_targets.title": "Нет целей",
 	"create.hint.mechanical_arm_no_targets": "Кажется, эта _Механическая рука_ не имеет никаких целей. Выберите _ремни_, _депо_, _воронки_, или другие блоки, с помощью _правого клика_, удерживая _Механическую руку_.",
-	"create.hint.horizontal_funnel.title": "Горизонтальные воронки",
-	"create.hint.horizontal_funnel": "Невозможно передавать предметы _напрямую_. Попробуйте запустить _механический ремень_ или _депо_ под вашей воронкой, чтобы извлекать предметы из присоеденённого инвентаря.",
-	"create.hint.upward_funnel.title": "Воронка направленна вверх",
-	"create.hint.upward_funnel": "Может перемещать только предметы, вставленные _рукой_, _желобами_ с вентиляторами, или брошенные на неё. Попробуйте использовать _желоба_, если вам нужно перемещать предметы по вертикали.",
 	"create.hint.empty_bearing.title": "Обновить подшипник",
 	"create.hint.empty_bearing": "_Правый клик_ по подшипнику _пустой рукой_, чтобы _присоединить_ к нему структуру, которую вы только что построили перед ним.",
 	"create.hint.full_deployer.title": "Переполнение автономного активатора",
@@ -1838,6 +1834,7 @@
 	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
 	"create.ponder.replay": "UNLOCALIZED: Replay",
 	"create.ponder.think_back": "UNLOCALIZED: Think Back",
+	"create.ponder.slow_text": "UNLOCALIZED: Comfy Reading",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",

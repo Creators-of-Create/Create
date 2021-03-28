@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 545",
+	"_": "Missing Localizations: 546",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1127,10 +1127,6 @@
 	"create.hint.hose_pulley": "La masa de fluido objetivo se considera infinita",
 	"create.hint.mechanical_arm_no_targets.title": "No hay objetivos",
 	"create.hint.mechanical_arm_no_targets": "Parece que a este _brazo mecánico_ no se le ha asignado ningún _objetivo._ Selecciona correas, depósitos, embudos y otros bloques haciendo _clic derecho_ sobre ellos mientras _sostienes_ el _brazo mecánico_ en tu _mano_.",
-	"create.hint.horizontal_funnel.title": "Embudos horizontales",
-	"create.hint.horizontal_funnel": "No puede transferir entre inventarios _directamente_. Intenta pasar una _correa_ o un _depósito_ por debajo de tu embudo para extraer artículos de los inventarios",
-	"create.hint.upward_funnel.title": "Embudos hacia arriba",
-	"create.hint.upward_funnel": "sólo pueden transferir objetos insertados por _brazos_, y _ductos_ impulsados por ventilador, o elementos _lanzados_ hacia ellos. Intenta construir algunos _ductos_ si quieres mover tus objetos _verticalmente_",
 	"create.hint.empty_bearing.title": "Rodamiento de reloj",
 	"create.hint.empty_bearing": "_Haz clic con el botón derecho del ratón_ en el rodamiento con la _mano vacía_ para _adherir_ la estructura que acabas de construir delante de él",
 	"create.hint.full_deployer.title": "Desbordamiento de elementos del desplegador",
@@ -1838,6 +1834,7 @@
 	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
 	"create.ponder.replay": "UNLOCALIZED: Replay",
 	"create.ponder.think_back": "UNLOCALIZED: Think Back",
+	"create.ponder.slow_text": "UNLOCALIZED: Comfy Reading",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",

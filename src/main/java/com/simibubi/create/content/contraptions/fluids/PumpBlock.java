@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllShapes;
@@ -31,7 +32,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable {
+public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable, ICogWheel {
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -80,11 +81,6 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
 		return AllShapes.PUMP.get(state.get(FACING));
-	}
-
-	@Override
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
-		return true;
 	}
 
 	@Override

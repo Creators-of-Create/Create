@@ -780,11 +780,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	REDSTONE_CONTACT = create(AllBlocks.REDSTONE_CONTACT).returns(2)
 		.unlockedBy(I::brassCasing)
 		.viaShaped(b -> b.key('W', I.redstone())
-			.key('D', I.brassCasing())
-			.key('S', I.iron())
-			.patternLine("WDW")
+			.key('C', Blocks.COBBLESTONE)
+			.key('S', I.ironSheet())
 			.patternLine(" S ")
-			.patternLine("WDW")),
+			.patternLine("CWC")
+			.patternLine("CCC")),
 
 		ANDESITE_FUNNEL = create(AllBlocks.ANDESITE_FUNNEL).returns(2)
 			.unlockedBy(I::andesite)

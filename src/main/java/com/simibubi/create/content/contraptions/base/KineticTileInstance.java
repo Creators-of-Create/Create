@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import net.minecraft.block.BlockState;
@@ -60,7 +61,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected float getRotationOffset(final Direction.Axis axis) {
-        float offset = CogWheelBlock.isLargeCog(blockState) ? 11.25f : 0;
+        float offset = ICogWheel.isLargeCog(blockState) ? 11.25f : 0;
         double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
                 + ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
         if (d == 0) {

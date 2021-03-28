@@ -1,26 +1,33 @@
 package com.simibubi.create.content.contraptions.components.press;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class PressInstance extends ShaftInstance implements IDynamicInstance {
 
-    private final InstanceKey<ModelData> pressHead;
+    private final InstanceKey<OrientedData> pressHead;
     private final MechanicalPressTileEntity press;
 
     public PressInstance(InstancedTileRenderer<?> dispatcher, MechanicalPressTileEntity tile) {
         super(dispatcher, tile);
         press = tile;
 
-        pressHead = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontalModel(dispatcher, blockState).createInstance();
+        pressHead = dispatcher.getOrientedMaterial()
+                .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
+                .createInstance();
+
+        Quaternion q = Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(blockState.get(MechanicalPressBlock.HORIZONTAL_FACING)));
+
+        pressHead.getInstance().setRotation(q);
+
         transformModels();
     }
 
@@ -35,14 +42,9 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
     private void transformModels() {
         float renderedHeadOffset = getRenderedHeadOffset(press);
 
-        MatrixStack ms = new MatrixStack();
-
-        MatrixStacker msr = MatrixStacker.of(ms);
-        msr.translate(getInstancePosition());
-        msr.translate(0, -renderedHeadOffset, 0);
-
         pressHead.getInstance()
-                 .setTransform(ms);
+                .setPosition(getInstancePosition())
+                .nudge(0, -renderedHeadOffset, 0);
     }
 
     private float getRenderedHeadOffset(MechanicalPressTileEntity press) {

@@ -36,7 +36,7 @@ public class EntityLauncher {
 	public void applyMotion(Entity entity, Direction facing) {
 		Vector3d motionVec = new Vector3d(0, yMotion, xMotion);
 		motionVec = VecHelper.rotate(motionVec, AngleHelper.horizontalAngle(facing), Axis.Y);
-		entity.setMotion(motionVec.x, motionVec.y, motionVec.z);
+		entity.setMotion(motionVec.x * .91, motionVec.y * .98, motionVec.z * .91);
 	}
 
 	public int getHorizontalDistance() {

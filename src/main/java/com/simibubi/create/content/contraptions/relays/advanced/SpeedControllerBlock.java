@@ -1,5 +1,16 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,18 +29,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
@@ -48,7 +52,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		BlockState above = context.getWorld()
 			.getBlockState(context.getPos()
 				.up());
-		if (CogWheelBlock.isLargeCog(above) && above.get(CogWheelBlock.AXIS)
+		if (ICogWheel.isLargeCog(above) && above.get(CogWheelBlock.AXIS)
 			.isHorizontal())
 			return getDefaultState().with(HORIZONTAL_AXIS, above.get(CogWheelBlock.AXIS) == Axis.X ? Axis.Z : Axis.X);
 		return super.getStateForPlacement(context);
@@ -82,7 +86,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	private static class PlacementHelper implements IPlacementHelper {
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
-			return AllBlocks.LARGE_COGWHEEL::isIn;
+			return ((Predicate<ItemStack>) ICogWheel::isLargeCogItem).and(ICogWheel::isDedicatedCogItem);
 		}
 
 		@Override
@@ -100,8 +104,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 			Axis newAxis = state.get(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
 
-			if (CogwheelBlockItem.hasLargeCogwheelNeighbor(world, newPos, newAxis)
-				|| CogwheelBlockItem.hasSmallCogwheelNeighbor(world, newPos, newAxis))
+			if (!CogWheelBlock.isValidCogwheelPosition(true, world, newPos, newAxis))
 				return PlacementOffset.fail();
 
 			return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));

@@ -120,8 +120,6 @@ public interface IRotate extends IWrenchable {
 	}
 
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
-	
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state);
 
 	public Axis getRotationAxis(BlockState state);
 
