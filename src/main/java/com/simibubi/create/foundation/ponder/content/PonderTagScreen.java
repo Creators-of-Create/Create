@@ -328,5 +328,11 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	public PonderTag getTag() {
 		return tag;
 	}
+	
+	@Override
+	public void removed() {
+		super.removed();
+		hoveredItem = ItemStack.EMPTY;
+	}
 
 }

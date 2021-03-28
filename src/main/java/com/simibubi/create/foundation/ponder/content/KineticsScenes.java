@@ -105,6 +105,7 @@ public class KineticsScenes {
 
 		scene.idle(10);
 		scene.overlay.showText(1000)
+			.placeNearTarget()
 			.text("Brass or Andesite Casing can be used to decorate Shafts")
 			.pointAt(util.vector.topOf(1, 1, 2));
 	}

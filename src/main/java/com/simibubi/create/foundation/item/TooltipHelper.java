@@ -16,10 +16,7 @@ import com.google.common.base.Strings;
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.AllSections;
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
-import com.simibubi.create.content.curiosities.tools.AllToolTiers;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
@@ -29,11 +26,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.TieredItem;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -165,12 +161,12 @@ public class TooltipHelper {
 			tooltip = tooltip.withSummary(I18n.format(summaryKey));
 
 		// Requirements
-		if (stack.getItem() instanceof BlockItem) {
-			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
-				tooltip = tooltip.withKineticStats(item.getBlock());
-			}
-		}
+//		if (stack.getItem() instanceof BlockItem) {
+//			BlockItem item = (BlockItem) stack.getItem();
+//			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+//				tooltip = tooltip.withKineticStats(item.getBlock());
+//			}
+//		}
 
 		// Behaviours
 		for (int i = 1; i < 100; i++) {
@@ -178,6 +174,8 @@ public class TooltipHelper {
 			String behaviourKey = translationKey + ".behaviour" + i;
 			if (!I18n.hasKey(conditionKey))
 				break;
+			if (i == 1)
+				tooltip.getLinesOnShift().add(new StringTextComponent(""));
 			tooltip.withBehaviour(I18n.format(conditionKey), I18n.format(behaviourKey));
 		}
 
@@ -195,14 +193,6 @@ public class TooltipHelper {
 
 	public static String getTooltipTranslationKey(ItemStack stack) {
 		Item item = stack.getItem();
-		if (item instanceof TieredItem) {
-			TieredItem tieredItem = (TieredItem) item;
-			if (tieredItem.getTier() instanceof AllToolTiers) {
-				AllToolTiers allToolTiers = (AllToolTiers) tieredItem.getTier();
-				return "tool.create." + Lang.asId(allToolTiers.name()) + ".tooltip";
-			}
-		}
-
 		if (tooltipReferrals.containsKey(item))
 			return tooltipReferrals.get(item).get() + ".tooltip";
 		return item.getTranslationKey(stack) + ".tooltip";

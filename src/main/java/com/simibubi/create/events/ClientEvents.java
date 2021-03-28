@@ -1,11 +1,16 @@
 package com.simibubi.create.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -24,6 +29,7 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
@@ -40,6 +46,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -47,9 +54,11 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,9 +75,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -113,7 +119,7 @@ public class ClientEvents {
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
-//		CollisionDebugger.tick();
+		//		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
@@ -143,7 +149,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld().isRemote()) {
+		if (event.getWorld()
+			.isRemote()) {
 			CreateClient.invalidateRenderers(event.getWorld());
 			AnimationTickHolder.reset();
 		}
@@ -151,7 +158,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		Vec3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
+			.getProjectedView();
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
@@ -164,7 +172,7 @@ public class ClientEvents {
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
 		CreateClient.outliner.renderOutlines(ms, buffer, pt);
-//		LightVolumeDebugger.render(ms, buffer);
+		//		LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -180,8 +188,8 @@ public class ClientEvents {
 			return;
 
 		onRenderHotbar(new MatrixStack(), Minecraft.getInstance()
-				.getBufferBuilders()
-				.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
+			.getBufferBuilders()
+			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV);
 	}
 
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -192,7 +200,7 @@ public class ClientEvents {
 	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
 		PonderTooltipHandler.handleTooltipColor(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
 		if (!AllConfigs.CLIENT.tooltips.get())
@@ -202,7 +210,7 @@ public class ClientEvents {
 
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem()
-				.getTranslationKey(stack);
+			.getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
 			return;
 
@@ -211,10 +219,24 @@ public class ClientEvents {
 			List<ITextComponent> toolTip = new ArrayList<>();
 			toolTip.add(itemTooltip.remove(0));
 			TooltipHelper.getTooltip(stack)
-					.addInformation(toolTip);
+				.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
-		
+
+		if (stack.getItem() instanceof BlockItem) {
+			BlockItem item = (BlockItem) stack.getItem();
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+				List<String> kineticStats = ItemDescription.getKineticStats(item.getBlock());
+				if (!kineticStats.isEmpty()) {
+					event.getToolTip()
+						.add(new StringTextComponent(""));
+					kineticStats.stream()
+						.map(StringTextComponent::new)
+						.forEach(event.getToolTip()::add);
+				}
+			}
+		}
+
 		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
 	}
 

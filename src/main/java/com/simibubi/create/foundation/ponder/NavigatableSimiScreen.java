@@ -117,7 +117,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		double scale = 1 + 0.5 * transitionValue;
 
 		// draw last screen into buffer
-		if (lastScreen != null && lastScreen != this) {
+		if (lastScreen != null && lastScreen != this && !transition.settled()) {
 			RenderSystem.pushMatrix();// 1
 			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
 			UIRenderHelper.prepFramebufferSize();

@@ -974,5 +974,11 @@ public class PonderUI extends NavigatableSimiScreen {
 	public void coolDownAfterSkip() {
 		skipCooling = 15;
 	}
+	
+	@Override
+	public void removed() {
+		super.removed();
+		hoveredTooltipItem = ItemStack.EMPTY;
+	}
 
 }

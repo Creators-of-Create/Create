@@ -173,7 +173,6 @@ public class AllItems {
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
 			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
-			.onRegister(v -> TooltipHelper.referTo(v, AllBlocks.GEARBOX))
 			.register();
 
 	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =

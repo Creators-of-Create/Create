@@ -83,11 +83,11 @@ public class ItemDescription {
 
 	public ItemDescription withSummary(String summary) {
 		add(linesOnShift, cutString(summary, palette.color, palette.hColor));
-		add(linesOnShift, "");
 		return this;
 	}
 
-	public ItemDescription withKineticStats(Block block) {
+	public static List<String> getKineticStats(Block block) {
+		List<String> list = new ArrayList<>();
 
 		boolean isEngine = block instanceof EngineBlock;
 		CKinetics config = AllConfigs.SERVER.kinetics;
@@ -108,14 +108,15 @@ public class ItemDescription {
 		if (hasSpeedRequirement) {
 			List<String> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			String level =
-				minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index) + speedLevels.get(index);
+			String level = minimumRequiredSpeedLevel.getTextColor() + makeProgressBar(3, index);
 
 			if (hasGlasses)
-				level += " (" + minimumRequiredSpeedLevel.getSpeedValue() + rpmUnit + "+)";
+				level += minimumRequiredSpeedLevel.getSpeedValue() + rpmUnit + "+";
+			else
+				level += speedLevels.get(index);
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.speedRequirement"));
-			add(linesOnShift, level);
+			list.add(GRAY + Lang.translate("tooltip.speedRequirement"));
+			list.add(level);
 		}
 
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
@@ -125,14 +126,16 @@ public class ItemDescription {
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
-			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressLevels.get(index);
+			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index);
 
 			if (hasGlasses)
-				level += " (" + impacts.get(id)
-					.get() + "x " + rpmUnit + ")";
+				level += impacts.get(id)
+					.get() + "x " + rpmUnit;
+			else
+				level += stressLevels.get(index);
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.stressImpact"));
-			add(linesOnShift, level);
+			list.add(GRAY + Lang.translate("tooltip.stressImpact"));
+			list.add(level);
 		}
 
 		if (hasStressCapacity) {
@@ -143,26 +146,28 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
-			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index) + stressCapacityLevels.get(index);
+			String level = impactId.getAbsoluteColor() + makeProgressBar(3, index);
 
 			if (hasGlasses)
-				level += " (" + capacity + "x " + rpmUnit + ")";
-			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
-				level +=
-					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
+				level += capacity + "x " + rpmUnit;
+			else
+				level += stressCapacityLevels.get(index);
+			
+//			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
+//				level +=
+//					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
-			add(linesOnShift, GRAY + Lang.translate("tooltip.capacityProvided"));
-			add(linesOnShift, level);
+			list.add(GRAY + Lang.translate("tooltip.capacityProvided"));
+			list.add(level);
 
 			String genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.equals("")) {
-				add(linesOnShift, GREEN + " " + genSpeed);
-			}
+			if (!genSpeed.equals(""))
+				list.add(DARK_GRAY + " " + genSpeed);
 		}
 
-		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
-			add(linesOnShift, "");
-		return this;
+		//		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
+		//			add(linesOnShift, "");
+		return list;
 	}
 
 	public static String makeProgressBar(int length, int filledLength) {
@@ -192,9 +197,9 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdKey = Lang.translate("tooltip.holdKey", "$")
+			String[] holdDesc = Lang.translate("tooltip.holdForDescription", "$")
 				.split("\\$");
-			String[] holdKeyOrKey = Lang.translate("tooltip.holdKeyOrKey", "$", "$")
+			String[] holdCtrl = Lang.translate("tooltip.holdForControls", "$")
 				.split("\\$");
 			String keyShift = Lang.translate("tooltip.keyShift");
 			String keyCtrl = Lang.translate("tooltip.keyCtrl");
@@ -202,35 +207,35 @@ public class ItemDescription {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;
 
-				if (holdKey.length != 2 || holdKeyOrKey.length != 3) {
+				if (holdDesc.length != 2 || holdCtrl.length != 2) {
 					list.add(0, new StringTextComponent("Invalid lang formatting!"));
 					continue;
 				}
 
-				StringBuilder tabBuilder = new StringBuilder();
-				tabBuilder.append(DARK_GRAY);
-				if (hasDescription && hasControls) {
-					tabBuilder.append(holdKeyOrKey[0]);
-					tabBuilder.append(shift ? palette.hColor : palette.color);
-					tabBuilder.append(keyShift);
+				if (hasControls) {
+					StringBuilder tabBuilder = new StringBuilder();
 					tabBuilder.append(DARK_GRAY);
-					tabBuilder.append(holdKeyOrKey[1]);
-					tabBuilder.append(ctrl ? palette.hColor : palette.color);
+					tabBuilder.append(holdCtrl[0]);
+					tabBuilder.append(ctrl? WHITE : GRAY);
 					tabBuilder.append(keyCtrl);
 					tabBuilder.append(DARK_GRAY);
-					tabBuilder.append(holdKeyOrKey[2]);
-
-				} else {
-					tabBuilder.append(holdKey[0]);
-					tabBuilder.append((hasDescription ? shift : ctrl) ? palette.hColor : palette.color);
-					tabBuilder.append(hasDescription ? keyShift : keyCtrl);
-					tabBuilder.append(DARK_GRAY);
-					tabBuilder.append(holdKey[1]);
+					tabBuilder.append(holdCtrl[1]);
+					list.add(0, new StringTextComponent(tabBuilder.toString()));
 				}
-
-				list.add(0, new StringTextComponent(tabBuilder.toString()));
+				
+				if (hasDescription) {
+					StringBuilder tabBuilder = new StringBuilder();
+					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(holdDesc[0]);
+					tabBuilder.append(shift? WHITE : GRAY);
+					tabBuilder.append(keyShift);
+					tabBuilder.append(DARK_GRAY);
+					tabBuilder.append(holdDesc[1]);
+					list.add(0, new StringTextComponent(tabBuilder.toString()));
+				}
+				
 				if (shift || ctrl)
-					list.add(1, new StringTextComponent(""));
+					list.add(hasDescription && hasControls ? 2 : 1, new StringTextComponent(""));
 			}
 		}
 
@@ -285,7 +290,7 @@ public class ItemDescription {
 		return linesOnShift;
 	}
 
-	private String generatorSpeed(Block block, String unitRPM) {
+	private static String generatorSpeed(Block block, String unitRPM) {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {

@@ -1,5 +1,14 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
+import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
+import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -16,27 +25,18 @@ import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
-import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
-import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 public class BuilderTransformers {
 
@@ -74,10 +74,6 @@ public class BuilderTransformers {
 				p.directionalBlock(c.get(), p.models()
 					.withExistingParent(variant + "_valve_handle", p.modLoc("block/valve_handle"))
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
-			})
-			.onRegisterAfter(Item.class, v -> {
-				if (color != null)
-					TooltipHelper.referTo(v, AllBlocks.COPPER_VALVE_HANDLE);
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
 			.onRegister(ItemUseOverrides::addBlock)
@@ -134,7 +130,6 @@ public class BuilderTransformers {
 			.blockstate(new MechanicalPistonGenerator(type)::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
-			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.mechanical_piston"))
 			.item()
 			.transform(ModelGen.customItemModel("mechanical_piston", type.getName(), "item"));
 	}

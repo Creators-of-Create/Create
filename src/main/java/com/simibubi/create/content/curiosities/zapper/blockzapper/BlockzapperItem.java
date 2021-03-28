@@ -61,9 +61,9 @@ public class BlockzapperItem extends ZapperItem {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		Palette palette = Palette.Purple;
 		if (Screen.hasShiftDown()) {
-			ItemDescription.add(tooltip, palette.color + Lang.translate("blockzapper.componentUpgrades"));
+			tooltip.add(new StringTextComponent(""));
+			ItemDescription.add(tooltip, TextFormatting.WHITE + Lang.translate("blockzapper.componentUpgrades"));
 
 			for (Components c : Components.values()) {
 				ComponentTier tier = getTier(c, stack);
