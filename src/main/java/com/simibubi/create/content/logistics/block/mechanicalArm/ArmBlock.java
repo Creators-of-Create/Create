@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllShapes;
@@ -29,7 +30,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
+public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWheel {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 
@@ -46,11 +47,6 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity> {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
 		return getDefaultState().with(CEILING, ctx.getFace() == Direction.DOWN);
-	}
-
-	@Override
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
-		return true;
 	}
 
 	@Override

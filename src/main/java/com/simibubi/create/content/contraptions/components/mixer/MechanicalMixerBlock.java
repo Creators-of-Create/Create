@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
@@ -17,7 +18,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity> {
+public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity>, ICogWheel {
 
 	public MechanicalMixerBlock(Properties properties) {
 		super(properties);
@@ -49,11 +50,6 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		return false;
-	}
-
-	@Override
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
-		return true;
 	}
 
 	@Override

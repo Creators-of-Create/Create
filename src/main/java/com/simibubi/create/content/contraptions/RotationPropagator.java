@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions;
 
-import static com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock.isLargeCog;
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
 import java.util.LinkedList;
@@ -12,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
@@ -66,8 +66,8 @@ public class RotationPropagator {
 			alignedAxes && definitionFrom.hasShaftTowards(world, from.getPos(), stateFrom, direction)
 				&& definitionTo.hasShaftTowards(world, to.getPos(), stateTo, direction.getOpposite());
 
-		boolean connectedByGears = definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom)
-			&& definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo);
+		boolean connectedByGears = ICogWheel.isSmallCog(stateFrom)
+			&& ICogWheel.isSmallCog(stateTo);
 
 		float custom = from.propagateRotationTo(to, stateFrom, stateTo, diff, connectedByAxis, connectedByGears);
 		if (custom != 0)
@@ -98,10 +98,10 @@ public class RotationPropagator {
 		}
 
 		// Gear <-> Large Gear
-		if (isLargeCog(stateFrom) && definitionTo.hasIntegratedCogwheel(world, to.getPos(), stateTo))
+		if (ICogWheel.isLargeCog(stateFrom) && ICogWheel.isSmallCog(stateTo))
 			if (isLargeToSmallCog(stateFrom, stateTo, definitionTo, diff))
 				return -2f;
-		if (isLargeCog(stateTo) && definitionFrom.hasIntegratedCogwheel(world, from.getPos(), stateFrom))
+		if (ICogWheel.isLargeCog(stateTo) && ICogWheel.isSmallCog(stateFrom))
 			if (isLargeToSmallCog(stateTo, stateFrom, definitionFrom, diff))
 				return -.5f;
 
@@ -109,7 +109,7 @@ public class RotationPropagator {
 		if (connectedByGears) {
 			if (diff.manhattanDistance(BlockPos.ZERO) != 1)
 				return 0;
-			if (isLargeCog(stateTo))
+			if (ICogWheel.isLargeCog(stateTo))
 				return 0;
 			if (direction.getAxis() == definitionFrom.getRotationAxis(stateFrom))
 				return 0;
@@ -137,7 +137,7 @@ public class RotationPropagator {
 	}
 
 	private static boolean isLargeToLargeGear(BlockState from, BlockState to, BlockPos diff) {
-		if (!isLargeCog(from) || !isLargeCog(to))
+		if (!ICogWheel.isLargeCog(from) || !ICogWheel.isLargeCog(to))
 			return false;
 		Axis fromAxis = from.get(AXIS);
 		Axis toAxis = to.get(AXIS);
@@ -186,7 +186,7 @@ public class RotationPropagator {
 	}
 
 	private static boolean isLargeCogToSpeedController(BlockState from, BlockState to, BlockPos diff) {
-		if (!isLargeCog(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.has(to))
+		if (!ICogWheel.isLargeCog(from) || !AllBlocks.ROTATION_SPEED_CONTROLLER.has(to))
 			return false;
 		if (!diff.equals(BlockPos.ZERO.down()))
 			return false;

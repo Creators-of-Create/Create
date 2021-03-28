@@ -28,12 +28,6 @@ public class KineticData extends BasicData {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public KineticData setPosition(int x, int y, int z) {
-        return setPosition((float) (x),
-                           (float) (y),
-                           (float) (z));
-    }
-
     public KineticData setPosition(float x, float y, float z) {
         this.x = x;
         this.y = y;

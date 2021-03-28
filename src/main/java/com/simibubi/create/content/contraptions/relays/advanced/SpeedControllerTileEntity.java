@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -118,8 +119,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		if (world == null || !world.isRemote)
 			return;
 		BlockState stateAbove = world.getBlockState(pos.up());
-		hasBracket = AllBlocks.LARGE_COGWHEEL.has(stateAbove) && stateAbove.get(CogWheelBlock.AXIS)
-			.isHorizontal();
+		hasBracket = ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
+			&& stateAbove.get(CogWheelBlock.AXIS).isHorizontal();
 	}
 	
 	@Override

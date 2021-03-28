@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.millstone;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -30,7 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity> {
+public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity>, ICogWheel {
 
 	public MillstoneBlock(Properties properties) {
 		super(properties);
@@ -129,11 +130,6 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 
 			worldIn.removeTileEntity(pos);
 		}
-	}
-
-	@Override
-	public boolean hasIntegratedCogwheel(IWorldReader world, BlockPos pos, BlockState state) {
-		return true;
 	}
 
 	@Override

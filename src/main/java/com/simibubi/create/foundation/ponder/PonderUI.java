@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.ponder;
 
+import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREFIX;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +23,7 @@ import com.simibubi.create.foundation.ponder.content.PonderChapter;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
+import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -58,14 +61,15 @@ public class PonderUI extends NavigatableSimiScreen {
 	public static int ponderTicks;
 	public static float ponderPartialTicksPaused;
 
-	public static final String PONDERING = PonderLocalization.LANG_PREFIX + "pondering";
-	public static final String IDENTIFY_MODE = PonderLocalization.LANG_PREFIX + "identify_mode";
-	public static final String IN_CHAPTER = PonderLocalization.LANG_PREFIX + "in_chapter";
-	public static final String IDENTIFY = PonderLocalization.LANG_PREFIX + "identify";
-	public static final String PREVIOUS = PonderLocalization.LANG_PREFIX + "previous";
-	public static final String CLOSE = PonderLocalization.LANG_PREFIX + "close";
-	public static final String NEXT = PonderLocalization.LANG_PREFIX + "next";
-	public static final String REPLAY = PonderLocalization.LANG_PREFIX + "replay";
+	public static final String PONDERING = LANG_PREFIX + "pondering";
+	public static final String IDENTIFY_MODE = LANG_PREFIX + "identify_mode";
+	public static final String IN_CHAPTER = LANG_PREFIX + "in_chapter";
+	public static final String IDENTIFY = LANG_PREFIX + "identify";
+	public static final String PREVIOUS = LANG_PREFIX + "previous";
+	public static final String CLOSE = LANG_PREFIX + "close";
+	public static final String NEXT = LANG_PREFIX + "next";
+	public static final String REPLAY = LANG_PREFIX + "replay";
+	public static final String SLOW_TEXT = LANG_PREFIX + "slow_text";
 
 	private List<PonderScene> scenes;
 	private List<PonderTag> tags;
@@ -76,6 +80,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	PonderChapter chapter = null;
 
 	private boolean userViewMode;
+	private boolean slowTextMode;
 	private boolean identifyMode;
 	private ItemStack hoveredTooltipItem;
 	private BlockPos hoveredBlockPos;
@@ -90,9 +95,12 @@ public class PonderUI extends NavigatableSimiScreen {
 	private int index = 0;
 	private PonderTag referredToByTag;
 
-	private PonderButton left, right, scan, chap, userMode, close, replay;
+	private PonderButton left, right, scan, chap, userMode, close, replay, slowMode;
 	private PonderProgressBar progressBar;
 	private int skipCooling = 0;
+
+	private int extendedTickLength = 0;
+	private int extendedTickTimer = 0;
 
 	public static PonderUI of(ResourceLocation id) {
 		return new PonderUI(PonderRegistry.compile(id));
@@ -196,8 +204,13 @@ public class PonderUI extends NavigatableSimiScreen {
 			.shortcut(bindings.keyBindDrop)
 			.fade(0, -1));
 
+		widgets.add(slowMode = new PonderButton(width - 20 - 31, bY, () -> {
+			slowTextMode = !slowTextMode;
+		}).showing(AllIcons.I_MTD_SLOW_MODE)
+			.fade(0, -1));
+		
 		if (PonderIndex.EDITOR_MODE) {
-			widgets.add(userMode = new PonderButton(width - 20 - 31, bY, () -> {
+			widgets.add(userMode = new PonderButton(width - 50 - 31, bY, () -> {
 				userViewMode = !userViewMode;
 			}).showing(AllIcons.I_MTD_USER_MODE)
 				.fade(0, -1));
@@ -250,16 +263,32 @@ public class PonderUI extends NavigatableSimiScreen {
 			referredToByTag = null;
 		}
 
-		PonderScene activeScene = scenes.get(index);
-		if (!identifyMode) {
-			ponderTicks++;
-			if (skipCooling == 0)
-				activeScene.tick();
-		}
-
 		lazyIndex.tickChaser();
 		fadeIn.tickChaser();
 		finishingFlash.tickChaser();
+		PonderScene activeScene = scenes.get(index);
+
+		extendedTickLength = 0;
+		if (slowTextMode) 
+			activeScene.forEachVisible(TextWindowElement.class, twe -> extendedTickLength = 2);
+		
+		if (extendedTickTimer == 0) {
+			if (!identifyMode) {
+				ponderTicks++;
+				if (skipCooling == 0)
+					activeScene.tick();
+			}
+
+			if (!identifyMode) {
+				float lazyIndexValue = lazyIndex.getValue();
+				if (Math.abs(lazyIndexValue - index) > 1 / 512f)
+					scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
+						.tick();
+			}
+			extendedTickTimer = extendedTickLength;
+		} else
+			extendedTickTimer--;
+
 		progressBar.tick();
 
 		if (activeScene.currentTime == activeScene.totalTime - 1)
@@ -270,13 +299,6 @@ public class PonderUI extends NavigatableSimiScreen {
 				finishingFlash.setValue(1);
 				finishingFlash.setValue(1);
 			}
-		}
-
-		if (!identifyMode) {
-			float lazyIndexValue = lazyIndex.getValue();
-			if (Math.abs(lazyIndexValue - index) > 1 / 512f)
-				scenes.get(lazyIndexValue < index ? index - 1 : index + 1)
-					.tick();
 		}
 
 		updateIdentifiedItem(activeScene);
@@ -357,6 +379,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	@Override
 	protected void renderWindow(int mouseX, int mouseY, float partialTicks) {
+		partialTicks = getPartialTicks();
 		RenderSystem.enableBlend();
 		renderVisibleScenes(mouseX, mouseY,
 			skipCooling > 0 ? 0 : identifyMode ? ponderPartialTicksPaused : partialTicks);
@@ -369,7 +392,6 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	protected void renderVisibleScenes(int mouseX, int mouseY, float partialTicks) {
-		SuperRenderTypeBuffer.vertexSortingOrigin = new BlockPos(0, 0, 800);
 		renderScene(mouseX, mouseY, index, partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		if (Math.abs(lazyIndexValue - index) > 1 / 512f)
@@ -388,7 +410,13 @@ public class PonderUI extends NavigatableSimiScreen {
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
 
+		RenderSystem.pushMatrix();
+
+		// has to be outside of MS transforms, important for vertex sorting
+		RenderSystem.translated(0, 0, 800);
+
 		ms.push();
+		ms.translate(0, 0, -800);
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms, partialTicks, false);
 		story.transform.updateSceneRVE(partialTicks);
@@ -485,8 +513,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		}
 
 		RenderSystem.popMatrix();
-
 		ms.pop();
+		RenderSystem.popMatrix();
 	}
 
 	protected void renderWidgets(int mouseX, int mouseY, float partialTicks) {
@@ -540,7 +568,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				drawRightAlignedString(font, Lang.translate(IN_CHAPTER), 0, 0, tooltipColor);
 				drawRightAlignedString(font,
-					Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId()), 0, 12, 0xffeeeeee);
+					Lang.translate(LANG_PREFIX + "chapter." + chapter.getId()), 0, 12, 0xffeeeeee);
 
 				RenderSystem.popMatrix();
 			}
@@ -587,6 +615,11 @@ public class PonderUI extends NavigatableSimiScreen {
 			else
 				userMode.dim();
 		}
+		
+		if (slowTextMode)
+			slowMode.flash();
+		else
+			slowMode.dim();
 
 		{
 			// Scene overlay
@@ -673,6 +706,10 @@ public class PonderUI extends NavigatableSimiScreen {
 			drawCenteredString(font, Lang.translate(NEXT), right.x + 10, tooltipY, tooltipColor);
 		if (replay.isHovered())
 			drawCenteredString(font, Lang.translate(REPLAY), replay.x + 10, tooltipY, tooltipColor);
+		if (slowMode.isHovered())
+			drawCenteredString(font, Lang.translate(SLOW_TEXT), slowMode.x + 5, tooltipY, tooltipColor);
+		if (PonderIndex.EDITOR_MODE && userMode.isHovered())
+			drawCenteredString(font, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
 		RenderSystem.popMatrix();
 	}
 
@@ -787,7 +824,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	@Override
 	protected String getBreadcrumbTitle() {
 		if (chapter != null)
-			return Lang.translate(PonderLocalization.LANG_PREFIX + "chapter." + chapter.getId());
+			return Lang.translate(LANG_PREFIX + "chapter." + chapter.getId());
 
 		return stack.getItem()
 			.getName()
@@ -915,13 +952,18 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public static float getPartialTicks() {
+		float renderPartialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
+
 		if (Minecraft.getInstance().currentScreen instanceof PonderUI) {
 			PonderUI ui = (PonderUI) Minecraft.getInstance().currentScreen;
 			if (ui.identifyMode)
 				return ponderPartialTicksPaused;
+
+			return (renderPartialTicks + (ui.extendedTickLength - ui.extendedTickTimer)) / (ui.extendedTickLength + 1);
 		}
-		return Minecraft.getInstance()
-			.getRenderPartialTicks();
+
+		return renderPartialTicks;
 	}
 
 	@Override
@@ -931,12 +973,6 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	public void coolDownAfterSkip() {
 		skipCooling = 15;
-	}
-
-	@Override
-	public void removed() {
-		super.removed();
-		SuperRenderTypeBuffer.vertexSortingOrigin = BlockPos.ZERO;
 	}
 
 }
