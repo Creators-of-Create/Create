@@ -80,7 +80,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			TransportedItemStack ts = iterator.next();
 			if (!tick(ts))
 				continue;
-			if (world.isRemote)
+			if (world.isRemote && !tileEntity.isVirtual())
 				continue;
 			if (heldItem == null) {
 				heldItem = ts;

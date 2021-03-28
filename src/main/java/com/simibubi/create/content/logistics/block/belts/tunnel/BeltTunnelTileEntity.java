@@ -147,7 +147,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		if (world.isRemote) {
 			if (flaps.containsKey(side))
 				flaps.get(side)
-					.set(inward ? -1 : 1);
+					.set(inward ^ side.getAxis() == Axis.Z ? -1 : 1);
 			return;
 		}
 

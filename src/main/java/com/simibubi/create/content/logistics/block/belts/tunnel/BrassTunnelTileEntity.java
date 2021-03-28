@@ -115,7 +115,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 			return;
 		if (stackToDistribute.isEmpty() && !syncedOutputActive)
 			return;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		if (distributionProgress == -1) {
@@ -206,6 +206,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		SelectionMode mode = selectionMode.get();
 		boolean force = mode == SelectionMode.FORCED_ROUND_ROBIN || mode == SelectionMode.FORCED_SPLIT;
 		boolean split = mode == SelectionMode.FORCED_SPLIT || mode == SelectionMode.SPLIT;
+		boolean robin = mode == SelectionMode.FORCED_ROUND_ROBIN || mode == SelectionMode.ROUND_ROBIN;
 
 		if (mode == SelectionMode.RANDOMIZE)
 			indexStart = rand.nextInt(amountTargets);
@@ -265,6 +266,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 							remainingOutputs--;
 						if (!simulate)
 							full.add(pair);
+						if (robin)
+							break;
 						continue;
 					} else if (!remainder.isEmpty() && !simulate) {
 						full.add(pair);
@@ -336,7 +339,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 				return null;
 			ItemStack result = sideOutput.handleInsertion(stack, side, simulate);
 			if (result.isEmpty() && !simulate)
-				tunnel.flap(side, true);
+				tunnel.flap(side, false);
 			return result;
 		}
 
