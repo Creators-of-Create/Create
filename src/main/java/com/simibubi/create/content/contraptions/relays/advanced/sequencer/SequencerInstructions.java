@@ -54,7 +54,7 @@ public enum SequencerInstructions {
 
 	String formatValue(int value) {
 		if (this == TURN_ANGLE)
-			return value + Lang.translate("generic.unit.degrees").getUnformattedComponentText(); // FIXME
+			return value + Lang.translate("generic.unit.degrees").getString();
 		if (this == TURN_DISTANCE)
 			return value + "m";
 		if (this == DELAY) {

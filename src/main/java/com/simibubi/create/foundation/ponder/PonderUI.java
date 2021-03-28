@@ -461,7 +461,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
 				ms.push();
 				ms.translate(0, 0, bounds.getZSize() * 16);
-				ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(-90));
+				ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90));
 				textRenderer.draw(ms, d.name().substring(0, 1), 0, 0, 0x66FFFFFF);
 				textRenderer.draw(ms, "|", 2, 10, 0x44FFFFFF);
 				textRenderer.draw(ms, ".", 2, 14, 0x22FFFFFF);

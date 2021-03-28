@@ -10,6 +10,7 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SPlayerAbilitiesPacket;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class FlySpeedCommand {
 
@@ -53,7 +54,8 @@ public class FlySpeedCommand {
 
 	private static int sendFlySpeedUpdate(CommandContext<CommandSource> ctx, ServerPlayerEntity player, float speed) {
 		SPlayerAbilitiesPacket packet = new SPlayerAbilitiesPacket(player.abilities);
-		//packet.setFlySpeed(speed);TODO 1.16
+		//packet.setFlySpeed(speed);
+		ObfuscationReflectionHelper.setPrivateValue(SPlayerAbilitiesPacket.class, packet, speed, "field_149116_e");
 		player.connection.sendPacket(packet);
 
 		ctx.getSource().sendFeedback(new StringTextComponent("Temporarily set " + player.getName().getString() + "'s Flying Speed to: " + speed), true);

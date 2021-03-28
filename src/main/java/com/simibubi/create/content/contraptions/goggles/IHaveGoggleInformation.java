@@ -85,7 +85,7 @@ public interface IHaveGoggleInformation {
 			return true;
 
 		ITextComponent capacity = Lang.translate("gui.goggles.fluid_container.capacity").formatted(TextFormatting.GRAY);
-		ITextComponent amount = new StringTextComponent(format(tank.getTankCapacity(0)) + mb).formatted(TextFormatting.GOLD);
+		ITextComponent amount = new StringTextComponent(format(tank.getTankCapacity(0))).append(mb).formatted(TextFormatting.GOLD);
 
 		tooltip.add(indent.copy()
 			.append(capacity)

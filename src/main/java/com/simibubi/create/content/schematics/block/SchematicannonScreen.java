@@ -35,6 +35,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
 	private static final AllGuiTextures BG_BOTTOM = AllGuiTextures.SCHEMATICANNON_BOTTOM;
@@ -375,12 +376,12 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return tooltip;
 		}
 
-		float f = te.fuelLevel * 100;
-		tooltip.add(Lang.translate(_gunpowderLevel, "" + (int) f));
-		tooltip.add(Lang.translate(_shotsRemaining, "" + TextFormatting.BLUE + shotsLeft).formatted(GRAY)); // fixme
+		int fillPercent = (int) (te.fuelLevel * 100);
+		tooltip.add(Lang.translate(_gunpowderLevel, fillPercent));
+		tooltip.add(Lang.translate(_shotsRemaining, new StringTextComponent(Integer.toString(shotsLeft)).formatted(BLUE)).formatted(GRAY));
 		if (shotsLeftWithItems != shotsLeft)
-			tooltip
-				.add(Lang.translate(_shotsRemainingWithBackup, "" + TextFormatting.BLUE + shotsLeftWithItems).formatted(GRAY)); // fixme
+			tooltip.add(Lang.translate(_shotsRemainingWithBackup, new StringTextComponent(Integer.toString(shotsLeftWithItems)).formatted(BLUE)).formatted(GRAY));
+
 		return tooltip;
 	}
 

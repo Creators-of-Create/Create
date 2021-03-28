@@ -86,7 +86,7 @@ public class PonderRegistry {
 			PonderStoryBoardEntry sb = entries.get(i);
 			Template activeTemplate = loadSchematic(sb.getSchematicName());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().world);
-			activeTemplate.placeAndNotifyListeners(world, BlockPos.ZERO, new PlacementSettings(), world.rand);//TODO 1.16 crashing
+			activeTemplate.placeAndNotifyListeners(world, BlockPos.ZERO, new PlacementSettings(), world.rand);
 			world.createBackup();
 			PonderScene scene = compileScene(i, sb, world);
 			scene.begin();

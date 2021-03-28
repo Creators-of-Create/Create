@@ -59,8 +59,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 		float stressBase = calculateAddedStressCapacity();
 		if (stressBase != 0 && IRotate.StressImpact.isEnabled()) {
-			tooltip.add(new StringTextComponent(spacing).append(Lang.translate("gui.goggles.generator_stats")));
-			tooltip.add(new StringTextComponent(spacing).append(Lang.translate("tooltip.capacityProvided").formatted(TextFormatting.GRAY)));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.generator_stats")));
+			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.capacityProvided").formatted(TextFormatting.GRAY)));
 
 			float speed = getTheoreticalSpeed();
 			if (speed != getGeneratedSpeed() && speed != 0)
@@ -69,12 +69,13 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 			speed = Math.abs(speed);
 			float stressTotal = stressBase * speed;
 
-			// FIXME add colours back
-			// String stressString = spacing + "%s" + Lang.translate("generic.unit.stress").getUnformattedComponentText() + " %s";
-			// tooltip.add(new StringTextComponent(String.format(stressString, IHaveGoggleInformation.format(stressBase), Lang.translate("gui.goggles.base_value").getUnformattedComponentText())));
-			// tooltip.add(new StringTextComponent(String.format(stressString, IHaveGoggleInformation.format(stressTotal), Lang.translate("gui.goggles.at_current_speed").getUnformattedComponentText())));
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
+			tooltip.add(
+					componentSpacing.copy()
+					.append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+							.append(Lang.translate("generic.unit.stress"))
+							.formatted(TextFormatting.AQUA))
+					.append(" ")
+					.append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
 
 			added = true;
 		}
