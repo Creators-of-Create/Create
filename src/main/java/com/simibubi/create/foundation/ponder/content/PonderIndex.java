@@ -96,6 +96,10 @@ public class PonderIndex {
 			ProcessingScenes::emptyBlazeBurner);
 		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
 		PonderRegistry.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
+		PonderRegistry.forComponents(AllBlocks.WEIGHTED_EJECTOR)
+			.addStoryBoard("weighted_ejector/eject", EjectorScenes::ejector)
+			.addStoryBoard("weighted_ejector/split", EjectorScenes::splitY)
+			.addStoryBoard("weighted_ejector/redstone", EjectorScenes::redstone);
 
 		// Crafters
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER)
@@ -120,6 +124,12 @@ public class PonderIndex {
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
 		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
+
+		// Tunnels
+		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_TUNNEL, "tunnels/andesite", TunnelScenes::andesite);
+		PonderRegistry.forComponents(AllBlocks.BRASS_TUNNEL)
+			.addStoryBoard("tunnels/brass", TunnelScenes::brass)
+			.addStoryBoard("tunnels/brass_modes", TunnelScenes::brassModes);
 
 		// Chassis & Super Glue
 		PonderRegistry.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)

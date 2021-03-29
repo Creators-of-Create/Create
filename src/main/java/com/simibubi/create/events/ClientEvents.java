@@ -1,5 +1,8 @@
 package com.simibubi.create.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -28,7 +31,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
-import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
@@ -70,9 +72,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -117,7 +116,7 @@ public class ClientEvents {
 		KineticDebugger.tick();
 		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
-//		CollisionDebugger.tick();
+		//		CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
@@ -152,7 +151,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld().isRemote()) {
+		if (event.getWorld()
+			.isRemote()) {
 			CreateClient.invalidateRenderers(event.getWorld());
 			AnimationTickHolder.reset();
 		}
@@ -160,7 +160,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
+			.getProjectedView();
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
@@ -173,7 +174,7 @@ public class ClientEvents {
 		CreateClient.ghostBlocks.renderAll(ms, buffer);
 
 		CreateClient.outliner.renderOutlines(ms, buffer, pt);
-//		LightVolumeDebugger.render(ms, buffer);
+		//		LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -211,7 +212,7 @@ public class ClientEvents {
 
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem()
-				.getTranslationKey(stack);
+			.getTranslationKey(stack);
 		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
 			return;
 
@@ -220,7 +221,7 @@ public class ClientEvents {
 			List<ITextComponent> toolTip = new ArrayList<>();
 			toolTip.add(itemTooltip.remove(0));
 			TooltipHelper.getTooltip(stack)
-					.addInformation(toolTip);
+				.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
 		}
 

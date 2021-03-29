@@ -966,6 +966,12 @@ public class PonderUI extends NavigatableSimiScreen {
 	public void coolDownAfterSkip() {
 		skipCooling = 15;
 	}
+	
+	@Override
+	public void removed() {
+		super.removed();
+		hoveredTooltipItem = ItemStack.EMPTY;
+	}
 
 	public void drawRightAlignedString(FontRenderer fontRenderer, MatrixStack ms, String string, int x, int y, int color) {
 		fontRenderer.draw(ms, string, (float)(x - fontRenderer.getStringWidth(string)), (float)y, color);

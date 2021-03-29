@@ -11,7 +11,6 @@ import static net.minecraft.util.text.TextFormatting.DARK_RED;
 import static net.minecraft.util.text.TextFormatting.GOLD;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 import static net.minecraft.util.text.TextFormatting.GREEN;
-import static net.minecraft.util.text.TextFormatting.ITALIC;
 import static net.minecraft.util.text.TextFormatting.LIGHT_PURPLE;
 import static net.minecraft.util.text.TextFormatting.RED;
 import static net.minecraft.util.text.TextFormatting.STRIKETHROUGH;
@@ -86,11 +85,11 @@ public class ItemDescription {
 
 	public ItemDescription withSummary(ITextComponent summary) {
 		addStrings(linesOnShift, cutTextComponent(summary, palette.color, palette.hColor));
-		add(linesOnShift, StringTextComponent.EMPTY);
 		return this;
 	}
 
-	public ItemDescription withKineticStats(Block block) {
+	public static List<ITextComponent> getKineticStats(Block block) {
+		List<ITextComponent> list = new ArrayList<>();
 
 		boolean isEngine = block instanceof EngineBlock;
 		CKinetics config = AllConfigs.SERVER.kinetics;
@@ -111,13 +110,15 @@ public class ItemDescription {
 		if (hasSpeedRequirement) {
 			List<ITextComponent> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(speedLevels.get(index)).formatted(minimumRequiredSpeedLevel.getTextColor());
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(minimumRequiredSpeedLevel.getTextColor());
 
 			if (hasGlasses)
-				level.append(" (" + minimumRequiredSpeedLevel.getSpeedValue()).append(rpmUnit).append("+)");
+				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue())).append(rpmUnit).append("+");
+			else
+				level.append(speedLevels.get(index));
 
-			add(linesOnShift, Lang.translate("tooltip.speedRequirement").formatted(GRAY));
-			add(linesOnShift, level);
+			list.add(Lang.translate("tooltip.speedRequirement").formatted(GRAY));
+			list.add(level);
 		}
 
 		if (hasStressImpact && !(!isEngine && ((IRotate) block).hideStressImpact())) {
@@ -127,13 +128,16 @@ public class ItemDescription {
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressLevels.get(index)).formatted(impactId.getAbsoluteColor());
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + impacts.get(id).get()).append("x ").append(rpmUnit).append(")");
+				level.append(impacts.get(id)
+					.get() + "x ").append(rpmUnit);
+			else
+				level.append(stressLevels.get(index));
 
-			add(linesOnShift, Lang.translate("tooltip.stressImpact").formatted(GRAY));
-			add(linesOnShift, level);
+			list.add(Lang.translate("tooltip.stressImpact").formatted(GRAY));
+			list.add(level);
 		}
 
 		if (hasStressCapacity) {
@@ -144,25 +148,28 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).append(stressCapacityLevels.get(index)).formatted(impactId.getAbsoluteColor());
+			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(" (" + capacity).append("x ").append(rpmUnit).append(")");
-			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
-				level.append(" ").append(Lang.translate("tooltip.capacityProvided.asGenerator").formatted(DARK_GRAY, ITALIC));
+				level.append(capacity + "x ").append(rpmUnit);
+			else
+				level.append(stressCapacityLevels.get(index));
+			
+//			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
+//				level +=
+//					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
-			add(linesOnShift, Lang.translate("tooltip.capacityProvided").formatted(GRAY));
-			add(linesOnShift, level);
+			list.add(Lang.translate("tooltip.capacityProvided").formatted(GRAY));
+			list.add(level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.getUnformattedComponentText().equals("")) {
-				add(linesOnShift, new StringTextComponent(" ").append(genSpeed).formatted(GREEN));
-			}
+			if (!genSpeed.equals(""))
+				list.add(new StringTextComponent(" ").append(genSpeed).formatted(DARK_GRAY));
 		}
 
-		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
-			add(linesOnShift, StringTextComponent.EMPTY);
-		return this;
+		//		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
+		//			add(linesOnShift, "");
+		return list;
 	}
 
 	public static String makeProgressBar(int length, int filledLength) {
@@ -192,38 +199,39 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdKey = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdKey", "$"))
+			String[] holdDesc = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdForDescription", "$"))
 				.split("\\$");
-			String[] holdKeyOrKey = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdKeyOrKey", "$", "$"))
+			String[] holdCtrl = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdForControls", "$"))
 				.split("\\$");
-			ITextComponent keyShift = Lang.translate("tooltip.keyShift");
-			ITextComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
+			IFormattableTextComponent keyShift = Lang.translate("tooltip.keyShift");
+			IFormattableTextComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<ITextComponent> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;
 
-				if (holdKey.length != 2 || holdKeyOrKey.length != 3) {
+				if (holdDesc.length != 2 || holdCtrl.length != 2) {
 					list.add(0, new StringTextComponent("Invalid lang formatting!"));
 					continue;
 				}
 
-				IFormattableTextComponent tabBuilder = StringTextComponent.EMPTY.copy();
-				if (hasDescription && hasControls) {
-					tabBuilder.append(holdKeyOrKey[0]);
-					tabBuilder.append(keyShift.copy().formatted(shift ? palette.hColor : palette.color));
-					tabBuilder.append(holdKeyOrKey[1]);
-					tabBuilder.append(keyCtrl.copy().formatted(ctrl ? palette.hColor : palette.color));
-					tabBuilder.append(holdKeyOrKey[2]);
-
-				} else {
-					tabBuilder.append(holdKey[0]);
-					tabBuilder.append((hasDescription ? keyShift : keyCtrl).copy().formatted((hasDescription ? shift : ctrl) ? palette.hColor : palette.color));
-					tabBuilder.append(holdKey[1]);
+				if (hasControls) {
+					IFormattableTextComponent tabBuilder = new StringTextComponent("");
+					tabBuilder.append(new StringTextComponent(holdCtrl[0]).formatted(DARK_GRAY));
+					tabBuilder.append(keyCtrl.formatted(ctrl? WHITE : GRAY));
+					tabBuilder.append(new StringTextComponent(holdCtrl[1]).formatted(DARK_GRAY));
+					list.add(0, tabBuilder);
 				}
-				tabBuilder.formatted(DARK_GRAY);
-				list.add(0, tabBuilder);
+				
+				if (hasDescription) {
+					IFormattableTextComponent tabBuilder = new StringTextComponent("");
+					tabBuilder.append(new StringTextComponent(holdDesc[0]).formatted(DARK_GRAY));
+					tabBuilder.append(keyShift.formatted(shift? WHITE : GRAY));
+					tabBuilder.append(new StringTextComponent(holdDesc[1]).formatted(DARK_GRAY));
+					list.add(0, tabBuilder);
+				}
+				
 				if (shift || ctrl)
-					list.add(1, StringTextComponent.EMPTY);
+					list.add(hasDescription && hasControls ? 2 : 1, new StringTextComponent(""));
 			}
 		}
 
@@ -282,7 +290,7 @@ public class ItemDescription {
 		return linesOnShift;
 	}
 
-	private IFormattableTextComponent generatorSpeed(Block block, ITextComponent unitRPM) {
+	private static IFormattableTextComponent generatorSpeed(Block block, ITextComponent unitRPM) {
 		String value = "";
 
 		if (block instanceof WaterWheelBlock) {

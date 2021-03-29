@@ -57,6 +57,11 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		icon = AllIcons.I_RMB;
 		return this;
 	}
+	
+	public InputWindowElement showing(AllIcons icon) {
+		this.icon = icon;
+		return this;
+	}
 
 	public InputWindowElement leftClick() {
 		icon = AllIcons.I_LMB;

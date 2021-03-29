@@ -42,7 +42,7 @@ public class BeltTunnelInteractionHandler {
 		}
 
 		World world = beltInventory.belt.getWorld();
-		boolean onServer = !world.isRemote;
+		boolean onServer = !world.isRemote || beltInventory.belt.isVirtual();
 		boolean removed = false;
 		BeltTunnelTileEntity nextTunnel = getTunnelOnSegement(beltInventory, upcomingSegment);
 		
@@ -128,7 +128,7 @@ public class BeltTunnelInteractionHandler {
 		BeltTunnelTileEntity te = getTunnelOnSegement(beltInventory, offset);
 		if (te == null)
 			return;
-		te.flap(side, inward ^ side.getAxis() == Axis.Z);
+		te.flap(side, inward);
 	}
 
 	protected static BeltTunnelTileEntity getTunnelOnSegement(BeltInventory beltInventory, int offset) {

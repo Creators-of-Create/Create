@@ -135,7 +135,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 			world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f));
 
 		// Launch Items
-		if (!world.isRemote)
+		boolean doLogic = !world.isRemote || isVirtual();
+		if (doLogic)
 			launchItems();
 
 		// Launch Entities
@@ -169,11 +170,13 @@ public class EjectorTileEntity extends KineticTileEntity {
 			AllPackets.channel.sendToServer(new EjectorElytraPacket(pos));
 		}
 
-		if (!world.isRemote) {
+		if (doLogic) {
 			lidProgress.chase(1, .8f, Chaser.EXP);
 			state = State.LAUNCHING;
-			world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .35f, 1f);
-			world.playSound(null, pos, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, .1f, 1.4f);
+			if (!world.isRemote) {
+				world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .35f, 1f);
+				world.playSound(null, pos, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, .1f, 1.4f);
+			}
 		}
 	}
 
@@ -369,6 +372,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return;
 		if (presentStackSize < maxStackSize.getValue())
 			return;
+		if (depotBehaviour.heldItem != null && depotBehaviour.heldItem.beltPosition < .49f)
+			return;
 
 		Direction funnelFacing = getFacing().getOpposite();
 		ItemStack held = depotBehaviour.getHeldItemStack();
@@ -502,6 +507,9 @@ public class EjectorTileEntity extends KineticTileEntity {
 				NBTUtil.readBlockPos(compound.getCompound("EarlyTargetPos")));
 			earlyTargetTime = compound.getFloat("EarlyTargetTime");
 		}
+
+		if (compound.contains("ForceAngle"))
+			lidProgress.startWithValue(compound.getFloat("ForceAngle"));
 	}
 
 	public void updateSignal() {
