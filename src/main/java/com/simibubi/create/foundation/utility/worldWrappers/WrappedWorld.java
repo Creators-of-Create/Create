@@ -56,7 +56,7 @@ public class WrappedWorld extends World {
 	
 	@Override
 	public WorldLightManager getLightingProvider() {
-		return super.getLightingProvider();
+		return world.getLightingProvider();
 	}
 	
 	@Override
