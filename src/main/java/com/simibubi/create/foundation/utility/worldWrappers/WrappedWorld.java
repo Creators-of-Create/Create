@@ -10,8 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.multiplayer.ClientChunkProvider;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -177,5 +175,19 @@ public class WrappedWorld extends World {
 	@Override
 	public float getBrightness(Direction p_230487_1_, boolean p_230487_2_) {
 		return world.getBrightness(p_230487_1_, p_230487_2_);
+	}
+
+	@Override
+	public void markChunkDirty(BlockPos p_175646_1_, TileEntity p_175646_2_) {
+	}
+
+	@Override
+	public boolean isBlockLoaded(BlockPos p_175667_1_) {
+		return true;
+	}
+
+	@Override
+	public void updateComparatorOutputLevel(BlockPos p_175666_1_, Block p_175666_2_) {
+		return;
 	}
 }

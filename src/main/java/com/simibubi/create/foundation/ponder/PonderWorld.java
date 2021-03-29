@@ -312,10 +312,6 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public void markChunkDirty(BlockPos p_175646_1_, TileEntity p_175646_2_) {
-	}
-
-	@Override
 	public boolean isPlayerWithin(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
 		return true; // always enable spawner animations
 	}
