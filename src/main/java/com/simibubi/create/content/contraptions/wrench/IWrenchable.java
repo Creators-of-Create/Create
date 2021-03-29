@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -38,7 +37,7 @@ public interface IWrenchable {
 		if (te != null)
 			te.updateContainingBlockInfo();
 		if (te instanceof GeneratingKineticTileEntity) {
-			((GeneratingKineticTileEntity) te).updateGeneratedRotation();
+			((GeneratingKineticTileEntity) te).reActivateSource = true;
 		}
 
 		return ActionResultType.SUCCESS;

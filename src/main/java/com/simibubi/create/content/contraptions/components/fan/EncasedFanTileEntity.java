@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -73,12 +72,17 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 
 	public void updateGenerator() {
 		BlockState blockState = getBlockState();
+		boolean shouldGenerate = true;
+
 		if (!AllBlocks.ENCASED_FAN.has(blockState))
-			return;
-		if (blockState.get(EncasedFanBlock.FACING) != Direction.DOWN)
-			return;
-		
-		boolean shouldGenerate = world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+			shouldGenerate = false;
+
+		if (shouldGenerate && blockState.get(EncasedFanBlock.FACING) != Direction.DOWN)
+			shouldGenerate = false;
+
+		if (shouldGenerate)
+			shouldGenerate = world != null && world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+
 		if (shouldGenerate == isGenerator)
 			return;
 		isGenerator = shouldGenerate;

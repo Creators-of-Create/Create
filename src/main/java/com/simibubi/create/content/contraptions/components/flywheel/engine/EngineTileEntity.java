@@ -76,16 +76,16 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	}
 
 	public void detachWheel() {
-		if (poweredWheel.isRemoved())
+		if (poweredWheel == null || poweredWheel.isRemoved())
 			return;
 		poweredWheel.setRotation(0, 0);
 		FlywheelBlock.setConnection(world, poweredWheel.getPos(), poweredWheel.getBlockState(), null);
+		poweredWheel = null;
 	}
 
 	@Override
 	public void remove() {
-		if (poweredWheel != null)
-			detachWheel();
+		detachWheel();
 		super.remove();
 	}
 
