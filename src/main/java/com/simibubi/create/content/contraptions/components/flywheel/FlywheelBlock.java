@@ -1,16 +1,13 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.utility.Lang;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.IStringSerializable;
@@ -18,6 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineTileEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.utility.Lang;
 
 public class FlywheelBlock extends HorizontalKineticBlock {
 
@@ -82,6 +86,24 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.get(HORIZONTAL_FACING).getAxis();
+	}
+
+	@Override
+	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+		Direction connection = getConnection(state);
+		if (connection == null)
+			return super.onWrenched(state ,context);
+
+		if (context.getFace().getAxis() == state.get(HORIZONTAL_FACING).getAxis())
+			return ActionResultType.PASS;
+
+		World world = context.getWorld();
+		BlockPos enginePos = context.getPos().offset(connection, 2);
+		BlockState engine = world.getBlockState(enginePos);
+		if (engine.getBlock() instanceof FurnaceEngineBlock)
+			((FurnaceEngineBlock) engine.getBlock()).withTileEntityDo(world, enginePos, EngineTileEntity::detachWheel);
+
+		return super.onWrenched(state.with(CONNECTION, ConnectionState.NONE), context);
 	}
 
 	public enum ConnectionState implements IStringSerializable {
