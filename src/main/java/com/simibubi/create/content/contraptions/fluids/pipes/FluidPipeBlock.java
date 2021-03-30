@@ -142,6 +142,8 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	public static boolean canConnectTo(ILightReader world, BlockPos neighbourPos, BlockState neighbour, Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
+		if (neighbour.has(BlockStateProperties.HONEY_LEVEL))
+			return true;
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, neighbourPos, BracketedTileEntityBehaviour.TYPE);
 		if (isPipe(neighbour))

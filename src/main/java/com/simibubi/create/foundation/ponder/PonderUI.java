@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -80,7 +81,6 @@ public class PonderUI extends NavigatableSimiScreen {
 	PonderChapter chapter = null;
 
 	private boolean userViewMode;
-	private boolean slowTextMode;
 	private boolean identifyMode;
 	private ItemStack hoveredTooltipItem;
 	private BlockPos hoveredBlockPos;
@@ -205,7 +205,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			.fade(0, -1));
 
 		widgets.add(slowMode = new PonderButton(width - 20 - 31, bY, () -> {
-			slowTextMode = !slowTextMode;
+			setComfyReadingEnabled(!isComfyReadingEnabled());
 		}).showing(AllIcons.I_MTD_SLOW_MODE)
 			.fade(0, -1));
 		
@@ -269,7 +269,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		PonderScene activeScene = scenes.get(index);
 
 		extendedTickLength = 0;
-		if (slowTextMode) 
+		if (isComfyReadingEnabled()) 
 			activeScene.forEachVisible(TextWindowElement.class, twe -> extendedTickLength = 2);
 		
 		if (extendedTickTimer == 0) {
@@ -616,7 +616,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				userMode.dim();
 		}
 		
-		if (slowTextMode)
+		if (isComfyReadingEnabled())
 			slowMode.flash();
 		else
 			slowMode.dim();
@@ -979,6 +979,14 @@ public class PonderUI extends NavigatableSimiScreen {
 	public void removed() {
 		super.removed();
 		hoveredTooltipItem = ItemStack.EMPTY;
+	}
+
+	public boolean isComfyReadingEnabled() {
+		return AllConfigs.CLIENT.comfyReading.get();
+	}
+
+	public void setComfyReadingEnabled(boolean slowTextMode) {
+		AllConfigs.CLIENT.comfyReading.set(slowTextMode);
 	}
 
 }
