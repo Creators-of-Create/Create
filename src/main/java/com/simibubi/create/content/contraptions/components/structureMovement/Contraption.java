@@ -1182,5 +1182,9 @@ public abstract class Contraption {
 			return info.state;
 		}
 
+		@Override
+		public boolean isBlockPresent(BlockPos pos) {
+			return pos.equals(te.getPos());
+		}
 	}
 }
