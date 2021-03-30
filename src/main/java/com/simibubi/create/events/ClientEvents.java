@@ -9,6 +9,8 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -27,6 +29,7 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
@@ -52,9 +55,11 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -223,6 +228,19 @@ public class ClientEvents {
 			TooltipHelper.getTooltip(stack)
 				.addInformation(toolTip);
 			itemTooltip.addAll(0, toolTip);
+		}
+		
+		if (stack.getItem() instanceof BlockItem) {
+			BlockItem item = (BlockItem) stack.getItem();
+			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
+				List<ITextComponent> kineticStats = ItemDescription.getKineticStats(item.getBlock());
+				if (!kineticStats.isEmpty()) {
+					event.getToolTip()
+						.add(new StringTextComponent(""));
+					event.getToolTip()
+						.addAll(kineticStats);
+				}
+			}
 		}
 
 		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);

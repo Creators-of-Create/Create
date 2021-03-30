@@ -217,7 +217,7 @@ public class ItemDescription {
 				if (hasControls) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
 					tabBuilder.append(new StringTextComponent(holdCtrl[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyCtrl.formatted(ctrl? WHITE : GRAY));
+					tabBuilder.append(keyCtrl.copy().formatted(ctrl? WHITE : GRAY));
 					tabBuilder.append(new StringTextComponent(holdCtrl[1]).formatted(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
@@ -225,7 +225,7 @@ public class ItemDescription {
 				if (hasDescription) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
 					tabBuilder.append(new StringTextComponent(holdDesc[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyShift.formatted(shift? WHITE : GRAY));
+					tabBuilder.append(keyShift.copy().formatted(shift? WHITE : GRAY));
 					tabBuilder.append(new StringTextComponent(holdDesc[1]).formatted(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
