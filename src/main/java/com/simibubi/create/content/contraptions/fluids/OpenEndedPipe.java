@@ -78,7 +78,8 @@ public class OpenEndedPipe extends FlowSource {
 		if (state.has(HONEY_LEVEL) && state.get(HONEY_LEVEL) >= 5) {
 			if (!simulate)
 				world.setBlockState(outputPos, state.with(HONEY_LEVEL, 0), 3);
-			return new FluidStack(AllFluids.HONEY.get(), 250);
+			return new FluidStack(AllFluids.HONEY.get()
+				.getStillFluid(), 250);
 		}
 
 		if (!waterlog && !state.getMaterial()
