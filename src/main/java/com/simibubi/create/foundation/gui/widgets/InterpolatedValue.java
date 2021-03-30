@@ -12,6 +12,11 @@ public class InterpolatedValue {
 		this.value = value;
 		return this;
 	}
+
+	public InterpolatedValue init(float value) {
+		this.lastValue = this.value = value;
+		return this;
+	}
 	
 	public float get(float partialTicks) {
 		return MathHelper.lerp(partialTicks, lastValue, value);

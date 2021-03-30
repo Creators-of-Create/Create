@@ -84,8 +84,8 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		int width = 0;
 		int height = 0;
 
-		int xFade = direction == Pointing.RIGHT ? -1 : direction == Pointing.LEFT ? 1 : 0;
-		int yFade = direction == Pointing.DOWN ? -1 : direction == Pointing.UP ? 1 : 0;
+		float xFade = direction == Pointing.RIGHT ? -1 : direction == Pointing.LEFT ? 1 : 0;
+		float yFade = direction == Pointing.DOWN ? -1 : direction == Pointing.UP ? 1 : 0;
 		xFade *= 10 * (1 - fade);
 		yFade *= 10 * (1 - fade);
 

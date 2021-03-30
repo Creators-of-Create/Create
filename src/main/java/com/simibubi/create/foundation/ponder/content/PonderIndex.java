@@ -8,7 +8,7 @@ import net.minecraft.block.Blocks;
 
 public class PonderIndex {
 
-	public static final boolean EDITOR_MODE = true;
+	public static final boolean EDITOR_MODE = false;
 
 	public static void register() {
 		// Register storyboards here

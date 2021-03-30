@@ -14,21 +14,19 @@ import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -41,13 +39,13 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerInteractionManager;
-import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.BeehiveTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -55,6 +53,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -218,7 +217,7 @@ public class DeployerHandler {
 			progress += before;
 
 			if (progress >= 1) {
-				safeTryHarvestBlock(player.interactionManager, clickedPos);
+				tryHarvestBlock(player.interactionManager, clickedPos);
 				world.sendBlockBreakProgress(player.getEntityId(), clickedPos, -1);
 				player.blockBreakingProgress = null;
 				return;
@@ -240,7 +239,7 @@ public class DeployerHandler {
 		Event.Result useItem = DEFAULT;
 		if (!clickedState.getShape(world, clickedPos)
 			.isEmpty()) {
-			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, face);
+			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, result);
 			useBlock = event.getUseBlock();
 			useItem = event.getUseItem();
 		}
@@ -257,11 +256,9 @@ public class DeployerHandler {
 		boolean flag1 =
 			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
-		if (clickedState.getBlock() instanceof BeehiveBlock)
-			return; // Beehives assume a lot about the usage context. Crashes to side-effects
-
 		// Use on block
-		if (useBlock != DENY && flag1 && clickedState.onUse(world, player, hand, result) == ActionResultType.SUCCESS)
+		if (useBlock != DENY && flag1
+			&& safeOnUse(clickedState, world, clickedPos, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;
@@ -296,7 +293,8 @@ public class DeployerHandler {
 
 		ActionResult<ItemStack> onItemRightClick = item.onItemRightClick(itemUseWorld, player, hand);
 		ItemStack resultStack = onItemRightClick.getResult();
-		if (resultStack != stack || resultStack.getCount() != stack.getCount() || resultStack.getUseDuration() > 0 || resultStack.getDamage() != stack.getDamage()) {
+		if (resultStack != stack || resultStack.getCount() != stack.getCount() || resultStack.getUseDuration() > 0
+			|| resultStack.getDamage() != stack.getDamage()) {
 			player.setHeldItem(hand, onItemRightClick.getResult());
 		}
 
@@ -311,51 +309,89 @@ public class DeployerHandler {
 		player.resetActiveHand();
 	}
 
-	private static boolean safeTryHarvestBlock(PlayerInteractionManager interactionManager, BlockPos clickedPos) {
-		BlockState state = interactionManager.world.getBlockState(clickedPos);
-		if (!(state.getBlock() instanceof BeehiveBlock))
-			return interactionManager.tryHarvestBlock(clickedPos);
-		else {
-			harvestBeehive(interactionManager, state, clickedPos);
-		}
+	public static boolean tryHarvestBlock(PlayerInteractionManager interactionManager, BlockPos pos) {
+		// <> PlayerInteractionManager#tryHarvestBlock
+
+		ServerWorld world = interactionManager.world;
+		ServerPlayerEntity player = interactionManager.player;
+		BlockState blockstate = world.getBlockState(pos);
+		GameType gameType = interactionManager.getGameType();
+
+		if (net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, gameType, player, pos) == -1)
+			return false;
+
+		TileEntity tileentity = world.getTileEntity(pos);
+		if (player.getHeldItemMainhand()
+			.onBlockStartBreak(pos, player))
+			return false;
+		if (player.isBlockBreakingRestricted(world, pos, gameType))
+			return false;
+
+		ItemStack prevHeldItem = player.getHeldItemMainhand();
+		ItemStack heldItem = prevHeldItem.copy();
+
+		boolean canHarvest = blockstate.canHarvestBlock(world, pos, player);
+		prevHeldItem.onBlockDestroyed(world, blockstate, pos, player);
+		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
+			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, Hand.MAIN_HAND);
+		if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
+			return true;
+
+		blockstate.getBlock()
+			.onPlayerDestroy(world, pos, blockstate);
+		if (!canHarvest)
+			return true;
+
+		Block.getDrops(blockstate, world, pos, tileentity, player, prevHeldItem)
+			.forEach(item -> player.inventory.placeItemBackInInventory(world, item));
+		blockstate.spawnAdditionalDrops(world, pos, prevHeldItem);
 		return true;
 	}
 
-	private static void harvestBeehive(PlayerInteractionManager interactionManager, BlockState state,
-		BlockPos clickedPos) {
-		// Modified code from PlayerInteractionManager, Block and BeehiveBlock to handle
-		// deployers breaking beehives without crash.
-		ItemStack itemstack = interactionManager.player.getHeldItemMainhand();
-		ItemStack itemstack1 = itemstack.copy();
-
-		boolean flag1 = state.canHarvestBlock(interactionManager.world, clickedPos, interactionManager.player);
-		itemstack.onBlockDestroyed(interactionManager.world, state, clickedPos, interactionManager.player);
-		if (itemstack.isEmpty() && !itemstack1.isEmpty())
-			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(interactionManager.player, itemstack1,
-				Hand.MAIN_HAND);
-
-		boolean flag = state.removedByPlayer(interactionManager.world, clickedPos, interactionManager.player, flag1,
-			interactionManager.world.getFluidState(clickedPos));
-		if (flag)
-			state.getBlock()
-				.onPlayerDestroy(interactionManager.world, clickedPos, state);
-
-		if (flag && flag1) {
-			interactionManager.player.addStat(Stats.BLOCK_MINED.get(state.getBlock()));
-			interactionManager.player.addExhaustion(0.005F);
-			TileEntity te = interactionManager.world.getTileEntity(clickedPos);
-			ItemStack heldItem = interactionManager.player.getHeldItemMainhand();
-			Block.spawnDrops(state, interactionManager.world, clickedPos, te, interactionManager.player, heldItem);
-
-			if (!interactionManager.world.isRemote && te instanceof BeehiveTileEntity) {
-				BeehiveTileEntity beehivetileentity = (BeehiveTileEntity) te;
-				if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, heldItem) == 0) {
-					interactionManager.world.updateComparatorOutputLevel(clickedPos, state.getBlock());
-				}
-
-				CriteriaTriggers.BEE_NEST_DESTROYED.test(interactionManager.player,
-					state.getBlock(), heldItem, beehivetileentity.getBeeCount());
-			}
-		}
+	public static ActionResultType safeOnUse(BlockState state, World world, BlockPos pos, PlayerEntity player,
+		Hand hand, BlockRayTraceResult ray) {
+		if (state.getBlock() instanceof BeehiveBlock)
+			return safeOnBeehiveUse(state, world, pos, player, hand);
+		return state.onUse(world, player, hand, ray);
 	}
+
+	protected static ActionResultType safeOnBeehiveUse(BlockState state, World world, BlockPos pos, PlayerEntity player,
+		Hand hand) {
+		// <> BeehiveBlock#onUse
+		
+		BeehiveBlock block = (BeehiveBlock) state.getBlock();
+		ItemStack prevHeldItem = player.getHeldItem(hand);
+		int honeyLevel = state.get(BeehiveBlock.HONEY_LEVEL);
+		boolean success = false;
+		if (honeyLevel < 5)
+			return ActionResultType.PASS;
+
+		if (prevHeldItem.getItem() == Items.SHEARS) {
+			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_BEEHIVE_SHEAR,
+				SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			// <> BeehiveBlock#dropHoneycomb
+			player.inventory.placeItemBackInInventory(world, new ItemStack(Items.HONEYCOMB, 3));
+			prevHeldItem.damageItem(1, player, s -> s.sendBreakAnimation(hand));
+			success = true;
+		}
+
+		if (prevHeldItem.getItem() == Items.GLASS_BOTTLE) {
+			prevHeldItem.shrink(1);
+			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BOTTLE_FILL,
+				SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			ItemStack honeyBottle = new ItemStack(Items.HONEY_BOTTLE);
+			if (prevHeldItem.isEmpty())
+				player.setHeldItem(hand, honeyBottle);
+			else
+				player.inventory.placeItemBackInInventory(world, honeyBottle);
+			success = true;
+		}
+
+		if (!success)
+			return ActionResultType.PASS;
+
+		block.takeHoney(world, state, pos);
+		return ActionResultType.SUCCESS;
+	}
+
 }

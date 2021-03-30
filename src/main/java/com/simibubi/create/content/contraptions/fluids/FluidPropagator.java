@@ -157,6 +157,8 @@ public class FluidPropagator {
 		if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
 			return false;
+		if (connectedState.contains(BlockStateProperties.HONEY_LEVEL))
+			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
 			return false;
 		if (!(connectedState.getMaterial()

@@ -78,13 +78,13 @@ public class ArmTileEntity extends KineticTileEntity {
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
 		baseAngle = new InterpolatedAngle();
-		baseAngle.set(previousTarget.baseAngle);
+		baseAngle.init(previousTarget.baseAngle);
 		lowerArmAngle = new InterpolatedAngle();
-		lowerArmAngle.set(previousTarget.lowerArmAngle);
+		lowerArmAngle.init(previousTarget.lowerArmAngle);
 		upperArmAngle = new InterpolatedAngle();
-		upperArmAngle.set(previousTarget.upperArmAngle);
+		upperArmAngle.init(previousTarget.upperArmAngle);
 		headAngle = new InterpolatedAngle();
-		headAngle.set(previousTarget.headAngle);
+		headAngle.init(previousTarget.headAngle);
 		clawAngle = new InterpolatedAngle();
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;

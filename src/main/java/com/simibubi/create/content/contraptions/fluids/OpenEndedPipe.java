@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import static net.minecraft.state.properties.BlockStateProperties.HONEY_LEVEL;
+import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
+
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -22,7 +25,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
@@ -72,7 +74,13 @@ public class OpenEndedPipe extends FlowSource {
 
 		BlockState state = world.getBlockState(outputPos);
 		FluidState fluidState = state.getFluidState();
-		boolean waterlog = state.contains(BlockStateProperties.WATERLOGGED);
+		boolean waterlog = state.contains(WATERLOGGED);
+		
+		if (state.contains(HONEY_LEVEL) && state.get(HONEY_LEVEL) >= 5) {
+			if (!simulate)
+				world.setBlockState(outputPos, state.with(HONEY_LEVEL, 0), 3);
+			return new FluidStack(AllFluids.HONEY.get(), 250);
+		}
 
 		if (!waterlog && !state.getMaterial()
 			.isReplaceable())
@@ -84,11 +92,11 @@ public class OpenEndedPipe extends FlowSource {
 
 		if (simulate)
 			return stack;
-		
+
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
 
 		if (waterlog) {
-			world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, false), 3);
+			world.setBlockState(outputPos, state.with(WATERLOGGED, false), 3);
 			world.getPendingFluidTicks()
 				.scheduleTick(outputPos, Fluids.WATER, 1);
 			return stack;
@@ -106,7 +114,7 @@ public class OpenEndedPipe extends FlowSource {
 
 		BlockState state = world.getBlockState(outputPos);
 		FluidState fluidState = state.getFluidState();
-		boolean waterlog = state.contains(BlockStateProperties.WATERLOGGED);
+		boolean waterlog = state.contains(WATERLOGGED);
 
 		if (!waterlog && !state.getMaterial()
 			.isReplaceable())
@@ -140,11 +148,11 @@ public class OpenEndedPipe extends FlowSource {
 				2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 			return true;
 		}
-		
+
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_SPILL, world, pos, 5);
 
 		if (waterlog) {
-			world.setBlockState(outputPos, state.with(BlockStateProperties.WATERLOGGED, true), 3);
+			world.setBlockState(outputPos, state.with(WATERLOGGED, true), 3);
 			world.getPendingFluidTicks()
 				.scheduleTick(outputPos, Fluids.WATER, 1);
 			return true;

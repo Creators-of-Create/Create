@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREF
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -12,7 +13,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.gui.*;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.content.DebugScenes;
 import com.simibubi.create.foundation.ponder.content.PonderChapter;
@@ -22,9 +28,15 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.FontHelper;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+
 import net.minecraft.client.ClipboardHelper;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.MainWindow;
@@ -50,8 +62,6 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Random;
-
 public class PonderUI extends NavigatableSimiScreen {
 
 	public static int ponderTicks;
@@ -76,7 +86,6 @@ public class PonderUI extends NavigatableSimiScreen {
 	PonderChapter chapter = null;
 
 	private boolean userViewMode;
-	private boolean slowTextMode;
 	private boolean identifyMode;
 	private ItemStack hoveredTooltipItem;
 	private BlockPos hoveredBlockPos;
@@ -201,7 +210,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			.fade(0, -1));
 
 		widgets.add(slowMode = new PonderButton(width - 20 - 31, bY, () -> {
-			slowTextMode = !slowTextMode;
+			setComfyReadingEnabled(!isComfyReadingEnabled());
 		}).showing(AllIcons.I_MTD_SLOW_MODE)
 			.fade(0, -1));
 		
@@ -265,7 +274,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		PonderScene activeScene = scenes.get(index);
 
 		extendedTickLength = 0;
-		if (slowTextMode) 
+		if (isComfyReadingEnabled()) 
 			activeScene.forEachVisible(TextWindowElement.class, twe -> extendedTickLength = 2);
 		
 		if (extendedTickTimer == 0) {
@@ -612,7 +621,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				userMode.dim();
 		}
 		
-		if (slowTextMode)
+		if (isComfyReadingEnabled())
 			slowMode.flash();
 		else
 			slowMode.dim();
@@ -976,4 +985,13 @@ public class PonderUI extends NavigatableSimiScreen {
 	public void drawRightAlignedString(FontRenderer fontRenderer, MatrixStack ms, String string, int x, int y, int color) {
 		fontRenderer.draw(ms, string, (float)(x - fontRenderer.getStringWidth(string)), (float)y, color);
 	}
+	
+	public boolean isComfyReadingEnabled() {
+		return AllConfigs.CLIENT.comfyReading.get();
+	}
+
+	public void setComfyReadingEnabled(boolean slowTextMode) {
+		AllConfigs.CLIENT.comfyReading.set(slowTextMode);
+	}
+
 }
