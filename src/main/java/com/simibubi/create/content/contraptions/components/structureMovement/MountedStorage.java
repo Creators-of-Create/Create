@@ -9,11 +9,7 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.BarrelTileEntity;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.tileentity.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -36,12 +32,9 @@ public class MountedStorage {
 			return true;
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
-		if (te instanceof ShulkerBoxTileEntity)
+		if (te instanceof LockableLootTileEntity){
 			return true;
-		if (te instanceof ChestTileEntity)
-			return true;
-		if (te instanceof BarrelTileEntity)
-			return true;
+		}
 
 		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		return capability.orElse(null) instanceof ItemStackHandler;
