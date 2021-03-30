@@ -2,11 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -21,7 +18,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
     final boolean fakeWorld;
     final int offset;
 
-    private final InstanceKey<ModelData> head;
+    private final ModelData head;
 
     public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
@@ -61,13 +58,12 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
                      .unCentre()
                      .translate(0, (offset * offset) * 4 / 16f, 0);
 
-        head.getInstance()
-            .setTransform(stack);
+        head.setTransform(stack);
     }
 
     @Override
     public void updateLight() {
-        relight(pos, head.getInstance());
+        relight(pos, head);
     }
 
     @Override

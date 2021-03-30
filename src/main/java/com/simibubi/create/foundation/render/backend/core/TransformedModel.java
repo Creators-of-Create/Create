@@ -1,24 +1,23 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
-
-import net.minecraft.client.renderer.BufferBuilder;
+package com.simibubi.create.foundation.render.backend.core;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 
-public class OrientedModel extends InstancedModel<OrientedData> {
+public class TransformedModel extends InstancedModel<ModelData> {
     public static final VertexFormat INSTANCE_FORMAT = VertexFormat.builder()
             .addAttributes(BasicAttributes.class)
-            .addAttributes(OrientedAttributes.class)
+            .addAttributes(TransformAttributes.class)
             .build();
 
-    public OrientedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
+    public TransformedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
         super(renderer, buf);
     }
 
     @Override
-    protected OrientedData newInstance() {
-        return new OrientedData(this);
+    protected ModelData newInstance() {
+        return new ModelData(this);
     }
 
     @Override

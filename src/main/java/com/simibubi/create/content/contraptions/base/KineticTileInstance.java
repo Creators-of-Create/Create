@@ -37,21 +37,20 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
                 .setColor(tile);
     }
 
-    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key) {
+    protected final RotatingData setup(RotatingData key) {
         return setup(key, getRotationAxis(), getTileSpeed());
     }
 
-    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, Direction.Axis axis) {
+    protected final RotatingData setup(RotatingData key, Direction.Axis axis) {
         return setup(key, axis, getTileSpeed());
     }
 
-    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, float speed) {
+    protected final RotatingData setup(RotatingData key, float speed) {
         return setup(key, getRotationAxis(), speed);
     }
 
-    protected final InstanceKey<RotatingData> setup(InstanceKey<RotatingData> key, Direction.Axis axis, float speed) {
-        key.getInstance()
-                .setRotationAxis(axis)
+    protected final RotatingData setup(RotatingData key, Direction.Axis axis, float speed) {
+        key.setRotationAxis(axis)
                 .setRotationalSpeed(speed)
                 .setRotationOffset(getRotationOffset(axis))
                 .setColor(tile)

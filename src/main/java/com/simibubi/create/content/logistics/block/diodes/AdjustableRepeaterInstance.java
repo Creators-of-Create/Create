@@ -3,13 +3,13 @@ package com.simibubi.create.content.logistics.block.diodes;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRepeaterTileEntity> implements ITickableInstance {
 
-    protected final InstanceKey<ModelData> indicator;
+    protected final ModelData indicator;
 
     protected int previousState;
 
@@ -21,7 +21,7 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
         MatrixStack ms = new MatrixStack();
         MatrixStacker.of(ms).translate(getInstancePosition());
 
-        indicator.getInstance()
+        indicator
                  .setTransform(ms)
                  .setColor(getColor());
 
@@ -32,14 +32,14 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
     public void tick() {
         if (previousState == tile.state) return;
 
-        indicator.getInstance().setColor(getColor());
+        indicator.setColor(getColor());
 
         previousState = tile.state;
     }
 
     @Override
     public void updateLight() {
-        relight(pos, indicator.getInstance());
+        relight(pos, indicator);
     }
 
     @Override

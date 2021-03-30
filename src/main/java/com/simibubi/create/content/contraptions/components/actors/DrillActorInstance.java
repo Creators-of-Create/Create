@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,9 +12,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 
-public class DrillActorInstance extends com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance {
+public class DrillActorInstance extends ActorInstance {
 
-    InstanceKey<ActorData> drillHead;
+    ActorData drillHead;
     private Direction facing;
 
     public DrillActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
@@ -37,8 +37,7 @@ public class DrillActorInstance extends com.simibubi.create.content.contraptions
 
         drillHead = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
 
-        drillHead.getInstance()
-                 .setPosition(context.localPos)
+        drillHead.setPosition(context.localPos)
                  .setBlockLight(localBlockLight())
                  .setRotationOffset(0)
                  .setRotationAxis(0, 0, 1)
@@ -48,7 +47,7 @@ public class DrillActorInstance extends com.simibubi.create.content.contraptions
 
     @Override
     public void beginFrame() {
-        drillHead.getInstance().setSpeed(getSpeed(facing));
+        drillHead.setSpeed(getSpeed(facing));
     }
 
     protected float getSpeed(Direction facing) {

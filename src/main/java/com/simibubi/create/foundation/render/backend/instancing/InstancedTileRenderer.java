@@ -5,11 +5,12 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
+import com.simibubi.create.foundation.render.backend.MaterialType;
+import com.simibubi.create.foundation.render.backend.MaterialTypes;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.core.OrientedData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -110,11 +111,11 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     }
 
     public RenderMaterial<P, InstancedModel<ModelData>> getTransformMaterial() {
-        return getMaterial(RenderMaterials.TRANSFORMED);
+        return getMaterial(MaterialTypes.TRANSFORMED);
     }
 
     public RenderMaterial<P, InstancedModel<OrientedData>> getOrientedMaterial() {
-        return getMaterial(RenderMaterials.ORIENTED);
+        return getMaterial(MaterialTypes.ORIENTED);
     }
 
     @SuppressWarnings("unchecked")

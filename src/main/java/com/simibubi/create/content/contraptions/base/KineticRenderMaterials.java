@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.components.actors.ActorData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.MaterialType;
+import com.simibubi.create.foundation.render.backend.MaterialType;
 
 public class KineticRenderMaterials {
     public static final MaterialType<InstancedModel<RotatingData>> ROTATING = new MaterialType<>();

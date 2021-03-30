@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.base;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.BasicAttributes;
+import com.simibubi.create.foundation.render.backend.core.BasicAttributes;
 
 import net.minecraft.client.renderer.BufferBuilder;
 

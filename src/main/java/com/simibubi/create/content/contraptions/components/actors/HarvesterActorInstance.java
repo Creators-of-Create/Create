@@ -5,10 +5,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -25,7 +24,7 @@ public class HarvesterActorInstance extends ActorInstance {
     static Vector3d rotOffset = new Vector3d(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 
 
-    InstanceKey<ModelData> harvester;
+    ModelData harvester;
     private Direction facing;
 
     private float horizontalAngle;
@@ -46,8 +45,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
         horizontalAngle = facing.getHorizontalAngle() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
-        harvester.getInstance()
-                 .setBlockLight(localBlockLight());
+        harvester.setBlockLight(localBlockLight());
     }
 
     @Override
@@ -85,7 +83,7 @@ public class HarvesterActorInstance extends ActorInstance {
            .rotateX(getRotation())
            .translateBack(rotOffset);
 
-        harvester.getInstance().setTransform(ms);
+        harvester.setTransform(ms);
     }
 
     private double getRotation() {

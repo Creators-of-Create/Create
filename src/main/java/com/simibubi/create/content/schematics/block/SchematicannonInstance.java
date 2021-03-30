@@ -3,15 +3,15 @@ package com.simibubi.create.content.schematics.block;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.util.Direction;
 
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
-    private final InstanceKey<ModelData> connector;
-    private final InstanceKey<ModelData> pipe;
+    private final ModelData connector;
+    private final ModelData pipe;
 
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
@@ -44,7 +44,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         msr.centre();
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
         msr.unCentre();
-        connector.getInstance().setTransform(ms);
+        connector.setTransform(ms);
         ms.pop();
 
         msr.translate(.5f, 15 / 16f, .5f);
@@ -53,7 +53,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         msr.translate(-.5f, -15 / 16f, -.5f);
         msr.translate(0, -recoil / 100, 0);
 
-        pipe.getInstance().setTransform(ms);
+        pipe.setTransform(ms);
     }
 
     @Override
@@ -64,6 +64,6 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
     @Override
     public void updateLight() {
-        relight(pos, connector.getInstance(), pipe.getInstance());
+        relight(pos, connector, pipe);
     }
 }

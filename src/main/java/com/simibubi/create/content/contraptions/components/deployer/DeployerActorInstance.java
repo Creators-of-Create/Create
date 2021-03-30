@@ -7,10 +7,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -30,9 +29,9 @@ public class DeployerActorInstance extends ActorInstance {
     float zRot;
     float zRotPole;
 
-    InstanceKey<ModelData> pole;
-    InstanceKey<ModelData> hand;
-    InstanceKey<RotatingData> shaft;
+    ModelData pole;
+    ModelData hand;
+    RotatingData shaft;
 
     public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
@@ -61,13 +60,12 @@ public class DeployerActorInstance extends ActorInstance {
 
         int blockLight = localBlockLight();
 
-        shaft.getInstance()
-                .setRotationAxis(axis)
+        shaft.setRotationAxis(axis)
                 .setPosition(context.localPos)
                 .setBlockLight(blockLight);
 
-        pole.getInstance().setBlockLight(blockLight);
-        hand.getInstance().setBlockLight(blockLight);
+        pole.setBlockLight(blockLight);
+        hand.setBlockLight(blockLight);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class DeployerActorInstance extends ActorInstance {
         transformModel(msr, pole, hand, yRot, zRot, zRotPole);
     }
 
-    static void transformModel(MatrixStacker msr, InstanceKey<ModelData> pole, InstanceKey<ModelData> hand, float yRot, float zRot, float zRotPole) {
+    static void transformModel(MatrixStacker msr, ModelData pole, ModelData hand, float yRot, float zRot, float zRotPole) {
 
         msr.centre();
         msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
@@ -103,11 +101,11 @@ public class DeployerActorInstance extends ActorInstance {
         msr.push();
         msr.rotate(Direction.SOUTH, (float) ((zRotPole) / 180 * Math.PI));
         msr.unCentre();
-        pole.getInstance().setTransform(msr.unwrap());
+        pole.setTransform(msr.unwrap());
         msr.pop();
 
         msr.unCentre();
 
-        hand.getInstance().setTransform(msr.unwrap());
+        hand.setTransform(msr.unwrap());
     }
 }

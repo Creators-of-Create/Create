@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.impl.BasicData;
+import com.simibubi.create.foundation.render.backend.core.BasicData;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
@@ -31,6 +31,7 @@ public class KineticData extends BasicData {
         this.x = x;
         this.y = y;
         this.z = z;
+        markDirty();
         return this;
     }
 
@@ -38,6 +39,7 @@ public class KineticData extends BasicData {
         this.x += x;
         this.y += y;
         this.z += z;
+        markDirty();
         return this;
     }
 

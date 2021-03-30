@@ -2,13 +2,11 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.Block;
@@ -18,7 +16,7 @@ import net.minecraft.util.Direction;
 public class HandCrankInstance extends SingleRotatingInstance implements IDynamicInstance {
 
     private final HandCrankTileEntity tile;
-    private InstanceKey<ModelData> crank;
+    private ModelData crank;
     private Direction facing;
 
     public HandCrankInstance(InstancedTileRenderer<?> modelManager, HandCrankTileEntity tile) {
@@ -57,7 +55,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
                      .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis), angle)
                      .unCentre();
 
-        crank.getInstance().setTransform(ms);
+        crank.setTransform(ms);
     }
 
     @Override
@@ -69,6 +67,6 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
     @Override
     public void updateLight() {
         super.updateLight();
-        if (crank != null) relight(pos, crank.getInstance());
+        if (crank != null) relight(pos, crank);
     }
 }

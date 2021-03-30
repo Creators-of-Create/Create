@@ -10,13 +10,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
 import com.simibubi.create.content.logistics.block.FlapModel;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.backend.MaterialTypes;
+import com.simibubi.create.foundation.render.backend.instancing.*;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
-import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
+import com.simibubi.create.foundation.render.backend.core.OrientedModel;
+import com.simibubi.create.foundation.render.backend.core.TransformedModel;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.math.BlockPos;
@@ -39,8 +37,8 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
 
     @Override
     public void registerMaterials() {
-        materials.put(RenderMaterials.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.C_MODEL, TransformedModel::new));
-        materials.put(RenderMaterials.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.C_ORIENTED, OrientedModel::new));
+        materials.put(MaterialTypes.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.C_MODEL, TransformedModel::new));
+        materials.put(MaterialTypes.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.C_ORIENTED, OrientedModel::new));
 
         materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.C_BELT, BeltInstancedModel::new));
         materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.C_ROTATING, RotatingModel::new));

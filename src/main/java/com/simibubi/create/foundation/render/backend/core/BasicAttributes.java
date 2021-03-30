@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
+package com.simibubi.create.foundation.render.backend.core;
 
 import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;

@@ -18,7 +18,7 @@ public enum MapBuffer implements GlVersioned {
 
         @Override
         public void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload) {
-            ByteBuffer buffer = GL30.glMapBufferRange(target, offset, length, GL30.GL_MAP_WRITE_BIT | GL30.GL_MAP_INVALIDATE_RANGE_BIT);
+            ByteBuffer buffer = GL30.glMapBufferRange(target, offset, length, GL30.GL_MAP_WRITE_BIT);
 
             upload.accept(buffer);
             buffer.rewind();
@@ -34,7 +34,7 @@ public enum MapBuffer implements GlVersioned {
 
         @Override
         public void mapBuffer(int target, int offset, int length, Consumer<ByteBuffer> upload) {
-            ByteBuffer buffer = ARBMapBufferRange.glMapBufferRange(target, offset, length, GL30.GL_MAP_WRITE_BIT | GL30.GL_MAP_INVALIDATE_RANGE_BIT);
+            ByteBuffer buffer = ARBMapBufferRange.glMapBufferRange(target, offset, length, GL30.GL_MAP_WRITE_BIT);
 
             upload.accept(buffer);
             buffer.rewind();

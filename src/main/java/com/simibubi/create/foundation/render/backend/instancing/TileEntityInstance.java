@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.IFlatLight;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.core.OrientedData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -103,7 +103,7 @@ public abstract class TileEntityInstance<T extends TileEntity> implements IInsta
         relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
     }
 
-    protected void relight(BlockPos pos, Stream<IFlatLight<?>> models) {
+    protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<L> models) {
         relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
     }
 
@@ -111,7 +111,7 @@ public abstract class TileEntityInstance<T extends TileEntity> implements IInsta
         relight(block, sky, Arrays.stream(models));
     }
 
-    protected void relight(int block, int sky, Stream<IFlatLight<?>> models) {
+    protected <L extends IFlatLight<?>> void relight(int block, int sky, Stream<L> models) {
         models.forEach(model -> model.setBlockLight(block).setSkyLight(sky));
     }
 

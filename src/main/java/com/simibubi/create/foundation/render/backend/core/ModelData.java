@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
+package com.simibubi.create.foundation.render.backend.core;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.backend.RenderUtil;
@@ -17,6 +17,7 @@ public class ModelData extends BasicData {
 
     public ModelData setTransform(MatrixStack stack) {
         matrices = RenderUtil.writeMatrixStack(stack);
+        markDirty();
         return this;
     }
 

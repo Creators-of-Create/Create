@@ -2,10 +2,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
 
-    protected final ArrayList<InstanceKey<RotatingData>> keys;
+    protected final ArrayList<RotatingData> keys;
 
     public SplitShaftInstance(InstancedTileRenderer<?> modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
@@ -43,18 +42,18 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
         Direction[] directions = Iterate.directionsInAxis(boxAxis);
 
         for (int i : Iterate.zeroAndOne) {
-            updateRotation(keys.get(i).getInstance(), tile.getSpeed() * tile.getRotationSpeedModifier(directions[i]));
+            updateRotation(keys.get(i), tile.getSpeed() * tile.getRotationSpeedModifier(directions[i]));
         }
     }
 
     @Override
     public void updateLight() {
-        relight(pos, keys.stream().map(InstanceKey::getInstance));
+        relight(pos, keys.stream());
     }
 
     @Override
     public void remove() {
-        keys.forEach(InstanceKey::delete);
+        keys.forEach(InstanceData::delete);
         keys.clear();
     }
 

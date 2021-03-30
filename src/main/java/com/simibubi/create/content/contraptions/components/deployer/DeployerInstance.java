@@ -4,10 +4,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -28,9 +27,9 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     final float zRot;
     final float zRotPole;
 
-    protected final InstanceKey<OrientedData> pole;
+    protected final OrientedData pole;
 
-    protected InstanceKey<OrientedData> hand;
+    protected OrientedData hand;
 
     AllBlockPartials currentHand;
     float progress = Float.NaN;
@@ -51,7 +50,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
 
         updateHandPose();
-        relight(pos, pole.getInstance());
+        relight(pos, pole);
 
         updateRotation(pole, hand, yRot, zRot, zRotPole);
 
@@ -83,15 +82,15 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
         float z = blockPos.getZ() + ((float) facingVec.getZ()) * distance;
 
-        pole.getInstance().setPosition(x, y, z);
-        hand.getInstance().setPosition(x, y, z);
+        pole.setPosition(x, y, z);
+        hand.setPosition(x, y, z);
 
     }
 
     @Override
     public void updateLight() {
         super.updateLight();
-        relight(pos, hand.getInstance(), pole.getInstance());
+        relight(pos, hand, pole);
     }
 
     @Override
@@ -99,8 +98,6 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         super.remove();
         hand.delete();
         pole.delete();
-        currentHand = null; // updateHandPose() uses an invalid key after a block update otherwise.
-        hand = null;
     }
 
     private boolean updateHandPose() {
@@ -113,7 +110,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
 
-        relight(pos, hand.getInstance());
+        relight(pos, hand);
         updateRotation(pole, hand, yRot, zRot, zRotPole);
 
         return true;
@@ -127,15 +124,15 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         return 0;
     }
 
-    static void updateRotation(InstanceKey<OrientedData> pole, InstanceKey<OrientedData> hand, float yRot, float zRot, float zRotPole) {
+    static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float zRot, float zRotPole) {
 
         Quaternion q = Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRot);
         q.multiply(Direction.UP.getUnitVector().getDegreesQuaternion(yRot));
 
-        hand.getInstance().setRotation(q);
+        hand.setRotation(q);
 
         q.multiply(Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRotPole));
 
-        pole.getInstance().setRotation(q);
+        pole.setRotation(q);
     }
 }

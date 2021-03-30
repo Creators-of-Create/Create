@@ -1,10 +1,8 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -14,8 +12,8 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
-    protected final InstanceKey<RotatingData> shaft;
-    protected final InstanceKey<RotatingData> fan;
+    protected final RotatingData shaft;
+    protected final RotatingData fan;
     final Direction direction;
 
     public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
@@ -41,17 +39,17 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     protected void update() {
-        updateRotation(shaft.getInstance());
-        updateRotation(fan.getInstance(), getFanSpeed());
+        updateRotation(shaft);
+        updateRotation(fan, getFanSpeed());
     }
 
     @Override
     public void updateLight() {
         BlockPos behind = pos.offset(direction.getOpposite());
-        relight(behind, shaft.getInstance());
+        relight(behind, shaft);
 
         BlockPos inFront = pos.offset(direction);
-        relight(inFront, fan.getInstance());
+        relight(inFront, fan);
     }
 
     @Override

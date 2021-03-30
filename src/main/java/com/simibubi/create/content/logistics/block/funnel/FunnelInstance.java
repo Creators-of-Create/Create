@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
 
-    private final ArrayList<InstanceKey<FlapData>> flaps;
+    private final ArrayList<FlapData> flaps;
 
     public FunnelInstance(InstancedTileRenderer<?> modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
@@ -38,10 +38,9 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
             float intensity = segment == 3 ? 1.5f : segment + 1;
             float segmentOffset = -3 / 16f * segment;
 
-            InstanceKey<FlapData> key = model.createInstance();
+            FlapData key = model.createInstance();
 
-            key.getInstance()
-               .setPosition(pos)
+            key.setPosition(pos)
                .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
                .setBlockLight(blockLight)
                .setSkyLight(skyLight)
@@ -61,21 +60,21 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
 
-        for (InstanceKey<FlapData> key : flaps) {
-            key.getInstance().setFlapness(flapness);
+        for (FlapData flap : flaps) {
+            flap.setFlapness(flapness);
         }
     }
 
     @Override
     public void updateLight() {
         if (flaps != null)
-            relight(pos, flaps.stream().map(InstanceKey::getInstance));
+            relight(pos, flaps.stream());
     }
 
     @Override
     public void remove() {
         if (flaps == null) return;
 
-        flaps.forEach(InstanceKey::delete);
+        flaps.forEach(InstanceData::delete);
     }
 }
