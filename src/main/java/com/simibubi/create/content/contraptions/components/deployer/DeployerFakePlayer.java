@@ -89,6 +89,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public ItemStack onFoodEaten(World world, ItemStack stack) {
+		stack.shrink(1);
 		return stack;
 	}
 
