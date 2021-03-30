@@ -163,7 +163,7 @@ public class ItemDescription {
 			list.add(level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.equals(""))
+			if (!genSpeed.getString().isEmpty())
 				list.add(new StringTextComponent(" ").append(genSpeed).formatted(DARK_GRAY));
 		}
 
