@@ -6,9 +6,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -19,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class GantryCarriageInstance extends ShaftInstance implements IDynamicInstance {
 
-    private final InstanceKey<ModelData> gantryCogs;
+    private final ModelData gantryCogs;
 
     final Direction facing;
     final Boolean alongFirst;
@@ -75,7 +74,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
                      .translate(0, 9 / 16f, 0)
                      .unCentre();
 
-        gantryCogs.getInstance().setTransform(ms);
+        gantryCogs.setTransform(ms);
     }
 
     static float getRotationMultiplier(Direction.Axis gantryAxis, Direction facing) {
@@ -100,7 +99,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
     @Override
     public void updateLight() {
-        relight(pos, gantryCogs.getInstance(), rotatingModel.getInstance());
+        relight(pos, gantryCogs, rotatingModel);
     }
 
     @Override

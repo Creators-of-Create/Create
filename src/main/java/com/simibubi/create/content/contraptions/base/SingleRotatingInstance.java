@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
@@ -8,7 +7,7 @@ import net.minecraft.block.BlockState;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
-    protected final InstanceKey<RotatingData> rotatingModel;
+    protected final RotatingData rotatingModel;
 
     public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
@@ -18,12 +17,12 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     @Override
     public void update() {
-        updateRotation(rotatingModel.getInstance());
+        updateRotation(rotatingModel);
     }
 
     @Override
     public void updateLight() {
-        relight(pos, rotatingModel.getInstance());
+        relight(pos, rotatingModel);
     }
 
     @Override

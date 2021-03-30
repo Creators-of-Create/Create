@@ -38,26 +38,31 @@ public class ActorData extends InstanceData {
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
+        markDirty();
         return this;
     }
 
     public ActorData setBlockLight(int blockLight) {
         this.blockLight = (byte) ((blockLight & 0xF) << 4);
+        markDirty();
         return this;
     }
 
     public ActorData setSkyLight(int skyLight) {
         this.skyLight = (byte) ((skyLight & 0xF) << 4);
+        markDirty();
         return this;
     }
 
     public ActorData setRotationOffset(float rotationOffset) {
         this.rotationOffset = rotationOffset;
+        markDirty();
         return this;
     }
 
     public ActorData setSpeed(float speed) {
         this.speed = speed;
+        markDirty();
         return this;
     }
 
@@ -70,6 +75,7 @@ public class ActorData extends InstanceData {
         this.rotationAxisX = (byte) (rotationAxisX * 127);
         this.rotationAxisY = (byte) (rotationAxisY * 127);
         this.rotationAxisZ = (byte) (rotationAxisZ * 127);
+        markDirty();
         return this;
     }
 
@@ -82,6 +88,7 @@ public class ActorData extends InstanceData {
         this.rotationCenterX = (byte) (rotationCenterX * 127);
         this.rotationCenterY = (byte) (rotationCenterY * 127);
         this.rotationCenterZ = (byte) (rotationCenterZ * 127);
+        markDirty();
         return this;
     }
 
@@ -90,6 +97,7 @@ public class ActorData extends InstanceData {
         this.qY = q.getY();
         this.qZ = q.getZ();
         this.qW = q.getW();
+        markDirty();
         return this;
     }
 

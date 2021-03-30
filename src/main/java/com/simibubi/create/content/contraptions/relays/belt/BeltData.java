@@ -31,6 +31,7 @@ public class BeltData extends KineticData {
         this.qY = q.getY();
         this.qZ = q.getZ();
         this.qW = q.getW();
+        markDirty();
         return this;
     }
 
@@ -44,12 +45,14 @@ public class BeltData extends KineticData {
         this.minV = target.getMinV();
         this.maxU = target.getMaxU();
         this.maxV = target.getMaxV();
+        markDirty();
 
         return this;
     }
 
     public BeltData setScrollMult(float scrollMult) {
         this.scrollMult = (byte) (scrollMult * 127);
+        markDirty();
         return this;
     }
 

@@ -6,11 +6,24 @@ public abstract class InstanceData {
 
     protected final InstancedModel<?> owner;
 
+    boolean dirty;
+    boolean removed;
+
     protected InstanceData(InstancedModel<?> owner) {
         this.owner = owner;
     }
 
     public abstract void write(ByteBuffer buf);
+
+    public void markDirty() {
+        owner.anyToUpdate = true;
+        dirty = true;
+    }
+
+    public void delete() {
+        owner.anyToRemove = true;
+        removed = true;
+    }
 
     public void putVec4(ByteBuffer buf, float x, float y, float z, float w) {
         put(buf, x);

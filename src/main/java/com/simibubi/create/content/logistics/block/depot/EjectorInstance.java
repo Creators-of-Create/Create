@@ -4,12 +4,10 @@ import net.minecraft.util.math.MathHelper;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -17,7 +15,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	protected final EjectorTileEntity tile;
 
-	protected final InstanceKey<ModelData> plate;
+	protected final ModelData plate;
 
 	private float lastProgress = Float.NaN;
 
@@ -43,7 +41,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 	@Override
 	public void updateLight() {
 		super.updateLight();
-		relight(pos, plate.getInstance());
+		relight(pos, plate);
 	}
 
 	@Override
@@ -67,6 +65,6 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 		EjectorRenderer.applyLidAngle(tile, angle, MatrixStacker.of(ms).translate(getInstancePosition()));
 
-		plate.getInstance().setTransform(ms);
+		plate.setTransform(ms);
 	}
 }

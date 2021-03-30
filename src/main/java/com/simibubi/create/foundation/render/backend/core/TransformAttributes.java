@@ -1,19 +1,18 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
+package com.simibubi.create.foundation.render.backend.core;
 
-import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
+import com.simibubi.create.foundation.render.backend.gl.attrib.MatrixAttributes;
 
-public enum OrientedAttributes implements IVertexAttrib {
-    INSTANCE_POS("aInstancePos", CommonAttributes.VEC3),
-    PIVOT("aPivot", CommonAttributes.VEC3),
-    ROTATION("aRotation", CommonAttributes.QUATERNION),
+public enum TransformAttributes implements IVertexAttrib {
+    TRANSFORM("aTransform", MatrixAttributes.MAT4),
+    NORMAL_MAT("aNormalMat", MatrixAttributes.MAT3),
     ;
 
     private final String name;
     private final IAttribSpec spec;
 
-    OrientedAttributes(String name, IAttribSpec spec) {
+    TransformAttributes(String name, IAttribSpec spec) {
         this.name = name;
         this.spec = spec;
     }

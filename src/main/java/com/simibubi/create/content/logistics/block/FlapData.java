@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.impl.IFlatLight;
+import com.simibubi.create.foundation.render.backend.core.IFlatLight;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.math.BlockPos;
 
@@ -54,18 +54,21 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		markDirty();
 		return this;
 	}
 
 	@Override
 	public FlapData setBlockLight(int blockLight) {
 		this.blockLight = (byte) ((blockLight & 0xF) << 4);
+		markDirty();
 		return this;
 	}
 
 	@Override
 	public FlapData setSkyLight(int skyLight) {
 		this.skyLight = (byte) ((skyLight & 0xF) << 4);
+		markDirty();
 		return this;
 	}
 
@@ -73,26 +76,31 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 		this.segmentOffsetX = x;
 		this.segmentOffsetY = y;
 		this.segmentOffsetZ = z;
+		markDirty();
 		return this;
 	}
 
 	public FlapData setIntensity(float intensity) {
 		this.intensity = intensity;
+		markDirty();
 		return this;
 	}
 
 	public FlapData setHorizontalAngle(float horizontalAngle) {
 		this.horizontalAngle = horizontalAngle;
+		markDirty();
 		return this;
 	}
 
 	public FlapData setFlapScale(float flapScale) {
 		this.flapScale = flapScale;
+		markDirty();
 		return this;
 	}
 
 	public FlapData setFlapness(float flapness) {
 		this.flapness = flapness;
+		markDirty();
 		return this;
 	}
 
@@ -100,6 +108,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 		pivotX = x / 16f;
 		pivotY = y / 16f;
 		pivotZ = z / 16f;
+		markDirty();
 		return this;
 	}
 

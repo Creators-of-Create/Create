@@ -31,6 +31,7 @@ public class RotatingData extends KineticData {
         this.rotationAxisX = (byte) (rotationAxisX * 127);
         this.rotationAxisY = (byte) (rotationAxisY * 127);
         this.rotationAxisZ = (byte) (rotationAxisZ * 127);
+        markDirty();
         return this;
     }
 

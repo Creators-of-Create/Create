@@ -9,7 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -30,8 +30,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     boolean alongZ;
     BeltSlope beltSlope;
     Direction facing;
-    protected ArrayList<InstanceKey<BeltData>> keys;
-    protected InstanceKey<RotatingData> pulleyKey;
+    protected ArrayList<BeltData> keys;
+    protected RotatingData pulleyKey;
 
     public BeltInstance(InstancedTileRenderer<?> modelManager, BeltTileEntity tile) {
         super(modelManager, tile);
@@ -78,31 +78,30 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         DyeColor color = tile.color.orElse(null);
 
         boolean bottom = true;
-        for (InstanceKey<BeltData> key : keys) {
+        for (BeltData key : keys) {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
-            key.getInstance()
-               .setScrollTexture(spriteShiftEntry)
+            key.setScrollTexture(spriteShiftEntry)
                .setColor(tile)
                .setRotationalSpeed(getScrollSpeed());
             bottom = false;
         }
 
         if (pulleyKey != null) {
-            updateRotation(pulleyKey.getInstance());
+            updateRotation(pulleyKey);
         }
     }
 
     @Override
     public void updateLight() {
-        relight(pos, keys.stream().map(InstanceKey::getInstance));
+        relight(pos, keys.stream());
 
-        if (pulleyKey != null) relight(pos, pulleyKey.getInstance());
+        if (pulleyKey != null) relight(pos, pulleyKey);
     }
 
     @Override
     public void remove() {
-        keys.forEach(InstanceKey::delete);
+        keys.forEach(InstanceData::delete);
         keys.clear();
         if (pulleyKey != null) pulleyKey.delete();
         pulleyKey = null;
@@ -151,7 +150,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return dir;
     }
 
-    private InstanceKey<BeltData> setup(InstanceKey<BeltData> key, boolean bottom, SpriteShiftEntry spriteShift) {
+    private BeltData setup(BeltData key, boolean bottom, SpriteShiftEntry spriteShift) {
         boolean downward = beltSlope == BeltSlope.DOWNWARD;
         float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (downward ? 180 : 0) + (sideways ? 90 : 0) + (vertical && alongZ ? 180 : 0);
         float rotY = facing.getHorizontalAngle() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
@@ -159,8 +158,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
         Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
 
-		key.getInstance()
-				.setScrollTexture(spriteShift)
+		key.setScrollTexture(spriteShift)
 				.setScrollMult(diagonal ? 3f / 8f : 0.5f)
 				.setRotation(q)
 				.setRotationalSpeed(getScrollSpeed())

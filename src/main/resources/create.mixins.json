@@ -1,11 +1,12 @@
 {
     "required": true,
+    "priority": 1100,
     "package": "com.simibubi.create.foundation.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
     "mixins": ["StepSoundMixin"],
     "client": [
-        "TileAddMixin",
+        "TileWorldHookMixin",
         "CancelTileEntityRenderMixin",
         "FogColorTrackerMixin",
         "LightUpdateMixin",

@@ -2,10 +2,9 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import net.minecraft.block.Block;
@@ -14,7 +13,7 @@ import net.minecraft.util.Direction;
 
 public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
-    protected InstanceKey<ModelData> frame;
+    protected ModelData frame;
 
     public EngineInstance(InstancedTileRenderer<?> modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
@@ -43,8 +42,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
            .unCentre()
            .translate(0, 0, -1);
 
-        this.frame.getInstance()
-                  .setTransform(ms);
+        this.frame.setTransform(ms);
     }
 
     @Override
@@ -54,6 +52,6 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     @Override
     public void updateLight() {
-        relight(pos, frame.getInstance());
+        relight(pos, frame);
     }
 }

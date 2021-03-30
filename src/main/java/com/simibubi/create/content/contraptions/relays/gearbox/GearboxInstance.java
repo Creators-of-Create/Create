@@ -6,7 +6,7 @@ import java.util.Map;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -18,7 +18,7 @@ import net.minecraft.world.LightType;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
-    protected final EnumMap<Direction, InstanceKey<RotatingData>> keys;
+    protected final EnumMap<Direction, RotatingData> keys;
     protected Direction sourceFacing;
 
     public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
@@ -39,10 +39,9 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
             InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction);
 
-            InstanceKey<RotatingData> key = shaft.createInstance();
+            RotatingData key = shaft.createInstance();
 
-            key.getInstance()
-                    .setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+            key.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
                     .setRotationalSpeed(getSpeed(direction))
                     .setRotationOffset(getRotationOffset(axis)).setColor(tile)
                     .setPosition(getInstancePosition())
@@ -77,22 +76,22 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     @Override
     public void update() {
         updateSourceFacing();
-        for (Map.Entry<Direction, InstanceKey<RotatingData>> key : keys.entrySet()) {
+        for (Map.Entry<Direction, RotatingData> key : keys.entrySet()) {
             Direction direction = key.getKey();
             Direction.Axis axis = direction.getAxis();
 
-            updateRotation(key.getValue().getInstance(), axis, getSpeed(direction));
+            updateRotation(key.getValue(), axis, getSpeed(direction));
         }
     }
 
     @Override
     public void updateLight() {
-        relight(pos, keys.values().stream().map(InstanceKey::getInstance));
+        relight(pos, keys.values().stream());
     }
 
     @Override
     public void remove() {
-        keys.values().forEach(InstanceKey::delete);
+        keys.values().forEach(InstanceData::delete);
         keys.clear();
     }
 }

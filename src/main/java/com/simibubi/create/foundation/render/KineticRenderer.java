@@ -6,14 +6,14 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.RotatingModel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
 import com.simibubi.create.content.logistics.block.FlapModel;
-import com.simibubi.create.foundation.render.backend.RenderMaterials;
+import com.simibubi.create.foundation.render.backend.MaterialTypes;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedModel;
-import com.simibubi.create.foundation.render.backend.instancing.impl.TransformedModel;
+import com.simibubi.create.foundation.render.backend.core.OrientedModel;
+import com.simibubi.create.foundation.render.backend.core.TransformedModel;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Matrix4f;
@@ -29,8 +29,8 @@ public class KineticRenderer extends InstancedTileRenderer<BasicProgram> {
 
     @Override
     public void registerMaterials() {
-        materials.put(RenderMaterials.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.MODEL, TransformedModel::new));
-        materials.put(RenderMaterials.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.ORIENTED, OrientedModel::new));
+        materials.put(MaterialTypes.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.MODEL, TransformedModel::new));
+        materials.put(MaterialTypes.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.ORIENTED, OrientedModel::new));
 
         materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.BELT, BeltInstancedModel::new));
         materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.ROTATING, RotatingModel::new));

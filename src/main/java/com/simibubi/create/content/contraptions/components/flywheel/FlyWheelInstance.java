@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -27,15 +27,15 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     protected boolean connectedLeft;
     protected float connectorAngleMult;
 
-    protected final InstanceKey<RotatingData> shaft;
+    protected final RotatingData shaft;
 
-    protected final InstanceKey<ModelData> wheel;
+    protected final ModelData wheel;
 
-    protected List<InstanceKey<ModelData>> connectors;
-    protected InstanceKey<ModelData> upperRotating;
-    protected InstanceKey<ModelData> lowerRotating;
-    protected InstanceKey<ModelData> upperSliding;
-    protected InstanceKey<ModelData> lowerSliding;
+    protected List<ModelData> connectors;
+    protected ModelData upperRotating;
+    protected ModelData lowerRotating;
+    protected ModelData upperSliding;
+    protected ModelData lowerSliding;
 
     protected float lastAngle = Float.NaN;
 
@@ -100,22 +100,22 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
             ms.push();
             transformConnector(msr, true, true, rotation, connectedLeft);
-            upperRotating.getInstance().setTransform(ms);
+            upperRotating.setTransform(ms);
             ms.pop();
 
             ms.push();
             transformConnector(msr, false, true, rotation, connectedLeft);
-            lowerRotating.getInstance().setTransform(ms);
+            lowerRotating.setTransform(ms);
             ms.pop();
 
             ms.push();
             transformConnector(msr, true, false, rotation, connectedLeft);
-            upperSliding.getInstance().setTransform(ms);
+            upperSliding.setTransform(ms);
             ms.pop();
 
             ms.push();
             transformConnector(msr, false, false, rotation, connectedLeft);
-            lowerSliding.getInstance().setTransform(ms);
+            lowerSliding.setTransform(ms);
             ms.pop();
 
             ms.pop();
@@ -125,20 +125,20 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
            .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, facing.getAxis()), AngleHelper.rad(angle))
            .unCentre();
 
-        wheel.getInstance().setTransform(ms);
+        wheel.setTransform(ms);
     }
 
     @Override
     protected void update() {
-        updateRotation(shaft.getInstance());
+        updateRotation(shaft);
     }
 
     @Override
     public void updateLight() {
-        relight(pos, shaft.getInstance(), wheel.getInstance());
+        relight(pos, shaft, wheel);
 
         if (connection != null) {
-            relight(this.pos.offset(connection), connectors.stream().map(InstanceKey::getInstance));
+            relight(this.pos.offset(connection), connectors.stream());
         }
     }
 
@@ -147,7 +147,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         shaft.delete();
         wheel.delete();
 
-        connectors.forEach(InstanceKey::delete);
+        connectors.forEach(InstanceData::delete);
         connectors.clear();
     }
 

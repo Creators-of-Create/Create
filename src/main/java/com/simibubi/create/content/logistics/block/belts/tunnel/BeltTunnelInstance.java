@@ -9,11 +9,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -21,7 +17,7 @@ import net.minecraft.world.LightType;
 
 public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
 
-    private final Map<Direction, ArrayList<InstanceKey<FlapData>>> tunnelFlaps;
+    private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
     public BeltTunnelInstance(InstancedTileRenderer<?> modelManager, BeltTunnelTileEntity tile) {
         super(modelManager, tile);
@@ -42,16 +38,15 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
             float flapScale = direction.getAxis() == Direction.Axis.X ? 1 : -1;
 
-            ArrayList<InstanceKey<FlapData>> flaps = new ArrayList<>(4);
+            ArrayList<FlapData> flaps = new ArrayList<>(4);
 
             for (int segment = 0; segment <= 3; segment++) {
                 float intensity = segment == 3 ? 1.5f : segment + 1;
                 float segmentOffset = -3 / 16f * segment;
 
-                InstanceKey<FlapData> key = model.createInstance();
+                FlapData key = model.createInstance();
 
-                key.getInstance()
-                   .setPosition(pos)
+                key.setPosition(pos)
                    .setSegmentOffset(segmentOffset, 0, 0)
                    .setBlockLight(blockLight)
                    .setSkyLight(skyLight)
@@ -82,23 +77,15 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
             }
 
             float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
-            for (InstanceKey<FlapData> key : keys) {
-                key.getInstance().setFlapness(flapness);
+            for (FlapData flap : keys) {
+                flap.setFlapness(flapness);
             }
         });
     }
 
     @Override
     public void updateLight() {
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
-
-        for (ArrayList<InstanceKey<FlapData>> instanceKeys : tunnelFlaps.values()) {
-            for (InstanceKey<FlapData> it : instanceKeys) {
-                it.getInstance().setBlockLight(blockLight)
-                                .setSkyLight(skyLight);
-            }
-        }
+        relight(pos, tunnelFlaps.values().stream().flatMap(Collection::stream));
     }
 
     @Override
@@ -106,6 +93,6 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
         tunnelFlaps.values()
                    .stream()
                    .flatMap(Collection::stream)
-                   .forEach(InstanceKey::delete);
+                   .forEach(InstanceData::delete);
     }
 }

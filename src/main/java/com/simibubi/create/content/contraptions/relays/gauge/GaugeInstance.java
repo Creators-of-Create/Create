@@ -4,11 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.*;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -75,8 +72,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         super.updateLight();
 
         relight(pos, faces.stream()
-                          .flatMap(Couple::stream)
-                          .map(InstanceKey::getInstance));
+                          .flatMap(Couple::stream));
     }
 
     @Override
@@ -88,11 +84,11 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     protected abstract InstancedModel<ModelData> getHeadModel();
 
-    private class DialFace extends Couple<InstanceKey<ModelData>> {
+    private class DialFace extends Couple<ModelData> {
 
         Direction face;
 
-        public DialFace(Direction face, InstanceKey<ModelData> first, InstanceKey<ModelData> second) {
+        public DialFace(Direction face, ModelData first, ModelData second) {
             super(first, second);
             this.face = face;
         }
@@ -103,13 +99,13 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
             ms.push();
             rotateToFace(msr);
 
-            getSecond().getInstance().setTransform(ms);
+            getSecond().setTransform(ms);
 
             msr.translate(0, dialPivot, dialPivot)
                .rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
                .translate(0, -dialPivot, -dialPivot);
 
-            getFirst().getInstance().setTransform(ms);
+            getFirst().setTransform(ms);
 
             ms.pop();
         }
@@ -124,7 +120,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
                     .rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
                     .translate(0, -dialPivot, -dialPivot);
 
-            getFirst().getInstance().setTransform(ms);
+            getFirst().setTransform(ms);
 
             ms.pop();
         }

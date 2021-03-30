@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
+package com.simibubi.create.foundation.render.backend.core;
 
 import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
@@ -39,6 +39,7 @@ public class OrientedData extends BasicData {
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
+		markDirty();
 		return this;
 	}
 
@@ -46,6 +47,7 @@ public class OrientedData extends BasicData {
 		this.posX += x;
 		this.posY += y;
 		this.posZ += z;
+		markDirty();
 		return this;
 	}
 
@@ -61,6 +63,7 @@ public class OrientedData extends BasicData {
 		this.pivotX = x;
 		this.pivotY = y;
 		this.pivotZ = z;
+		markDirty();
 		return this;
 	}
 
@@ -73,6 +76,7 @@ public class OrientedData extends BasicData {
 		this.qY = y;
 		this.qZ = z;
 		this.qW = w;
+		markDirty();
 		return this;
 	}
 

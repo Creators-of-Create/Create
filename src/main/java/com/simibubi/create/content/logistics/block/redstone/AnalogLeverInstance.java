@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -13,8 +13,8 @@ import net.minecraft.util.Direction;
 
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
-    protected final InstanceKey<ModelData> handle;
-    protected final InstanceKey<ModelData> indicator;
+    protected final ModelData handle;
+    protected final ModelData indicator;
 
     final float rX;
     final float rY;
@@ -50,8 +50,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());
 
         int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, state / 15f);
-        indicator.getInstance()
-                 .setTransform(ms)
+        indicator.setTransform(ms)
                  .setColor(color);
 
         float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
@@ -59,8 +58,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
            .rotate(Direction.EAST, angle)
            .translate(-1 / 2f, -1 / 16f, -1 / 2f);
 
-        handle.getInstance()
-              .setTransform(ms);
+        handle.setTransform(ms);
     }
 
     @Override
@@ -71,7 +69,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
 
     @Override
     public void updateLight() {
-        relight(pos, handle.getInstance(), indicator.getInstance());
+        relight(pos, handle, indicator);
     }
 
     private void transform(MatrixStacker msr) {

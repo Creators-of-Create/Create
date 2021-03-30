@@ -11,10 +11,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.relays.belt.BeltAttributes;
 import com.simibubi.create.content.logistics.block.FlapAttributes;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
-import com.simibubi.create.foundation.render.backend.instancing.impl.BasicAttributes;
-import com.simibubi.create.foundation.render.backend.instancing.impl.TransformAttributes;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelAttributes;
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedAttributes;
+import com.simibubi.create.foundation.render.backend.core.BasicAttributes;
+import com.simibubi.create.foundation.render.backend.core.TransformAttributes;
+import com.simibubi.create.foundation.render.backend.core.ModelAttributes;
+import com.simibubi.create.foundation.render.backend.core.OrientedAttributes;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
 

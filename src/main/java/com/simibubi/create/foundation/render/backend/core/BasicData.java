@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.render.backend.instancing.impl;
+package com.simibubi.create.foundation.render.backend.core;
 
 import java.nio.ByteBuffer;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
@@ -21,12 +21,14 @@ public class BasicData extends InstanceData implements IFlatLight<BasicData> {
     @Override
     public BasicData setBlockLight(int blockLight) {
         this.blockLight = (byte) (blockLight << 4);
+        markDirty();
         return this;
     }
 
     @Override
     public BasicData setSkyLight(int skyLight) {
         this.skyLight = (byte) (skyLight << 4);
+        markDirty();
         return this;
     }
 
@@ -55,6 +57,7 @@ public class BasicData extends InstanceData implements IFlatLight<BasicData> {
         this.r = r;
         this.g = g;
         this.b = b;
+        markDirty();
         return this;
     }
 
@@ -63,6 +66,7 @@ public class BasicData extends InstanceData implements IFlatLight<BasicData> {
         this.g = g;
         this.b = b;
         this.a = a;
+        markDirty();
         return this;
     }
 

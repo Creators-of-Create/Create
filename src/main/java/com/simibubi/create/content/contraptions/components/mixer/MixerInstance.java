@@ -4,15 +4,15 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.impl.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
 
 public class MixerInstance extends ShaftlessCogInstance implements IDynamicInstance {
 
-	private final InstanceKey<RotatingData> mixerHead;
-	private final InstanceKey<OrientedData> mixerPole;
+	private final RotatingData mixerHead;
+	private final OrientedData mixerPole;
 	private final MechanicalMixerTileEntity mixer;
 
 	public MixerInstance(InstancedTileRenderer<?> dispatcher, MechanicalMixerTileEntity tile) {
@@ -22,8 +22,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 		mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
 				.createInstance();
 
-		mixerHead.getInstance()
-				.setRotationAxis(Direction.Axis.Y);
+		mixerHead.setRotationAxis(Direction.Axis.Y);
 
 		mixerPole = getOrientedMaterial()
 				.getModel(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState)
@@ -48,15 +47,13 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	private void transformHead(float renderedHeadOffset) {
 		float speed = mixer.getRenderedHeadRotationSpeed(AnimationTickHolder.getPartialTicks());
 
-		mixerHead.getInstance()
-				.setPosition(getInstancePosition())
+		mixerHead.setPosition(getInstancePosition())
 				.nudge(0, -renderedHeadOffset, 0)
 				.setRotationalSpeed(speed * 2);
 	}
 
 	private void transformPole(float renderedHeadOffset) {
-		mixerPole.getInstance()
-				.setPosition(getInstancePosition())
+		mixerPole.setPosition(getInstancePosition())
 				.nudge(0, -renderedHeadOffset, 0);
 	}
 
@@ -68,8 +65,8 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	public void updateLight() {
 		super.updateLight();
 
-		relight(pos.down(), mixerHead.getInstance());
-		relight(pos, mixerPole.getInstance());
+		relight(pos.down(), mixerHead);
+		relight(pos, mixerPole);
 	}
 
 	@Override

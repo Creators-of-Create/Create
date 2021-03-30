@@ -6,9 +6,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceKey;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.impl.ModelData;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -17,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class FluidValveInstance extends ShaftInstance implements IDynamicInstance {
 
-    protected InstanceKey<ModelData> pointer;
+    protected ModelData pointer;
 
     protected final double xRot;
     protected final double yRot;
@@ -64,13 +63,13 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
                      .rotateY(pointerRotationOffset + pointerRotation)
                      .unCentre();
 
-        pointer.getInstance().setTransform(ms);
+        pointer.setTransform(ms);
     }
 
     @Override
     public void updateLight() {
         super.updateLight();
-        relight(pos, pointer.getInstance());
+        relight(pos, pointer);
     }
 
     @Override
