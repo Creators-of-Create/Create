@@ -137,7 +137,7 @@ public abstract class Contraption {
 	private Map<BlockPos, Entity> initialPassengers;
 	private List<BlockFace> pendingSubContraptions;
 
-	private CompletableFuture<List<AxisAlignedBB>> simplifiedEntityColliderProvider;
+	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
 	public Map<BlockPos, TileEntity> presentTileEntities;
@@ -193,6 +193,7 @@ public abstract class Contraption {
 		String type = nbt.getString("Type");
 		Contraption contraption = ContraptionType.fromType(type);
 		contraption.readNBT(world, nbt, spawnData);
+		contraption.world = new ContraptionWorld(world, contraption);
 		contraption.gatherBBsOffThread();
 		return contraption;
 	}
@@ -260,6 +261,13 @@ public abstract class Contraption {
 		gatherBBsOffThread();
 	}
 
+	public void onEntityRemoved(AbstractContraptionEntity entity) {
+		if (simplifiedEntityColliderProvider != null) {
+			simplifiedEntityColliderProvider.cancel(false);
+			simplifiedEntityColliderProvider = null;
+		}
+	}
+
 	public void onEntityInitialize(World world, AbstractContraptionEntity contraptionEntity) {
 		if (world.isRemote)
 			return;
@@ -282,15 +290,6 @@ public abstract class Contraption {
 	}
 
 	public void onEntityTick(World world) {
-		if (simplifiedEntityColliderProvider != null && simplifiedEntityColliderProvider.isDone()) {
-			try {
-				simplifiedEntityColliders = Optional.of(simplifiedEntityColliderProvider.join());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			simplifiedEntityColliderProvider = null;
-		}
-
 		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
 	}
 
@@ -1182,19 +1181,25 @@ public abstract class Contraption {
 	}
 
 	private void gatherBBsOffThread() {
+		getContraptionWorld();
 		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
 			VoxelShape combinedShape = VoxelShapes.empty();
 			for (Entry<BlockPos, BlockInfo> entry : blocks.entrySet()) {
 				BlockInfo info = entry.getValue();
 				BlockPos localPos = entry.getKey();
-				VoxelShape collisionShape = info.state.getCollisionShape(this.world, localPos);
+				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
 				if (collisionShape.isEmpty())
 					continue;
-				combinedShape = VoxelShapes.combineAndSimplify(combinedShape,
+				combinedShape = VoxelShapes.combine(combinedShape,
 					collisionShape.withOffset(localPos.getX(), localPos.getY(), localPos.getZ()), IBooleanFunction.OR);
 			}
-			return combinedShape.toBoundingBoxList();
-		});
+			return combinedShape.simplify()
+				.toBoundingBoxList();
+		})
+			.thenAccept(r -> {
+				simplifiedEntityColliders = Optional.of(r);
+				simplifiedEntityColliderProvider = null;
+			});
 	}
 
 	public static float getRadius(Set<BlockPos> blocks, Direction.Axis axis) {
