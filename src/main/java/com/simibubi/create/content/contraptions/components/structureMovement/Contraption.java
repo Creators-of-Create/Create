@@ -1,5 +1,30 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
+import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -32,9 +57,22 @@ import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.Coordinate;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.UniqueLinkedList;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import net.minecraft.block.*;
+
+import net.minecraft.block.AbstractButtonBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.FluidState;
@@ -54,6 +92,9 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.palette.HashMapPalette;
 import net.minecraft.village.PointOfInterestType;
@@ -72,19 +113,10 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.registries.GameData;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isExtensionPole;
-import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 
 public abstract class Contraption {
 
+	public Optional<List<AxisAlignedBB>> simplifiedEntityColliders;
 	public AbstractContraptionEntity entity;
 	public CombinedInvWrapper inventory;
 	public CombinedTankWrapper fluidInventory;
@@ -104,6 +136,8 @@ public abstract class Contraption {
 	private List<SuperGlueEntity> glueToRemove;
 	private Map<BlockPos, Entity> initialPassengers;
 	private List<BlockFace> pendingSubContraptions;
+
+	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
 	public Map<BlockPos, TileEntity> presentTileEntities;
@@ -127,13 +161,12 @@ public abstract class Contraption {
 		specialRenderedTileEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
+		simplifiedEntityColliders = Optional.empty();
 	}
 
 	public ContraptionWorld getContraptionWorld() {
-		if (world == null) {
+		if (world == null)
 			world = new ContraptionWorld(entity.world, this);
-		}
-
 		return world;
 	}
 
@@ -160,6 +193,8 @@ public abstract class Contraption {
 		String type = nbt.getString("Type");
 		Contraption contraption = ContraptionType.fromType(type);
 		contraption.readNBT(world, nbt, spawnData);
+		contraption.world = new ContraptionWorld(world, contraption);
+		contraption.gatherBBsOffThread();
 		return contraption;
 	}
 
@@ -223,6 +258,14 @@ public abstract class Contraption {
 			.collect(Collectors.toList());
 		fluidInventory = new CombinedTankWrapper(
 			Arrays.copyOf(fluidHandlers.toArray(), fluidHandlers.size(), IFluidHandler[].class));
+		gatherBBsOffThread();
+	}
+
+	public void onEntityRemoved(AbstractContraptionEntity entity) {
+		if (simplifiedEntityColliderProvider != null) {
+			simplifiedEntityColliderProvider.cancel(false);
+			simplifiedEntityColliderProvider = null;
+		}
 	}
 
 	public void onEntityInitialize(World world, AbstractContraptionEntity contraptionEntity) {
@@ -1134,6 +1177,28 @@ public abstract class Contraption {
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new EmptyLighter(this);
+	}
+
+	private void gatherBBsOffThread() {
+		getContraptionWorld();
+		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
+			VoxelShape combinedShape = VoxelShapes.empty();
+			for (Entry<BlockPos, BlockInfo> entry : blocks.entrySet()) {
+				BlockInfo info = entry.getValue();
+				BlockPos localPos = entry.getKey();
+				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
+				if (collisionShape.isEmpty())
+					continue;
+				combinedShape = VoxelShapes.combine(combinedShape,
+					collisionShape.withOffset(localPos.getX(), localPos.getY(), localPos.getZ()), IBooleanFunction.OR);
+			}
+			return combinedShape.simplify()
+				.toBoundingBoxList();
+		})
+			.thenAccept(r -> {
+				simplifiedEntityColliders = Optional.of(r);
+				simplifiedEntityColliderProvider = null;
+			});
 	}
 
 	public static float getRadius(Set<BlockPos> blocks, Direction.Axis axis) {

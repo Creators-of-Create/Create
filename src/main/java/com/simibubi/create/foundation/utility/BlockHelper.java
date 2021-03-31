@@ -8,10 +8,13 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SlimeBlock;
 import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.world.ClientWorld;
@@ -259,6 +262,14 @@ public class BlockHelper {
 				.onBlockPlacedBy(world, target, state, null, stack);
 		} catch (Exception e) {
 		}
+	}
+	
+	public static double getBounceMultiplier(Block block) {
+		if (block instanceof SlimeBlock)
+			return 0.8D;
+		if (block instanceof BedBlock || block instanceof SeatBlock)
+			return 0.66 * 0.8D;
+		return 0;
 	}
 
 	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_, Direction p_220056_3_) {

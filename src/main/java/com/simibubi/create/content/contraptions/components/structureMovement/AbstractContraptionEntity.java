@@ -455,6 +455,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			if (!ticking)
 				contraption.stop(world);
 		}
+		if (contraption != null)
+			contraption.onEntityRemoved(this);
 		super.remove(keepData);
 	}
 
