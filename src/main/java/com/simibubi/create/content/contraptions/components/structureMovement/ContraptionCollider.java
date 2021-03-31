@@ -118,7 +118,6 @@ public class ContraptionCollider {
 			motion = rotationMatrix.transform(motion);
 
 			// Use simplified bbs when present 
-			// TODO: is it worth filtering out far away bbs?
 			final Vec3d motionCopy = motion;
 			List<AxisAlignedBB> collidableBBs = contraption.simplifiedEntityColliders.orElseGet(() -> {
 
@@ -147,7 +146,17 @@ public class ContraptionCollider {
 
 				for (AxisAlignedBB bb : collidableBBs) {
 					Vec3d currentResponse = collisionResponse.getValue();
-					obb.setCenter(obbCenter.add(currentResponse));
+					Vec3d currentCenter = obbCenter.add(currentResponse);
+
+					if (Math.abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXSize() - 1 > bb.getXSize() / 2)
+						continue;
+					if (Math.abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYSize()
+						- 1 > bb.getYSize() / 2)
+						continue;
+					if (Math.abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZSize() - 1 > bb.getZSize() / 2)
+						continue;
+
+					obb.setCenter(currentCenter);
 					ContinuousSeparationManifold intersect = obb.intersect(bb, motion);
 
 					if (intersect == null)
