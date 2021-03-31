@@ -7,12 +7,16 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -20,28 +24,57 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
+
 public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
+		if (FastRenderDispatcher.available()) return;
+
 		Direction facing = context.state.get(BlockStateProperties.FACING);
 		AllBlockPartials top = AllBlockPartials.BEARING_TOP;
 		SuperByteBuffer superBuffer = top.renderOn(context.state);
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
-		Axis axis = facing.getAxis();
-		if (axis.isHorizontal())
-			superBuffer.rotateCentered(Direction.UP,
-				AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
-		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
+		Quaternion orientation = BearingInstance.getBlockStateOrientation(facing);
 
 		// rotate against parent
+		float angle = getCounterRotationAngle(context, facing, renderPartialTicks) * facing.getAxisDirection().getOffset();
+
+		Quaternion rotation = facing.getUnitVector().getDegreesQuaternion(angle);
+
+		rotation.multiply(orientation);
+
+		orientation = rotation;
+
+		superBuffer.rotateCentered(orientation);
+
+		// render
+		superBuffer.light(msLocal.peek()
+			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
+		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+	}
+
+	@Override
+	public boolean hasSpecialInstancedRendering() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+		return new StabilizedBearingInstance(kr, context);
+	}
+
+	static float getCounterRotationAngle(MovementContext context, Direction facing, float renderPartialTicks) {
 		float offset = 0;
-		int offsetMultiplier = facing.getAxisDirection().getOffset();
-		
+
+		Axis axis = facing.getAxis();
+
 		AbstractContraptionEntity entity = context.contraption.entity;
 		if (entity instanceof ControlledContraptionEntity) {
 			ControlledContraptionEntity controlledCE = (ControlledContraptionEntity) entity;
@@ -54,17 +87,12 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 				offset = -orientedCE.getYaw(renderPartialTicks);
 			else {
 				if (orientedCE.isInitialOrientationPresent() && orientedCE.getInitialOrientation()
-					.getAxis() == axis)
+						.getAxis() == axis)
 					offset = -orientedCE.getPitch(renderPartialTicks);
 			}
 		}
-		if (offset != 0)
-			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(offset * offsetMultiplier));
-
-		// render
-		superBuffer.light(msLocal.peek()
-			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
-		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		return offset;
 	}
+
 
 }
