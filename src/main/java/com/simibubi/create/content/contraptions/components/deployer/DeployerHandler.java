@@ -69,7 +69,7 @@ public class DeployerHandler {
 		boolean rayMode = false;
 
 		private ItemUseWorld(World world, Direction face, BlockPos pos) {
-			super(world);
+			super(world, world.getChunkProvider());
 			this.face = face;
 			this.pos = pos;
 		}
