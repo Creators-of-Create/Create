@@ -4,7 +4,6 @@
     "package": "com.simibubi.create.foundation.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
-    "mixins": ["StepSoundMixin"],
     "client": [
         "TileWorldHookMixin",
         "CancelTileEntityRenderMixin",
@@ -13,7 +12,8 @@
         "NetworkLightUpdateMixin",
         "RenderHooksMixin",
         "ShaderCloseMixin",
-        "TileRemoveMixin"
+        "TileRemoveMixin",
+        "StepSoundMixin"
     ],
     "injectors": {
         "defaultRequire": 1
