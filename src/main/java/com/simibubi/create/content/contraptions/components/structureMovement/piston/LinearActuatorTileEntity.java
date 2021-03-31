@@ -21,7 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
-public abstract class LinearActuatorTileEntity extends KineticTileEntity implements IControlContraption, IDisplayAssemblyExceptions {
+public abstract class LinearActuatorTileEntity extends KineticTileEntity
+	implements IControlContraption, IDisplayAssemblyExceptions {
 
 	public float offset;
 	public boolean running;
@@ -148,6 +149,11 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity impleme
 		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
 		waitingForSpeedChange = false;
+
+		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
+			movedContraption.getContraption()
+				.stop(world);
+		}
 	}
 
 	@Override

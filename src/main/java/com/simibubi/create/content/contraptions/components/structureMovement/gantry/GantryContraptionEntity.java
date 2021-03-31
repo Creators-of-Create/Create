@@ -69,6 +69,8 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		if (!isStalled() && ticksExisted > 2)
 			move(movementVec.x, movementVec.y, movementVec.z);
 
+		if (Math.signum(prevAxisMotion) != Math.signum(axisMotion) && prevAxisMotion != 0)
+			contraption.stop(world);
 		if (!world.isRemote && (prevAxisMotion != axisMotion || ticksExisted % 3 == 0))
 			sendPacket();
 	}

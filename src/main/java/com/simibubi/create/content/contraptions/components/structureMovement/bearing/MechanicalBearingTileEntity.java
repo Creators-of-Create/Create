@@ -102,6 +102,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
+		
+		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
+			movedContraption.getContraption()
+				.stop(world);
+		}
 	}
 
 	public float getAngularSpeed() {
