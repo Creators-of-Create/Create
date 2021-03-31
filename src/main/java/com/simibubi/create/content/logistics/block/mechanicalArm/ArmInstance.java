@@ -31,8 +31,14 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	private final ArrayList<ModelData> models;
 	private final ArmTileEntity arm;
+	private final Boolean ceiling;
 
 	private boolean firstTick = true;
+
+	private float baseAngle = Float.NaN;
+	private float lowerArmAngle = Float.NaN;
+	private float upperArmAngle = Float.NaN;
+	private float headAngle = Float.NaN;
 
 	public ArmInstance(InstancedTileRenderer<?> modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
@@ -52,31 +58,49 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 		arm = tile;
+		ceiling = blockState.get(ArmBlock.CEILING);
 
 		animateArm(false);
 	}
 
 	@Override
 	public void beginFrame() {
+		if (arm.phase == ArmTileEntity.Phase.DANCING) {
+			animateArm(true);
+			return;
+		}
 
-		boolean settled = arm.baseAngle.settled() && arm.lowerArmAngle.settled() && arm.upperArmAngle.settled() && arm.headAngle.settled();
-		boolean rave = arm.phase == ArmTileEntity.Phase.DANCING;
+		float pt = AnimationTickHolder.getPartialTicks();
 
-		if (!settled || rave || firstTick)
-			animateArm(rave);
+		float baseAngleNow = this.arm.baseAngle.get(pt);
+		float lowerArmAngleNow = this.arm.lowerArmAngle.get(pt);
+		float upperArmAngleNow = this.arm.upperArmAngle.get(pt);
+		float headAngleNow = this.arm.headAngle.get(pt);
+
+		boolean settled = MathHelper.epsilonEquals(baseAngle, baseAngleNow)
+				&& MathHelper.epsilonEquals(lowerArmAngle, lowerArmAngleNow)
+				&& MathHelper.epsilonEquals(upperArmAngle, upperArmAngleNow)
+				&& MathHelper.epsilonEquals(headAngle, headAngleNow);
+
+		this.baseAngle = baseAngleNow;
+		this.lowerArmAngle = lowerArmAngleNow;
+		this.upperArmAngle = upperArmAngleNow;
+		this.headAngle = headAngleNow;
+
+		if (!settled || firstTick)
+			animateArm(false);
 
 		if (settled)
 			firstTick = false;
 	}
 
 	private void animateArm(boolean rave) {
-		float pt = AnimationTickHolder.getPartialTicks();
-		int color = 0xFFFFFF;
 
-		float baseAngle = this.arm.baseAngle.get(pt);
-		float lowerArmAngle = this.arm.lowerArmAngle.get(pt) - 135;
-		float upperArmAngle = this.arm.upperArmAngle.get(pt) - 90;
-		float headAngle = this.arm.headAngle.get(pt);
+		int color;
+		float baseAngle;
+		float lowerArmAngle;
+		float upperArmAngle;
+		float headAngle;
 
 		if (rave) {
 			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
@@ -84,7 +108,15 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
+
 			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
+		} else {
+			baseAngle = this.baseAngle;
+			lowerArmAngle = this.lowerArmAngle - 135;
+			upperArmAngle = this.upperArmAngle - 90;
+			headAngle = this.headAngle;
+
+			color = 0xFFFFFF;
 		}
 
 		MatrixStack msLocal = new MatrixStack();
@@ -92,7 +124,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		msr.translate(getInstancePosition());
 		msr.centre();
 
-		if (blockState.get(ArmBlock.CEILING))
+		if (ceiling)
 			msr.rotateX(180);
 
 		ArmRenderer.transformBase(msr, baseAngle);
