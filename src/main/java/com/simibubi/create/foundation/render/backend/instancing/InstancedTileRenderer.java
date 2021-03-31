@@ -30,6 +30,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
     protected int frame;
+    protected int tick;
 
     protected InstancedTileRenderer() {
         registerMaterials();
@@ -40,6 +41,8 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
     public abstract void registerMaterials();
 
     public void tick(double cameraX, double cameraY, double cameraZ) {
+        tick++;
+
         // integer camera pos
         int cX = (int) cameraX;
         int cY = (int) cameraY;
@@ -58,7 +61,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
                 int dY = pos.getY() - cY;
                 int dZ = pos.getZ() - cZ;
 
-                if ((frame % getUpdateDivisor(dX, dY, dZ)) == 0)
+                if ((tick % getUpdateDivisor(dX, dY, dZ)) == 0)
                     instance.tick();
             }
         }
@@ -195,9 +198,9 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
         int dY = worldPos.getY() - cY;
         int dZ = worldPos.getZ() - cZ;
 
-        float dot = dX * lookX + dY * lookY + dZ * lookZ;
+        float dot = (dX + lookX * 2) * lookX + (dY + lookY * 2) * lookY + (dZ + lookZ * 2) * lookZ;
 
-        if (dot < 0) return false; // is it behind the camera?
+        if (dot < 0) return false; // is it more than 2 blocks behind the camera?
 
         return (frame % getUpdateDivisor(dX, dY, dZ)) == 0;
     }
