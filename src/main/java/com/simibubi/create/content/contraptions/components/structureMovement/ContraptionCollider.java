@@ -407,32 +407,32 @@ public class ContraptionCollider {
 				: Stream.of(voxelshape);
 		Stream<VoxelShape> stream1 = world.getEntityCollisions(e, bb.expand(movement), entity -> false); // FIXME: 1.15 equivalent translated correctly?
 		ReuseableStream<VoxelShape> reuseablestream = new ReuseableStream<>(Stream.concat(stream1, stream));
-		Vector3d Vector3d = movement.lengthSquared() == 0.0D ? movement
+		Vector3d allowedMovement = movement.lengthSquared() == 0.0D ? movement
 			: collideBoundingBoxHeuristically(e, movement, bb, world, ctx, reuseablestream);
-		boolean flag = movement.x != Vector3d.x;
-		boolean flag1 = movement.y != Vector3d.y;
-		boolean flag2 = movement.z != Vector3d.z;
-		boolean flag3 = e.isOnGround() || flag1 && movement.y < 0.0D;
-		if (e.stepHeight > 0.0F && flag3 && (flag || flag2)) {
-			Vector3d Vector3d1 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.stepHeight, movement.z),
+		boolean xDifferent = movement.x != allowedMovement.x;
+		boolean yDifferent = movement.y != allowedMovement.y;
+		boolean zDifferent = movement.z != allowedMovement.z;
+		boolean notMovingUp = e.isOnGround() || yDifferent && movement.y < 0.0D;
+		if (e.stepHeight > 0.0F && notMovingUp && (xDifferent || zDifferent)) {
+			Vector3d allowedStep = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.stepHeight, movement.z),
 				bb, world, ctx, reuseablestream);
-			Vector3d Vector3d2 = collideBoundingBoxHeuristically(e, new Vector3d(0.0D, (double) e.stepHeight, 0.0D),
+			Vector3d allowedStepGivenMovement = collideBoundingBoxHeuristically(e, new Vector3d(0.0D, (double) e.stepHeight, 0.0D),
 				bb.expand(movement.x, 0.0D, movement.z), world, ctx, reuseablestream);
-			if (Vector3d2.y < (double) e.stepHeight) {
-				Vector3d Vector3d3 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, 0.0D, movement.z),
-					bb.offset(Vector3d2), world, ctx, reuseablestream).add(Vector3d2);
-				if (horizontalMag(Vector3d3) > horizontalMag(Vector3d1)) {
-					Vector3d1 = Vector3d3;
+			if (allowedStepGivenMovement.y < (double) e.stepHeight) {
+				Vector3d vec3 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, 0.0D, movement.z),
+					bb.offset(allowedStepGivenMovement), world, ctx, reuseablestream).add(allowedStepGivenMovement);
+				if (horizontalMag(vec3) > horizontalMag(allowedStep)) {
+					allowedStep = vec3;
 				}
 			}
 
-			if (horizontalMag(Vector3d1) > horizontalMag(Vector3d)) {
-				return Vector3d1.add(collideBoundingBoxHeuristically(e, new Vector3d(0.0D, -Vector3d1.y + movement.y, 0.0D),
-					bb.offset(Vector3d1), world, ctx, reuseablestream));
+			if (horizontalMag(allowedStep) > horizontalMag(allowedMovement)) {
+				return allowedStep.add(collideBoundingBoxHeuristically(e, new Vector3d(0.0D, -allowedStep.y + movement.y, 0.0D),
+					bb.offset(allowedStep), world, ctx, reuseablestream));
 			}
 		}
 
-		return Vector3d;
+		return allowedMovement;
 	}
 
 	private static PlayerType getPlayerType(Entity entity) {
