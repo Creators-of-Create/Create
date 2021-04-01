@@ -1,17 +1,16 @@
 package com.simibubi.create.foundation.render.backend;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
 import com.simibubi.create.foundation.render.backend.gl.shader.*;
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlFeatureCompat;
+
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.resource.IResourceType;
 import net.minecraftforge.resource.VanillaResourceType;
-import org.lwjgl.opengl.GL;
+
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.*;

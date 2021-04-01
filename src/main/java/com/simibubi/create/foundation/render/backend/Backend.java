@@ -1,19 +1,17 @@
 package com.simibubi.create.foundation.render.backend;
 
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.foundation.render.backend.gl.GlFog;
 import com.simibubi.create.foundation.render.backend.gl.shader.*;
-import com.simibubi.create.foundation.render.backend.gl.versioned.GlFeatureCompat;
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlCompat;
 import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.system.MemoryUtil;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 
@@ -28,7 +26,7 @@ public class Backend {
 
 	public static final Logger log = LogManager.getLogger(Backend.class);
 	public static GLCapabilities capabilities;
-	public static GlFeatureCompat compat;
+	public static GlCompat compat;
 
 	private static boolean instancingAvailable;
 	private static boolean enabled;
@@ -97,7 +95,7 @@ public class Backend {
 	public static void refresh() {
 		capabilities = GL.createCapabilities();
 
-		compat = new GlFeatureCompat(capabilities);
+		compat = new GlCompat(capabilities);
 
 		instancingAvailable = compat.vertexArrayObjectsSupported() &&
 				compat.drawInstancedSupported() &&
