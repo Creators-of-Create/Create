@@ -42,7 +42,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 		super.updateDiagonalNeighbors(stateIn, worldIn, pos, flags, count);
 		withTileEntityDo(worldIn, pos, GantryCarriageTileEntity::checkValidGantryShaft);
 	}
-	
+
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
@@ -81,9 +81,10 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos updatePos,
 		boolean p_220069_6_) {
-		if (!isValidPosition(state, world, pos))
+		if (updatePos.equals(pos.offset(state.get(FACING)
+			.getOpposite())) && !isValidPosition(state, world, pos))
 			world.destroyBlock(pos, true);
 	}
 
