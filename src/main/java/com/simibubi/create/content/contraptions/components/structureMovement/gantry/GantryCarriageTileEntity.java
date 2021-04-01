@@ -36,6 +36,13 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		if (shouldAssemble())
 			queueAssembly();
 	}
+	
+	@Override
+	public void initialize() {
+		super.initialize();
+		if (!getBlockState().isValidPosition(world, pos))
+			world.destroyBlock(pos, true);
+	}
 
 	public void queueAssembly() {
 		assembleNextTick = true;

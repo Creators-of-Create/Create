@@ -285,13 +285,16 @@ public class ContraptionCollider {
 			}
 
 			if (bounce == 0 && slide > 0 && hasNormal && anyCollision && rotation.hasVerticalRotation()) {
-				Vec3d motionIn = entityMotionNoTemporal.mul(0, 1, 0)
+				double slideFactor = collisionNormal.mul(1, 0, 1)
+					.length() * 1.25f;
+				Vec3d motionIn = entityMotionNoTemporal.mul(0, .9, 0)
 					.add(0, -.01f, 0);
 				Vec3d slideNormal = collisionNormal.crossProduct(motionIn.crossProduct(collisionNormal))
 					.normalize();
-				entity.setMotion(entityMotion.mul(.8, 0, .8)
-					.add(slideNormal.scale((.2f + slide) * motionIn.length())
-						.add(0, -0.1, 0)));
+				Vec3d newMotion = entityMotion.mul(.85, 0, .85)
+					.add(slideNormal.scale((.2f + slide) * motionIn.length() * slideFactor)
+						.add(0, -.1f - collisionNormal.y * .125f, 0));
+				entity.setMotion(newMotion);
 				entityMotion = entity.getMotion();
 			}
 
