@@ -196,8 +196,18 @@ public class SuperByteBuffer extends TemplateBuffer {
 		return this;
 	}
 
+	public SuperByteBuffer rotate(Quaternion q) {
+		transforms.multiply(q);
+		return this;
+	}
+
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
 		return translate(.5f, .5f, .5f).rotate(axis, radians)
+			.translate(-.5f, -.5f, -.5f);
+	}
+
+	public SuperByteBuffer rotateCentered(Quaternion q) {
+		return translate(.5f, .5f, .5f).rotate(q)
 			.translate(-.5f, -.5f, -.5f);
 	}
 

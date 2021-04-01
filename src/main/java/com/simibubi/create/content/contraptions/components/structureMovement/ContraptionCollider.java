@@ -13,6 +13,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
@@ -221,6 +222,7 @@ public class ContraptionCollider {
 			totalResponse = VecHelper.rotate(totalResponse, yawOffset, Axis.Y);
 			collisionNormal = rotationMatrix.transform(collisionNormal);
 			collisionNormal = VecHelper.rotate(collisionNormal, yawOffset, Axis.Y);
+			collisionNormal = collisionNormal.normalize();
 			collisionLocation = rotationMatrix.transform(collisionLocation);
 			collisionLocation = VecHelper.rotate(collisionLocation, yawOffset, Axis.Y);
 			rotationMatrix.transpose();
@@ -248,16 +250,11 @@ public class ContraptionCollider {
 			boolean hasNormal = !collisionNormal.equals(Vector3d.ZERO);
 			boolean anyCollision = hardCollision || temporalCollision;
 
-			if (bounce > 0 && hasNormal && anyCollision) {
-				collisionNormal = collisionNormal.normalize();
-				Vector3d newNormal = collisionNormal.crossProduct(collisionNormal.crossProduct(entityMotionNoTemporal))
-					.normalize();
-				if (bounceEntity(entity, newNormal, contraptionEntity, bounce)) {
-					entity.world.playSound(playerType == PlayerType.CLIENT ? (PlayerEntity) entity : null,
-						entity.getX(), entity.getY(), entity.getZ(), SoundEvents.BLOCK_SLIME_BLOCK_FALL,
-						SoundCategory.BLOCKS, .5f, 1);
-					continue;
-				}
+			if (bounce > 0 && hasNormal && anyCollision && bounceEntity(entity, collisionNormal, contraptionEntity, bounce)) {
+				entity.world.playSound(playerType == PlayerType.CLIENT ? (PlayerEntity) entity : null,
+					entity.getX(), entity.getY(), entity.getZ(), SoundEvents.BLOCK_SLIME_BLOCK_FALL,
+					SoundCategory.BLOCKS, .5f, 1);
+				continue;
 			}
 
 			if (temporalCollision) {
@@ -288,7 +285,6 @@ public class ContraptionCollider {
 			}
 
 			if (bounce == 0 && slide > 0 && hasNormal && anyCollision && rotation.hasVerticalRotation()) {
-				collisionNormal = collisionNormal.normalize();
 				Vector3d motionIn = entityMotionNoTemporal.mul(0, 1, 0)
 					.add(0, -.01f, 0);
 				Vector3d slideNormal = collisionNormal.crossProduct(motionIn.crossProduct(collisionNormal))
@@ -346,35 +342,14 @@ public class ContraptionCollider {
 			return false;
 		if (entity.bypassesLandingEffects())
 			return false;
-		if (normal.equals(Vector3d.ZERO))
-			return false;
 
-		Vector3d contraptionVec = Vector3d.ZERO;
 		Vector3d contactPointMotion = contraption.getContactPointMotion(entity.getPositionVec());
-		Vector3d motion = entity.getMotion()
-			.subtract(contactPointMotion);
-
-		Vector3d v2 = motion.crossProduct(normal)
-			.normalize();
-		if (v2 != Vector3d.ZERO)
-			contraptionVec = normal.scale(contraptionVec.dotProduct(normal))
-				.add(v2.scale(contraptionVec.dotProduct(v2)));
-		else
-			v2 = normal.crossProduct(normal.add(Math.random(), Math.random(), Math.random()))
-				.normalize();
-
-		Vector3d v3 = normal.crossProduct(v2);
-		motion = motion.subtract(contraptionVec);
-		Vector3d lr = new Vector3d(factor * motion.dotProduct(normal), -motion.dotProduct(v2), -motion.dotProduct(v3));
-
-		if (lr.dotProduct(lr) > 1 / 16f) {
-			Vector3d newMot = contactPointMotion.add(normal.x * lr.x + v2.x * lr.y + v3.x * lr.z,
-				normal.y * lr.x + v2.y * lr.y + v3.y * lr.z, normal.z * lr.x + v2.z * lr.y + v3.z * lr.z);
-			entity.setMotion(newMot);
-			return true;
-		}
-
-		return false;
+		Vector3d motion = entity.getMotion().subtract(contactPointMotion);
+		Vector3d deltav = normal.scale(factor*2*motion.dotProduct(normal));
+		if (deltav.dotProduct(deltav) < 0.1f)
+		 	return false;
+		entity.setMotion(entity.getMotion().subtract(deltav));
+		return true;
 	}
 
 	public static Vector3d getWorldToLocalTranslation(Entity entity, AbstractContraptionEntity contraptionEntity) {

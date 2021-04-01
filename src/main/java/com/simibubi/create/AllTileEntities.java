@@ -50,10 +50,7 @@ import com.simibubi.create.content.contraptions.components.press.PressInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
@@ -380,21 +377,21 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<WindmillBearingTileEntity> WINDMILL_BEARING = Create.registrate()
 		.tileEntity("windmill_bearing", WindmillBearingTileEntity::new)
-		.instance(() -> BackHalfShaftInstance::new)
+		.instance(() -> BearingInstance::new)
 		.validBlocks(AllBlocks.WINDMILL_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<MechanicalBearingTileEntity> MECHANICAL_BEARING = Create.registrate()
 		.tileEntity("mechanical_bearing", MechanicalBearingTileEntity::new)
-		.instance(() -> BackHalfShaftInstance::new)
+		.instance(() -> BearingInstance::new)
 		.validBlocks(AllBlocks.MECHANICAL_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<ClockworkBearingTileEntity> CLOCKWORK_BEARING = Create.registrate()
 		.tileEntity("clockwork_bearing", ClockworkBearingTileEntity::new)
-		.instance(() -> BackHalfShaftInstance::new)
+		.instance(() -> BearingInstance::new)
 		.validBlocks(AllBlocks.CLOCKWORK_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();

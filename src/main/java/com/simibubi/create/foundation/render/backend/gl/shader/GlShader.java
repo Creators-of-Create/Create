@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.gl.GlObject;
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlCompat;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -17,7 +18,7 @@ public class GlShader extends GlObject {
         this.name = name;
         int handle = GL20.glCreateShader(type.glEnum);
 
-        GL20.glShaderSource(handle, source);
+        GlCompat.safeShaderSource(handle, source);
         GL20.glCompileShader(handle);
 
         String log = GL20.glGetShaderInfoLog(handle);

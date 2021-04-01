@@ -31,8 +31,8 @@ public class TreeFertilizerItem extends Item {
 				return ActionResultType.SUCCESS;
 			}
 
-			TreesDreamWorld world = new TreesDreamWorld((ServerWorld) context.getWorld(), context.getPos());
 			BlockPos saplingPos = context.getPos();
+			TreesDreamWorld world = new TreesDreamWorld((ServerWorld) context.getWorld(), saplingPos);
 
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(-1, 0, -1, 1, 0, 1)) {
 				if (context.getWorld()
@@ -45,8 +45,8 @@ public class TreeFertilizerItem extends Item {
 				state.with(SaplingBlock.STAGE, 1));
 
 			for (BlockPos pos : world.blocksAdded.keySet()) {
-				BlockPos actualPos = pos.add(saplingPos)
-					.down(10);
+				BlockPos actualPos = pos.add(saplingPos).down(10);
+				BlockState newState = world.blocksAdded.get(pos);
 
 				// Don't replace Bedrock
 				if (context.getWorld()
@@ -54,21 +54,15 @@ public class TreeFertilizerItem extends Item {
 					.getBlockHardness(context.getWorld(), actualPos) == -1)
 					continue;
 				// Don't replace solid blocks with leaves
-				if (!world.getBlockState(pos)
-					.isNormalCube(world, pos)
+				if (!newState.isNormalCube(world, pos)
 					&& !context.getWorld()
 						.getBlockState(actualPos)
 						.getCollisionShape(context.getWorld(), actualPos)
 						.isEmpty())
 					continue;
-				if (world.getBlockState(pos)
-					.getBlock() == Blocks.GRASS_BLOCK
-					|| world.getBlockState(pos)
-						.getBlock() == Blocks.PODZOL)
-					continue;
 
 				context.getWorld()
-					.setBlockState(actualPos, world.getBlockState(pos));
+					.setBlockState(actualPos, newState);
 			}
 
 			if (context.getPlayer() != null && !context.getPlayer()
@@ -84,21 +78,27 @@ public class TreeFertilizerItem extends Item {
 
 	private class TreesDreamWorld extends PlacementSimulationServerWorld {
 		private final BlockPos saplingPos;
+		private final BlockState soil;
 
 		protected TreesDreamWorld(ServerWorld wrapped, BlockPos saplingPos) {
 			super(wrapped);
 			this.saplingPos = saplingPos;
+			soil = wrapped.getBlockState(saplingPos.down());
 		}
 
 		@Override
 		public BlockState getBlockState(BlockPos pos) {
 			if (pos.getY() <= 9)
-				return world.getBlockState(saplingPos.down());
+				return soil;
 			return super.getBlockState(pos);
 		}
 
+		@Override
+		public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+			if (newState.getBlock() == Blocks.PODZOL)
+				return true;
+			return super.setBlockState(pos, newState, flags);
+		}
 	}
-
-
 
 }
