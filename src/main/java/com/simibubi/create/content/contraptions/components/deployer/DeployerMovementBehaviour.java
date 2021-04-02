@@ -75,7 +75,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		World world = context.world;
 
 		ItemStack filter = getFilter(context);
-		if (AllItems.SCHEMATIC.isIn(filter)) 
+		if (AllItems.SCHEMATIC.isIn(filter))
 			activateAsSchematicPrinter(context, pos, player, world, filter);
 
 		Vector3d facingVec = Vector3d.of(context.state.get(DeployerBlock.FACING)
@@ -88,8 +88,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
 
-	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player, World world,
-		ItemStack filter) {
+	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
+		World world, ItemStack filter) {
 		if (!filter.hasTag())
 			return;
 		if (!world.getBlockState(pos)
@@ -113,24 +113,25 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 		List<ItemStack> requiredItems = requirement.getRequiredItems();
 		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
-		IItemHandler iItemHandler = context.contraption.inventory;
-
-		for (ItemStack required : requiredItems) {
-			int amountFound = ItemHelper
-				.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-					required.getCount(), true)
-				.getCount();
-			if (amountFound < required.getCount())
-				return;
+		
+		if (!context.contraption.hasUniversalCreativeCrate) {
+			IItemHandler iItemHandler = context.contraption.inventory;
+			for (ItemStack required : requiredItems) {
+				int amountFound = ItemHelper
+					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+						required.getCount(), true)
+					.getCount();
+				if (amountFound < required.getCount())
+					return;
+			}
+			for (ItemStack required : requiredItems)
+				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
+					required.getCount(), false);
 		}
-
-		for (ItemStack required : requiredItems)
-			ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-				required.getCount(), false);
 
 		CompoundNBT data = null;
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-			TileEntity tile = world.getTileEntity(pos);
+			TileEntity tile = schematicWorld.getTileEntity(pos);
 			if (tile != null) {
 				data = tile.write(new CompoundNBT());
 				data = NBTProcessors.process(tile, data, true);

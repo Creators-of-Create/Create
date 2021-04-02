@@ -60,8 +60,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	private int flickerTally;
 	private int networkSize;
 	private int validationCountdown;
-	private float lastStressApplied;
-	private float lastCapacityProvided;
+	protected float lastStressApplied;
+	protected float lastCapacityProvided;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -161,7 +161,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateStressApplied() {
-		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getBlockState().getBlock());
+		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getStressConfigKey());
 		this.lastStressApplied = impact;
 		return impact;
 	}

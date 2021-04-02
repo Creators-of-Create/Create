@@ -496,7 +496,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		powered = compound.getBoolean("Powered");
 		state = NBTHelper.readEnum(compound, "State", State.class);
-		lidProgress.readNBT(compound.getCompound("Lid"), clientPacket);
+		lidProgress.readNBT(compound.getCompound("Lid"), false);
 		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", NBT.TAG_COMPOUND),
 			nbt -> IntAttached.read(nbt, ItemStack::read));
 

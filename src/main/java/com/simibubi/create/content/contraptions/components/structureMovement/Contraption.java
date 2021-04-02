@@ -51,12 +51,14 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
+import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
 import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Coordinate;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -123,6 +125,7 @@ public abstract class Contraption {
 	public AxisAlignedBB bounds;
 	public BlockPos anchor;
 	public boolean stalled;
+	public boolean hasUniversalCreativeCrate;
 
 	protected Map<BlockPos, BlockInfo> blocks;
 	protected Map<BlockPos, MountedStorage> storage;
@@ -623,6 +626,11 @@ public abstract class Contraption {
 			fluidStorage.put(localPos, new MountedFluidStorage(te));
 		if (AllMovementBehaviours.contains(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
+		if (te instanceof CreativeCrateTileEntity
+			&& ((CreativeCrateTileEntity) te).getBehaviour(FilteringBehaviour.TYPE)
+				.getFilter()
+				.isEmpty())
+			hasUniversalCreativeCrate = true;
 	}
 
 	@Nullable
@@ -735,6 +743,7 @@ public abstract class Contraption {
 			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
 
 		stalled = nbt.getBoolean("Stalled");
+		hasUniversalCreativeCrate = nbt.getBoolean("BottomlessSupply");
 		anchor = NBTUtil.readBlockPos(nbt.getCompound("Anchor"));
 	}
 
@@ -810,6 +819,7 @@ public abstract class Contraption {
 		nbt.put("FluidStorage", fluidStorageNBT);
 		nbt.put("Anchor", NBTUtil.writeBlockPos(anchor));
 		nbt.putBoolean("Stalled", stalled);
+		nbt.putBoolean("BottomlessSupply", hasUniversalCreativeCrate);
 
 		if (bounds != null) {
 			ListNBT bb = NBTHelper.writeAABB(bounds);
