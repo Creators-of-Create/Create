@@ -115,6 +115,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 			BlockPos attachedPos = pos.offset(attachedFace);
 			world.updateNeighbors(pos, world.getBlockState(pos).getBlock());
 			world.updateNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
+			receivedSignalChanged = false;
 		}
 	}
 

@@ -61,9 +61,9 @@ public interface IHaveGoggleInformation {
 				continue;
 
 			ITextComponent fluidName = new TranslationTextComponent(fluidStack.getTranslationKey()).formatted(TextFormatting.GRAY);
-			ITextComponent contained = new StringTextComponent(format(fluidStack.getAmount()) + mb).formatted(TextFormatting.GOLD);
+			ITextComponent contained = new StringTextComponent(format(fluidStack.getAmount())).append(mb).formatted(TextFormatting.GOLD);
 			ITextComponent slash = new StringTextComponent(" / ").formatted(TextFormatting.GRAY);
-			ITextComponent capacity = new StringTextComponent(format(tank.getTankCapacity(i)) + mb).formatted(TextFormatting.DARK_GRAY);
+			ITextComponent capacity = new StringTextComponent(format(tank.getTankCapacity(i))).append(mb).formatted(TextFormatting.DARK_GRAY);
 
 			tooltip.add(indent.copy()
 					.append(fluidName));
