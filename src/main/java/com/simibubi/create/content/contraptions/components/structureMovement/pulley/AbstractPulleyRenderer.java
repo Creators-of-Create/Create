@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
@@ -41,6 +42,9 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
+
+		if (FastRenderDispatcher.available(te.getWorld())) return;
+
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		float offset = getOffset(te, partialTicks);
 		boolean running = isRunning(te);

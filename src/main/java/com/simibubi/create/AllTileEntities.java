@@ -61,6 +61,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.gan
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
@@ -398,7 +399,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<PulleyTileEntity> ROPE_PULLEY = Create.registrate()
 		.tileEntity("rope_pulley", PulleyTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> PulleyInstance::new)
 		.validBlocks(AllBlocks.ROPE_PULLEY)
 		.renderer(() -> PulleyRenderer::new)
 		.register();

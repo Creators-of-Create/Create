@@ -170,7 +170,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	@Override
 	protected InstancedModel<RotatingData> getModel() {
-		return AllBlockPartials.ARM_COG.renderOnRotating(renderer, tile.getBlockState());
+		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, tile.getBlockState());
 	}
 
 	@Override

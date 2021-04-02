@@ -241,6 +241,6 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public boolean shouldRenderAsTE() {
-		return true;
+		return false;
 	}
 }

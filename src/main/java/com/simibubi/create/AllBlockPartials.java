@@ -16,10 +16,10 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.MaterialTypes;
+import com.simibubi.create.foundation.render.backend.MaterialType;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -237,20 +237,7 @@ public class AllBlockPartials {
 		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
 	}
 
-	public InstancedModel<RotatingData> renderOnRotating(InstancedTileRenderer<?> ctx, BlockState referenceState) {
-		return ctx.getMaterial(KineticRenderMaterials.ROTATING).getModel(this, referenceState);
-	}
-
-	public InstancedModel<BeltData> renderOnBelt(InstancedTileRenderer<?> ctx, BlockState referenceState) {
-		return ctx.getMaterial(KineticRenderMaterials.BELTS).getModel(this, referenceState);
-	}
-
-	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer<?> dispatcher, BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectionalSouthRotating(dispatcher, referenceState, facing);
-	}
-
-	public InstancedModel<RotatingData> renderOnDirectionalSouthRotating(InstancedTileRenderer<?> dispatcher, BlockState referenceState, Direction facing) {
+	public <M extends InstancedModel<?>> M getModel(RenderMaterial<?, M> mat, BlockState referenceState, Direction facing) {
 		Supplier<MatrixStack> ms = () -> {
 			MatrixStack stack = new MatrixStack();
 			MatrixStacker.of(stack)
@@ -260,25 +247,7 @@ public class AllBlockPartials {
 						 .unCentre();
 			return stack;
 		};
-		return dispatcher.getMaterial(KineticRenderMaterials.ROTATING).getModel(this, referenceState, facing, ms);
-	}
-
-	public InstancedModel<ModelData> renderOnHorizontalModel(InstancedTileRenderer<?> dispatcher, BlockState referenceState) {
-		Direction facing = referenceState.get(HORIZONTAL_FACING);
-		return renderOnDirectionalSouthModel(dispatcher, referenceState, facing);
-	}
-
-	public InstancedModel<ModelData> renderOnDirectionalSouthModel(InstancedTileRenderer<?> dispatcher, BlockState referenceState, Direction facing) {
-		Supplier<MatrixStack> ms = () -> {
-			MatrixStack stack = new MatrixStack();
-			MatrixStacker.of(stack)
-						 .centre()
-						 .rotateY(AngleHelper.horizontalAngle(facing))
-						 .rotateX(AngleHelper.verticalAngle(facing))
-						 .unCentre();
-			return stack;
-		};
-		return dispatcher.getMaterial(MaterialTypes.TRANSFORMED).getModel(this, referenceState, facing, ms);
+		return mat.getModel(this, referenceState, facing, ms);
 	}
 
 }

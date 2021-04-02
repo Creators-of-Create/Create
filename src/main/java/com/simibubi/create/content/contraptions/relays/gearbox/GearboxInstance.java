@@ -4,11 +4,13 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.state.properties.BlockStateProperties;
@@ -32,12 +34,14 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
         int skyLight = world.getLightLevel(LightType.SKY, pos);
         updateSourceFacing();
 
+        RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
+
         for (Direction direction : Iterate.directions) {
             final Direction.Axis axis = direction.getAxis();
             if (boxAxis == axis)
                 continue;
 
-            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, direction);
+            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.getModel(rotatingMaterial, blockState, direction);
 
             RotatingData key = shaft.createInstance();
 

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -25,9 +27,11 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
         float speed = tile.getSpeed();
 
+        RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
+
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
-            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(modelManager, blockState, dir);
+            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.getModel(rotatingMaterial, blockState, dir);
 
             float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 

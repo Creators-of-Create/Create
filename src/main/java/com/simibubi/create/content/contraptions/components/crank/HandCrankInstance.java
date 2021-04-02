@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.crank;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
+import com.simibubi.create.foundation.render.backend.MaterialTypes;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -29,7 +30,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
             return;
 
         facing = blockState.get(BlockStateProperties.FACING);
-        InstancedModel<ModelData> model = renderedHandle.renderOnDirectionalSouthModel(modelManager, blockState, facing.getOpposite());
+		InstancedModel<ModelData> model = renderedHandle.getModel(getTransformMaterial(), blockState, facing.getOpposite());
         crank = model.createInstance();
 
         rotateCrank();
