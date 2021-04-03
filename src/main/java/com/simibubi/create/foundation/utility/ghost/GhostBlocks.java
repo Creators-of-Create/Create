@@ -15,7 +15,7 @@ public class GhostBlocks {
 		double period = 2500;
 		double timer = System.currentTimeMillis() % period;
 		double offset = MathHelper.cos((float) ((2d/period) * Math.PI * timer));
-		return 0.75d - 0.2d * offset;
+		return 0.55d - 0.2d * offset;
 	}
 
 	final Map<Object, Entry> ghosts;

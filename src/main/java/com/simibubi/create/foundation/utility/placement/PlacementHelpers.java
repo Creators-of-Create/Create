@@ -29,11 +29,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CClient;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 @Mod.EventBusSubscriber
 public class PlacementHelpers {
@@ -214,6 +222,8 @@ public class PlacementHelpers {
 		ms.translate(centerX, centerY, 0);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle.get(0)));
 		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
+		double scale = AllConfigs.CLIENT.indicatorScale.get();
+		RenderSystem.scaled(scale, scale, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -249,7 +259,9 @@ public class PlacementHelpers {
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		ms.translate(centerX, centerY, 0);
-		ms.scale(12, 12, 0);
+		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue();
+		ms.scale(scale, scale, 1);
+		ms.scale(12, 12, 1);
 
 		float index = snappedAngle / 22.5f;
 		float tex_size = 16f/256f;
