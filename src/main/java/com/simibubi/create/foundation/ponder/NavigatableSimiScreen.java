@@ -58,6 +58,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		super.init();
+		backTrack = null;
 		List<Screen> screenHistory = ScreenOpener.getScreenHistory();
 		if (screenHistory.isEmpty())
 			return;
