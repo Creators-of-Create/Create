@@ -285,7 +285,6 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 
 	public void setController(BlockPos controller) {
 		this.controller = controller;
-		cachedBoundingBox = null;
 	}
 
 	public BlockPos getController() {
