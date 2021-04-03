@@ -72,7 +72,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	ChuteItemHandler itemHandler;
 	LazyOptional<IItemHandler> lazyHandler;
 	boolean canPickUpItems;
-	boolean canFilterItems;
 
 	float bottomPullDistance;
 	float beltBelowOffset;
@@ -91,7 +90,6 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		itemHandler = new ChuteItemHandler(this);
 		lazyHandler = LazyOptional.of(() -> itemHandler);
 		canPickUpItems = false;
-		canFilterItems = false;
 		capAbove = LazyOptional.empty();
 		capBelow = LazyOptional.empty();
 		bottomPullDistance = 0;
@@ -326,40 +324,25 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private void handleInputFromAbove() {
 		if (!capAbove.isPresent())
 			capAbove = grabCapability(Direction.UP);
-		if (!capAbove.isPresent())
-			return;
-
-		int count = getExtractionAmount();
-		IItemHandler inv = capAbove.orElse(null);
-		Predicate<ItemStack> canAccept = this::canAcceptItem;
-		if (count == 0) {
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, canFilterItems ? 64 : 16, false);
-			return;
-		}
-
-		if (!ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, true)
-			.isEmpty())
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, false);
+		handleInput(capAbove.orElse(null));
 	}
 
 	private void handleInputFromBelow() {
 		if (!capBelow.isPresent())
 			capBelow = grabCapability(Direction.DOWN);
-		if (!capBelow.isPresent())
-			return;
+		handleInput(capBelow.orElse(null));
+	}
 
-		int count = getExtractionAmount();
-		IItemHandler inv = capBelow.orElse(null);
+	private void handleInput(IItemHandler inv) {
+		if (inv == null)
+			return;
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
-
-		if (count == 0) {
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, canFilterItems ? 64 : 16, false);
-			return;
-		}
-
-		if (!ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, true)
+		int count = getExtractionAmount();
+		ExtractionCountMode mode = getExtractionMode();
+		if (mode == ExtractionCountMode.UPTO || !ItemHelper.extract(inv, canAccept, mode, count, true)
 			.isEmpty())
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.EXACTLY, count, false);
+			item = ItemHelper.extract(inv, canAccept, mode, count, false);
+
 	}
 
 	private boolean handleDownwardOutput(boolean simulate) {
@@ -477,7 +460,11 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected int getExtractionAmount() {
-		return 0;
+		return 16;
+	}
+
+	protected ExtractionCountMode getExtractionMode() {
+		return ExtractionCountMode.UPTO;
 	}
 
 	protected boolean canCollectItemsFromBelow() {
