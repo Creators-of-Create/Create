@@ -106,7 +106,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 		Direction direction = getFunnelFacing(state);
 		Vector3d diff = entityIn.getPositionVec()
-			.subtract(VecHelper.getCenterOf(pos));
+			.subtract(VecHelper.getCenterOf(pos)
+				.add(Vector3d.of(direction.getDirectionVec()).scale(-.325f)));
 		double projectedDiff = direction.getAxis()
 			.getCoordinate(diff.x, diff.y, diff.z);
 		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))

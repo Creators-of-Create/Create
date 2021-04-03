@@ -1742,7 +1742,7 @@
 	"create.ponder.funnel_transfer.header": "Direct transfer",
 	"create.ponder.funnel_transfer.text_1": "Funnels cannot ever transfer between closed inventories directly.",
 	"create.ponder.funnel_transfer.text_2": "Chutes or Smart chutes might be more suitable for such purposes.",
-	"create.ponder.funnel_transfer.text_3": "Same applies for horizontal movement.\nA mechanical belt should help here.",
+	"create.ponder.funnel_transfer.text_3": "Same applies for horizontal movement. A mechanical belt should help here.",
 
 	"create.ponder.furnace_engine.header": "Generating Rotational Force using the Furnace Engine",
 	"create.ponder.furnace_engine.text_1": "Furnace Engines generate Rotational Force while their attached Furnace is running",
@@ -1931,6 +1931,10 @@
 	"create.ponder.millstone.text_3": "Throw or Insert items at the top",
 	"create.ponder.millstone.text_4": "After some time, the result can be obtained via Right-click",
 	"create.ponder.millstone.text_5": "The outputs can also be extracted by automation",
+
+	"create.ponder.nixie_tube.header": "Using Nixie Tubes",
+	"create.ponder.nixie_tube.text_1": "When powered by Redstone, Nixie Tubes will display the redstone signals' strength",
+	"create.ponder.nixie_tube.text_2": "Using name tags edited with an anvil, custom text can be displayed",
 
 	"create.ponder.piston_pole.header": "Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "Without attached Poles, a Mechanical Piston cannot move",

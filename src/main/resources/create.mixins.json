@@ -13,7 +13,7 @@
         "RenderHooksMixin",
         "ShaderCloseMixin",
         "TileRemoveMixin",
-        "StepSoundMixin"
+        "EntityContraptionInteractionMixin"
     ],
     "injectors": {
         "defaultRequire": 1

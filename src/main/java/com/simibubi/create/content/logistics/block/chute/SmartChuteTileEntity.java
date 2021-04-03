@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.chute;
 
 import java.util.List;
 
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
@@ -26,7 +27,13 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	@Override
 	protected int getExtractionAmount() {
-		return filtering.isCountVisible() ? filtering.getAmount() : 0;
+		return filtering.isCountVisible() && !filtering.anyAmount() ? filtering.getAmount() : 64;
+	}
+
+	@Override
+	protected ExtractionCountMode getExtractionMode() {
+		return filtering.isCountVisible() && !filtering.anyAmount() ? ExtractionCountMode.EXACTLY
+			: ExtractionCountMode.UPTO;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -70,6 +71,13 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
+		
+		InputMappings.Input mouseKey = InputMappings.getInputByCode(code, p_keyPressed_2_);
+        if (code == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+           this.minecraft.player.closeScreen();
+           return true;
+        }
+        
 		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
@@ -79,8 +87,6 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (widget.charTyped(character, code))
 				return true;
 		}
-		if (character == 'e')
-			onClose();
 		return super.charTyped(character, code);
 	}
 

@@ -32,7 +32,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     protected OrientedData hand;
 
     AllBlockPartials currentHand;
-    float progress = Float.NaN;
+    float progress;
     private boolean newHand = false;
 
     public DeployerInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
@@ -52,9 +52,9 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         updateHandPose();
         relight(pos, pole);
 
+        progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, zRot, zRotPole);
-
-        beginFrame();
+        updatePosition();
     }
 
     @Override
@@ -72,19 +72,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         progress = newProgress;
         newHand = false;
 
-        float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
-                : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-        float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
-        Vector3i facingVec = facing.getDirectionVec();
-        BlockPos blockPos = getInstancePosition();
-
-        float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
-        float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
-        float z = blockPos.getZ() + ((float) facingVec.getZ()) * distance;
-
-        pole.setPosition(x, y, z);
-        hand.setPosition(x, y, z);
-
+        updatePosition();
     }
 
     @Override
@@ -112,6 +100,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         relight(pos, hand);
         updateRotation(pole, hand, yRot, zRot, zRotPole);
+        updatePosition();
 
         return true;
     }
@@ -122,6 +111,21 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         if (tile.state == DeployerTileEntity.State.RETRACTING)
             return (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
         return 0;
+    }
+
+    private void updatePosition() {
+        float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
+                : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+        float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
+        Vector3i facingVec = facing.getDirectionVec();
+        BlockPos blockPos = getInstancePosition();
+
+        float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
+        float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
+        float z = blockPos.getZ() + ((float) facingVec.getZ()) * distance;
+
+        pole.setPosition(x, y, z);
+        hand.setPosition(x, y, z);
     }
 
     static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float zRot, float zRotPole) {

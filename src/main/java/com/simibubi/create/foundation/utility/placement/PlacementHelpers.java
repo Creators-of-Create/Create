@@ -259,7 +259,7 @@ public class PlacementHelpers {
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		ms.translate(centerX, centerY, 0);
-		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue();
+		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue() * .75f;
 		ms.scale(scale, scale, 1);
 		ms.scale(12, 12, 1);
 

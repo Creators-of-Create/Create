@@ -89,8 +89,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		super.tick();
 		effects.tick();
 
-		if (world.isRemote)
+		if (world.isRemote) {
+			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
 			return;
+		}
 
 		if (validationCountdown-- <= 0) {
 			validationCountdown = AllConfigs.SERVER.kinetics.kineticValidationFrequency.get();
@@ -220,7 +222,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
-		cachedBoundingBox = null;
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
 			super.fromTag(state, compound, clientPacket);

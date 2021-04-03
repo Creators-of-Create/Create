@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -87,6 +88,13 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
 		}
+		
+		InputMappings.Input mouseKey = InputMappings.getInputByCode(code, p_keyPressed_2_);
+        if (code == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+           this.minecraft.player.closeScreen();
+           return true;
+        }
+		
 		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
@@ -96,8 +104,6 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			if (widget.charTyped(character, code))
 				return true;
 		}
-		if (character == 'e')
-			onClose();
 		return super.charTyped(character, code);
 	}
 
