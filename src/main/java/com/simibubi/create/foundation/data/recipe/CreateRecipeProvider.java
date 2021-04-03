@@ -134,7 +134,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static Tag<Item> copperSheet() {
 			return AllTags.forgeItemTag("plates/copper");
 		}
-
+		
 		static Tag<Item> copperNugget() {
 			return AllTags.forgeItemTag("nuggets/copper");
 		}

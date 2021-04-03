@@ -617,7 +617,7 @@ public class RedstoneScenes {
 	}
 
 	public static void nixieTube(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("analog_lever", "Using Nixie Tubes");
+		scene.title("nixie_tube", "Using Nixie Tubes");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0)
 			.add(util.select.fromTo(2, 1, 1, 2, 1, 2)), Direction.UP);

@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "create:golden_sheet"
+      "tag": "forge:plates/gold"
     },
     "D": {
       "item": "create:depot"
