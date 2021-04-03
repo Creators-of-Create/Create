@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
@@ -72,13 +71,15 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
 		
+		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
+			return true;
+
 		InputMappings.Input mouseKey = InputMappings.getInputByCode(code, p_keyPressed_2_);
-        if (code == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
-           this.minecraft.player.closeScreen();
-           return true;
-        }
-        
-		return super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_);
+		if (this.client.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+			this.onClose();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
