@@ -17,6 +17,7 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	public SmartChuteTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
+		canFilterItems = true;
 	}
 
 	@Override

@@ -72,6 +72,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	ChuteItemHandler itemHandler;
 	LazyOptional<IItemHandler> lazyHandler;
 	boolean canPickUpItems;
+	boolean canFilterItems;
 
 	float bottomPullDistance;
 	float beltBelowOffset;
@@ -90,6 +91,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		itemHandler = new ChuteItemHandler(this);
 		lazyHandler = LazyOptional.of(() -> itemHandler);
 		canPickUpItems = false;
+		canFilterItems = false;
 		capAbove = LazyOptional.empty();
 		capBelow = LazyOptional.empty();
 		bottomPullDistance = 0;
@@ -331,7 +333,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		IItemHandler inv = capAbove.orElse(null);
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
 		if (count == 0) {
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, 16, false);
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, canFilterItems ? 64 : 16, false);
 			return;
 		}
 
@@ -351,7 +353,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		Predicate<ItemStack> canAccept = this::canAcceptItem;
 
 		if (count == 0) {
-			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, 16, false);
+			item = ItemHelper.extract(inv, canAccept, ExtractionCountMode.UPTO, canFilterItems ? 64 : 16, false);
 			return;
 		}
 
