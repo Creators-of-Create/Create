@@ -54,6 +54,9 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
 
     public WrappedChunk getChunk(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
+        
+        if (chunks == null)
+        	return null;
 
         WrappedChunk chunk = chunks.get(pos);
 
