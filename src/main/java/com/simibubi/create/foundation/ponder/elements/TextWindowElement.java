@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.FontHelper;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -126,8 +125,11 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		}
 
 		ms.translate(0, 0, 400);
-		FontHelper.drawSplitString(ms, screen.getFontRenderer(), bakedText, targetX - 10, 3, textWidth,
-			ColorHelper.applyAlpha(brighterColor, fade));
+		for (int i = 0; i < lines.size(); i++) {
+			screen.getFontRenderer()
+				.draw(ms, lines.get(i)
+					.getString(), targetX - 10, 3 + 9 * i, ColorHelper.applyAlpha(brighterColor, fade));
+		}
 		ms.pop();
 	}
 
