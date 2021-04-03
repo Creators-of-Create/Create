@@ -651,7 +651,7 @@ public class RedstoneScenes {
 		scene.world.showSection(tubes, Direction.DOWN);
 		scene.idle(20);
 
-		scene.overlay.showControls(new InputWindowElement(centerTube.add(0, .35, 0), Pointing.DOWN).rightClick()
+		scene.overlay.showControls(new InputWindowElement(centerTube.add(1, .35, 0), Pointing.DOWN).rightClick()
 			.withItem(new ItemStack(Items.NAME_TAG)), 40);
 		scene.idle(7);
 
@@ -673,8 +673,9 @@ public class RedstoneScenes {
 		scene.idle(20);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
+			.placeNearTarget()
 			.text("Using name tags edited with an anvil, custom text can be displayed")
-			.pointAt(util.vector.topOf(util.grid.at(2, 1, 3))
+			.pointAt(util.vector.topOf(util.grid.at(3, 1, 3))
 				.add(.25, -.05f, 0));
 		scene.idle(70);
 	}

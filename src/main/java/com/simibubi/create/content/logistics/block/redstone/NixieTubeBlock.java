@@ -63,12 +63,12 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 					return ActionResultType.SUCCESS;
 
 				BlockPos currentPos = pos;
-				while (true) {
-					BlockPos nextPos = currentPos.offset(left);
-					if (world.getBlockState(nextPos) != state)
-						break;
-					currentPos = nextPos;
-				}
+//				while (true) {
+//					BlockPos nextPos = currentPos.offset(left);
+//					if (world.getBlockState(nextPos) != state)
+//						break;
+//					currentPos = nextPos;
+//				}
 
 				int index = 0;
 
