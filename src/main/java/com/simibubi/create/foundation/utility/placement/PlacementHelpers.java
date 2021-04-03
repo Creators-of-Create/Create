@@ -265,7 +265,7 @@ public class PlacementHelpers {
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
 		//RenderSystem.translated(0, 10, 0);
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, 1);
-		double scale = AllConfigs.CLIENT.indicatorScale.get();
+		double scale = AllConfigs.CLIENT.indicatorScale.get() * .75;
 		RenderSystem.scaled(scale, scale, 1);
 		RenderSystem.scaled(12, 12, 1);
 
