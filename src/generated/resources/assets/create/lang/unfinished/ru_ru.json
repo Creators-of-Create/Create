@@ -396,7 +396,7 @@
 	"block.create.weathered_limestone_cobblestone_stairs": "Ступени из известняк-булыжника",
 	"block.create.weathered_limestone_cobblestone_wall": "Стена из известняк-булыжника",
 	"block.create.weathered_limestone_pillar": "Колонна из выветренного известняка",
-	"block.create.weighted_ejector": "Взвешенный подбрасыватель",
+	"block.create.weighted_ejector": "Взвешенная катапульта",
 	"block.create.white_sail": "Белый парус",
 	"block.create.white_seat": "Белое сиденье",
 	"block.create.white_valve_handle": "Белый ручной вентиль",
@@ -1089,10 +1089,10 @@
 	"create.mechanical_arm.points_outside_range": "%1$s выбранные точки взаимодействия удалены из-за ограничений диапазона.",
 
 	"create.weighted_ejector.target_set": "Цель выбрана",
-	"create.weighted_ejector.target_not_valid": "Побрасывает до близлежащего блока (Неподходящая Цель)",
-	"create.weighted_ejector.no_target": "Побрасывает до близлежащего блока (Цель не была Выбрана)",
-	"create.weighted_ejector.targeting": "Побрасывает до [%1$s,%2$s,%3$s]",
-	"create.weighted_ejector.stack_size": "Размер Подбрасываемого Стака",
+	"create.weighted_ejector.target_not_valid": "Бросает до близлежащего блока (Неподходящая Цель)",
+	"create.weighted_ejector.no_target": "Бросает до близлежащего блока (Цель не была Выбрана)",
+	"create.weighted_ejector.targeting": "Бросает до [%1$s,%2$s,%3$s]",
+	"create.weighted_ejector.stack_size": "Размер Бросаемого Стака",
 
 	"create.logistics.when_multiple_outputs_available": "Когда доступно несколько выходов",
 
@@ -1344,7 +1344,7 @@
 	"item.create.goggles.tooltip.condition2": "При взгляде на датчик",
 	"item.create.goggles.tooltip.behaviour2": "Показывает подробную информацию о скорости или моменте сети, к которой подключён датчик.",
 	"item.create.goggles.tooltip.condition3": "При взгляде на жидкостные контейнеры",
-	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _Ёмкости_ блока и сколько в ней хранится _Жидкостей_.",
+	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _Ёмкости_ блока и о хранящейся в нём хранится _Жидкости_.",
 
 	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "Полезный _инструмент_ для работы с _кинетическими_ штуковинами. Может использоваться для _поворота_, _демонтажа_ и _настройки_ компонентов.",
@@ -1474,7 +1474,7 @@
 	"create.ponder.tag.redstone": "Логические Компоненты",
 	"create.ponder.tag.redstone.description": "Компоненты, помогающие с конструироваением Редстоун Схем",
 	"create.ponder.tag.fluids": "Жидкостные Манипуляторы",
-	"create.ponder.tag.fluids.description": "Компоненты, помогающие перещать и использовать Жидкости",
+	"create.ponder.tag.fluids.description": "Компоненты, помогающие перемещать и использовать Жидкости",
 
 	"create.ponder.adjustable_pulse_repeater.header": "Управлении сигналами с помощью Регулируемого импульсного повторителя",
 	"create.ponder.adjustable_pulse_repeater.text_1": "Регулируемые импульсные повторители испускают короткий импульс с задержкой",
