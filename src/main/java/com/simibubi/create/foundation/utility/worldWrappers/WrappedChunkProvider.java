@@ -56,14 +56,7 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
     public WrappedChunk getChunk(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
 
-        WrappedChunk chunk = chunks.get(pos);
-
-        if (chunk == null) {
-            chunk = new WrappedChunk(world, x, z);
-            chunks.put(pos, chunk);
-        }
-
-        return chunk;
+        return chunks.computeIfAbsent(pos, $ -> new WrappedChunk(world, x, z));
     }
 
     @Override
