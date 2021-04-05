@@ -29,6 +29,7 @@ public class AllCommands {
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())
+				.then(ConfigCommand.register())
 				.then(CloneCommand.register())
 				.then(PonderCommand.register())
 

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.command;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -68,6 +69,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	enum Actions {
+		configScreen(() -> Actions::configScreen),
 		rainbowDebug(() -> Actions::rainbowDebug),
 		overlayScreen(() -> Actions::overlayScreen),
 		fixLighting(() -> Actions::experimentalLighting),
@@ -87,6 +89,11 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		void performAction(String value) {
 			consumer.get()
 				.accept(value);
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void configScreen(String value) {
+			ScreenOpener.open(new ConfigScreen(null));
 		}
 
 		@OnlyIn(Dist.CLIENT)

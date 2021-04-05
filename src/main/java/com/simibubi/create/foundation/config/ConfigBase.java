@@ -107,8 +107,7 @@ public abstract class ConfigBase {
 			if (comment.length > 0) {
 				String[] comments = new String[comment.length + 1];
 				comments[0] = "";
-				for (int i = 0; i < comment.length; i++)
-					comments[i + 1] = comment[i];
+				System.arraycopy(comment, 0, comments, 1, comment.length);
 				builder.comment(comments);
 			} else
 				builder.comment("");
