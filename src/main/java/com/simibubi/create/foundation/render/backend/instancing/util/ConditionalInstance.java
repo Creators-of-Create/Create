@@ -17,7 +17,7 @@ public class ConditionalInstance<D extends InstanceData> {
 		this.model = model;
 		this.condition = condition;
 
-		check();
+		update();
 	}
 
 	public ConditionalInstance<D> setCondition(Condition condition) {
@@ -25,7 +25,7 @@ public class ConditionalInstance<D extends InstanceData> {
 		return this;
 	}
 
-	public ConditionalInstance<D> check() {
+	public ConditionalInstance<D> update() {
 		boolean shouldShow = condition.shouldShow();
 		if (shouldShow && instance == null) {
 			instance = model.createInstance();

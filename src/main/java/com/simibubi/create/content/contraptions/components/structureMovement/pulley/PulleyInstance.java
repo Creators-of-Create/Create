@@ -66,13 +66,16 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 
 		coil.setRotation(rotationAxis.getDegreesQuaternion(offset * 180));
 		magnet.update().get().ifPresent(data ->
-				data.setPosition(getInstancePosition())
-						.nudge(0, -offset, 0)
-						.setBlockLight(bLight[bLight.length - 1])
-						.setSkyLight(sLight[sLight.length - 1])
+				{
+					int index = Math.max(0, MathHelper.floor(offset));
+					data.setPosition(getInstancePosition())
+							.nudge(0, -offset, 0)
+							.setBlockLight(bLight[index])
+							.setSkyLight(sLight[index]);
+				}
 		);
 
-		halfRope.check().get().ifPresent(rope -> {
+		halfRope.update().get().ifPresent(rope -> {
 			float f = offset % 1;
 			float halfRopeNudge = f > .75f ? f - 1 : f;
 
@@ -82,8 +85,8 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 					.setSkyLight(sLight[0]);
 		});
 
+		resizeRope();
 		if (isRunning()) {
-			resizeRope();
 			int size = rope.size();
 			for (int i = 0; i < size; i++) {
 				rope.get(i)
@@ -142,9 +145,12 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 	}
 
 	protected void resizeRope() {
-		if (rope.resize(getNeededRopeCount())) {
+		int neededRopeCount = getNeededRopeCount();
+		rope.resize(neededRopeCount);
 
-			int length = MathHelper.ceil(offset);
+		int length = MathHelper.ceil(offset);
+
+		if (volume == null || bLight.length < length + 1) {
 			volume = GridAlignedBB.from(pos.down(length), pos);
 			volume.fixMinMax();
 
