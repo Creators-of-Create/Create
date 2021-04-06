@@ -9,6 +9,9 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import ca.spottedleaf.starlight.common.chunk.ExtendedChunk;
+import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
+import ca.spottedleaf.starlight.common.light.StarLightEngine;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.shorts.ShortList;
 import net.minecraft.block.Block;
@@ -120,7 +123,7 @@ public class WrappedChunk implements IChunk {
 
     @Override
     public ChunkPos getPos() {
-        return null;
+        return pos;
     }
 
     @Override
@@ -256,5 +259,6 @@ public class WrappedChunk implements IChunk {
 	public Map<Structure<?>, StructureStart<?>> getStructureStarts() {
 		return null;
 	}
+
 
 }

@@ -3,6 +3,8 @@ package com.simibubi.create.content.schematics;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
+
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -43,7 +45,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	public SchematicWorld(BlockPos anchor, World original) {
-		super(original, new WrappedChunkProvider());
+		super(original, new WrappedChunkProvider(WrappedChunk::new));
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
 		this.bounds = new MutableBoundingBox();
