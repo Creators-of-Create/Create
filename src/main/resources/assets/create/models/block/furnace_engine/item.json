@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"5": "create:block/brass_casing",
-		"particle": "create:block/brass_block",
 		"1_1": "create:block/furnace_cylinder"
 	},
 	"elements": [
@@ -56,6 +55,20 @@
 			}
 		},
 		{
+			"name": "LowerPort",
+			"from": [1.5, 0.1, 13.9],
+			"to": [5.5, 4.1, 16.9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 0]},
+			"faces": {
+				"north": {"uv": [14, 0, 10, 4], "texture": "#1_1"},
+				"east": {"uv": [4.5, 13, 3, 15], "texture": "#1_1"},
+				"south": {"uv": [4.5, 13, 2.5, 15], "texture": "#1_1"},
+				"west": {"uv": [4.5, 13, 3, 15], "rotation": 180, "texture": "#1_1"},
+				"up": {"uv": [3, 15, 4.5, 13], "rotation": 90, "texture": "#1_1"},
+				"down": {"uv": [3, 15, 4.5, 13], "rotation": 270, "texture": "#1_1"}
+			}
+		},
+		{
 			"name": "Port",
 			"from": [4, 4, 15.8],
 			"to": [12, 12, 17.8],
@@ -104,7 +117,7 @@
 		{
 			"name": "SteamCylinder",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4]
+			"children": [0, 1, 2, 3, 4, 5]
 		}
 	]
 }

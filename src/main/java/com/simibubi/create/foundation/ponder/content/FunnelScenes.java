@@ -498,7 +498,7 @@ public class FunnelScenes {
 		scene.world.showSection(util.select.fromTo(0, 2, 2, 4, 2, 2), Direction.DOWN);
 		scene.overlay.showText(120)
 			.colored(PonderPalette.GREEN)
-			.text("Same applies for horizontal movement.\nA mechanical belt should help here.")
+			.text("Same applies for horizontal movement. A mechanical belt should help here.")
 			.pointAt(util.vector.topOf(1, 2, 2))
 			.placeNearTarget();
 

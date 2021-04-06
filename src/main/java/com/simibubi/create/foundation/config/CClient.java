@@ -18,8 +18,10 @@ public class CClient extends ConfigBase {
 		"Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY",
 		"Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
-	public ConfigBool smoothPlacementIndicator = b(false, "smoothPlacementIndicator",
-		"Use an alternative indicator when showing where the assisted placement ends up relative to your crosshair");
+
+	public ConfigGroup placementAssist = group(1, "placementAssist", "Settings for the Placement Assist");
+	public ConfigEnum<PlacementIndicatorSetting> placementIndicator = e(PlacementIndicatorSetting.TEXTURE, "indicatorType", "What indicator should be used when showing where the assisted placement ends up relative to your crosshair", "Choose 'NONE' to disable the Indicator altogether");
+	public ConfigFloat indicatorScale = f(1.0f, 0f, "indicatorScale", "Change the size of the Indicator by this multiplier");
 
 	public ConfigGroup ponder = group(1, "ponder", "Ponder settings");
 	public ConfigBool comfyReading =
@@ -28,5 +30,9 @@ public class CClient extends ConfigBase {
 	@Override
 	public String getName() {
 		return "client";
+	}
+
+	public enum PlacementIndicatorSetting {
+		TEXTURE, TRIANGLE, NONE
 	}
 }

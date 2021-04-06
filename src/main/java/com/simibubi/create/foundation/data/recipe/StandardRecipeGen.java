@@ -599,7 +599,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("I")),
 
 		WEIGHTED_EJECTOR = create(AllBlocks.WEIGHTED_EJECTOR).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('A', AllItems.GOLDEN_SHEET.get())
+			.viaShaped(b -> b.key('A', I.goldSheet())
 				.key('D', AllBlocks.DEPOT.get())
 				.key('I', I.cog())
 				.patternLine("A")

@@ -1,12 +1,5 @@
 package com.simibubi.create.foundation.utility.placement;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -25,11 +18,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CClient;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
+import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 @Mod.EventBusSubscriber
 public class PlacementHelpers {
@@ -205,11 +206,10 @@ public class PlacementHelpers {
 		float length = 10;
 		//TOD O if the target is off screen, use length to show a meaningful distance
 
-		boolean flag = AllConfigs.CLIENT.smoothPlacementIndicator.get();
-		if (flag)
+		CClient.PlacementIndicatorSetting mode = AllConfigs.CLIENT.placementIndicator.get();
+		if (mode == CClient.PlacementIndicatorSetting.TRIANGLE)
 			fadedArrow(centerX, centerY, r, g, b, a, length, snappedAngle);
-
-		else
+		else if (mode == CClient.PlacementIndicatorSetting.TEXTURE)
 			textured(centerX, centerY, a, snappedAngle);
 	}
 
@@ -224,6 +224,8 @@ public class PlacementHelpers {
 		RenderSystem.translated(centerX, centerY, 0);
 		RenderSystem.rotatef(angle.get(0), 0, 0, 1);
 		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
+		double scale = AllConfigs.CLIENT.indicatorScale.get();
+		RenderSystem.scaled(scale, scale, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -263,7 +265,9 @@ public class PlacementHelpers {
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, -1);
 		//RenderSystem.translated(0, 10, 0);
 		//RenderSystem.rotatef(angle.get(0.1f), 0, 0, 1);
-		RenderSystem.scaled(12, 12, 0);
+		double scale = AllConfigs.CLIENT.indicatorScale.get() * .75;
+		RenderSystem.scaled(scale, scale, 1);
+		RenderSystem.scaled(12, 12, 1);
 
 		float index = snappedAngle / 22.5f;
 		float tex_size = 16f/256f;

@@ -89,8 +89,13 @@ public class ScreenOpener {
 
 	private static void openScreen(Screen screen) {
 		Minecraft.getInstance()
-			.enqueue(() -> Minecraft.getInstance()
-				.displayGuiScreen(screen));
+			.enqueue(() -> {
+				Minecraft.getInstance()
+					.displayGuiScreen(screen);
+				Screen previouslyRenderedScreen = getPreviouslyRenderedScreen();
+				if (previouslyRenderedScreen != null && screen instanceof NavigatableSimiScreen)
+					previouslyRenderedScreen.init(Minecraft.getInstance(), screen.width, screen.height);
+			});
 	}
 
 }

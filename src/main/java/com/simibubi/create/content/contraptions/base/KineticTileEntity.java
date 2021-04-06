@@ -60,8 +60,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	private int flickerTally;
 	private int networkSize;
 	private int validationCountdown;
-	private float lastStressApplied;
-	private float lastCapacityProvided;
+	protected float lastStressApplied;
+	protected float lastCapacityProvided;
 
 	public KineticTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -89,8 +89,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		super.tick();
 		effects.tick();
 
-		if (world.isRemote)
+		if (world.isRemote) {
+			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
 			return;
+		}
 
 		if (validationCountdown-- <= 0) {
 			validationCountdown = AllConfigs.SERVER.kinetics.kineticValidationFrequency.get();
@@ -161,7 +163,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateStressApplied() {
-		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getBlockState().getBlock());
+		float impact = (float) AllConfigs.SERVER.kinetics.stressValues.getImpactOf(getStressConfigKey());
 		this.lastStressApplied = impact;
 		return impact;
 	}
@@ -220,7 +222,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
-		cachedBoundingBox = null;
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
 			super.read(compound, clientPacket);

@@ -11,6 +11,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
@@ -61,6 +62,8 @@ public final class NBTProcessors {
 			compound = survivalProcessors.get(type).apply(compound);
 		if (compound != null && processors.containsKey(type))
 			return processors.get(type).apply(compound);
+		if (tileEntity instanceof MobSpawnerTileEntity)
+			return compound;
 		if (tileEntity.onlyOpsCanSetNbt())
 			return null;
 		return compound;

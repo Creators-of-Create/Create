@@ -8,13 +8,17 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
+import net.minecraftforge.common.capabilities.CapabilityProvider;
+
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,14 +34,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Mixin(Entity.class)
-public abstract class StepSoundMixin {
+public abstract class EntityContraptionInteractionMixin extends CapabilityProvider<Entity> {
+	private EntityContraptionInteractionMixin(Class<Entity> baseClass) {
+		super(baseClass);
+	}
+
 	private final Entity self = (Entity) (Object) this;
 
-	@Shadow
-	public boolean collided;
-
-	@Shadow
-	public World world;
+	private AbstractContraptionEntity contraption;
 
 	@Final
 	@Shadow
@@ -47,29 +51,20 @@ public abstract class StepSoundMixin {
 	private float nextStepDistance;
 
 	@Shadow
-	public abstract BlockPos getPosition();
-
-	@Shadow
-	public abstract Vec3d getPositionVec();
-
-	@Shadow
 	protected abstract float determineNextStepDistance();
-
-	@Shadow
-	public abstract AxisAlignedBB getBoundingBox();
 
 	@Shadow
 	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
 
 	private Set<AbstractContraptionEntity> getIntersectingContraptions() {
-		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(this.world)
+		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.world)
 			.values()
 			.stream()
 			.map(Reference::get)
 			.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(self))
 			.collect(Collectors.toSet());
 
-		contraptions.addAll(this.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, getBoundingBox().grow(1f)));
+		contraptions.addAll(self.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, self.getBoundingBox().grow(1f)));
 		return contraptions;
 	}
 
@@ -98,20 +93,18 @@ public abstract class StepSoundMixin {
 		method = "move"
 	)
 	private void movementMixin(MoverType mover, Vec3d movement, CallbackInfo ci) {
-		World entityWorld = world;
 		Vec3d worldPos = self.getPositionVector().add(0, -0.2, 0);
 		AtomicBoolean stepped = new AtomicBoolean(false);
 
 		forCollision(worldPos, (contraption, blockstate, blockPos) -> {
-			this.world = contraption.getContraptionWorld();
-			this.playStepSound(blockPos, blockstate);
+			bindContraption(contraption);
+			playStepSound(blockPos, blockstate);
+			unbindContraption();
 			stepped.set(true);
 		});
 
 		if (stepped.get())
 			this.nextStepDistance = this.determineNextStepDistance();
-
-		world = entityWorld;
 	}
 
 	@Inject(method = "createRunningParticles", at = @At("TAIL"))
@@ -120,13 +113,42 @@ public abstract class StepSoundMixin {
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
-			if (!blockstate.addRunningEffects(world, blockpos, self) && blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
+			if (!blockstate.addRunningEffects(self.world, blockpos, self) && blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
 				Vec3d vec3d = self.getMotion();
-				this.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
+				self.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
 					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(),
 					self.getY() + 0.1D, self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(),
 					vec3d.x * -4.0D, 1.5D, vec3d.z * -4.0D);
 			}
 		});
 	}
+
+	@Inject(method = "playSound", at = @At("HEAD"), cancellable = true)
+	private void playSoundShifted(SoundEvent event, float pitch, float volume, CallbackInfo ci) {
+		if (this.contraption != null && (!self.isSilent() || self instanceof PlayerEntity)) {
+			double x = self.getX();
+			double y = self.getY();
+			double z = self.getZ();
+			Vec3d worldPos = ContraptionCollider.getWorldToLocalTranslation(new Vec3d(x, y, z), this.contraption);
+
+			worldPos = worldPos.add(x, y, z);
+
+			self.world.playSound(null, worldPos.x + x, worldPos.y + y, worldPos.z + z, event, self.getSoundCategory(), pitch, volume);
+
+			ci.cancel();
+		}
+	}
+
+	private void bindContraption(Contraption contraption) {
+		bindContraption(contraption.entity);
+	}
+
+	private void bindContraption(AbstractContraptionEntity contraption) {
+		this.contraption = contraption;
+	}
+
+	private void unbindContraption() {
+		this.contraption = null;
+	}
 }
+
