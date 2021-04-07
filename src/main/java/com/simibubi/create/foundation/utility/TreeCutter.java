@@ -2,22 +2,18 @@ package com.simibubi.create.foundation.utility;
 
 import com.simibubi.create.AllTags;
 import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TreeCutter {
@@ -209,7 +205,7 @@ public class TreeCutter {
 		return state.contains(LeavesBlock.DISTANCE);
 	}
 
-	public static class Tree {
+	public static class Tree extends AbstractBlockBreakQueue{
 		private final List<BlockPos> logs;
 		private final List<BlockPos> leaves;
 
@@ -218,22 +214,10 @@ public class TreeCutter {
 			this.leaves = leaves;
 		}
 
-		public void destroyBlocks(World world, @Nullable LivingEntity entity, BiConsumer<BlockPos, ItemStack> drop) {
-			PlayerEntity playerEntity = entity instanceof PlayerEntity ? ((PlayerEntity) entity) : null;
-			ItemStack toDamage = playerEntity != null && !playerEntity.isCreative() ? playerEntity.getHeldItemMainhand() : ItemStack.EMPTY;
-
+		@Override
+		public void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
 			logs.forEach(makeCallbackFor(world, 1/2f, toDamage, playerEntity, drop));
 			leaves.forEach(makeCallbackFor(world, 1/8f, toDamage, playerEntity, drop));
 		}
-
-		private Consumer<BlockPos> makeCallbackFor(World world, float effectChance, ItemStack toDamage, @Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
-			return pos -> {
-				ItemStack usedTool = toDamage.copy();
-				BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, effectChance, stack -> drop.accept(pos, stack));
-				if (toDamage.isEmpty() && !usedTool.isEmpty())
-					ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, Hand.MAIN_HAND);
-			};
-		}
 	}
-
 }
