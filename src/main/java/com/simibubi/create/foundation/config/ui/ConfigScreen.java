@@ -11,6 +11,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.StencilElement;
+import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.utility.animation.Force;
@@ -21,6 +23,8 @@ public class ConfigScreen extends NavigatableSimiScreen {
 	private final Screen parent;
 	protected static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
 	protected static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
+
+	protected StencilElement testStencil;
 
 	public ConfigScreen(Screen parent) {
 		this.parent = parent;
@@ -35,7 +39,7 @@ public class ConfigScreen extends NavigatableSimiScreen {
 	@Override
 	protected void init() {
 		super.init();
-
+		testStencil = new TextStencilElement(client.fontRenderer, "POGGERS").at(width*0.5f, height*0.5f, 0);
 	}
 
 	@Override
@@ -77,6 +81,8 @@ public class ConfigScreen extends NavigatableSimiScreen {
 		int y = (int) (height * 0.5f);
 		this.drawHorizontalLine(ms, x-25, x+25, y, 0xff_807060);
 		this.drawVerticalLine(ms, x, y-25, y+25, 0xff_90a0b0);
+
+		//this.testStencil.render(ms);
 
 		//UIRenderHelper.streak(ms, 0, mouseX, mouseY, 16, 50, 0xaa_1e1e1e);
 	}

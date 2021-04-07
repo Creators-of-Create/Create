@@ -29,7 +29,7 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.ui.ConfigScreen;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -312,7 +312,7 @@ public class ClientEvents {
 
 	public static void loadCompleted(FMLLoadCompleteEvent event) {
 		ModContainer createContainer = ModList.get().getModContainerById("create").orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> new ConfigScreen(previousScreen));
+		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen));
 	}
 
 }

@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+
+import javax.annotation.Nonnull;
 import org.antlr.v4.runtime.misc.IntegerList;
 
 public class PonderProgressBar extends AbstractSimiWidget {
@@ -103,7 +105,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		hovered = clicked(mouseX, mouseY);
 

@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.command;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.ui.ConfigScreen;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -93,7 +93,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 
 		@OnlyIn(Dist.CLIENT)
 		private static void configScreen(String value) {
-			ScreenOpener.open(new ConfigScreen(null));
+			ScreenOpener.open(new BaseConfigScreen(null));
 		}
 
 		@OnlyIn(Dist.CLIENT)

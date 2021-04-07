@@ -110,6 +110,7 @@ public class CreateClient {
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
+		UIRenderHelper.enableStencil();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();

@@ -16,6 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class PonderButton extends AbstractSimiWidget {
 
 	private IScreenRenderable icon;
@@ -87,7 +89,7 @@ public class PonderButton extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (!visible)
 			return;
 		if (fade < .1f)

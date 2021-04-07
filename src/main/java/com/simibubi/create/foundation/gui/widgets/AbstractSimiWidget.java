@@ -9,6 +9,8 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import javax.annotation.Nonnull;
+
 public abstract class AbstractSimiWidget extends Widget {
 
 	protected List<ITextComponent> toolTip;
@@ -23,7 +25,7 @@ public abstract class AbstractSimiWidget extends Widget {
 	}
 	
 	@Override
-	public void renderButton(MatrixStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 	}
 
 }
