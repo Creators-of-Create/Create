@@ -404,7 +404,7 @@ a3a11524cd3515fc01d905767b4b7ea782adaf03 assets/create/blockstates/yellow_seat.j
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
 ce0e5405da381a86625b908c569c5dbe347abdba assets/create/lang/en_ud.json
 8d7a354696019a15170d7b9a6b463953b05e6c5f assets/create/lang/en_us.json
-e150751efd62793b2827e4f5dc52daf83e3f1038 assets/create/lang/unfinished/de_de.json
+5d1cfa9bc6e93ddadb4d57e93cff489c5d992dc2 assets/create/lang/unfinished/de_de.json
 49c322f52ee8ed82eef3997e7b238621ef88e08d assets/create/lang/unfinished/es_es.json
 65d15c4bfe19719b63a26dc723c5c96e45e434b0 assets/create/lang/unfinished/es_mx.json
 040fdf75186a23ba97e29bdf29c627134dc9f644 assets/create/lang/unfinished/fr_fr.json
@@ -413,7 +413,7 @@ a1cb070af4295e107116858487e22fcb525f9dc6 assets/create/lang/unfinished/it_it.jso
 5e2c5d0caa0a7b436e2b87235ae7479ac4635758 assets/create/lang/unfinished/ko_kr.json
 b00a03074be21b1967bab26b2a7a7bd18fa1d4e5 assets/create/lang/unfinished/nl_nl.json
 38935b6594edf97254fc7db528d97d4de4ec4bca assets/create/lang/unfinished/pt_br.json
-b97ce7199bbfba9bc5f841ad4fe249b2369536c3 assets/create/lang/unfinished/ru_ru.json
+330c69e0b9205851da6cdabfc222185e53416635 assets/create/lang/unfinished/ru_ru.json
 e03d4064b5f34a84882add2155539ef07937deaf assets/create/lang/unfinished/zh_cn.json
 28bd3281204a4d09439fa71e21e250dfb5396c99 assets/create/lang/unfinished/zh_tw.json
 846200eb548d3bfa2e77b41039de159b4b6cfb45 assets/create/models/block/acacia_window.json
@@ -1587,7 +1587,7 @@ d080b1b25e5bc8baf5aee68691b08c7f12ece3b0 assets/create/models/item/windmill_bear
 9f9455ccb5fc9e3cbfce73862b46078346a522a5 assets/create/models/item/zinc_nugget.json
 b1689617190c05ef34bd18456b0c7ae09bb3210f assets/create/models/item/zinc_ore.json
 e76041b7ae829fdd7dc0524f6ca4d2f89fca51bb assets/create/sounds.json
-5d0cc4c0255dc241e61c173b31ddca70c88d08e4 data/create/advancements/aesthetics.json
+0f1b4b980afba9bf2caf583b88e261bba8b10313 data/create/advancements/aesthetics.json
 187921fa131b06721bfaf63f2623a28c141aae9a data/create/advancements/andesite_alloy.json
 0ea2db7173b5be28b289ea7c9a6a0cf5805c60c7 data/create/advancements/andesite_casing.json
 356f4855a2a6c65be3fb51d7d1aabf2ca6034d42 data/create/advancements/arm_blaze_burner.json
