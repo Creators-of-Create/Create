@@ -10,6 +10,7 @@ import net.minecraft.world.LightType;
 import java.util.Arrays;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.render.backend.instancing.*;
@@ -21,28 +22,26 @@ import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
 import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
 
-	final PulleyTileEntity tile = (PulleyTileEntity) super.tile;
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
 	final InstanceGroup<OrientedData> rope;
 	final ConditionalInstance<OrientedData> halfRope;
 
-	private float offset;
-	private final Direction rotatingAbout;
-	private final Vector3f rotationAxis;
+	protected float offset;
+	protected final Direction rotatingAbout;
+	protected final Vector3f rotationAxis;
 
 	private byte[] bLight = new byte[1];
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public PulleyInstance(InstancedTileRenderer<?> dispatcher, PulleyTileEntity tile) {
+	public AbstractPulleyInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
 		rotationAxis = rotatingAbout.getUnitVector();
-		updateOffset();
 
 		coil = getCoilModel()
 				.createInstance()
@@ -53,16 +52,18 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 				.addModel(getHalfMagnetModel());
 
 		rope = new InstanceGroup<>(getRopeModel());
-		resizeRope();
-
 		halfRope = new ConditionalInstance<>(getHalfRopeModel(), this::shouldRenderHalfRope);
-
-		beginFrame();
 	}
 
 	@Override
 	public void beginFrame() {
 		updateOffset();
+
+		transformModels();
+	}
+
+	private void transformModels() {
+		resizeRope();
 
 		coil.setRotation(rotationAxis.getDegreesQuaternion(offset * 180));
 		magnet.update().get().ifPresent(data ->
@@ -85,7 +86,6 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 					.setSkyLight(sLight[0]);
 		});
 
-		resizeRope();
 		if (isRunning()) {
 			int size = rope.size();
 			for (int i = 0; i < size; i++) {
@@ -115,34 +115,19 @@ public class PulleyInstance extends ShaftInstance implements IDynamicInstance, L
 		halfRope.delete();
 	}
 
-	protected InstancedModel<OrientedData> getRopeModel() {
-		return getOrientedMaterial().getModel(AllBlocks.ROPE.getDefaultState());
-	}
+	protected abstract InstancedModel<OrientedData> getRopeModel();
 
-	protected InstancedModel<OrientedData> getMagnetModel() {
-		return getOrientedMaterial().getModel(AllBlocks.PULLEY_MAGNET.getDefaultState());
-	}
+	protected abstract InstancedModel<OrientedData> getMagnetModel();
 
-	protected InstancedModel<OrientedData> getHalfMagnetModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF_MAGNET, blockState);
-	}
+	protected abstract InstancedModel<OrientedData> getHalfMagnetModel();
 
-	protected InstancedModel<OrientedData> getCoilModel() {
-		return AllBlockPartials.ROPE_COIL.getModel(getOrientedMaterial(), blockState, rotatingAbout);
-	}
+	protected abstract InstancedModel<OrientedData> getCoilModel();
 
-	protected InstancedModel<OrientedData> getHalfRopeModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF, blockState);
-	}
+	protected abstract InstancedModel<OrientedData> getHalfRopeModel();
 
-	protected float getOffset() {
-		float partialTicks = AnimationTickHolder.getPartialTicks();
-		return PulleyRenderer.getTileOffset(partialTicks, tile);
-	}
+	protected abstract float getOffset();
 
-	protected boolean isRunning() {
-		return tile.running || tile.isVirtual();
-	}
+	protected abstract boolean isRunning();
 
 	protected void resizeRope() {
 		int neededRopeCount = getNeededRopeCount();
