@@ -717,6 +717,8 @@
 	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "su",
 	"create.generic.unit.degrees": "°",
+	"create.generic.unit.heat": "°C",
+	"create.generic.unit.friction": "cμ",
 	"create.generic.unit.millibuckets": "%1$smB",
 	"create.generic.clockwise": "Clockwise",
 	"create.generic.counter_clockwise": "Counter-Clockwise",
@@ -830,6 +832,8 @@
 
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
+	"create.gui.goggles.heat_stats": "Heat Stats:",
+	"create.gui.goggles.friction_stats": "Friction Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
 	"create.gui.goggles.pole_length": "Pole Length:",
 	"create.gui.goggles.fluid_container": "Fluid Container Info:",

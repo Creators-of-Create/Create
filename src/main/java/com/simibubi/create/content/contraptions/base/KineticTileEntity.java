@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -37,12 +38,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 import static net.minecraft.util.text.TextFormatting.GOLD;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
+	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered, IHeat, IFriction {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -54,6 +56,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected float speed;
 	protected float capacity;
 	protected float stress;
+	protected float heat;
+	protected float friction;
+	protected float maxHeat;
+	protected float lubricantAmount;
 	protected boolean overStressed;
 	protected boolean wasMoved;
 
@@ -97,6 +103,55 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (validationCountdown-- <= 0) {
 			validationCountdown = AllConfigs.SERVER.kinetics.kineticValidationFrequency.get();
 			validateKinetics();
+		}
+
+		if(heatAble()) {
+			if(getMaxHeat() <= getHeat()) {
+				world.setBlockState(getPos(), Blocks.AIR.getDefaultState());
+				remove();
+			}
+			//Check if is moving
+			if(getAbsoluteSpeed() > 0) {
+				//Planning to get surrounding light levels to determine
+				heat += ((getAbsoluteSpeed() / 1000) + heatGeneration() + (getFriction() / 10)) / 1000;
+			} else if(getHeat() > 0) {
+				heat -= 0.001;
+			}
+			//Loop trough every Direction, to get neighbours
+			//pre-loop vars
+			float frictionedTes = 0;
+			//
+			for (Direction value : Direction.values()) {
+				BlockPos nextBlock = getPos().offset(value);
+				BlockState state = world.getBlockState(nextBlock);
+				if(state.hasTileEntity()) {
+					TileEntity tileEntity = world.getTileEntity(nextBlock);
+					//Check if TileEntity is capable of holding heat
+					if(tileEntity instanceof IHeat) {
+						IHeat heatedTE = (IHeat) tileEntity;
+						//Add decreased heat of other TE;
+						if(heatedTE.getHeat() > getHeat()) {
+							heat += (heatedTE.getHeat() / 100000);
+						}
+					}
+					if(frictionAble()) {
+						//Check if TileEntity is capable of holding friction
+						if (tileEntity instanceof IFriction) {
+							IFriction frictionTE = (IFriction) tileEntity;
+							frictionedTes += (frictionTE.frictionGeneration()) - ((frictionTE.getLubricantAmount() + getLubricantAmount()) / 100) + (getAbsoluteSpeed() / 100);
+						}
+						if(lubricantAmount > 0) {
+							decreaseLubricantAmount(getAbsoluteSpeed() / 100000);
+							if (world.isRainingAt(getPos())) {
+								decreaseLubricantAmount(getAbsoluteSpeed() / 1000);
+							}
+						}
+						setFriction(frictionedTes);
+					}
+				}
+			}
+			//This is going to be a performance impact
+			notifyUpdate();
 		}
 
 		if (getFlickerScore() > 0)
@@ -188,12 +243,19 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putFloat("Speed", speed);
-
 		if (needsSpeedUpdate())
 			compound.putBoolean("NeedsSpeedUpdate", true);
 
 		if (hasSource())
 			compound.put("Source", NBTUtil.writeBlockPos(source));
+
+		if(heatAble())
+			compound.putFloat("Heat", heat);
+
+		if(frictionAble()) {
+			compound.putFloat("Friction", friction);
+			compound.putFloat("LubricantAmount", lubricantAmount);
+		}
 
 		if (hasNetwork()) {
 			CompoundNBT networkTag = new CompoundNBT();
@@ -233,6 +295,15 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (compound.contains("Source"))
 			source = NBTUtil.readBlockPos(compound.getCompound("Source"));
 
+
+		if(heatAble())
+			heat = compound.getFloat("Heat");
+
+		if(frictionAble()) {
+			friction = compound.getFloat("Friction");
+			lubricantAmount = compound.getFloat("LubricantAmount");
+		}
+
 		if (compound.contains("Network")) {
 			CompoundNBT networkTag = compound.getCompound("Network");
 			network = networkTag.getLong("Id");
@@ -261,6 +332,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return getGeneratedSpeed() != 0;
 	}
 
+	@Override
+	public float getHeat() {
+		return heat;
+	}
+
 	public float getSpeed() {
 		if (overStressed)
 			return 0;
@@ -269,6 +345,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	public float getTheoreticalSpeed() {
 		return speed;
+	}
+
+	public float getAbsoluteSpeed() {
+		return Math.abs(speed);
 	}
 
 	public void setSpeed(float speed) {
@@ -427,12 +507,29 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			added = true;
 		}
 
+		if(heatAble()) {
+			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.heat_stats")));
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(getHeat())).append(Lang.translate("generic.unit.heat"))).formatted(getHeatTextColor()));
+			added = true;
+		}
+
+		if(frictionAble()) {
+			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.friction_stats")));
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(getFriction())).append(Lang.translate("generic.unit.friction"))).formatted(TextFormatting.AQUA));
+			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(getLubricantAmount())).append(Lang.translate("generic.unit.millibuckets"))).formatted(TextFormatting.AQUA));
+			added = true;
+		}
+
 		return added;
 
 	}
 
 	public void clearKineticInformation() {
 		speed = 0;
+		lubricantAmount = 0;
+		heat = 27; //27°C, default Roomtemperature
+		maxHeat = 1000; //1000°C, almost survives Lava
+		friction = 0;
 		source = null;
 		network = null;
 		overStressed = false;
@@ -545,5 +642,58 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	protected AxisAlignedBB makeRenderBoundingBox() {
 		return super.getRenderBoundingBox();
+	}
+
+	/**
+	 * Everything that is kinetic should be heatable by default, except creative/debug Objects
+	 * ~Jayson.json
+	 */
+	@Override
+	public boolean heatAble() {
+		return true;
+	}
+
+	/**
+	 * Everything that is kinetic should be frictionAble by default, except creative/debug Objects
+	 * ~Jayson.json
+	 */
+	@Override
+	public boolean frictionAble() {
+		return true;
+	}
+
+	@Override
+	public float getMaxHeat() {
+		return maxHeat;
+	}
+
+	@Override
+	public float heatGeneration() {
+		return .00005f;
+	}
+
+	@Override
+	public float getFriction() {
+		return friction;
+	}
+
+	@Override
+	public void setFriction(float friction) {
+		this.friction = friction < 0 ? 0 : friction;
+	}
+
+	@Override
+	public float frictionGeneration() {
+		return 1.3f;
+	}
+
+	@Override
+	public float getLubricantAmount() {
+		return lubricantAmount;
+	}
+
+	@Override
+	public void setLubricantAmount(float lubricantAmount) {
+		this.lubricantAmount = lubricantAmount < 0 ? 0 : lubricantAmount;
 	}
 }
