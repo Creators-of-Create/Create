@@ -85,13 +85,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
     }
 
     protected void makeRenderCalls() {
-        for (Cache<Object, MODEL> cache : models.values()) {
-            for (MODEL model : cache.asMap().values()) {
-                if (!model.isEmpty()) {
-                    model.render();
-                }
-            }
-        }
+        runOnAll(InstancedModel::render);
     }
 
     public void runOnAll(Consumer<MODEL> f) {

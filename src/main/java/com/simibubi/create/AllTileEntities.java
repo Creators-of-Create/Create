@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -61,8 +60,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.gan
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.*;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpCogInstance;
@@ -311,7 +309,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<HosePulleyTileEntity> HOSE_PULLEY = Create.registrate()
 		.tileEntity("hose_pulley", HosePulleyTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> HosePulleyInstance::new)
 		.validBlocks(AllBlocks.HOSE_PULLEY)
 		.renderer(() -> HosePulleyRenderer::new)
 		.register();
@@ -398,7 +396,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<PulleyTileEntity> ROPE_PULLEY = Create.registrate()
 		.tileEntity("rope_pulley", PulleyTileEntity::new)
-		.instance(() -> ShaftInstance::new)
+		.instance(() -> RopePulleyInstance::new)
 		.validBlocks(AllBlocks.ROPE_PULLEY)
 		.renderer(() -> PulleyRenderer::new)
 		.register();
