@@ -1,9 +1,6 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -18,9 +15,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
-import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
@@ -360,13 +355,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void onBlockBroken(BlockState stateToBreak) {
 		super.onBlockBroken(stateToBreak);
-		Tree tree = TreeCutter.cutTree(world, breakingPos);
-		if (tree != null) {
-			for (BlockPos log : tree.logs)
-				BlockHelper.destroyBlock(world, log, 1 / 2f, stack -> dropItemFromCutTree(log, stack));
-			for (BlockPos leaf : tree.leaves)
-				BlockHelper.destroyBlock(world, leaf, 1 / 8f, stack -> dropItemFromCutTree(leaf, stack));
-		}
+		TreeCutter.findTree(world, breakingPos).destroyBlocks(world, null, this::dropItemFromCutTree);
 	}
 
 	public void dropItemFromCutTree(BlockPos pos, ItemStack stack) {

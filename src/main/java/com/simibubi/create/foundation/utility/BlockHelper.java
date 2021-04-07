@@ -4,6 +4,9 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.stats.Stats;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -184,16 +187,33 @@ public class BlockHelper {
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
+		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
+	}
 
+	public static void destroyBlockAs(World world, BlockPos pos, @Nullable PlayerEntity player, ItemStack usedTool, float effectChance,
+									  Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
 			world.playEvent(2001, pos, Block.getStateId(state));
 		TileEntity tileentity = state.hasTileEntity() ? world.getTileEntity(pos) : null;
+		if (player != null) {
+			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
+			MinecraftForge.EVENT_BUS.post(event);
+			if (event.isCanceled())
+				return;
+
+			if (event.getExpToDrop() > 0 && world instanceof ServerWorld)
+				state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos, event.getExpToDrop());
+
+			usedTool.onBlockDestroyed(world, state, pos, player);
+			player.addStat(Stats.BLOCK_MINED.get(state.getBlock()));
+		}
 
 		if (world instanceof ServerWorld && world.getGameRules()
-			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots) {
-			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity))
+			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots && (player == null || !player.isCreative())) {
+			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity,
+					player, usedTool))
 				droppedItemCallback.accept(itemStack);
 			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 		}

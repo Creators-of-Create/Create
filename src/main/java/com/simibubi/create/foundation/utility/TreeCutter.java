@@ -1,51 +1,41 @@
 package com.simibubi.create.foundation.utility;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
 import com.simibubi.create.AllTags;
-
-import net.minecraft.block.BambooBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CactusBlock;
-import net.minecraft.block.ChorusFlowerBlock;
-import net.minecraft.block.ChorusPlantBlock;
-import net.minecraft.block.KelpBlock;
-import net.minecraft.block.KelpTopBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 public class TreeCutter {
+	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
 
-	public static class Tree {
-		public List<BlockPos> logs;
-		public List<BlockPos> leaves;
-
-		public Tree(List<BlockPos> logs, List<BlockPos> leaves) {
-			this.logs = logs;
-			this.leaves = leaves;
-		}
-	}
 
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
-	 * 
+	 *
 	 * @param reader
 	 * @param pos
 	 * @return null if not found or not fully cut
 	 */
-	public static Tree cutTree(IBlockReader reader, BlockPos pos) {
+	@Nonnull
+	public static Tree findTree(@Nullable IBlockReader reader, BlockPos pos) {
+		if (reader == null)
+			return NO_TREE;
+
 		List<BlockPos> logs = new ArrayList<>();
 		List<BlockPos> leaves = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
@@ -87,7 +77,7 @@ public class TreeCutter {
 
 		// Regular Tree
 		if (!validateCut(reader, pos))
-			return null;
+			return NO_TREE;
 
 		visited.add(pos);
 		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1))
@@ -112,9 +102,8 @@ public class TreeCutter {
 		frontier.addAll(logs);
 		while (!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.remove(0);
-			if (!logs.contains(currentPos))
-				if (visited.contains(currentPos))
-					continue;
+			if (!logs.contains(currentPos) && visited.contains(currentPos))
+				continue;
 			visited.add(currentPos);
 
 			BlockState blockState = reader.getBlockState(currentPos);
@@ -158,15 +147,13 @@ public class TreeCutter {
 			return true;
 		if (block instanceof KelpBlock)
 			return true;
-		if (block instanceof KelpTopBlock)
-			return true;
-		return false;
+		return block instanceof KelpTopBlock;
 	}
 
 	/**
 	 * Checks whether a tree was fully cut by seeing whether the layer above the cut
 	 * is not supported by any more logs.
-	 * 
+	 *
 	 * @param reader
 	 * @param pos
 	 * @return
@@ -206,7 +193,7 @@ public class TreeCutter {
 
 	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
 		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1))
-			.filter(Predicates.not(visited::contains))
+			.filter(((Predicate<BlockPos>) visited::contains).negate())
 			.forEach(p -> frontier.add(new BlockPos(p)));
 	}
 
@@ -220,6 +207,27 @@ public class TreeCutter {
 
 	private static boolean isLeaf(BlockState state) {
 		return state.contains(LeavesBlock.DISTANCE);
+	}
+
+	public static class Tree {
+		private final List<BlockPos> logs;
+		private final List<BlockPos> leaves;
+
+		public Tree(List<BlockPos> logs, List<BlockPos> leaves) {
+			this.logs = logs;
+			this.leaves = leaves;
+		}
+
+		public void destroyBlocks(World world, @Nullable LivingEntity entity, BiConsumer<BlockPos, ItemStack> drop) {
+			PlayerEntity playerEntity = entity instanceof PlayerEntity ? ((PlayerEntity) entity) : null;
+			ItemStack toDamage = playerEntity != null && !playerEntity.isCreative() ? playerEntity.getHeldItemMainhand() : ItemStack.EMPTY;
+			Iterators.concat(logs.iterator(), leaves.iterator()).forEachRemaining(pos -> {
+				ItemStack usedTool = toDamage.copy();
+				BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, 1 / 2f, stack -> drop.accept(pos, stack));
+				if (toDamage.isEmpty() && !usedTool.isEmpty())
+					ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, Hand.MAIN_HAND);
+			});
+		}
 	}
 
 }
