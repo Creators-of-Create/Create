@@ -31,9 +31,13 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 			return false;
 		if (input1.data.isEmpty() || input2.data.isEmpty())
 			return false;
-		if (pos.add(input1.data.get(0))
-			.equals(otherPos.add(input2.data.get(0))))
-			return true;
+		try {
+			if (pos.add(input1.data.get(0))
+					.equals(otherPos.add(input2.data.get(0))))
+				return true;
+		} catch (IndexOutOfBoundsException e) {
+			// race condition. data somehow becomes empty between the last 2 if statements
+		}
 
 		return false;
 	}

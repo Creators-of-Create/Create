@@ -6,17 +6,23 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
+import com.simibubi.create.foundation.render.backend.MaterialTypes;
 import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
+
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
 
@@ -41,11 +47,12 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
         super(modelManager, tile);
 
-        facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
+        facing = blockState.get(HORIZONTAL_FACING);
 
         shaft = setup(shaftModel().createInstance());
 
-        wheel = AllBlockPartials.FLYWHEEL.renderOnHorizontalModel(modelManager, blockState.rotate(Rotation.CLOCKWISE_90)).createInstance();
+        BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
+        wheel = AllBlockPartials.FLYWHEEL.getModel(getTransformMaterial(), referenceState, referenceState.get(HORIZONTAL_FACING)).createInstance();
 
         connection = FlywheelBlock.getConnection(blockState);
         if (connection != null) {
@@ -151,7 +158,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     protected InstancedModel<RotatingData> shaftModel() {
-        return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouthRotating(renderer, blockState, facing.getOpposite());
+        return AllBlockPartials.SHAFT_HALF.getModel(getRotatingMaterial(), blockState, facing.getOpposite());
     }
 
     protected void transformConnector(MatrixStacker ms, boolean upper, boolean rotating, float angle, boolean flip) {

@@ -40,16 +40,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	@Override
 	protected float getOffset(KineticTileEntity te, float partialTicks) {
 		PulleyTileEntity pulley = (PulleyTileEntity) te;
-		float offset = pulley.getInterpolatedOffset(partialTicks);
-
-		if (pulley.movedContraption != null) {
-			AbstractContraptionEntity e = pulley.movedContraption;
-			PulleyContraption c = (PulleyContraption) pulley.movedContraption.getContraption();
-			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.getY());
-			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
-		}
-
-		return offset;
+		return getTileOffset(partialTicks, pulley);
 	}
 
 	@Override
@@ -57,4 +48,17 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 		return ((PulleyTileEntity) te).running || te.isVirtual();
 	}
 
+
+	static float getTileOffset(float partialTicks, PulleyTileEntity tile) {
+		float offset = tile.getInterpolatedOffset(partialTicks);
+
+		if (tile.movedContraption != null) {
+			AbstractContraptionEntity e = tile.movedContraption;
+			PulleyContraption c = (PulleyContraption) tile.movedContraption.getContraption();
+			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.getY());
+			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
+		}
+
+		return offset;
+	}
 }
