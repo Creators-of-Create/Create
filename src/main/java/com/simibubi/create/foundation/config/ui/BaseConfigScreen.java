@@ -13,9 +13,9 @@ import com.simibubi.create.foundation.gui.widgets.StencilWidget;
 
 public class BaseConfigScreen extends ConfigScreen {
 
-	StencilWidget clientConfigWidget;
-	StencilWidget commonConfigWidget;
-	StencilWidget serverConfigWidget;
+	ConfigButton clientConfigWidget;
+	ConfigButton commonConfigWidget;
+	ConfigButton serverConfigWidget;
 
 	public BaseConfigScreen(Screen parent) {
 		super(parent);
@@ -43,6 +43,8 @@ public class BaseConfigScreen extends ConfigScreen {
 				30,
 				text2
 		));
+		commonConfigWidget.active = false;
+		commonConfigWidget.updateColorsFromState();
 
 		StencilElement text3 = new TextStencilElement.Centered(client.fontRenderer, new StringTextComponent("SERVER CONFIG").formatted(TextFormatting.BOLD), 200).at(0, 11, 0);
 		widgets.add(serverConfigWidget = ConfigButton.createFromTextElement(
@@ -52,6 +54,17 @@ public class BaseConfigScreen extends ConfigScreen {
 				30,
 				text3
 		));
+		serverConfigWidget.active = false;
+		serverConfigWidget.updateColorsFromState();
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		widgets.stream()
+				.filter(w -> w instanceof ConfigButton)
+				.forEach(w -> ((ConfigButton) w).tick());
 	}
 
 	@Override
