@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.utility;
 
-import com.google.common.collect.Iterators;
 import com.simibubi.create.AllTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TreeCutter {
@@ -221,12 +221,18 @@ public class TreeCutter {
 		public void destroyBlocks(World world, @Nullable LivingEntity entity, BiConsumer<BlockPos, ItemStack> drop) {
 			PlayerEntity playerEntity = entity instanceof PlayerEntity ? ((PlayerEntity) entity) : null;
 			ItemStack toDamage = playerEntity != null && !playerEntity.isCreative() ? playerEntity.getHeldItemMainhand() : ItemStack.EMPTY;
-			Iterators.concat(logs.iterator(), leaves.iterator()).forEachRemaining(pos -> {
+
+			logs.forEach(makeCallbackFor(world, 1/2f, toDamage, playerEntity, drop));
+			leaves.forEach(makeCallbackFor(world, 1/8f, toDamage, playerEntity, drop));
+		}
+
+		private Consumer<BlockPos> makeCallbackFor(World world, float effectChance, ItemStack toDamage, @Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
+			return pos -> {
 				ItemStack usedTool = toDamage.copy();
-				BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, 1 / 2f, stack -> drop.accept(pos, stack));
+				BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, effectChance, stack -> drop.accept(pos, stack));
 				if (toDamage.isEmpty() && !usedTool.isEmpty())
 					ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, Hand.MAIN_HAND);
-			});
+			};
 		}
 	}
 

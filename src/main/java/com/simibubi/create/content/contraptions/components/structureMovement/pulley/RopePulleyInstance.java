@@ -1,10 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import net.minecraft.world.ILightReader;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
