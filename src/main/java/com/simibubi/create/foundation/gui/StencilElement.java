@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
+import net.minecraft.client.Minecraft;
+
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -36,11 +38,13 @@ public abstract class StencilElement {
 	}
 
 	protected void prepareStencil(MatrixStack ms) {
+		GL11.glDisable(GL11.GL_STENCIL_TEST);
+		RenderSystem.stencilMask(~0);
+		RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
-		RenderSystem.clearStencil(0);
-		RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+		RenderSystem.stencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
 		RenderSystem.stencilMask(0xFF);
-		RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+		RenderSystem.stencilFunc(GL11.GL_NEVER, 1, 0xFF);
 	}
 
 	protected void prepareElement(MatrixStack ms) {

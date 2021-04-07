@@ -44,7 +44,7 @@ public class ConfigScreen extends NavigatableSimiScreen {
 
 	@Override
 	public void renderBackground(@Nonnull MatrixStack ms) {
-		fill(ms, 0, 0, this.width, this.height, 0xe8_101010);
+		//fill(ms, 0, 0, this.width, this.height, 0xe8_101010);
 		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this, ms));
 	}
 
@@ -57,7 +57,22 @@ public class ConfigScreen extends NavigatableSimiScreen {
 			fill(ms, 0, 0, this.width, this.height, 0xff_282c34);
 		}
 
+		/*ms.push();
+		ms.translate(width*0.5f, height*0.5f, 0);
 		renderCog(ms, partialTicks);
+		ms.pop();*/
+
+		new StencilElement() {
+			@Override
+			protected void renderStencil(MatrixStack ms) {
+				renderCog(ms, partialTicks);
+			}
+
+			@Override
+			protected void renderElement(MatrixStack ms) {
+				fill(ms, -200, -200, 200, 200, 0x40_000000);
+			}
+		}.at(width * 0.5f, height * 0.5f, 0).render(ms);
 
 		super.renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 
@@ -66,7 +81,7 @@ public class ConfigScreen extends NavigatableSimiScreen {
 	protected void renderCog(MatrixStack ms, float partialTicks) {
 		ms.push();
 
-		ms.translate(.5 * width - 100, .5 * height + 110, -200);
+		ms.translate(-100, 100, -200);
 		ms.scale(200, 200, .1f);
 		GuiGameElement.of(cogwheelState)
 				.rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
