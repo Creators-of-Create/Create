@@ -15,8 +15,8 @@ import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -41,8 +41,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -82,7 +82,8 @@ public class PonderWorld extends SchematicWorld {
 		originalBlocks.clear();
 		originalTileEntities.clear();
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
-		tileEntities.forEach((k, v) -> originalTileEntities.put(k, TileEntity.createFromTag(blocks.get(k), v.write(new CompoundNBT()))));
+		tileEntities.forEach(
+			(k, v) -> originalTileEntities.put(k, TileEntity.createFromTag(blocks.get(k), v.write(new CompoundNBT()))));
 		entities.forEach(e -> EntityType.loadEntityUnchecked(e.serializeNBT(), this)
 			.ifPresent(originalEntities::add));
 	}
@@ -221,7 +222,8 @@ public class PonderWorld extends SchematicWorld {
 		double mz) {
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
 		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleFactories.get(key);
-		return iparticlefactory == null ? null : iparticlefactory.makeParticle(data, asClientWorld.getValue(), x, y, z, mx, my, mz);
+		return iparticlefactory == null ? null
+			: iparticlefactory.makeParticle(data, asClientWorld.getValue(), x, y, z, mx, my, mz);
 	}
 
 	public void addParticle(Particle p) {

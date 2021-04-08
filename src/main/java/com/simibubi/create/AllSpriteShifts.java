@@ -44,8 +44,7 @@ public class AllSpriteShifts {
 		SHADOW_STEEL_CASING = omni("shadow_steel_casing"), REFINED_RADIANCE_CASING = omni("refined_radiance_casing"),
 		CREATIVE_CASING = getCT(CTType.CROSS, "creative_casing");
 
-	public static final CTSpriteShiftEntry 
-		CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_side"),
+	public static final CTSpriteShiftEntry CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_side"),
 		SECONDARY_CHASSIS_SIDE = getCT(CTType.OMNIDIRECTIONAL, "secondary_linear_chassis_side"),
 		CHASSIS = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end"),
 		CHASSIS_STICKY = getCT(CTType.OMNIDIRECTIONAL, "linear_chassis_end_sticky");
@@ -97,7 +96,8 @@ public class AllSpriteShifts {
 			String id = color.getString();
 			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id + "_scroll"));
 			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id + "_scroll"));
-			DYED_DIAGONAL_BELTS.put(color, SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal_scroll"));
+			DYED_DIAGONAL_BELTS.put(color,
+				SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal_scroll"));
 		}
 	}
 

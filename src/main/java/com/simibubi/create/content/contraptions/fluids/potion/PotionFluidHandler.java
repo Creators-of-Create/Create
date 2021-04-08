@@ -1,11 +1,16 @@
 package com.simibubi.create.content.contraptions.fluids.potion;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.google.common.collect.Lists;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.fluid.Fluids;
@@ -13,7 +18,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.*;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectUtils;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.ITextComponent;
@@ -23,10 +33,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class PotionFluidHandler {
 

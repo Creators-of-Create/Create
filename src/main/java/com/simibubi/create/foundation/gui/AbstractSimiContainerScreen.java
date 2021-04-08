@@ -46,21 +46,22 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	@Override
 	protected void drawForeground(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-		//no-op to prevent screen- and inventory-title from being rendered at incorrect location
-		//could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper values instead
+		// no-op to prevent screen- and inventory-title from being rendered at incorrect location
+		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper values instead
 	}
 
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		partialTicks = Minecraft.getInstance().getRenderPartialTicks();
+		partialTicks = Minecraft.getInstance()
+			.getRenderPartialTicks();
 		renderBackground(matrixStack);
 		renderWindow(matrixStack, mouseX, mouseY, partialTicks);
-		
+
 		for (Widget widget : widgets)
 			widget.render(matrixStack, mouseX, mouseY, partialTicks);
-		
+
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
-		
+
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
 		RenderSystem.disableRescaleNormal();
@@ -88,7 +89,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
 		}
-		
+
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
@@ -117,7 +118,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		}
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
-	
+
 	@Override
 	public boolean mouseReleased(double x, double y, int button) {
 		boolean result = false;
@@ -151,16 +152,18 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			if (!widget.isHovered())
 				continue;
 
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
+			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip()
+				.isEmpty()) {
 				renderTooltip(matrixStack, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
 			}
 		}
 	}
-	
-	protected void renderItemOverlayIntoGUI(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition, int yPosition,
-			@Nullable String text, int textColor) {
+
+	protected void renderItemOverlayIntoGUI(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition,
+		int yPosition, @Nullable String text, int textColor) {
 		if (!stack.isEmpty()) {
-			if (stack.getItem().showDurabilityBar(stack)) {
+			if (stack.getItem()
+				.showDurabilityBar(stack)) {
 				RenderSystem.disableLighting();
 				RenderSystem.disableDepthTest();
 				RenderSystem.disableTexture();
@@ -168,12 +171,14 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				RenderSystem.disableBlend();
 				Tessellator tessellator = Tessellator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuffer();
-				double health = stack.getItem().getDurabilityForDisplay(stack);
+				double health = stack.getItem()
+					.getDurabilityForDisplay(stack);
 				int i = Math.round(13.0F - (float) health * 13.0F);
-				int j = stack.getItem().getRGBDurabilityForDisplay(stack);
+				int j = stack.getItem()
+					.getRGBDurabilityForDisplay(stack);
 				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
 				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255,
-						255);
+					255);
 				RenderSystem.enableBlend();
 				RenderSystem.enableAlphaTest();
 				RenderSystem.enableTexture();
@@ -188,13 +193,14 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				RenderSystem.disableBlend();
 				matrixStack.push();
 
-				int guiScaleFactor = (int) client.getWindow().getGuiScaleFactor();
+				int guiScaleFactor = (int) client.getWindow()
+					.getGuiScaleFactor();
 				matrixStack.translate(xPosition + 16.5f, yPosition + 16.5f, 0);
 				double scale = getItemCountTextScale();
 
 				matrixStack.scale((float) scale, (float) scale, 0);
 				matrixStack.translate(-fr.getStringWidth(s) - (guiScaleFactor > 1 ? 0 : -.5f),
-						-textRenderer.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
+					-textRenderer.FONT_HEIGHT + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
 				fr.drawWithShadow(matrixStack, s, 0, 0, textColor);
 
 				matrixStack.pop();
@@ -207,7 +213,8 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	public double getItemCountTextScale() {
-		int guiScaleFactor = (int) client.getWindow().getGuiScaleFactor();
+		int guiScaleFactor = (int) client.getWindow()
+			.getGuiScaleFactor();
 		double scale = 1;
 		switch (guiScaleFactor) {
 		case 1:
@@ -229,13 +236,22 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
-			int alpha) {
+		int alpha) {
 		renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.vertex((double) (x + 0), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.vertex((double) (x + width), (double) (y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-		renderer.vertex((double) (x + width), (double) (y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-		Tessellator.getInstance().draw();
+		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
+			.color(red, green, blue, alpha)
+			.endVertex();
+		renderer.vertex((double) (x + 0), (double) (y + height), 0.0D)
+			.color(red, green, blue, alpha)
+			.endVertex();
+		renderer.vertex((double) (x + width), (double) (y + height), 0.0D)
+			.color(red, green, blue, alpha)
+			.endVertex();
+		renderer.vertex((double) (x + width), (double) (y + 0), 0.0D)
+			.color(red, green, blue, alpha)
+			.endVertex();
+		Tessellator.getInstance()
+			.draw();
 	}
 
 	/**

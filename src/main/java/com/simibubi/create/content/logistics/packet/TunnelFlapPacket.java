@@ -1,13 +1,15 @@
 package com.simibubi.create.content.logistics.packet;
 
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
-import com.simibubi.create.foundation.networking.TileEntityDataPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
+import com.simibubi.create.foundation.networking.TileEntityDataPacket;
+
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
 
 public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity> {
 

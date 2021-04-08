@@ -1,7 +1,11 @@
 package com.simibubi.create.content.logistics.item.filter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
@@ -16,9 +20,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AttributeFilterContainer extends AbstractFilterContainer {
 

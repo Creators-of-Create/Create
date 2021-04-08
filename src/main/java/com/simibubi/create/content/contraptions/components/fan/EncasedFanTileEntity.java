@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,8 +18,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 @MethodsReturnNonnullByDefault
 public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {

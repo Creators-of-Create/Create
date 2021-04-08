@@ -62,9 +62,7 @@ public class ReplaceInCommandBlocksCommand {
 			source.sendFeedback(new StringTextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendFeedback(
-			new StringTextComponent("Replaced occurrences in " + intValue + " blocks."),
-			true);
+		source.sendFeedback(new StringTextComponent("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

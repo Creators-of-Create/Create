@@ -1,20 +1,22 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.MaterialType;
 import com.simibubi.create.foundation.render.backend.MaterialTypes;
-import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
-import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
+import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;

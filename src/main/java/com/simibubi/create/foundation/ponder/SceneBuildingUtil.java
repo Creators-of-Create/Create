@@ -61,7 +61,8 @@ public class SceneBuildingUtil {
 		}
 
 		public Vector3d blockSurface(BlockPos pos, Direction face, float margin) {
-			return centerOf(pos).add(Vector3d.of(face.getDirectionVec()).scale(.5f + margin));
+			return centerOf(pos).add(Vector3d.of(face.getDirectionVec())
+				.scale(.5f + margin));
 		}
 
 		public Vector3d of(double x, double y, double z) {

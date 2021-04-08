@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.render.backend.core;
 
+import java.nio.ByteBuffer;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-
-import java.nio.ByteBuffer;
 
 public class ModelData extends BasicData {
     private static final float[] empty = new float[25];

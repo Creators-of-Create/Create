@@ -1,5 +1,17 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.EID;
+import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.INF;
+import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
+import static com.simibubi.create.foundation.data.recipe.Mods.MW;
+import static com.simibubi.create.foundation.data.recipe.Mods.SM;
+import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.UnaryOperator;
+
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
@@ -15,10 +27,15 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.*;
+import net.minecraft.data.CookingRecipeBuilder;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
@@ -33,12 +50,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.UnaryOperator;
-
-import static com.simibubi.create.foundation.data.recipe.Mods.*;
 
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {

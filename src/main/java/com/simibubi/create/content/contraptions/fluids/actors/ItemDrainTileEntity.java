@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -12,6 +16,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -27,10 +32,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 

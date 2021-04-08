@@ -3,8 +3,9 @@ package com.simibubi.create.content.contraptions.components.mixer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
-import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;

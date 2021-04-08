@@ -8,17 +8,12 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
 import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
-import ca.spottedleaf.starlight.common.light.VariableBlockLightHandler;
-import ca.spottedleaf.starlight.common.light.VariableBlockLightHandlerImpl;
-import ca.spottedleaf.starlight.common.world.ExtendedWorld;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.lighting.WorldLightManager;
 
 public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelWorld {

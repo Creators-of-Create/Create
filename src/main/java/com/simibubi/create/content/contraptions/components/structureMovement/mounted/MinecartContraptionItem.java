@@ -1,10 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
@@ -30,10 +36,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
 
 @EventBusSubscriber
 public class MinecartContraptionItem extends Item {

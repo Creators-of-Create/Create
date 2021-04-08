@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.ponder.elements;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.PonderWorld;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;

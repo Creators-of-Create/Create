@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.TemplateBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
-import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;

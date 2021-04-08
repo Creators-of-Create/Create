@@ -2,9 +2,8 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import net.minecraft.block.BlockState;
 
-import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
+import net.minecraft.block.BlockState;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 

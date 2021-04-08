@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl.versioned;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBInstancedArrays;
+import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GLCapabilities;
 
 public enum InstancedArrays implements GlVersioned {
     GL33_INSTANCED_ARRAYS {

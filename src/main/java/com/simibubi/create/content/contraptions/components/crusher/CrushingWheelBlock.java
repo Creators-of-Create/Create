@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
 import static com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock.VALID;
-import static com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock.FACING;
+import static net.minecraft.block.DirectionalBlock.FACING;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;

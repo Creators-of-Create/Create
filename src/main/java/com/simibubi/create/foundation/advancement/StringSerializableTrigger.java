@@ -1,24 +1,26 @@
 package com.simibubi.create.foundation.advancement;
 
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.google.common.collect.Sets;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
+import net.minecraft.loot.ConditionArraySerializer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -49,14 +51,15 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 	public Instance<T> conditionsFromJson(JsonObject json, ConditionArrayParser context) {
 		if (json.has(getJsonKey())) {
 			JsonArray elements = json.getAsJsonArray(getJsonKey());
-			return new Instance<>(this,
-				StreamSupport.stream(elements.spliterator(), false).map(JsonElement::getAsString)
-					.map(key -> {
-						T entry = getValue(key);
-						if (entry == null)
-							throw new JsonSyntaxException("Unknown entry '" + key + "'");
-						return entry;
-					}).collect(Collectors.toSet()));
+			return new Instance<>(this, StreamSupport.stream(elements.spliterator(), false)
+				.map(JsonElement::getAsString)
+				.map(key -> {
+					T entry = getValue(key);
+					if (entry == null)
+						throw new JsonSyntaxException("Unknown entry '" + key + "'");
+					return entry;
+				})
+				.collect(Collectors.toSet()));
 		}
 		return new Instance<>(this, null);
 	}
@@ -83,7 +86,8 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		protected boolean test(@Nullable List<Supplier<Object>> suppliers) {
 			if (entries == null || suppliers == null || suppliers.isEmpty())
 				return false;
-			return entries.contains(suppliers.get(0).get());
+			return entries.contains(suppliers.get(0)
+				.get());
 		}
 
 		@Override

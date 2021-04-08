@@ -1,24 +1,32 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
+import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.*;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
+import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-
-import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
-import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
 public class DeployerActorInstance extends ActorInstance {
 

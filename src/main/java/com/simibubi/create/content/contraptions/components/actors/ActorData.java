@@ -1,12 +1,13 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import java.nio.ByteBuffer;
+
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
-
-import java.nio.ByteBuffer;
 
 public class ActorData extends InstanceData {
     private float x;

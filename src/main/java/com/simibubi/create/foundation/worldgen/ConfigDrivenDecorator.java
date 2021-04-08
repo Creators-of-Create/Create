@@ -11,7 +11,7 @@ import net.minecraft.world.gen.placement.SimplePlacement;
 public class ConfigDrivenDecorator extends SimplePlacement<ConfigDrivenOreFeatureConfig> {
 
 	public static final ConfigDrivenDecorator INSTANCE = new ConfigDrivenDecorator();
-	
+
 	public ConfigDrivenDecorator() {
 		super(ConfigDrivenOreFeatureConfig.CODEC);
 		setRegistryName("create_config_driven_decorator");

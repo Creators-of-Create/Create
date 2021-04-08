@@ -45,12 +45,13 @@ public class FluidHelper {
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
 	}
-	
+
 	public static boolean hasBlockState(Fluid fluid) {
-		BlockState blockState = fluid.getDefaultState().getBlockState();
+		BlockState blockState = fluid.getDefaultState()
+			.getBlockState();
 		return blockState != null && blockState != Blocks.AIR.getDefaultState();
 	}
-	
+
 	public static FluidStack copyStackWithAmount(FluidStack fs, int amount) {
 		if (fs.isEmpty())
 			return FluidStack.EMPTY;

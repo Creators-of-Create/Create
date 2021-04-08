@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.minecraft.util.math.vector.*;
 import org.antlr.v4.runtime.misc.IntegerList;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -46,7 +45,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.math.vector.Vector4f;
 
 public class PonderScene {
 
@@ -344,13 +347,15 @@ public class PonderScene {
 
 	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
 		world.getEntities()
-				.filter(type::isInstance)
-				.map(type::cast)
-				.forEach(function);
-		/*for (Entity element : world.getEntities()) {
-			if (type.isInstance(element))
-				function.accept(type.cast(element));
-		}*/
+			.filter(type::isInstance)
+			.map(type::cast)
+			.forEach(function);
+		/*
+		 * for (Entity element : world.getEntities()) {
+		 * if (type.isInstance(element))
+		 * function.accept(type.cast(element));
+		 * }
+		 */
 	}
 
 	public <T extends PonderElement> void forEach(Class<T> type, Consumer<T> function) {
@@ -452,7 +457,6 @@ public class PonderScene {
 
 			return ms;
 		}
-
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.TreeCutter;
@@ -21,8 +23,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 
 @ParametersAreNonnullByDefault

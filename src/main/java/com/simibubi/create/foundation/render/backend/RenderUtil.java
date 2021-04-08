@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.render.backend;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class RenderUtil {
 	public static int nextPowerOf2(int a)  {

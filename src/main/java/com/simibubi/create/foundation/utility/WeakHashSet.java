@@ -1,8 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.util.Unit;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.WeakHashMap;
 
-import java.util.*;
+import net.minecraft.util.Unit;
 
 public class WeakHashSet<T> extends AbstractSet<T> {
 
@@ -14,7 +17,7 @@ public class WeakHashSet<T> extends AbstractSet<T> {
 
 	/**
 	 * Constructs a new set containing the elements in the specified
-	 * collection.  The <tt>HashMap</tt> is created with default load factor
+	 * collection. The <tt>HashMap</tt> is created with default load factor
 	 * (0.75) and an initial capacity sufficient to contain the elements in
 	 * the specified collection.
 	 *
@@ -22,7 +25,7 @@ public class WeakHashSet<T> extends AbstractSet<T> {
 	 * @throws NullPointerException if the specified collection is null
 	 */
 	public WeakHashSet(Collection<? extends T> c) {
-		map = new WeakHashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
+		map = new WeakHashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
 		addAll(c);
 	}
 
@@ -30,10 +33,10 @@ public class WeakHashSet<T> extends AbstractSet<T> {
 	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
 	 * the specified initial capacity and the specified load factor.
 	 *
-	 * @param      initialCapacity   the initial capacity of the hash map
-	 * @param      loadFactor        the load factor of the hash map
-	 * @throws     IllegalArgumentException if the initial capacity is less
-	 *             than zero, or if the load factor is nonpositive
+	 * @param initialCapacity the initial capacity of the hash map
+	 * @param loadFactor      the load factor of the hash map
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 *                                  than zero, or if the load factor is nonpositive
 	 */
 	public WeakHashSet(int initialCapacity, float loadFactor) {
 		map = new WeakHashMap<>(initialCapacity, loadFactor);
@@ -43,18 +46,18 @@ public class WeakHashSet<T> extends AbstractSet<T> {
 	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
 	 * the specified initial capacity and default load factor (0.75).
 	 *
-	 * @param      initialCapacity   the initial capacity of the hash table
-	 * @throws     IllegalArgumentException if the initial capacity is less
-	 *             than zero
+	 * @param initialCapacity the initial capacity of the hash table
+	 * @throws IllegalArgumentException if the initial capacity is less
+	 *                                  than zero
 	 */
 	public WeakHashSet(int initialCapacity) {
 		map = new WeakHashMap<>(initialCapacity);
 	}
 
-
 	@Override
 	public Iterator<T> iterator() {
-		return map.keySet().iterator();
+		return map.keySet()
+			.iterator();
 	}
 
 	@Override
@@ -84,12 +87,14 @@ public class WeakHashSet<T> extends AbstractSet<T> {
 
 	@Override
 	public Object[] toArray() {
-		return map.keySet().toArray();
+		return map.keySet()
+			.toArray();
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		return c.stream().allMatch(map::containsKey);
+		return c.stream()
+			.allMatch(map::containsKey);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.block.connected;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;

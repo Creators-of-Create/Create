@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
-	
+
 	@SubscribeEvent
 	public static void onKeyInput(KeyInputEvent event) {
 		int key = event.getKey();

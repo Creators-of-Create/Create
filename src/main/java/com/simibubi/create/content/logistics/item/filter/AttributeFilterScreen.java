@@ -1,5 +1,10 @@
 package com.simibubi.create.content.logistics.item.filter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
@@ -12,6 +17,7 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,11 +25,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterContainer> {
 

@@ -1,23 +1,24 @@
 package com.simibubi.create.foundation.utility.placement.util;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.state.Property;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.state.Property;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
-
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 @MethodsReturnNonnullByDefault
 public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementHelper {

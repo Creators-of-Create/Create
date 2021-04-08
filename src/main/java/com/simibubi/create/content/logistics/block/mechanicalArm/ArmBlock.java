@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -27,7 +27,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWheel {

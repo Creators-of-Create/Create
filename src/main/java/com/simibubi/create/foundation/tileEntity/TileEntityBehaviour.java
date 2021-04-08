@@ -75,13 +75,12 @@ public abstract class TileEntityBehaviour {
 		return tileEntity.getWorld();
 	}
 
-	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos,
-			BehaviourType<T> type) {
+	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos, BehaviourType<T> type) {
 		return get(reader.getTileEntity(pos), type);
 	}
-	
+
 	public static <T extends TileEntityBehaviour> void destroy(IBlockReader reader, BlockPos pos,
-			BehaviourType<T> type) {
+		BehaviourType<T> type) {
 		T behaviour = get(reader.getTileEntity(pos), type);
 		if (behaviour != null)
 			behaviour.destroy();

@@ -1,15 +1,15 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import net.minecraft.util.math.MathHelper;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
+import net.minecraft.util.math.MathHelper;
 
 public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 

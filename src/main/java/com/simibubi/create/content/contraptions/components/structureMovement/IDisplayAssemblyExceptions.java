@@ -1,17 +1,18 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
-import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.util.text.TextFormatting.WHITE;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static net.minecraft.util.text.TextFormatting.GRAY;
-import static net.minecraft.util.text.TextFormatting.WHITE;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.Lang;
+
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public interface IDisplayAssemblyExceptions {
 

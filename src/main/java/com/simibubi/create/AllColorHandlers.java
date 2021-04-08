@@ -41,9 +41,8 @@ public class AllColorHandlers {
 	}
 
 	public static IBlockColor getRedstonePower() {
-		return new BlockColor(
-				(state, world, pos, layer) -> RedstoneWireBlock.getWireColor(pos != null && world != null ? state.get(BlockStateProperties.POWER_0_15) : 0)
-		);
+		return new BlockColor((state, world, pos, layer) -> RedstoneWireBlock
+			.getWireColor(pos != null && world != null ? state.get(BlockStateProperties.POWER_0_15) : 0));
 	}
 
 	//

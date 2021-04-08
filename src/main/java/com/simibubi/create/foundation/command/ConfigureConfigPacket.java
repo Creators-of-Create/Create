@@ -1,5 +1,10 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -10,6 +15,7 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.OptifineHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -24,10 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class ConfigureConfigPacket extends SimplePacketBase {
 
@@ -92,38 +94,44 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void rainbowDebug(String value) {
 			ClientPlayerEntity player = Minecraft.getInstance().player;
-			if (player == null || "".equals(value)) return;
+			if (player == null || "".equals(value))
+				return;
 
 			if (value.equals("info")) {
-				ITextComponent text = new StringTextComponent("Rainbow Debug Utility is currently: ").append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
+				ITextComponent text = new StringTextComponent("Rainbow Debug Utility is currently: ")
+					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
 				player.sendStatusMessage(text, false);
 				return;
 			}
 
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-			ITextComponent text = boolToText(AllConfigs.CLIENT.rainbowDebug.get()).append(new StringTextComponent(" Rainbow Debug Utility").formatted(TextFormatting.WHITE));
+			ITextComponent text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
+				.append(new StringTextComponent(" Rainbow Debug Utility").formatted(TextFormatting.WHITE));
 			player.sendStatusMessage(text, false);
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		private static void experimentalRendering(String value) {
 			ClientPlayerEntity player = Minecraft.getInstance().player;
-			if (player == null || "".equals(value)) return;
+			if (player == null || "".equals(value))
+				return;
 
 			if (value.equals("info")) {
-				ITextComponent text = new StringTextComponent("Experimental Rendering is currently: ").append(boolToText(AllConfigs.CLIENT.experimentalRendering.get()));
+				ITextComponent text = new StringTextComponent("Experimental Rendering is currently: ")
+					.append(boolToText(AllConfigs.CLIENT.experimentalRendering.get()));
 				player.sendStatusMessage(text, false);
 				return;
 			}
 
 			boolean parsedBoolean = Boolean.parseBoolean(value);
 			boolean cannotUseER = OptifineHandler.usingShaders() && parsedBoolean;
-			
+
 			AllConfigs.CLIENT.experimentalRendering.set(parsedBoolean);
-			
+
 			ITextComponent text = boolToText(AllConfigs.CLIENT.experimentalRendering.get())
 				.append(new StringTextComponent(" Experimental Rendering").formatted(TextFormatting.WHITE));
-			ITextComponent error = new StringTextComponent("Experimental Rendering does not support Optifine Shaders").formatted(TextFormatting.RED);
+			ITextComponent error = new StringTextComponent("Experimental Rendering does not support Optifine Shaders")
+				.formatted(TextFormatting.RED);
 
 			player.sendStatusMessage(cannotUseER ? error : text, false);
 			FastRenderDispatcher.refresh();
@@ -166,13 +174,14 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void fabulousWarning(String value) {
 			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
-			Minecraft.getInstance().ingameGUI.addChatMessage(ChatType.CHAT, new StringTextComponent("Disabled Fabulous graphics warning"), Minecraft.getInstance().player.getUniqueID());
+			Minecraft.getInstance().ingameGUI.addChatMessage(ChatType.CHAT,
+				new StringTextComponent("Disabled Fabulous graphics warning"),
+				Minecraft.getInstance().player.getUniqueID());
 		}
 
 		private static IFormattableTextComponent boolToText(boolean b) {
-			return b
-					? new StringTextComponent("enabled").formatted(TextFormatting.DARK_GREEN)
-					: new StringTextComponent("disabled").formatted(TextFormatting.RED);
+			return b ? new StringTextComponent("enabled").formatted(TextFormatting.DARK_GREEN)
+				: new StringTextComponent("disabled").formatted(TextFormatting.RED);
 		}
 	}
 }

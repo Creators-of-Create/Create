@@ -1,11 +1,14 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -34,8 +37,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-
-import java.util.Random;
 
 @EventBusSubscriber(bus = Bus.FORGE)
 public class SymmetryHandler {

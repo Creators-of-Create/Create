@@ -2,17 +2,18 @@ package com.simibubi.create.foundation.render.backend.instancing;
 
 
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
 
-import com.simibubi.create.foundation.render.backend.Backend;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.BufferedModel;
+import com.simibubi.create.foundation.render.backend.core.ModelAttributes;
 import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlVertexArray;
-import com.simibubi.create.foundation.render.backend.core.ModelAttributes;
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;

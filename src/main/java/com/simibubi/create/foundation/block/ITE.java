@@ -20,13 +20,15 @@ public interface ITE<T extends TileEntity> {
 	default void withTileEntityDo(IBlockReader world, BlockPos pos, Consumer<T> action) {
 		try {
 			action.accept(getTileEntity(world, pos));
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 	}
-	
+
 	default Optional<T> getTileEntityOptional(IBlockReader world, BlockPos pos) {
 		try {
 			return Optional.of(getTileEntity(world, pos));
-		} catch (TileEntityException e) {}
+		} catch (TileEntityException e) {
+		}
 		return Optional.empty();
 	}
 
@@ -61,7 +63,7 @@ public interface ITE<T extends TileEntity> {
 
 		static String makeBaseMessage(IWorld world, BlockPos pos, Class<?> expectedTeClass) {
 			return String.format("[%s] @(%d, %d, %d), expecting a %s", getDimensionName(world), pos.getX(), pos.getY(),
-					pos.getZ(), expectedTeClass.getSimpleName());
+				pos.getZ(), expectedTeClass.getSimpleName());
 		}
 
 		static String getDimensionName(IWorld world) {
@@ -89,7 +91,7 @@ public interface ITE<T extends TileEntity> {
 
 		public InvalidTileEntityException(IWorld world, BlockPos pos, Class<?> expectedTeClass, Class<?> foundTeClass) {
 			super("Wrong TileEntity: " + makeBaseMessage(world, pos, expectedTeClass) + ", found "
-					+ foundTeClass.getSimpleName());
+				+ foundTeClass.getSimpleName());
 		}
 	}
 

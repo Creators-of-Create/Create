@@ -10,15 +10,12 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class LeftClickPacket extends SimplePacketBase {
 
-	public LeftClickPacket() {
-	}
+	public LeftClickPacket() {}
 
-	LeftClickPacket(PacketBuffer buffer) {
-	}
+	LeftClickPacket(PacketBuffer buffer) {}
 
 	@Override
-	public void write(PacketBuffer buffer) {
-	}
+	public void write(PacketBuffer buffer) {}
 
 	@Override
 	public void handle(Supplier<Context> context) {

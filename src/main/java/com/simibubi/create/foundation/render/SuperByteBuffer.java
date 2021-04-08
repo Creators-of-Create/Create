@@ -7,8 +7,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,12 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.*;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.LightUtil;
@@ -71,16 +76,16 @@ public class SuperByteBuffer extends TemplateBuffer {
 		((Buffer) buffer).rewind();
 
 		Matrix3f normalMat = transforms.peek()
-								  .getNormal()
-								  .copy();
-		//normalMat.multiply(transforms.peek().getNormal());
+			.getNormal()
+			.copy();
+		// normalMat.multiply(transforms.peek().getNormal());
 
 		Matrix4f modelMat = input.peek()
-								 .getModel()
-								 .copy();
+			.getModel()
+			.copy();
 
 		Matrix4f localTransforms = transforms.peek()
-											 .getModel();
+			.getModel();
 		modelMat.multiply(localTransforms);
 
 		if (shouldLight && lightTransform != null) {
@@ -114,9 +119,9 @@ public class SuperByteBuffer extends TemplateBuffer {
 			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
-			//builder.color((byte) Math.max(0, nx * 255), (byte) Math.max(0, ny * 255), (byte) Math.max(0, nz * 255), a);
+			// builder.color((byte) Math.max(0, nx * 255), (byte) Math.max(0, ny * 255), (byte) Math.max(0, nz * 255), a);
 			if (shouldColor) {
-				//float lum = (r < 0 ? 255 + r : r) / 256f;
+				// float lum = (r < 0 ? 255 + r : r) / 256f;
 				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
 				int colorG = Math.min(255, (int) (((float) this.g) * instanceDiffuse));
 				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
@@ -183,8 +188,14 @@ public class SuperByteBuffer extends TemplateBuffer {
 	}
 
 	public SuperByteBuffer transform(MatrixStack stack) {
-		transforms.peek().getModel().multiply(stack.peek().getModel());
-		transforms.peek().getNormal().multiply(stack.peek().getNormal());
+		transforms.peek()
+			.getModel()
+			.multiply(stack.peek()
+				.getModel());
+		transforms.peek()
+			.getNormal()
+			.multiply(stack.peek()
+				.getNormal());
 		return this;
 	}
 
@@ -213,8 +224,10 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
 		this.spriteShiftFunc = (builder, u, v) -> {
-			float targetU = entry.getTarget().getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u)));
-			float targetV = entry.getTarget().getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v)));
+			float targetU = entry.getTarget()
+				.getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u)));
+			float targetV = entry.getTarget()
+				.getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v)));
 			builder.texture(targetU, targetV);
 		};
 		return this;
@@ -222,8 +235,13 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
 		this.spriteShiftFunc = (builder, u, v) -> {
-			float targetU = u - entry.getOriginal().getMinU() + entry.getTarget().getMinU();
-			float targetV = v - entry.getOriginal().getMinV() + entry.getTarget().getMinV() + scrollV;
+			float targetU = u - entry.getOriginal()
+				.getMinU() + entry.getTarget()
+					.getMinU();
+			float targetV = v - entry.getOriginal()
+				.getMinV() + entry.getTarget()
+					.getMinV()
+				+ scrollV;
 			builder.texture(targetU, targetV);
 		};
 		return this;
@@ -231,8 +249,10 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		this.spriteShiftFunc = (builder, u, v) -> {
-			float targetU = entry.getTarget().getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
-			float targetV = entry.getTarget().getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
+			float targetU = entry.getTarget()
+				.getInterpolatedU((getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
+			float targetV = entry.getTarget()
+				.getInterpolatedV((getUnInterpolatedV(entry.getOriginal(), v) / sheetSize) + vTarget * 16);
 			builder.texture(targetU, targetV);
 		};
 		return this;

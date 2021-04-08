@@ -13,7 +13,8 @@ public class CCuriosities extends ConfigBase {
 
 	private static class Comments {
 		static String symmetryRange = "The Maximum Distance to an active mirror for the symmetry wand to trigger.";
-		static String placementRange = "The Maximum Distance a Block placed by Create's placement assist will have to its interaction point.";
+		static String placementRange =
+			"The Maximum Distance a Block placed by Create's placement assist will have to its interaction point.";
 //		static String zapperUndoLogLength = "The maximum amount of operations, a blockzapper can remember for undoing. (0 to disable undo)";
 	}
 

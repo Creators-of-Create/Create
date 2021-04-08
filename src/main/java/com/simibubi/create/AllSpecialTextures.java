@@ -14,7 +14,7 @@ public enum AllSpecialTextures {
 	CUTOUT_CHECKERED("cutout_checkerboard.png"),
 	HIGHLIGHT_CHECKERED("highlighted_checkerboard.png"),
 	SELECTION("selection.png"),
-	
+
 	;
 
 	public static final String ASSET_PATH = "textures/special/";
@@ -25,9 +25,11 @@ public enum AllSpecialTextures {
 	}
 
 	public void bind() {
-		Minecraft.getInstance().getTextureManager().bindTexture(location);
+		Minecraft.getInstance()
+			.getTextureManager()
+			.bindTexture(location);
 	}
-	
+
 	public ResourceLocation getLocation() {
 		return location;
 	}

@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.function.Consumer;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.function.Consumer;
 
 public class ProcessingInventory extends ItemStackHandler {
 	public float remainingTime;

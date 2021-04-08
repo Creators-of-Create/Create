@@ -4,9 +4,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.stats.Stats;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.AllBlocks;
@@ -26,11 +23,12 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.SlabType;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -46,11 +44,14 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 public class BlockHelper {
 
 	@OnlyIn(Dist.CLIENT)
-	public static void addReducedDestroyEffects(BlockState state, World worldIn, BlockPos pos, ParticleManager manager) {
+	public static void addReducedDestroyEffects(BlockState state, World worldIn, BlockPos pos,
+		ParticleManager manager) {
 		if (!(worldIn instanceof ClientWorld))
 			return;
 		ClientWorld world = (ClientWorld) worldIn;
@@ -123,8 +124,8 @@ public class BlockHelper {
 		int amountFound = 0;
 		Item required = getRequiredItem(block).getItem();
 
-		boolean needsTwo =
-			block.contains(BlockStateProperties.SLAB_TYPE) && block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
+		boolean needsTwo = block.contains(BlockStateProperties.SLAB_TYPE)
+			&& block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
 
 		if (needsTwo)
 			amount *= 2;
@@ -190,8 +191,8 @@ public class BlockHelper {
 		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
 	}
 
-	public static void destroyBlockAs(World world, BlockPos pos, @Nullable PlayerEntity player, ItemStack usedTool, float effectChance,
-									  Consumer<ItemStack> droppedItemCallback) {
+	public static void destroyBlockAs(World world, BlockPos pos, @Nullable PlayerEntity player, ItemStack usedTool,
+		float effectChance, Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.rand.nextFloat() < effectChance)
@@ -204,16 +205,17 @@ public class BlockHelper {
 				return;
 
 			if (event.getExpToDrop() > 0 && world instanceof ServerWorld)
-				state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos, event.getExpToDrop());
+				state.getBlock()
+					.dropXpOnBlockBreak((ServerWorld) world, pos, event.getExpToDrop());
 
 			usedTool.onBlockDestroyed(world, state, pos, player);
 			player.addStat(Stats.BLOCK_MINED.get(state.getBlock()));
 		}
 
 		if (world instanceof ServerWorld && world.getGameRules()
-			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots && (player == null || !player.isCreative())) {
-			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity,
-					player, usedTool))
+			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots
+			&& (player == null || !player.isCreative())) {
+			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
 			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 		}
@@ -222,8 +224,8 @@ public class BlockHelper {
 	}
 
 	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {
-		return hasBlockSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader,
-			fromPos.offset(toDirection), toDirection.getOpposite());
+		return hasBlockSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader, fromPos.offset(toDirection),
+			toDirection.getOpposite());
 	}
 
 	public static boolean noCollisionInSpace(IBlockReader reader, BlockPos pos) {
@@ -248,9 +250,11 @@ public class BlockHelper {
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
-		if (world.getDimension().isUltrawarm() && state.getFluidState()
-			.getFluid()
-			.isIn(FluidTags.WATER)) {
+		if (world.getDimension()
+			.isUltrawarm()
+			&& state.getFluidState()
+				.getFluid()
+				.isIn(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();
@@ -283,7 +287,7 @@ public class BlockHelper {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public static double getBounceMultiplier(Block block) {
 		if (block instanceof SlimeBlock)
 			return 0.8D;
@@ -292,13 +296,17 @@ public class BlockHelper {
 		return 0;
 	}
 
-	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_, Direction p_220056_3_) {
-		return !p_220056_0_.isIn(BlockTags.LEAVES) && Block.doesSideFillSquare(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
+	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_,
+		Direction p_220056_3_) {
+		return !p_220056_0_.isIn(BlockTags.LEAVES)
+			&& Block.doesSideFillSquare(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
 	}
 
-	public static boolean extinguishFire(World world, @Nullable PlayerEntity p_175719_1_, BlockPos p_175719_2_, Direction p_175719_3_) {
+	public static boolean extinguishFire(World world, @Nullable PlayerEntity p_175719_1_, BlockPos p_175719_2_,
+		Direction p_175719_3_) {
 		p_175719_2_ = p_175719_2_.offset(p_175719_3_);
-		if (world.getBlockState(p_175719_2_).getBlock() == Blocks.FIRE) {
+		if (world.getBlockState(p_175719_2_)
+			.getBlock() == Blocks.FIRE) {
 			world.playEvent(p_175719_1_, 1009, p_175719_2_, 0);
 			world.removeBlock(p_175719_2_, false);
 			return true;

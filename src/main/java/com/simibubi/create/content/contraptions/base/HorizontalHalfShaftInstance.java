@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 

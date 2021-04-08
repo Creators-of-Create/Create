@@ -1,11 +1,18 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
+import static net.minecraft.entity.MoverType.SELF;
+import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
+import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
+
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -22,12 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-
-import java.util.List;
-
-import static net.minecraft.entity.MoverType.SELF;
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 public class BeltMovementHandler {
 

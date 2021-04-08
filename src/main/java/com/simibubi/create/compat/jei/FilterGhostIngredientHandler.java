@@ -22,7 +22,8 @@ import net.minecraft.nbt.CompoundNBT;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FilterGhostIngredientHandler<T extends AbstractFilterContainer> implements IGhostIngredientHandler<AbstractFilterScreen<T>> {
+public class FilterGhostIngredientHandler<T extends AbstractFilterContainer>
+	implements IGhostIngredientHandler<AbstractFilterScreen<T>> {
 
 	@Override
 	public <I> List<Target<I>> getTargets(AbstractFilterScreen<T> gui, I ingredient, boolean doStart) {
@@ -33,8 +34,9 @@ public class FilterGhostIngredientHandler<T extends AbstractFilterContainer> imp
 			for (int i = 36; i < gui.getContainer().inventorySlots.size(); i++) {
 				targets.add(new FilterGhostTarget<>(gui, i - 36, isAttributeFilter));
 
-				//Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
-				if (isAttributeFilter) break;
+				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
+				if (isAttributeFilter)
+					break;
 			}
 		}
 
@@ -46,7 +48,7 @@ public class FilterGhostIngredientHandler<T extends AbstractFilterContainer> imp
 
 	@Override
 	public boolean shouldHighlightTargets() {
-		//TODO change to false and highlight the slots ourself in some better way
+		// TODO change to false and highlight the slots ourself in some better way
 		return true;
 	}
 
@@ -57,17 +59,12 @@ public class FilterGhostIngredientHandler<T extends AbstractFilterContainer> imp
 		private final int slotIndex;
 		private final boolean isAttributeFilter;
 
-
 		public FilterGhostTarget(AbstractFilterScreen<T> gui, int slotIndex, boolean isAttributeFilter) {
 			this.gui = gui;
 			this.slotIndex = slotIndex;
 			this.isAttributeFilter = isAttributeFilter;
 			Slot slot = gui.getContainer().inventorySlots.get(slotIndex + 36);
-			this.area = new Rectangle2d(
-					gui.getGuiLeft() + slot.xPos,
-					gui.getGuiTop() + slot.yPos,
-					16,
-					16);
+			this.area = new Rectangle2d(gui.getGuiLeft() + slot.xPos, gui.getGuiTop() + slot.yPos, 16, 16);
 		}
 
 		@Override
@@ -78,13 +75,15 @@ public class FilterGhostIngredientHandler<T extends AbstractFilterContainer> imp
 		@Override
 		public void accept(I ingredient) {
 			ItemStack stack = ((ItemStack) ingredient).copy();
-			LogManager.getLogger().info(stack);
+			LogManager.getLogger()
+				.info(stack);
 			stack.setCount(1);
 			gui.getContainer().filterInventory.setStackInSlot(slotIndex, stack);
 
-			if (isAttributeFilter) return;
+			if (isAttributeFilter)
+				return;
 
-			//sync new filter contents with server
+			// sync new filter contents with server
 			CompoundNBT data = new CompoundNBT();
 			data.putInt("Slot", slotIndex);
 			data.put("Item", stack.serializeNBT());

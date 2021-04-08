@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;

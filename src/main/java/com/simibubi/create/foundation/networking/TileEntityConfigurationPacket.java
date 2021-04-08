@@ -19,11 +19,11 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 		pos = buffer.readBlockPos();
 		readSettings(buffer);
 	}
-	
+
 	public TileEntityConfigurationPacket(BlockPos pos) {
 		this.pos = pos;
 	}
-	
+
 	@Override
 	public void write(PacketBuffer buffer) {
 		buffer.writeBlockPos(pos);
@@ -33,27 +33,32 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 	@SuppressWarnings("unchecked")
 	@Override
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
-			if (player == null)
-				return;
-			World world = player.world;
+		context.get()
+			.enqueueWork(() -> {
+				ServerPlayerEntity player = context.get()
+					.getSender();
+				if (player == null)
+					return;
+				World world = player.world;
 
-			if (world == null || !world.isBlockPresent(pos))
-				return;
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity instanceof SyncedTileEntity) {
-				applySettings((TE) tileEntity);
-				((SyncedTileEntity) tileEntity).sendData();
-				tileEntity.markDirty();
-			}
-		});
-		context.get().setPacketHandled(true);
-		
+				if (world == null || !world.isBlockPresent(pos))
+					return;
+				TileEntity tileEntity = world.getTileEntity(pos);
+				if (tileEntity instanceof SyncedTileEntity) {
+					applySettings((TE) tileEntity);
+					((SyncedTileEntity) tileEntity).sendData();
+					tileEntity.markDirty();
+				}
+			});
+		context.get()
+			.setPacketHandled(true);
+
 	}
-	
+
 	protected abstract void writeSettings(PacketBuffer buffer);
+
 	protected abstract void readSettings(PacketBuffer buffer);
+
 	protected abstract void applySettings(TE te);
 
 }

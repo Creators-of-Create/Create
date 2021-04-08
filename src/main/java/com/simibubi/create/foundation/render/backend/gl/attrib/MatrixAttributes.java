@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl.attrib;
 
-import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 import org.lwjgl.opengl.GL20;
+
+import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 
 public enum MatrixAttributes implements IAttribSpec {
     MAT3(3, 3),

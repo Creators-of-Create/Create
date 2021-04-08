@@ -22,10 +22,10 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;

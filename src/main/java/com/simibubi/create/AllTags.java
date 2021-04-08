@@ -47,7 +47,7 @@ public class AllTags {
 	public static ITag.INamedTag<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags::makeWrapperTag, name);
 	}
-	
+
 	public static ITag.INamedTag<Fluid> forgeFluidTag(String name) {
 		return forgeTag(FluidTags::makeWrapperTag, name);
 	}
@@ -56,7 +56,8 @@ public class AllTags {
 		return tag(wrapperFactory, "forge", name);
 	}
 
-	public static <T> ITag.INamedTag<T> tag(Function<String, ITag.INamedTag<T>> wrapperFactory, String domain, String name) {
+	public static <T> ITag.INamedTag<T> tag(Function<String, ITag.INamedTag<T>> wrapperFactory, String domain,
+		String name) {
 		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
 	}
 
@@ -65,6 +66,7 @@ public class AllTags {
 		MOD(Create.ID), FORGE("forge"), MC("minecraft"), TIC("tconstruct")
 
 		;
+
 		String id;
 
 		private NameSpace(String id) {
@@ -112,13 +114,14 @@ public class AllTags {
 				.addTag(tag));
 		}
 	}
-	
+
 	public static enum AllFluidTags {
 		NO_INFINITE_DRAINING
-		
+
 		;
+
 		public ITag.INamedTag<Fluid> tag;
-		
+
 		private AllFluidTags() {
 			this(MOD, "");
 		}
@@ -131,17 +134,26 @@ public class AllTags {
 			tag = FluidTags.createOptional(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
-		
+
 		public boolean matches(Fluid fluid) {
 			return fluid != null && fluid.isIn(tag);
 		}
-		
-		static void loadClass() {
-		}
+
+		static void loadClass() {}
 	}
 
 	public static enum AllBlockTags {
-		WINDMILL_SAILS, FAN_HEATERS, WINDOWABLE, NON_MOVABLE, BRITTLE, SEATS, SAILS, VALVE_HANDLES, FAN_TRANSPARENT, SAFE_NBT, SLIMY_LOGS(TIC)
+		WINDMILL_SAILS,
+		FAN_HEATERS,
+		WINDOWABLE,
+		NON_MOVABLE,
+		BRITTLE,
+		SEATS,
+		SAILS,
+		VALVE_HANDLES,
+		FAN_TRANSPARENT,
+		SAFE_NBT,
+		SLIMY_LOGS(TIC)
 
 		;
 
@@ -156,8 +168,10 @@ public class AllTags {
 		}
 
 		private AllBlockTags(NameSpace namespace, String path) {
-			ResourceLocation id = new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
-			if (ModList.get().isLoaded(namespace.id)) {
+			ResourceLocation id =
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
+			if (ModList.get()
+				.isLoaded(namespace.id)) {
 				tag = BlockTags.makeWrapperTag(id.toString());
 				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
 			} else {
@@ -178,9 +192,10 @@ public class AllTags {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
 				.addTag(child));
 		}
-		
-		public void add(Block ...values) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag).add(values));
+
+		public void add(Block... values) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+				.add(values));
 		}
 	}
 
@@ -192,7 +207,7 @@ public class AllTags {
 			Items.HONEY_BOTTLE);
 
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
-		
+
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 

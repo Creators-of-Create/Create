@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.simibubi.create.content.contraptions.base.IRotate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;

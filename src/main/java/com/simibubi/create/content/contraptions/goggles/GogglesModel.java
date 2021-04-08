@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.goggles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.block.render.WrappedBakedModel;
+
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 

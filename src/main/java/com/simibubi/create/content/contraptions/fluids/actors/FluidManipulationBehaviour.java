@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;

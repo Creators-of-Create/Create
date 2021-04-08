@@ -1,17 +1,18 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.List;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 

@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.ponder;
 
+import org.antlr.v4.runtime.misc.IntegerList;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -11,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import org.antlr.v4.runtime.misc.IntegerList;
 
 public class PonderProgressBar extends AbstractSimiWidget {
 
@@ -58,8 +58,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 	@Override
 	public void onClick(double mouseX, double mouseY) {
-        PonderScene activeScene = ponder.getActiveScene();
-        IntegerList keyframeTimes = activeScene.keyframeTimes;
+		PonderScene activeScene = ponder.getActiveScene();
+		IntegerList keyframeTimes = activeScene.keyframeTimes;
 
 		int keyframeIndex = getHoveredKeyframeIndex(activeScene, mouseX);
 
@@ -109,10 +109,11 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		ms.push();
 		ms.translate(0, 0, 150);
-		/*  ponderButtons are at z+400
-		*   renderBox is at z+100
-		*   gradients have to be in front of the box so z>+100
-		* */
+		/*
+		 * ponderButtons are at z+400
+		 * renderBox is at z+100
+		 * gradients have to be in front of the box so z>+100
+		 */
 
 		ms.push();
 		PonderUI.renderBox(ms, x, y, width, height, false);
@@ -123,8 +124,10 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		ms.push();
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 3, 1, 4, 0x80ffeedd, 0x80ffeedd);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 4, 1, 5, 0x50ffeedd, 0x50ffeedd);
+		GuiUtils.drawGradientRect(ms.peek()
+			.getModel(), 110, 0, 3, 1, 4, 0x80ffeedd, 0x80ffeedd);
+		GuiUtils.drawGradientRect(ms.peek()
+			.getModel(), 110, 0, 4, 1, 5, 0x50ffeedd, 0x50ffeedd);
 		ms.pop();
 
 		renderKeyframes(ms, mouseX, partialTicks);
@@ -174,10 +177,12 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		}
 	}
 
-	private void drawKeyframe(MatrixStack ms, PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
+	private void drawKeyframe(MatrixStack ms, PonderScene activeScene, boolean selected, int keyframeTime,
+		int keyframePos, int startColor, int endColor, int height) {
 		if (selected) {
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
-			GuiUtils.drawGradientRect(ms.peek().getModel(), 500, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
+			GuiUtils.drawGradientRect(ms.peek()
+				.getModel(), 500, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
 			ms.push();
 			ms.translate(0, 0, 400);
 			String text;
@@ -185,8 +190,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			if (activeScene.currentTime < keyframeTime) {
 				text = ">";
 				offset = -1 - font.getStringWidth(text);
-			}
-			else {
+			} else {
 				text = "<";
 				offset = 3;
 			}
@@ -194,7 +198,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			ms.pop();
 		}
 
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
+		GuiUtils.drawGradientRect(ms.peek()
+			.getModel(), 500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
 	}
 
 	@Override

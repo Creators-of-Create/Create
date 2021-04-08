@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.actors.dispenser;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.BlockHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;

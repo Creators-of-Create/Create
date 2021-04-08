@@ -407,7 +407,8 @@ public class SceneBuilder {
 
 		public void rotateParrot(ElementLink<ParrotElement> link, double xRotation, double yRotation, double zRotation,
 			int duration) {
-			addInstruction(AnimateParrotInstruction.rotate(link, new Vector3d(xRotation, yRotation, zRotation), duration));
+			addInstruction(
+				AnimateParrotInstruction.rotate(link, new Vector3d(xRotation, yRotation, zRotation), duration));
 		}
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vector3d offset, int duration) {

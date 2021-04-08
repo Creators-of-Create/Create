@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+
 import ca.spottedleaf.starlight.common.chunk.ExtendedChunk;
 import ca.spottedleaf.starlight.common.light.SWMRNibbleArray;
 import ca.spottedleaf.starlight.common.light.StarLightEngine;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.IChunk;
-
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 public class WrappedChunkStarlight extends WrappedChunk implements ExtendedChunk {
 

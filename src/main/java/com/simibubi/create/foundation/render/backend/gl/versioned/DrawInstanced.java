@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.render.backend.gl.versioned;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBDrawInstanced;
+import org.lwjgl.opengl.EXTDrawInstanced;
+import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GLCapabilities;
 
 public enum DrawInstanced implements GlVersioned {
     GL31_DRAW_INSTANCED {

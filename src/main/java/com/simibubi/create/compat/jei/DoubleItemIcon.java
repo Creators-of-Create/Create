@@ -38,7 +38,7 @@ public class DoubleItemIcon implements IDrawable {
 			primaryStack = primarySupplier.get();
 			secondaryStack = secondarySupplier.get();
 		}
-		
+
 		RenderHelper.enable();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
@@ -47,13 +47,15 @@ public class DoubleItemIcon implements IDrawable {
 
 		matrixStack.push();
 		matrixStack.translate(1, 1, 0);
-		GuiGameElement.of(primaryStack).render(matrixStack);
+		GuiGameElement.of(primaryStack)
+			.render(matrixStack);
 		matrixStack.pop();
 
 		matrixStack.push();
 		matrixStack.translate(10, 10, 100);
 		matrixStack.scale(.5f, .5f, .5f);
-		GuiGameElement.of(secondaryStack).render(matrixStack);
+		GuiGameElement.of(secondaryStack)
+			.render(matrixStack);
 		matrixStack.pop();
 
 		matrixStack.pop();

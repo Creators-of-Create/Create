@@ -1,22 +1,32 @@
 package com.simibubi.create.content.schematics;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.*;
-import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSchematicLoader {

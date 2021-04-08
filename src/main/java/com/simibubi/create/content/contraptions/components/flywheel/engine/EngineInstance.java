@@ -2,11 +2,12 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.block.Block;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;

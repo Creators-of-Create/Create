@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.utility.animation;
 
+import com.simibubi.create.foundation.utility.AngleHelper;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
-
-import com.simibubi.create.foundation.utility.AngleHelper;
 
 // Can replace all Interpolated value classes
 // InterpolatedChasingValue, InterpolatedValue, InterpolatedChasingAngle, InterpolatedAngle

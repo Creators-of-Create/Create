@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render.backend.core;
 
 import java.nio.ByteBuffer;
+
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 

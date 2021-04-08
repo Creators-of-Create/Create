@@ -44,7 +44,8 @@ public class OxidizingBlock extends Block {
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if (worldIn.getRandom().nextFloat() <= chance) {
+		if (worldIn.getRandom()
+			.nextFloat() <= chance) {
 			int currentState = state.get(OXIDIZATION);
 			boolean canIncrease = false;
 			LinkedList<Integer> neighbors = new LinkedList<>();
@@ -64,7 +65,9 @@ public class OxidizingBlock extends Block {
 				canIncrease = true;
 			}
 			if (canIncrease) {
-				OptionalDouble average = neighbors.stream().mapToInt(v -> v).average();
+				OptionalDouble average = neighbors.stream()
+					.mapToInt(v -> v)
+					.average();
 				if (average.orElse(7d) >= currentState)
 					worldIn.setBlockState(pos, state.with(OXIDIZATION, Math.min(currentState + 1, 7)));
 			}
@@ -72,11 +75,13 @@ public class OxidizingBlock extends Block {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos,
-			PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult) {
-		if(state.get(OXIDIZATION) > 0 && player.getHeldItem(hand).getItem() instanceof SandPaperItem) {
-			if(!player.isCreative())
-				player.getHeldItem(hand).damageItem(1, player, p -> p.sendBreakAnimation(p.getActiveHand()));
+	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult blockRayTraceResult) {
+		if (state.get(OXIDIZATION) > 0 && player.getHeldItem(hand)
+			.getItem() instanceof SandPaperItem) {
+			if (!player.isCreative())
+				player.getHeldItem(hand)
+					.damageItem(1, player, p -> p.sendBreakAnimation(p.getActiveHand()));
 			world.setBlockState(pos, state.with(OXIDIZATION, 0));
 			return ActionResultType.SUCCESS;
 		}

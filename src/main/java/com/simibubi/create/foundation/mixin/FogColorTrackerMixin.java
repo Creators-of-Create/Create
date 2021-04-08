@@ -12,10 +12,10 @@ import com.simibubi.create.foundation.render.backend.gl.GlFog;
 @Mixin(GlStateManager.class)
 public class FogColorTrackerMixin {
 
-    @Inject(at = @At("TAIL"), method = "fog")
-    private static void copyFogColor(int pname, float[] params, CallbackInfo ci) {
-        if (pname == GL11.GL_FOG_COLOR) {
-            GlFog.FOG_COLOR = params;
-        }
-    }
+	@Inject(at = @At("TAIL"), method = "fog")
+	private static void copyFogColor(int pname, float[] params, CallbackInfo ci) {
+		if (pname == GL11.GL_FOG_COLOR) {
+			GlFog.FOG_COLOR = params;
+		}
+	}
 }

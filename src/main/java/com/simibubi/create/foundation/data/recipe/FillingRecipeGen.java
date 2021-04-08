@@ -5,6 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;

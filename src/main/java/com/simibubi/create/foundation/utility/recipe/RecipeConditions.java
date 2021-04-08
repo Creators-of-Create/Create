@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.utility.recipe;
 
+import java.util.function.Predicate;
+
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-
-import java.util.function.Predicate;
 
 /**
  * Commonly used Predicates for searching through recipe collections.

@@ -28,9 +28,9 @@ public abstract class Selection implements Predicate<BlockPos> {
 	public abstract Vector3d getCenter();
 
 	public abstract void forEach(Consumer<BlockPos> callback);
-	
+
 	public abstract OutlineParams makeOutline(Outliner outliner, Object slot);
-	
+
 	public OutlineParams makeOutline(Outliner outliner) {
 		return makeOutline(outliner, this);
 	}
@@ -44,7 +44,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 			posSet = new HashSet<>();
 			add(initial);
 		}
-		
+
 		private Compound(Set<BlockPos> template) {
 			posSet = new HashSet<>(template);
 		}
@@ -127,7 +127,8 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 		@Override
 		public void forEach(Consumer<BlockPos> callback) {
-			BlockPos.stream(bb).forEach(callback);
+			BlockPos.stream(bb)
+				.forEach(callback);
 		}
 
 		@Override

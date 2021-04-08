@@ -27,8 +27,8 @@ public class ScreenResourceWrapper implements IDrawable {
 	@Override
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		resource.bind();
-		AbstractGui.drawTexture(matrixStack, xOffset, yOffset, 0, resource.startX, resource.startY, resource.width, resource.height, 256,
-				256);
+		AbstractGui.drawTexture(matrixStack, xOffset, yOffset, 0, resource.startX, resource.startY, resource.width,
+			resource.height, 256, 256);
 	}
 
 }

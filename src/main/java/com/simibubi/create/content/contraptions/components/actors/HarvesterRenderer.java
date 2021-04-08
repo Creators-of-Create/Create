@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -9,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -17,8 +20,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntity> {
 

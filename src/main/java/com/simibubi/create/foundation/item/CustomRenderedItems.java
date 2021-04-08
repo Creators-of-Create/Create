@@ -19,7 +19,7 @@ public class CustomRenderedItems {
 
 	private List<Pair<Supplier<? extends Item>, NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>>> registered;
 	private Map<Item, NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> customModels;
-	
+
 	public CustomRenderedItems() {
 		registered = new ArrayList<>();
 		customModels = new IdentityHashMap<>();
@@ -29,8 +29,9 @@ public class CustomRenderedItems {
 		NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel> behaviour) {
 		registered.add(Pair.of(entry, behaviour));
 	}
-	
-	public void foreach(NonNullBiConsumer<Item, NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> consumer) {
+
+	public void foreach(
+		NonNullBiConsumer<Item, NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> consumer) {
 		loadEntriesIfMissing();
 		customModels.forEach(consumer);
 	}

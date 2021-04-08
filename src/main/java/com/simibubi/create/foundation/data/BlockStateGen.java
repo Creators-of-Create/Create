@@ -227,8 +227,8 @@ public class BlockStateGen {
 
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
-						.getExistingFile(p
-							.modLoc("block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
+						.getExistingFile(p.modLoc(
+							"block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
 					.rotationY(yRotation % 360)
 					.build();
 			});

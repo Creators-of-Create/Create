@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
+
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;

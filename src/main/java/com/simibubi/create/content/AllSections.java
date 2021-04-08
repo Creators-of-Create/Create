@@ -24,7 +24,7 @@ public enum AllSections {
 
 	/** Base materials, ingredients and tools */
 	MATERIALS(Palette.Green),
-	
+
 	/** Helpful gadgets and other shenanigans */
 	CURIOSITIES(Palette.Purple),
 

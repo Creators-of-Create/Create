@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;

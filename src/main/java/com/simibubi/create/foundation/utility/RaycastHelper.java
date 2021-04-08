@@ -23,7 +23,7 @@ public class RaycastHelper {
 	}
 
 	public static PredicateTraceResult rayTraceUntil(PlayerEntity playerIn, double range,
-			Predicate<BlockPos> predicate) {
+		Predicate<BlockPos> predicate) {
 		Vector3d origin = getTraceOrigin(playerIn);
 		Vector3d target = getTraceTarget(playerIn, range, origin);
 		return rayTraceUntil(origin, target, predicate);

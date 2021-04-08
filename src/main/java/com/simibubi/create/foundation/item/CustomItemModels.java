@@ -18,7 +18,7 @@ public class CustomItemModels {
 
 	private List<Pair<Supplier<? extends Item>, NonNullFunction<IBakedModel, ? extends IBakedModel>>> registered;
 	private Map<Item, NonNullFunction<IBakedModel, ? extends IBakedModel>> customModels;
-	
+
 	public CustomItemModels() {
 		registered = new ArrayList<>();
 		customModels = new IdentityHashMap<>();
@@ -28,7 +28,7 @@ public class CustomItemModels {
 		NonNullFunction<IBakedModel, ? extends IBakedModel> behaviour) {
 		registered.add(Pair.of(entry, behaviour));
 	}
-	
+
 	public void foreach(NonNullBiConsumer<Item, NonNullFunction<IBakedModel, ? extends IBakedModel>> consumer) {
 		loadEntriesIfMissing();
 		customModels.forEach(consumer);

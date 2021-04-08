@@ -1,28 +1,29 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.MaterialTypes;
-import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
+import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
-
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
 

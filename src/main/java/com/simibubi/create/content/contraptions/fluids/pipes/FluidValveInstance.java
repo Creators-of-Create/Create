@@ -5,12 +5,13 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 

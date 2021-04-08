@@ -3,8 +3,9 @@ package com.simibubi.create.foundation.render.backend.gl;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
-import com.simibubi.create.foundation.render.backend.Backend;
 import org.lwjgl.opengl.GL20;
+
+import com.simibubi.create.foundation.render.backend.Backend;
 
 public class GlBuffer extends GlObject {
 

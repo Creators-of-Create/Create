@@ -1,10 +1,13 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
+
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -15,8 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.List;
 
 public class FunnelMovementBehaviour extends MovementBehaviour {
 

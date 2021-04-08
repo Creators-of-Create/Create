@@ -1,11 +1,10 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
-import com.simibubi.create.foundation.render.backend.RenderUtil;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.ResourceLocation;

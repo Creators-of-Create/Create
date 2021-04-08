@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -13,6 +8,11 @@ import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> extends BackHalfShaftInstance implements IDynamicInstance {
 	final B bearing;

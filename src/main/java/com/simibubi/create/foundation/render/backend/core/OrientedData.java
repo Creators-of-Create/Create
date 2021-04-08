@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.render.backend.core;
 
-import net.minecraft.util.math.BlockPos;
-
 import java.nio.ByteBuffer;
+
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;

@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
+
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FarmlandBlock;
@@ -22,8 +25,6 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
 public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 

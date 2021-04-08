@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -10,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,8 +22,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.util.List;
 
 public class StickerTileEntity extends SmartTileEntity implements IInstanceRendered {
 

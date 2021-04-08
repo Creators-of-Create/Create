@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
+import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunkStarlight;
+
 import ca.spottedleaf.starlight.common.light.VariableBlockLightHandler;
 import ca.spottedleaf.starlight.common.light.VariableBlockLightHandlerImpl;
 import ca.spottedleaf.starlight.common.world.ExtendedWorld;
@@ -8,9 +11,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
-
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunkStarlight;
 
 public class PlacementSimulationWorldStarlight extends PlacementSimulationWorld implements ExtendedWorld {
 

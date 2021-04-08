@@ -15,7 +15,7 @@ public abstract class SpecialBlockStateGen {
 	protected Property<?>[] getIgnoredProperties() {
 		return new Property<?>[0];
 	}
-	
+
 	public final <T extends Block> void generate(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
@@ -28,11 +28,12 @@ public abstract class SpecialBlockStateGen {
 	}
 
 	protected int horizontalAngle(Direction direction) {
-		if (direction.getAxis().isVertical())
+		if (direction.getAxis()
+			.isVertical())
 			return 0;
 		return (int) direction.getHorizontalAngle();
 	}
-	
+
 	protected abstract int getXRotation(BlockState state);
 
 	protected abstract int getYRotation(BlockState state);

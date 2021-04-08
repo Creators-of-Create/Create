@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -14,8 +17,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
 
 public class EngineTileEntity extends SmartTileEntity implements IInstanceRendered {
 

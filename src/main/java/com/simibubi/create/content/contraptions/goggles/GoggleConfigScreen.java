@@ -8,7 +8,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;

@@ -44,21 +44,23 @@ public class SuperByteBufferCache {
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
 		return get(Compartment.PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
+
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
 		MatrixStack modelTransform) {
-		return get(Compartment.PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState, modelTransform));
+		return get(Compartment.PARTIAL, partial,
+			() -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState,
 		Direction dir) {
 		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-				   () -> standardModelRender(partial.get(), referenceState));
+			() -> standardModelRender(partial.get(), referenceState));
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir,
 		MatrixStack modelTransform) {
 		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-				   () -> standardModelRender(partial.get(), referenceState, modelTransform));
+			() -> standardModelRender(partial.get(), referenceState, modelTransform));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {
@@ -78,7 +80,7 @@ public class SuperByteBufferCache {
 			return null;
 		}
 	}
-	
+
 	public <T> void invalidate(Compartment<T> compartment, T key) {
 		Cache<Object, SuperByteBuffer> compartmentCache = this.cache.get(compartment);
 		compartmentCache.invalidate(key);
@@ -118,11 +120,11 @@ public class SuperByteBufferCache {
 		BufferBuilder builder = new BufferBuilder(512);
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true, mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
+			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 		builder.finishDrawing();
 		return builder;
 	}
-
 
 	public void invalidate() {
 		cache.forEach((comp, cache) -> cache.invalidateAll());

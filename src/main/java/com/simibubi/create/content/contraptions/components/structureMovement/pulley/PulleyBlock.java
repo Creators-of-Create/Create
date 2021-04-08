@@ -5,7 +5,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.render.backend.instancing;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import com.simibubi.create.foundation.render.backend.core.IFlatLight;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
@@ -9,9 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * The layer between a {@link TileEntity} and the Flywheel backend.

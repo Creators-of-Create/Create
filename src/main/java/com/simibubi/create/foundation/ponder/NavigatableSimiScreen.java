@@ -1,5 +1,13 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
@@ -9,18 +17,12 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -31,8 +33,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		.startWithValue(0)
 		.chase(0, .1f, LerpedFloat.Chaser.LINEAR);
 	protected final LerpedFloat arrowAnimation = LerpedFloat.linear()
-			.startWithValue(0)
-			.chase(0, 0.075f, LerpedFloat.Chaser.LINEAR);
+		.startWithValue(0)
+		.chase(0, 0.075f, LerpedFloat.Chaser.LINEAR);
 	protected PonderButton backTrack;
 
 	public NavigatableSimiScreen() {
@@ -98,7 +100,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, 0xffa3a3a3);
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
-				arrowAnimation.setValue(1);//called twice to also set the previous value to 1
+				arrowAnimation.setValue(1);// called twice to also set the previous value to 1
 			}
 		}
 		ms.pop();
@@ -162,7 +164,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x40aa9999,
+					0x10aa9999);
 
 			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
 			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
@@ -223,8 +226,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.translate(0, 0, 600);
 		names.forEach(s -> {
 			int sWidth = textRenderer.getStringWidth(s);
-			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2, 0xdd101010,
-				0x44101010);
+			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2,
+				0xdd101010, 0x44101010);
 			textRenderer.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
 			first.setFalse();
 

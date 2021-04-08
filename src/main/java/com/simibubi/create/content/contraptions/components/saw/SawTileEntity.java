@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -19,8 +22,17 @@ import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
+
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.*;
+import net.minecraft.block.BambooBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CactusBlock;
+import net.minecraft.block.ChorusPlantBlock;
+import net.minecraft.block.KelpBlock;
+import net.minecraft.block.KelpTopBlock;
+import net.minecraft.block.StemGrownBlock;
+import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;

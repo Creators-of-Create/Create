@@ -202,7 +202,9 @@ public class GuiGameElement {
 
 		protected void renderModel(BlockRendererDispatcher blockRenderer, IRenderTypeBuffer.Impl buffer,
 			RenderType renderType, IVertexBuilder vb, MatrixStack ms) {
-			int color = Minecraft.getInstance().getBlockColors().getColor(blockState, null, null, 0);
+			int color = Minecraft.getInstance()
+				.getBlockColors()
+				.getColor(blockState, null, null, 0);
 			Vector3d rgb = ColorHelper.getRGB(color == -1 ? this.color : color);
 			blockRenderer.getBlockModelRenderer()
 				.renderModel(ms.peek(), vb, blockState, blockmodel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
@@ -276,16 +278,16 @@ public class GuiGameElement {
 			cleanUpMatrix(matrixStack);
 		}
 		/*
-		public void render() {
-			prepare();
-			transform();
-			RenderSystem.scaled(1, -1, 1);
-			RenderSystem.translated(0, 0, -75);
-			Minecraft.getInstance()
-				.getItemRenderer()
-				.renderItemIntoGUI(stack, 0, 0);
-			cleanUp();
-			}
+		 * public void render() {
+		 * prepare();
+		 * transform();
+		 * RenderSystem.scaled(1, -1, 1);
+		 * RenderSystem.translated(0, 0, -75);
+		 * Minecraft.getInstance()
+		 * .getItemRenderer()
+		 * .renderItemIntoGUI(stack, 0, 0);
+		 * cleanUp();
+		 * }
 		 */
 
 		public static void renderItemIntoGUI(MatrixStack matrixStack, ItemStack stack) {

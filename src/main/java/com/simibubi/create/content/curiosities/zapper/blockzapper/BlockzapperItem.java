@@ -13,7 +13,6 @@ import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.ItemDescription;
-import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;

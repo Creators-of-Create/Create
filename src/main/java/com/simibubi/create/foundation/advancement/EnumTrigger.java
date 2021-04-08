@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.advancement;
 
-import mcp.MethodsReturnNonnullByDefault;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import mcp.MethodsReturnNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

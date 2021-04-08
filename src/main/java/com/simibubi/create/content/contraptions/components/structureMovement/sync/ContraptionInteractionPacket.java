@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;

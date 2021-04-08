@@ -1,23 +1,26 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.LightType;
-
 import java.util.Arrays;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.*;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.util.ConditionalInstance;
 import com.simibubi.create.foundation.render.backend.instancing.util.InstanceGroup;
 import com.simibubi.create.foundation.render.backend.instancing.util.SelectInstance;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
 import com.simibubi.create.foundation.render.backend.light.LightUpdater;
+
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.LightType;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
 

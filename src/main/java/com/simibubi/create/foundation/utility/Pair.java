@@ -23,19 +23,19 @@ public class Pair<F, S> {
 	public S getSecond() {
 		return second;
 	}
-	
+
 	public void setFirst(F first) {
 		this.first = first;
 	}
-	
+
 	public void setSecond(S second) {
 		this.second = second;
 	}
-	
+
 	public Pair<F, S> copy() {
 		return Pair.of(first, second);
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj == this)
@@ -56,7 +56,7 @@ public class Pair<F, S> {
 	public String toString() {
 		return "(" + first + ", " + second + ")";
 	}
-	
+
 	public Pair<S, F> swap() {
 		return Pair.of(second, first);
 	}

@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

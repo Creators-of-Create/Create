@@ -1,10 +1,13 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import java.util.List;
+
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -13,8 +16,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
 
 public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity {
 

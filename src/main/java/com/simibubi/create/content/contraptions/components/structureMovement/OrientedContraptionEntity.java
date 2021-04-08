@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
@@ -8,7 +15,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -32,12 +44,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
-
-import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
 /**
  * Ex: Minecarts, Couplings <br>

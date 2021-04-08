@@ -1,5 +1,14 @@
 package com.simibubi.create.foundation.data;
 
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
@@ -16,7 +25,12 @@ import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import com.tterrag.registrate.util.nullness.*;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
+
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IBlockColor;
@@ -35,15 +49,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
@@ -106,12 +111,14 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.collect(Collectors.toList());
 	}
 
-	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
-		return this.tileEntity(this.self(), name, (NonNullFunction)factory);
+	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+		return this.tileEntity(this.self(), name, (NonNullFunction) factory);
 	}
 
 	@Override
-	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
+		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
 		});

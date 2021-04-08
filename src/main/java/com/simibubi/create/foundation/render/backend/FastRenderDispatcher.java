@@ -2,11 +2,10 @@ package com.simibubi.create.foundation.render.backend;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.simibubi.create.foundation.render.KineticRenderer;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.WorldAttached;
 

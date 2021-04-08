@@ -3,6 +3,7 @@ package com.simibubi.create.foundation;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
+
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;

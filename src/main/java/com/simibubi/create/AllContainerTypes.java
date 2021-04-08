@@ -45,8 +45,9 @@ public enum AllContainerTypes {
 	public static void register(RegistryEvent.Register<ContainerType<?>> event) {
 		for (AllContainerTypes container : values()) {
 			container.type = new ContainerType<>(container.factory)
-					.setRegistryName(new ResourceLocation(Create.ID, Lang.asId(container.name())));
-			event.getRegistry().register(container.type);
+				.setRegistryName(new ResourceLocation(Create.ID, Lang.asId(container.name())));
+			event.getRegistry()
+				.register(container.type);
 		}
 	}
 
@@ -62,7 +63,7 @@ public enum AllContainerTypes {
 	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("unchecked")
 	private static <C extends Container, S extends Screen & IHasContainer<C>> void bind(AllContainerTypes c,
-			IScreenFactory<C, S> factory) {
+		IScreenFactory<C, S> factory) {
 		ScreenManager.registerFactory((ContainerType<C>) c.type, factory);
 	}
 

@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.util.Optional;
+import java.util.Random;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -8,6 +12,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,10 +29,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Predicate;
 
 public class PipeConnection {
 

@@ -1,17 +1,17 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class StabilizedBearingInstance extends ActorInstance {
 

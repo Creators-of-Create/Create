@@ -27,20 +27,22 @@ public class VoxelShaper {
 		return shapes.get(axisAsFace(axis));
 	}
 
-	public static VoxelShaper forHorizontal(VoxelShape shape, Direction facing){
+	public static VoxelShaper forHorizontal(VoxelShape shape, Direction facing) {
 		return forDirectionsWithRotation(shape, facing, Direction.Plane.HORIZONTAL, new HorizontalRotationValues());
 	}
 
 	public static VoxelShaper forHorizontalAxis(VoxelShape shape, Axis along) {
-		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST), new HorizontalRotationValues());
+		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST),
+			new HorizontalRotationValues());
 	}
 
-	public static VoxelShaper forDirectional(VoxelShape shape, Direction facing){
+	public static VoxelShaper forDirectional(VoxelShape shape, Direction facing) {
 		return forDirectionsWithRotation(shape, facing, Arrays.asList(Iterate.directions), new DefaultRotationValues());
 	}
 
-	public static VoxelShaper forAxis(VoxelShape shape, Axis along){
-		return forDirectionsWithRotation(shape, axisAsFace(along), Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.UP), new DefaultRotationValues());
+	public static VoxelShaper forAxis(VoxelShape shape, Axis along) {
+		return forDirectionsWithRotation(shape, axisAsFace(along),
+			Arrays.asList(Direction.SOUTH, Direction.EAST, Direction.UP), new DefaultRotationValues());
 	}
 
 	public VoxelShaper withVerticalShapes(VoxelShape upShape) {
@@ -49,7 +51,7 @@ public class VoxelShaper {
 		return this;
 	}
 
-	public VoxelShaper withShape(VoxelShape shape, Direction facing){
+	public VoxelShaper withShape(VoxelShape shape, Direction facing) {
 		shapes.put(facing, shape);
 		return this;
 	}
@@ -58,11 +60,12 @@ public class VoxelShaper {
 		return Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
 	}
 
-	protected static float horizontalAngleFromDirection(Direction direction){
-		return (float)((Math.max(direction.getHorizontalIndex(), 0) & 3) * 90);
+	protected static float horizontalAngleFromDirection(Direction direction) {
+		return (float) ((Math.max(direction.getHorizontalIndex(), 0) & 3) * 90);
 	}
 
-	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing, Iterable<Direction> directions, Function<Direction, Vector3d> rotationValues){
+	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing,
+		Iterable<Direction> directions, Function<Direction, Vector3d> rotationValues) {
 		VoxelShaper voxelShaper = new VoxelShaper();
 		for (Direction dir : directions) {
 			voxelShaper.shapes.put(dir, rotate(shape, facing, dir, rotationValues));
@@ -70,14 +73,17 @@ public class VoxelShaper {
 		return voxelShaper;
 	}
 
-	protected static VoxelShape rotate(VoxelShape shape, Direction from, Direction to, Function<Direction, Vector3d> usingValues){
+	protected static VoxelShape rotate(VoxelShape shape, Direction from, Direction to,
+		Function<Direction, Vector3d> usingValues) {
 		if (from == to)
 			return shape;
 
-		return rotatedCopy(shape, usingValues.apply(from).inverse().add(usingValues.apply(to)));
+		return rotatedCopy(shape, usingValues.apply(from)
+			.inverse()
+			.add(usingValues.apply(to)));
 	}
 
-	protected static VoxelShape rotatedCopy(VoxelShape shape, Vector3d rotation){
+	protected static VoxelShape rotatedCopy(VoxelShape shape, Vector3d rotation) {
 		if (rotation.equals(Vector3d.ZERO))
 			return shape;
 
@@ -85,16 +91,20 @@ public class VoxelShaper {
 		Vector3d center = new Vector3d(8, 8, 8);
 
 		shape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
-			Vector3d v1 = new Vector3d(x1, y1, z1).scale(16).subtract(center);
-			Vector3d v2 = new Vector3d(x2, y2, z2).scale(16).subtract(center);
+			Vector3d v1 = new Vector3d(x1, y1, z1).scale(16)
+				.subtract(center);
+			Vector3d v2 = new Vector3d(x2, y2, z2).scale(16)
+				.subtract(center);
 
 			v1 = VecHelper.rotate(v1, (float) rotation.x, Axis.X);
 			v1 = VecHelper.rotate(v1, (float) rotation.y, Axis.Y);
-			v1 = VecHelper.rotate(v1, (float) rotation.z, Axis.Z).add(center);
+			v1 = VecHelper.rotate(v1, (float) rotation.z, Axis.Z)
+				.add(center);
 
 			v2 = VecHelper.rotate(v2, (float) rotation.x, Axis.X);
 			v2 = VecHelper.rotate(v2, (float) rotation.y, Axis.Y);
-			v2 = VecHelper.rotate(v2, (float) rotation.z, Axis.Z).add(center);
+			v2 = VecHelper.rotate(v2, (float) rotation.z, Axis.Z)
+				.add(center);
 
 			VoxelShape rotated = Block.makeCuboidShape(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 			result.setValue(VoxelShapes.or(result.getValue(), rotated));
@@ -104,25 +114,18 @@ public class VoxelShaper {
 	}
 
 	protected static class DefaultRotationValues implements Function<Direction, Vector3d> {
-		//assume facing up as the default rotation
+		// assume facing up as the default rotation
 		@Override
 		public Vector3d apply(Direction direction) {
-			return new Vector3d(
-					direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
-					-horizontalAngleFromDirection(direction),
-					0
-			);
+			return new Vector3d(direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
+				-horizontalAngleFromDirection(direction), 0);
 		}
 	}
 
 	protected static class HorizontalRotationValues implements Function<Direction, Vector3d> {
 		@Override
 		public Vector3d apply(Direction direction) {
-			return new Vector3d(
-					0,
-					-horizontalAngleFromDirection(direction),
-					0
-			);
+			return new Vector3d(0, -horizontalAngleFromDirection(direction), 0);
 		}
 	}
 

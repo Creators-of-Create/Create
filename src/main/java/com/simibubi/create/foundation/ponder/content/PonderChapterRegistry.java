@@ -1,12 +1,17 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
-import com.simibubi.create.foundation.utility.Pair;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
+import com.simibubi.create.foundation.utility.Pair;
 
 public class PonderChapterRegistry {
 

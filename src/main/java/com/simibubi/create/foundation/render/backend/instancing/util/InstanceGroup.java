@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.render.backend.instancing.util;
 
-import net.minecraft.util.NonNullList;
+import java.util.AbstractCollection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.*;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 

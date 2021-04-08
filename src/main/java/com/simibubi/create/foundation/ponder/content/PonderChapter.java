@@ -1,15 +1,15 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nonnull;
 
 public class PonderChapter implements IScreenRenderable {
 

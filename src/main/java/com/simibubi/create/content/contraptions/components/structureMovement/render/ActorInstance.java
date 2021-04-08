@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+
 import net.minecraft.world.LightType;
 
 public abstract class ActorInstance {

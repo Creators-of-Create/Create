@@ -1,13 +1,30 @@
 package com.simibubi.create.content.logistics.item.filter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.logistics.InWorldProcessing;
-import com.simibubi.create.content.logistics.item.filter.attribute.*;
+import com.simibubi.create.content.logistics.item.filter.attribute.BookAuthorAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.BookCopyAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ColorAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
@@ -29,12 +46,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public interface ItemAttribute {
 

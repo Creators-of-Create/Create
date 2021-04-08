@@ -28,10 +28,13 @@ public class ServerSpeedProvider {
 			serverTimer = 0;
 		}
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
-		if (Minecraft.getInstance().isSingleplayer() && Minecraft.getInstance().isGamePaused())
+		if (Minecraft.getInstance()
+			.isSingleplayer()
+			&& Minecraft.getInstance()
+				.isGamePaused())
 			return;
 		modifier.tick();
 		clientTimer++;
@@ -47,30 +50,29 @@ public class ServerSpeedProvider {
 
 	public static class Packet extends SimplePacketBase {
 
-		public Packet() {
-		}
+		public Packet() {}
 
-		public Packet(PacketBuffer buffer) {
-		}
+		public Packet(PacketBuffer buffer) {}
 
 		@Override
-		public void write(PacketBuffer buffer) {
-		}
+		public void write(PacketBuffer buffer) {}
 
 		@Override
 		public void handle(Supplier<Context> context) {
-			context.get().enqueueWork(() -> {
-				if (!initialized) {
-					initialized = true;
+			context.get()
+				.enqueueWork(() -> {
+					if (!initialized) {
+						initialized = true;
+						clientTimer = 0;
+						return;
+					}
+					float target = ((float) getSyncInterval()) / Math.max(clientTimer, 1);
+					modifier.target(Math.min(target, 1));
 					clientTimer = 0;
-					return;
-				}
-				float target = ((float) getSyncInterval()) / Math.max(clientTimer, 1);
-				modifier.target(Math.min(target, 1));
-				clientTimer = 0;
 
-			});
-			context.get().setPacketHandled(true);
+				});
+			context.get()
+				.setPacketHandled(true);
 		}
 
 	}

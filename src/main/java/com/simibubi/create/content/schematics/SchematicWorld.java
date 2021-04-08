@@ -1,5 +1,14 @@
 package com.simibubi.create.content.schematics;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -20,14 +29,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.*;
+import net.minecraft.world.EmptyTickList;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.ITickList;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class SchematicWorld extends WrappedWorld implements IServerWorld {
 

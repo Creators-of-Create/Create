@@ -1,5 +1,25 @@
 package com.simibubi.create.content.logistics;
 
+import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,24 +47,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.ColorHelper;
-
-import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
 
 public class InWorldProcessing {
 

@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.render.backend.core;
 
-import net.minecraft.client.renderer.BufferBuilder;
-
 import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+
+import net.minecraft.client.renderer.BufferBuilder;
 
 public class OrientedModel extends InstancedModel<OrientedData> {
     public static final VertexFormat INSTANCE_FORMAT = VertexFormat.builder()

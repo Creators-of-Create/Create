@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
@@ -14,6 +15,7 @@ public interface IScreenRenderable {
 
 	@OnlyIn(Dist.CLIENT)
 	default void draw(MatrixStack ms, int x, int y) {
-		draw(ms, new Screen(new StringTextComponent("")) {}, x, y);
+		draw(ms, new Screen(new StringTextComponent("")) {
+		}, x, y);
 	}
 }

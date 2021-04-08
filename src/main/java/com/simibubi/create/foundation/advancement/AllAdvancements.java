@@ -6,10 +6,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.logistics.InWorldProcessing;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +19,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
 import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components;
+import com.simibubi.create.content.logistics.InWorldProcessing;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Advancement.Builder;
@@ -34,6 +31,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
@@ -63,12 +63,13 @@ public class AllAdvancements implements IDataProvider {
 
 		kineticsBranch(t, andesite_alloy);
 
-		Advancement aesthetics =
-			advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL).withParent(andesite_alloy)
-				.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
-				.withCriterion("1", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
-				.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
-				.register(t, id + ":aesthetics");
+		Advancement aesthetics = advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL)
+			.withParent(andesite_alloy)
+			.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
+			.withCriterion("1",
+				AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
+			.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
+			.register(t, id + ":aesthetics");
 
 		Advancement reinforced =
 			advancement("reinforced", AllBlocks.ANDESITE_ENCASED_SHAFT.get(), TaskType.NORMAL).withParent(aesthetics)

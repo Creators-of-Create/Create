@@ -70,7 +70,7 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
-		
+
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
@@ -127,7 +127,8 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (!widget.isHovered())
 				continue;
 
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
+			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip()
+				.isEmpty()) {
 				renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
 			}
 		}

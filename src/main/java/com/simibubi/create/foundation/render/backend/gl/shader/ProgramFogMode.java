@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
-import com.simibubi.create.foundation.render.backend.gl.GlFog;
 import org.lwjgl.opengl.GL20;
+
+import com.simibubi.create.foundation.render.backend.gl.GlFog;
 
 public abstract class ProgramFogMode {
 

@@ -1,5 +1,10 @@
 package com.simibubi.create.foundation.render.backend.light;
 
+import java.util.WeakHashMap;
+import java.util.function.LongConsumer;
+
+import com.simibubi.create.foundation.utility.WeakHashSet;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongRBTreeSet;
@@ -7,10 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
-
-import java.util.*;
-import java.util.function.LongConsumer;
-import com.simibubi.create.foundation.utility.WeakHashSet;
 
 /**
  * By using WeakReferences we can automatically remove listeners when they are garbage collected.

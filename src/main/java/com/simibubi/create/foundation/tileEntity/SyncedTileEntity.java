@@ -45,7 +45,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 		if (world != null)
 			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 1);
 	}
-	
+
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		return new SUpdateTileEntityPacket(getPos(), 1, writeToClient(new CompoundNBT()));
@@ -65,7 +65,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 	public CompoundNBT writeToClient(CompoundNBT tag) {
 		return write(tag);
 	}
-	
+
 	public void notifyUpdate() {
 		markDirty();
 		sendData();

@@ -17,7 +17,7 @@ public class ProperDirectionalBlock extends DirectionalBlock implements IWrencha
 	public ProperDirectionalBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
-	
+
 	@Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
 		builder.add(FACING);
@@ -40,7 +40,7 @@ public class ProperDirectionalBlock extends DirectionalBlock implements IWrencha
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return getDefaultState().with(FACING, context.getNearestLookingDirection());
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
 		return state.with(FACING, rot.rotate(state.get(FACING)));

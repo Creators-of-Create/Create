@@ -91,7 +91,7 @@ public class RenderTypes extends RenderState {
 	public static RenderType getItemPartialSolid() {
 		return ITEM_PARTIAL_SOLID;
 	}
-	
+
 	public static RenderType getItemPartialTranslucent() {
 		return ITEM_PARTIAL_TRANSLUCENT;
 	}

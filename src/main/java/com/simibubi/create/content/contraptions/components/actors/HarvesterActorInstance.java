@@ -1,22 +1,23 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
-
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class HarvesterActorInstance extends ActorInstance {
     static double oneOverRadius = 16.0 / 6.5;

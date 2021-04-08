@@ -191,7 +191,9 @@ public class RemapHelper {
 
 	@SubscribeEvent
 	public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
-		ModContainer mod = ModList.get().getModContainerById(Create.ID).orElse(null);
+		ModContainer mod = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElse(null);
 		if (mod == null)
 			return;
 		event.setModContainer(mod);
@@ -203,7 +205,8 @@ public class RemapHelper {
 					Create.logger.warn("Remapping block '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.BLOCKS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping block '{}' to '{}' failed: {}", mapping.key, reMap.get(mapping.key.getPath()), t);
+					Create.logger.warn("Remapping block '{}' to '{}' failed: {}", mapping.key,
+						reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}
@@ -211,7 +214,9 @@ public class RemapHelper {
 
 	@SubscribeEvent
 	public static void onRemapItems(RegistryEvent.MissingMappings<Item> event) {
-		ModContainer mod = ModList.get().getModContainerById(Create.ID).orElse(null);
+		ModContainer mod = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElse(null);
 		if (mod == null)
 			return;
 		event.setModContainer(mod);
@@ -223,7 +228,8 @@ public class RemapHelper {
 					Create.logger.warn("Remapping item '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.ITEMS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping item '{}' to '{}' failed: {}", mapping.key, reMap.get(mapping.key.getPath()), t);
+					Create.logger.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
+						reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}

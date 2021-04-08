@@ -143,7 +143,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		public FluidStackIngredient() {
 			tagToMatch = new CompoundNBT();
 		}
-		
+
 		void fixFlowing() {
 			if (fluid instanceof FlowingFluid)
 				fluid = ((FlowingFluid) fluid).getStillFluid();

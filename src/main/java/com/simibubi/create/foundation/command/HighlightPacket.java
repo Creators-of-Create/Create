@@ -34,11 +34,13 @@ public class HighlightPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			performHighlight(pos);
-		}));
+		ctx.get()
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				performHighlight(pos);
+			}));
 
-		ctx.get().setPacketHandled(true);
+		ctx.get()
+			.setPacketHandled(true);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -46,11 +48,13 @@ public class HighlightPacket extends SimplePacketBase {
 		if (Minecraft.getInstance().world == null || !Minecraft.getInstance().world.isBlockPresent(pos))
 			return;
 
-		CreateClient.outliner.showAABB("highlightCommand", VoxelShapes.fullCube().getBoundingBox().offset(pos), 200)
-				.lineWidth(1 / 32f)
-				.colored(0xEeEeEe)
-				//.colored(0x243B50)
-				.withFaceTexture(AllSpecialTextures.SELECTION);
+		CreateClient.outliner.showAABB("highlightCommand", VoxelShapes.fullCube()
+			.getBoundingBox()
+			.offset(pos), 200)
+			.lineWidth(1 / 32f)
+			.colored(0xEeEeEe)
+			// .colored(0x243B50)
+			.withFaceTexture(AllSpecialTextures.SELECTION);
 
 	}
 }

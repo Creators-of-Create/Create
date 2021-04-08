@@ -9,9 +9,9 @@ import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;

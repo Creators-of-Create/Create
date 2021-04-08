@@ -10,7 +10,7 @@ public class ItemHandlerWrapper implements IItemHandlerModifiable {
 	public ItemHandlerWrapper(IItemHandlerModifiable wrapped) {
 		this.wrapped = wrapped;
 	}
-	
+
 	@Override
 	public int getSlots() {
 		return wrapped.getSlots();

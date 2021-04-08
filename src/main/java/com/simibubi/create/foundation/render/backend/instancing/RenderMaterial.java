@@ -15,7 +15,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.backend.Backend;

@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -11,8 +14,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nullable;
 
 public abstract class MovementBehaviour {
 

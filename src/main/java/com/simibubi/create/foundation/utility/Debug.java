@@ -22,8 +22,9 @@ public class Debug {
 	@Deprecated
 	public static void debugChatAndShowStack(ITextComponent message, int depth) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player
-					.sendStatusMessage(message.copy().append("@").append(debugStack(depth)), false);
+			Minecraft.getInstance().player.sendStatusMessage(message.copy()
+				.append("@")
+				.append(debugStack(depth)), false);
 	}
 
 	@Deprecated
@@ -34,22 +35,28 @@ public class Debug {
 
 	@Deprecated
 	public static String getLogicalSide() {
-		return EffectiveSide.get().isClient() ? "CL" : "SV";
+		return EffectiveSide.get()
+			.isClient() ? "CL" : "SV";
 	}
 
 	@Deprecated
 	public static ITextComponent debugStack(int depth) {
-		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		IFormattableTextComponent text = new StringTextComponent("[").append(new StringTextComponent(getLogicalSide()).formatted(TextFormatting.GOLD)).append("] ");
+		StackTraceElement[] stackTraceElements = Thread.currentThread()
+			.getStackTrace();
+		IFormattableTextComponent text = new StringTextComponent("[")
+			.append(new StringTextComponent(getLogicalSide()).formatted(TextFormatting.GOLD))
+			.append("] ");
 		for (int i = 1; i < depth + 2 && i < stackTraceElements.length; i++) {
 			StackTraceElement e = stackTraceElements[i];
-			if (e.getClassName().equals(Debug.class.getName()))
+			if (e.getClassName()
+				.equals(Debug.class.getName()))
 				continue;
-			text.append(new StringTextComponent(e.getMethodName()).formatted(TextFormatting.YELLOW)).append(", ");
+			text.append(new StringTextComponent(e.getMethodName()).formatted(TextFormatting.YELLOW))
+				.append(", ");
 		}
 		return text.append(new StringTextComponent(" ...").formatted(TextFormatting.GRAY));
 	}
-	
+
 	@Deprecated
 	public static void markTemporary() {}
 

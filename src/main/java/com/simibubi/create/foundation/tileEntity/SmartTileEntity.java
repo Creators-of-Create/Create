@@ -173,11 +173,11 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	protected boolean isFluidHandlerCap(Capability<?> cap) {
 		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
-	
+
 	public void markVirtual() {
 		virtualMode = true;
 	}
-	
+
 	public boolean isVirtual() {
 		return virtualMode;
 	}

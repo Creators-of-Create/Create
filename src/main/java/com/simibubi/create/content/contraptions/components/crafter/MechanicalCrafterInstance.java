@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -8,9 +10,8 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.MatrixStacker;
-import net.minecraft.util.Direction;
 
-import java.util.function.Supplier;
+import net.minecraft.util.Direction;
 
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
 

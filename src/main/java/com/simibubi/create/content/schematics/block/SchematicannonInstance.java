@@ -2,10 +2,15 @@ package com.simibubi.create.content.schematics.block;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.*;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+
 import net.minecraft.util.Direction;
 
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {

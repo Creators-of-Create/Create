@@ -1,5 +1,12 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
@@ -24,6 +31,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRen
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -49,12 +57,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public class CreateClient {
 
@@ -100,7 +102,7 @@ public class CreateClient {
 
 		AllKeys.register();
 		AllContainerTypes.registerScreenFactories();
-		//AllTileEntities.registerRenderers();
+		// AllTileEntities.registerRenderers();
 		AllEntityTypes.registerRenderers();
 		getColorHandler().init();
 		AllFluids.assignRenderLayers();
@@ -170,7 +172,7 @@ public class CreateClient {
 			swapModels(modelRegistry, location, factory);
 		});
 	}
-	
+
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 		ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
@@ -199,7 +201,7 @@ public class CreateClient {
 			colorHandlers = new AllColorHandlers();
 		return colorHandlers;
 	}
-	
+
 	public static CasingConnectivity getCasingConnectivity() {
 		if (casingConnectivity == null)
 			casingConnectivity = new CasingConnectivity();
@@ -214,7 +216,8 @@ public class CreateClient {
 		bufferCache.invalidate();
 
 		if (world != null) {
-			kineticRenderer.get(world).invalidate();
+			kineticRenderer.get(world)
+				.invalidate();
 		} else {
 			kineticRenderer.forEach(InstancedTileRenderer::invalidate);
 		}
@@ -233,11 +236,14 @@ public class CreateClient {
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		IFormattableTextComponent text = TextComponentUtils.bracketed(new StringTextComponent("WARN")).formatted(TextFormatting.GOLD)
-				.append(new StringTextComponent(" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
-				.styled(style -> style
-						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click here to disable this warning"))));
+		IFormattableTextComponent text = TextComponentUtils.bracketed(new StringTextComponent("WARN"))
+			.formatted(TextFormatting.GOLD)
+			.append(new StringTextComponent(
+				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
+			.styled(style -> style
+				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
+				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+					new StringTextComponent("Click here to disable this warning"))));
 
 		mc.ingameGUI.addChatMessage(ChatType.CHAT, text, mc.player.getUniqueID());
 	}

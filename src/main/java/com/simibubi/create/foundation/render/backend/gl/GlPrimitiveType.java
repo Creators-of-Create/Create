@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.render.backend.gl;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
 @OnlyIn(Dist.CLIENT)
 public enum GlPrimitiveType {

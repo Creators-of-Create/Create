@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
-import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
-
 import java.util.Map;
+
+import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
 
 public class ProgramGroup<P extends GlProgram> {
 

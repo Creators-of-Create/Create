@@ -4,5 +4,5 @@ import net.minecraft.util.math.BlockPos;
 
 @FunctionalInterface
 public interface Coordinate {
-    float get(BlockPos from);
+	float get(BlockPos from);
 }

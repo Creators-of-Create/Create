@@ -1,5 +1,12 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import mezz.jei.api.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -21,12 +28,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.stream.Stream;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")

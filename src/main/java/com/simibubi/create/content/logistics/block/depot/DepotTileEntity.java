@@ -1,14 +1,15 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import java.util.List;
 
 public class DepotTileEntity extends SmartTileEntity {
 

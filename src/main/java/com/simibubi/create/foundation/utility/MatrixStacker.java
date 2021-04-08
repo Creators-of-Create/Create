@@ -27,8 +27,10 @@ public class MatrixStacker {
 	public MatrixStacker restoreIdentity() {
 		MatrixStack.Entry entry = ms.peek();
 
-		entry.getModel().loadIdentity();
-		entry.getNormal().loadIdentity();
+		entry.getModel()
+			.loadIdentity();
+		entry.getNormal()
+			.loadIdentity();
 
 		return this;
 	}
@@ -37,7 +39,7 @@ public class MatrixStacker {
 		if (radians == 0)
 			return this;
 		ms.multiply(axis.getUnitVector()
-						.getRadialQuaternion(radians));
+			.getRadialQuaternion(radians));
 		return this;
 	}
 

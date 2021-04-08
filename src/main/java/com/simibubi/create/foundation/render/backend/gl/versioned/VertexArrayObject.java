@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.render.backend.gl.versioned;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBVertexArrayObject;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GLCapabilities;
 
 public enum VertexArrayObject implements GlVersioned {
     GL30_VAO {

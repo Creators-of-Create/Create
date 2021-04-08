@@ -1,5 +1,8 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -19,6 +22,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -30,9 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
 
 public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
 

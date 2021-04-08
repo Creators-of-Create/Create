@@ -71,8 +71,9 @@ public class PonderWorldParticles {
 			RenderSystem.enableFog();
 		};
 		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.peek().getModel());
-		//check ParticleManager#renderParticles for a replacement if RenderSystem#multMatrix gets removed
+		RenderSystem.multMatrix(ms.peek()
+			.getModel());
+		// check ParticleManager#renderParticles for a replacement if RenderSystem#multMatrix gets removed
 
 		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) { // Forge: allow custom
 																				// IParticleRenderType's

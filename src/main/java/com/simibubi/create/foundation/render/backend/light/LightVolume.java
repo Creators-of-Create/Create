@@ -2,19 +2,18 @@ package com.simibubi.create.foundation.render.backend.light;
 
 import java.nio.ByteBuffer;
 
-import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.gl.versioned.RGPixelFormat;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
+import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.render.backend.gl.GlTexture;
+import com.simibubi.create.foundation.render.backend.gl.versioned.RGPixelFormat;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 

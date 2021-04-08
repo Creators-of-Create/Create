@@ -22,7 +22,7 @@ public class Matrix3d {
 		asIdentity();
 		if (radians == 0)
 			return this;
-		
+
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m22 = m11 = c;
@@ -35,7 +35,7 @@ public class Matrix3d {
 		asIdentity();
 		if (radians == 0)
 			return this;
-		
+
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m00 = m22 = c;
@@ -48,7 +48,7 @@ public class Matrix3d {
 		asIdentity();
 		if (radians == 0)
 			return this;
-		
+
 		double s = MathHelper.sin(radians);
 		double c = MathHelper.cos(radians);
 		m00 = m11 = c;
@@ -122,15 +122,15 @@ public class Matrix3d {
 	public Matrix3d copy() {
 		return new Matrix3d().add(this);
 	}
-	
+
 	float[] conversionBuffer = new float[16];
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public Matrix4f getAsMatrix4f() {
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
 				conversionBuffer[j * 4 + i] = i == j ? 1 : 0;
-		
+
 		conversionBuffer[0] = (float) m00;
 		conversionBuffer[1] = (float) m01;
 		conversionBuffer[2] = (float) m02;
@@ -140,7 +140,7 @@ public class Matrix3d {
 		conversionBuffer[8] = (float) m20;
 		conversionBuffer[9] = (float) m21;
 		conversionBuffer[10] = (float) m22;
-		
+
 		return new Matrix4f(conversionBuffer);
 	}
 

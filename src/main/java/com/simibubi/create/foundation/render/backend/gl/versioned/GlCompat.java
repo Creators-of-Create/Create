@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.render.backend.gl.versioned;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.GL20C;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 /**
  * An instance of this class stores information

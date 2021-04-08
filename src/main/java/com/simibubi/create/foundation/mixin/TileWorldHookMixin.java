@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.mixin;
 
+import java.util.Set;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,33 +18,32 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.Set;
-
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = World.class, priority = 1100) // this and create.mixins.json have high priority to load after Performant
 public class TileWorldHookMixin {
 
 	final World self = (World) (Object) this;
 
-	@Shadow @Final public boolean isRemote;
+	@Shadow
+	@Final
+	public boolean isRemote;
 
-	@Shadow @Final protected Set<TileEntity> tileEntitiesToBeRemoved;
+	@Shadow
+	@Final
+	protected Set<TileEntity> tileEntitiesToBeRemoved;
 
 	@Inject(at = @At("TAIL"), method = "addTileEntity")
 	private void onAddTile(TileEntity te, CallbackInfoReturnable<Boolean> cir) {
 		if (isRemote) {
-			CreateClient.kineticRenderer.get(self).queueAdd(te);
+			CreateClient.kineticRenderer.get(self)
+				.queueAdd(te);
 		}
 	}
 
 	/**
 	 * Without this we don't unload instances when a chunk unloads.
 	 */
-	@Inject(at = @At(
-			value = "INVOKE",
-			target = "Ljava/util/Set;clear()V", ordinal = 0
-	),
-			method = "tickBlockEntities")
+	@Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;clear()V", ordinal = 0), method = "tickBlockEntities")
 	private void onChunkUnload(CallbackInfo ci) {
 		if (isRemote) {
 			KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(self);

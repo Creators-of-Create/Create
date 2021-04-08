@@ -108,16 +108,21 @@ public class ItemDescription {
 
 		ITextComponent rpmUnit = Lang.translate("generic.unit.rpm");
 		if (hasSpeedRequirement) {
-			List<ITextComponent> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
+			List<ITextComponent> speedLevels =
+				Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(minimumRequiredSpeedLevel.getTextColor());
+			IFormattableTextComponent level =
+				new StringTextComponent(makeProgressBar(3, index)).formatted(minimumRequiredSpeedLevel.getTextColor());
 
 			if (hasGlasses)
-				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue())).append(rpmUnit).append("+");
+				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
+					.append(rpmUnit)
+					.append("+");
 			else
 				level.append(speedLevels.get(index));
 
-			list.add(Lang.translate("tooltip.speedRequirement").formatted(GRAY));
+			list.add(Lang.translate("tooltip.speedRequirement")
+				.formatted(GRAY));
 			list.add(level);
 		}
 
@@ -128,15 +133,18 @@ public class ItemDescription {
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
+			IFormattableTextComponent level =
+				new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
 				level.append(impacts.get(id)
-					.get() + "x ").append(rpmUnit);
+					.get() + "x ")
+					.append(rpmUnit);
 			else
 				level.append(stressLevels.get(index));
 
-			list.add(Lang.translate("tooltip.stressImpact").formatted(GRAY));
+			list.add(Lang.translate("tooltip.stressImpact")
+				.formatted(GRAY));
 			list.add(level);
 		}
 
@@ -148,27 +156,32 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
-			IFormattableTextComponent level = new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
+			IFormattableTextComponent level =
+				new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
-				level.append(capacity + "x ").append(rpmUnit);
+				level.append(capacity + "x ")
+					.append(rpmUnit);
 			else
 				level.append(stressCapacityLevels.get(index));
-			
+
 //			if (!isEngine && ((IRotate) block).showCapacityWithAnnotation())
 //				level +=
 //					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
-			list.add(Lang.translate("tooltip.capacityProvided").formatted(GRAY));
+			list.add(Lang.translate("tooltip.capacityProvided")
+				.formatted(GRAY));
 			list.add(level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
-			if (!genSpeed.getString().isEmpty())
-				list.add(new StringTextComponent(" ").append(genSpeed).formatted(DARK_GRAY));
+			if (!genSpeed.getString()
+				.isEmpty())
+				list.add(new StringTextComponent(" ").append(genSpeed)
+					.formatted(DARK_GRAY));
 		}
 
-		//		if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
-		//			add(linesOnShift, "");
+		// if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
+		// add(linesOnShift, "");
 		return list;
 	}
 
@@ -217,19 +230,21 @@ public class ItemDescription {
 				if (hasControls) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
 					tabBuilder.append(new StringTextComponent(holdCtrl[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyCtrl.copy().formatted(ctrl? WHITE : GRAY));
+					tabBuilder.append(keyCtrl.copy()
+						.formatted(ctrl ? WHITE : GRAY));
 					tabBuilder.append(new StringTextComponent(holdCtrl[1]).formatted(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
-				
+
 				if (hasDescription) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
 					tabBuilder.append(new StringTextComponent(holdDesc[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyShift.copy().formatted(shift? WHITE : GRAY));
+					tabBuilder.append(keyShift.copy()
+						.formatted(shift ? WHITE : GRAY));
 					tabBuilder.append(new StringTextComponent(holdDesc[1]).formatted(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
-				
+
 				if (shift || ctrl)
 					list.add(hasDescription && hasControls ? 2 : 1, new StringTextComponent(""));
 			}
@@ -308,7 +323,8 @@ public class ItemDescription {
 			value = baseSpeed + "-" + (baseSpeed * 2);
 		}
 
-		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM) : StringTextComponent.EMPTY.copy();
+		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM)
+			: StringTextComponent.EMPTY.copy();
 	}
 
 }

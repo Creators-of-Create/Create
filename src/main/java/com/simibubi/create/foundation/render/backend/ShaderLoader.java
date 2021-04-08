@@ -1,30 +1,45 @@
 package com.simibubi.create.foundation.render.backend;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.lwjgl.system.MemoryUtil;
+
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
-import com.simibubi.create.foundation.render.backend.gl.shader.*;
+import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramGroup;
+import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
+import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
+import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
 
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.resource.IResourceType;
 import net.minecraftforge.resource.VanillaResourceType;
-
-import org.lwjgl.system.MemoryUtil;
-
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ShaderLoader {
 	public static final String SHADER_DIR = "flywheel/shaders/";

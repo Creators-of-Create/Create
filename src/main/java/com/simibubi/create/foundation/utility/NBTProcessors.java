@@ -34,8 +34,8 @@ public final class NBTProcessors {
 			for (int i = 0; i < 4; ++i) {
 				String s = data.getString("Text" + (i + 1));
 				ITextComponent textcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
-				if (textcomponent != null && textcomponent.getStyle() != null
-						&& textcomponent.getStyle().getClickEvent() != null)
+				if (textcomponent != null && textcomponent.getStyle() != null && textcomponent.getStyle()
+					.getClickEvent() != null)
 					return null;
 			}
 			return data;
@@ -50,8 +50,7 @@ public final class NBTProcessors {
 		});
 	}
 
-	private NBTProcessors() {
-	}
+	private NBTProcessors() {}
 
 	@Nullable
 	public static CompoundNBT process(TileEntity tileEntity, CompoundNBT compound, boolean survival) {
@@ -59,9 +58,11 @@ public final class NBTProcessors {
 			return null;
 		TileEntityType<?> type = tileEntity.getType();
 		if (survival && survivalProcessors.containsKey(type))
-			compound = survivalProcessors.get(type).apply(compound);
+			compound = survivalProcessors.get(type)
+				.apply(compound);
 		if (compound != null && processors.containsKey(type))
-			return processors.get(type).apply(compound);
+			return processors.get(type)
+				.apply(compound);
 		if (tileEntity instanceof MobSpawnerTileEntity)
 			return compound;
 		if (tileEntity.onlyOpsCanSetNbt())

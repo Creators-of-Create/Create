@@ -40,7 +40,8 @@ public class FilesHelper {
 	}
 
 	public static String slug(String name) {
-		return Lang.asId(name).replaceAll("\\W+", "_");
+		return Lang.asId(name)
+			.replaceAll("\\W+", "_");
 	}
 
 	public static boolean saveTagCompoundAsJson(CompoundNBT compound, String path) {

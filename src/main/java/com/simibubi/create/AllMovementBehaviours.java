@@ -38,7 +38,7 @@ public class AllMovementBehaviours {
 	public static MovementBehaviour of(Block block) {
 		return of(block.getRegistryName());
 	}
-	
+
 	@Nullable
 	public static MovementBehaviour of(BlockState state) {
 		return of(state.getBlock());

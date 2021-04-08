@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.RotatingModel;
@@ -11,19 +18,15 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
 import com.simibubi.create.content.logistics.block.FlapModel;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.backend.MaterialTypes;
-import com.simibubi.create.foundation.render.backend.instancing.*;
-
 import com.simibubi.create.foundation.render.backend.core.OrientedModel;
 import com.simibubi.create.foundation.render.backend.core.TransformedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nullable;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 public class ContraptionKineticRenderer extends InstancedTileRenderer<ContraptionProgram> {
 

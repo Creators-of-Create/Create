@@ -17,7 +17,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChunkUtil {
 	private static final Logger LOGGER = LogManager.getLogger("Create/ChunkUtil");
-	final EnumSet<Heightmap.Type> POST_FEATURES = EnumSet.of(Heightmap.Type.OCEAN_FLOOR, Heightmap.Type.WORLD_SURFACE, Heightmap.Type.MOTION_BLOCKING, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES);
+	final EnumSet<Heightmap.Type> POST_FEATURES = EnumSet.of(Heightmap.Type.OCEAN_FLOOR, Heightmap.Type.WORLD_SURFACE,
+		Heightmap.Type.MOTION_BLOCKING, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES);
 
 	private final List<Long> markedChunks;
 	private final List<Long> interestingChunks;
@@ -29,15 +30,17 @@ public class ChunkUtil {
 	}
 
 	public void init() {
-		ChunkStatus.FULL = new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.Type.LEVELCHUNK,
-				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk),
-				(_0, _1, _2, _3, future, chunk) -> {
-					if (markedChunks.contains(chunk.getPos().asLong())) {
-						LOGGER.debug("trying to load unforced chunk " + chunk.getPos().toString() + ", returning chunk loading error");
-						//this.reloadChunk(world.getChunkProvider(), chunk.getPos());
+		ChunkStatus.FULL =
+			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.Type.LEVELCHUNK,
+				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
+					if (markedChunks.contains(chunk.getPos()
+						.asLong())) {
+						LOGGER.debug("trying to load unforced chunk " + chunk.getPos()
+							.toString() + ", returning chunk loading error");
+						// this.reloadChunk(world.getChunkProvider(), chunk.getPos());
 						return ChunkHolder.MISSING_CHUNK_FUTURE;
 					} else {
-						//LOGGER.debug("regular, chunkStatus: " + chunk.getStatus().toString());
+						// LOGGER.debug("regular, chunkStatus: " + chunk.getStatus().toString());
 						return future.apply(chunk);
 					}
 				});
@@ -81,23 +84,27 @@ public class ChunkUtil {
 
 	@SubscribeEvent
 	public void chunkUnload(ChunkEvent.Unload event) {
-		//LOGGER.debug("Chunk Unload: " + event.getChunk().getPos().toString());
-		if (interestingChunks.contains(event.getChunk().getPos().asLong())) {
-			LOGGER.info("Interesting Chunk Unload: " + event.getChunk().getPos().toString());
+		// LOGGER.debug("Chunk Unload: " + event.getChunk().getPos().toString());
+		if (interestingChunks.contains(event.getChunk()
+			.getPos()
+			.asLong())) {
+			LOGGER.info("Interesting Chunk Unload: " + event.getChunk()
+				.getPos()
+				.toString());
 		}
 	}
 
 	@SubscribeEvent
 	public void chunkLoad(ChunkEvent.Load event) {
-		//LOGGER.debug("Chunk Load: " + event.getChunk().getPos().toString());
+		// LOGGER.debug("Chunk Load: " + event.getChunk().getPos().toString());
 
-		ChunkPos pos = event.getChunk().getPos();
+		ChunkPos pos = event.getChunk()
+			.getPos();
 		if (interestingChunks.contains(pos.asLong())) {
 			LOGGER.info("Interesting Chunk Load: " + pos.toString());
 			if (!markedChunks.contains(pos.asLong()))
 				interestingChunks.remove(pos.asLong());
 		}
-
 
 	}
 

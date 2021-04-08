@@ -32,8 +32,8 @@ public class AllEntityTypes {
 
 	public static final RegistryEntry<EntityType<SuperGlueEntity>> SUPER_GLUE = register("super_glue",
 		SuperGlueEntity::new, EntityClassification.MISC, 10, Integer.MAX_VALUE, false, true, SuperGlueEntity::build);
-	public static final RegistryEntry<EntityType<SeatEntity>> SEAT =
-		register("seat", SeatEntity::new, EntityClassification.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build);
+	public static final RegistryEntry<EntityType<SeatEntity>> SEAT = register("seat", SeatEntity::new,
+		EntityClassification.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build);
 
 	//
 
@@ -64,12 +64,10 @@ public class AllEntityTypes {
 
 	@OnlyIn(value = Dist.CLIENT)
 	public static void registerRenderers() {
-		RenderingRegistry.registerEntityRenderingHandler(CONTROLLED_CONTRAPTION.get(),
-			ContraptionEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(CONTROLLED_CONTRAPTION.get(), ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ORIENTED_CONTRAPTION.get(),
 			OrientedContraptionEntityRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(GANTRY_CONTRAPTION.get(),
-			ContraptionEntityRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(GANTRY_CONTRAPTION.get(), ContraptionEntityRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SUPER_GLUE.get(), SuperGlueRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SEAT.get(), SeatEntity.Render::new);
 	}

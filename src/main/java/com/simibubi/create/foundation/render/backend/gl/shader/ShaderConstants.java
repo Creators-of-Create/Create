@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
-import com.google.common.collect.Lists;
-
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.collect.Lists;
 
 public class ShaderConstants implements GlShader.PreProcessor {
     public static final ShaderConstants EMPTY = new ShaderConstants();

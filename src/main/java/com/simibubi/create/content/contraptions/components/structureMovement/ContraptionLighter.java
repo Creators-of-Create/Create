@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.LightType;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
 import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.render.backend.light.LightVolume;
+
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.LightType;
 
 public abstract class ContraptionLighter<C extends Contraption> implements LightUpdateListener {
     protected final C contraption;

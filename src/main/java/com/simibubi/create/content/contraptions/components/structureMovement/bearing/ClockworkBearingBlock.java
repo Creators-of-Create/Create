@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemUseContext;

@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -7,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.utility.Pair;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.CommandSource;
@@ -25,35 +28,37 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.server.ServerWorld;
 
-import java.util.List;
-
 public class CloneCommand {
 
-	private static final Dynamic2CommandExceptionType CLONE_TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType((arg1, arg2) -> new TranslationTextComponent("commands.clone.toobig", arg1, arg2));
+	private static final Dynamic2CommandExceptionType CLONE_TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType(
+		(arg1, arg2) -> new TranslationTextComponent("commands.clone.toobig", arg1, arg2));
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("clone")
-				.requires(cs -> cs.hasPermissionLevel(2))
-				.then(Commands.argument("begin", BlockPosArgument.blockPos())
-						.then(Commands.argument("end", BlockPosArgument.blockPos())
-								.then(Commands.argument("destination", BlockPosArgument.blockPos())
-										.then(Commands.literal("skipBlocks")
-												.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"), BlockPosArgument.getLoadedBlockPos(ctx, "end"), BlockPosArgument.getLoadedBlockPos(ctx, "destination"), false))
-										)
-										.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"), BlockPosArgument.getLoadedBlockPos(ctx, "end"), BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true))
-								)
-						)
-				)
-				.executes(ctx -> {
-					ctx.getSource().sendFeedback(new StringTextComponent("Clones all blocks as well as super glue from the specified area to the target destination"), true);
+			.requires(cs -> cs.hasPermissionLevel(2))
+			.then(Commands.argument("begin", BlockPosArgument.blockPos())
+				.then(Commands.argument("end", BlockPosArgument.blockPos())
+					.then(Commands.argument("destination", BlockPosArgument.blockPos())
+						.then(Commands.literal("skipBlocks")
+							.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "end"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "destination"), false)))
+						.executes(ctx -> doClone(ctx.getSource(), BlockPosArgument.getLoadedBlockPos(ctx, "begin"),
+							BlockPosArgument.getLoadedBlockPos(ctx, "end"),
+							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
+			.executes(ctx -> {
+				ctx.getSource()
+					.sendFeedback(new StringTextComponent(
+						"Clones all blocks as well as super glue from the specified area to the target destination"),
+						true);
 
-					return Command.SINGLE_SUCCESS;
-				});
-
+				return Command.SINGLE_SUCCESS;
+			});
 
 	}
 
-	private static int doClone(CommandSource source, BlockPos begin, BlockPos end, BlockPos destination, boolean cloneBlocks) throws CommandSyntaxException {
+	private static int doClone(CommandSource source, BlockPos begin, BlockPos end, BlockPos destination,
+		boolean cloneBlocks) throws CommandSyntaxException {
 		MutableBoundingBox sourceArea = new MutableBoundingBox(begin, end);
 		BlockPos destinationEnd = destination.add(sourceArea.getLength());
 		MutableBoundingBox destinationArea = new MutableBoundingBox(destination, destinationEnd);
@@ -67,7 +72,8 @@ public class CloneCommand {
 		if (!world.isAreaLoaded(begin, end) || !world.isAreaLoaded(destination, destinationEnd))
 			throw BlockPosArgument.POS_UNLOADED.create();
 
-		BlockPos diffToTarget = new BlockPos(destinationArea.minX - sourceArea.minX, destinationArea.minY - sourceArea.minY, destinationArea.minZ - sourceArea.minZ);
+		BlockPos diffToTarget = new BlockPos(destinationArea.minX - sourceArea.minX,
+			destinationArea.minY - sourceArea.minY, destinationArea.minZ - sourceArea.minZ);
 
 		int blockPastes = cloneBlocks ? cloneBlocks(sourceArea, world, diffToTarget) : 0;
 		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
@@ -83,7 +89,8 @@ public class CloneCommand {
 	private static int cloneGlue(MutableBoundingBox sourceArea, ServerWorld world, BlockPos diffToTarget) {
 		int gluePastes = 0;
 
-		List<SuperGlueEntity> glue = world.getEntitiesWithinAABB(SuperGlueEntity.class, AxisAlignedBB.func_216363_a(sourceArea));
+		List<SuperGlueEntity> glue =
+			world.getEntitiesWithinAABB(SuperGlueEntity.class, AxisAlignedBB.func_216363_a(sourceArea));
 		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
 
 		for (SuperGlueEntity g : glue) {
@@ -94,7 +101,7 @@ public class CloneCommand {
 
 		for (Pair<BlockPos, Direction> p : newGlue) {
 			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
-			if (g.onValidSurface()){
+			if (g.onValidSurface()) {
 				world.addEntity(g);
 				gluePastes++;
 			}
@@ -153,7 +160,7 @@ public class CloneCommand {
 				te.markDirty();
 			}
 
-			//idk why the state is set twice for a te, but its done like this in the original clone command
+			// idk why the state is set twice for a te, but its done like this in the original clone command
 			world.setBlockState(info.pos, info.state, 2);
 		}
 
@@ -161,8 +168,8 @@ public class CloneCommand {
 			world.updateNeighbors(info.pos, info.state.getBlock());
 		}
 
-
-		world.getPendingBlockTicks().copyTicks(sourceArea, diffToTarget);
+		world.getPendingBlockTicks()
+			.copyTicks(sourceArea, diffToTarget);
 
 		return blockPastes;
 	}

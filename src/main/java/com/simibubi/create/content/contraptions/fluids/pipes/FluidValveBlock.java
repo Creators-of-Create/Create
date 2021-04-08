@@ -1,10 +1,15 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import java.util.Random;
+
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.DebugPacketSender;
@@ -21,9 +26,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import javax.annotation.Nonnull;
-import java.util.Random;
 
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 

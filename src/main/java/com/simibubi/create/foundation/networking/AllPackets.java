@@ -62,7 +62,8 @@ public enum AllPackets {
 	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new,
+		PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
@@ -106,7 +107,8 @@ public enum AllPackets {
 
 	private LoadedPacket<?> packet;
 
-	private <T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory, NetworkDirection direction) {
+	private <T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory,
+		NetworkDirection direction) {
 		packet = new LoadedPacket<>(type, factory, direction);
 	}
 
@@ -121,9 +123,8 @@ public enum AllPackets {
 	}
 
 	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
-		channel.send(
-			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getRegistryKey())),
-			message);
+		channel.send(PacketDistributor.NEAR
+			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getRegistryKey())), message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
