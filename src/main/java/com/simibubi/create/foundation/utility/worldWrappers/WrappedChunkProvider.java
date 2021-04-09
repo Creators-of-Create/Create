@@ -21,12 +21,6 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
 
     public HashMap<Long, WrappedChunk> chunks;
 
-    protected final ChunkFactory chunkFactory;
-
-    public WrappedChunkProvider(ChunkFactory chunkFactory) {
-        this.chunkFactory = chunkFactory;
-    }
-
     public WrappedChunkProvider setWorld(PlacementSimulationWorld world) {
         this.world = world;
         this.chunks = new HashMap<>();
@@ -64,8 +58,7 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
         if (chunks == null)
         	return null;
 
-
-        return chunks.computeIfAbsent(pos, $ -> chunkFactory.create(world, x, z));
+        return chunks.computeIfAbsent(pos, $ -> new WrappedChunk(world, x, z));
     }
 
     @Override
@@ -76,9 +69,5 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
     @Override
     public WorldLightManager getLightManager() {
         return world.getLightingProvider();
-    }
-
-    public interface ChunkFactory {
-        WrappedChunk create(PlacementSimulationWorld world, int x, int z);
     }
 }

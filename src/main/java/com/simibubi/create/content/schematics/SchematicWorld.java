@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
@@ -54,7 +53,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	public SchematicWorld(BlockPos anchor, World original) {
-		super(original, new WrappedChunkProvider(WrappedChunk::new));
+		super(original, new WrappedChunkProvider());
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
 		this.bounds = new MutableBoundingBox();
@@ -110,7 +109,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		}
 		return null;
 	}
-	
+
 	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
 		tileEntity.setLocation(this, pos);
 	}

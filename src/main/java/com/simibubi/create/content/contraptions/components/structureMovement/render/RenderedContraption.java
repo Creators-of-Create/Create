@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendere
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorldStarlight;
 
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -40,7 +39,6 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.fml.ModList;
 
 public class RenderedContraption {
     private final HashMap<RenderType, ContraptionModel> renderLayers = new HashMap<>();
@@ -172,14 +170,6 @@ public class RenderedContraption {
     }
 
     private static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
-        if (ModList.get().isLoaded("starlight")) {
-            return PlacementSimulationWorldStarlight.setupRenderWorldStarlight(world, c);
-        } else {
-            return setupRenderWorldVanilla(world, c);
-        }
-    }
-
-    private static PlacementSimulationWorld setupRenderWorldVanilla(World world, Contraption c) {
         PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
 
         renderWorld.setTileEntities(c.presentTileEntities.values());

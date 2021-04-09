@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
-import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -26,7 +25,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	private final BlockPos.Mutable scratch = new BlockPos.Mutable();
 
 	public PlacementSimulationWorld(World wrapped) {
-		this(wrapped, new WrappedChunkProvider(WrappedChunk::new));
+		this(wrapped, new WrappedChunkProvider());
 	}
 
 	public PlacementSimulationWorld(World wrapped, WrappedChunkProvider chunkProvider) {

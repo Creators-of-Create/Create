@@ -39,8 +39,7 @@ minecraft {
             workingDirectory project.file('run')
             // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
-            //jvmArgs '-XX:+UnlockCommercialFeatures'
-            jvmArgs '-Dmixin.env.disableRefMap=true'
+            jvmArgs '-XX:+UnlockCommercialFeatures'
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {
@@ -110,10 +109,6 @@ repositories {
     maven {
         url = "https://www.cursemaven.com"
     }
-
-    flatDir {
-        dirs 'deps'
-    }
 }
 
 configurations {
@@ -139,9 +134,6 @@ dependencies {
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.3-1.6.40")
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.3-3.0.1.24")
-
-    compileOnly fg.deobf("local:starlight-1.0.0-RC1")
-    //runtimeOnly fg.deobf("local:starlight-1.0.0-RC1")
 
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
