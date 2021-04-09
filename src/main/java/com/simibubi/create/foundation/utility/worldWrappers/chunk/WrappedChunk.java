@@ -219,7 +219,7 @@ public class WrappedChunk implements IChunk {
 
 	@Override
 	public void addStructureReference(Structure<?> arg0, long arg1) {
-		
+
 	}
 
 	@Override
@@ -239,23 +239,22 @@ public class WrappedChunk implements IChunk {
 
 	@Override
 	public void setStructureReferences(Map<Structure<?>, LongSet> arg0) {
-		
+
 	}
 
 	@Override
 	public void setStructureStart(Structure<?> arg0, StructureStart<?> arg1) {
-		
+
 	}
 
 	@Override
 	public void setStructureStarts(Map<Structure<?>, StructureStart<?>> p_201612_1_) {
-		
+
 	}
 
 	@Override
 	public Map<Structure<?>, StructureStart<?>> getStructureStarts() {
 		return null;
 	}
-
 
 }
