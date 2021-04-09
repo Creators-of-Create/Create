@@ -20,6 +20,8 @@ public class ProgramSpec<P extends GlProgram> {
 
     public final ArrayList<IVertexAttrib> attributes;
 
+    public final boolean fogSensitive;
+
     public static <P extends GlProgram> Builder<P> builder(String name, GlProgram.ProgramFactory<P> factory) {
         return builder(new ResourceLocation(Create.ID, name), factory);
     }
@@ -28,16 +30,16 @@ public class ProgramSpec<P extends GlProgram> {
         return new Builder<>(name, factory);
     }
 
-    public ProgramSpec(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, GlProgram.ProgramFactory<P> factory, ShaderConstants defines, ArrayList<IVertexAttrib> attributes) {
+    public ProgramSpec(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, GlProgram.ProgramFactory<P> factory, ShaderConstants defines, ArrayList<IVertexAttrib> attributes, boolean fogSensitive) {
         this.name = name;
         this.vert = vert;
         this.frag = frag;
         this.defines = defines;
 
-
         this.factory = factory;
         this.attributes = attributes;
-    }
+		this.fogSensitive = fogSensitive;
+	}
 
     public ResourceLocation getVert() {
         return vert;
@@ -51,6 +53,7 @@ public class ProgramSpec<P extends GlProgram> {
         private ResourceLocation vert;
         private ResourceLocation frag;
         private ShaderConstants defines = ShaderConstants.EMPTY;
+        private boolean fogSensitive = true;
 
         private final ResourceLocation name;
         private final GlProgram.ProgramFactory<P> factory;
@@ -77,13 +80,18 @@ public class ProgramSpec<P extends GlProgram> {
             return this;
         }
 
-        public <A extends Enum<A> & IVertexAttrib> Builder<P> addAttributes(Class<A> attributeEnum) {
+		public Builder<P> setFogSensitive(boolean fogSensitive) {
+			this.fogSensitive = fogSensitive;
+			return this;
+		}
+
+		public <A extends Enum<A> & IVertexAttrib> Builder<P> addAttributes(Class<A> attributeEnum) {
             attributes.addAll(Arrays.asList(attributeEnum.getEnumConstants()));
             return this;
         }
 
         public ProgramSpec<P> createProgramSpec() {
-            return new ProgramSpec<>(name, vert, frag, factory, defines, attributes);
+            return new ProgramSpec<>(name, vert, frag, factory, defines, attributes, fogSensitive);
         }
     }
 }

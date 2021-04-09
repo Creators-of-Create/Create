@@ -13,7 +13,8 @@
         "RenderHooksMixin",
         "ShaderCloseMixin",
         "TileRemoveMixin",
-        "EntityContraptionInteractionMixin"
+        "EntityContraptionInteractionMixin",
+        "StoreProjectionMatrixMixin"
     ],
     "injectors": {
         "defaultRequire": 1

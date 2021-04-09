@@ -28,9 +28,11 @@ import org.lwjgl.system.MemoryUtil;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
+import com.simibubi.create.foundation.render.backend.gl.shader.SingleProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramGroup;
+import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.IMultiProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
@@ -45,9 +47,12 @@ public class ShaderLoader {
 	public static final String SHADER_DIR = "flywheel/shaders/";
 	public static final ArrayList<String> EXTENSIONS = Lists.newArrayList(".vert", ".vsh", ".frag", ".fsh", ".glsl");
 
-	static final Map<ResourceLocation, String> shaderSource = new HashMap<>();
+	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
+	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
 
-	static void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
+	final Map<ResourceLocation, String> shaderSource = new HashMap<>();
+
+	void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
 			OptifineHandler.refresh();
 			Backend.refresh();
@@ -56,16 +61,16 @@ public class ShaderLoader {
 				shaderSource.clear();
 				loadShaderSources(manager);
 
-				Backend.programs.values().forEach(ProgramGroup::delete);
+				Backend.programs.values().forEach(IMultiProgram::delete);
 				Backend.programs.clear();
-				Backend.registry.values().forEach(ShaderLoader::loadProgram);
+				Backend.registry.values().forEach(this::loadProgramFromSpec);
 
 				Backend.log.info("Loaded all shader programs.");
 			}
 		}
 	}
 
-	private static void loadShaderSources(IResourceManager manager){
+	private void loadShaderSources(IResourceManager manager){
 		Collection<ResourceLocation> allShaders = manager.getAllResourceLocations(SHADER_DIR, s -> {
 			for (String ext : EXTENSIONS) {
 				if (s.endsWith(ext)) return true;
@@ -89,19 +94,26 @@ public class ShaderLoader {
 		}
 	}
 
-	static <P extends GlProgram, S extends ProgramSpec<P>> void loadProgram(S programSpec) {
-		Map<GlFogMode, P> programGroup = new EnumMap<>(GlFogMode.class);
+	private <P extends GlProgram, S extends ProgramSpec<P>> void loadProgramFromSpec(S programSpec) {
 
-		for (GlFogMode fogMode : GlFogMode.values()) {
-			programGroup.put(fogMode, loadProgram(programSpec, fogMode));
+		if (programSpec.fogSensitive) {
+			Map<GlFogMode, P> programGroup = new EnumMap<>(GlFogMode.class);
+
+			for (GlFogMode fogMode : GlFogMode.values()) {
+				programGroup.put(fogMode, loadProgram(programSpec, fogMode));
+			}
+
+			Backend.programs.put(programSpec, new FogSensitiveProgram<>(programGroup));
+		} else {
+			P program = loadProgram(programSpec, GlFogMode.NONE);
+
+			Backend.programs.put(programSpec, new SingleProgram<>(program));
 		}
-
-		Backend.programs.put(programSpec, new ProgramGroup<>(programGroup));
 
 		Backend.log.debug("Loaded program {}", programSpec.name);
 	}
 
-	private static <P extends GlProgram, S extends ProgramSpec<P>> P loadProgram(S programSpec, GlFogMode fogMode) {
+	private <P extends GlProgram, S extends ProgramSpec<P>> P loadProgram(S programSpec, GlFogMode fogMode) {
 		GlShader vert = null;
 		GlShader frag = null;
 		try {
@@ -124,16 +136,14 @@ public class ShaderLoader {
 		}
 	}
 
-	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
-
-	private static String processIncludes(ResourceLocation baseName, String source) {
+	private String processIncludes(ResourceLocation baseName, String source) {
 		HashSet<ResourceLocation> seen = new HashSet<>();
 		seen.add(baseName);
 
 		return includeRecursive(source, seen).collect(Collectors.joining("\n"));
 	}
 
-	private static Stream<String> includeRecursive(String source, Set<ResourceLocation> seen) {
+	private Stream<String> includeRecursive(String source, Set<ResourceLocation> seen) {
 		return new BufferedReader(new StringReader(source)).lines().flatMap(line -> {
 
 			Matcher matcher = includePattern.matcher(line);
@@ -156,7 +166,7 @@ public class ShaderLoader {
 		});
 	}
 
-	private static GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
+	private GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
 		String source = shaderSource.get(name);
 
 		source = processIncludes(name, source);
@@ -168,7 +178,7 @@ public class ShaderLoader {
 		return new GlShader(type, name, source);
 	}
 
-	public static String readToString(InputStream is) {
+	public String readToString(InputStream is) {
 		RenderSystem.assertThread(RenderSystem::isOnRenderThread);
 		ByteBuffer bytebuffer = null;
 
@@ -189,7 +199,7 @@ public class ShaderLoader {
 		return null;
 	}
 
-	public static ByteBuffer readToBuffer(InputStream is) throws IOException {
+	public ByteBuffer readToBuffer(InputStream is) throws IOException {
 		ByteBuffer bytebuffer;
 		if (is instanceof FileInputStream) {
 			FileInputStream fileinputstream = (FileInputStream)is;

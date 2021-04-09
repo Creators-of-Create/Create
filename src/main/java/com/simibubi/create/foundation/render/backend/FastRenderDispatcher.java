@@ -26,12 +26,6 @@ public class FastRenderDispatcher {
 
     public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
-    private static Matrix4f projectionMatrixThisFrame = null;
-
-    public static void endFrame() {
-        projectionMatrixThisFrame = null;
-    }
-
     public static void enqueueUpdate(TileEntity te) {
         queuedUpdates.get(te.getWorld()).add(te);
     }
@@ -81,46 +75,5 @@ public class FastRenderDispatcher {
         kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
 
         layer.endDrawing();
-    }
-
-    // copied from GameRenderer.renderWorld
-    public static Matrix4f getProjectionMatrix() {
-        if (projectionMatrixThisFrame != null) return projectionMatrixThisFrame;
-
-        float partialTicks = AnimationTickHolder.getPartialTicks();
-        Minecraft mc = Minecraft.getInstance();
-        GameRenderer gameRenderer = mc.gameRenderer;
-        ClientPlayerEntity player = mc.player;
-
-        MatrixStack matrixstack = new MatrixStack();
-		matrixstack.peek()
-			.getModel()
-			.multiply(gameRenderer.getBasicProjectionMatrix(gameRenderer.getActiveRenderInfo(), partialTicks, true));
-        gameRenderer.bobViewWhenHurt(matrixstack, partialTicks);
-        if (mc.gameSettings.viewBobbing) {
-            gameRenderer.bobView(matrixstack, partialTicks);
-        }
-
-        float portalTime = MathHelper.lerp(partialTicks, player.prevTimeInPortal, player.timeInPortal);
-        if (portalTime > 0.0F) {
-            int i = 20;
-            if (player.isPotionActive(Effects.NAUSEA)) {
-                i = 7;
-            }
-
-            float f1 = 5.0F / (portalTime * portalTime + 5.0F) - portalTime * 0.04F;
-            f1 = f1 * f1;
-            Vector3f vector3f = new Vector3f(0.0F, MathHelper.SQRT_2 / 2.0F, MathHelper.SQRT_2 / 2.0F);
-            matrixstack.multiply(vector3f.getDegreesQuaternion(((float)gameRenderer.rendererUpdateCount + partialTicks) * (float)i));
-            matrixstack.scale(1.0F / f1, 1.0F, 1.0F);
-            float f2 = -((float)gameRenderer.rendererUpdateCount + partialTicks) * (float)i;
-            matrixstack.multiply(vector3f.getDegreesQuaternion(f2));
-        }
-
-        Matrix4f matrix4f = matrixstack.peek().getModel();
-        gameRenderer.loadProjectionMatrix(matrix4f);
-
-        projectionMatrixThisFrame = matrix4f;
-        return projectionMatrixThisFrame;
     }
 }

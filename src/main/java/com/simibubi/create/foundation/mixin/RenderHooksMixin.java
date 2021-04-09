@@ -49,7 +49,7 @@ public class RenderHooksMixin {
 		Matrix4f viewProjection = stack.peek()
 			.getModel()
 			.copy();
-		viewProjection.multiplyBackward(FastRenderDispatcher.getProjectionMatrix());
+		viewProjection.multiplyBackward(Backend.projectionMatrix);
 
 		FastRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 

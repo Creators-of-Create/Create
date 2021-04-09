@@ -186,7 +186,6 @@ public class ClientEvents {
 		ms.pop();
 
 		RenderWork.runAll();
-		FastRenderDispatcher.endFrame();
 	}
 
 	@SubscribeEvent

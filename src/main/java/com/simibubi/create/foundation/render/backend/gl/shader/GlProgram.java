@@ -38,7 +38,7 @@ public abstract class GlProgram extends GlObject {
     public int getUniformLocation(String uniform) {
         int index = GL20.glGetUniformLocation(this.handle(), uniform);
 
-        if (index < 0 && Backend.SHADER_DEBUG_OUTPUT) {
+        if (index < 0) {
             Backend.log.debug("No active uniform '{}' exists in program '{}'. Could be unused.", uniform, this.name);
         }
 
@@ -106,7 +106,7 @@ public abstract class GlProgram extends GlObject {
 
             String log = GL20.glGetProgramInfoLog(this.program);
 
-            if (!log.isEmpty() && Backend.SHADER_DEBUG_OUTPUT) {
+            if (!log.isEmpty()) {
                 Backend.log.debug("Program link log for " + this.name + ": " + log);
             }
 
