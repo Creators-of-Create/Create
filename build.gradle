@@ -33,8 +33,8 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 minecraft {
     mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    
-    runs {		
+
+    runs {
 		client {
             workingDirectory project.file('run')
             // property 'mixin.env.disableRefMap', 'true'

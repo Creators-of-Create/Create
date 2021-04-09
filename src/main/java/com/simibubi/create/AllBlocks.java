@@ -1338,6 +1338,17 @@ public class AllBlocks {
 		.build()
 		.register();
 
+	static {
+		REGISTRATE.startSection(AllSections.CURIOSITIES);
+	}
+
+	public static final BlockEntry<Block> CHROMATIC_PROJECTOR =
+		REGISTRATE.block("chromatic_projector", Block::new)
+				.initialProperties(() -> Blocks.IRON_BLOCK)
+				.item()
+				.build()
+				.register();
+
 	// Load this class
 
 	public static void register() {}
