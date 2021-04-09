@@ -33,13 +33,12 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 minecraft {
     mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    
-    runs {		
+
+    runs {
 		client {
             workingDirectory project.file('run')
-            // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
-            jvmArgs '-XX:+UnlockCommercialFeatures'
+            //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
             mods {
@@ -51,7 +50,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server')
-            // property 'mixin.env.disableRefMap', 'true'
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
             mods {
@@ -117,7 +115,7 @@ configurations {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    
+
     def registrate = "com.tterrag.registrate:Registrate:MC1.16.2-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
@@ -199,7 +197,7 @@ String getChangelogText() {
 //new File("changelog.html").write getChangelogText()
 
 tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
-    
+
 curseforge {
     if (project.hasProperty('simi_curseforge_key')) {
         apiKey = project.simi_curseforge_key
