@@ -21,9 +21,9 @@ import javax.annotation.Nonnull;
 public class PonderButton extends AbstractSimiWidget {
 
 	private IScreenRenderable icon;
+	private boolean scaleIcon = true;
 	private ItemStack item;
 	protected boolean pressed;
-	private BiConsumer<Integer, Integer> onClick;
 	private int xFadeModifier;
 	private int yFadeModifier;
 	private float fade;
@@ -48,8 +48,18 @@ public class PonderButton extends AbstractSimiWidget {
 		this(x, y, ($, $$) -> onClick.run());
 	}
 
+	/**
+	 * @param icon the icon to be rendered. assumed to be 16x16px in size. will be scaled to fit the button size
+	 *
+	 */
 	public PonderButton showing(IScreenRenderable icon) {
 		this.icon = icon;
+		return this;
+	}
+
+	public PonderButton showingUnscaled(IScreenRenderable icon) {
+		this.icon = icon;
+		this.scaleIcon = false;
 		return this;
 	}
 
@@ -121,7 +131,9 @@ public class PonderButton extends AbstractSimiWidget {
 			RenderSystem.color4f(1, 1, 1, fade);
 			ms.push();
 			ms.translate(x + 2, y + 2, 0);
-			ms.scale((width - 4) / 16f, (height - 4) / 16f, 1);
+			if (this.scaleIcon)
+				ms.scale((width - 4) / 16f, (height - 4) / 16f, 1);
+
 			icon.draw(ms, this, 0, 0);
 			ms.pop();
 		}
@@ -139,10 +151,6 @@ public class PonderButton extends AbstractSimiWidget {
 				y + height - 6, ColorHelper.applyAlpha(0xff606060, fade));
 
 		ms.pop();
-	}
-
-	public void runCallback(double mouseX, double mouseY) {
-		onClick.accept((int) mouseX, (int) mouseY);
 	}
 
 	@Override

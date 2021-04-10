@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.config.ui;
 
 import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -20,24 +21,28 @@ public class ConfigButton extends StencilWidget {
 
 	protected boolean wasHovered;
 
-	public static ConfigButton createFromTextElement(int x, int y, int width, int height, StencilElement text) {
-		ConfigButton button = new ConfigButton(x, y, width, height);
+	public static ConfigButton createFromStencilElement(int x, int y, StencilElement text) {
+		ConfigButton button = new ConfigButton(x, y);
 		StencilElement box  = new StencilElement() {
 			@Override
 			protected void renderStencil(MatrixStack ms) {
-				fill(ms, 0, 0     , width, 0      + 1, 0xff_000000);
-				fill(ms, 0, height, width +1, height + 1, 0xff_000000);
+				fill(ms, 0, 0     , width    , 0      + 1, 0xff_000000);
+				fill(ms, 0, height, width + 1, height + 1, 0xff_000000);
 				fill(ms, 0    , 0, 0     + 1, height, 0xff_000000);
 				fill(ms, width, 0, width + 1, height, 0xff_000000);
 			}
 
 			@Override
 			protected void renderElement(MatrixStack ms) {
-				UIRenderHelper.angledGradient(ms, 0, 0, 15, 32, 201, button.gradientColor1, button.gradientColor2);
+				UIRenderHelper.angledGradient(ms, 0, 0, height/2, height+2, width+2, button.gradientColor1, button.gradientColor2);
 			}
 		};
 		button.stencilElement = CombinedStencilElement.of(box, text);
 		return button;
+	}
+
+	protected ConfigButton(int x, int y) {
+		super(x, y);
 	}
 
 	protected ConfigButton(int x, int y, int width, int height) {
@@ -48,12 +53,20 @@ public class ConfigButton extends StencilWidget {
 		super(x, y, width, height, stencilElement);
 	}
 
+	public ConfigButton withBounds(int width, int height) {
+		this.width = width;
+		this.height = height;
+		return this;
+	}
+
 	public void tick() {
 		colorAnimation.tickChaser();
 	}
 
 	@Override
 	public void onClick(double x, double y) {
+		runCallback(x, y);
+
 		gradientColor1 = Palette.button_click_1;
 		gradientColor2 = Palette.button_click_2;
 		startGradientAnimation(Palette.getColorForButtonState(true, active, hovered), Palette.getColorForButtonState(false, active, hovered), true, 0.15);

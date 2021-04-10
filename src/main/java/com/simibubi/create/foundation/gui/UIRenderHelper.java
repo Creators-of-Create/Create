@@ -22,6 +22,8 @@ public class UIRenderHelper {
 
 	public static void enableStencil() {
 		RenderSystem.recordRenderCall(() -> Minecraft.getInstance().getFramebuffer().enableStencil());
+		if (framebuffer != null)
+			RenderSystem.recordRenderCall(() -> framebuffer.enableStencil());
 	}
 
 	public static Framebuffer framebuffer;
@@ -77,8 +79,8 @@ public class UIRenderHelper {
 
 	//angle in degrees; 0° -> fading to the right
 	//x and y specify the middle point of the starting edge
-	//width is the total width of the streak
-	public static void streak(MatrixStack ms, float angle, int x, int y, int width, int length, int color) {
+	//breadth is the total width of the streak
+	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length, int color) {
 		int a1 = 0xa0 << 24;
 		int a2 = 0x80 << 24;
 		int a3 = 0x10 << 24;
@@ -94,7 +96,7 @@ public class UIRenderHelper {
 		ms.translate(x, y, 0);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle - 90));
 
-		streak(ms, width/2, length, c1, c2, c3, c4);
+		streak(ms, breadth/2, length, c1, c2, c3, c4);
 
 		ms.pop();
 	}

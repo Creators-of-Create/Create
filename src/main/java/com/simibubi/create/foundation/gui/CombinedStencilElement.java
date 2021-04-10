@@ -27,21 +27,21 @@ public class CombinedStencilElement extends StencilElement {
 	protected void renderStencil(MatrixStack ms) {
 		ms.push();
 		element1.transform(ms);
-		element1.renderStencil(ms);
+		element1.withBounds(width, height).renderStencil(ms);
 		ms.pop();
 		ms.push();
 		element2.transform(ms);
-		element2.renderStencil(ms);
+		element2.withBounds(width, height).renderStencil(ms);
 		ms.pop();
 	}
 
 	@Override
 	protected void renderElement(MatrixStack ms) {
 		if (mode.rendersFirst())
-			element1.renderElement(ms);
+			element1.withBounds(width, height).renderElement(ms);
 
 		if (mode.rendersSecond())
-			element2.renderElement(ms);
+			element2.withBounds(width, height).renderElement(ms);
 	}
 
 	public enum ElementMode {

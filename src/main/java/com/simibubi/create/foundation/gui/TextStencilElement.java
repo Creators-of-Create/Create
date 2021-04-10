@@ -6,17 +6,17 @@ import net.minecraft.util.text.StringTextComponent;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-public class TextStencilElement extends StencilElement {
-
-	protected static final ElementRenderer DEFAULT_RENDERER = ((ms, width, _height) -> UIRenderHelper.angledGradient(ms, 15, -3, 5, 14, width+6, 0xff_10dd10, 0x1010dd));
+public class TextStencilElement extends DelegatedStencilElement {
 
 	protected FontRenderer font;
 	protected IFormattableTextComponent component;
-	protected ElementRenderer elementRenderer = DEFAULT_RENDERER;
+	protected boolean centerVertically = false;
+	protected boolean centerHorizontally = false;
 
 	public TextStencilElement(FontRenderer font) {
 		super();
 		this.font = font;
+		height = 10;
 	}
 
 	public TextStencilElement(FontRenderer font, String text) {
@@ -29,11 +29,6 @@ public class TextStencilElement extends StencilElement {
 		this.component = component;
 	}
 
-	public TextStencilElement withElementRenderer(ElementRenderer renderer) {
-		elementRenderer = renderer;
-		return this;
-	}
-
 	public TextStencilElement withText(String text) {
 		component = new StringTextComponent(text);
 		return this;
@@ -44,24 +39,34 @@ public class TextStencilElement extends StencilElement {
 		return this;
 	}
 
+	public TextStencilElement centered(boolean vertical, boolean horizontal) {
+		this.centerVertically = vertical;
+		this.centerHorizontally = horizontal;
+		return this;
+	}
+
 	@Override
 	protected void renderStencil(MatrixStack ms) {
-		font.draw(ms, component, 0, 0, 0xff_000000);
+
+		float x = 0, y = 0;
+		if (centerHorizontally)
+			x = width / 2f - font.getWidth(component) / 2f;
+
+		if (centerVertically)
+			y = height / 2f - font.FONT_HEIGHT / 2f;
+
+		font.draw(ms, component, x, y, 0xff_000000);
+		//font.draw(ms, component, 0, 0, 0xff_000000);
 	}
 
 	@Override
 	protected void renderElement(MatrixStack ms) {
-		elementRenderer.render(ms, font.getWidth(component), 10);
+		element.render(ms, font.getWidth(component), height);
 	}
 
-	@FunctionalInterface
-	public interface ElementRenderer {
-		void render(MatrixStack ms, int width, int height);
-	}
+
 
 	public static class Centered extends TextStencilElement {
-
-		int width;
 
 		public Centered(FontRenderer font, String text, int width) {
 			super(font, text);
@@ -81,7 +86,7 @@ public class TextStencilElement extends StencilElement {
 
 		@Override
 		protected void renderElement(MatrixStack ms) {
-			elementRenderer.render(ms, width, 10);
+			element.render(ms, width, 10);
 		}
 	}
 }

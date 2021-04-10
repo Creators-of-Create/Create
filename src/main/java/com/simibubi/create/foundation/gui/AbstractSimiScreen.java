@@ -62,6 +62,10 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			if (widget.mouseClicked(x, y, button))
 				result = true;
+
+		if (!result) {
+			result = super.mouseClicked(x, y, button);
+		}
 		return result;
 	}
 

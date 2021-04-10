@@ -4,8 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Direction;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import org.apache.commons.lang3.StringUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -14,11 +18,12 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.StencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.utility.animation.Force;
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
-public class ConfigScreen extends NavigatableSimiScreen {
+public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 	private final Screen parent;
 	protected static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
@@ -33,12 +38,23 @@ public class ConfigScreen extends NavigatableSimiScreen {
 	@Override
 	public void tick() {
 		cogSpin.tick();
+
+		widgets.stream()
+				.filter(w -> w instanceof ConfigButton)
+				.forEach(w -> ((ConfigButton) w).tick());
+
 		super.tick();
 	}
 
 	@Override
 	protected void init() {
-		super.init();
+		/*super.init();
+		if (backTrack != null) {
+			widgets.remove(backTrack);
+			backTrack = null;
+		}*/
+
+
 		testStencil = new TextStencilElement(client.fontRenderer, "POGGERS").at(width*0.5f, height*0.5f, 0);
 	}
 
@@ -107,5 +123,10 @@ public class ConfigScreen extends NavigatableSimiScreen {
 		cogSpin.bump(3, -delta * 5);
 
 		return super.mouseScrolled(mouseX, mouseY, delta);
+	}
+
+	public static String toHumanReadable(String key) {
+		String s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(key)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
+		return s;
 	}
 }
