@@ -34,7 +34,7 @@ public class MountedStorage {
 			return true;
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
-		if (te instanceof LockableLootTileEntity){
+		if (te instanceof LockableLootTileEntity) {
 			return true;
 		}
 
