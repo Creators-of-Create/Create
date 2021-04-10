@@ -9,6 +9,8 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.ModelGen.oxidizedItemModel;
 
+import java.util.Vector;
+
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
@@ -600,22 +602,22 @@ public class AllBlocks {
 			.transform(BuilderTransformers.valveHandle(null))
 			.register();
 
-	public static final BlockEntry<ValveHandleBlock>[] DYED_VALVE_HANDLES = new BlockEntry[DyeColor.values().length];
+	public static final Vector<BlockEntry<ValveHandleBlock>> DYED_VALVE_HANDLES =
+		new Vector<>(DyeColor.values().length);
 
 	static {
 		for (DyeColor colour : DyeColor.values()) {
 			String colourName = colour.getString();
-			DYED_VALVE_HANDLES[colour.ordinal()] =
-				REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
-					.transform(BuilderTransformers.valveHandle(colour))
-					.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
-						.patternLine("#")
-						.patternLine("-")
-						.key('#', DyeHelper.getTagOfDye(colour))
-						.key('-', AllItemTags.VALVE_HANDLES.tag)
-						.addCriterion("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
-						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
-					.register();
+			DYED_VALVE_HANDLES.add(REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
+				.transform(BuilderTransformers.valveHandle(colour))
+				.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
+					.patternLine("#")
+					.patternLine("-")
+					.key('#', DyeHelper.getTagOfDye(colour))
+					.key('-', AllItemTags.VALVE_HANDLES.tag)
+					.addCriterion("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
+					.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
+				.register());
 		}
 	}
 

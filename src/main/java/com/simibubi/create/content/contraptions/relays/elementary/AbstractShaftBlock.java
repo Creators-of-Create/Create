@@ -17,6 +17,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -29,13 +30,14 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock implements IWaterLoggable, IWrenchableWithBracket {
+public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
+	implements IWaterLoggable, IWrenchableWithBracket {
 
 	public AbstractShaftBlock(Properties properties) {
 		super(properties);
 		setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		return IWrenchableWithBracket.super.onWrenched(state, context);
@@ -58,7 +60,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock imple
 			removeBracket(world, pos, true).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-	
+
 	// IRotate:
 
 	@Override
@@ -112,4 +114,10 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock imple
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
+
 }

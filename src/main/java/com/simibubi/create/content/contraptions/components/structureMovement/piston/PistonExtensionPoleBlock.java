@@ -26,6 +26,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
@@ -146,6 +147,11 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
         }
         return state;
     }
+    
+    @Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
 
     @MethodsReturnNonnullByDefault
     public static class PlacementHelper extends PoleHelper<Direction> {

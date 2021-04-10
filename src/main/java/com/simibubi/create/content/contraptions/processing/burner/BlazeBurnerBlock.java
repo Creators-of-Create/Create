@@ -29,6 +29,7 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.loot.conditions.ILootCondition.IBuilder;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.loot.conditions.SurvivesExplosion;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.Property;
@@ -255,4 +256,10 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			return this.ordinal() >= heatLevel.ordinal();
 		}
 	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
+	
 }

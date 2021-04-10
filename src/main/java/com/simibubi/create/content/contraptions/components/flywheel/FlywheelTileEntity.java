@@ -45,7 +45,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float calculateAddedStressCapacity() {
-		return generatedCapacity;
+		return lastCapacityProvided = generatedCapacity;
 	}
 
 	@Override

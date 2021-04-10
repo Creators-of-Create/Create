@@ -26,6 +26,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -40,7 +41,9 @@ import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.block.RedstoneWallTorchBlock;
 import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.block.StandingSignBlock;
 import net.minecraft.block.TorchBlock;
+import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.AttachFace;
@@ -116,6 +119,8 @@ public class BlockMovementTraits {
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
+		if (block instanceof AbstractSignBlock)
+			return true;
 		if (block instanceof AbstractPressurePlateBlock)
 			return true;
 		if (block instanceof HorizontalFaceBlock && !(block instanceof GrindstoneBlock))
@@ -143,6 +148,10 @@ public class BlockMovementTraits {
 			return state.get(LadderBlock.FACING) == direction.getOpposite();
 		if (block instanceof WallTorchBlock)
 			return state.get(WallTorchBlock.HORIZONTAL_FACING) == direction.getOpposite();
+		if (block instanceof WallSignBlock)
+			return state.get(WallSignBlock.FACING) == direction.getOpposite();
+		if (block instanceof StandingSignBlock)
+			return direction == Direction.DOWN;
 		if (block instanceof AbstractPressurePlateBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)

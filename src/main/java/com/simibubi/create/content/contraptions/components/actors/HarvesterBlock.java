@@ -21,4 +21,5 @@ public class HarvesterBlock extends AttachedActorBlock {
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new HarvesterTileEntity(AllTileEntities.HARVESTER.get());
 	}
+	
 }

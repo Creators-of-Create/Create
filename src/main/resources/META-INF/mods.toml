@@ -22,6 +22,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3,1.17)"
+    versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"

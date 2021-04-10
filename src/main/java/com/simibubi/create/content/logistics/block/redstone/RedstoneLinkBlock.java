@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -54,10 +55,12 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (state.getBlock() == oldState.getBlock() || isMoving)
+			return;
 		updateTransmittedSignal(state, worldIn, pos, state.get(FACING));
 	}
 
-	private void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos, Direction blockFacing) {
+	public void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos, Direction blockFacing) {
 		if (worldIn.isRemote)
 			return;
 		if (state.get(RECEIVER))
@@ -183,6 +186,11 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		return AllShapes.REDSTONE_BRIDGE.get(state.get(FACING));
 	}
 
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
+	
 	@Override
 	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
 		return RedstoneLinkTileEntity.class;

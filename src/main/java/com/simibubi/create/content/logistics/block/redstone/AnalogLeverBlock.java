@@ -11,6 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -135,6 +136,11 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	@Override
 	public Class<AnalogLeverTileEntity> getTileEntityClass() {
 		return AnalogLeverTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

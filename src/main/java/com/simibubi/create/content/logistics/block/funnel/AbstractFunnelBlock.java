@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -40,6 +41,11 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return getDefaultState().with(POWERED, context.getWorld()
 			.isBlockPowered(context.getPos()));
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 	@Override
