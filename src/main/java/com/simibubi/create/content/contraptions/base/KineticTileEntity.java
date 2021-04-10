@@ -50,7 +50,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public @Nullable BlockPos source;
 	public boolean networkDirty;
 	public boolean updateSpeed;
-	public boolean preventSpeedUpdate;
+	public int preventSpeedUpdate;
 
 	protected KineticEffectHandler effects;
 	protected float speed;

@@ -89,8 +89,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
-		return super.areStatesKineticallyEquivalent(oldState.with(CASING, false), newState.with(CASING, false))
-			&& oldState.get(PART) == newState.get(PART);
+		return super.areStatesKineticallyEquivalent(oldState, newState) && oldState.get(PART) == newState.get(PART);
 	}
 
 	@Override
@@ -381,7 +380,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public static void initBelt(World world, BlockPos pos) {
 		if (world.isRemote)
 			return;
-		if (world instanceof ServerWorld && ((ServerWorld) world).getChunkProvider().getChunkGenerator() instanceof DebugChunkGenerator)
+		if (world instanceof ServerWorld && ((ServerWorld) world).getChunkProvider()
+			.getChunkGenerator() instanceof DebugChunkGenerator)
 			return;
 
 		BlockState state = world.getBlockState(pos);

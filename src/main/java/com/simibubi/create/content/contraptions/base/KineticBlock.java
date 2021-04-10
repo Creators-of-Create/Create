@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
+import com.simibubi.create.foundation.utility.Debug;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -54,7 +56,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 		if (tileEntity instanceof KineticTileEntity) {
 			KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
-			kineticTileEntity.preventSpeedUpdate = false;
+			kineticTileEntity.preventSpeedUpdate = 0;
 
 			if (oldState.getBlock() != state.getBlock())
 				return;
@@ -63,7 +65,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 			if (!areStatesKineticallyEquivalent(oldState, state))
 				return;
 
-			kineticTileEntity.preventSpeedUpdate = true;
+			kineticTileEntity.preventSpeedUpdate = 2;
 		}
 	}
 
@@ -94,8 +96,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 			return;
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
 
-		if (kte.preventSpeedUpdate) {
-			kte.preventSpeedUpdate = false;
+		if (kte.preventSpeedUpdate > 0) {
+			kte.preventSpeedUpdate--;
 			return;
 		}
 
