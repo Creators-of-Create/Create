@@ -61,10 +61,22 @@ public class TextStencilElement extends DelegatedStencilElement {
 
 	@Override
 	protected void renderElement(MatrixStack ms) {
-		element.render(ms, font.getWidth(component), height);
+		float x = 0, y = 0;
+		if (centerHorizontally)
+			x = width / 2f - font.getWidth(component) / 2f;
+
+		if (centerVertically)
+			y = height / 2f - font.FONT_HEIGHT / 2f;
+
+		ms.push();
+		ms.translate(x, y, 0);
+		element.render(ms, font.getWidth(component), font.FONT_HEIGHT + 2);
+		ms.pop();
 	}
 
-
+	public IFormattableTextComponent getComponent() {
+		return component;
+	}
 
 	public static class Centered extends TextStencilElement {
 

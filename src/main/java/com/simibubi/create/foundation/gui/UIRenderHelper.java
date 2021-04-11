@@ -113,8 +113,8 @@ public class UIRenderHelper {
 	/**
 	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
 	 */
-	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int width, int length, int color1, int color2) {
-		angledGradient(ms, angle, x, y, 0, width, length, color1, color2);
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int breadth, int length, int color1, int color2) {
+		angledGradient(ms, angle, x, y, 0, breadth, length, color1, color2);
 	}
 	/**
 	 * x and y specify the middle point of the starting edge
@@ -122,16 +122,16 @@ public class UIRenderHelper {
 	 * @param angle the angle of the gradient in degrees; 0° means from left to right
 	 * @param color1 the color at the starting edge
 	 * @param color2 the color at the ending edge
-	 * @param width the total width of the gradient
+	 * @param breadth the total width of the gradient
 	 *
 	 */
-	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int width, int length, int color1, int color2) {
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int breadth, int length, int color1, int color2) {
 		ms.push();
 		ms.translate(x, y, z);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle - 90));
 
 		Matrix4f model = ms.peek().getModel();
-		int w = width / 2;
+		int w = breadth / 2;
 		GuiUtils.drawGradientRect(model, 0, -w, 0, w, length, color1, color2);
 
 		ms.pop();

@@ -21,14 +21,16 @@ public class DelegatedStencilElement extends StencilElement {
 		this.element = element;
 	}
 
-	public DelegatedStencilElement withStencilRenderer(ElementRenderer renderer) {
+	public <T extends DelegatedStencilElement> T withStencilRenderer(ElementRenderer renderer) {
 		stencil = renderer;
-		return this;
+		//noinspection unchecked
+		return (T) this;
 	}
 
-	public DelegatedStencilElement withElementRenderer(ElementRenderer renderer) {
+	public <T extends DelegatedStencilElement> T withElementRenderer(ElementRenderer renderer) {
 		element = renderer;
-		return this;
+		//noinspection unchecked
+		return (T) this;
 	}
 
 	@Override

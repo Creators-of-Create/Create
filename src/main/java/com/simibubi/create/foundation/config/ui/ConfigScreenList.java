@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.util.text.IFormattableTextComponent;
 
 public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
@@ -28,12 +29,12 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	@Override
 	public int getRowWidth() {
-		return width-10;
+		return width-18;
 	}
 
 	@Override
 	protected int getScrollbarPositionX() {
-		return left + this.width;
+		return left + this.width-5;
 	}
 
 	public void tick() {
@@ -41,13 +42,11 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	public static abstract class Entry extends ExtendedList.AbstractListEntry<Entry> {
-		public void tick() {
-
-		}
+		public void tick() {}
 	}
 
 	public static class LabeledEntry extends Entry {
-		protected StencilElement label;
+		protected TextStencilElement label;
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().fontRenderer, label);
@@ -56,6 +55,10 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 			UIRenderHelper.streak(ms, 0, x, y+height/2, height, width/2, 0x0);
+			IFormattableTextComponent component = label.getComponent();
+			if (Minecraft.getInstance().fontRenderer.getWidth(component) > width/2 - 10) {
+				label.withText(Minecraft.getInstance().fontRenderer.trimToWidth(component, width / 2 - 15).getString() + "...");
+			}
 			label.at(x + 5, y + height/2 - 4, 0).render(ms);
 		}
 	}

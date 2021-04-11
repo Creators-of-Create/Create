@@ -10,6 +10,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
 import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextStencilElement;
@@ -54,8 +55,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		MutableInt y = new MutableInt(15);
 
 		configGroup.valueMap().forEach((s, o) -> {
+			String humanKey = toHumanReadable(s);
+
 			if (o instanceof AbstractConfig) {
-				SubMenuEntry entry = new SubMenuEntry(this, toHumanReadable(s), spec, (UnmodifiableConfig) o);
+				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) o);
 				list.children().add(entry);
 
 			}  else if (o instanceof ForgeConfigSpec.ConfigValue<?>) {
@@ -63,11 +66,16 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
 				Object value = configValue.get();
 
-				AbstractSimiWidget widget = createWidgetForValue(configValue, valueSpec, value, s, this);
-				widget.y = y.getValue();
-				//list.children().add(new ConfigScreenList.WrappedEntry(widget));
-				list.children().add(new ConfigScreenList.LabeledEntry(toHumanReadable(s) + " : " + value));
-				//widgets.add(widget);
+				if (value instanceof Boolean) {
+					BooleanEntry entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
+					list.children().add(entry);
+				} else {
+					AbstractSimiWidget widget = createWidgetForValue(configValue, valueSpec, value, s, this);
+					widget.y = y.getValue();
+					//list.children().add(new ConfigScreenList.WrappedEntry(widget));
+					list.children().add(new ConfigScreenList.LabeledEntry(humanKey + " : " + value));
+					//widgets.add(widget);
+				}
 			}
 
 			y.add(50);

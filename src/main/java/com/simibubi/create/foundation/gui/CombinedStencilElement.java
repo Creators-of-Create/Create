@@ -23,6 +23,24 @@ public class CombinedStencilElement extends StencilElement {
 		return e;
 	}
 
+	public <T extends CombinedStencilElement> T withFirst(StencilElement element) {
+		this.element1 = element;
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends CombinedStencilElement> T withSecond(StencilElement element) {
+		this.element2 = element;
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends CombinedStencilElement> T withMode(ElementMode mode) {
+		this.mode = mode;
+		//noinspection unchecked
+		return (T) this;
+	}
+
 	@Override
 	protected void renderStencil(MatrixStack ms) {
 		ms.push();
