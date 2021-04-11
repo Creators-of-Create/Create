@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
@@ -39,6 +40,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -231,6 +233,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	protected void applyPressingInWorld() {
 		AxisAlignedBB bb = new AxisAlignedBB(pos.down(1));
+		boolean bulk = canProcessInBulk();
 		pressedItems.clear();
 		if (world.isRemote)
 			return;
@@ -240,14 +243,37 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			if (!entity.isAlive() || !entity.isOnGround())
 				continue;
 			ItemEntity itemEntity = (ItemEntity) entity;
-			pressedItems.add(itemEntity.getItem());
+			ItemStack item = itemEntity.getItem();
+			pressedItems.add(item);
 			sendData();
-			Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
+			Optional<PressingRecipe> recipe = getRecipe(item);
 			if (!recipe.isPresent())
 				continue;
-			InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+
+			if (bulk || item.getCount() == 1) {
+				InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+			} else {
+				for (ItemStack result : InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(item, 1),
+					recipe.get())) {
+					ItemEntity created =
+						new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
+					created.setDefaultPickupDelay();
+					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.random, .05f));
+					world.addEntity(created);
+				}
+				item.shrink(1);
+			}
+
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
+			entityScanCooldown = 0;
+			
+			if (!bulk)
+				break;
 		}
+	}
+
+	public static boolean canProcessInBulk() {
+		return AllConfigs.SERVER.recipes.bulkPressing.get();
 	}
 
 	public int getRunningTickSpeed() {
