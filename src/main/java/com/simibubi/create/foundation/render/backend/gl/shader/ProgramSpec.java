@@ -16,54 +16,42 @@ public class ProgramSpec<P extends GlProgram> {
 
     public final ShaderConstants defines;
 
-    public final GlProgram.ProgramFactory<P> factory;
-
     public final ArrayList<IVertexAttrib> attributes;
 
-    public final boolean fogSensitive;
+    public final ShaderSpecLoader<P> finalizer;
 
-    public static <P extends GlProgram> Builder<P> builder(String name, GlProgram.ProgramFactory<P> factory) {
-        return builder(new ResourceLocation(Create.ID, name), factory);
-    }
-
-    public static <P extends GlProgram> Builder<P> builder(ResourceLocation name, GlProgram.ProgramFactory<P> factory) {
-        return new Builder<>(name, factory);
-    }
-
-    public ProgramSpec(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, GlProgram.ProgramFactory<P> factory, ShaderConstants defines, ArrayList<IVertexAttrib> attributes, boolean fogSensitive) {
-        this.name = name;
-        this.vert = vert;
-        this.frag = frag;
-        this.defines = defines;
-
-        this.factory = factory;
-        this.attributes = attributes;
-		this.fogSensitive = fogSensitive;
+	public static <P extends GlProgram> Builder<P> builder(String name, ShaderSpecLoader<P> factory) {
+		return builder(new ResourceLocation(Create.ID, name), factory);
 	}
 
-    public ResourceLocation getVert() {
-        return vert;
-    }
+	public static <P extends GlProgram> Builder<P> builder(ResourceLocation name, ShaderSpecLoader<P> factory) {
+		return new Builder<>(name, factory);
+	}
 
-    public ResourceLocation getFrag() {
-        return frag;
-    }
+	public ProgramSpec(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, ShaderConstants defines, ArrayList<IVertexAttrib> attributes, ShaderSpecLoader<P> finalizer) {
+		this.name = name;
+		this.vert = vert;
+		this.frag = frag;
+		this.defines = defines;
+
+		this.attributes = attributes;
+		this.finalizer = finalizer;
+	}
 
     public static class Builder<P extends GlProgram> {
         private ResourceLocation vert;
         private ResourceLocation frag;
-        private ShaderConstants defines = ShaderConstants.EMPTY;
-        private boolean fogSensitive = true;
+		private ShaderConstants defines = ShaderConstants.EMPTY;
+		private final ShaderSpecLoader<P> loader;
 
         private final ResourceLocation name;
-        private final GlProgram.ProgramFactory<P> factory;
         private final ArrayList<IVertexAttrib> attributes;
 
-        public Builder(ResourceLocation name, GlProgram.ProgramFactory<P> factory) {
-            this.name = name;
-            this.factory = factory;
-            attributes = new ArrayList<>();
-        }
+		public Builder(ResourceLocation name, ShaderSpecLoader<P> factory) {
+			this.name = name;
+			this.loader = factory;
+			attributes = new ArrayList<>();
+		}
 
         public Builder<P> setVert(ResourceLocation vert) {
             this.vert = vert;
@@ -80,18 +68,14 @@ public class ProgramSpec<P extends GlProgram> {
             return this;
         }
 
-		public Builder<P> setFogSensitive(boolean fogSensitive) {
-			this.fogSensitive = fogSensitive;
-			return this;
-		}
-
 		public <A extends Enum<A> & IVertexAttrib> Builder<P> addAttributes(Class<A> attributeEnum) {
             attributes.addAll(Arrays.asList(attributeEnum.getEnumConstants()));
             return this;
         }
 
         public ProgramSpec<P> createProgramSpec() {
-            return new ProgramSpec<>(name, vert, frag, factory, defines, attributes, fogSensitive);
+			return new ProgramSpec<>(name, vert, frag, defines, attributes, loader);
         }
     }
+
 }

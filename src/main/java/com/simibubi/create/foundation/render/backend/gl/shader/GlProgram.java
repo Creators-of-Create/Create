@@ -1,34 +1,37 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
+import java.util.Collection;
+
 import org.lwjgl.opengl.GL20;
 
 import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.gl.GlObject;
 import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
 
 public abstract class GlProgram extends GlObject {
 
-    public final ResourceLocation name;
+	public final ResourceLocation name;
 
-    protected GlProgram(ResourceLocation name, int handle) {
-        setHandle(handle);
-        this.name = name;
-    }
+	protected GlProgram(ResourceLocation name, int handle) {
+		setHandle(handle);
+		this.name = name;
+	}
 
-    public static Builder builder(ResourceLocation name, GlFogMode fogMode) {
-        return new Builder(name, fogMode);
-    }
+	public static Builder builder(ResourceLocation name) {
+		return new Builder(name);
+	}
 
-    public void bind() {
-        GL20.glUseProgram(handle());
-    }
+	public void bind() {
+		GL20.glUseProgram(handle());
+	}
 
-    public void unbind() {
-        GL20.glUseProgram(0);
-    }
+	public void unbind() {
+		GL20.glUseProgram(0);
+	}
 
     /**
      * Retrieves the index of the uniform with the given name.
@@ -52,76 +55,78 @@ public abstract class GlProgram extends GlObject {
      * @return The sampler uniform's index.
      * @throws NullPointerException If no uniform exists with the given name.
      */
-    public int setSamplerBinding(String name, int binding) {
-        int samplerUniform = getUniformLocation(name);
+	public int setSamplerBinding(String name, int binding) {
+		int samplerUniform = getUniformLocation(name);
 
-        if (samplerUniform >= 0) {
-            GL20.glUniform1i(samplerUniform, binding);
-        }
+		if (samplerUniform >= 0) {
+			GL20.glUniform1i(samplerUniform, binding);
+		}
 
-        return samplerUniform;
-    }
+		return samplerUniform;
+	}
 
-    @Override
-    protected void deleteInternal(int handle) {
-        GL20.glDeleteProgram(handle);
-    }
+	protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {
+		GL20.glUniformMatrix4fv(uniform, false, RenderUtil.writeMatrix(mat));
+	}
 
-    public static class Builder {
-        private final ResourceLocation name;
-        private final int program;
-        private final GlFogMode fogMode;
+	@Override
+	protected void deleteInternal(int handle) {
+		GL20.glDeleteProgram(handle);
+	}
 
-        private int attributeIndex;
+	public static class Builder {
+		public final ResourceLocation name;
+		public final int program;
 
-        public Builder(ResourceLocation name, GlFogMode fogMode) {
-            this.name = name;
-            this.program = GL20.glCreateProgram();
-            this.fogMode = fogMode;
-        }
+		private int attributeIndex;
 
-        public Builder attachShader(GlShader shader) {
-            GL20.glAttachShader(this.program, shader.handle());
+		public Builder(ResourceLocation name) {
+			this.name = name;
+			this.program = GL20.glCreateProgram();
+		}
 
-            return this;
-        }
+		public Builder attachShader(GlShader shader) {
+			GL20.glAttachShader(this.program, shader.handle());
 
-        public <A extends IVertexAttrib> Builder addAttribute(A attrib) {
-            GL20.glBindAttribLocation(this.program, attributeIndex, attrib.attribName());
-            attributeIndex += attrib.attribSpec().getAttributeCount();
-            return this;
-        }
+			return this;
+		}
 
-        /**
-         * Links the attached shaders to this program and returns a user-defined container which wraps the shader
-         * program. This container can, for example, provide methods for updating the specific uniforms of that shader
-         * set.
-         *
-         * @param factory The factory which will create the shader program's container
-         * @param <P> The type which should be instantiated with the new program's handle
-         * @return An instantiated shader container as provided by the factory
-         */
-        public <P extends GlProgram> P build(ProgramFactory<P> factory) {
-            GL20.glLinkProgram(this.program);
+		public <A extends IVertexAttrib> Builder addAttributes(Collection<A> attributes) {
+			attributes.forEach(this::addAttribute);
+			return this;
+		}
 
-            String log = GL20.glGetProgramInfoLog(this.program);
+		public <A extends IVertexAttrib> Builder addAttribute(A attrib) {
+			GL20.glBindAttribLocation(this.program, attributeIndex, attrib.attribName());
+			attributeIndex += attrib.attribSpec().getAttributeCount();
+			return this;
+		}
 
-            if (!log.isEmpty()) {
-                Backend.log.debug("Program link log for " + this.name + ": " + log);
-            }
+		/**
+		 * Links the attached shaders to this program and returns a user-defined container which wraps the shader
+		 * program. This container can, for example, provide methods for updating the specific uniforms of that shader
+		 * set.
+		 *
+		 * @param factory The factory which will create the shader program's container
+		 * @param <P>     The type which should be instantiated with the new program's handle
+		 * @return An instantiated shader container as provided by the factory
+		 */
+		public Builder link() {
+			GL20.glLinkProgram(this.program);
 
-            int result = GL20.glGetProgrami(this.program, GL20.GL_LINK_STATUS);
+			String log = GL20.glGetProgramInfoLog(this.program);
 
-            if (result != GL20.GL_TRUE) {
-                throw new RuntimeException("Shader program linking failed, see log for details");
-            }
+			if (!log.isEmpty()) {
+				Backend.log.debug("Program link log for " + this.name + ": " + log);
+			}
 
-            return factory.create(this.name, this.program, this.fogMode.getFogFactory());
-        }
-    }
+			int result = GL20.glGetProgrami(this.program, GL20.GL_LINK_STATUS);
 
-    @FunctionalInterface
-    public interface ProgramFactory<P extends GlProgram> {
-        P create(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory);
-    }
+			if (result != GL20.GL_TRUE) {
+				throw new RuntimeException("Shader program linking failed, see log for details");
+			}
+
+			return this;
+		}
+	}
 }

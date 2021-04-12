@@ -186,6 +186,8 @@ public class ClientEvents {
 		ms.pop();
 
 		RenderWork.runAll();
+
+		//Backend.effects.render();
 	}
 
 	@SubscribeEvent

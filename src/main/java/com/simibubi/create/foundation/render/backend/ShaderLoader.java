@@ -12,7 +12,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,11 +26,9 @@ import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
-import com.simibubi.create.foundation.render.backend.gl.shader.SingleProgram;
+import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
-import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.IMultiProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
@@ -96,43 +93,34 @@ public class ShaderLoader {
 
 	private <P extends GlProgram, S extends ProgramSpec<P>> void loadProgramFromSpec(S programSpec) {
 
-		if (programSpec.fogSensitive) {
-			Map<GlFogMode, P> programGroup = new EnumMap<>(GlFogMode.class);
-
-			for (GlFogMode fogMode : GlFogMode.values()) {
-				programGroup.put(fogMode, loadProgram(programSpec, fogMode));
-			}
-
-			Backend.programs.put(programSpec, new FogSensitiveProgram<>(programGroup));
-		} else {
-			P program = loadProgram(programSpec, GlFogMode.NONE);
-
-			Backend.programs.put(programSpec, new SingleProgram<>(program));
-		}
+		Backend.programs.put(programSpec, programSpec.finalizer.create(this, programSpec));
 
 		Backend.log.debug("Loaded program {}", programSpec.name);
 	}
 
-	private <P extends GlProgram, S extends ProgramSpec<P>> P loadProgram(S programSpec, GlFogMode fogMode) {
-		GlShader vert = null;
-		GlShader frag = null;
+	public GlProgram.Builder loadProgram(ProgramSpec<?> programSpec) {
+		return loadProgram(programSpec, programSpec.defines);
+	}
+
+	public GlProgram.Builder loadProgram(ProgramSpec<?> programSpec, ShaderConstants defines) {
+		return loadProgram(programSpec.name, programSpec.vert, programSpec.frag, programSpec.attributes, defines);
+	}
+
+	public GlProgram.Builder loadProgram(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, Collection<IVertexAttrib> attribs, ShaderConstants defines) {
+		GlShader vsh = null;
+		GlShader fsh = null;
 		try {
-			ShaderConstants defines = new ShaderConstants(programSpec.defines);
+			vsh = loadShader(vert, ShaderType.VERTEX, defines);
+			fsh = loadShader(frag, ShaderType.FRAGMENT, defines);
 
-			defines.defineAll(fogMode.getDefines());
-
-			vert = loadShader(programSpec.getVert(), ShaderType.VERTEX, defines);
-			frag = loadShader(programSpec.getFrag(), ShaderType.FRAGMENT, defines);
-
-			GlProgram.Builder builder = GlProgram.builder(programSpec.name, fogMode).attachShader(vert).attachShader(frag);
-
-			programSpec.attributes.forEach(builder::addAttribute);
-
-			return builder.build(programSpec.factory);
-
+			return GlProgram.builder(name)
+					.attachShader(vsh)
+					.attachShader(fsh)
+					.addAttributes(attribs)
+					.link();
 		} finally {
-			if (vert != null) vert.delete();
-			if (frag != null) frag.delete();
+			if (vsh != null) vsh.delete();
+			if (fsh != null) fsh.delete();
 		}
 	}
 
@@ -166,7 +154,7 @@ public class ShaderLoader {
 		});
 	}
 
-	private GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
+	public GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
 		String source = shaderSource.get(name);
 
 		source = processIncludes(name, source);

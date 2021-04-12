@@ -46,9 +46,9 @@ public class RenderHooksMixin {
 		if (!Backend.available())
 			return;
 
-		Matrix4f viewProjection = stack.peek()
-			.getModel()
-			.copy();
+		Matrix4f view = stack.peek()
+				.getModel();
+		Matrix4f viewProjection = view.copy();
 		viewProjection.multiplyBackward(Backend.projectionMatrix);
 
 		FastRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
@@ -56,6 +56,10 @@ public class RenderHooksMixin {
 		ContraptionRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 
 		GL20.glUseProgram(0);
+
+		if (type == RenderType.getTranslucent()) {
+			Backend.effects.render(view);
+		}
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")

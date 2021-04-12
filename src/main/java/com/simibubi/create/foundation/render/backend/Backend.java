@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.backend.gl.GlFog;
+import com.simibubi.create.foundation.render.backend.effects.EffectsHandler;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.IMultiProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
@@ -28,6 +28,7 @@ public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
 
 	public static final ShaderLoader shaderLoader = new ShaderLoader();
+	public static EffectsHandler effects;
 
 	public static Matrix4f projectionMatrix = new Matrix4f();
 
@@ -108,5 +109,10 @@ public class Backend {
 				compat.instancedArraysSupported();
 
 		enabled = AllConfigs.CLIENT.experimentalRendering.get() && !OptifineHandler.usingShaders();
+
+		if (enabled) {
+			if (effects != null) effects.delete();
+			effects = new EffectsHandler();
+		}
 	}
 }

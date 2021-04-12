@@ -11,12 +11,15 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.relays.belt.BeltAttributes;
 import com.simibubi.create.content.logistics.block.FlapAttributes;
 import com.simibubi.create.foundation.render.backend.core.BasicAttributes;
+import com.simibubi.create.foundation.render.backend.core.BasicProgram;
 import com.simibubi.create.foundation.render.backend.core.ModelAttributes;
 import com.simibubi.create.foundation.render.backend.core.OrientedAttributes;
 import com.simibubi.create.foundation.render.backend.core.TransformAttributes;
-import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
+import com.simibubi.create.foundation.render.backend.effects.PostProcessingProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
+import com.simibubi.create.foundation.render.backend.gl.shader.SingleProgram;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -25,7 +28,15 @@ public class AllProgramSpecs {
 		// noop, make sure the static field are loaded.
 	}
 
-	public static final ProgramSpec<BasicProgram> MODEL = register(ProgramSpec.builder("model", BasicProgram::new)
+	public static final ProgramSpec<PostProcessingProgram> CHROMATIC = register(ProgramSpec.builder("chromatic", new SingleProgram.SpecLoader<>(PostProcessingProgram::new))
+			.addAttributes(ModelAttributes.class)
+			.addAttributes(BasicAttributes.class)
+			.addAttributes(TransformAttributes.class)
+			.setVert(Locations.SCREEN_QUAD)
+			.setFrag(Locations.CHROMATIC)
+			.createProgramSpec());
+
+	public static final ProgramSpec<BasicProgram> MODEL = register(ProgramSpec.builder("model", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(TransformAttributes.class)
@@ -33,7 +44,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.MODEL_FRAG)
 			.createProgramSpec());
 
-	public static final ProgramSpec<BasicProgram> ORIENTED = register(ProgramSpec.builder("oriented", BasicProgram::new)
+	public static final ProgramSpec<BasicProgram> ORIENTED = register(ProgramSpec.builder("oriented", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(OrientedAttributes.class)
@@ -41,7 +52,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.MODEL_FRAG)
 			.createProgramSpec());
 
-	public static final ProgramSpec<BasicProgram> ROTATING = register(ProgramSpec.builder("rotating", BasicProgram::new)
+	public static final ProgramSpec<BasicProgram> ROTATING = register(ProgramSpec.builder("rotating", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(KineticAttributes.class)
@@ -50,7 +61,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.MODEL_FRAG)
 			.createProgramSpec());
 
-	public static final ProgramSpec<BasicProgram> BELT = register(ProgramSpec.builder("belt", BasicProgram::new)
+	public static final ProgramSpec<BasicProgram> BELT = register(ProgramSpec.builder("belt", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(KineticAttributes.class)
@@ -59,18 +70,18 @@ public class AllProgramSpecs {
 			.setFrag(Locations.MODEL_FRAG)
 			.createProgramSpec());
 
-	public static final ProgramSpec<BasicProgram> FLAPS = register(ProgramSpec.builder("flap", BasicProgram::new)
+	public static final ProgramSpec<BasicProgram> FLAPS = register(ProgramSpec.builder("flap", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(FlapAttributes.class)
 			.setVert(Locations.FLAP)
 			.setFrag(Locations.MODEL_FRAG)
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_STRUCTURE = register(ProgramSpec.builder("contraption_structure", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_STRUCTURE = register(ProgramSpec.builder("contraption_structure", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ContraptionAttributes.class)
 			.setVert(Locations.CONTRAPTION_STRUCTURE)
 			.setFrag(Locations.CONTRAPTION)
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_MODEL = register(ProgramSpec.builder("contraption_model", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_MODEL = register(ProgramSpec.builder("contraption_model", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(TransformAttributes.class)
@@ -78,7 +89,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.CONTRAPTION)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_ORIENTED = register(ProgramSpec.builder("contraption_oriented", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_ORIENTED = register(ProgramSpec.builder("contraption_oriented", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(OrientedAttributes.class)
@@ -86,7 +97,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.CONTRAPTION)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_ROTATING = register(ProgramSpec.builder("contraption_rotating", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_ROTATING = register(ProgramSpec.builder("contraption_rotating", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(KineticAttributes.class)
@@ -95,7 +106,7 @@ public class AllProgramSpecs {
 			.setFrag(Locations.CONTRAPTION)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_BELT = register(ProgramSpec.builder("contraption_belt", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_BELT = register(ProgramSpec.builder("contraption_belt", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(KineticAttributes.class)
@@ -104,14 +115,14 @@ public class AllProgramSpecs {
 			.setFrag(Locations.CONTRAPTION)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_FLAPS = register(ProgramSpec.builder("contraption_flap", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_FLAPS = register(ProgramSpec.builder("contraption_flap", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(FlapAttributes.class)
 			.setVert(Locations.FLAP)
 			.setFrag(Locations.CONTRAPTION)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec<ContraptionProgram> C_ACTOR = register(ProgramSpec.builder("contraption_actor", ContraptionProgram::new)
+	public static final ProgramSpec<ContraptionProgram> C_ACTOR = register(ProgramSpec.builder("contraption_actor", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(ActorVertexAttributes.class)
 			.setVert(Locations.CONTRAPTION_ACTOR)
@@ -120,6 +131,8 @@ public class AllProgramSpecs {
 
 
 	public static class Locations {
+		public static final ResourceLocation SCREEN_QUAD = loc("screen_quad.vert");
+		public static final ResourceLocation CHROMATIC = loc("chromatic.frag");
 		public static final ResourceLocation MODEL_FRAG = loc("model.frag");
 		public static final ResourceLocation MODEL_VERT = loc("model.vert");
 		public static final ResourceLocation ORIENTED = loc("oriented.vert");

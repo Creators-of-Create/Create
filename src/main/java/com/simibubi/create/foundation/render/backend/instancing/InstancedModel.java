@@ -182,7 +182,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         int requiredSize = size * stride;
         if (requiredSize > glBufferSize) {
             glBufferSize = requiredSize + stride * 16;
-            GL15.glBufferData(instanceVBO.getBufferType(), glBufferSize, GL15.GL_STATIC_DRAW);
+			instanceVBO.alloc(glBufferSize, GL15.GL_STATIC_DRAW);
 
             instanceVBO.map(glBufferSize, buffer -> {
                 for (D datum : data) {

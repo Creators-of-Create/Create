@@ -1,26 +1,61 @@
 package com.simibubi.create.foundation.render.backend.gl.shader;
 
+import java.util.EnumMap;
 import java.util.Map;
 
+import com.simibubi.create.foundation.render.backend.ShaderLoader;
 import com.simibubi.create.foundation.render.backend.gl.GlFog;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
 
+import net.minecraft.util.ResourceLocation;
+
 public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P> {
 
-    private final Map<GlFogMode, P> programs;
+	private final Map<GlFogMode, P> programs;
 
-    public FogSensitiveProgram(Map<GlFogMode, P> programs) {
-        this.programs = programs;
-    }
+	public FogSensitiveProgram(Map<GlFogMode, P> programs) {
+		this.programs = programs;
+	}
 
-    @Override
-    public P get() {
-        return programs.get(GlFog.getFogMode());
-    }
+	@Override
+	public P get() {
+		return programs.get(GlFog.getFogMode());
+	}
 
-    @Override
-    public void delete() {
-        programs.values().forEach(GlProgram::delete);
-    }
+	@Override
+	public void delete() {
+		programs.values().forEach(GlProgram::delete);
+	}
 
+	public static class SpecLoader<P extends GlProgram> implements ShaderSpecLoader<P> {
+
+		private final FogProgramLoader<P> fogProgramLoader;
+
+		public SpecLoader(FogProgramLoader<P> fogProgramLoader) {
+			this.fogProgramLoader = fogProgramLoader;
+		}
+
+		@Override
+		public IMultiProgram<P> create(ShaderLoader loader, ProgramSpec<P> spec) {
+			Map<GlFogMode, P> programs = new EnumMap<>(GlFogMode.class);
+
+			for (GlFogMode fogMode : GlFogMode.values()) {
+				ShaderConstants defines = new ShaderConstants(spec.defines);
+
+				defines.defineAll(fogMode.getDefines());
+
+				GlProgram.Builder builder = loader.loadProgram(spec, defines);
+
+				programs.put(fogMode, fogProgramLoader.create(builder.name, builder.program, fogMode.getFogFactory()));
+			}
+
+			return new FogSensitiveProgram<>(programs);
+		}
+
+	}
+
+	public interface FogProgramLoader<P extends GlProgram> {
+
+		P create(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory);
+	}
 }

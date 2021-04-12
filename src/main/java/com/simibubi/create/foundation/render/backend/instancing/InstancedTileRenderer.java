@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.MaterialType;
 import com.simibubi.create.foundation.render.backend.MaterialTypes;
+import com.simibubi.create.foundation.render.backend.core.BasicProgram;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
 
 import net.minecraft.client.Minecraft;

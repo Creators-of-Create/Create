@@ -1,8 +1,7 @@
-package com.simibubi.create.foundation.render.backend.gl;
+package com.simibubi.create.foundation.render.backend.core;
 
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -50,9 +49,5 @@ public class BasicProgram extends GlProgram {
         GL20.glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
 
         fogMode.bind();
-    }
-
-    protected static void uploadMatrixUniform(int uniform, Matrix4f mat) {
-        GL20.glUniformMatrix4fv(uniform, false, RenderUtil.writeMatrix(mat));
     }
 }
