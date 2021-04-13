@@ -31,11 +31,15 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 				.withCallback(() -> {
 					value.set(!value.get());
 					buttonStencil.withSecond(value.get() ? enabled : disabled);
+					onValueChange();
 				});
 
 		buttonStencil = ((CombinedStencilElement) button.getStencilElement())
 				.withMode(CombinedStencilElement.ElementMode.BOTH)
 				.withSecond(value.get() ? enabled : disabled);
+
+		listeners.add(button);
+		onReset();
 	}
 
 	@Override
@@ -48,18 +52,19 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + width/2;
+		button.x = x + getLabelWidth(width);
 		button.y = y;
-		button.withBounds(width/2 - 34, height).render(ms, mouseX, mouseY, partialTicks);
+		button.withBounds(width - getLabelWidth(width) - resetWidth, height).render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void onReset() {
+		super.onReset();
 		buttonStencil.withSecond(value.get() ? enabled : disabled);
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double mX, double mY, int button) {
 		return this.button.mouseClicked(mX, mY, button) || super.mouseClicked(mX, mY, button);
-	}
+	}*/
 }

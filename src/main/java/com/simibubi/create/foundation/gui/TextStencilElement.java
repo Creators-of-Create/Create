@@ -77,28 +77,4 @@ public class TextStencilElement extends DelegatedStencilElement {
 	public IFormattableTextComponent getComponent() {
 		return component;
 	}
-
-	public static class Centered extends TextStencilElement {
-
-		public Centered(FontRenderer font, String text, int width) {
-			super(font, text);
-			this.width = width;
-		}
-
-		public Centered(FontRenderer font, IFormattableTextComponent component, int width) {
-			super(font, component);
-			this.width = width;
-		}
-
-		@Override
-		protected void renderStencil(MatrixStack ms) {
-			int textWidth = font.getWidth(component);
-			font.draw(ms, component, width / 2f - textWidth / 2f, 0, 0xff_000000);
-		}
-
-		@Override
-		protected void renderElement(MatrixStack ms) {
-			element.render(ms, width, 10);
-		}
-	}
 }

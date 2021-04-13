@@ -10,6 +10,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
+	protected static final int resetWidth = 24;//including 2px offset on each side
+
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
 	protected ConfigButton reset;
@@ -21,11 +23,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "R").centered(true, true);
 		reset = ConfigButton.createFromStencilElement(0, 0, text)
-				.withBounds(30, 30)
+				.withBounds(resetWidth - 4, 20)
 				.withCallback(() -> {
 					value.set((T) spec.getDefault());
 					this.onReset();
 				});
+
+		listeners.add(reset);
 	}
 
 	@Override
@@ -37,15 +41,22 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		reset.x = x + width - 32;
-		reset.y = y + 10;
+		reset.x = x + width - resetWidth + 2;
+		reset.y = y + 15;
 		reset.render(ms, mouseX, mouseY, partialTicks);
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double mX, double mY, int button) {
 		return reset.mouseClicked(mX, mY, button);
+	}*/
+
+	protected void onReset() {
+		onValueChange();
 	}
 
-	protected void onReset() {}
+	protected void onValueChange() {
+		reset.active = !value.get().equals(spec.getDefault());
+		reset.animateGradientFromState();
+	}
 }

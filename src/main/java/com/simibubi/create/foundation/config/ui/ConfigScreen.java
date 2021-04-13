@@ -110,8 +110,8 @@ public abstract class ConfigScreen extends NavigatableSimiScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = (int) (width * 0.5f);
 		int y = (int) (height * 0.5f);
-		this.drawHorizontalLine(ms, x-25, x+25, y, 0xff_807060);
-		this.drawVerticalLine(ms, x, y-25, y+25, 0xff_90a0b0);
+		//this.drawHorizontalLine(ms, x-25, x+25, y, 0xff_807060);
+		//this.drawVerticalLine(ms, x, y-25, y+25, 0xff_90a0b0);
 
 		//this.testStencil.render(ms);
 

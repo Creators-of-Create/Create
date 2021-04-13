@@ -21,6 +21,8 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Click to open").centered(true, true);
 		button = ConfigButton.createFromStencilElement(0, 0, text)
 				.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(parent, spec, config)));
+
+		listeners.add(button);
 	}
 
 	@Override
@@ -33,14 +35,14 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + width/2;
+		button.x = x + getLabelWidth(width);
 		button.y = y;
-		button.withBounds(width/2, height);
+		button.withBounds(width - getLabelWidth(width), height);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
 		return button.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
-	}
+	}*/
 }

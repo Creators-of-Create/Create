@@ -11,6 +11,7 @@ import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
+import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextStencilElement;
@@ -69,12 +70,15 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				if (value instanceof Boolean) {
 					BooleanEntry entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
 					list.children().add(entry);
+				} else if (value instanceof Number) {
+					NumberEntry<? extends Number> entry = NumberEntry.create(value, humanKey, configValue, valueSpec);
+					if (entry != null) {
+						list.children().add(entry);
+					} else {
+						list.children().add(new ConfigScreenList.LabeledEntry("n-" + o.getClass().getSimpleName() + "  " + humanKey + " : " + value));
+					}
 				} else {
-					AbstractSimiWidget widget = createWidgetForValue(configValue, valueSpec, value, s, this);
-					widget.y = y.getValue();
-					//list.children().add(new ConfigScreenList.WrappedEntry(widget));
 					list.children().add(new ConfigScreenList.LabeledEntry(humanKey + " : " + value));
-					//widgets.add(widget);
 				}
 			}
 

@@ -104,6 +104,14 @@ public class ConfigButton extends StencilWidget {
 		gradientColor2 = Palette.getColorForButtonState(false, active, hovered);
 	}
 
+	public void animateGradientFromState() {
+		startGradientAnimation(
+				Palette.getColorForButtonState(true, active, hovered),
+				Palette.getColorForButtonState(false, active, hovered),
+				true
+		);
+	}
+
 	private void startGradientAnimation(int c1, int c2, boolean positive, double expSpeed) {
 		colorAnimation.startWithValue(positive ? 1 : -1);
 		colorAnimation.chase(0, expSpeed, LerpedFloat.Chaser.EXP);

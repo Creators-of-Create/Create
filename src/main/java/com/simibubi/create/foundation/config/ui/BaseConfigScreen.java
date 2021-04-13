@@ -35,7 +35,7 @@ public class BaseConfigScreen extends ConfigScreen {
 						.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(this, AllConfigs.CLIENT.specification)))
 		);
 
-		StencilElement text2 = new TextStencilElement(client.fontRenderer, new StringTextComponent("COMMON CONFIG").formatted(TextFormatting.BOLD)).centered(false, true).at(0, 11, 0);
+		StencilElement text2 = new TextStencilElement(client.fontRenderer, new StringTextComponent("COMMON CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
 		widgets.add(commonConfigWidget = ConfigButton.createFromStencilElement(
 				width / 2 - 100,
 				height / 2 - 15,
@@ -46,7 +46,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		commonConfigWidget.active = false;
 		commonConfigWidget.updateColorsFromState();
 
-		StencilElement text3 = new TextStencilElement.Centered(client.fontRenderer, new StringTextComponent("SERVER CONFIG").formatted(TextFormatting.BOLD), 200).at(0, 11, 0);
+		StencilElement text3 = new TextStencilElement(client.fontRenderer, new StringTextComponent("SERVER CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
 		widgets.add(serverConfigWidget = ConfigButton.createFromStencilElement(
 				width / 2 - 100,
 				height / 2 - 15 + 50,
