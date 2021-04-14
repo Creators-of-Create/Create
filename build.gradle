@@ -124,6 +124,10 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
+        
+        //Curios API 
+      compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.4-4.0.3.5")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
 
