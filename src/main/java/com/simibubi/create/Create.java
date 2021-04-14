@@ -143,7 +143,7 @@ public class Create {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.BLAZE_MUNCH.generator(gen));
+		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);

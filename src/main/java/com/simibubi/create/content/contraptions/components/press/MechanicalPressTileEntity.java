@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
@@ -35,7 +37,6 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -182,12 +183,11 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				applyPressingInWorld();
 			if (onBasin())
 				applyCompactingOnBasin();
-			if (!world.isRemote) {
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS,
-					.5f, 1f);
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS,
-					.125f, 1f);
-			}
+
+			if (world.getBlockState(pos.down(2)).getSoundType() == SoundType.CLOTH)
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(world, pos);
+			else
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos);
 		}
 
 		if (!world.isRemote && runningTicks > CYCLE) {
@@ -266,7 +266,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
 			entityScanCooldown = 0;
-			
+
 			if (!bulk)
 				break;
 		}

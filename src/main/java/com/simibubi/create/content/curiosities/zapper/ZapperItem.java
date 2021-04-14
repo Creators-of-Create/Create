@@ -30,7 +30,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -144,8 +143,7 @@ public abstract class ZapperItem extends Item {
 		// Check if can be used
 		ITextComponent msg = validateUsage(item);
 		if (msg != null) {
-			world.playSound(player, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_DENY.get(), SoundCategory.BLOCKS,
-				1f, 0.5f);
+			AllSoundEvents.BLOCKZAPPER_DENY.play(world, player, player.getBlockPos());
 			player.sendStatusMessage(msg.copy().formatted(TextFormatting.RED), true);
 			return new ActionResult<>(ActionResultType.FAIL, item);
 		}

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1162",
+	"_": "Missing Localizations: 1163",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1148,16 +1148,18 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
+
+	"_": "->------------------------]  Subtitles  [------------------------<-",
+
 	"create.subtitle.schematicannon_launch_block": "Tir de schémacanon",
 	"create.subtitle.schematicannon_finish": "Fin de schémacanon",
 	"create.subtitle.slime_added": "Bruit de slime",
+	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.mechanical_press_activation": "Activation de la presse mechanique",
-	"create.subtitle.mechanical_press_item_break": "Cliquetis de métal",
-	"create.subtitle.blockzapper_place": "Blocs se zappant en place",
-	"create.subtitle.blockzapper_confirm": "Ding d'affirmation",
 	"create.subtitle.blockzapper_deny": "Boop de déclin",
-	"create.subtitle.block_funnel_eat": "Croc d'entonoir",
-	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze munches happily",
+	"create.subtitle.blockzapper_confirm": "Ding d'affirmation",
+	"create.subtitle.blockzapper_place": "Blocs se zappant en place",
+	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze Burner munches",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

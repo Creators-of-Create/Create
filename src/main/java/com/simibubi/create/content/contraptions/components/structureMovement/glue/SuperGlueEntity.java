@@ -96,12 +96,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (onValidSurface()) {
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 				new GlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
-			playSound(AllSoundEvents.SLIME_ADDED.get(), 0.5F, 0.5F);
+			AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.5F);
 		}
 	}
 
 	public void playPlaceSound() {
-		playSound(AllSoundEvents.SLIME_ADDED.get(), 0.5F, 0.75F);
+		AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.75F);
 	}
 
 	protected void updateFacingWithBoundingBox() {

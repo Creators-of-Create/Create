@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 675",
+	"_": "Missing Localizations: 676",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1148,15 +1148,17 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
+
+	"_": "->------------------------]  Subtitles  [------------------------<-",
+
 	"create.subtitle.schematicannon_launch_block": "청사진 대포가 발포함",
 	"create.subtitle.schematicannon_finish": "청사진 대포가 끝남",
 	"create.subtitle.slime_added": "슬라임이 철퍽거림",
+	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.mechanical_press_activation": "압착기가 가동됨",
-	"create.subtitle.mechanical_press_item_break": "금속이 부딫힘",
-	"create.subtitle.blockzapper_place": "블록이 순간이동됨",
-	"create.subtitle.blockzapper_confirm": "확인 효과음",
 	"create.subtitle.blockzapper_deny": "취소 효과음",
-	"create.subtitle.block_funnel_eat": "깔때기가 흡입함",
+	"create.subtitle.blockzapper_confirm": "확인 효과음",
+	"create.subtitle.blockzapper_place": "블록이 순간이동됨",
 	"create.subtitle.blaze_munch": "블레이즈가 행복하게 섭취함",
 
 

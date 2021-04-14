@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 604",
+	"_": "Missing Localizations: 605",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1148,15 +1148,17 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: /killtps start <tickTime>を使用して、サーバーのティックを意図的に遅くします",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
+
+	"_": "->------------------------]  Subtitles  [------------------------<-",
+
 	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
 	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
 	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
+	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.mechanical_press_activation": "メカニカルプレスが作動する",
-	"create.subtitle.mechanical_press_item_break": "金属がガチャンと鳴る",
-	"create.subtitle.blockzapper_place": "ブロックを発射して設置する",
-	"create.subtitle.blockzapper_confirm": "成功音",
 	"create.subtitle.blockzapper_deny": "失敗音",
-	"create.subtitle.block_funnel_eat": "ファンネルが大口で食べる",
+	"create.subtitle.blockzapper_confirm": "成功音",
+	"create.subtitle.blockzapper_place": "ブロックを発射して設置する",
 	"create.subtitle.blaze_munch": "ブレイズの咀嚼音",
 
 

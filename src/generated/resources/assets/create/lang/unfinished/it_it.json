@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 622",
+	"_": "Missing Localizations: 623",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1148,15 +1148,17 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: usa /killtps avvia <tickTime> per rallentare artificialmente il tick del server",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
+
+	"_": "->------------------------]  Subtitles  [------------------------<-",
+
 	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
 	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
 	"create.subtitle.slime_added": "Slime schiacciato",
+	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
-	"create.subtitle.mechanical_press_item_break": "Rumori metallici",
-	"create.subtitle.blockzapper_place": "Posiziona blocchi nello spazio",
-	"create.subtitle.blockzapper_confirm": "Ding affermativo",
 	"create.subtitle.blockzapper_deny": "Boop in calo",
-	"create.subtitle.block_funnel_eat": "CHOMPS a imbuto",
+	"create.subtitle.blockzapper_confirm": "Ding affermativo",
+	"create.subtitle.blockzapper_place": "Posiziona blocchi nello spazio",
 	"create.subtitle.blaze_munch": "Il blaze lo gusta felicemente",
 
 

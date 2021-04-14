@@ -22,7 +22,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -88,7 +87,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return ActionResultType.SUCCESS;
 		}
-		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 		if (!player.isCreative())
 			player.getHeldItem(handIn)
 				.shrink(1);
