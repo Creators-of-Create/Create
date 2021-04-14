@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.render.backend.core.BasicProgram;
 import com.simibubi.create.foundation.render.backend.core.ModelAttributes;
 import com.simibubi.create.foundation.render.backend.core.OrientedAttributes;
 import com.simibubi.create.foundation.render.backend.core.TransformAttributes;
-import com.simibubi.create.foundation.render.backend.effects.PostProcessingProgram;
+import com.simibubi.create.foundation.render.backend.effects.SphereFilterProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
@@ -28,12 +28,12 @@ public class AllProgramSpecs {
 		// noop, make sure the static field are loaded.
 	}
 
-	public static final ProgramSpec<PostProcessingProgram> CHROMATIC = register(ProgramSpec.builder("chromatic", new SingleProgram.SpecLoader<>(PostProcessingProgram::new))
+	public static final ProgramSpec<SphereFilterProgram> CHROMATIC = register(ProgramSpec.builder("chromatic", new SingleProgram.SpecLoader<>(SphereFilterProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(TransformAttributes.class)
-			.setVert(Locations.SCREEN_QUAD)
-			.setFrag(Locations.CHROMATIC)
+			.setVert(Locations.EFFECT_VERT)
+			.setFrag(Locations.EFFECT_FRAG)
 			.createProgramSpec());
 
 	public static final ProgramSpec<BasicProgram> MODEL = register(ProgramSpec.builder("model", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
@@ -131,8 +131,8 @@ public class AllProgramSpecs {
 
 
 	public static class Locations {
-		public static final ResourceLocation SCREEN_QUAD = loc("screen_quad.vert");
-		public static final ResourceLocation CHROMATIC = loc("chromatic.frag");
+		public static final ResourceLocation EFFECT_VERT = loc("area_effect.vert");
+		public static final ResourceLocation EFFECT_FRAG = loc("area_effect.frag");
 		public static final ResourceLocation MODEL_FRAG = loc("model.frag");
 		public static final ResourceLocation MODEL_VERT = loc("model.vert");
 		public static final ResourceLocation ORIENTED = loc("oriented.vert");

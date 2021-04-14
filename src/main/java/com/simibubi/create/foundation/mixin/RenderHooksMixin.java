@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.KineticRenderer;
@@ -56,10 +57,6 @@ public class RenderHooksMixin {
 		ContraptionRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 
 		GL20.glUseProgram(0);
-
-		if (type == RenderType.getTranslucent()) {
-			Backend.effects.render(view);
-		}
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")
@@ -72,14 +69,24 @@ public class RenderHooksMixin {
 		double camZ = cameraPos.getZ();
 
 		CreateClient.kineticRenderer.get(world)
-			.beginFrame(info, camX, camY, camZ);
+				.beginFrame(info, camX, camY, camZ);
 		ContraptionRenderDispatcher.beginFrame(info, camX, camY, camZ);
+	}
+
+	@Inject(method = "render", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/client/shader/ShaderGroup;render(F)V"))
+	private void disableTransparencyShaderDepth(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo p_228426_6_, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
+		GlStateManager.depthMask(false);
+	}
+
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/WorldRenderer;renderChunkDebugInfo(Lnet/minecraft/client/renderer/ActiveRenderInfo;)V"))
+	private void applyFilters(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo p_228426_6_, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
+		Backend.effects.render(stack.peek().getModel());
 	}
 
 	@Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
 	private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
 		CreateClient.kineticRenderer.get(world)
-			.update(world.getTileEntity(pos));
+				.update(world.getTileEntity(pos));
 	}
 
 	@Inject(at = @At("TAIL"), method = "loadRenderers")

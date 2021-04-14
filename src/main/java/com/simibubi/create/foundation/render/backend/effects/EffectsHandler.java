@@ -26,7 +26,7 @@ public class EffectsHandler {
 	}
 
 	public static float getFarPlane() {
-		return Minecraft.getInstance().gameRenderer.getFarPlaneDistance();
+		return Minecraft.getInstance().gameRenderer.getFarPlaneDistance() * 4;
 	}
 
 	public static final float[] vertices = {
@@ -75,6 +75,10 @@ public class EffectsHandler {
 	}
 
 	public void render(Matrix4f view) {
+//		if (true) {
+//			return;
+//		}
+
 		GL20.glEnable(GL20.GL_DEPTH_TEST);
 
 		GL20.glDepthRange(getNearPlane(), getFarPlane());
@@ -87,8 +91,9 @@ public class EffectsHandler {
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 
 		GL30.glBindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
+		GL30.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-		PostProcessingProgram program = Backend.getProgram(AllProgramSpecs.CHROMATIC);
+		SphereFilterProgram program = Backend.getProgram(AllProgramSpecs.CHROMATIC);
 		program.bind();
 
 		program.bindColorTexture(mainBuffer.getColorAttachment());
@@ -104,15 +109,37 @@ public class EffectsHandler {
 
 		Matrix4f inverseView = view.copy();
 		inverseView.invert();
-//		Matrix4f inverseView = new Matrix4f();
-//		inverseView.loadIdentity();
 		program.bindInverseView(inverseView);
 
-		Vector3d pos = new Vector3d(286, 73, -149);
+		Vector3d pos1 = new Vector3d(330, 0, 110);
+//		Vector3d pos1 = new Vector3d(852, 79, -204);
+//		Vector3d pos2 = new Vector3d(858, 95, -260);
+//		Vector3d pos3 = new Vector3d(906, 84, -207);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
 
-		Vector3d shaderPos = pos.subtract(cameraPos).scale(1 / getFarPlane());
-		program.setSphere(shaderPos, 20f / getFarPlane(), 0.01f);
+		for (int i = 0; i < 16; i++) {
+			double angle = (Math.PI * AnimationTickHolder.getRenderTime() / 40) + i * Math.PI / 4;
+
+			program.addSphere(new SphereFilterProgram.FilterSphere()
+					.setCenter(pos1.subtract(cameraPos).add(0, 0, i * 30))
+					.setRadius(15)
+					.setFeather(0.5f)
+					.setFilter(ColorMatrices.hueShift((float) i / 16 * 360 + AnimationTickHolder.getRenderTime())));
+		}
+
+//		program.addSphere(new SphereFilterProgram.FilterSphere()
+//				.setCenter(pos2.subtract(cameraPos))
+//				.setRadius(50)
+//				.setFeather(0.5f)
+//				.setFilter(ColorMatrices.sepia(1)));
+//
+//		program.addSphere(new SphereFilterProgram.FilterSphere()
+//				.setCenter(pos3.subtract(cameraPos))
+//				.setRadius(20)
+//				.setFeather(3f)
+//				.setFilter(ColorMatrices.saturate(4)));
+
+		program.uploadFilters();
 
 		program.setFarPlane(getFarPlane());
 		program.setNearPlane(getNearPlane());
@@ -123,7 +150,9 @@ public class EffectsHandler {
 
 		program.bindColorTexture(0);
 		program.bindDepthTexture(0);
+		GL20.glActiveTexture(GL20.GL_TEXTURE0);
 
+		program.clear();
 		program.unbind();
 
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);

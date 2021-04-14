@@ -12,20 +12,28 @@ public class GlBuffer extends GlObject {
 
     protected final int bufferType;
 
-    public GlBuffer(int bufferType) {
-        setHandle(GL20.glGenBuffers());
-        this.bufferType = bufferType;
-    }
+	public GlBuffer(int bufferType) {
+		setHandle(GL20.glGenBuffers());
+		this.bufferType = bufferType;
+	}
 
-    public int getBufferType() {
-        return bufferType;
+	public int getBufferType() {
+		return bufferType;
 	}
 
 	public void bind() {
-		GL20.glBindBuffer(bufferType, handle());
+		bind(bufferType);
+	}
+
+	public void bind(int type) {
+		GL20.glBindBuffer(type, handle());
 	}
 
 	public void unbind() {
+		unbind(bufferType);
+	}
+
+	public void unbind(int bufferType) {
 		GL20.glBindBuffer(bufferType, 0);
 	}
 
@@ -43,11 +51,15 @@ public class GlBuffer extends GlObject {
 		Backend.compat.mapBuffer(bufferType, 0, length, upload);
 	}
 
-    public void map(int offset, int length, Consumer<ByteBuffer> upload) {
-        Backend.compat.mapBuffer(bufferType, offset, length, upload);
-    }
+	public void map(int offset, int length, Consumer<ByteBuffer> upload) {
+		Backend.compat.mapBuffer(bufferType, offset, length, upload);
+	}
 
-    protected void deleteInternal(int handle) {
-        GL20.glDeleteBuffers(handle);
-    }
+	public void map(int type, int offset, int length, Consumer<ByteBuffer> upload) {
+		Backend.compat.mapBuffer(type, offset, length, upload);
+	}
+
+	protected void deleteInternal(int handle) {
+		GL20.glDeleteBuffers(handle);
+	}
 }
