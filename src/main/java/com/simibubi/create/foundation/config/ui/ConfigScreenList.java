@@ -18,7 +18,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 
 public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
-
 	public ConfigScreenList(Minecraft client, int width, int height, int top, int bottom, int elementHeight) {
 		super(client, width, height, top, bottom, elementHeight);
 		func_244605_b(false);
@@ -55,6 +54,10 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	public void tick() {
 		children().forEach(Entry::tick);
+	}
+
+	public void bumpCog(float force) {
+		ConfigScreen.cogSpin.bump(3, force);
 	}
 
 	public static abstract class Entry extends ExtendedList.AbstractListEntry<Entry> {
@@ -98,7 +101,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-			UIRenderHelper.streak(ms, 0, x, y+height/2, height - 10, width/2, 0x0);
+			UIRenderHelper.streak(ms, 0, x, y+height/2, height - 10, getLabelWidth(width), 0x0);
 			IFormattableTextComponent component = label.getComponent();
 			if (Minecraft.getInstance().fontRenderer.getWidth(component) > getLabelWidth(width) - 10) {
 				label.withText(Minecraft.getInstance().fontRenderer.trimToWidth(component, getLabelWidth(width) - 15).getString() + "...");
@@ -106,8 +109,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 			label.at(x + 5, y + height/2 - 4, 0).render(ms);
 		}
 
-		protected static int getLabelWidth(int totalWidth) {
-			return (int) (totalWidth * labelWidthMult);
+		protected int getLabelWidth(int totalWidth) {
+			return totalWidth;
 		}
 	}
 

@@ -83,7 +83,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	}
 
 	protected String formatBound(T bound) {
-		String sci = String.format("%.2E", bound);
+		String sci = String.format("%.2E", bound.doubleValue());
 		String str = String.valueOf(bound);
 		return sci.length() < str.length() ? sci : str;
 	}

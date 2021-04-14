@@ -11,6 +11,7 @@ import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
+import com.simibubi.create.foundation.config.ui.entries.EnumEntry;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -47,7 +48,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		widgets.clear();
 		super.init();
 
-		int lWidth = width - 66;
+		int lWidth = Math.min(width - 66, 500);
 		list = new ConfigScreenList(client, lWidth, height - 30, 15, height - 15, 50);
 		list.setLeftPos(this.width /2 - list.getWidth()/2);
 
@@ -69,6 +70,9 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 				if (value instanceof Boolean) {
 					BooleanEntry entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
+					list.children().add(entry);
+				} else if (value instanceof Enum) {
+					EnumEntry entry = new EnumEntry(humanKey, (ForgeConfigSpec.ConfigValue<Enum<?>>) configValue, valueSpec);
 					list.children().add(entry);
 				} else if (value instanceof Number) {
 					NumberEntry<? extends Number> entry = NumberEntry.create(value, humanKey, configValue, valueSpec);

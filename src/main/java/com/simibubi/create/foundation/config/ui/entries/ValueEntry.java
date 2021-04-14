@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
-	protected static final int resetWidth = 24;//including 2px offset on each side
+	protected static final int resetWidth = 24;//including 2px offset on either side
 
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
@@ -46,6 +46,11 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		reset.render(ms, mouseX, mouseY, partialTicks);
 	}
 
+	@Override
+	protected int getLabelWidth(int totalWidth) {
+		return (int) (totalWidth * labelWidthMult);
+	}
+
 	/*@Override
 	public boolean mouseClicked(double mX, double mY, int button) {
 		return reset.mouseClicked(mX, mY, button);
@@ -58,5 +63,11 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected void onValueChange() {
 		reset.active = !value.get().equals(spec.getDefault());
 		reset.animateGradientFromState();
+	}
+
+	protected void bumpCog() {bumpCog(10f);}
+	protected void bumpCog(float force) {
+		if (list != null && list instanceof ConfigScreenList)
+		((ConfigScreenList) list).bumpCog(force);
 	}
 }

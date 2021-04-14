@@ -58,9 +58,10 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	protected void onReset() {
-		super.onReset();
+	protected void onValueChange() {
+		super.onValueChange();
 		buttonStencil.withSecond(value.get() ? enabled : disabled);
+		bumpCog(value.get() ? 15f : -16f);
 	}
 
 	/*@Override

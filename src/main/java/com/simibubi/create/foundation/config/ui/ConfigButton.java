@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.CombinedStencilElement;
+import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.StencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.StencilWidget;
@@ -38,6 +39,12 @@ public class ConfigButton extends StencilWidget {
 			}
 		};
 		button.stencilElement = CombinedStencilElement.of(box, text);
+		return button;
+	}
+
+	public static ConfigButton createAndInjectElementRenderer(int x, int y, DelegatedStencilElement stencil) {
+		ConfigButton button = new ConfigButton(x, y);
+		button.stencilElement = stencil.withElementRenderer((ms, $width, $height) -> UIRenderHelper.angledGradient(ms, 0, 0, $height/2, $height+2, $width+2, button.gradientColor1, button.gradientColor2));
 		return button;
 	}
 

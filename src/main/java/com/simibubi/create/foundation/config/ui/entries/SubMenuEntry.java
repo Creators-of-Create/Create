@@ -41,6 +41,11 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 
+	@Override
+	protected int getLabelWidth(int totalWidth) {
+		return (int) (totalWidth * labelWidthMult);
+	}
+
 	/*@Override
 	public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
 		return button.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);

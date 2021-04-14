@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.StencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -42,9 +43,8 @@ public class BaseConfigScreen extends ConfigScreen {
 				text2
 				)
 						.withBounds(200, 30)
+						.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(this, AllConfigs.COMMON.specification)))
 		);
-		commonConfigWidget.active = false;
-		commonConfigWidget.updateColorsFromState();
 
 		StencilElement text3 = new TextStencilElement(client.fontRenderer, new StringTextComponent("SERVER CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
 		widgets.add(serverConfigWidget = ConfigButton.createFromStencilElement(
@@ -54,8 +54,13 @@ public class BaseConfigScreen extends ConfigScreen {
 				)
 						.withBounds(200, 30)
 		);
-		serverConfigWidget.active = false;
-		serverConfigWidget.updateColorsFromState();
+
+		if (Minecraft.getInstance().world != null) {
+			serverConfigWidget.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(this, AllConfigs.SERVER.specification)));
+		} else {
+			serverConfigWidget.active = false;
+			serverConfigWidget.updateColorsFromState();
+		}
 	}
 
 	@Override
@@ -63,6 +68,6 @@ public class BaseConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 
-		testStencil.at(200, 200, 0).render(ms);
+		//<testStencil.at(200, 200, 0).render(ms);
 	}
 }
