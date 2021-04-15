@@ -83,9 +83,6 @@ public class EffectsHandler {
 
 		GL20.glDepthRange(getNearPlane(), getFarPlane());
 
-//		float[] floats = new float[2];
-//		GL20.glGetFloatv(GL20.GL_DEPTH_RANGE, floats);
-
 		prepFramebufferSize();
 
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
@@ -112,35 +109,18 @@ public class EffectsHandler {
 		program.bindInverseView(inverseView);
 
 		Vector3d pos1 = new Vector3d(330, 0, 110);
-//		Vector3d pos1 = new Vector3d(852, 79, -204);
-//		Vector3d pos2 = new Vector3d(858, 95, -260);
-//		Vector3d pos3 = new Vector3d(906, 84, -207);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
 
 		program.setTestParam((float) (Math.E - 0.99));
 		program.setCameraPos(cameraPos.inverse());
 
 		for (int i = 0; i < 16; i++) {
-			double angle = (Math.PI * AnimationTickHolder.getRenderTime() / 40) + i * Math.PI / 4;
-
 			program.addSphere(new SphereFilterProgram.FilterSphere()
-					.setCenter(pos1.subtract(cameraPos).add(0, 0, i * 30))
+					.setCenter(pos1.subtract(cameraPos).add(0, 0, i * 10))
 					.setRadius(15)
-					.setFeather(0.5f)
+					.setFeather(0f)
 					.setFilter(ColorMatrices.hueShift((float) i / 16 * 360 + AnimationTickHolder.getRenderTime())));
 		}
-
-//		program.addSphere(new SphereFilterProgram.FilterSphere()
-//				.setCenter(pos2.subtract(cameraPos))
-//				.setRadius(50)
-//				.setFeather(0.5f)
-//				.setFilter(ColorMatrices.sepia(1)));
-//
-//		program.addSphere(new SphereFilterProgram.FilterSphere()
-//				.setCenter(pos3.subtract(cameraPos))
-//				.setRadius(20)
-//				.setFeather(3f)
-//				.setFilter(ColorMatrices.saturate(4)));
 
 		program.uploadFilters();
 

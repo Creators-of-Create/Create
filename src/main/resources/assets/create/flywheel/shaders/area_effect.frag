@@ -1,5 +1,7 @@
 #version 140
 
+#define LC 1.7282818// e - 0.99
+
 #flwinclude <"create:core/color.glsl">
 
 in vec2 ScreenCoord;
@@ -34,7 +36,7 @@ layout (std140) uniform Filters {
 float linearizeDepth(float d, float zNear, float zFar) {
     float clipZ = 2.0 * d - 1.0;
     float linearized = zNear * zFar / (zFar + zNear - clipZ * (zFar - zNear));
-    return testParam * linearized;
+    return LC * linearized;
 }
 
 vec4 filterColor(mat4 colorOp, vec4 frag) {
@@ -54,26 +56,35 @@ float getDepth() {
     return depth;
 }
 
-void main() {
-    float depth = getDepth();
-    vec3 worldPos = WorldDir * depth - uCameraPos;
+vec4 applyFilters(vec3 worldPos, vec4 diffuse) {
+    vec4 accum = diffuse;
 
-    vec4 diffuse = texture2D(uColor, ScreenCoord);
-    //
-    //    for (int i = 0; i < uCount; i++) {
-    //        SphereFilter s = uSpheres[i];
-    //
-    //        float distance = distance(s.sphere.xyz, worldPos);
-    //        float strength = 1 - smoothstep(s.sphere.w - s.feather, s.sphere.w + s.feather, distance);
-    //
-    //        accum = mix(accum, filterColor(s.colorOp, accum), strength);
-    //    }
-    //
-    //    Color = accum;
+    for (int i = 0; i < uCount; i++) {
+        SphereFilter s = uSpheres[i];
 
-    vec3 fractionalCoords = fract(worldPos);
+        float distance = distance(s.sphere.xyz, worldPos);
+        float strength = 1 - smoothstep(s.sphere.w - s.feather, s.sphere.w + s.feather, distance);
+
+        accum = mix(accum, filterColor(s.colorOp, diffuse), strength);
+    }
+
+    return accum;
+}
+
+vec4 debugGrid(vec3 worldPos, vec4 diffuse) {
+    vec3 fractionalCoords = fract(worldPos - uCameraPos);
 
     vec3 isBonudary = step(15./16., fractionalCoords);
 
-    Color = vec4(mix(diffuse.rgb, fractionalCoords, isBonudary), 1.);
+    return vec4(mix(diffuse.rgb, fractionalCoords, isBonudary), 1.);
+}
+
+void main() {
+    float depth = getDepth();
+    vec3 worldPos = WorldDir * depth;
+
+    vec4 diffuse = texture2D(uColor, ScreenCoord);
+
+    //Color = applyFilters(worldPos, diffuse);
+    Color = debugGrid(worldPos, diffuse);
 }
