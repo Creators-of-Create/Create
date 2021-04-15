@@ -38,7 +38,7 @@
   "mechanical_press_activation": {
     "sounds": [
       {
-        "name": "minecraft:block.netherite_block.hit",
+        "name": "minecraft:block.anvil.land",
         "type": "event"
       }
     ],

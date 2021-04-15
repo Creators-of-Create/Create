@@ -63,6 +63,8 @@ public class ContraptionHandlerClient {
 		ClientPlayerEntity player = mc.player;
 		if (player == null)
 			return;
+		if (player.isPassenger())
+			return;
 		if (mc.world == null)
 			return;
 		if (!event.isUseItem())

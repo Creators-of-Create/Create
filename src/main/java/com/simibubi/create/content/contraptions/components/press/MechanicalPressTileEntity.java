@@ -186,7 +186,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			if (world.getBlockState(pos.down(2)).getSoundType() == SoundType.CLOTH)
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(world, pos);
 			else
-				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos);
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos, .5f, .75f + (Math.abs(getSpeed()) / 1024f));
 			
 			if (!world.isRemote)
 				sendData();

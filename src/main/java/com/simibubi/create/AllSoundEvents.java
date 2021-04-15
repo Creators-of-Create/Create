@@ -51,8 +51,8 @@ public class AllSoundEvents {
 			.build(),
 
 		MECHANICAL_PRESS_ACTIVATION = create("mechanical_press_activation").subtitle("Mechanical Press clangs")
-			.playExisting(SoundEvents.BLOCK_NETHERITE_BLOCK_HIT, .5f, 1.25f)
-			.playExisting(SoundEvents.ENTITY_ITEM_BREAK, .15f, .75f)
+			.playExisting(SoundEvents.BLOCK_ANVIL_LAND, .125f, 1f)
+			.playExisting(SoundEvents.ENTITY_ITEM_BREAK, .5f, 1f)
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
