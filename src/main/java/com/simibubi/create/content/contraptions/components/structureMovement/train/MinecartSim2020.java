@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
@@ -47,7 +48,7 @@ public class MinecartSim2020 {
 	
 	public static Vector3d predictNextPositionOf(AbstractMinecartEntity cart) {
 		Vector3d position = cart.getPositionVec();
-		Vector3d motion = cart.getMotion();
+		Vector3d motion = VecHelper.clamp(cart.getMotion(), 1f);
 		return position.add(motion);
 	}
 

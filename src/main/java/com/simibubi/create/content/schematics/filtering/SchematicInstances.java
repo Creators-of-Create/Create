@@ -35,12 +35,14 @@ public class SchematicInstances {
 	public static SchematicWorld get(World world, ItemStack schematic) {
 		Cache<Integer, SchematicWorld> map = loadedSchematics.get(world);
 		int hash = getHash(schematic);
-		try {
-			return map.get(hash, () -> loadWorld(world, schematic));
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		return null;
+		SchematicWorld ifPresent = map.getIfPresent(hash);
+		if (ifPresent != null)
+			return ifPresent;
+		SchematicWorld loadWorld = loadWorld(world, schematic);
+		if (loadWorld == null)
+			return null;
+		map.put(hash, loadWorld);
+		return loadWorld;
 	}
 
 	private static SchematicWorld loadWorld(World wrapped, ItemStack schematic) {

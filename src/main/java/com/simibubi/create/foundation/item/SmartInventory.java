@@ -18,6 +18,7 @@ public class SmartInventory extends RecipeWrapper
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
 	protected boolean stackNonStackables;
+	protected SyncedStackHandler wrapped;
 	protected int stackSize;
 
 	public SmartInventory(int slots, SyncedTileEntity te) {
@@ -30,6 +31,13 @@ public class SmartInventory extends RecipeWrapper
 		insertionAllowed = true;
 		extractionAllowed = true;
 		this.stackSize = stackSize;
+		wrapped = (SyncedStackHandler) inv;
+	}
+	
+	public SmartInventory withMaxStackSize(int maxStackSize) {
+		stackSize = maxStackSize;
+		wrapped.stackSize = maxStackSize;
+		return this;
 	}
 
 	public SmartInventory whenContentsChanged(Consumer<Integer> updateCallback) {

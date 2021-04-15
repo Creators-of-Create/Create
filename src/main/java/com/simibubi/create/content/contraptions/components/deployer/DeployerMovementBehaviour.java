@@ -101,6 +101,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (!tag.getBoolean("Deployed"))
 			return;
 		SchematicWorld schematicWorld = SchematicInstances.get(world, filter);
+		if (schematicWorld == null)
+			return;
 		if (!schematicWorld.getBounds()
 			.isVecInside(pos.subtract(schematicWorld.anchor)))
 			return;
