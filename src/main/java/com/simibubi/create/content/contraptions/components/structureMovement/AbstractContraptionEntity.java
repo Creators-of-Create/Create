@@ -385,11 +385,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		CompoundNBT compound = new CompoundNBT();
 		writeAdditional(compound, true);
 
-		byte[] byteArray = null;
 		try {
 			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 			CompressedStreamTools.write(compound, dataOutput);
-			byteArray = dataOutput.toByteArray();
+			byte[] byteArray = dataOutput.toByteArray();
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
 				Create.logger.warn("Could not send Contraption Spawn Data (Packet too big): "
@@ -404,7 +403,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		}
 
-		buffer.writeByteArray(byteArray);
+		buffer.writeCompoundTag(compound);
 	}
 
 	@Override
