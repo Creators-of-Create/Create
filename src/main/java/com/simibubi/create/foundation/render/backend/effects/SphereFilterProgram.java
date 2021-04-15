@@ -17,15 +17,17 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class SphereFilterProgram extends GlProgram {
 
-	protected static final int BLOCK_BINDING = 4;
+	protected static final int UBO_BINDING = 4;
 
-	protected static final int SPHERE_FILTER_SIZE = 4 * 16 + 16 + 4 * 16 * 16;
+	protected static final int SPHERE_FILTER_SIZE = 24 * 4; // <vec4, float + padding, mat4>
+	protected static final int MAX_FILTERS = 16; // arbitrary
 
-	protected static final int MAX_FILTERS = 16;
+	protected static final int EXTRA_INFO = 16; // array length: int + padding
+	protected static final int ALL_FILTERS_SIZE = MAX_FILTERS * SPHERE_FILTER_SIZE;
 
-	protected static final int BUFFER_SIZE = 4 + MAX_FILTERS * SPHERE_FILTER_SIZE;
+	protected static final int BUFFER_SIZE = EXTRA_INFO + ALL_FILTERS_SIZE;
 
-	GlBuffer effectsUBO;
+	public final GlBuffer effectsUBO;
 
 	protected final ArrayList<FilterSphere> filters = new ArrayList<>(16);
 
@@ -41,11 +43,6 @@ public class SphereFilterProgram extends GlProgram {
 	protected final int uFarPlane;
 
 	protected final int uCameraPos;
-	protected final int testParam;
-//	protected final int uSphereCenter;
-//	protected final int uSphereRadius;
-//	protected final int uSphereFeather;
-//	protected final int uColorFilter;
 
 	public SphereFilterProgram(ResourceLocation name, int handle) {
 		super(name, handle);
@@ -54,11 +51,11 @@ public class SphereFilterProgram extends GlProgram {
 
 		uniformBlock = GL31.glGetUniformBlockIndex(handle, "Filters");
 
-		GL31.glUniformBlockBinding(handle, uniformBlock, BLOCK_BINDING);
+		GL31.glUniformBlockBinding(handle, uniformBlock, UBO_BINDING);
 
 		effectsUBO.bind();
 		effectsUBO.alloc(BUFFER_SIZE, GL20.GL_STATIC_DRAW);
-		GL31.glBindBufferBase(effectsUBO.getBufferType(), BLOCK_BINDING, effectsUBO.handle());
+		GL31.glBindBufferBase(effectsUBO.getBufferType(), UBO_BINDING, effectsUBO.handle());
 		effectsUBO.unbind();
 
 		uInverseProjection = getUniformLocation("uInverseProjection");
@@ -66,12 +63,6 @@ public class SphereFilterProgram extends GlProgram {
 		uNearPlane = getUniformLocation("uNearPlane");
 		uFarPlane = getUniformLocation("uFarPlane");
 		uCameraPos = getUniformLocation("uCameraPos");
-		testParam = getUniformLocation("testParam");
-//
-//		uSphereCenter = getUniformLocation("uSphereCenter");
-//		uSphereRadius = getUniformLocation("uSphereRadius");
-//		uSphereFeather = getUniformLocation("uSphereFeather");
-//		uColorFilter = getUniformLocation("uColorFilter");
 
 		bind();
 		uDepth = setSamplerBinding("uDepth", 8);
@@ -85,10 +76,6 @@ public class SphereFilterProgram extends GlProgram {
 
 	public void setFarPlane(float farPlane) {
 		GL20.glUniform1f(uFarPlane, farPlane);
-	}
-
-	public void setTestParam(float farPlane) {
-		GL20.glUniform1f(testParam, farPlane);
 	}
 
 	public void setCameraPos(Vector3d pos) {
@@ -108,15 +95,6 @@ public class SphereFilterProgram extends GlProgram {
 		effectsUBO.map(GL20.GL_ARRAY_BUFFER, 0, BUFFER_SIZE, this::uploadUBO);
 		effectsUBO.unbind(GL20.GL_ARRAY_BUFFER);
 	}
-
-//	public void setSphere(FilterSphere sphere) {
-//		GL20.glUniform3f(uSphereCenter, (float) sphere.center.x, (float) sphere.center.y, (float) sphere.center.z);
-//
-//		GL20.glUniform1f(uSphereRadius, sphere.radius);
-//		GL20.glUniform1f(uSphereFeather, sphere.feather);
-//
-//		uploadMatrixUniform(uColorFilter, sphere.filter);
-//	}
 
 	public void bindInverseProjection(Matrix4f mat) {
 		uploadMatrixUniform(uInverseProjection, mat);
@@ -141,7 +119,6 @@ public class SphereFilterProgram extends GlProgram {
 		buf.position(16);
 		FloatBuffer floatBuffer = buf.asFloatBuffer();
 
-		//floatBuffer.position(4);
 		filters.forEach(it -> it.write(floatBuffer));
 	}
 
@@ -179,7 +156,7 @@ public class SphereFilterProgram extends GlProgram {
 					(float) center.z,
 					radius,
 					feather,
-					0,
+					0, // padding, we could add more parameters here
 					0,
 					0
 			});

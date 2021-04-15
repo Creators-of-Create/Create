@@ -1,7 +1,5 @@
 #version 140
 
-#define LC 1.7282818// e - 0.99
-
 #flwinclude <"create:core/color.glsl">
 
 in vec2 ScreenCoord;
@@ -15,11 +13,6 @@ uniform sampler2D uColor;
 uniform float uNearPlane = 0.15;
 uniform float uFarPlane = 1.;
 uniform vec3 uCameraPos;
-
-uniform float testParam = 2.0;
-
-uniform mat4 uInverseProjection;
-uniform mat4 uInverseView;
 
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
@@ -35,8 +28,7 @@ layout (std140) uniform Filters {
 
 float linearizeDepth(float d, float zNear, float zFar) {
     float clipZ = 2.0 * d - 1.0;
-    float linearized = zNear * zFar / (zFar + zNear - clipZ * (zFar - zNear));
-    return LC * linearized;
+    return zNear * zFar / (zFar + zNear - clipZ * (zFar - zNear));
 }
 
 vec4 filterColor(mat4 colorOp, vec4 frag) {
@@ -49,11 +41,7 @@ vec4 filterColor(mat4 colorOp, vec4 frag) {
 float getDepth() {
     float depth = texture2D(uDepth, ScreenCoord).r;
 
-    depth = linearizeDepth(depth, uNearPlane, uFarPlane);
-    //depth = (depth - uNearPlane) / (uFarPlane - uNearPlane);
-    //depth = depth / uFarPlane;
-
-    return depth;
+    return linearizeDepth(depth, uNearPlane, uFarPlane);
 }
 
 vec4 applyFilters(vec3 worldPos, vec4 diffuse) {
@@ -85,6 +73,6 @@ void main() {
 
     vec4 diffuse = texture2D(uColor, ScreenCoord);
 
-    //Color = applyFilters(worldPos, diffuse);
-    Color = debugGrid(worldPos, diffuse);
+    Color = applyFilters(worldPos, diffuse);
+    //Color = debugGrid(worldPos, diffuse);
 }
