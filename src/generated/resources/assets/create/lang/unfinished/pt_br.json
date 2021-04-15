@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1607",
+	"_": "Missing Localizations: 1608",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -36,7 +36,7 @@
 	"block.create.blue_seat": "UNLOCALIZED: Blue Seat",
 	"block.create.blue_valve_handle": "UNLOCALIZED: Blue Valve Handle",
 	"block.create.brass_belt_funnel": "UNLOCALIZED: Brass Belt Funnel",
-	"block.create.brass_block": "UNLOCALIZED: Brass Block",
+	"block.create.brass_block": "UNLOCALIZED: Block of Brass",
 	"block.create.brass_casing": "UNLOCALIZED: Brass Casing",
 	"block.create.brass_encased_shaft": "UNLOCALIZED: Brass Encased Shaft",
 	"block.create.brass_funnel": "UNLOCALIZED: Brass Funnel",
@@ -58,7 +58,7 @@
 	"block.create.cogwheel": "Roda Dentada",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
 	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
-	"block.create.copper_block": "UNLOCALIZED: Copper Block",
+	"block.create.copper_block": "UNLOCALIZED: Block of Copper",
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
 	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",
 	"block.create.copper_shingles": "UNLOCALIZED: Copper Shingles",
@@ -409,7 +409,7 @@
 	"block.create.yellow_sail": "UNLOCALIZED: Yellow Sail",
 	"block.create.yellow_seat": "UNLOCALIZED: Yellow Seat",
 	"block.create.yellow_valve_handle": "UNLOCALIZED: Yellow Valve Handle",
-	"block.create.zinc_block": "UNLOCALIZED: Zinc Block",
+	"block.create.zinc_block": "UNLOCALIZED: Block of Zinc",
 	"block.create.zinc_ore": "UNLOCALIZED: Zinc Ore",
 
 	"entity.create.contraption": "UNLOCALIZED: Contraption",
@@ -1147,6 +1147,8 @@
 	"create.command.killTPSCommand.status.usage.0": "UNLOCALIZED: [Create]: use /killtps stop to bring back server tick to regular speed",
 	"create.command.killTPSCommand.status.usage.1": "UNLOCALIZED: [Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "UNLOCALIZED: tickTime",
+
+	"create.contraption.minecart_contraption_too_big": "UNLOCALIZED: This Cart Contraption seems too big to pick up",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

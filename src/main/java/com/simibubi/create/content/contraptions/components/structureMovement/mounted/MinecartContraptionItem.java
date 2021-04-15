@@ -1,19 +1,24 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IDispenseItemBehavior;
@@ -26,12 +31,15 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -86,7 +94,7 @@ public class MinecartContraptionItem extends Item {
 					d3 = 0.1D;
 				}
 			} else {
-				if (!blockstate.isAir(world, blockpos) || !world.getBlockState(blockpos.down())
+				if (blockstate.getMaterial() != Material.AIR || !world.getBlockState(blockpos.down())
 					.isIn(BlockTags.RAILS)) {
 					return this.behaviourDefaultDispenseItem.dispense(source, stack);
 				}
@@ -210,13 +218,32 @@ public class MinecartContraptionItem extends Item {
 			return;
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
-		if (!event.getWorld().isRemote) {
-			player.inventory.placeItemBackInInventory(event.getWorld(),
-				create(type, contraption).setDisplayName(entity.getCustomName()));
-			contraption.remove();
-			entity.remove();
+		if (event.getWorld().isRemote) {
+			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCanceled(true);
+			return;
 		}
 
+		ItemStack generatedStack = create(type, contraption).setDisplayName(entity.getCustomName());
+
+		try {
+			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+			CompressedStreamTools.write(generatedStack.serializeNBT(), dataOutput);
+			int estimatedPacketSize = dataOutput.toByteArray().length;
+			if (estimatedPacketSize > 2_000_000) {
+				player.sendStatusMessage(Lang.translate("contraption.minecart_contraption_too_big")
+					.formatted(TextFormatting.RED), true);
+				return;
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		player.inventory.placeItemBackInInventory(event.getWorld(), generatedStack);
+		contraption.remove();
+		entity.remove();
 		event.setCancellationResult(ActionResultType.SUCCESS);
 		event.setCanceled(true);
 	}

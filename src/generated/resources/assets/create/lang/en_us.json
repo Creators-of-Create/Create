@@ -35,7 +35,7 @@
 	"block.create.blue_seat": "Blue Seat",
 	"block.create.blue_valve_handle": "Blue Valve Handle",
 	"block.create.brass_belt_funnel": "Brass Belt Funnel",
-	"block.create.brass_block": "Brass Block",
+	"block.create.brass_block": "Block of Brass",
 	"block.create.brass_casing": "Brass Casing",
 	"block.create.brass_encased_shaft": "Brass Encased Shaft",
 	"block.create.brass_funnel": "Brass Funnel",
@@ -57,7 +57,7 @@
 	"block.create.cogwheel": "Cogwheel",
 	"block.create.content_observer": "Content Observer",
 	"block.create.controller_rail": "Controller Rail",
-	"block.create.copper_block": "Copper Block",
+	"block.create.copper_block": "Block of Copper",
 	"block.create.copper_casing": "Copper Casing",
 	"block.create.copper_ore": "Copper Ore",
 	"block.create.copper_shingles": "Copper Shingles",
@@ -408,7 +408,7 @@
 	"block.create.yellow_sail": "Yellow Sail",
 	"block.create.yellow_seat": "Yellow Seat",
 	"block.create.yellow_valve_handle": "Yellow Valve Handle",
-	"block.create.zinc_block": "Zinc Block",
+	"block.create.zinc_block": "Block of Zinc",
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
@@ -1146,6 +1146,8 @@
 	"create.command.killTPSCommand.status.usage.0": "[Create]: use /killtps stop to bring back server tick to regular speed",
 	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
+
+	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

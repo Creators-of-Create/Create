@@ -1302,6 +1302,7 @@ public class AllBlocks {
 			.tag(Tags.Items.STORAGE_BLOCKS)
 			.transform(oxidizedItemModel())
 			.transform(oxidizedBlockstate())
+			.lang("Block of Copper")
 			.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
@@ -1327,6 +1328,7 @@ public class AllBlocks {
 		.transform(tagBlockAndItem("storage_blocks/zinc"))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
+		.lang("Block of Zinc")
 		.register();
 
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", p -> new Block(p))
@@ -1338,6 +1340,7 @@ public class AllBlocks {
 		.transform(tagBlockAndItem("storage_blocks/brass"))
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
+		.lang("Block of Brass")
 		.register();
 
 	// Load this class
