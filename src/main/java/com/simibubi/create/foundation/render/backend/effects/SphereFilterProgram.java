@@ -39,6 +39,9 @@ public class SphereFilterProgram extends GlProgram {
 
 	protected final int uNearPlane;
 	protected final int uFarPlane;
+
+	protected final int uCameraPos;
+	protected final int testParam;
 //	protected final int uSphereCenter;
 //	protected final int uSphereRadius;
 //	protected final int uSphereFeather;
@@ -62,6 +65,8 @@ public class SphereFilterProgram extends GlProgram {
 		uInverseView = getUniformLocation("uInverseView");
 		uNearPlane = getUniformLocation("uNearPlane");
 		uFarPlane = getUniformLocation("uFarPlane");
+		uCameraPos = getUniformLocation("uCameraPos");
+		testParam = getUniformLocation("testParam");
 //
 //		uSphereCenter = getUniformLocation("uSphereCenter");
 //		uSphereRadius = getUniformLocation("uSphereRadius");
@@ -80,6 +85,14 @@ public class SphereFilterProgram extends GlProgram {
 
 	public void setFarPlane(float farPlane) {
 		GL20.glUniform1f(uFarPlane, farPlane);
+	}
+
+	public void setTestParam(float farPlane) {
+		GL20.glUniform1f(testParam, farPlane);
+	}
+
+	public void setCameraPos(Vector3d pos) {
+		GL20.glUniform3f(uCameraPos, (float) pos.x, (float) pos.y, (float) pos.z);
 	}
 
 	public void clear() {

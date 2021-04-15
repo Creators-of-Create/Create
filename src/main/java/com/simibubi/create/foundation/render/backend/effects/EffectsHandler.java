@@ -100,8 +100,8 @@ public class EffectsHandler {
 		program.bindDepthTexture(mainBuffer.getDepthAttachment());
 
 		GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-		Matrix4f projection = gameRenderer.getBasicProjectionMatrix(gameRenderer.getActiveRenderInfo(), AnimationTickHolder.getPartialTicks(), true);
-		//Matrix4f projection = Backend.projectionMatrix.copy();
+		//Matrix4f projection = gameRenderer.getBasicProjectionMatrix(gameRenderer.getActiveRenderInfo(), AnimationTickHolder.getPartialTicks(), true);
+		Matrix4f projection = Backend.projectionMatrix.copy();
 		//projection.a23 = projection.a32 = 0;
 		projection.a33 = 1;
 		projection.invert();
@@ -116,6 +116,9 @@ public class EffectsHandler {
 //		Vector3d pos2 = new Vector3d(858, 95, -260);
 //		Vector3d pos3 = new Vector3d(906, 84, -207);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
+
+		program.setTestParam((float) (Math.E - 0.99));
+		program.setCameraPos(cameraPos.inverse());
 
 		for (int i = 0; i < 16; i++) {
 			double angle = (Math.PI * AnimationTickHolder.getRenderTime() / 40) + i * Math.PI / 4;

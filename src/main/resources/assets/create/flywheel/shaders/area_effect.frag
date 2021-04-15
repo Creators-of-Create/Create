@@ -12,6 +12,12 @@ uniform sampler2D uDepth;
 uniform sampler2D uColor;
 uniform float uNearPlane = 0.15;
 uniform float uFarPlane = 1.;
+uniform vec3 uCameraPos;
+
+uniform float testParam = 2.0;
+
+uniform mat4 uInverseProjection;
+uniform mat4 uInverseView;
 
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
@@ -26,8 +32,9 @@ layout (std140) uniform Filters {
 };
 
 float linearizeDepth(float d, float zNear, float zFar) {
-    float z_n = 2.0 * d - 1.0;
-    return 2.0 * zNear * zFar / (zFar + zNear - z_n * (zFar - zNear));
+    float clipZ = 2.0 * d - 1.0;
+    float linearized = zNear * zFar / (zFar + zNear - clipZ * (zFar - zNear));
+    return testParam * linearized;
 }
 
 vec4 filterColor(mat4 colorOp, vec4 frag) {
@@ -41,7 +48,7 @@ float getDepth() {
     float depth = texture2D(uDepth, ScreenCoord).r;
 
     depth = linearizeDepth(depth, uNearPlane, uFarPlane);
-    //depth = ( - uNearPlane) / (uFarPlane - uNearPlane);
+    //depth = (depth - uNearPlane) / (uFarPlane - uNearPlane);
     //depth = depth / uFarPlane;
 
     return depth;
@@ -49,19 +56,24 @@ float getDepth() {
 
 void main() {
     float depth = getDepth();
-    vec3 worldPos = WorldDir * depth;
+    vec3 worldPos = WorldDir * depth - uCameraPos;
 
-    vec4 accum = texture2D(uColor, ScreenCoord);
+    vec4 diffuse = texture2D(uColor, ScreenCoord);
+    //
+    //    for (int i = 0; i < uCount; i++) {
+    //        SphereFilter s = uSpheres[i];
+    //
+    //        float distance = distance(s.sphere.xyz, worldPos);
+    //        float strength = 1 - smoothstep(s.sphere.w - s.feather, s.sphere.w + s.feather, distance);
+    //
+    //        accum = mix(accum, filterColor(s.colorOp, accum), strength);
+    //    }
+    //
+    //    Color = accum;
 
-    for (int i = 0; i < uCount; i++) {
-        SphereFilter s = uSpheres[i];
+    vec3 fractionalCoords = fract(worldPos);
 
-        float distance = distance(s.sphere.xyz, worldPos);
-        float strength = 1 - smoothstep(s.sphere.w - s.feather, s.sphere.w + s.feather, distance);
+    vec3 isBonudary = step(15./16., fractionalCoords);
 
-        accum = mix(accum, filterColor(s.colorOp, accum), strength);
-    }
-
-    Color = accum;
-    //Color = vec4(vec3(distance / uFarPlane), 1.);
+    Color = vec4(mix(diffuse.rgb, fractionalCoords, isBonudary), 1.);
 }
