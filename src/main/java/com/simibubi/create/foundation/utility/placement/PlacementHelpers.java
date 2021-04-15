@@ -157,10 +157,14 @@ public class PlacementHelpers {
 
 			float screenY = res.getScaledHeight() / 2f;
 			float screenX = res.getScaledWidth() / 2f;
-			float progress = Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
+			float progress = getCurrentAlpha();
 
 			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
 		}
+	}
+
+	public static float getCurrentAlpha() {
+		return Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
 	}
 
 	@OnlyIn(Dist.CLIENT)

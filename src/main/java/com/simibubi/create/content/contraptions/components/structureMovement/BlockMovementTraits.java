@@ -13,6 +13,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
@@ -87,6 +89,11 @@ public class BlockMovementTraits {
 			TileEntity te = world.getTileEntity(pos);
 			if (te instanceof MechanicalBearingTileEntity)
 				return !((MechanicalBearingTileEntity) te).isRunning();
+		}
+		if (block instanceof WindmillBearingBlock) {
+			TileEntity te = world.getTileEntity(pos);
+			if (te instanceof WindmillBearingTileEntity)
+				return !((WindmillBearingTileEntity) te).isRunning();
 		}
 		if (block instanceof ClockworkBearingBlock) {
 			TileEntity te = world.getTileEntity(pos);

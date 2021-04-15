@@ -108,7 +108,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		hovered = clicked(mouseX, mouseY);
 
 		ms.push();
-		ms.translate(0, 0, 150);
+		ms.translate(0, 0, 250);
 		/*
 		 * ponderButtons are at z+400
 		 * renderBox is at z+100
@@ -182,9 +182,9 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		if (selected) {
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			GuiUtils.drawGradientRect(ms.peek()
-				.getModel(), 500, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
+				.getModel(), 100, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
 			ms.push();
-			ms.translate(0, 0, 400);
+			ms.translate(0, 0, 100);
 			String text;
 			int offset;
 			if (activeScene.currentTime < keyframeTime) {

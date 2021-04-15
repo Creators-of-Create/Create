@@ -449,6 +449,7 @@ public class PonderScene {
 			} else {
 				// For block breaking overlay; Don't ask
 				ms.scale(f, f, f);
+				ms.translate(0.525, .2975, .9);
 				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -yOffset,
 					(basePlateSize + basePlateOffsetZ) / -2f);
 				float y = (float) (0.5065 * Math.pow(2.2975, Math.log(1 / scaleFactor) / Math.log(2))) / 30;

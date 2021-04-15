@@ -24,7 +24,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
@@ -188,6 +187,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(world, pos);
 			else
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos);
+			
+			if (!world.isRemote)
+				sendData();
 		}
 
 		if (!world.isRemote && runningTicks > CYCLE) {

@@ -537,7 +537,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		{
 			// Chapter title
 			ms.push();
-			ms.translate(0, 0, 100);
+			ms.translate(0, 0, 300);
 			int x = 31 + 20 + 8;
 			int y = 31;
 

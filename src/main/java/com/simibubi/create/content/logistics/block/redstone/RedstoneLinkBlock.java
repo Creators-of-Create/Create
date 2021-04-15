@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import java.util.Random;
+
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
 
@@ -41,8 +44,10 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		Direction blockFacing = state.get(FACING);
+		if (worldIn.isRemote)
+			return;
 
+		Direction blockFacing = state.get(FACING);
 		if (fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
 			if (!isValidPosition(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
@@ -50,17 +55,25 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 			}
 		}
 
-		updateTransmittedSignal(state, worldIn, pos, blockFacing);
+		if (!worldIn.getPendingBlockTicks()
+			.isTickPending(pos, this))
+			worldIn.getPendingBlockTicks()
+				.scheduleTick(pos, this, 0);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		updateTransmittedSignal(state, worldIn, pos);
 	}
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (state.getBlock() == oldState.getBlock() || isMoving)
 			return;
-		updateTransmittedSignal(state, worldIn, pos, state.get(FACING));
+		updateTransmittedSignal(state, worldIn, pos);
 	}
 
-	public void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos, Direction blockFacing) {
+	public void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos) {
 		if (worldIn.isRemote)
 			return;
 		if (state.get(RECEIVER))
@@ -171,7 +184,8 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		BlockPos neighbourPos = pos.offset(state.get(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		return !neighbour.getMaterial().isReplaceable();
+		return !neighbour.getMaterial()
+			.isReplaceable();
 	}
 
 	@Override
@@ -190,7 +204,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
-	
+
 	@Override
 	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
 		return RedstoneLinkTileEntity.class;
