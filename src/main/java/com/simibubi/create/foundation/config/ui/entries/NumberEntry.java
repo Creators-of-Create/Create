@@ -59,8 +59,8 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 				maxText = new TextStencilElement(font, t).centered(true, false);
 				maxOffset = font.getWidth(t);
 			}
-		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-			e.printStackTrace();
+		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {
+
 		}
 
 		textField.setResponder(s -> {
@@ -93,6 +93,12 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	protected abstract T getTypeMax();
 
 	protected abstract Function<String, T> getParser();
+
+	@Override
+	protected void setEditable(boolean b) {
+		super.setEditable(b);
+		textField.setEnabled(b);
+	}
 
 	@Override
 	protected void onReset() {

@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -13,10 +12,15 @@ import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.util.text.IFormattableTextComponent;
 
 public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
+
+	public TextFieldWidget currentText;
+
+	public boolean isForServer = false;
 
 	public ConfigScreenList(Minecraft client, int width, int height, int top, int bottom, int elementHeight) {
 		super(client, width, height, top, bottom, elementHeight);
@@ -86,6 +90,14 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		@Override
 		public boolean charTyped(char ch, int code) {
 			return getGuiListeners().stream().anyMatch(l -> l.charTyped(ch, code));
+		}
+
+		protected void setEditable(boolean b) {}
+
+		protected boolean isForServer() {
+			if (list == null)
+				return false;
+			return ((ConfigScreenList) list).isForServer;
 		}
 	}
 

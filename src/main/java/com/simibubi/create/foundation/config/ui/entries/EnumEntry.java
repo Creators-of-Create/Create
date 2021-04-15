@@ -42,6 +42,15 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	@Override
+	protected void setEditable(boolean b) {
+		super.setEditable(b);
+		cycleLeft.active = b;
+		cycleLeft.animateGradientFromState();
+		cycleRight.active = b;
+		cycleRight.animateGradientFromState();
+	}
+
+	@Override
 	public void tick() {
 		super.tick();
 		cycleLeft.tick();

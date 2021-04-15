@@ -30,17 +30,17 @@ import org.apache.logging.log4j.LogManager;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ConfigureConfigPacket extends SimplePacketBase {
+public class SConfigureConfigPacket extends SimplePacketBase {
 
 	private final String option;
 	private final String value;
 
-	public ConfigureConfigPacket(String option, String value) {
+	public SConfigureConfigPacket(String option, String value) {
 		this.option = option;
 		this.value = value;
 	}
 
-	public ConfigureConfigPacket(PacketBuffer buffer) {
+	public SConfigureConfigPacket(PacketBuffer buffer) {
 		this.option = buffer.readString(32767);
 		this.value = buffer.readString(32767);
 	}
@@ -68,7 +68,7 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 			.setPacketHandled(true);
 	}
 
-	enum Actions {
+	public enum Actions {
 		configScreen(() -> Actions::configScreen),
 		rainbowDebug(() -> Actions::rainbowDebug),
 		overlayScreen(() -> Actions::overlayScreen),

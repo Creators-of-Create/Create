@@ -48,7 +48,7 @@ public class PonderCommand {
 
 			AllPackets.channel.send(
 					PacketDistributor.PLAYER.with(() -> player),
-					new ConfigureConfigPacket(ConfigureConfigPacket.Actions.openPonder.name(), sceneId));
+					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId));
 		}
 		return Command.SINGLE_SUCCESS;
 	}

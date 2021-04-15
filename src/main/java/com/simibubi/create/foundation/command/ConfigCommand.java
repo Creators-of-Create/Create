@@ -17,7 +17,7 @@ public class ConfigCommand {
 					ServerPlayerEntity player = ctx.getSource().asPlayer();
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),
-							new ConfigureConfigPacket(ConfigureConfigPacket.Actions.configScreen.name(), "")
+							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), "")
 					);
 
 					return Command.SINGLE_SUCCESS;

@@ -18,12 +18,12 @@ public class OverlayConfigCommand {
 				.requires(cs -> cs.hasPermissionLevel(0))
 				.then(Commands.literal("reset")
 					.executes(ctx -> {
-						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ConfigureConfigPacket.Actions.overlayReset.performAction(""));
+						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
 
 						DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 								AllPackets.channel.send(
 										PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
-										new ConfigureConfigPacket(ConfigureConfigPacket.Actions.overlayReset.name(), "")));
+										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
 						ctx.getSource().sendFeedback(new StringTextComponent("reset overlay offset"), true);
 
@@ -31,12 +31,12 @@ public class OverlayConfigCommand {
 					})
 				)
 				.executes(ctx -> {
-					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ConfigureConfigPacket.Actions.overlayScreen.performAction(""));
+					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
 
 					DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 							AllPackets.channel.send(
 									PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
-									new ConfigureConfigPacket(ConfigureConfigPacket.Actions.overlayScreen.name(), "")));
+									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 
 					ctx.getSource().sendFeedback(new StringTextComponent("window opened"), true);
 

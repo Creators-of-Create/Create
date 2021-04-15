@@ -25,7 +25,22 @@ import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
 public abstract class ConfigScreen extends NavigatableSimiScreen {
 
-	private final Screen parent;
+	/*
+	* TODO unable to edit feedback message
+	* TODO overlays for better descriptions
+	* TODO units at the end of the text box
+	* TODO match style with ponderUI
+	* TODO cache changes before setting values and saving to file
+	* TODO don't exit on ESC
+	* TODO reset text field focus for any click inside screen
+	* TODO adjust transition animation of screens
+	* TODO allow backspace in text fields
+	*
+	* TODO some color themes maybe?
+	*
+	* */
+
+	protected final Screen parent;
 	protected static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
 	protected static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
 

@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
+import com.simibubi.create.foundation.config.ui.ServerSubMenuConfigScreen;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextStencilElement;
@@ -20,7 +21,10 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 		super(label);
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Click to open").centered(true, true);
 		button = ConfigButton.createFromStencilElement(0, 0, text)
-				.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(parent, spec, config)));
+				.withCallback(() -> ScreenOpener.transitionTo(isForServer() ?
+						new ServerSubMenuConfigScreen(parent, spec, config) :
+						new SubMenuConfigScreen(parent, spec, config)
+				));
 
 		listeners.add(button);
 	}

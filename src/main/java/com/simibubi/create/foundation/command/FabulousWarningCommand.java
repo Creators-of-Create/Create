@@ -19,7 +19,7 @@ public class FabulousWarningCommand {
 
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),
-							new ConfigureConfigPacket(ConfigureConfigPacket.Actions.fabulousWarning.name(), "")
+							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fabulousWarning.name(), "")
 					);
 
 					return Command.SINGLE_SUCCESS;

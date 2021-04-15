@@ -56,7 +56,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		);
 
 		if (Minecraft.getInstance().world != null) {
-			serverConfigWidget.withCallback(() -> ScreenOpener.transitionTo(new SubMenuConfigScreen(this, AllConfigs.SERVER.specification)));
+			serverConfigWidget.withCallback(() -> ScreenOpener.transitionTo(new ServerSubMenuConfigScreen(this, AllConfigs.SERVER.specification)));
 		} else {
 			serverConfigWidget.active = false;
 			serverConfigWidget.updateColorsFromState();

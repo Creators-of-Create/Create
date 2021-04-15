@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -15,6 +17,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
 	protected ConfigButton reset;
+	protected boolean editable = true;
 
 	public ValueEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label);
@@ -30,6 +33,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 				});
 
 		listeners.add(reset);
+	}
+
+	@Override
+	protected void setEditable(boolean b) {
+		editable = b;
+		reset.active = editable && !value.get().equals(spec.getDefault());
+		reset.animateGradientFromState();
 	}
 
 	@Override
@@ -51,23 +61,24 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		return (int) (totalWidth * labelWidthMult);
 	}
 
-	/*@Override
-	public boolean mouseClicked(double mX, double mY, int button) {
-		return reset.mouseClicked(mX, mY, button);
-	}*/
-
 	protected void onReset() {
 		onValueChange();
 	}
 
 	protected void onValueChange() {
-		reset.active = !value.get().equals(spec.getDefault());
+		reset.active = editable && !value.get().equals(spec.getDefault());
 		reset.animateGradientFromState();
+
+		if (!isForServer())
+			return;
+
+		String path = String.join(".", value.getPath());
+		AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(path, value.get()));
 	}
 
 	protected void bumpCog() {bumpCog(10f);}
 	protected void bumpCog(float force) {
 		if (list != null && list instanceof ConfigScreenList)
-		((ConfigScreenList) list).bumpCog(force);
+			((ConfigScreenList) list).bumpCog(force);
 	}
 }

@@ -43,6 +43,13 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
+	protected void setEditable(boolean b) {
+		super.setEditable(b);
+		button.active = b;
+		button.animateGradientFromState();
+	}
+
+	@Override
 	public void tick() {
 		super.tick();
 		button.tick();
