@@ -6,6 +6,7 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigTextField;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	protected int minOffset = 0, maxOffset = 0;
 	protected TextStencilElement minText = null, maxText = null;
+	protected TextFieldWidget textField;
 
 	@Nullable
 	public static NumberEntry<? extends Number> create(Object type, String label, ForgeConfigSpec.ConfigValue<?> value, ForgeConfigSpec.ValueSpec spec) {
@@ -32,11 +34,9 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		return null;
 	}
 
-	protected TextFieldWidget textField;
-
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new TextFieldWidget(Minecraft.getInstance().fontRenderer, 0, 0, 200, 30, StringTextComponent.EMPTY);
+		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 30, unit);
 		textField.setText(String.valueOf(value.get()));
 
 		Object range = spec.getRange();

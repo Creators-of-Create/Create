@@ -1,15 +1,12 @@
 package com.simibubi.create.foundation.config.ui;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
 import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -17,18 +14,17 @@ import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.StencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.utility.animation.Force;
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.Direction;
+
 public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 	/*
-	* TODO unable to edit feedback message
-	* TODO overlays for better descriptions
-	* TODO units at the end of the text box
 	* TODO match style with ponderUI
 	* TODO cache changes before setting values and saving to file
 	* TODO don't exit on ESC

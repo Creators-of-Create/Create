@@ -98,16 +98,14 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	@Override
+	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
+	}
+
+	@Override
 	public void resize(@Nonnull Minecraft client, int width, int height) {
 		double scroll = list.getScrollAmount();
 		init(client, width, height);
 		list.setScrollAmount(scroll);
-	}
-
-	public static AbstractSimiWidget createWidgetForValue(ForgeConfigSpec.ConfigValue<?> configValue, ForgeConfigSpec.ValueSpec valueSpec, Object value, String key, SubMenuConfigScreen parent) {
-		String title = toHumanReadable(key);
-		title += " : " + value;
-		TextStencilElement text = new TextStencilElement(parent.client.fontRenderer, title).at(5, 11, 0);
-		return ConfigButton.createFromStencilElement(parent.width/2 - 100, 0, text);
 	}
 }
