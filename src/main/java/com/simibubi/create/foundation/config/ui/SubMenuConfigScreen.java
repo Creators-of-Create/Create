@@ -2,11 +2,8 @@ package com.simibubi.create.foundation.config.ui;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.common.ForgeConfigSpec;
-
 import org.apache.commons.lang3.mutable.MutableInt;
+
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -14,9 +11,10 @@ import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
 import com.simibubi.create.foundation.config.ui.entries.EnumEntry;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.TextStencilElement;
-import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuConfigScreen extends ConfigScreen {
 
@@ -50,7 +48,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		int lWidth = Math.min(width - 66, 500);
 		list = new ConfigScreenList(client, lWidth, height - 30, 15, height - 15, 50);
-		list.setLeftPos(this.width /2 - list.getWidth()/2);
+		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
 		children.add(list);
 
@@ -63,7 +61,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) o);
 				list.children().add(entry);
 
-			}  else if (o instanceof ForgeConfigSpec.ConfigValue<?>) {
+			} else if (o instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) o;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
 				Object value = configValue.get();

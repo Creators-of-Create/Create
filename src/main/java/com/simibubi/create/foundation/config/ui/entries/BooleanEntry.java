@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.config.ui.ConfigButton;
-import com.simibubi.create.foundation.gui.CombinedStencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -13,8 +12,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 
 	TextStencilElement enabled;
 	TextStencilElement disabled;
-	CombinedStencilElement buttonStencil;
-	ConfigButton button;
+	PonderButton button;
 
 	public BooleanEntry(String label, ForgeConfigSpec.ConfigValue<Boolean> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
@@ -27,16 +25,11 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 				.centered(true, true)
 				.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
 
-		button = ConfigButton.createFromStencilElement(0, 0, enabled)
-				.withCallback(() -> {
-					value.set(!value.get());
-					buttonStencil.withSecond(value.get() ? enabled : disabled);
-					onValueChange();
-				});
-
-		buttonStencil = ((CombinedStencilElement) button.getStencilElement())
-				.withMode(CombinedStencilElement.ElementMode.BOTH)
-				.withSecond(value.get() ? enabled : disabled);
+		button = new PonderButton(0, 0, () -> {
+			value.set(!value.get());
+			onValueChange();
+		}).showingUnscaled(enabled);
+		button.fade(1);
 
 		listeners.add(button);
 		onReset();
@@ -46,13 +39,11 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	protected void setEditable(boolean b) {
 		super.setEditable(b);
 		button.active = b;
-		button.animateGradientFromState();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		button.tick();
 	}
 
 	@Override
@@ -60,14 +51,16 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		button.x = x + getLabelWidth(width);
-		button.y = y;
-		button.withBounds(width - getLabelWidth(width) - resetWidth, height).render(ms, mouseX, mouseY, partialTicks);
+		button.y = y + 10;
+		button.setWidth(width - getLabelWidth(width) - resetWidth - 4);
+		button.setHeight(height - 20);
+		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void onValueChange() {
 		super.onValueChange();
-		buttonStencil.withSecond(value.get() ? enabled : disabled);
+		button.showingUnscaled(value.get() ? enabled : disabled);
 		bumpCog(value.get() ? 15f : -16f);
 	}
 

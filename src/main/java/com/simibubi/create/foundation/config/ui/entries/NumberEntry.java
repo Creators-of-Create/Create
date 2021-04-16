@@ -6,8 +6,10 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigTextField;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -52,11 +54,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			if (!min.equals(getTypeMin())) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
+				minText.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_hover_1, ConfigButton.Palette.button_hover_2));
 				minOffset = font.getWidth(t);
 			}
 			if (!max.equals(getTypeMax())) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
+				maxText.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_hover_1, ConfigButton.Palette.button_hover_2));
 				maxOffset = font.getWidth(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {

@@ -43,4 +43,9 @@ public abstract class AbstractSimiWidget extends Widget {
 	public void runCallback(double mouseX, double mouseY) {
 		onClick.accept((int) mouseX, (int) mouseY);
 	}
+
+	@Override
+	public void onClick(double mouseX, double mouseY) {
+		runCallback(mouseX, mouseY);
+	}
 }

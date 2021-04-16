@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.config.ui.ServerSubMenuConfigScreen;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -15,16 +17,17 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
-	protected ConfigButton button;
+	protected PonderButton button;
 
 	public SubMenuEntry(Screen parent, String label, ForgeConfigSpec spec, UnmodifiableConfig config) {
 		super(label);
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Click to open").centered(true, true);
-		button = ConfigButton.createFromStencilElement(0, 0, text)
-				.withCallback(() -> ScreenOpener.transitionTo(isForServer() ?
-						new ServerSubMenuConfigScreen(parent, spec, config) :
-						new SubMenuConfigScreen(parent, spec, config)
-				));
+		text.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2));
+		button = new PonderButton(0, 0, () -> ScreenOpener.transitionTo(isForServer() ?
+				new ServerSubMenuConfigScreen(parent, spec, config) :
+				new SubMenuConfigScreen(parent, spec, config))
+		).showingUnscaled(text);
+		button.fade(1);
 
 		listeners.add(button);
 	}
@@ -32,7 +35,6 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	@Override
 	public void tick() {
 		super.tick();
-		button.tick();
 	}
 
 	@Override
@@ -40,8 +42,9 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		button.x = x + getLabelWidth(width);
-		button.y = y;
-		button.withBounds(width - getLabelWidth(width), height);
+		button.y = y + 10;
+		button.setWidth(width - getLabelWidth(width) - 4);
+		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 
@@ -49,9 +52,4 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	protected int getLabelWidth(int totalWidth) {
 		return (int) (totalWidth * labelWidthMult);
 	}
-
-	/*@Override
-	public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
-		return button.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
-	}*/
 }

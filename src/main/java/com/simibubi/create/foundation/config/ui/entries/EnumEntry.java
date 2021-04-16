@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -19,6 +20,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		super(label, value, spec);
 
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
+		valueText.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_hover_1, ConfigButton.Palette.button_hover_2));
 
 		TextStencilElement l = new TextStencilElement(Minecraft.getInstance().fontRenderer, "<").centered(true, true);
 		cycleLeft = ConfigButton.createAndInjectElementRenderer(0, 0, l).withBounds(30, 30).withCallback(() -> cycleValue(-1));

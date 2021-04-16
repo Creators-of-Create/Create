@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
+import com.simibubi.create.foundation.gui.StencilElement;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -133,6 +134,11 @@ public class PonderButton extends AbstractSimiWidget {
 			ms.translate(x + 2, y + 2, 0);
 			if (this.scaleIcon)
 				ms.scale((width - 4) / 16f, (height - 4) / 16f, 1);
+			else {
+				if (icon instanceof StencilElement){
+					((StencilElement) icon).withBounds(width - 4, height - 4);
+				}
+			}
 
 			icon.draw(ms, this, 0, 0);
 			ms.pop();

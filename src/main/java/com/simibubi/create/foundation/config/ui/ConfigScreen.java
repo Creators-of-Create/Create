@@ -25,14 +25,29 @@ import net.minecraft.util.Direction;
 public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 	/*
-	* TODO match style with ponderUI
-	* TODO cache changes before setting values and saving to file
-	* TODO don't exit on ESC
-	* TODO reset text field focus for any click inside screen
-	* TODO adjust transition animation of screens
-	* TODO allow backspace in text fields
 	*
-	* TODO some color themes maybe?
+	* TODO
+	* zelo's list for configUI
+	*
+	* match style with ponderUI
+	* cache changes before setting values and saving to file
+	* don't exit on ESC
+	* reset text field focus for any click inside screen
+	* adjust transition animation of screens
+	* allow backspace in text fields
+	* move config button's animations to ponder button or a new superclass
+	* get some proper icons for reset button and enum cycle
+	* some small shadow effect for top and bottom of the list
+	* add the 'think back' button back, just with a different caption
+	* add a title to the current config screen, maybe in the form of breadcrumbs
+	*
+	* some color themes maybe?
+	* at least a helper class to unite colors throughout different uis
+	*
+	* FIXME
+	*
+	* tooltip are hidden underneath the scrollbar, if the bar is near the middle
+	* misalignment of the label-streak and textboxes/enum stuff
 	*
 	* */
 
@@ -97,7 +112,7 @@ public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 			@Override
 			protected void renderElement(MatrixStack ms) {
-				fill(ms, -200, -200, 200, 200, 0x40_000000);
+				fill(ms, -200, -200, 200, 200, 0x60_000000);
 			}
 		}.at(width * 0.5f, height * 0.5f, 0).render(ms);
 

@@ -100,7 +100,7 @@ public class ConfigButton extends StencilWidget {
 
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
-		fill(ms, x, y, x + width, y + height, 0x30_ffffff);
+		fill(ms, x, y, x + width, y + height, 0x10_ffffff);
 		RenderSystem.defaultBlendFunc();
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 		wasHovered = hovered;

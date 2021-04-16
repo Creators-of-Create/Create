@@ -13,7 +13,9 @@ import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.StringTextComponent;
@@ -22,12 +24,12 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
-	protected static final int resetWidth = 24;//including 2px offset on either side
+	protected static final int resetWidth = 28;//including 6px offset on either side
 	public static final Pattern unitPattern = Pattern.compile("\\[(in .*)]");
 
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
-	protected ConfigButton reset;
+	protected PonderButton resetButton;
 	protected boolean editable = true;
 	protected String unit = null;
 
@@ -37,14 +39,15 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		this.spec = spec;
 
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "R").centered(true, true);
-		reset = ConfigButton.createFromStencilElement(0, 0, text)
-				.withBounds(resetWidth - 4, 20)
-				.withCallback(() -> {
-					value.set((T) spec.getDefault());
-					this.onReset();
-				});
+		text.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2));
+		resetButton = new PonderButton(0, 0, (_$, _$$) -> {
+			value.set((T) spec.getDefault());
+			this.onReset();
+		}, resetWidth - 12, 16).showingUnscaled(text);
+		resetButton.fade(1);
 
-		listeners.add(reset);
+		listeners.add(resetButton);
+
 		List<String> path = value.getPath();
 		labelTooltip.add(new StringTextComponent(path.get(path.size()-1)).formatted(TextFormatting.GRAY));
 		String comment = spec.getComment();
@@ -79,22 +82,16 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	@Override
 	protected void setEditable(boolean b) {
 		editable = b;
-		reset.active = editable && !value.get().equals(spec.getDefault());
-		reset.animateGradientFromState();
-	}
-
-	@Override
-	public void tick() {
-		reset.tick();
+		resetButton.active = editable && !value.get().equals(spec.getDefault());
 	}
 
 	@Override
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		reset.x = x + width - resetWidth + 2;
-		reset.y = y + 15;
-		reset.render(ms, mouseX, mouseY, partialTicks);
+		resetButton.x = x + width - resetWidth + 6;
+		resetButton.y = y + 15;
+		resetButton.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -107,8 +104,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 
 	protected void onValueChange() {
-		reset.active = editable && !value.get().equals(spec.getDefault());
-		reset.animateGradientFromState();
+		resetButton.active = editable && !value.get().equals(spec.getDefault());
 
 		if (!isForServer())
 			return;
