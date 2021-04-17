@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/axis",
+		"1": "create:block/axis_top",
+		"particle": "create:block/axis",
+		"2_0": "create:block/symmetry_mirror"
+	},
+	"elements": [
+		{
+			"name": "Mirror",
+			"from": [2, 9.5, 2],
+			"to": [14, 10.5, 14],
+			"faces": {
+				"north": {"uv": [2, 2, 14, 14], "rotation": 180, "texture": "#2_0"},
+				"east": {"uv": [3, 1, 4, 15], "rotation": 270, "texture": "#2_0"},
+				"south": {"uv": [4, 1, 12, 2], "texture": "#2_0"},
+				"west": {"uv": [12, 1, 13, 15], "rotation": 90, "texture": "#2_0"},
+				"up": {"uv": [2, 2, 14, 14], "rotation": 180, "texture": "#2_0"},
+				"down": {"uv": [4, 1, 12, 15], "texture": "#2_0"}
+			}
+		},
+		{
+			"name": "Axis",
+			"from": [6, 6, 0],
+			"to": [10, 10, 16],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#1"},
+				"east": {"uv": [6, 0, 10, 16], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [6, 6, 10, 10], "texture": "#1"},
+				"west": {"uv": [6, 0, 10, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [6, 0, 10, 16], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [6, 0, 10, 16], "texture": "#0"}
+			}
+		}
+	]
+}
