@@ -154,6 +154,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.optics.mirror.MirrorBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
@@ -1092,6 +1093,23 @@ public class AllBlocks {
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(BlockStateGen.horizontalAxisBlockProvider(true))
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	// Optics
+
+	static {
+		REGISTRATE.startSection(AllSections.OPTICS);
+	}
+
+	public static final BlockEntry<MirrorBlock> MIRROR =
+		REGISTRATE.block("mirror", MirrorBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(AllBlockTags.SAFE_NBT.tag)
+			.blockstate(BlockStateGen.axisBlockProvider(true))
+			.transform(StressConfigDefaults.setImpact(4.0))
 			.item()
 			.transform(customItemModel())
 			.register();

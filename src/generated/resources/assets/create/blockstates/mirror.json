@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:block/mirror/block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create:block/mirror/block"
+    },
+    "axis=z": {
+      "model": "create:block/mirror/block",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

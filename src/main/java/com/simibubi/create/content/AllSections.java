@@ -16,6 +16,9 @@ public enum AllSections {
 	/** Item transport and other Utility */
 	LOGISTICS(Palette.Yellow),
 
+	/** Beacon tech */
+	OPTICS(Palette.White),
+
 	/** Tools for strucuture movement and replication */
 	SCHEMATICS(Palette.Blue),
 

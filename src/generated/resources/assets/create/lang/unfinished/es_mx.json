@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1265",
+	"_": "Missing Localizations: 1266",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -242,6 +242,7 @@
 	"block.create.metal_bracket": "Soporte de Metal",
 	"block.create.millstone": "Molino",
 	"block.create.minecart_anchor": "Ancla de Vagonetas",
+	"block.create.mirror": "UNLOCALIZED: Mirror",
 	"block.create.mossy_andesite": "Andesita Musgosa",
 	"block.create.mossy_dark_scoria": "Escoria Oscura Musgosa",
 	"block.create.mossy_diorite": "Diorita Musgosa",

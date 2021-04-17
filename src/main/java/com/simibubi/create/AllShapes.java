@@ -38,6 +38,10 @@ public class AllShapes {
 			.add(2, 13, 2, 14, 16, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
+		MIRROR = shape(0, 0, 0, 16, 2, 16)
+				.add(1, 2, 1, 15, 14, 15)
+				.add(0, 14, 0, 16, 16, 16)
+				.forAxis(),
 		SAIL_FRAME_COLLISION = shape(0, 5, 0, 16, 9, 16).erase(2, 0, 2, 14, 16, 14)
 			.forDirectional(),
 		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(), SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),

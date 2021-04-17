@@ -83,6 +83,8 @@ public class AllBlockPartials {
 		HOSE_MAGNET = get("hose_pulley/pulley_magnet"), HOSE_HALF = get("hose_pulley/rope_half"),
 		HOSE_HALF_MAGNET = get("hose_pulley/rope_half_magnet"),
 
+		MIRROR_PLANE = get("mirror/mirror_plane"),
+
 		MILLSTONE_COG = get("millstone/inner"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),

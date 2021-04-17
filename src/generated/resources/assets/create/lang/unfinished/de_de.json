@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 914",
+	"_": "Missing Localizations: 915",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -242,6 +242,7 @@
 	"block.create.metal_bracket": "Metallhalterung",
 	"block.create.millstone": "Mahlstein",
 	"block.create.minecart_anchor": "Lorenanker",
+	"block.create.mirror": "UNLOCALIZED: Mirror",
 	"block.create.mossy_andesite": "Moosiger Andesit",
 	"block.create.mossy_dark_scoria": "Moosige Dunkle Schlacke",
 	"block.create.mossy_diorite": "Moosiger Diorit",
