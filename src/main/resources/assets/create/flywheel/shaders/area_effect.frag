@@ -16,11 +16,11 @@ uniform vec3 uCameraPos;
 
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
-    float feather;
+    vec3 data;// <float feather, float strength, float hsv marker>
     mat4 colorOp;
 };
 
-#define N 16
+#define N 256
 layout (std140) uniform Filters {
     int uCount;
     SphereFilter uSpheres[N];
@@ -31,11 +31,11 @@ float linearizeDepth(float d, float zNear, float zFar) {
     return zNear * zFar / (zFar + zNear - clipZ * (zFar - zNear));
 }
 
-vec4 filterColor(mat4 colorOp, vec4 frag) {
+vec3 filterColor(mat4 colorOp, vec3 color) {
     // preserve alpha while transforming color
-    vec4 i = vec4(frag.rgb, 1.);
+    vec4 i = vec4(color, 1.);
     i *= colorOp;
-    return vec4(i.rgb, frag.a);
+    return i.rgb;
 }
 
 float getDepth() {
@@ -44,16 +44,65 @@ float getDepth() {
     return linearizeDepth(depth, uNearPlane, uFarPlane);
 }
 
-vec4 applyFilters(vec3 worldPos, vec4 diffuse) {
-    vec4 accum = diffuse;
+float overlayFilterAmount(in vec3 worldPos, in vec4 sphere, in float feather) {
+    float distance = distance(sphere.xyz, worldPos);
+    return 1 - smoothstep(sphere.w, sphere.w + feather, distance);
+}
+
+float sphereFilterAmount(in vec3 worldDir, in float depth, in vec4 sphere, in float feather) {
+    float feathering =  1 - smoothstep(sphere.w, sphere.w + feather, length(sphere.xyz));
+    feathering += overlayFilterAmount(worldDir * depth, sphere, feather);
+    vec3 oc = -sphere.xyz;
+
+    float rayLengthSqr = dot(worldDir, worldDir);
+    float b = 2.0 * dot(-sphere.xyz, worldDir);
+    float sphereDistSqr = dot(sphere.xyz, sphere.xyz);
+    float b2 = b*b;
+    float d = 4. * rayLengthSqr;
+    float e = 1. / (2.0*rayLengthSqr);
+
+    float radius = sphere.w;
+    float c = sphereDistSqr - radius*radius;
+    float discriminant = b2 - d * c;
+    float hitDepth = (-b - sqrt(discriminant)) * e;
+
+
+    if (discriminant > 0 && hitDepth > 0 && hitDepth < depth) {
+        //        float c = sphereDistSqr - sphere.w*sphere.w;
+        //        float discriminant = b2 - d * c;
+        //        float hitDepth = (-b - sqrt(discriminant)) * e;
+
+        vec3 hitPos = worldDir * hitDepth;
+
+        vec3 normal = normalize(hitPos - sphere.xyz);
+
+        return feathering - dot(normal, normalize(worldDir)) * 1.3 - 0.1;
+    } else {
+        return feathering;
+    }
+}
+
+vec3 applyFilters(in vec3 worldDir, in float depth, in vec3 diffuse) {
+    vec3 worldPos = worldDir * depth;
+
+    vec3 accum = diffuse;
+    vec3 diffuseHSV = rgb2hsv(accum);
 
     for (int i = 0; i < uCount; i++) {
         SphereFilter s = uSpheres[i];
 
-        float distance = distance(s.sphere.xyz, worldPos);
-        float strength = 1 - smoothstep(s.sphere.w - s.feather, s.sphere.w + s.feather, distance);
+        //float strength = overlayFilterAmount(worldPos, s.sphere, s.data.x);
+        float strength = sphereFilterAmount(worldDir, depth, s.sphere, s.data.x);
 
-        accum = mix(accum, filterColor(s.colorOp, diffuse), strength);
+        //accum = vec3(strength, strength, strength);
+
+        vec3 toFilter = mix(diffuse, diffuseHSV, s.data.z);
+
+        vec3 filtered = filterColor(s.colorOp, diffuse);
+
+        filtered = mix(filtered, hsv2rgbWrapped(filtered), s.data.z);
+
+        accum = mix(accum, filtered, clamp(strength * s.data.y, 0., 1.));
     }
 
     return accum;
@@ -69,10 +118,9 @@ vec4 debugGrid(vec3 worldPos, vec4 diffuse) {
 
 void main() {
     float depth = getDepth();
-    vec3 worldPos = WorldDir * depth;
 
     vec4 diffuse = texture2D(uColor, ScreenCoord);
 
-    Color = applyFilters(worldPos, diffuse);
-    //Color = debugGrid(worldPos, diffuse);
+    Color = vec4(applyFilters(WorldDir, depth, diffuse.rgb), diffuse.a);
+    //Color = debugGrid(WorldDir * depth, Color);
 }

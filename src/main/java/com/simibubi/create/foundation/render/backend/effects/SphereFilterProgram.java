@@ -20,7 +20,7 @@ public class SphereFilterProgram extends GlProgram {
 	protected static final int UBO_BINDING = 4;
 
 	protected static final int SPHERE_FILTER_SIZE = 24 * 4; // <vec4, float + padding, mat4>
-	protected static final int MAX_FILTERS = 16; // arbitrary
+	protected static final int MAX_FILTERS = 256; // arbitrary
 
 	protected static final int EXTRA_INFO = 16; // array length: int + padding
 	protected static final int ALL_FILTERS_SIZE = MAX_FILTERS * SPHERE_FILTER_SIZE;
@@ -126,6 +126,8 @@ public class SphereFilterProgram extends GlProgram {
 		public Vector3d center;
 		public float radius;
 		public float feather;
+		public float strength = 1;
+		public boolean hsv;
 
 		public Matrix4f filter;
 
@@ -144,6 +146,16 @@ public class SphereFilterProgram extends GlProgram {
 			return this;
 		}
 
+		public FilterSphere setStrength(float strength) {
+			this.strength = strength;
+			return this;
+		}
+
+		public FilterSphere setHsv(boolean hsv) {
+			this.hsv = hsv;
+			return this;
+		}
+
 		public FilterSphere setFilter(Matrix4f filter) {
 			this.filter = filter;
 			return this;
@@ -156,9 +168,9 @@ public class SphereFilterProgram extends GlProgram {
 					(float) center.z,
 					radius,
 					feather,
-					0, // padding, we could add more parameters here
-					0,
-					0
+					strength,
+					hsv ? 1f : 0f,
+					0 // padding, we could add more parameters here
 			});
 
 			buf.put(RenderUtil.writeMatrix(filter));

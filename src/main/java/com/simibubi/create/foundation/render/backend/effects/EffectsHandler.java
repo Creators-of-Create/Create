@@ -106,18 +106,30 @@ public class EffectsHandler {
 		inverseView.invert();
 		program.bindInverseView(inverseView);
 
-		Vector3d pos1 = new Vector3d(330, 0, 110);
+		Vector3d pos1 = new Vector3d(852, 79, -204);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
 
 		program.setCameraPos(cameraPos.inverse());
 
-		for (int i = 0; i < 16; i++) {
-			program.addSphere(new SphereFilterProgram.FilterSphere()
-					.setCenter(pos1.subtract(cameraPos).add(0, 0, i * 10))
-					.setRadius(15)
-					.setFeather(0f)
-					.setFilter(ColorMatrices.hueShift((float) i / 16 * 360 + AnimationTickHolder.getRenderTime())));
-		}
+//		int n = 20;
+//		double rad = 15;
+//		for (int i = 0; i < n; i++) {
+//			double angle = ((double) i) / n * Math.PI * 2;
+//			program.addSphere(new SphereFilterProgram.FilterSphere()
+//					.setCenter(pos1.subtract(cameraPos).add(Math.sin(angle) * rad, 0, Math.cos(angle) * rad))
+//					.setRadius(10)
+//					.setFeather(0f)
+//					.setFilter(ColorMatrices.hueShiftRGB((float) i / n * 360 + i / 2f)));
+//		}
+
+		Matrix4f filter = ColorMatrices.sepia(1f);
+
+		program.addSphere(new SphereFilterProgram.FilterSphere()
+				.setCenter(pos1.subtract(cameraPos))
+				.setRadius(40)
+				.setFeather(20f)
+				.setHsv(false)
+				.setFilter(filter));
 
 		program.uploadFilters();
 

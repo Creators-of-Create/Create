@@ -59,7 +59,7 @@ public class ColorMatrices {
 	}
 
 	// https://stackoverflow.com/a/8510751
-	public static Matrix4f hueShift(float rot) {
+	public static Matrix4f hueShiftRGB(float rot) {
 		Matrix4f mat = new Matrix4f();
 
 		mat.loadIdentity();
@@ -75,6 +75,16 @@ public class ColorMatrices {
 		mat.a20 = (float) (1. / 3. * (1.0 - cosA) - MathHelper.sqrt(1. / 3.) * sinA);
 		mat.a21 = (float) (1. / 3. * (1.0 - cosA) + MathHelper.sqrt(1. / 3.) * sinA);
 		mat.a22 = (float) (cosA + 1. / 3. * (1.0 - cosA));
+
+		return mat;
+	}
+
+	public static Matrix4f hueShiftHSV(float rot) {
+		Matrix4f mat = new Matrix4f();
+
+		mat.loadIdentity();
+
+		//mat.a03 = 0.5f;
 
 		return mat;
 	}
