@@ -214,4 +214,15 @@ public class VecHelper {
 		return new Vector3d(-result3f.getX() * scale_factor, result3f.getY() * scale_factor, result3f.getZ());
 	}
 
+	public static Vector3d step(Vector3d direction) {
+		return direction.scale(1 / varMax(Math.abs(direction.x), Math.abs(direction.y), Math.abs(direction.z)));
+	}
+
+	private static double varMax(double n, double ... numbers) {
+		for (double test : numbers) {
+			if (test > n)
+				n = test;
+		}
+		return n;
+	}
 }

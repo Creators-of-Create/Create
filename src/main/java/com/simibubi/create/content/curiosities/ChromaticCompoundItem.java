@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
+import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -15,17 +16,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.BeaconTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.Heightmap;
 
 public class ChromaticCompoundItem extends Item {
 
@@ -114,35 +110,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		// Is inside beacon beam?
-		boolean isOverBeacon = false;
-		int entityX = MathHelper.floor(entity.getX());
-		int entityZ = MathHelper.floor(entity.getZ());
-		int localWorldHeight = world.getHeight(Heightmap.Type.WORLD_SURFACE, entityX, entityZ);
-
-		BlockPos.Mutable testPos =
-			new BlockPos.Mutable(entityX, Math.min(MathHelper.floor(entity.getY()), localWorldHeight), entityZ);
-
-		while (testPos.getY() > 0) {
-			testPos.move(Direction.DOWN);
-			BlockState state = world.getBlockState(testPos);
-			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
-				break;
-			if (state.getBlock() == Blocks.BEACON) {
-				TileEntity te = world.getTileEntity(testPos);
-
-				if (!(te instanceof BeaconTileEntity))
-					break;
-
-				BeaconTileEntity bte = (BeaconTileEntity) te;
-
-				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty())
-					isOverBeacon = true;
-
-				break;
-			}
-		}
-
-		if (isOverBeacon) {
+		if (BeaconHelper.isAboveActiveBeacon(entity.getPositionVec(), world)) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			newStack.setCount(stack.getCount());
 			data.putBoolean("JustCreated", true);

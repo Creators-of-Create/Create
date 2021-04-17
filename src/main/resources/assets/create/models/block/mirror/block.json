@@ -21,8 +21,8 @@
 		},
 		{
 			"name": "side",
-			"from": [2, 0, 2],
-			"to": [14, 1, 14],
+			"from": [2, 1, 2],
+			"to": [14, 2, 14],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, -10, 8]},
 			"faces": {
 				"north": {"uv": [2, 11, 14, 12], "rotation": 180, "texture": "#4"},
