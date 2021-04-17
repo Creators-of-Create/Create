@@ -1,34 +1,77 @@
 package com.simibubi.create.content.optics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
+import javax.annotation.Nullable;
+
+import com.simibubi.create.foundation.utility.BeaconHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
 	Vector3d getBeamDirection();
 
-	default double getBeamLenght() {
-		T te = getTile();
-		World world = te.getWorld();
-		BlockPos pos = te.getPos();
-		if (pos == BlockPos.ZERO || world == null)
-			return 0;
+	default Collection<BeamSegment> constructOutBeam(Vector3d beamDirection) {
+		ArrayList<BeamSegment> beam = new ArrayList<>();
+		float[] segmentColor = getSegmentStartColor();
+		World world = getTile().getWorld();
+		if (world == null)
+			return beam;
+		Vector3d direction = VecHelper.step(beamDirection);
+		Vector3d testPos = VecHelper.getCenterOf(getTile().getPos());
 
-		Vector3d direction = getBeamDirection();
-		BlockRayTraceResult raytrace = world
-				.rayTraceBlocks(new RayTraceContext(Vector3d.of(pos).add(direction),
-						direction.normalize()
-								.scale(128)
-								.add(Vector3d.of(pos)),
-						RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, null));
+		BeamSegment segment = new BeamSegment(segmentColor, testPos, direction);
+		beam.add(segment);
 
-		return Vector3d.of(raytrace.getPos()
-				.subtract(pos))
-				.length();
+		for (int i = 0; i < 128; i++) {
+			testPos = testPos.add(direction); // check next block
+			BlockPos testBlockPos = new BlockPos(testPos.x, testPos.y, testPos.z);
+			BlockState testState = world.getBlockState(testBlockPos);
+			float[] newColor = BeaconHelper.getBeaconColorAt(testState.getBlock());
+			if (newColor == null) {
+				TileEntity te = testState.hasTileEntity() ? world.getTileEntity(testBlockPos) : null;
+				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || te instanceof ILightHandler) {
+					if (te instanceof ILightHandler) {
+						((ILightHandler<?>) te).setColor(segmentColor);
+					}
+					break;
+				}
+			} else if (!Arrays.equals(segmentColor, newColor)) {
+				segmentColor = new float[]{(segment.colors[0] + newColor[0]) / 2.0F, (segment.colors[1] + newColor[1]) / 2.0F, (segment.colors[2] + newColor[2]) / 2.0F};
+				segment = new BeamSegment(newColor, testPos, direction);
+				beam.add(segment);
+				continue;
+			}
+			segment.incrementLength();
+		}
+		return beam;
 	}
 
 	T getTile();
+
+	default void setColor(float[] segmentColor) {
+	}
+
+	default float[] getSegmentStartColor() {
+		return DyeColor.WHITE.getColorComponentValues();
+	}
+
+	@Nullable
+	@OnlyIn(Dist.CLIENT)
+	default Vector3f getBeamRotationAround() {
+		return null;
+	}
+
 }

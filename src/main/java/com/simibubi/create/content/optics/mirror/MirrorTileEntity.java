@@ -1,9 +1,10 @@
 package com.simibubi.create.content.optics.mirror;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.BeamSegment;
@@ -15,19 +16,23 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MirrorTileEntity extends KineticTileEntity implements ILightHandler<MirrorTileEntity> {
 	public final List<BeamSegment> beam;
 	protected float angle;
 	protected float clientAngleDiff;
 	private float prevAngle;
-	private double length;
 	private Optional<BeaconTileEntity> beacon;
+	private float[] initialColor = DyeColor.WHITE.getColorComponentValues();
 
 	public MirrorTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -44,10 +49,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
-		if (wasMoved) {
-			super.fromTag(state, compound, clientPacket);
-			return;
-		}
+		super.fromTag(state, compound, clientPacket);
 
 		angle = compound.getFloat("Angle");
 		super.fromTag(state, compound, clientPacket);
@@ -87,38 +89,13 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	public void lazyTick() {
 		super.lazyTick();
 		beacon = BeaconHelper.getBeaconTE(pos, world);
-		length = getBeamLenght();
-
-		if (length < 1)
-			return;
-		Vector3d direction = VecHelper.step(getBeamDirection());
-		Vector3d startPos = VecHelper.getCenterOf(getPos());
 		beam.clear();
-
-		float[] startColor = DyeColor.WHITE.getColorComponentValues(); // TODO: Add mirroring of color
-		BeamSegment segment = new BeamSegment(startColor, startPos, direction);
-
-		for (int i = 0; i < length; i++) {
-			startPos = startPos.add(direction); // check next block
-			float[] newColor = BeaconHelper.getBeaconColorAt(startPos, world);
-			if (newColor != null && !Arrays.equals(startColor, newColor)) {
-				beam.add(segment);
-				startColor = new float[]{(segment.colors[0] + newColor[0]) / 2.0F, (segment.colors[1] + newColor[1]) / 2.0F, (segment.colors[2] + newColor[2]) / 2.0F};
-				segment = new BeamSegment(newColor, startPos, direction);
-			} else {
-				segment.incrementLength();
-			}
-		}
-		beam.add(segment);
+		beam.addAll(constructOutBeam(getBeamDirection()));
 	}
 
 	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
-	}
-
-	public void setAngle(float forcedAngle) {
-		angle = forcedAngle;
 	}
 
 	@Override
@@ -130,5 +107,31 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Override
 	public MirrorTileEntity getTile() {
 		return this;
+	}
+
+	@Override
+	public void setColor(float[] initialColor) {
+		this.initialColor = initialColor;
+	}
+
+	@Override
+	public float[] getSegmentStartColor() {
+		return initialColor;
+	}
+
+	@Nonnull
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public Vector3f getBeamRotationAround() {
+		return Direction.getFacingFromAxisDirection(getBlockState().get(BlockStateProperties.AXIS), Direction.AxisDirection.POSITIVE)
+				.getUnitVector();
+	}
+
+	public float getAngle() {
+		return angle;
+	}
+
+	public void setAngle(float forcedAngle) {
+		angle = forcedAngle;
 	}
 }

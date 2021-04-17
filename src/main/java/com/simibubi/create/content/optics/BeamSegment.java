@@ -2,6 +2,7 @@ package com.simibubi.create.content.optics;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class BeamSegment {
@@ -9,12 +10,14 @@ public class BeamSegment {
 	private final Vector3d direction;
 	private final Vector3d start;
 	private int length;
+	private final LazyValue<Vector3d> normalized;
 
 	public BeamSegment(@Nonnull float[] color, Vector3d start, Vector3d direction) {
 		this.colors = color;
 		this.direction = direction;
 		this.start = start;
 		this.length = 1;
+		this.normalized = new LazyValue<>(direction::normalize);
 	}
 
 	public void incrementLength() {
@@ -35,5 +38,9 @@ public class BeamSegment {
 
 	public Vector3d getStart() {
 		return start;
+	}
+
+	public Vector3d getNormalized() {
+		return normalized.getValue();
 	}
 }

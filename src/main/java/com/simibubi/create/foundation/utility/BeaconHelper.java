@@ -53,11 +53,7 @@ public class BeaconHelper {
 	}
 
 	@Nullable
-	public static float[] getBeaconColorAt(Vector3d pos, @Nullable IBlockReader world) {
-		if (world == null)
-			return null;
-		Block block = world.getBlockState(new BlockPos(pos.x, pos.y, pos.z))
-				.getBlock();
+	public static float[] getBeaconColorAt(Block block) {
 		if (!(block instanceof IBeaconBeamColorProvider))
 			return null;
 		return ((IBeaconBeamColorProvider) block).getColor()
