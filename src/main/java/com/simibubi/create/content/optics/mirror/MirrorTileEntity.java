@@ -16,8 +16,11 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -143,5 +146,16 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	private Direction.Axis getAxis() {
 		return getBlockState().get(BlockStateProperties.AXIS);
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return INFINITE_EXTENT_AABB;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 256.0D;
 	}
 }
