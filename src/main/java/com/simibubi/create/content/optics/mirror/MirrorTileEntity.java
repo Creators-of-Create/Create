@@ -1,14 +1,10 @@
 package com.simibubi.create.content.optics.mirror;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nonnull;
-
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.BeamSegment;
 import com.simibubi.create.content.optics.ILightHandler;
+import com.simibubi.create.foundation.collision.Matrix3d;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -22,9 +18,12 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MirrorTileEntity extends KineticTileEntity implements ILightHandler<MirrorTileEntity> {
 	public final List<BeamSegment> beam;
@@ -83,25 +82,34 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		float angularSpeed = getAngularSpeed();
 		float newAngle = angle + angularSpeed;
 		angle = newAngle % 360;
+
+		if (angle != prevAngle)
+			updateBeams();
+	}
+
+	private void updateBeams() {
+		beacon = BeaconHelper.getBeaconTE(pos, world);
+		beam.clear();
+		beam.addAll(constructOutBeam(getReflectionAngle(VecHelper.UP)));
+	}
+
+	private Vector3d getReflectionAngle(Vector3d inputAngle) {
+		inputAngle = inputAngle.normalize();
+		Vector3d normal = new Matrix3d().asIdentity()
+				.asAxisRotation(getAxis(), AngleHelper.rad(angle))
+				.transform(inputAngle);
+		return VecHelper.step(inputAngle.subtract(normal.scale(2 * inputAngle.dotProduct(normal))));
 	}
 
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		beacon = BeaconHelper.getBeaconTE(pos, world);
-		beam.clear();
-		beam.addAll(constructOutBeam(getBeamDirection()));
+		updateBeams();
 	}
 
 	@Override
 	public boolean shouldRenderAsTE() {
 		return true;
-	}
-
-	@Override
-	public Vector3d getBeamDirection() {
-		// TODO: Implement properly
-		return VecHelper.step(Vector3d.of(Direction.SOUTH.getDirectionVec()));
 	}
 
 	@Override
@@ -120,11 +128,9 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	}
 
 	@Nonnull
-	@OnlyIn(Dist.CLIENT)
 	@Override
-	public Vector3f getBeamRotationAround() {
-		return Direction.getFacingFromAxisDirection(getBlockState().get(BlockStateProperties.AXIS), Direction.AxisDirection.POSITIVE)
-				.getUnitVector();
+	public Direction getBeamRotationAround() {
+		return Direction.getFacingFromAxisDirection(getAxis(), Direction.AxisDirection.POSITIVE);
 	}
 
 	public float getAngle() {
@@ -133,5 +139,9 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	public void setAngle(float forcedAngle) {
 		angle = forcedAngle;
+	}
+
+	private Direction.Axis getAxis() {
+		return getBlockState().get(BlockStateProperties.AXIS);
 	}
 }

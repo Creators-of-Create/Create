@@ -1,11 +1,5 @@
 package com.simibubi.create.content.optics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -13,16 +7,18 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
-	Vector3d getBeamDirection();
-
 	default Collection<BeamSegment> constructOutBeam(Vector3d beamDirection) {
 		ArrayList<BeamSegment> beam = new ArrayList<>();
 		float[] segmentColor = getSegmentStartColor();
@@ -32,7 +28,7 @@ public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
 		Vector3d direction = VecHelper.step(beamDirection);
 		Vector3d testPos = VecHelper.getCenterOf(getTile().getPos());
 
-		BeamSegment segment = new BeamSegment(segmentColor, testPos, direction);
+		BeamSegment segment = new BeamSegment(this, segmentColor, testPos, direction);
 		beam.add(segment);
 
 		for (int i = 0; i < 128; i++) {
@@ -50,7 +46,7 @@ public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
 				}
 			} else if (!Arrays.equals(segmentColor, newColor)) {
 				segmentColor = new float[]{(segment.colors[0] + newColor[0]) / 2.0F, (segment.colors[1] + newColor[1]) / 2.0F, (segment.colors[2] + newColor[2]) / 2.0F};
-				segment = new BeamSegment(newColor, testPos, direction);
+				segment = new BeamSegment(this, newColor, testPos, direction);
 				beam.add(segment);
 				continue;
 			}
@@ -69,8 +65,7 @@ public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
 	}
 
 	@Nullable
-	@OnlyIn(Dist.CLIENT)
-	default Vector3f getBeamRotationAround() {
+	default Direction getBeamRotationAround() {
 		return null;
 	}
 

@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.collision;
 
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
@@ -144,4 +145,14 @@ public class Matrix3d {
 		return new Matrix4f(conversionBuffer);
 	}
 
+	public Matrix3d asAxisRotation(Direction.Axis axis, float rad) {
+		switch (axis) {
+			case X:
+				return asXRotation(rad);
+			case Y:
+				return asYRotation(rad);
+			default:
+				return asZRotation(rad);
+		}
+	}
 }
