@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render.backend.effects;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -87,8 +88,8 @@ public class EffectsHandler {
 
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 
-		GL30.glBindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
-		GL30.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
+		GL11.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
 		SphereFilterProgram program = Backend.getProgram(AllProgramSpecs.CHROMATIC);
 		program.bind();
@@ -106,7 +107,7 @@ public class EffectsHandler {
 		inverseView.invert();
 		program.bindInverseView(inverseView);
 
-		Vector3d pos1 = new Vector3d(852, 79, -204);
+		Vector3d pos1 = new Vector3d(865.5, 79, -240.5);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
 
 		program.setCameraPos(cameraPos.inverse());
@@ -126,8 +127,9 @@ public class EffectsHandler {
 
 		program.addSphere(new SphereFilterProgram.FilterSphere()
 				.setCenter(pos1.subtract(cameraPos))
-				.setRadius(40)
-				.setFeather(20f)
+				.setRadius(10f)
+				.setFeather(3f)
+				.setFade(1.5f)
 				.setHsv(false)
 				.setFilter(filter));
 
@@ -147,10 +149,10 @@ public class EffectsHandler {
 		program.clear();
 		program.unbind();
 
-		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);
-		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		GL30.glBlitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
-		GL30.glBindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
+		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
 	}
 
 	public void delete() {
