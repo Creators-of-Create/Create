@@ -1,13 +1,12 @@
 package com.simibubi.create.foundation.ponder;
 
-import org.antlr.v4.runtime.misc.IntegerList;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
@@ -59,7 +58,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	@Override
 	public void onClick(double mouseX, double mouseY) {
 		PonderScene activeScene = ponder.getActiveScene();
-		IntegerList keyframeTimes = activeScene.keyframeTimes;
+		IntList keyframeTimes = activeScene.keyframeTimes;
 
 		int keyframeIndex = getHoveredKeyframeIndex(activeScene, mouseX);
 
@@ -68,17 +67,17 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		else if (keyframeIndex == keyframeTimes.size())
 			ponder.seekToTime(activeScene.totalTime);
 		else
-			ponder.seekToTime(keyframeTimes.get(keyframeIndex));
+			ponder.seekToTime(keyframeTimes.getInt(keyframeIndex));
 	}
 
 	public int getHoveredKeyframeIndex(PonderScene activeScene, double mouseX) {
-		IntegerList keyframeTimes = activeScene.keyframeTimes;
+		IntList keyframeTimes = activeScene.keyframeTimes;
 
 		int totalTime = activeScene.totalTime;
 		int clickedAtTime = (int) ((mouseX - x) / ((double) width + 4) * totalTime);
 
 		{
-			int lastKeyframeTime = keyframeTimes.get(keyframeTimes.size() - 1);
+			int lastKeyframeTime = keyframeTimes.getInt(keyframeTimes.size() - 1);
 
 			int diffToEnd = totalTime - clickedAtTime;
 			int diffToLast = clickedAtTime - lastKeyframeTime;
@@ -91,7 +90,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		int index = -1;
 
 		for (int i = 0; i < keyframeTimes.size(); i++) {
-			int keyframeTime = keyframeTimes.get(i);
+			int keyframeTime = keyframeTimes.getInt(i);
 
 			if (keyframeTime > clickedAtTime)
 				break;
@@ -156,7 +155,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			hoverEndColor = 0;
 			hoverStartColor = 0;
 		}
-		IntegerList keyframeTimes = activeScene.keyframeTimes;
+		IntList keyframeTimes = activeScene.keyframeTimes;
 
 		if (hoverIndex == -1)
 			drawKeyframe(ms, activeScene, true, 0, 0, hoverStartColor, hoverEndColor, 8);
@@ -164,7 +163,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			drawKeyframe(ms, activeScene, true, activeScene.totalTime, width + 4, hoverStartColor, hoverEndColor, 8);
 
 		for (int i = 0; i < keyframeTimes.size(); i++) {
-			int keyframeTime = keyframeTimes.get(i);
+			int keyframeTime = keyframeTimes.getInt(i);
 			int keyframePos = (int) (((float) keyframeTime) / ((float) activeScene.totalTime) * (width + 4));
 
 			boolean selected = i == hoverIndex;
