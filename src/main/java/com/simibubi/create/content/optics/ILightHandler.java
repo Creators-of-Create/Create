@@ -1,5 +1,11 @@
 package com.simibubi.create.content.optics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -12,14 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
-	default Collection<BeamSegment> constructOutBeam(Vector3d beamDirection) {
+	default List<BeamSegment> constructOutBeam(Vector3d beamDirection) {
 		ArrayList<BeamSegment> beam = new ArrayList<>();
 		float[] segmentColor = getSegmentStartColor();
 		World world = getTile().getWorld();
