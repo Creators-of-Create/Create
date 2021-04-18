@@ -126,6 +126,7 @@ public class SphereFilterProgram extends GlProgram {
 		public Vector3d center;
 		public float radius;
 		public float feather;
+		public float fade;
 		public float strength = 1;
 		public boolean hsv;
 
@@ -143,6 +144,11 @@ public class SphereFilterProgram extends GlProgram {
 
 		public FilterSphere setFeather(float feather) {
 			this.feather = feather;
+			return this;
+		}
+
+		public FilterSphere setFade(float fade) {
+			this.fade = fade;
 			return this;
 		}
 
@@ -168,9 +174,9 @@ public class SphereFilterProgram extends GlProgram {
 					(float) center.z,
 					radius,
 					feather,
+					fade,
 					strength,
 					hsv ? 1f : 0f,
-					0 // padding, we could add more parameters here
 			});
 
 			buf.put(RenderUtil.writeMatrix(filter));

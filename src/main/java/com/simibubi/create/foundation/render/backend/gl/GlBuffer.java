@@ -48,15 +48,15 @@ public class GlBuffer extends GlObject {
 	}
 
 	public void map(int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer(bufferType, 0, length, upload);
+		Backend.compat.mapBuffer.mapBuffer(bufferType, 0, length, upload);
 	}
 
 	public void map(int offset, int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer(bufferType, offset, length, upload);
+		Backend.compat.mapBuffer.mapBuffer(bufferType, offset, length, upload);
 	}
 
 	public void map(int type, int offset, int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer(type, offset, length, upload);
+		Backend.compat.mapBuffer.mapBuffer(type, offset, length, upload);
 	}
 
 	protected void deleteInternal(int handle) {

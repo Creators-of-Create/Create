@@ -6,16 +6,16 @@ import com.simibubi.create.foundation.render.backend.Backend;
 
 public class GlVertexArray extends GlObject {
     public GlVertexArray() {
-        setHandle(Backend.compat.genVertexArrays());
-    }
+		setHandle(Backend.compat.vao.genVertexArrays());
+	}
 
     public void bind() {
-        Backend.compat.bindVertexArray(handle());
-    }
+		Backend.compat.vao.bindVertexArray(handle());
+	}
 
     public void unbind() {
-        Backend.compat.bindVertexArray(0);
-    }
+		Backend.compat.vao.bindVertexArray(0);
+	}
 
     public void with(Consumer<GlVertexArray> action) {
         bind();
@@ -24,6 +24,6 @@ public class GlVertexArray extends GlObject {
     }
 
     protected void deleteInternal(int handle) {
-        Backend.compat.deleteVertexArrays(handle);
-    }
+		Backend.compat.vao.deleteVertexArrays(handle);
+	}
 }

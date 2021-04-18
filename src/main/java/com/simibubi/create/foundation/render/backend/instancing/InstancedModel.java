@@ -83,7 +83,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
             renderSetup();
 
             if (glInstanceCount > 0)
-                Backend.compat.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
+				Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
         });
     }
 
@@ -118,8 +118,8 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
         getInstanceFormat().vertexAttribPointers(staticAttributes);
 
         for (int i = 0; i < getInstanceFormat().getShaderAttributeCount(); i++) {
-            Backend.compat.vertexAttribDivisor(i + staticAttributes, 1);
-        }
+			Backend.compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
+		}
     }
 
     private void clearBufferTail() {

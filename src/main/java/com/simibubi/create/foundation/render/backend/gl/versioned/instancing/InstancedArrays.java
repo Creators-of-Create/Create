@@ -1,25 +1,27 @@
-package com.simibubi.create.foundation.render.backend.gl.versioned;
+package com.simibubi.create.foundation.render.backend.gl.versioned.instancing;
 
 import org.lwjgl.opengl.ARBInstancedArrays;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.opengl.GLCapabilities;
 
-public enum InstancedArrays implements GlVersioned {
-    GL33_INSTANCED_ARRAYS {
-        @Override
-        public boolean supported(GLCapabilities caps) {
-            return caps.OpenGL33;
-        }
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlVersioned;
 
-        @Override
-        public void vertexAttribDivisor(int index, int divisor) {
-            GL33.glVertexAttribDivisor(index, divisor);
-        }
-    },
-    ARB_INSTANCED_ARRAYS {
-        @Override
-        public boolean supported(GLCapabilities caps) {
-            return caps.GL_ARB_instanced_arrays;
+public enum InstancedArrays implements GlVersioned {
+	GL33_INSTANCED_ARRAYS {
+		@Override
+		public boolean supported(GLCapabilities caps) {
+			return caps.OpenGL33;
+		}
+
+		@Override
+		public void vertexAttribDivisor(int index, int divisor) {
+			GL33.glVertexAttribDivisor(index, divisor);
+		}
+	},
+	ARB_INSTANCED_ARRAYS {
+		@Override
+		public boolean supported(GLCapabilities caps) {
+			return caps.GL_ARB_instanced_arrays;
         }
 
         @Override

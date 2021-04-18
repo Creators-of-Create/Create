@@ -1,28 +1,30 @@
-package com.simibubi.create.foundation.render.backend.gl.versioned;
+package com.simibubi.create.foundation.render.backend.gl.versioned.instancing;
 
 import org.lwjgl.opengl.ARBVertexArrayObject;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLCapabilities;
 
+import com.simibubi.create.foundation.render.backend.gl.versioned.GlVersioned;
+
 public enum VertexArrayObject implements GlVersioned {
-    GL30_VAO {
-        @Override
-        public boolean supported(GLCapabilities caps) {
-            return caps.OpenGL30;
-        }
+	GL30_VAO {
+		@Override
+		public boolean supported(GLCapabilities caps) {
+			return caps.OpenGL30;
+		}
 
-        @Override
-        public int genVertexArrays() {
-            return GL30.glGenVertexArrays();
-        }
+		@Override
+		public int genVertexArrays() {
+			return GL30.glGenVertexArrays();
+		}
 
-        @Override
-        public void bindVertexArray(int array) {
-            GL30.glBindVertexArray(array);
-        }
+		@Override
+		public void bindVertexArray(int array) {
+			GL30.glBindVertexArray(array);
+		}
 
-        @Override
-        public void deleteVertexArrays(int array) {
+		@Override
+		public void deleteVertexArrays(int array) {
             GL30.glDeleteVertexArrays(array);
         }
     },
