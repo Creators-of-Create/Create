@@ -1,10 +1,11 @@
 package com.simibubi.create.content.optics.mirror;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -112,24 +113,28 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 		if (beacon != null) {
 			beaconBeam = constructOutBeam(null, VecHelper.UP, beacon.getPos());
-			if (beaconBeam != null) {
+			if (beaconBeam != null && !beaconBeam.isEmpty()) {
 				beaconBeam.addListener(this);
 				beaconBeam.onCreated();
 			}
 		}
 	}
 
-	private void updateBeams() {
+	@Override
+	public void updateBeams() {
 		Map<Beam, Beam> newBeams = new HashMap<>();
 		for (Map.Entry<Beam, Beam> entry : beams.entrySet()) {
+			entry.getValue()
+					.onRemoved();
 			if (entry.getKey()
 					.isRemoved())
 				continue;
-
 			Beam reflected = reflectBeam(entry.getKey());
-			if (reflected != null) {
+			if (reflected != null && !reflected.isEmpty()) {
 				newBeams.put(entry.getKey(), reflected);
 				reflected.onCreated();
+				entry.getKey()
+						.addListener(this);
 			}
 		}
 		beams = newBeams;
@@ -138,7 +143,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {
 		inputAngle = inputAngle.normalize();
 		Vector3d normal = new Matrix3d().asIdentity()
-				.asAxisRotation(getAxis(), AngleHelper.rad(angle))
+				.asAxisRotation(getBlockState().get(BlockStateProperties.AXIS), AngleHelper.rad(angle))
 				.transform(VecHelper.UP);
 		return inputAngle.subtract(normal.scale(2 * inputAngle.dotProduct(normal)));
 	}
@@ -160,26 +165,10 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		return this;
 	}
 
-	@Override
-	public void setColor(float[] initialColor) {
-	}
-
 	@Nonnull
 	@Override
 	public Direction getBeamRotationAround() {
-		return Direction.getFacingFromAxisDirection(getAxis(), Direction.AxisDirection.POSITIVE);
-	}
-
-	public float getAngle() {
-		return angle;
-	}
-
-	public void setAngle(float forcedAngle) {
-		angle = forcedAngle;
-	}
-
-	private Direction.Axis getAxis() {
-		return getBlockState().get(BlockStateProperties.AXIS);
+		return Direction.getFacingFromAxisDirection(getBlockState().get(BlockStateProperties.AXIS), Direction.AxisDirection.POSITIVE);
 	}
 
 	@Override
@@ -206,13 +195,13 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	public Stream<Beam> constructSubBeams(Beam beam) {
 		if (beams.keySet()
 				.stream()
+				.filter(((Predicate<Beam>) Beam::isRemoved).negate())
 				.map(Beam::getDirection)
-				.map(Vector3d::normalize)
-				.anyMatch(beam.getDirection()
-						.normalize()::equals))
+				.filter(Objects::nonNull)
+				.anyMatch(b -> b.equals(beam.getDirection())))
 			return Stream.empty();
 		Beam reflected = reflectBeam(beam);
-		if (reflected != null) {
+		if (reflected != null && !reflected.isEmpty()) {
 			beams.put(beam, reflected);
 			beam.addListener(this);
 			return Stream.of(reflected);
@@ -220,23 +209,17 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		return Stream.empty();
 	}
 
-
+	@Nullable
 	private Beam reflectBeam(Beam beam) {
-		Vector3d inDir = beam.getDirection()
-				.normalize();
+		Vector3d inDir = beam.getDirection();
+		if (inDir == null)
+			return null;
+
 		Vector3d outDir = getReflectionAngle(inDir).normalize();
 
 		if (inDir.subtract(outDir)
 				.normalize() == Vector3d.ZERO)
 			return null;
-
-		// TE already has input beam at that direction
-
 		return constructOutBeam(beam, outDir);
-	}
-
-	@Override
-	public Collection<Beam> getOutBeams() {
-		return beams.keySet();
 	}
 }

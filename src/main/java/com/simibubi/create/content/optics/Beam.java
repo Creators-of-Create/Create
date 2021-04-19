@@ -2,7 +2,6 @@ package com.simibubi.create.content.optics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -12,19 +11,19 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.DyeColor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class Beam extends ArrayList<BeamSegment> {
 	private final Set<ILightHandler<?>> lightEventListeners;
-	private final Vector3d direction;
 	@Nullable
 	private final Beam parent;
+	private boolean removed = false;
 
-	public Beam(@Nullable Beam parent, Vector3d direction) {
+	public Beam(@Nullable Beam parent) {
 		super();
 		this.parent = parent;
-		this.direction = direction;
 		lightEventListeners = new HashSet<>();
 	}
 
@@ -43,8 +42,22 @@ public class Beam extends ArrayList<BeamSegment> {
 			lightEventListeners.add(tile);
 	}
 
+	@Nullable
 	public Vector3d getDirection() {
-		return direction;
+		return isEmpty() ? null : get(0).getNormalized();
+	}
+
+	public void onRemoved() {
+		removed = true;
+		lightEventListeners.stream()
+				.filter(handler -> handler != this.getHandler())
+				.forEach(ILightHandler::updateBeams);
+	}
+
+	@Nullable
+	public TileEntity getHandler() {
+		return size() == 0 ? null : get(0).getHandler()
+				.getTile();
 	}
 
 	@Override
@@ -53,15 +66,14 @@ public class Beam extends ArrayList<BeamSegment> {
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
 		Beam that = (Beam) o;
-		return lightEventListeners.equals(that.lightEventListeners) && Objects.equals(direction, that.direction);
+		return lightEventListeners.equals(that.lightEventListeners);
 	}
 
 	public boolean isRemoved() {
-		return isEmpty() || get(0).getHandler()
-				.getTile()
-				.isRemoved() || !get(0).getHandler()
-				.getOutBeams()
-				.contains(this) || (parent != null && parent.isRemoved());
+		// || !get(0).getHandler().getOutBeams().contains(this)
+		TileEntity handler = getHandler();
+		removed = removed || isEmpty() || handler == null || handler.isRemoved() || (parent != null && parent.isRemoved());
+		return removed;
 	}
 
 	public float[] getColorAt(BlockPos testBlockPos) {

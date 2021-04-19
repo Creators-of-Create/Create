@@ -1,7 +1,6 @@
 package com.simibubi.create.content.optics;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -22,20 +21,19 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
-	@Nullable
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection) {
 		return constructOutBeam(parent, beamDirection, getTile().getPos());
 	}
 
-	@Nullable
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos) {
-
-		float[] segmentColor = parent == null ? DyeColor.WHITE.getColorComponentValues() : parent.getColorAt(testBlockPos);
+		Beam beam = new Beam(parent);
 		World world = getTile().getWorld();
 		if (world == null)
-			return null;
+			return beam;
+
+		float[] segmentColor = parent == null ? DyeColor.WHITE.getColorComponentValues() : parent.getColorAt(testBlockPos);
 		Vector3d direction = VecHelper.step(beamDirection);
-		Beam beam = new Beam(parent, direction);
+
 		Vector3d testPos = VecHelper.getCenterOf(testBlockPos);
 
 		BeamSegment segment = new BeamSegment(this, segmentColor, testPos, direction);
@@ -54,9 +52,6 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 
 			if (newColor == null) {
 				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || (lightHandler != null && !lightHandler.canLightPass())) {
-					if (lightHandler != null) {
-						lightHandler.setColor(segmentColor);
-					}
 					break;
 				}
 			} else if (!Arrays.equals(segmentColor, newColor)) {
@@ -71,9 +66,6 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 	}
 
 	T getTile();
-
-	default void setColor(float[] segmentColor) {
-	}
 
 	@Nullable
 	default Direction getBeamRotationAround() {
@@ -92,7 +84,5 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 		return false;
 	}
 
-	default Collection<Beam> getOutBeams() {
-		return Collections.emptySet();
-	}
+	default void updateBeams(){}
 }
