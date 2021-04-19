@@ -7,7 +7,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -37,23 +36,11 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 
 		final Direction.Axis facing = te.getBlockState()
 				.get(BlockStateProperties.AXIS);
-		SuperByteBuffer superBuffer = AllBlockPartials.MIRROR_PLANE.renderOn(te.getBlockState());
+		SuperByteBuffer superBuffer = AllBlockPartials.MIRROR_PLANE.renderOnDirectionalSouth(te.getBlockState(), te.getBeamRotationAround());
 
 		float interpolatedAngle = te.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing, (float) (interpolatedAngle / 180 * Math.PI), light);
-
-		switch (facing) {
-			case X:
-				superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
-				break;
-			case Y:
-				superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(90));
-				break;
-			default:
-				superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(180));
-		}
-
-		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getTranslucent()));
 	}
 
 	@Override

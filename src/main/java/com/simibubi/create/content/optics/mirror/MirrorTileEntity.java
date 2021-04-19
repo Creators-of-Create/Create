@@ -125,15 +125,20 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	private void updateReflections() {
 		new HashMap<>(beams).forEach(Beam::removeSubBeam);
-		beams.replaceAll((b, v) -> reflectBeam(b));
+
+		Map<Beam, Beam> newBeams = new HashMap<>();
+		for (Beam beam : beams.keySet()) {
+			newBeams.put(beam, reflectBeam(beam));
+		}
+		beams = newBeams;
 	}
 
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {
 		inputAngle = inputAngle.normalize();
 		Vector3d normal = new Matrix3d().asIdentity()
 				.asAxisRotation(getAxis(), AngleHelper.rad(angle))
-				.transform(inputAngle);
-		return VecHelper.step(inputAngle.subtract(normal.scale(2 * inputAngle.dotProduct(normal))));
+				.transform(VecHelper.UP);
+		return inputAngle.subtract(normal.scale(2 * inputAngle.dotProduct(normal)));
 	}
 
 	@Override

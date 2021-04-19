@@ -1106,6 +1106,7 @@ public class AllBlocks {
 	public static final BlockEntry<MirrorBlock> MIRROR =
 		REGISTRATE.block("mirror", MirrorBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.properties(Block.Properties::nonOpaque)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.axisBlockProvider(true))
