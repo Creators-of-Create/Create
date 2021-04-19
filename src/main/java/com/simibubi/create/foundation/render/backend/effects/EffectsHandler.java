@@ -107,7 +107,6 @@ public class EffectsHandler {
 		inverseView.invert();
 		program.bindInverseView(inverseView);
 
-		Vector3d pos1 = new Vector3d(865.5, 79, -240.5);
 		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
 
 		program.setCameraPos(cameraPos.inverse());
@@ -123,15 +122,39 @@ public class EffectsHandler {
 //					.setFilter(ColorMatrices.hueShiftRGB((float) i / n * 360 + i / 2f)));
 //		}
 
-		Matrix4f filter = ColorMatrices.sepia(1f);
-
 		program.addSphere(new SphereFilterProgram.FilterSphere()
-				.setCenter(pos1.subtract(cameraPos))
+				.setCenter(new Vector3d(865.5, 79, -240.5).subtract(cameraPos))
 				.setRadius(10f)
 				.setFeather(3f)
-				.setFade(1.5f)
-				.setHsv(false)
-				.setFilter(filter));
+				.setFade(1.8f)
+				.setDensity(1.3f)
+				.setFilter(ColorMatrices.grayscale()));
+
+		program.addSphere(new SphereFilterProgram.FilterSphere()
+				.setCenter(new Vector3d(858.5, 88, -259.5).subtract(cameraPos))
+				.setRadius(10f)
+				.setFeather(3f)
+				.setFade(1.8f)
+				.setDensity(1.3f)
+				.setStrength(1f)
+				.setFilter(ColorMatrices.sepia(1f)));
+
+		Matrix4f test = ColorMatrices.grayscale();
+		Matrix4f colorize = new Matrix4f();
+		colorize.a00 = 1f;
+		colorize.a11 = 0.5f;
+		colorize.a22 = 0.5f;
+		colorize.a33 = 1f;
+		test = colorize;
+
+		program.addSphere(new SphereFilterProgram.FilterSphere()
+				.setCenter(new Vector3d(2310, 60, -954).subtract(cameraPos))
+				.setRadius(8f)
+				.setFeather(3f)
+				.setFade(0.1f)
+				.setDensity(0.5f)
+				.setStrength(1f)
+				.setFilter(test));
 
 		program.uploadFilters();
 

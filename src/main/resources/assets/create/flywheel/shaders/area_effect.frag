@@ -16,11 +16,35 @@ uniform vec3 uCameraPos;
 
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
-    vec4 data;// <float feather, float fade, float strength, float hsv marker>
+    vec4 data;// <float feather, float fade, float density, float strength>
     mat4 colorOp;
 };
 
-#define N 256
+vec3 getPosition(SphereFilter f) {
+    return f.sphere.xyz;
+}
+
+float getRadius(SphereFilter f) {
+    return f.sphere.w;
+}
+
+float getFeather(SphereFilter f) {
+    return f.data.x;
+}
+
+float getFade(SphereFilter f) {
+    return f.data.y;
+}
+
+float getDensity(SphereFilter f) {
+    return f.data.z;
+}
+
+float getStrength(SphereFilter f) {
+    return f.data.w;
+}
+
+    #define N 256
 layout (std140) uniform Filters {
     int uCount;
     SphereFilter uSpheres[N];
@@ -44,65 +68,68 @@ float getDepth() {
     return linearizeDepth(depth, uNearPlane, uFarPlane);
 }
 
-float overlayFilterAmount(in vec3 worldPos, in vec4 sphere, in float feather) {
+float surfaceFilterStrength(vec3 worldPos, vec4 sphere, float feather) {
     float distance = distance(sphere.xyz, worldPos);
     return 1 - smoothstep(sphere.w, sphere.w + feather, distance);
 }
 
-float sphereFilterAmount(in vec3 worldDir, in float depth, in vec4 sphere, in vec4 data) {
-    float feathering =  1 - smoothstep(sphere.w + data.x, sphere.w + data.x + data.y, length(sphere.xyz));
-    feathering += overlayFilterAmount(worldDir * depth, sphere, data.x);
-    vec3 oc = -sphere.xyz;
+float bubbleFilterStrength(vec3 worldDir, float depth, vec4 sphere, float feather, float density) {
+    vec3 position = sphere.xyz;
 
     float rayLengthSqr = dot(worldDir, worldDir);
-    float b = 2.0 * dot(-sphere.xyz, worldDir);
-    float sphereDistSqr = dot(sphere.xyz, sphere.xyz);
+    float b = 2.0 * dot(-position, worldDir);
+    float sphereDistSqr = dot(position, position);
     float b2 = b*b;
     float d = 4. * rayLengthSqr;
     float e = 1. / (2.0*rayLengthSqr);
 
-    float radius = sphere.w + data.x;
+    float radius = sphere.w + feather;
     float c = sphereDistSqr - radius*radius;
     float discriminant = b2 - d * c;
     float hitDepth = (-b - sqrt(discriminant)) * e;
 
-
+    float strength = 0.;
     if (discriminant > 0 && hitDepth > 0 && hitDepth < depth) {
-        //        float c = sphereDistSqr - sphere.w*sphere.w;
-        //        float discriminant = b2 - d * c;
-        //        float hitDepth = (-b - sqrt(discriminant)) * e;
-
         vec3 hitPos = worldDir * hitDepth;
 
-        vec3 normal = normalize(hitPos - sphere.xyz);
+        vec3 normal = normalize(hitPos - position);
         float normalDot = dot(normal, normalize(worldDir));
-        return feathering + normalDot * normalDot;
-    } else {
-        return feathering;
+        // blend into the effect based on the distance between the fragcoord and point on the sphere
+        // this avoinds having hard edges
+        strength += mix(0., normalDot * normalDot * density, clamp(depth - hitDepth, 0., feather + 1.));
     }
+
+    return clamp(strength, 0., 1.);
 }
 
-vec3 applyFilters(in vec3 worldDir, in float depth, in vec3 diffuse) {
+float filterStrength(vec3 worldDir, float depth, vec4 sphere, vec4 data) {
+    float feather = data.x;
+
+    float strength = 0.;
+    // transition effect
+    float transitionRadius = sphere.w + feather;
+    strength += 1. - smoothstep(transitionRadius, transitionRadius + data.y, length(sphere.xyz));
+    // surface effect
+    strength += surfaceFilterStrength(worldDir * depth, sphere, feather);
+    // bubble effect
+    strength += bubbleFilterStrength(worldDir, depth, sphere, feather, data.z);
+
+    return strength;
+}
+
+vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
     vec3 worldPos = worldDir * depth;
 
-    vec3 accum = diffuse;
-    vec3 diffuseHSV = rgb2hsv(accum);
+    vec3 accum = vec3(diffuse);
 
     for (int i = 0; i < uCount; i++) {
         SphereFilter s = uSpheres[i];
 
-        //float strength = overlayFilterAmount(worldPos, s.sphere, s.data.x);
-        float strength = sphereFilterAmount(worldDir, depth, s.sphere, s.data);
-
-        //accum = vec3(strength, strength, strength);
-
-        vec3 toFilter = mix(diffuse, diffuseHSV, s.data.w);
+        float strength = filterStrength(worldDir, depth, s.sphere, s.data);
 
         vec3 filtered = filterColor(s.colorOp, diffuse);
 
-        filtered = mix(filtered, hsv2rgbWrapped(filtered), s.data.w);
-
-        accum = mix(accum, filtered, clamp(strength * s.data.z, 0., 1.));
+        accum = mix(accum, filtered, clamp(strength * s.data.w, 0., 1.));
     }
 
     return accum;

@@ -127,8 +127,8 @@ public class SphereFilterProgram extends GlProgram {
 		public float radius;
 		public float feather;
 		public float fade;
+		public float density = 2;
 		public float strength = 1;
-		public boolean hsv;
 
 		public Matrix4f filter;
 
@@ -152,13 +152,13 @@ public class SphereFilterProgram extends GlProgram {
 			return this;
 		}
 
-		public FilterSphere setStrength(float strength) {
-			this.strength = strength;
+		public FilterSphere setDensity(float density) {
+			this.density = density;
 			return this;
 		}
 
-		public FilterSphere setHsv(boolean hsv) {
-			this.hsv = hsv;
+		public FilterSphere setStrength(float strength) {
+			this.strength = strength;
 			return this;
 		}
 
@@ -175,8 +175,8 @@ public class SphereFilterProgram extends GlProgram {
 					radius,
 					feather,
 					fade,
+					density,
 					strength,
-					hsv ? 1f : 0f,
 			});
 
 			buf.put(RenderUtil.writeMatrix(filter));

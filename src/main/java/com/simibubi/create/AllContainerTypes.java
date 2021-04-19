@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorContainer;
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateContainer;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer;
@@ -32,6 +34,7 @@ public enum AllContainerTypes {
 	FLEXCRATE(AdjustableCrateContainer::new),
 	FILTER(FilterContainer::new),
 	ATTRIBUTE_FILTER(AttributeFilterContainer::new),
+	CHROMATIC_PROJECTOR(ChromaticProjectorContainer::new),
 
 	;
 
@@ -58,6 +61,7 @@ public enum AllContainerTypes {
 		bind(FLEXCRATE, AdjustableCrateScreen::new);
 		bind(FILTER, FilterScreen::new);
 		bind(ATTRIBUTE_FILTER, AttributeFilterScreen::new);
+		bind(CHROMATIC_PROJECTOR, ChromaticProjectorScreen::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)

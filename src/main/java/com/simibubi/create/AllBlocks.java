@@ -113,6 +113,7 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
@@ -1332,25 +1333,26 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
-		.tag(BlockTags.BEACON_BASE_BLOCKS)
-		.transform(tagBlockAndItem("storage_blocks/brass"))
-		.tag(Tags.Items.STORAGE_BLOCKS)
-		.build()
-		.register();
+			.tag(BlockTags.BEACON_BASE_BLOCKS)
+			.transform(tagBlockAndItem("storage_blocks/brass"))
+			.tag(Tags.Items.STORAGE_BLOCKS)
+			.build()
+			.register();
 
 	static {
 		REGISTRATE.startSection(AllSections.CURIOSITIES);
 	}
 
-	public static final BlockEntry<Block> CHROMATIC_PROJECTOR =
-		REGISTRATE.block("chromatic_projector", Block::new)
-				.initialProperties(() -> Blocks.IRON_BLOCK)
-				.item()
-				.build()
-				.register();
+	public static final BlockEntry<ChromaticProjectorBlock> CHROMATIC_PROJECTOR =
+			REGISTRATE.block("chromatic_projector", ChromaticProjectorBlock::new)
+					.initialProperties(() -> Blocks.IRON_BLOCK)
+					.item()
+					.build()
+					.register();
 
 	// Load this class
 
-	public static void register() {}
+	public static void register() {
+	}
 
 }

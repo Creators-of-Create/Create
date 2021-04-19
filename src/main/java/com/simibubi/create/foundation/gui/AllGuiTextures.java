@@ -56,6 +56,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
+	PROJECTOR("projector.png", 173, 159),
+
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets.png", 20, 156, 18, 18),
