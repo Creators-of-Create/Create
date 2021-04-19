@@ -1,11 +1,13 @@
 package com.simibubi.create.content.optics;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -18,29 +20,41 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
-	default List<BeamSegment> constructOutBeam(Vector3d beamDirection) {
-		ArrayList<BeamSegment> beam = new ArrayList<>();
+public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
+	@Nullable
+	default Beam constructOutBeam(Vector3d beamDirection) {
+		return constructOutBeam(beamDirection, getTile().getPos());
+	}
+
+	@Nullable
+	default Beam constructOutBeam(Vector3d beamDirection, BlockPos testBlockPos) {
+
 		float[] segmentColor = getSegmentStartColor();
 		World world = getTile().getWorld();
 		if (world == null)
-			return beam;
+			return null;
 		Vector3d direction = VecHelper.step(beamDirection);
-		Vector3d testPos = VecHelper.getCenterOf(getTile().getPos());
+		Beam beam = new Beam(direction);
+		Vector3d testPos = VecHelper.getCenterOf(testBlockPos);
 
 		BeamSegment segment = new BeamSegment(this, segmentColor, testPos, direction);
 		beam.add(segment);
 
 		for (int i = 0; i < 128; i++) {
 			testPos = testPos.add(direction); // check next block
-			BlockPos testBlockPos = new BlockPos(testPos.x, testPos.y, testPos.z);
+			testBlockPos = new BlockPos(testPos.x, testPos.y, testPos.z);
 			BlockState testState = world.getBlockState(testBlockPos);
 			float[] newColor = BeaconHelper.getBeaconColorAt(testState.getBlock());
+
+			TileEntity te = testState.hasTileEntity() ? world.getTileEntity(testBlockPos) : null;
+			ILightHandler<?> lightHandler = te instanceof ILightHandler ? (ILightHandler<?>) te : null;
+			if (lightHandler != this)
+				beam.addListener(lightHandler);
+
 			if (newColor == null) {
-				TileEntity te = testState.hasTileEntity() ? world.getTileEntity(testBlockPos) : null;
-				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || te instanceof ILightHandler) {
-					if (te instanceof ILightHandler) {
-						((ILightHandler<?>) te).setColor(segmentColor);
+				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || (lightHandler != null && !lightHandler.canLightPass())) {
+					if (lightHandler != null) {
+						lightHandler.setColor(segmentColor);
 					}
 					break;
 				}
@@ -69,4 +83,18 @@ public interface ILightHandler<T extends TileEntity & ILightHandler<T>> {
 		return null;
 	}
 
+	default void onBeamRemoved(Beam beam) {
+	}
+
+	default Stream<Beam> constructSubBeams(Beam beam) {
+		return Stream.empty();
+	}
+
+	default Iterator<Beam> getRenderBeams() {
+		return Collections.emptyIterator();
+	}
+
+	default boolean canLightPass() {
+		return false;
+	}
 }

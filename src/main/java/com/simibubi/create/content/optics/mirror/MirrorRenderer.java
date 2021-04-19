@@ -6,7 +6,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.optics.BeamSegment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -30,15 +29,8 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 		MirrorTileEntity mirrorTe = (MirrorTileEntity) te;
 
 		renderMirror(mirrorTe, partialTicks, ms, buffer, light);
-		renderOutBeam(mirrorTe.beam, partialTicks, ms, buffer);
-	}
-
-	private void renderOutBeam(Iterable<BeamSegment> beam, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer) {
-		double totalLength = 0;
-		for (BeamSegment beamSegment : beam) {
-			beamSegment.renderSegment(ms, buffer, partialTicks, totalLength);
-			totalLength += beamSegment.getTotalSectionLength();
-		}
+		((MirrorTileEntity) te).getRenderBeams()
+				.forEachRemaining(beam -> beam.render(ms, buffer, partialTicks));
 	}
 
 	private void renderMirror(MirrorTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light) {

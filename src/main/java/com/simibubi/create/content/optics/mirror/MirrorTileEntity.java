@@ -1,7 +1,17 @@
 package com.simibubi.create.content.optics.mirror;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.collect.Iterators;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.optics.BeamSegment;
+import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -22,24 +32,20 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class MirrorTileEntity extends KineticTileEntity implements ILightHandler<MirrorTileEntity> {
-	public final List<BeamSegment> beam;
 	protected float angle;
 	protected float clientAngleDiff;
+	Map<Beam, Beam> beams;
 	private float prevAngle;
-	private Optional<BeaconTileEntity> beacon;
+	@Nullable
+	private BeaconTileEntity beacon;
+	private Beam beaconBeam = null;
 	private float[] initialColor = DyeColor.WHITE.getColorComponentValues();
 
 	public MirrorTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
-		beacon = Optional.empty();
-		beam = new ArrayList<>();
+		beacon = null;
+		beams = new HashMap<>();
 		setLazyTickRate(20);
 	}
 
@@ -86,14 +92,40 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		float newAngle = angle + angularSpeed;
 		angle = newAngle % 360;
 
-		if (angle != prevAngle)
-			updateBeams();
+		if (angle != prevAngle) {
+			updateReflections();
+		}
+
+		if (beacon != null && beacon.isRemoved())
+			updateBeaconState();
 	}
 
-	private void updateBeams() {
-		beacon = BeaconHelper.getBeaconTE(pos, world);
-		beam.clear();
-		beam.addAll(constructOutBeam(getReflectionAngle(VecHelper.UP)));
+	private void updateBeaconState() {
+		BeaconTileEntity beaconBefore = beacon;
+		beacon = BeaconHelper.getBeaconTE(pos, world)
+				.orElse(null);
+
+		if (beaconBefore == beacon)
+			return;
+
+		if (beaconBefore != null) {
+			beaconBeam.onRemoved();
+			beaconBeam = null;
+			updateReflections();
+		}
+
+		if (beacon != null) {
+			beaconBeam = constructOutBeam(VecHelper.UP, beacon.getPos());
+			if (beaconBeam != null) {
+				beaconBeam.addListener(this);
+				beaconBeam.onCreated();
+			}
+		}
+	}
+
+	private void updateReflections() {
+		new HashMap<>(beams).forEach(Beam::removeSubBeam);
+		beams.replaceAll((b, v) -> reflectBeam(b));
 	}
 
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {
@@ -107,7 +139,8 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		updateBeams();
+		updateBeaconState();
+		updateReflections();
 	}
 
 	@Override
@@ -157,5 +190,39 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@OnlyIn(Dist.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 256.0D;
+	}
+
+	@Override
+	public Iterator<Beam> getRenderBeams() {
+		Iterator<Beam> beaconIter = beaconBeam == null ? Collections.emptyIterator() : Collections.singleton(beaconBeam)
+				.iterator();
+		return Iterators.concat(beams.values()
+				.iterator(), beaconIter);
+	}
+
+	@Override
+	public void onBeamRemoved(Beam beam) {
+		beams.remove(beam);
+	}
+
+
+	@Override
+	public Stream<Beam> constructSubBeams(Beam beam) {
+		Beam reflected = reflectBeam(beam);
+		if (reflected != null) {
+			beams.put(beam, reflected);
+			return Stream.of(reflected);
+		}
+		return Stream.empty();
+	}
+
+
+	private Beam reflectBeam(Beam beam) {
+		Beam reflected = constructOutBeam(getReflectionAngle(beam.getDirection()));
+		if (reflected != null) {
+			beam.registerSubBeam(reflected);
+			reflected.onCreated();
+		}
+		return reflected;
 	}
 }
