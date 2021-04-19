@@ -1,5 +1,6 @@
 package com.simibubi.create.content.optics.mirror;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +21,6 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.BeaconTileEntity;
@@ -40,7 +40,6 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Nullable
 	private BeaconTileEntity beacon;
 	private Beam beaconBeam = null;
-	private float[] initialColor = DyeColor.WHITE.getColorComponentValues();
 
 	public MirrorTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -93,7 +92,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		angle = newAngle % 360;
 
 		if (angle != prevAngle) {
-			updateReflections();
+			updateBeams();
 		}
 
 		if (beacon != null && beacon.isRemoved())
@@ -105,17 +104,14 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		beacon = BeaconHelper.getBeaconTE(pos, world)
 				.orElse(null);
 
-		if (beaconBefore == beacon)
-			return;
-
 		if (beaconBefore != null) {
-			beaconBeam.onRemoved();
+			beaconBeam.clear();
 			beaconBeam = null;
-			updateReflections();
+			updateBeams();
 		}
 
 		if (beacon != null) {
-			beaconBeam = constructOutBeam(VecHelper.UP, beacon.getPos());
+			beaconBeam = constructOutBeam(null, VecHelper.UP, beacon.getPos());
 			if (beaconBeam != null) {
 				beaconBeam.addListener(this);
 				beaconBeam.onCreated();
@@ -123,12 +119,18 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		}
 	}
 
-	private void updateReflections() {
-		new HashMap<>(beams).forEach(Beam::removeSubBeam);
-
+	private void updateBeams() {
 		Map<Beam, Beam> newBeams = new HashMap<>();
-		for (Beam beam : beams.keySet()) {
-			newBeams.put(beam, reflectBeam(beam));
+		for (Map.Entry<Beam, Beam> entry : beams.entrySet()) {
+			if (entry.getKey()
+					.isRemoved())
+				continue;
+
+			Beam reflected = reflectBeam(entry.getKey());
+			if (reflected != null) {
+				newBeams.put(entry.getKey(), reflected);
+				reflected.onCreated();
+			}
 		}
 		beams = newBeams;
 	}
@@ -145,7 +147,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	public void lazyTick() {
 		super.lazyTick();
 		updateBeaconState();
-		updateReflections();
+		updateBeams();
 	}
 
 	@Override
@@ -160,12 +162,6 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	@Override
 	public void setColor(float[] initialColor) {
-		this.initialColor = initialColor;
-	}
-
-	@Override
-	public float[] getSegmentStartColor() {
-		return initialColor;
 	}
 
 	@Nonnull
@@ -205,17 +201,20 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 				.iterator(), beaconIter);
 	}
 
-	@Override
-	public void onBeamRemoved(Beam beam) {
-		beams.remove(beam);
-	}
-
 
 	@Override
 	public Stream<Beam> constructSubBeams(Beam beam) {
+		if (beams.keySet()
+				.stream()
+				.map(Beam::getDirection)
+				.map(Vector3d::normalize)
+				.anyMatch(beam.getDirection()
+						.normalize()::equals))
+			return Stream.empty();
 		Beam reflected = reflectBeam(beam);
 		if (reflected != null) {
 			beams.put(beam, reflected);
+			beam.addListener(this);
 			return Stream.of(reflected);
 		}
 		return Stream.empty();
@@ -223,11 +222,21 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 
 	private Beam reflectBeam(Beam beam) {
-		Beam reflected = constructOutBeam(getReflectionAngle(beam.getDirection()));
-		if (reflected != null) {
-			beam.registerSubBeam(reflected);
-			reflected.onCreated();
-		}
-		return reflected;
+		Vector3d inDir = beam.getDirection()
+				.normalize();
+		Vector3d outDir = getReflectionAngle(inDir).normalize();
+
+		if (inDir.subtract(outDir)
+				.normalize() == Vector3d.ZERO)
+			return null;
+
+		// TE already has input beam at that direction
+
+		return constructOutBeam(beam, outDir);
+	}
+
+	@Override
+	public Collection<Beam> getOutBeams() {
+		return beams.keySet();
 	}
 }

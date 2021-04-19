@@ -1,6 +1,7 @@
 package com.simibubi.create.content.optics;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -22,19 +23,19 @@ import net.minecraft.world.World;
 
 public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 	@Nullable
-	default Beam constructOutBeam(Vector3d beamDirection) {
-		return constructOutBeam(beamDirection, getTile().getPos());
+	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection) {
+		return constructOutBeam(parent, beamDirection, getTile().getPos());
 	}
 
 	@Nullable
-	default Beam constructOutBeam(Vector3d beamDirection, BlockPos testBlockPos) {
+	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos) {
 
-		float[] segmentColor = getSegmentStartColor();
+		float[] segmentColor = parent == null ? DyeColor.WHITE.getColorComponentValues() : parent.getColorAt(testBlockPos);
 		World world = getTile().getWorld();
 		if (world == null)
 			return null;
 		Vector3d direction = VecHelper.step(beamDirection);
-		Beam beam = new Beam(direction);
+		Beam beam = new Beam(parent, direction);
 		Vector3d testPos = VecHelper.getCenterOf(testBlockPos);
 
 		BeamSegment segment = new BeamSegment(this, segmentColor, testPos, direction);
@@ -74,16 +75,9 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 	default void setColor(float[] segmentColor) {
 	}
 
-	default float[] getSegmentStartColor() {
-		return DyeColor.WHITE.getColorComponentValues();
-	}
-
 	@Nullable
 	default Direction getBeamRotationAround() {
 		return null;
-	}
-
-	default void onBeamRemoved(Beam beam) {
 	}
 
 	default Stream<Beam> constructSubBeams(Beam beam) {
@@ -96,5 +90,9 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 
 	default boolean canLightPass() {
 		return false;
+	}
+
+	default Collection<Beam> getOutBeams() {
+		return Collections.emptySet();
 	}
 }

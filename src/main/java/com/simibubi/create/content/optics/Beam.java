@@ -8,44 +8,33 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.item.DyeColor;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class Beam extends ArrayList<BeamSegment> {
-	public final Set<Beam> subBeams;
 	private final Set<ILightHandler<?>> lightEventListeners;
 	private final Vector3d direction;
-	private boolean removed = false;
+	@Nullable
+	private final Beam parent;
 
-	public Beam(Vector3d direction) {
+	public Beam(@Nullable Beam parent, Vector3d direction) {
 		super();
+		this.parent = parent;
 		this.direction = direction;
 		lightEventListeners = new HashSet<>();
-		subBeams = new HashSet<>();
-	}
-
-	public void onRemoved() {
-		lightEventListeners.forEach(handler -> handler.onBeamRemoved(this));
-		subBeams.forEach(Beam::onRemoved);
-		subBeams.clear();
-		removed = true;
-		clear();
 	}
 
 	public void onCreated() {
 		lightEventListeners.stream()
 				.flatMap(handler -> handler.constructSubBeams(this))
-				.forEach(subBeams::add);
-	}
-
-	public void registerSubBeam(Beam beam) {
-		subBeams.add(beam);
+				.forEach(Beam::onCreated);
 	}
 
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer, float partialTicks) {
-		if (removed)
-			throw new IllegalStateException("tried to render removed beam");
 		forEach(beamSegment -> beamSegment.renderSegment(ms, buffer, partialTicks));
 	}
 
@@ -64,11 +53,28 @@ public class Beam extends ArrayList<BeamSegment> {
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
 		Beam that = (Beam) o;
-		return removed == that.removed && subBeams.equals(that.subBeams) && lightEventListeners.equals(that.lightEventListeners) && Objects.equals(direction, that.direction);
+		return lightEventListeners.equals(that.lightEventListeners) && Objects.equals(direction, that.direction);
 	}
 
-	public void removeSubBeam(Beam out) {
-		if (subBeams.remove(out))
-			out.onRemoved();
+	public boolean isRemoved() {
+		return isEmpty() || get(0).getHandler()
+				.getTile()
+				.isRemoved() || !get(0).getHandler()
+				.getOutBeams()
+				.contains(this) || (parent != null && parent.isRemoved());
+	}
+
+	public float[] getColorAt(BlockPos testBlockPos) {
+		float[] out = DyeColor.WHITE.getColorComponentValues();
+		for (BeamSegment segment : this) {
+			if (VecHelper.getCenterOf(testBlockPos)
+					.subtract(segment.getStart())
+					.dotProduct(segment.getNormalized()) > 0)
+				out = segment.getColors();
+			else
+				break;
+		}
+
+		return out;
 	}
 }

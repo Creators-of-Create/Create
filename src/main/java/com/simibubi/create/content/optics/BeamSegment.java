@@ -120,14 +120,10 @@ public class BeamSegment {
 				beaconBeamModifier = Quaternion.IDENTITY;
 			} else {
 				Vector3f unitVec = axis.getUnitVector();
-				beaconBeamModifier = unitVec.getRadialQuaternion((float) (-Math.acos(dotProd) * Math.signum(new Vector3d(unitVec).dotProduct(getNormalized().crossProduct(UP)))));
+				beaconBeamModifier = unitVec.getRadialQuaternion((float) Math.acos(dotProd) * (new Vector3d(unitVec).dotProduct(getNormalized().crossProduct(UP)) > 0 ? -1 : 1));
 			}
 		}
 		return beaconBeamModifier;
-	}
-
-	public double getTotalSectionLength() {
-		return totalSectionLength.getValue();
 	}
 
 	public long getWorldTick() {
