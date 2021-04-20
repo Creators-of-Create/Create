@@ -413,7 +413,7 @@
 	"block.create.zinc_ore": "Mineral de Zinc",
 
 	"entity.create.contraption": "Artefacto",
-	"entity.create.gantry_contraption": "Artefacto de ",
+	"entity.create.gantry_contraption": "Artefacto de Pórtico",
 	"entity.create.seat": "Asiento",
 	"entity.create.stationary_contraption": "Artefacto Estacionario",
 	"entity.create.super_glue": "Super Pegamento",
