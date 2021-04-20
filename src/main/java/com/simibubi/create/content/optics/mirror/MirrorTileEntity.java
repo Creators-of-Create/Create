@@ -17,7 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MirrorTileEntity extends KineticTileEntity implements ILightHandlerProvider {
+public class MirrorTileEntity extends KineticTileEntity implements ILightHandlerProvider, RotationMode.RotationModeProvider {
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected MirrorBehaviour mirror;
 
@@ -62,5 +62,10 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Override
 	public ILightHandler getHandler() {
 		return mirror;
+	}
+
+	@Override
+	public RotationMode getMode() {
+		return movementMode.get();
 	}
 }

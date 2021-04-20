@@ -30,4 +30,8 @@ public enum RotationMode implements INamedIconOptions {
 		return translationKey;
 	}
 
+	@FunctionalInterface
+	public interface RotationModeProvider {
+		RotationMode getMode();
+	}
 }
