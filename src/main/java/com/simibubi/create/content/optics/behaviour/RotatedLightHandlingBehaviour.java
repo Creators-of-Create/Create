@@ -1,7 +1,7 @@
-package com.simibubi.create.content.optics;
+package com.simibubi.create.content.optics.behaviour;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.optics.mirror.RotationMode;
+import com.simibubi.create.content.optics.ILightHandlerProvider;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.nbt.CompoundNBT;

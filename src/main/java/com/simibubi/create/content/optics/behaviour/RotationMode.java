@@ -1,4 +1,4 @@
-package com.simibubi.create.content.optics.mirror;
+package com.simibubi.create.content.optics.behaviour;
 
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;

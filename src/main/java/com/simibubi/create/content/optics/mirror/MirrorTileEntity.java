@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.content.optics.ILightHandlerProvider;
+import com.simibubi.create.content.optics.behaviour.RotationMode;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;

@@ -1,5 +1,11 @@
 package com.simibubi.create.content.optics;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -7,12 +13,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Beam extends ArrayList<BeamSegment> {
 	private final Set<ILightHandler> lightEventListeners;

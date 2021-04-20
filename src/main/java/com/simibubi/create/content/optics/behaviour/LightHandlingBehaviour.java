@@ -1,6 +1,19 @@
-package com.simibubi.create.content.optics;
+package com.simibubi.create.content.optics.behaviour;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Iterators;
+import com.simibubi.create.content.optics.Beam;
+import com.simibubi.create.content.optics.ILightHandler;
+import com.simibubi.create.content.optics.ILightHandlerProvider;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BeaconHelper;
@@ -8,12 +21,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
-
-import javax.annotation.Nullable;
-
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public abstract class LightHandlingBehaviour<T extends SmartTileEntity & ILightHandlerProvider> extends TileEntityBehaviour implements ILightHandler {
 	protected final T handler;

@@ -1,7 +1,11 @@
 package com.simibubi.create.content.optics.mirror;
 
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.content.optics.Beam;
-import com.simibubi.create.content.optics.RotatedLightHandlingBehaviour;
+import com.simibubi.create.content.optics.behaviour.RotatedLightHandlingBehaviour;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -9,10 +13,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3d;
-
-import javax.annotation.Nonnull;
-
-import java.util.stream.Stream;
 
 public class MirrorBehaviour extends RotatedLightHandlingBehaviour<MirrorTileEntity> {
 	public static final BehaviourType<MirrorBehaviour> TYPE = new BehaviourType<>();

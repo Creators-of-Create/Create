@@ -28,7 +28,8 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 		MirrorTileEntity mirrorTe = (MirrorTileEntity) te;
 
 		renderMirror(mirrorTe, partialTicks, ms, buffer, light);
-		((MirrorTileEntity) te).getHandler().getRenderBeams()
+		((MirrorTileEntity) te).getHandler()
+				.getRenderBeams()
 				.forEachRemaining(beam -> beam.render(ms, buffer, partialTicks));
 	}
 
@@ -36,9 +37,11 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 
 		final Direction.Axis facing = te.getBlockState()
 				.get(BlockStateProperties.AXIS);
-		SuperByteBuffer superBuffer = AllBlockPartials.MIRROR_PLANE.renderOnDirectionalSouth(te.getBlockState(), te.getHandler().getBeamRotationAround());
+		SuperByteBuffer superBuffer = AllBlockPartials.MIRROR_PLANE.renderOnDirectionalSouth(te.getBlockState(), te.getHandler()
+				.getBeamRotationAround());
 
-		float interpolatedAngle = te.getHandler().getInterpolatedAngle(partialTicks - 1);
+		float interpolatedAngle = te.getHandler()
+				.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing, (float) (interpolatedAngle / 180 * Math.PI), light);
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getTranslucent()));
 	}
