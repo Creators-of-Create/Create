@@ -111,14 +111,16 @@ public class EffectsHandler {
 
 		program.setCameraPos(cameraPos.inverse());
 
-//		int n = 20;
+//		int n = 64;
 //		double rad = 15;
 //		for (int i = 0; i < n; i++) {
 //			double angle = ((double) i) / n * Math.PI * 2;
 //			program.addSphere(new SphereFilterProgram.FilterSphere()
-//					.setCenter(pos1.subtract(cameraPos).add(Math.sin(angle) * rad, 0, Math.cos(angle) * rad))
-//					.setRadius(10)
-//					.setFeather(0f)
+//					.setCenter(new Vector3d(852, 77, -204).subtract(cameraPos).add(Math.sin(angle) * rad, 0, Math.cos(angle) * rad))
+//					.setRadius(15)
+//					.setFeather(3f)
+//					.setFade(1f)
+//					.setDensity(0.5f)
 //					.setFilter(ColorMatrices.hueShiftRGB((float) i / n * 360 + i / 2f)));
 //		}
 
@@ -130,31 +132,37 @@ public class EffectsHandler {
 				.setDensity(1.3f)
 				.setFilter(ColorMatrices.grayscale()));
 
+		Matrix4f test = ColorMatrices.sepia(1f);
+
+
+		test.multiply(ColorMatrices.invert());
+
+		Matrix4f darken = new Matrix4f();
+		darken.loadIdentity();
+		darken.multiply(0.7f);
+		darken.a03 = 0.7f;
+		darken.a13 = 0.7f;
+		darken.a23 = 0.7f;
+		test.multiply(darken);
+
 		program.addSphere(new SphereFilterProgram.FilterSphere()
 				.setCenter(new Vector3d(858.5, 88, -259.5).subtract(cameraPos))
 				.setRadius(10f)
 				.setFeather(3f)
 				.setFade(1.8f)
-				.setDensity(1.3f)
+				.setDensity(0.5f)
 				.setStrength(1f)
-				.setFilter(ColorMatrices.sepia(1f)));
+				.setFilter(test));
 
-		Matrix4f test = ColorMatrices.grayscale();
-		Matrix4f colorize = new Matrix4f();
-		colorize.a00 = 1f;
-		colorize.a11 = 0.5f;
-		colorize.a22 = 0.5f;
-		colorize.a33 = 1f;
-		test = colorize;
 
 		program.addSphere(new SphereFilterProgram.FilterSphere()
 				.setCenter(new Vector3d(2310, 60, -954).subtract(cameraPos))
 				.setRadius(8f)
 				.setFeather(3f)
-				.setFade(0.1f)
-				.setDensity(0.5f)
+				.setFade(0.8f)
+				.setDensity(1.3f)
 				.setStrength(1f)
-				.setFilter(test));
+				.setFilter(ColorMatrices.grayscale()));
 
 		program.uploadFilters();
 

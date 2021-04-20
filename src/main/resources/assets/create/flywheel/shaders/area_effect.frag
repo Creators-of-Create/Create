@@ -73,23 +73,34 @@ float surfaceFilterStrength(vec3 worldPos, vec4 sphere, float feather) {
     return 1 - smoothstep(sphere.w, sphere.w + feather, distance);
 }
 
+vec2 raySphere(vec3 worldDir, vec3 position, float radius) {
+    float rayLengthSqr = dot(worldDir, worldDir);
+    float sphereDistSqr = dot(position, position);
+
+    const vec3 M = vec3(2., 2., 4.);
+    vec3 f = M * vec3(dot(-position, worldDir), vec2(rayLengthSqr));
+
+    vec2 s = vec2(f.x, radius);
+    vec2 s2 = s * s;
+    float c = sphereDistSqr - s2.y;
+    float dc = f.z * c;
+
+    float discriminant = s2.x - dc;
+    float hitDepth = (-f.x - sqrt(discriminant)) / f.y;
+
+    return vec2(discriminant, hitDepth);
+}
+
 float bubbleFilterStrength(vec3 worldDir, float depth, vec4 sphere, float feather, float density) {
     vec3 position = sphere.xyz;
 
-    float rayLengthSqr = dot(worldDir, worldDir);
-    float b = 2.0 * dot(-position, worldDir);
-    float sphereDistSqr = dot(position, position);
-    float b2 = b*b;
-    float d = 4. * rayLengthSqr;
-    float e = 1. / (2.0*rayLengthSqr);
-
-    float radius = sphere.w + feather;
-    float c = sphereDistSqr - radius*radius;
-    float discriminant = b2 - d * c;
-    float hitDepth = (-b - sqrt(discriminant)) * e;
+    vec2 hit = raySphere(worldDir, position, sphere.w + feather);
+    float hitDepth = hit.y;
 
     float strength = 0.;
-    if (discriminant > 0 && hitDepth > 0 && hitDepth < depth) {
+
+    //float boo = step(0., discriminant) * step(0., hitDepth) * step(0., depth - hitDepth);
+    if (hit.x > 0 && hitDepth > 0 && hitDepth < depth) {
         vec3 hitPos = worldDir * hitDepth;
 
         vec3 normal = normalize(hitPos - position);
@@ -99,7 +110,7 @@ float bubbleFilterStrength(vec3 worldDir, float depth, vec4 sphere, float feathe
         strength += mix(0., normalDot * normalDot * density, clamp(depth - hitDepth, 0., feather + 1.));
     }
 
-    return clamp(strength, 0., 1.);
+    return clamp(strength, 0., 1.);// * boo;
 }
 
 float filterStrength(vec3 worldDir, float depth, vec4 sphere, vec4 data) {
@@ -120,6 +131,7 @@ float filterStrength(vec3 worldDir, float depth, vec4 sphere, vec4 data) {
 vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
     vec3 worldPos = worldDir * depth;
 
+    vec3 hsv = rgb2hsv(diffuse);
     vec3 accum = vec3(diffuse);
 
     for (int i = 0; i < uCount; i++) {
@@ -127,9 +139,16 @@ vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
 
         float strength = filterStrength(worldDir, depth, s.sphere, s.data);
 
-        vec3 filtered = filterColor(s.colorOp, diffuse);
+        if (strength > 0) {
+            const float fcon = 0.;
 
-        accum = mix(accum, filtered, clamp(strength * s.data.w, 0., 1.));
+            vec3 formatted = mix(diffuse, hsv, fcon);
+            vec3 filtered = filterColor(s.colorOp, formatted);
+            filtered = mix(filtered, hsv2rgbWrapped(filtered), fcon);
+
+            float mixing = clamp(strength * s.data.w, 0., 1.);
+            accum = mix(accum, filtered, mixing);
+        }
     }
 
     return accum;
