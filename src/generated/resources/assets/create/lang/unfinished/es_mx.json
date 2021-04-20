@@ -421,7 +421,9 @@
 	"fluid.create.milk": "Leche",
 	"fluid.create.potion": "Poción",
 	"fluid.create.tea": "Té del Constructor",
-
+  "fluid.create.chocolate": "Chocolate",
+  "fluid.create.honey": "Cariño"
+  
 	"item.create.andesite_alloy": "Aleación de Andesita",
 	"item.create.attribute_filter": "Filtro por Atributos",
 	"item.create.bar_of_chocolate": "Barra de Chocolate",
@@ -502,10 +504,10 @@
 	"advancement.create.root": "Bienvinido a Create"
 	"advancement.create.root.desc": "¡Es la timepo para creer artigulios asombrosos!",
 	"advancement.create.andesite_alloy": "Aliteraciónes en Abundancia",
-	"advancement.create.andesite_alloy.desc": "UNLOCALIZED: Create's materials have weird names, Andesite Alloy is one of them.",
-	"advancement.create.its_alive": "UNLOCALIZED: It's Alive!",
-	"advancement.create.its_alive.desc": "UNLOCALIZED: Watch your first kinetic component spin.",
-	"advancement.create.shifting_gears": "UNLOCALIZED: Shifting Gears",
+	"advancement.create.andesite_alloy.desc": "Los materiales en Create tienen nombres extraños, Andesita es una.",
+	"advancement.create.its_alive": "¡Esta vivo!",
+	"advancement.create.its_alive.desc": "Ve su componente cinético primero gira.",
+	"advancement.create.shifting_gears": "Engranajes Cambiandos",
 	"advancement.create.shifting_gears.desc": "UNLOCALIZED: Connect a Large Cogwheel to a Small Cogwheel, allowing you to change the speed of your contraption.",
 	"advancement.create.overstressed": "UNLOCALIZED: Overstressed",
 	"advancement.create.overstressed.desc": "UNLOCALIZED: Experience the limits of stress firsthand.",
