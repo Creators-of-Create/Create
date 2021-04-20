@@ -1,11 +1,5 @@
 package com.simibubi.create.content.optics;
 
-import static com.simibubi.create.foundation.utility.VecHelper.UP;
-import static net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -18,14 +12,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.*;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static com.simibubi.create.foundation.utility.VecHelper.UP;
+import static net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
 
 public class BeamSegment {
 	public final float[] colors;
@@ -120,7 +116,14 @@ public class BeamSegment {
 				beaconBeamModifier = Quaternion.IDENTITY;
 			} else {
 				Vector3f unitVec = axis.getUnitVector();
-				beaconBeamModifier = unitVec.getRadialQuaternion((float) Math.acos(dotProd) * (new Vector3d(unitVec).dotProduct(getNormalized().crossProduct(UP)) > 0 ? -1 : 1));
+				beaconBeamModifier = unitVec.getRadialQuaternion((float) Math.acos(dotProd) * (new Vector3d(unitVec).dotProduct(getNormalized().crossProduct(UP)) > 0
+						^ axis.getAxis()
+						.isVertical() ? -1 : 1));
+				if (axis.getAxis()
+						.isVertical()) {
+					beaconBeamModifier.multiply(unitVec.getDegreesQuaternion(-90));
+					beaconBeamModifier.multiply(new Vector3f(getNormalized().crossProduct(Vector3d.of(axis.getDirectionVec()))).getDegreesQuaternion(90));
+				}
 			}
 		}
 		return beaconBeamModifier;

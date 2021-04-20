@@ -1,16 +1,5 @@
 package com.simibubi.create.content.optics.mirror;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Iterators;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.Beam;
@@ -33,6 +22,13 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 public class MirrorTileEntity extends KineticTileEntity implements ILightHandler<MirrorTileEntity> {
 	protected float angle;
 	protected float clientAngleDiff;
@@ -41,6 +37,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Nullable
 	private BeaconTileEntity beacon;
 	private Beam beaconBeam = null;
+	private boolean isUpdating = false;
 
 	public MirrorTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -122,8 +119,12 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	@Override
 	public void updateBeams() {
+		if (isUpdating)
+			return;
+		isUpdating = true;
+
 		Map<Beam, Beam> newBeams = new HashMap<>();
-		for (Map.Entry<Beam, Beam> entry : beams.entrySet()) {
+		for (Map.Entry<Beam, Beam> entry : new HashSet<>(beams.entrySet())) {
 			entry.getValue()
 					.onRemoved();
 			if (entry.getKey()
@@ -138,13 +139,22 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 			}
 		}
 		beams = newBeams;
+		isUpdating = false;
 	}
 
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {
 		inputAngle = inputAngle.normalize();
-		Vector3d normal = new Matrix3d().asIdentity()
-				.asAxisRotation(getBlockState().get(BlockStateProperties.AXIS), AngleHelper.rad(angle))
-				.transform(VecHelper.UP);
+		Direction.Axis axis = getBlockState().get(BlockStateProperties.AXIS);
+		Vector3d normal;
+		if (axis.isHorizontal())
+			normal = new Matrix3d().asIdentity()
+					.asAxisRotation(axis, AngleHelper.rad(angle))
+					.transform(VecHelper.UP);
+		else
+			normal = new Matrix3d().asIdentity()
+					.asAxisRotation(axis, AngleHelper.rad(-angle))
+					.transform(VecHelper.SOUTH);
+
 		return inputAngle.subtract(normal.scale(2 * inputAngle.dotProduct(normal)));
 	}
 
