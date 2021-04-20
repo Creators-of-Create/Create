@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.optics.ILightHandler;
+import com.simibubi.create.foundation.block.ITE;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,7 +30,7 @@ public class BeaconHelper {
 		while (testPos.getY() > 0) {
 			testPos = testPos.down();
 			BlockState state = world.getBlockState(testPos);
-			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+			if (getCorrectedOpacity(state, world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
 				break;
 			if (state.getBlock() == Blocks.BEACON) {
 				TileEntity te = world.getTileEntity(testPos);
@@ -58,5 +61,17 @@ public class BeaconHelper {
 			return null;
 		return ((IBeaconBeamColorProvider) block).getColor()
 				.getColorComponentValues();
+	}
+
+	public static int getCorrectedOpacity(BlockState state, IBlockReader world, BlockPos pos) {
+		try {
+			if (state.getBlock() instanceof ITE) {
+				TileEntity te = ((ITE<?>) state.getBlock()).getTileEntity(world, pos);
+				if (te instanceof ILightHandler && !((ILightHandler<?>) te).canLightPass())
+					return 15;
+			}
+		} catch (ITE.TileEntityException ignored) {
+		}
+		return state.getOpacity(world, pos);
 	}
 }

@@ -5,10 +5,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.foundation.collision.Matrix3d;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.BeaconHelper;
-import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.utility.*;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class MirrorTileEntity extends KineticTileEntity implements ILightHandler<MirrorTileEntity> {
+	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected float angle;
 	protected float clientAngleDiff;
 	Map<Beam, Beam> beams;
@@ -44,6 +45,15 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		beacon = null;
 		beams = new HashMap<>();
 		setLazyTickRate(20);
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translate("optics.mirror.movement_mode"),
+				this, new CenteredSideValueBoxTransform((state, d) -> getAxis() != d.getAxis()));
+		movementMode.requiresWrench();
+		behaviours.add(movementMode);
 	}
 
 	@Override
@@ -63,6 +73,8 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	public float getInterpolatedAngle(float partialTicks) {
 		if (isVirtual())
 			return MathHelper.lerp(partialTicks + .5f, prevAngle, angle);
+		if (movementMode.get() == RotationMode.ROTATE_LIMITED && Math.abs(angle) == 90)
+			return angle;
 		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
 
@@ -88,6 +100,12 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		float angularSpeed = getAngularSpeed();
 		float newAngle = angle + angularSpeed;
 		angle = newAngle % 360;
+
+		if (movementMode.get() == RotationMode.ROTATE_LIMITED)
+			angle = MathHelper.clamp(angle, -90, 90);
+		if (movementMode.get() == RotationMode.ROTATE_45 && angle == prevAngle) // don't snap while still rotating
+			angle = 45F * Math.round(Math.round(angle) / 45F);
+
 
 		if (angle != prevAngle) {
 			updateBeams();
@@ -144,7 +162,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {
 		inputAngle = inputAngle.normalize();
-		Direction.Axis axis = getBlockState().get(BlockStateProperties.AXIS);
+		Direction.Axis axis = getAxis();
 		Vector3d normal;
 		if (axis.isHorizontal())
 			normal = new Matrix3d().asIdentity()
@@ -178,7 +196,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	@Nonnull
 	@Override
 	public Direction getBeamRotationAround() {
-		return Direction.getFacingFromAxisDirection(getBlockState().get(BlockStateProperties.AXIS), Direction.AxisDirection.POSITIVE);
+		return Direction.getFacingFromAxisDirection(getAxis(), Direction.AxisDirection.POSITIVE);
 	}
 
 	@Override
@@ -225,11 +243,14 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 		if (inDir == null)
 			return null;
 
-		Vector3d outDir = getReflectionAngle(inDir).normalize();
+		return constructOutBeam(beam, getReflectionAngle(inDir).normalize());
+	}
 
-		if (inDir.subtract(outDir)
-				.normalize() == Vector3d.ZERO)
-			return null;
-		return constructOutBeam(beam, outDir);
+	private Direction.Axis getAxis() {
+		return getBlockState().get(BlockStateProperties.AXIS);
+	}
+
+	public float getAngle() {
+		return angle;
 	}
 }
