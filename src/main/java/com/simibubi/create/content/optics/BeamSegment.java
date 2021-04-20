@@ -1,5 +1,11 @@
 package com.simibubi.create.content.optics;
 
+import static com.simibubi.create.foundation.utility.VecHelper.UP;
+import static net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -8,20 +14,17 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.*;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import static com.simibubi.create.foundation.utility.VecHelper.UP;
-import static net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer.TEXTURE_BEACON_BEAM;
 
 public class BeamSegment {
 	public final float[] colors;
@@ -29,12 +32,12 @@ public class BeamSegment {
 	private final Vector3d start;
 	private final LazyValue<Vector3d> normalized;
 	private final LazyValue<Float> totalSectionLength;
-	private final ILightHandler<? extends TileEntity> handler;
+	private final ILightHandler handler;
 	@Nullable
 	private Quaternion beaconBeamModifier;
 	private int length;
 
-	public BeamSegment(ILightHandler<? extends TileEntity> handler, @Nonnull float[] color, Vector3d start, Vector3d direction) {
+	public BeamSegment(ILightHandler handler, @Nonnull float[] color, Vector3d start, Vector3d direction) {
 		this.handler = handler;
 		this.colors = color;
 		this.direction = direction;
@@ -100,7 +103,7 @@ public class BeamSegment {
 		return normalized.getValue();
 	}
 
-	public ILightHandler<? extends TileEntity> getHandler() {
+	public ILightHandler getHandler() {
 		return handler;
 	}
 
@@ -131,8 +134,7 @@ public class BeamSegment {
 
 	public long getWorldTick() {
 		World world = getHandler()
-				.getTile()
-				.getWorld();
+				.getHandlerWorld();
 		if (world == null)
 			return 0;
 		return world.getGameTime();
@@ -146,8 +148,7 @@ public class BeamSegment {
 
 		MatrixStacker stacker = MatrixStacker.of(ms)
 				.push()
-				.translate(getStart().subtract(VecHelper.getCenterOf(getHandler().getTile()
-						.getPos())))
+				.translate(getStart().subtract(VecHelper.getCenterOf(getHandler().getBlockPos())))
 				.push()
 				.translate(VecHelper.CENTER_OF_ORIGIN)
 				.multiply(getBeaconBeamModifier())

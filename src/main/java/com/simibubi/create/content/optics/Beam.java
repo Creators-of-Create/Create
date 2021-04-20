@@ -1,22 +1,21 @@
 package com.simibubi.create.content.optics;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 public class Beam extends ArrayList<BeamSegment> {
-	private final Set<ILightHandler<?>> lightEventListeners;
+	private final Set<ILightHandler> lightEventListeners;
 	@Nullable
 	private final Beam parent;
 	private boolean removed = false;
@@ -37,7 +36,7 @@ public class Beam extends ArrayList<BeamSegment> {
 		forEach(beamSegment -> beamSegment.renderSegment(ms, buffer, partialTicks));
 	}
 
-	public void addListener(@Nullable ILightHandler<?> tile) {
+	public void addListener(@Nullable ILightHandler tile) {
 		if (tile != null)
 			lightEventListeners.add(tile);
 	}
@@ -55,9 +54,8 @@ public class Beam extends ArrayList<BeamSegment> {
 	}
 
 	@Nullable
-	public TileEntity getHandler() {
-		return size() == 0 ? null : get(0).getHandler()
-				.getTile();
+	public ILightHandler getHandler() {
+		return size() == 0 ? null : get(0).getHandler();
 	}
 
 	@Override
@@ -71,8 +69,9 @@ public class Beam extends ArrayList<BeamSegment> {
 
 	public boolean isRemoved() {
 		// || !get(0).getHandler().getOutBeams().contains(this)
-		TileEntity handler = getHandler();
-		removed = removed || isEmpty() || handler == null || handler.isRemoved() || (parent != null && parent.isRemoved());
+		ILightHandler handler = getHandler();
+		removed = removed || isEmpty() || handler == null || handler.getTile()
+				.isRemoved() || (parent != null && parent.isRemoved());
 		return removed;
 	}
 

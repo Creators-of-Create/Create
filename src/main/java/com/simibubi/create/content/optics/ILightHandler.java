@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -20,14 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
+public interface ILightHandler {
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection) {
-		return constructOutBeam(parent, beamDirection, getTile().getPos());
+		return constructOutBeam(parent, beamDirection, getBlockPos());
 	}
 
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos) {
 		Beam beam = new Beam(parent);
-		World world = getTile().getWorld();
+		World world = getHandlerWorld();
 		if (world == null)
 			return beam;
 
@@ -43,15 +42,15 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 			testPos = testPos.add(direction); // check next block
 			testBlockPos = new BlockPos(testPos.x, testPos.y, testPos.z);
 			BlockState testState = world.getBlockState(testBlockPos);
-			float[] newColor = BeaconHelper.getBeaconColorAt(testState.getBlock());
+			float[] newColor = BeaconHelper.getBeaconColorFor(testState.getBlock());
 
 			TileEntity te = testState.hasTileEntity() ? world.getTileEntity(testBlockPos) : null;
-			ILightHandler<?> lightHandler = te instanceof ILightHandler ? (ILightHandler<?>) te : null;
+			ILightHandler lightHandler = te instanceof ILightHandlerProvider ? ((ILightHandlerProvider) te).getHandler() : null;
 			if (lightHandler != this)
 				beam.addListener(lightHandler);
 
 			if (newColor == null) {
-				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || (lightHandler != null && !lightHandler.canLightPass())) {
+				if (testState.getOpacity(world, testBlockPos) >= 15 && testState.getBlock() != Blocks.BEDROCK || (lightHandler != null && lightHandler.absorbsLight())) {
 					break;
 				}
 			} else if (!Arrays.equals(segmentColor, newColor)) {
@@ -65,7 +64,15 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 		return beam;
 	}
 
-	T getTile();
+	default World getHandlerWorld() {
+		return getTile().getWorld();
+	}
+
+	default BlockPos getBlockPos() {
+		return getTile().getPos();
+	}
+
+	TileEntity getTile();
 
 	@Nullable
 	default Direction getBeamRotationAround() {
@@ -80,9 +87,14 @@ public interface ILightHandler<T extends SmartTileEntity & ILightHandler<T>> {
 		return Collections.emptyIterator();
 	}
 
-	default boolean canLightPass() {
-		return false;
+	default boolean absorbsLight() {
+		return true;
 	}
 
-	default void updateBeams(){}
+	default void updateBeams() {
+	}
+
+	default float getInterpolatedAngle(float v) {
+		return 0;
+	}
 }
