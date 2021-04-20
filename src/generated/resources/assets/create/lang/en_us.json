@@ -420,7 +420,10 @@
 	"fluid.create.milk": "Milk",
 	"fluid.create.potion": "Potion",
 	"fluid.create.tea": "Builder's Tea",
-
+  "fluid.create.honey": "Honey",
+  "fluid.create.chocolate": "Chocolate",
+  
+  
 	"item.create.andesite_alloy": "Andesite Alloy",
 	"item.create.attribute_filter": "Attribute Filter",
 	"item.create.bar_of_chocolate": "Bar of Chocolate",
