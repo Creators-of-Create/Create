@@ -10,4 +10,9 @@ public class GearboxTileEntity extends DirectionalShaftHalvesTileEntity {
 		super(type);
 	}
 	
+	@Override
+	protected boolean isNoisy() {
+		return false;
+	}
+	
 }

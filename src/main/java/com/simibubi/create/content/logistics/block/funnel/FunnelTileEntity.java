@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
@@ -61,7 +62,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		BlockState state = getBlockState();
 		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
-		if (state.method_28500(BlockStateProperties.POWERED).orElse(false))
+		if (state.method_28500(BlockStateProperties.POWERED)
+			.orElse(false))
 			return Mode.PAUSED;
 		if (state.getBlock() instanceof BeltFunnelBlock) {
 			Shape shape = state.get(BeltFunnelBlock.SHAPE);
@@ -156,7 +158,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			.isVertical();
 		boolean up = facing == Direction.UP;
 
-		outputPos = outputPos.add(Vector3d.of(facing.getDirectionVec()).scale(vertical ? up ? .15f : .5f : .25f));
+		outputPos = outputPos.add(Vector3d.of(facing.getDirectionVec())
+			.scale(vertical ? up ? .15f : .5f : .25f));
 		if (!vertical)
 			outputPos = outputPos.subtract(0, .45f, 0);
 
@@ -283,6 +286,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.set(inward ? 1 : -1);
+			AllSoundEvents.FUNNEL_FLAP.playAt(world, pos, 1, 1, true);
 		}
 	}
 

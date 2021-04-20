@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 606",
+	"_": "Missing Localizations: 610",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
-	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "メカニカルプレスが作動する",
-	"create.subtitle.blockzapper_deny": "失敗音",
 	"create.subtitle.blockzapper_confirm": "成功音",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "ブロックを発射して設置する",
 	"create.subtitle.blaze_munch": "ブレイズの咀嚼音",
+	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
+	"create.subtitle.mechanical_press_activation": "メカニカルプレスが作動する",
+	"create.subtitle.blockzapper_deny": "失敗音",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

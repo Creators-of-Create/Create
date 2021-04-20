@@ -45,6 +45,22 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		DEPOT_SLIDE = create("depot_slide").subtitle("Item slides")
+			.playExisting(SoundEvents.BLOCK_SAND_BREAK, .125f, 1.5f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		DEPOT_PLOP = create("depot_plop").subtitle("Item lands")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, .25f, 1.25f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		FUNNEL_FLAP = create("funnel_flap").subtitle("Funnel Flaps")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_ROTATE_ITEM, .125f, 1.5f)
+			.playExisting(SoundEvents.BLOCK_WOOL_BREAK, .0425f, .75f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
 		SLIME_ADDED = create("slime_added").subtitle("Slime squishes")
 			.playExisting(SoundEvents.BLOCK_SLIME_BLOCK_PLACE)
 			.category(SoundCategory.BLOCKS)
@@ -76,6 +92,10 @@ public class AllSoundEvents {
 		BLOCKZAPPER_DENY = create("blockzapper_deny").subtitle("Declining boop")
 			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 1f, 0.5f)
 			.category(SoundCategory.PLAYERS)
+			.build(),
+
+		COGS = create("cogs").subtitle("Cogwheels rumble")
+			.category(SoundCategory.BLOCKS)
 			.build(),
 
 		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
@@ -212,6 +232,8 @@ public class AllSoundEvents {
 
 		public abstract void write(JsonObject json);
 
+		public abstract SoundEvent getMainEvent();
+
 		public String getSubtitleKey() {
 			return Create.ID + ".subtitle." + id;
 		}
@@ -255,6 +277,12 @@ public class AllSoundEvents {
 
 		abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
 
+		public void playAt(World world, BlockPos pos, float volume, float pitch, boolean fade) {
+			playAt(world, pos.getX(), pos.getY(), pos.getZ(), volume, pitch, fade);
+		}
+		
+		public abstract void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade);
+
 	}
 
 	static class WrappedSoundEntry extends SoundEntry {
@@ -278,6 +306,12 @@ public class AllSoundEvents {
 				compiledEvents.add(Pair.of(sound, wrappedEvents.get(i)
 					.getSecond()));
 			}
+		}
+
+		@Override
+		public SoundEvent getMainEvent() {
+			return compiledEvents.get(0)
+				.getFirst();
 		}
 
 		protected String getIdOf(int i) {
@@ -311,6 +345,15 @@ public class AllSoundEvents {
 					volPitch.getSecond() * pitch);
 			}
 		}
+
+		@Override
+		public void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade) {
+			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) {
+				Couple<Float> volPitch = pair.getSecond();
+				world.playSound(x, y, z, pair.getFirst(), category, volPitch.getFirst() * volume,
+					volPitch.getSecond() * pitch, fade);
+			}
+		}
 	}
 
 	static class CustomSoundEntry extends SoundEntry {
@@ -324,8 +367,12 @@ public class AllSoundEvents {
 		@Override
 		public void register(IForgeRegistry<SoundEvent> registry) {
 			ResourceLocation location = getLocation();
-			SoundEvent sound = new SoundEvent(location).setRegistryName(location);
-			registry.register(sound);
+			registry.register(event = new SoundEvent(location).setRegistryName(location));
+		}
+
+		@Override
+		public SoundEvent getMainEvent() {
+			return event;
 		}
 
 		@Override
@@ -341,6 +388,11 @@ public class AllSoundEvents {
 		@Override
 		void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
 			world.playSound(entity, x, y, z, event, category, volume, pitch);
+		}
+
+		@Override
+		public void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade) {
+			world.playSound(x, y, z, event, category, volume, pitch, fade);
 		}
 
 	}

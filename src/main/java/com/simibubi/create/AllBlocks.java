@@ -447,6 +447,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BasinBlock> BASIN = REGISTRATE.block("basin", BasinBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.sound(SoundType.NETHERITE))
 		.blockstate(new BasinGenerator()::generate)
 		.onRegister(addMovementBehaviour(new BasinMovementBehaviour()))
 		.item()
@@ -496,6 +497,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.blockstate(new ChuteGenerator()::generate)
 		.item(ChuteItem::new)
@@ -504,6 +506,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SmartChuteBlock> SMART_CHUTE = REGISTRATE.block("smart_chute", SmartChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE))
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
 		.transform(customItemModel("_", "block"))

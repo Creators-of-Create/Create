@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 624",
+	"_": "Missing Localizations: 628",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
-	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime schiacciato",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
-	"create.subtitle.blockzapper_deny": "Boop in calo",
 	"create.subtitle.blockzapper_confirm": "Ding affermativo",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "Posiziona blocchi nello spazio",
 	"create.subtitle.blaze_munch": "Il blaze lo gusta felicemente",
+	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
+	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
+	"create.subtitle.blockzapper_deny": "Boop in calo",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -60,6 +61,7 @@ public class SharedDepotBlockMethods {
 			transported.beltPosition = .25f;
 			behaviour.setHeldItem(transported);
 			player.setHeldItem(hand, ItemStack.EMPTY);
+			AllSoundEvents.DEPOT_SLIDE.playOnServer(world, pos);
 		}
 
 		behaviour.tileEntity.notifyUpdate();

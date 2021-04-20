@@ -35,6 +35,47 @@
     ],
     "subtitle": "create.subtitle.blockzapper_place"
   },
+  "cogs": {
+    "sounds": [
+      "create:cogs"
+    ],
+    "subtitle": "create.subtitle.cogs"
+  },
+  "depot_plop": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.add_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.depot_plop"
+  },
+  "depot_slide": {
+    "sounds": [
+      {
+        "name": "minecraft:block.sand.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.depot_slide"
+  },
+  "funnel_flap": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.rotate_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.funnel_flap"
+  },
+  "funnel_flap_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wool.place",
+        "type": "event"
+      }
+    ]
+  },
   "mechanical_press_activation": {
     "sounds": [
       {

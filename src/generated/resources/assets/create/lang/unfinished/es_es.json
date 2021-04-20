@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 607",
+	"_": "Missing Localizations: 611",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "Disparos de Schematicannon",
-	"create.subtitle.schematicannon_finish": "Acabados de Schematicannon",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime aplastado",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "La Prensa Mecánica se activa",
-	"create.subtitle.blockzapper_deny": "Boop declinante",
 	"create.subtitle.blockzapper_confirm": "Ding afirmativo",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "Los bloques se colocan en su sitio",
 	"create.subtitle.blaze_munch": "Blaze mastica felizmente",
+	"create.subtitle.schematicannon_launch_block": "Disparos de Schematicannon",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "Acabados de Schematicannon",
+	"create.subtitle.mechanical_press_activation": "La Prensa Mecánica se activa",
+	"create.subtitle.blockzapper_deny": "Boop declinante",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

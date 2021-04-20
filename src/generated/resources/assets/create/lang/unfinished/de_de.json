@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 914",
+	"_": "Missing Localizations: 918",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "Bauplankanone schießt",
-	"create.subtitle.schematicannon_finish": "Bauplankanone endet",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Schleim matscht",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "Mechanische Presse wird aktiviert",
-	"create.subtitle.blockzapper_deny": "Ablehnendes Boop",
 	"create.subtitle.blockzapper_confirm": "Bestätigendes Ding",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "Blöcke zappen an Ort und Stelle",
 	"create.subtitle.blaze_munch": "Lohe kaut glücklich",
+	"create.subtitle.schematicannon_launch_block": "Bauplankanone schießt",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "Bauplankanone endet",
+	"create.subtitle.mechanical_press_activation": "Mechanische Presse wird aktiviert",
+	"create.subtitle.blockzapper_deny": "Ablehnendes Boop",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

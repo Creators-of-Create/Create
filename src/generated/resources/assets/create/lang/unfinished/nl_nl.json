@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1554",
+	"_": "Missing Localizations: 1558",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "UNLOCALIZED: Schematicannon fires",
-	"create.subtitle.schematicannon_finish": "UNLOCALIZED: Schematicannon dings",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "UNLOCALIZED: Slime squishes",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "UNLOCALIZED: Mechanical Press clangs",
-	"create.subtitle.blockzapper_deny": "UNLOCALIZED: Declining boop",
 	"create.subtitle.blockzapper_confirm": "UNLOCALIZED: Affirmative ding",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "UNLOCALIZED: Blockzapper zaps",
 	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze Burner munches",
+	"create.subtitle.schematicannon_launch_block": "UNLOCALIZED: Schematicannon fires",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "UNLOCALIZED: Schematicannon dings",
+	"create.subtitle.mechanical_press_activation": "UNLOCALIZED: Mechanical Press clangs",
+	"create.subtitle.blockzapper_deny": "UNLOCALIZED: Declining boop",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

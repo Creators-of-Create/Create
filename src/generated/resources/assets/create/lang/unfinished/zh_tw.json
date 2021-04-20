@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 626",
+	"_": "Missing Localizations: 630",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1153,15 +1153,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "藍圖大炮發射",
-	"create.subtitle.schematicannon_finish": "藍圖大炮完成任務",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "黏液擠壓",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "液壓機工作",
-	"create.subtitle.blockzapper_deny": "放置失敗",
 	"create.subtitle.blockzapper_confirm": "選擇方塊",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "放置方塊",
 	"create.subtitle.blaze_munch": "烈焰使者開心地吃著",
+	"create.subtitle.schematicannon_launch_block": "藍圖大炮發射",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "藍圖大炮完成任務",
+	"create.subtitle.mechanical_press_activation": "液壓機工作",
+	"create.subtitle.blockzapper_deny": "放置失敗",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

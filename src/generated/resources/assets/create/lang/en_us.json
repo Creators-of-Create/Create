@@ -1152,15 +1152,19 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
-	"create.subtitle.schematicannon_finish": "Schematicannon dings",
+	"create.subtitle.cogs": "Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime squishes",
 	"create.subtitle.mechanical_press_activation_belt": "Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
-	"create.subtitle.blockzapper_deny": "Declining boop",
 	"create.subtitle.blockzapper_confirm": "Affirmative ding",
+	"create.subtitle.depot_slide": "Item slides",
 	"create.subtitle.blockzapper_place": "Blockzapper zaps",
 	"create.subtitle.blaze_munch": "Blaze Burner munches",
+	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
+	"create.subtitle.funnel_flap": "Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "Schematicannon dings",
+	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
+	"create.subtitle.blockzapper_deny": "Declining boop",
+	"create.subtitle.depot_plop": "Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
