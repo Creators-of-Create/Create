@@ -15,13 +15,13 @@ Technology that empowers the player.'''
 [[dependencies.create]] 
     modId="forge"
     mandatory=true 
-    versionRange="[34.0.0,)"
+    versionRange="[35.1.16,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.create]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3,1.17)"
+    versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"

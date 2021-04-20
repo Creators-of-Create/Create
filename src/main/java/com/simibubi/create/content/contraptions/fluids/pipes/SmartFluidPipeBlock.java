@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.network.DebugPacketSender;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.tileentity.TileEntity;
@@ -151,6 +152,11 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	@Override
 	public Axis getAxis(BlockState state) {
 		return getPipeAxis(state);
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

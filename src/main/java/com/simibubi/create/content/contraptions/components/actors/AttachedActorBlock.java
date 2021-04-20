@@ -12,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -69,4 +70,9 @@ public abstract class AttachedActorBlock extends HorizontalBlock implements IWre
 		return getDefaultState().with(HORIZONTAL_FACING, facing);
 	}
 
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
+	
 }

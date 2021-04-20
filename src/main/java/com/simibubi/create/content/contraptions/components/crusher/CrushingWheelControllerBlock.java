@@ -20,6 +20,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -200,6 +201,11 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	@Override
 	public Class<CrushingWheelControllerTileEntity> getTileEntityClass() {
 		return CrushingWheelControllerTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

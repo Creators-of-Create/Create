@@ -55,7 +55,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.3.1a";
+	public static final String VERSION = "0.3.1c";
 
 	public static Logger logger = LogManager.getLogger();
 	public static ItemGroup baseCreativeTab = new CreateItemGroup();
@@ -143,7 +143,7 @@ public class Create {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.BLAZE_MUNCH.generator(gen));
+		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);

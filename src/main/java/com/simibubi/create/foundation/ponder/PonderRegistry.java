@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +63,10 @@ public class PonderRegistry {
 
 	public static MultiSceneBuilder forComponents(ItemProviderEntry<?>... components) {
 		return new MultiSceneBuilder(Arrays.asList(components));
+	}
+	
+	public static MultiSceneBuilder forComponents(Iterable<? extends ItemProviderEntry<?>> components) {
+		return new MultiSceneBuilder(components);
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
@@ -136,9 +139,9 @@ public class PonderRegistry {
 
 	public static class MultiSceneBuilder {
 
-		private final Collection<ItemProviderEntry<?>> components;
+		private final Iterable<? extends ItemProviderEntry<?>> components;
 
-		MultiSceneBuilder(Collection<ItemProviderEntry<?>> components) {
+		MultiSceneBuilder(Iterable<? extends ItemProviderEntry<?>> components) {
 			this.components = components;
 		}
 

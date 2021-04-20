@@ -60,7 +60,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-
 public class BeltTileEntity extends KineticTileEntity implements LightUpdateListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
@@ -118,7 +117,8 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 
 		if (light == null && world.isRemote) {
 			initializeLight();
-			LightUpdater.getInstance().startListening(getBeltVolume(), this);
+			LightUpdater.getInstance()
+				.startListening(getBeltVolume(), this);
 		}
 
 		getInventory().tick();
@@ -423,6 +423,10 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 	private boolean canInsertFrom(Direction side) {
 		if (getSpeed() == 0)
 			return false;
+		BlockState state = getBlockState();
+		if (state.contains(BeltBlock.SLOPE)
+			&& (state.get(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS || state.get(BeltBlock.SLOPE) == BeltSlope.VERTICAL))
+			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
 
@@ -515,7 +519,10 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 
 	@Override
 	public boolean shouldRenderAsTE() {
-		return isController();
+		if (world == null)
+			return isController();
+		BlockState state = getBlockState();
+		return state != null && state.contains(BeltBlock.PART) && state.get(BeltBlock.PART) == BeltPart.START;
 	}
 
 	@Override

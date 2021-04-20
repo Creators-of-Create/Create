@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
@@ -24,7 +25,8 @@ public class ScrollValueHandler {
 	private static float lastPassiveScroll = 0.0f;
 	private static float passiveScroll = 0.0f;
 	private static float passiveScrollDirection = 1f;
-	private static final PhysicalFloat wrenchCog = PhysicalFloat.create().withDrag(0.3);
+	private static final PhysicalFloat wrenchCog = PhysicalFloat.create()
+		.withDrag(0.3);
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
@@ -47,6 +49,7 @@ public class ScrollValueHandler {
 
 		passiveScrollDirection = (float) -delta;
 		wrenchCog.bump(3, -delta * 10);
+		int prev = scrolling.scrollableValue;
 
 		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
 			return false;
@@ -66,6 +69,11 @@ public class ScrollValueHandler {
 		} else
 			applyTo(delta, scrolling);
 
+		if (prev != scrolling.scrollableValue) {
+			float pitch = (scrolling.scrollableValue - scrolling.min) / (float) (scrolling.max - scrolling.min);
+			pitch = MathHelper.lerp(pitch, 1.5f, 2f);
+			AllSoundEvents.SCROLL_VALUE.play(world, mc.player, blockPos, 1, pitch);
+		}
 		return true;
 	}
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.InWorldProcessing;
@@ -22,6 +23,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
@@ -34,11 +36,11 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -180,12 +182,14 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				applyPressingInWorld();
 			if (onBasin())
 				applyCompactingOnBasin();
-			if (!world.isRemote) {
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ITEM_BREAK.get(), SoundCategory.BLOCKS,
-					.5f, 1f);
-				world.playSound(null, getPos(), AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.get(), SoundCategory.BLOCKS,
-					.125f, 1f);
-			}
+
+			if (world.getBlockState(pos.down(2)).getSoundType() == SoundType.CLOTH)
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(world, pos);
+			else
+				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos, .5f, .75f + (Math.abs(getSpeed()) / 1024f));
+			
+			if (!world.isRemote)
+				sendData();
 		}
 
 		if (!world.isRemote && runningTicks > CYCLE) {
@@ -231,6 +235,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	protected void applyPressingInWorld() {
 		AxisAlignedBB bb = new AxisAlignedBB(pos.down(1));
+		boolean bulk = canProcessInBulk();
 		pressedItems.clear();
 		if (world.isRemote)
 			return;
@@ -240,14 +245,37 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			if (!entity.isAlive() || !entity.isOnGround())
 				continue;
 			ItemEntity itemEntity = (ItemEntity) entity;
-			pressedItems.add(itemEntity.getItem());
+			ItemStack item = itemEntity.getItem();
+			pressedItems.add(item);
 			sendData();
-			Optional<PressingRecipe> recipe = getRecipe(itemEntity.getItem());
+			Optional<PressingRecipe> recipe = getRecipe(item);
 			if (!recipe.isPresent())
 				continue;
-			InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+
+			if (bulk || item.getCount() == 1) {
+				InWorldProcessing.applyRecipeOn(itemEntity, recipe.get());
+			} else {
+				for (ItemStack result : InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(item, 1),
+					recipe.get())) {
+					ItemEntity created =
+						new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
+					created.setDefaultPickupDelay();
+					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.random, .05f));
+					world.addEntity(created);
+				}
+				item.shrink(1);
+			}
+
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, world, pos, 4);
+			entityScanCooldown = 0;
+
+			if (!bulk)
+				break;
 		}
+	}
+
+	public static boolean canProcessInBulk() {
+		return AllConfigs.SERVER.recipes.bulkPressing.get();
 	}
 
 	public int getRunningTickSpeed() {

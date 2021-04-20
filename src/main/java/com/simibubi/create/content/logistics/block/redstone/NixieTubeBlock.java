@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import java.util.Random;
+
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
@@ -12,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +28,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTileEntity> {
 
@@ -115,13 +119,25 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	}
 
 	@Override
-	public void neighborChanged(BlockState p_220069_1_, World p_220069_2_, BlockPos p_220069_3_, Block p_220069_4_,
-		BlockPos p_220069_5_, boolean p_220069_6_) {
-		updateDisplayedRedstoneValue(p_220069_1_, p_220069_2_, p_220069_3_);
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+		boolean p_220069_6_) {
+		if (worldIn.isRemote)
+			return;
+		if (!worldIn.getPendingBlockTicks()
+			.isTickPending(pos, this))
+			worldIn.getPendingBlockTicks()
+				.scheduleTick(pos, this, 0);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
 	@Override
 	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (state.getBlock() == oldState.getBlock() || isMoving)
+			return;
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
@@ -157,6 +173,11 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 		for (Direction direction : Iterate.directions)
 			power = Math.max(worldIn.getRedstonePower(pos.offset(direction), Direction.UP), power);
 		return power;
+	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
@@ -39,6 +40,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class AirCurrent {
 
@@ -58,6 +62,8 @@ public class AirCurrent {
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
+	static boolean isClientPlayerInAirCurrent;
+
 	public AirCurrent(IAirCurrentSource source) {
 		this.source = source;
 	}
@@ -70,7 +76,8 @@ public class AirCurrent {
 		if (world != null && world.isRemote) {
 			float offset = pushing ? 0.5f : maxDistance + .5f;
 			Vector3d pos = VecHelper.getCenterOf(source.getAirCurrentPos())
-				.add(Vector3d.of(facing.getDirectionVec()).scale(offset));
+				.add(Vector3d.of(facing.getDirectionVec())
+					.scale(offset));
 			if (world.rand.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
@@ -108,6 +115,8 @@ public class AirCurrent {
 
 			entity.setMotion(previousMotion.add(new Vector3d(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+				() -> () -> enableClientPlayerSound(entity, MathHelper.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayerEntity)
 				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
@@ -115,7 +124,8 @@ public class AirCurrent {
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);
 			if (entity instanceof ServerPlayerEntity)
-				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType), (PlayerEntity) entity);
+				AllTriggers.triggerFor(AllTriggers.FAN_PROCESSING.constructTriggerFor(processingType),
+					(PlayerEntity) entity);
 
 			if (processingType == null || processingType == Type.NONE) {
 				continue;
@@ -343,7 +353,40 @@ public class AirCurrent {
 		InWorldProcessing.Type type;
 		int startOffset;
 		int endOffset;
+	}
 
+	@OnlyIn(Dist.CLIENT)
+	static AirCurrentSound flyingSound;
+
+	@OnlyIn(Dist.CLIENT)
+	private static void enableClientPlayerSound(Entity e, float maxVolume) {
+		if (e != Minecraft.getInstance()
+			.getRenderViewEntity())
+			return;
+
+		isClientPlayerInAirCurrent = true;
+
+		float pitch = (float) MathHelper.clamp(e.getMotion()
+			.length() * .5f, .5f, 2f);
+
+		if (flyingSound == null || flyingSound.isDonePlaying()) {
+			flyingSound = new AirCurrentSound(SoundEvents.ITEM_ELYTRA_FLYING, pitch);
+			Minecraft.getInstance()
+				.getSoundHandler()
+				.play(flyingSound);
+		}
+		flyingSound.setPitch(pitch);
+		flyingSound.fadeIn(maxVolume);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void tickClientPlayerSounds() {
+		if (!AirCurrent.isClientPlayerInAirCurrent && flyingSound != null)
+			if (flyingSound.isFaded())
+				flyingSound.stop();
+			else
+				flyingSound.fadeOut();
+		isClientPlayerInAirCurrent = false;
 	}
 
 }

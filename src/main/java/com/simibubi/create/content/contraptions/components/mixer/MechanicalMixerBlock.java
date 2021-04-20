@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -70,6 +71,11 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	@Override
 	public Class<MechanicalMixerTileEntity> getTileEntityClass() {
 		return MechanicalMixerTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

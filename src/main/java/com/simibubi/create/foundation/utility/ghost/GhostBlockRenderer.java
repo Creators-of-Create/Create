@@ -14,12 +14,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
+import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -35,15 +37,16 @@ import net.minecraft.util.math.vector.Vector4f;
 public abstract class GhostBlockRenderer {
 
 	private static final GhostBlockRenderer transparent = new TransparentGhostBlockRenderer();
+
 	public static GhostBlockRenderer transparent() {
 		return transparent;
 	}
 
 	private static final GhostBlockRenderer standard = new DefaultGhostBlockRenderer();
+
 	public static GhostBlockRenderer standard() {
 		return standard;
 	}
-
 
 	public abstract void render(MatrixStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params);
 
@@ -52,7 +55,8 @@ public abstract class GhostBlockRenderer {
 		public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
 			ms.push();
 
-			BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+			BlockRendererDispatcher dispatcher = Minecraft.getInstance()
+				.getBlockRendererDispatcher();
 
 			IBakedModel model = dispatcher.getModelForState(params.state);
 
@@ -62,7 +66,9 @@ public abstract class GhostBlockRenderer {
 			BlockPos pos = params.pos;
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+			dispatcher.getBlockModelRenderer()
+				.renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV,
+					VirtualEmptyModelData.INSTANCE);
 
 			ms.pop();
 		}
@@ -73,48 +79,61 @@ public abstract class GhostBlockRenderer {
 
 		public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
 
-			//prepare
+			// prepare
 			ms.push();
 
-			//RenderSystem.pushMatrix();
+			// RenderSystem.pushMatrix();
 
-			BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+			Minecraft mc = Minecraft.getInstance();
+			BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
 
 			IBakedModel model = dispatcher.getModelForState(params.state);
 
-			//RenderType layer = RenderTypeLookup.getEntityBlockLayer(params.state);
+			// RenderType layer = RenderTypeLookup.getEntityBlockLayer(params.state);
 			RenderType layer = RenderType.getTranslucent();
 			IVertexBuilder vb = buffer.getEarlyBuffer(layer);
 
 			BlockPos pos = params.pos;
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			//dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
-			renderModel(params, ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+			ms.translate(.5, .5, .5);
+			ms.scale(.85f, .85f, .85f);
+			ms.translate(-.5, -.5, -.5);
 
-			//buffer.draw();
-			//clean
-			//RenderSystem.popMatrix();
+			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+			renderModel(params, ms.peek(), vb, params.state, model, 1f, 1f, 1f,
+				WorldRenderer.getLightmapCoordinates(mc.world, pos), OverlayTexture.DEFAULT_UV,
+				VirtualEmptyModelData.INSTANCE);
+
+			// buffer.draw();
+			// clean
+			// RenderSystem.popMatrix();
 			ms.pop();
 
 		}
 
-		//BlockModelRenderer
-		public void renderModel(GhostBlockParams params, MatrixStack.Entry entry, IVertexBuilder vb, @Nullable BlockState state, IBakedModel model, float p_228804_5_, float p_228804_6_, float p_228804_7_, int p_228804_8_, int p_228804_9_, net.minecraftforge.client.model.data.IModelData modelData) {
+		// BlockModelRenderer
+		public void renderModel(GhostBlockParams params, MatrixStack.Entry entry, IVertexBuilder vb,
+			@Nullable BlockState state, IBakedModel model, float p_228804_5_, float p_228804_6_, float p_228804_7_,
+			int p_228804_8_, int p_228804_9_, net.minecraftforge.client.model.data.IModelData modelData) {
 			Random random = new Random();
 
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
-				renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_, model.getQuads(state, direction, random, modelData), p_228804_8_, p_228804_9_);
+				renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
+					model.getQuads(state, direction, random, modelData), p_228804_8_, p_228804_9_);
 			}
 
 			random.setSeed(42L);
-			renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_, model.getQuads(state, (Direction) null, random, modelData), p_228804_8_, p_228804_9_);
+			renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
+				model.getQuads(state, (Direction) null, random, modelData), p_228804_8_, p_228804_9_);
 		}
 
-		//BlockModelRenderer
-		private static void renderQuad(GhostBlockParams params, MatrixStack.Entry p_228803_0_, IVertexBuilder p_228803_1_, float p_228803_2_, float p_228803_3_, float p_228803_4_, List<BakedQuad> p_228803_5_, int p_228803_6_, int p_228803_7_) {
-			Float alpha = params.alphaSupplier.get();
+		// BlockModelRenderer
+		private static void renderQuad(GhostBlockParams params, MatrixStack.Entry p_228803_0_,
+			IVertexBuilder p_228803_1_, float p_228803_2_, float p_228803_3_, float p_228803_4_,
+			List<BakedQuad> p_228803_5_, int p_228803_6_, int p_228803_7_) {
+			Float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
 
 			for (BakedQuad bakedquad : p_228803_5_) {
 				float f;
@@ -130,15 +149,19 @@ public abstract class GhostBlockRenderer {
 					f2 = 1.0F;
 				}
 
-				quad(alpha, p_228803_1_, p_228803_0_, bakedquad, new float[]{1f, 1f, 1f, 1f}, f, f1, f2, new int[]{p_228803_6_, p_228803_6_, p_228803_6_, p_228803_6_}, p_228803_7_);
+				quad(alpha, p_228803_1_, p_228803_0_, bakedquad, new float[] { 1f, 1f, 1f, 1f }, f, f1, f2,
+					new int[] { p_228803_6_, p_228803_6_, p_228803_6_, p_228803_6_ }, p_228803_7_);
 			}
 
 		}
 
-		//IVertexBuilder
-		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry p_227890_1_, BakedQuad p_227890_2_, float[] p_227890_3_, float p_227890_4_, float p_227890_5_, float p_227890_6_, int[] p_227890_7_, int p_227890_8_) {
+		// IVertexBuilder
+		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry p_227890_1_, BakedQuad p_227890_2_,
+			float[] p_227890_3_, float p_227890_4_, float p_227890_5_, float p_227890_6_, int[] p_227890_7_,
+			int p_227890_8_) {
 			int[] aint = p_227890_2_.getVertexData();
-			Vector3i Vector3i = p_227890_2_.getFace().getDirectionVec();
+			Vector3i Vector3i = p_227890_2_.getFace()
+				.getDirectionVec();
 			Vector3f vector3f = new Vector3f((float) Vector3i.getX(), (float) Vector3i.getY(), (float) Vector3i.getZ());
 			Matrix4f matrix4f = p_227890_1_.getModel();
 			vector3f.transform(p_227890_1_.getNormal());
@@ -163,14 +186,14 @@ public abstract class GhostBlockRenderer {
 					g = p_227890_3_[k] * p_227890_5_;
 					b = p_227890_3_[k] * p_227890_6_;
 
-
 					int l = vb.applyBakedLighting(p_227890_7_[k], bytebuffer);
 					float f9 = bytebuffer.getFloat(16);
 					float f10 = bytebuffer.getFloat(20);
 					Vector4f vector4f = new Vector4f(f, f1, f2, 1.0F);
 					vector4f.transform(matrix4f);
 					vb.applyBakedNormals(vector3f, bytebuffer, p_227890_1_.getNormal());
-					vb.vertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), r, g, b, alpha, f9, f10, p_227890_8_, l, vector3f.getX(), vector3f.getY(), vector3f.getZ());
+					vb.vertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), r, g, b, alpha, f9, f10, p_227890_8_,
+						l, vector3f.getX(), vector3f.getY(), vector3f.getZ());
 				}
 			}
 		}

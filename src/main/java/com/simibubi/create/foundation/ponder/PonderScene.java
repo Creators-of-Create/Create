@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.antlr.v4.runtime.misc.IntegerList;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -32,6 +31,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -60,7 +61,7 @@ public class PonderScene {
 	int textIndex;
 	String sceneId;
 
-	IntegerList keyframeTimes;
+	IntList keyframeTimes;
 
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
@@ -110,7 +111,7 @@ public class PonderScene {
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
-		keyframeTimes = new IntegerList(4);
+		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
 
@@ -449,6 +450,8 @@ public class PonderScene {
 			} else {
 				// For block breaking overlay; Don't ask
 				ms.scale(f, f, f);
+				if (f == 30)
+					ms.translate(0.525, .2975, .9);
 				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -yOffset,
 					(basePlateSize + basePlateOffsetZ) / -2f);
 				float y = (float) (0.5065 * Math.pow(2.2975, Math.log(1 / scaleFactor) / Math.log(2))) / 30;

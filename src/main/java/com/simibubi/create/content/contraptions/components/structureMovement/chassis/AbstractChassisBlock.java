@@ -18,7 +18,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -65,7 +64,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 						return ActionResultType.SUCCESS;
 					}
-					worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+					AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 					state = state.with(glueableSide, true);
 				}
 			}
@@ -86,7 +85,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return ActionResultType.SUCCESS;
 		}
 
-		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 		worldIn.setBlockState(pos, state.with(affectedSide, isSlimeBall));
 		return ActionResultType.SUCCESS;
 	}

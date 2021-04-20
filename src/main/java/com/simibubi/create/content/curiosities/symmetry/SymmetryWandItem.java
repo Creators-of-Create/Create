@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItem;
@@ -172,8 +173,8 @@ public class SymmetryWandItem extends Item {
 
 	public static boolean isEnabled(ItemStack stack) {
 		checkNBT(stack);
-		return stack.getTag()
-			.getBoolean(ENABLE);
+		CompoundNBT tag = stack.getTag();
+		return tag.getBoolean(ENABLE) && !tag.getBoolean("Simulate");
 	}
 
 	public static SymmetryMirror getMirror(ItemStack stack) {
@@ -235,11 +236,16 @@ public class SymmetryWandItem extends Item {
 				FluidState ifluidstate = world.getFluidState(position);
 				world.setBlockState(position, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
 				world.setBlockState(position, blockState);
-				if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
+
+				CompoundNBT wandNbt = wand.getOrCreateTag();
+				wandNbt.putBoolean("Simulate", true);
+				boolean placeInterrupted = ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP);
+				wandNbt.putBoolean("Simulate", false);
+
+				if (placeInterrupted) {
 					blocksnapshot.restore(true, false);
 					continue;
 				}
-				
 				targets.add(position);
 			}
 		}
@@ -286,7 +292,7 @@ public class SymmetryWandItem extends Item {
 				continue;
 
 			BlockState blockstate = world.getBlockState(position);
-			if (!blockstate.isAir(world, position)) {
+			if (blockstate.getMaterial() != Material.AIR) {
 				targets.add(position);
 				world.playEvent(2001, position, Block.getStateId(blockstate));
 				world.setBlockState(position, air, 3);

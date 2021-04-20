@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -57,4 +58,10 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	public boolean hideStressImpact() {
 		return true;
 	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
+	
 }

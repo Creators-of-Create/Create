@@ -47,9 +47,8 @@ public class TooltipHelper {
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
-		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
-		return Lang.translate("tooltip.holdKey", Lang.translate("tooltip.keyShift")
-			.formatted(colorFormat))
+		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
+			.formatted(TextFormatting.GRAY))
 			.formatted(TextFormatting.DARK_GRAY);
 	}
 

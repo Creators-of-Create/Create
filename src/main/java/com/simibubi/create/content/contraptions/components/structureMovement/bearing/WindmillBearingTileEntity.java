@@ -27,7 +27,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		super.updateGeneratedRotation();
 		lastGeneratedSpeed = getGeneratedSpeed();
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		boolean cancelAssembly = assembleNextTick;
@@ -63,7 +63,8 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
-		lastGeneratedSpeed = compound.getFloat("LastGenerated");
+		if (!wasMoved)
+			lastGeneratedSpeed = compound.getFloat("LastGenerated");
 		super.fromTag(state, compound, clientPacket);
 	}
 

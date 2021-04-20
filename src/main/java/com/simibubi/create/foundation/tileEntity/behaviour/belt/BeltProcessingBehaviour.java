@@ -1,10 +1,12 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.belt;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
@@ -41,8 +43,10 @@ public class BeltProcessingBehaviour extends TileEntityBehaviour {
 	}
 
 	public static boolean isBlocked(IBlockReader world, BlockPos processingSpace) {
-		return !world.getBlockState(processingSpace.up())
-			.getCollisionShape(world, processingSpace.up())
+		BlockState blockState = world.getBlockState(processingSpace.up());
+		if (AbstractFunnelBlock.isFunnel(blockState))
+			return false;
+		return !blockState.getCollisionShape(world, processingSpace.up())
 			.isEmpty();
 	}
 

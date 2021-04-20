@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1265",
+	"_": "Missing Localizations: 1272",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1148,16 +1148,27 @@
 	"create.command.killTPSCommand.status.usage.1": "UNLOCALIZED: [Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "UNLOCALIZED: tickTime",
 
-	"create.subtitle.schematicannon_launch_block": "UNLOCALIZED: Schematicannon shoots",
-	"create.subtitle.schematicannon_finish": "UNLOCALIZED: Schematicannon finishes",
+	"create.contraption.minecart_contraption_too_big": "UNLOCALIZED: This Cart Contraption seems too big to pick up",
+
+
+	"_": "->------------------------]  Subtitles  [------------------------<-",
+
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "UNLOCALIZED: Slime squishes",
-	"create.subtitle.mechanical_press_activation": "UNLOCALIZED: Mechanical Press activates",
-	"create.subtitle.mechanical_press_item_break": "UNLOCALIZED: Metal clanks",
-	"create.subtitle.blockzapper_place": "UNLOCALIZED: Blocks zap into place",
-	"create.subtitle.blockzapper_confirm": "UNLOCALIZED: Affirmative Ding",
-	"create.subtitle.blockzapper_deny": "UNLOCALIZED: Declining Boop",
-	"create.subtitle.block_funnel_eat": "UNLOCALIZED: Funnel CHOMPS",
-	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze munches happily",
+	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
+	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.blockzapper_confirm": "UNLOCALIZED: Affirmative ding",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
+	"create.subtitle.blockzapper_place": "UNLOCALIZED: Blockzapper zaps",
+	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze Burner munches",
+	"create.subtitle.schematicannon_launch_block": "UNLOCALIZED: Schematicannon fires",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "UNLOCALIZED: Schematicannon dings",
+	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
+	"create.subtitle.mechanical_press_activation": "UNLOCALIZED: Mechanical Press clangs",
+	"create.subtitle.blockzapper_deny": "UNLOCALIZED: Declining boop",
+	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",

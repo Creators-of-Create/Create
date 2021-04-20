@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -82,21 +81,21 @@ public class ZapperRenderHandler {
 		lastRightHandAnimation = rightHandAnimation;
 		leftHandAnimation *= 0.8f;
 		rightHandAnimation *= 0.8f;
-		
+
 		if (cachedBeams == null)
 			cachedBeams = new LinkedList<>();
-		
+
 		cachedBeams.removeIf(b -> b.itensity < .1f);
 		if (cachedBeams.isEmpty())
 			return;
-		
+
 		cachedBeams.forEach(beam -> {
 			CreateClient.outliner.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
-			.disableNormals()
-			.colored(0xffffff)
-			.lineWidth(beam.itensity * 1 / 8f);
+				.disableNormals()
+				.colored(0xffffff)
+				.lineWidth(beam.itensity * 1 / 8f);
 		});
-		
+
 		cachedBeams.forEach(b -> b.itensity *= .6f);
 	}
 
@@ -115,8 +114,8 @@ public class ZapperRenderHandler {
 
 	public static void playSound(Hand hand, BlockPos position) {
 		float pitch = hand == Hand.MAIN_HAND ? 2f : 0.9f;
-		Minecraft.getInstance().world.playSound(position, AllSoundEvents.BLOCKZAPPER_PLACE.get(), SoundCategory.BLOCKS,
-			0.8f, pitch, false);
+		Minecraft mc = Minecraft.getInstance();
+		AllSoundEvents.BLOCKZAPPER_PLACE.play(mc.world, mc.player, position, 0.8f, pitch);
 	}
 
 	public static void addBeam(LaserBeam beam) {
@@ -166,7 +165,7 @@ public class ZapperRenderHandler {
 		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
 		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
 		float f6 = MathHelper.sin(f1 * (float) Math.PI);
-		
+
 		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
 			f4 + -0.71999997F + .3f + recoil);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 75.0F));
@@ -181,7 +180,7 @@ public class ZapperRenderHandler {
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * -135.0F));
 		ms.translate(f * 5.6F, 0.0F, 0.0F);
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 40.0F));
-		
+
 		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager()
 			.getRenderer(abstractclientplayerentity);
 		if (rightHand) {

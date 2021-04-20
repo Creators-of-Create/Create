@@ -15,7 +15,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.StairsShape;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -33,7 +32,8 @@ public class ZapperInteractionHandler {
 	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
 		if (event.getWorld().isRemote)
 			return;
-		ItemStack heldItem = event.getPlayer().getHeldItemMainhand();
+		ItemStack heldItem = event.getPlayer()
+			.getHeldItemMainhand();
 		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
 			event.setCancellationResult(ActionResultType.FAIL);
 			event.setCanceled(true);
@@ -87,10 +87,8 @@ public class ZapperInteractionHandler {
 			data.remove("id");
 		}
 		CompoundNBT tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed")
-				&& NBTUtil.readBlockState(
-						stack.getTag().getCompound("BlockUsed")) == newState
-				&& Objects.equals(data, tag.get("BlockData"))) {
+		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag()
+			.getCompound("BlockUsed")) == newState && Objects.equals(data, tag.get("BlockData"))) {
 			return false;
 		}
 
@@ -99,9 +97,8 @@ public class ZapperInteractionHandler {
 			tag.remove("BlockData");
 		else
 			tag.put("BlockData", data);
-		player.world.playSound(null, player.getBlockPos(), AllSoundEvents.BLOCKZAPPER_CONFIRM.get(),
-			SoundCategory.BLOCKS, 0.5f, 0.8f);
 
+		AllSoundEvents.BLOCKZAPPER_CONFIRM.playOnServer(player.world, player.getBlockPos());
 		return true;
 	}
 

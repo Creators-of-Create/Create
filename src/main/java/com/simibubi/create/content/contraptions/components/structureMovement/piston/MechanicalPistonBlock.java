@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
+import java.util.Random;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
@@ -22,7 +24,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -31,6 +32,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements ITE<MechanicalPistonTileEntity> {
@@ -88,7 +90,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return ActionResultType.SUCCESS;
 		}
-		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 		if (!player.isCreative())
 			player.getHeldItem(handIn)
 				.shrink(1);
@@ -96,6 +98,35 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			.with(FACING, direction)
 			.with(AXIS_ALONG_FIRST_COORDINATE, state.get(AXIS_ALONG_FIRST_COORDINATE)));
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos fromPos,
+		boolean p_220069_6_) {
+		Direction direction = state.get(FACING);
+		if (!fromPos.equals(pos.offset(direction.getOpposite())))
+			return;
+		if (!world.isRemote && !world.getPendingBlockTicks()
+			.isTickPending(pos, this))
+			world.getPendingBlockTicks()
+				.scheduleTick(pos, this, 0);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		Direction direction = state.get(FACING);
+		BlockState pole = worldIn.getBlockState(pos.offset(direction.getOpposite()));
+		if (!AllBlocks.PISTON_EXTENSION_POLE.has(pole))
+			return;
+		if (pole.get(PistonExtensionPoleBlock.FACING)
+			.getAxis() != direction.getAxis())
+			return;
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.lastException == null)
+				return;
+			te.lastException = null;
+			te.sendData();
+		});
 	}
 
 	@Override

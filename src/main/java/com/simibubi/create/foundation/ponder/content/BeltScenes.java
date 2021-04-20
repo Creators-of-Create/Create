@@ -45,6 +45,7 @@ public class BeltScenes {
 		scene.title("belt_connector", "Using Mechanical Belts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
+		scene.world.showSection(util.select.position(3, 0, 5), Direction.UP);
 		scene.idle(5);
 
 		scene.world.showSection(util.select.fromTo(4, 1, 3, 4, 1, 5), Direction.DOWN);

@@ -75,6 +75,11 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		if (wasMoved) {
+			super.fromTag(state, compound, clientPacket);
+			return;
+		}
+		
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
