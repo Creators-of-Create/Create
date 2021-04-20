@@ -1,6 +1,8 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -15,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -48,6 +52,8 @@ public class SharedDepotBlockMethods {
 		if (!mainItemStack.isEmpty()) {
 			player.inventory.placeItemBackInInventory(world, mainItemStack);
 			behaviour.removeHeldItem();
+			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
+				1f + Create.random.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
@@ -60,6 +66,7 @@ public class SharedDepotBlockMethods {
 			transported.beltPosition = .25f;
 			behaviour.setHeldItem(transported);
 			player.setHeldItem(hand, ItemStack.EMPTY);
+			AllSoundEvents.DEPOT_SLIDE.playOnServer(world, pos);
 		}
 
 		behaviour.tileEntity.notifyUpdate();

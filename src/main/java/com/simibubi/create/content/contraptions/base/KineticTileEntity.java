@@ -15,10 +15,12 @@ import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -36,12 +38,14 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -93,6 +97,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (world.isRemote) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.tickAudio());
 			return;
 		}
 
@@ -391,21 +396,28 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(GOLD)));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("gui.stressometer.overstressed")
+					.formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed");
 			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy()
+					.append(cutString.get(i)));
 			return true;
 		}
 
 		if (notFastEnough) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.speedRequirement").formatted(GOLD)));
-			ITextComponent hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
-				.getTranslationKey()));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("tooltip.speedRequirement")
+					.formatted(GOLD)));
+			ITextComponent hint =
+				Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
+					.getTranslationKey()));
 			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy()
+					.append(cutString.get(i)));
 			return true;
 		}
 
@@ -418,13 +430,21 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		float stressAtBase = calculateStressApplied();
 
 		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.kinetic_stats")));
-			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.stressImpact").formatted(TextFormatting.GRAY)));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("gui.goggles.kinetic_stats")));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("tooltip.stressImpact")
+					.formatted(TextFormatting.GRAY)));
 
 			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
+			tooltip.add(componentSpacing.copy()
+				.append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+					.append(Lang.translate("generic.unit.stress"))
+					.append(" ")
+					.formatted(TextFormatting.AQUA))
+				.append(Lang.translate("gui.goggles.at_current_speed")
+					.formatted(TextFormatting.DARK_GRAY)));
 
 			added = true;
 		}
@@ -537,6 +557,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
+
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
@@ -548,4 +569,24 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected AxisAlignedBB makeRenderBoundingBox() {
 		return super.getRenderBoundingBox();
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		float componentSpeed = Math.abs(getSpeed());
+		if (componentSpeed == 0)
+			return;
+		float pitch = MathHelper.clamp((componentSpeed / 256f) + .45f, .5f, 1.25f);
+
+		if (isNoisy())
+			SoundScapes.playGeneralKineticAmbience(pos, pitch);
+
+		Block block = getBlockState().getBlock();
+		if (ICogWheel.isSmallCog(block) || ICogWheel.isSmallCog(block) || block instanceof GearboxBlock)
+			SoundScapes.playCogwheelAmbience(pos, pitch);
+	}
+
+	protected boolean isNoisy() {
+		return true;
+	}
+
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
@@ -133,11 +134,19 @@ public class FilteringHandler {
 			((Sided) filtering.slotPositioning).fromSide(result.getFace());
 		if (!filtering.testHit(objectMouseOver.getHitVec()))
 			return false;
+		
 		ItemStack filterItem = filtering.getFilter();
 		filtering.ticksUntilScrollPacket = 10;
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
+		int prev = filtering.scrollableValue;
 		filtering.scrollableValue =
 			(int) MathHelper.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
+		
+		if (prev != filtering.scrollableValue) {
+			float pitch = (filtering.scrollableValue) / (float) (maxAmount);
+			pitch = MathHelper.lerp(pitch, 1.5f, 2f);
+			AllSoundEvents.SCROLL_VALUE.play(world, mc.player, blockPos, 1, pitch);
+		}
 
 		return true;
 	}

@@ -10,6 +10,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
@@ -38,6 +39,7 @@ import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.RenderWork;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
@@ -87,12 +89,15 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
 		World world = Minecraft.getInstance().world;
-		if (event.phase == Phase.START)
-			return;
-
 		if (!isGameActive())
 			return;
+		
+		if (event.phase == Phase.START) {
+			AirCurrent.tickClientPlayerSounds();
+			return;
+		}
 
+		SoundScapes.tick();
 		AnimationTickHolder.tick();
 		FastRenderDispatcher.tick();
 		ScrollValueHandler.tick();

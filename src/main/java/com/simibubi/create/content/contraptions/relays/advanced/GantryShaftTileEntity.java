@@ -99,5 +99,10 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			return 0;
 		return MathHelper.clamp(-getSpeed() / 512f, -.49f, .49f);
 	}
+	
+	@Override
+	protected boolean isNoisy() {
+		return false;
+	}
 
 }

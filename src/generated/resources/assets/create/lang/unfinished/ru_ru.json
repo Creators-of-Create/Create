@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 522",
+	"_": "Missing Localizations: 529",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1154,15 +1154,22 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.schematicannon_launch_block": "Выстрелы схематичной пушки",
-	"create.subtitle.schematicannon_finish": "Схематичная пушка закончила работу",
+	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Намазывание слизи",
+	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.mechanical_press_activation": "Механический пресс активирован",
-	"create.subtitle.blockzapper_deny": "Тихий буп",
 	"create.subtitle.blockzapper_confirm": "Утвердительный динь",
+	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.blockzapper_place": "Блок запрыгивает на место",
 	"create.subtitle.blaze_munch": "Всполох радостно жуёт",
+	"create.subtitle.schematicannon_launch_block": "Выстрелы схематичной пушки",
+	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.schematicannon_finish": "Схематичная пушка закончила работу",
+	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
+	"create.subtitle.mechanical_press_activation": "Механический пресс активирован",
+	"create.subtitle.blockzapper_deny": "Тихий буп",
+	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
+	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
