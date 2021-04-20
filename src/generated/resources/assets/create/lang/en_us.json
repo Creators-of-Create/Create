@@ -1154,6 +1154,7 @@
 
 	"create.subtitle.cogs": "Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime squishes",
+	"create.subtitle.mixing": "Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "Affirmative ding",
 	"create.subtitle.depot_slide": "Item slides",
@@ -1162,8 +1163,10 @@
 	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
 	"create.subtitle.funnel_flap": "Funnel Flaps",
 	"create.subtitle.schematicannon_finish": "Schematicannon dings",
+	"create.subtitle.scroll_value": "Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
 	"create.subtitle.blockzapper_deny": "Declining boop",
+	"create.subtitle.cranking": "Hand Crank turns",
 	"create.subtitle.depot_plop": "Item lands",
 
 

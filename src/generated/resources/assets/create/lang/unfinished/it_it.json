@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 628",
+	"_": "Missing Localizations: 631",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1155,6 +1155,7 @@
 
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime schiacciato",
+	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "Ding affermativo",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
@@ -1163,8 +1164,10 @@
 	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
 	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
+	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
 	"create.subtitle.blockzapper_deny": "Boop in calo",
+	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 

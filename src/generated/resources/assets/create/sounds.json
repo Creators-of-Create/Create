@@ -41,6 +41,23 @@
     ],
     "subtitle": "create.subtitle.cogs"
   },
+  "cranking": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wood.place",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.cranking"
+  },
+  "cranking_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wooden_button.click_off",
+        "type": "event"
+      }
+    ]
+  },
   "depot_plop": {
     "sounds": [
       {
@@ -71,7 +88,7 @@
   "funnel_flap_compounded_1": {
     "sounds": [
       {
-        "name": "minecraft:block.wool.place",
+        "name": "minecraft:block.wool.break",
         "type": "event"
       }
     ]
@@ -110,6 +127,23 @@
       }
     ]
   },
+  "mixing": {
+    "sounds": [
+      {
+        "name": "minecraft:block.gilded_blackstone.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.mixing"
+  },
+  "mixing_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherrack.break",
+        "type": "event"
+      }
+    ]
+  },
   "schematicannon_finish": {
     "sounds": [
       {
@@ -127,6 +161,15 @@
       }
     ],
     "subtitle": "create.subtitle.schematicannon_launch_block"
+  },
+  "scroll_value": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.hat",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.scroll_value"
   },
   "slime_added": {
     "sounds": [

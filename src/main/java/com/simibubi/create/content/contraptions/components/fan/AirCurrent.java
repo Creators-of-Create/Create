@@ -356,7 +356,7 @@ public class AirCurrent {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	static AirCurrentSound flyingSound = null;
+	static AirCurrentSound flyingSound;
 
 	@OnlyIn(Dist.CLIENT)
 	private static void enableClientPlayerSound(Entity e, float maxVolume) {

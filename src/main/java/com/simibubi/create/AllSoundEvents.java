@@ -79,8 +79,25 @@ public class AllSoundEvents {
 				.category(SoundCategory.BLOCKS)
 				.build(),
 
+		MIXING = create("mixing").subtitle("Mixing Noises")
+			.playExisting(SoundEvents.BLOCK_GILDED_BLACKSTONE_BREAK, .125f, .5f)
+			.playExisting(SoundEvents.BLOCK_NETHERRACK_BREAK, .125f, .5f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CRANKING = create("cranking").subtitle("Hand Crank turns")
+			.playExisting(SoundEvents.BLOCK_WOOD_PLACE, .075f, .5f)
+			.playExisting(SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, .025f, .5f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
 		BLOCKZAPPER_PLACE = create("blockzapper_place").subtitle("Blockzapper zaps")
 			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM)
+			.category(SoundCategory.PLAYERS)
+			.build(),
+			
+		SCROLL_VALUE = create("scroll_value").subtitle("Scroll-input clicks")
+			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_HAT, .124f, 1f)
 			.category(SoundCategory.PLAYERS)
 			.build(),
 
@@ -278,9 +295,9 @@ public class AllSoundEvents {
 		abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
 
 		public void playAt(World world, BlockPos pos, float volume, float pitch, boolean fade) {
-			playAt(world, pos.getX(), pos.getY(), pos.getZ(), volume, pitch, fade);
+			playAt(world, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, volume, pitch, fade);
 		}
-		
+
 		public abstract void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade);
 
 	}

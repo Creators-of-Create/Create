@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 918",
+	"_": "Missing Localizations: 921",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1155,6 +1155,7 @@
 
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Schleim matscht",
+	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "Bestätigendes Ding",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
@@ -1163,8 +1164,10 @@
 	"create.subtitle.schematicannon_launch_block": "Bauplankanone schießt",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
 	"create.subtitle.schematicannon_finish": "Bauplankanone endet",
+	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Mechanische Presse wird aktiviert",
 	"create.subtitle.blockzapper_deny": "Ablehnendes Boop",
+	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 

@@ -1,7 +1,9 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -68,7 +70,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 				updateGeneratedRotation();
 		}
 	}
-	
+
 	@Override
 	protected Block getStressConfigKey() {
 		return AllBlocks.HAND_CRANK.get();
@@ -78,4 +80,15 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	public boolean shouldRenderAsTE() {
 		return true;
 	}
+
+	@Override
+	public void tickAudio() {
+		super.tickAudio();
+		if (inUse > 0 && AnimationTickHolder.getTicks() % 2 == 0) {
+			if (!AllBlocks.HAND_CRANK.has(getBlockState()))
+				return;
+			AllSoundEvents.CRANKING.playAt(world, pos, (inUse) / 5f, .65f + (10 - inUse) / 10f, true);
+		}
+	}
+
 }

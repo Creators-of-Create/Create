@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 625",
+	"_": "Missing Localizations: 628",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1155,6 +1155,7 @@
 
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "粘液：挤碎声",
+	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "选择方块",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
@@ -1163,8 +1164,10 @@
 	"create.subtitle.schematicannon_launch_block": "蓝图加农炮：发射",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
 	"create.subtitle.schematicannon_finish": "蓝图加农炮：完成任务",
+	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "辊压机：工作中",
 	"create.subtitle.blockzapper_deny": "放置失败",
+	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 
