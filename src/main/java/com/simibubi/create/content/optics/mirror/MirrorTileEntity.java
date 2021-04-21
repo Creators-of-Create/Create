@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.ILightHandler;
-import com.simibubi.create.content.optics.ILightHandlerProvider;
+import com.simibubi.create.content.optics.behaviour.AbstractRotatedLightRelayBehaviour;
 import com.simibubi.create.content.optics.behaviour.RotationMode;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -18,7 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MirrorTileEntity extends KineticTileEntity implements ILightHandlerProvider, RotationMode.RotationModeProvider {
+public class MirrorTileEntity extends KineticTileEntity implements ILightHandler.ILightHandlerProvider, RotationMode.RotationModeProvider {
 	protected ScrollOptionBehaviour<RotationMode> movementMode;
 	protected MirrorBehaviour mirror;
 
@@ -61,7 +61,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	}
 
 	@Override
-	public ILightHandler getHandler() {
+	public AbstractRotatedLightRelayBehaviour<MirrorTileEntity> getHandler() {
 		return mirror;
 	}
 

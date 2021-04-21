@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.optics.ILightHandlerProvider;
+import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.Block;
@@ -67,7 +67,7 @@ public class BeaconHelper {
 		try {
 			if (state.getBlock() instanceof ITE) {
 				TileEntity te = ((ITE<?>) state.getBlock()).getTileEntity(world, pos);
-				if (te instanceof ILightHandlerProvider && ((ILightHandlerProvider) te).getHandler()
+				if (te instanceof ILightHandler.ILightHandlerProvider && ((ILightHandler.ILightHandlerProvider) te).getHandler()
 						.absorbsLight())
 					return 15;
 			}

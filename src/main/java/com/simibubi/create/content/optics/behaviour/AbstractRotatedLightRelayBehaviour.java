@@ -1,18 +1,18 @@
 package com.simibubi.create.content.optics.behaviour;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.optics.ILightHandlerProvider;
+import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class RotatedLightHandlingBehaviour<T extends KineticTileEntity & ILightHandlerProvider & RotationMode.RotationModeProvider> extends LightHandlingBehaviour<T> {
+public abstract class AbstractRotatedLightRelayBehaviour<T extends KineticTileEntity & ILightHandler.ILightHandlerProvider & RotationMode.RotationModeProvider> extends AbstractLightRelayBehaviour<T> {
 	protected float angle;
 	protected float clientAngleDiff;
 	private float prevAngle;
 
-	public RotatedLightHandlingBehaviour(T te) {
+	protected AbstractRotatedLightRelayBehaviour(T te) {
 		super(te);
 	}
 

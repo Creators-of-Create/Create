@@ -91,10 +91,10 @@ public interface ILightHandler {
 		return true;
 	}
 
-	default void updateBeams() {
-	}
+	void updateBeams();
 
-	default float getInterpolatedAngle(float v) {
-		return 0;
+	@FunctionalInterface
+	interface ILightHandlerProvider {
+		ILightHandler getHandler();
 	}
 }
