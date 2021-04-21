@@ -149,6 +149,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
+import com.simibubi.create.content.optics.mirror.MirrorInstance;
 import com.simibubi.create.content.optics.mirror.MirrorRenderer;
 import com.simibubi.create.content.optics.mirror.MirrorTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
@@ -587,7 +588,7 @@ public class AllTileEntities {
 	// Optics
 	public static final TileEntityEntry<MirrorTileEntity> MIRROR = Create.registrate()
 		.tileEntity("mirror", MirrorTileEntity::new)
-		// .instance(() -> MirrorRendererInstance::new)
+		.instance(() -> MirrorInstance::new)
 		.validBlocks(AllBlocks.MIRROR)
 		.renderer(() -> MirrorRenderer::new)
 		.register();

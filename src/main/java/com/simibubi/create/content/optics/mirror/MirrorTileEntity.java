@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.optics.ILightHandler;
-import com.simibubi.create.content.optics.behaviour.AbstractRotatedLightRelayBehaviour;
 import com.simibubi.create.content.optics.behaviour.RotationMode;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -41,7 +40,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 
 	@Override
 	public boolean shouldRenderAsTE() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class MirrorTileEntity extends KineticTileEntity implements ILightHandler
 	}
 
 	@Override
-	public AbstractRotatedLightRelayBehaviour<MirrorTileEntity> getHandler() {
+	public MirrorBehaviour getHandler() {
 		return mirror;
 	}
 

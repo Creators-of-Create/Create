@@ -5,6 +5,8 @@ import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class AbstractRotatedLightRelayBehaviour<T extends KineticTileEntity & ILightHandler.ILightHandlerProvider & RotationMode.RotationModeProvider> extends AbstractLightRelayBehaviour<T> {
@@ -66,7 +68,16 @@ public abstract class AbstractRotatedLightRelayBehaviour<T extends KineticTileEn
 
 
 		if (angle != prevAngle) {
-			updateBeams();
+			onAngleChanged();
 		}
+	}
+
+	protected void onAngleChanged() {
+		updateBeams();
+	}
+
+	protected Direction.Axis getAxis() {
+		return tileEntity.getBlockState()
+				.get(BlockStateProperties.AXIS);
 	}
 }

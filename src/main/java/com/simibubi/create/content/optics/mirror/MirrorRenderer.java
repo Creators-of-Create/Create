@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -24,10 +25,8 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 							  int light, int overlay) {
 
-		// if (FastRenderDispatcher.available(te.getWorld())) return;
-		MirrorTileEntity mirrorTe = (MirrorTileEntity) te;
-
-		renderMirror(mirrorTe, partialTicks, ms, buffer, light);
+		if (!FastRenderDispatcher.available(te.getWorld()))
+			renderMirror((MirrorTileEntity) te, partialTicks, ms, buffer, light);
 		((MirrorTileEntity) te).getHandler()
 				.getRenderBeams()
 				.forEachRemaining(beam -> beam.render(ms, buffer, partialTicks));
