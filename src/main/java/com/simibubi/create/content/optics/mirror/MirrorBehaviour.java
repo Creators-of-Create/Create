@@ -14,9 +14,11 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -54,10 +56,19 @@ public class MirrorBehaviour extends AbstractRotatedLightRelayBehaviour<MirrorTi
 	@OnlyIn(Dist.CLIENT)
 	@Nonnull
 	public Quaternion getBufferedRotationQuaternion() {
-		if (bufferedRotationQuaternion == null)
+		if (bufferedRotationQuaternion == null) {
 			bufferedRotationQuaternion = getBeamRotationAround().getUnitVector()
 					.getDegreesQuaternion(getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1));
+			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(getBeamRotationAround())));
+			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(AngleHelper.verticalAngle(getBeamRotationAround())));
+		}
 		return bufferedRotationQuaternion;
+	}
+
+	@Override
+	public void read(CompoundNBT nbt, boolean clientPacket) {
+		super.read(nbt, clientPacket);
+		bufferedRotationQuaternion = null;
 	}
 
 	@Nonnull
