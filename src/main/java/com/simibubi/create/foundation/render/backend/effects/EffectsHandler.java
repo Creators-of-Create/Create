@@ -132,18 +132,30 @@ public class EffectsHandler {
 				.setDensity(1.3f)
 				.setFilter(ColorMatrices.grayscale()));
 
-		Matrix4f test = ColorMatrices.sepia(1f);
+		program.addSphere(new SphereFilterProgram.FilterSphere()
+				.setCenter(new Vector3d(852.5, 70, -203.5).subtract(cameraPos))
+				.setRadius(20f)
+				.setFeather(3f)
+				.setFade(1f)
+				.setDensity(1.3f)
+				.setFilter(ColorMatrices.sepia(1f)));
 
+//		Matrix4f test = ColorMatrices.sepia(1f);
+//
+//
+//		test.multiply(ColorMatrices.invert());
+//
+//		Matrix4f darken = new Matrix4f();
+//		darken.loadIdentity();
+//		darken.multiply(0.7f);
+//		darken.a03 = 0.7f;
+//		darken.a13 = 0.7f;
+//		darken.a23 = 0.7f;
+//		test.multiply(darken);
 
-		test.multiply(ColorMatrices.invert());
+		Matrix4f test = ColorMatrices.saturate(2f);
 
-		Matrix4f darken = new Matrix4f();
-		darken.loadIdentity();
-		darken.multiply(0.7f);
-		darken.a03 = 0.7f;
-		darken.a13 = 0.7f;
-		darken.a23 = 0.7f;
-		test.multiply(darken);
+		test.multiply(ColorMatrices.hueShift(120f));
 
 		program.addSphere(new SphereFilterProgram.FilterSphere()
 				.setCenter(new Vector3d(858.5, 88, -259.5).subtract(cameraPos))
