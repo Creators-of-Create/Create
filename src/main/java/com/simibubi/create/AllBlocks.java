@@ -154,6 +154,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.optics.aligner.AlignerBlock;
 import com.simibubi.create.content.optics.mirror.MirrorBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
@@ -1117,6 +1118,17 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
+
+	public static final BlockEntry<AlignerBlock> ALIGNER =
+		REGISTRATE.block("aligner", AlignerBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(AbstractBlock.Properties::nonOpaque)
+			.addLayer(() -> RenderType::getTranslucent)
+			.tag(AllBlockTags.SAFE_NBT.tag)
+			.blockstate(BlockStateGen.directionalBlockProvider(false))
+			.simpleItem()
+			.register();
+
 
 	// Logistics
 

@@ -16,6 +16,7 @@
     "create:sequenced_gearshift",
     "create:rotation_speed_controller",
     "create:mirror",
+    "create:aligner",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",
     "create:brass_funnel",

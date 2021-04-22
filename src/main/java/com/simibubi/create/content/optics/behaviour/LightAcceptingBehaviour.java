@@ -7,12 +7,11 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.ILightHandler;
-import com.simibubi.create.content.optics.mirror.MirrorBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 public class LightAcceptingBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends AbstractLightHandlingBehaviour<T> {
-	public static final BehaviourType<MirrorBehaviour> TYPE = new BehaviourType<>();
+	public static final BehaviourType<LightAcceptingBehaviour<? extends SmartTileEntity>> TYPE = new BehaviourType<>();
 	boolean isUpdating = false;
 
 	public LightAcceptingBehaviour(T te, LightHandlingbehaviourProperties properties) {
@@ -27,6 +26,7 @@ public class LightAcceptingBehaviour<T extends SmartTileEntity & ILightHandler.I
 
 	@Override
 	public void updateBeams() {
+		super.updateBeams();
 		if (isUpdating)
 			return;
 		isUpdating = true;

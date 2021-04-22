@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1273",
+	"_": "Missing Localizations: 1274",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -9,6 +9,7 @@
 	"block.create.adjustable_crate": "Caja Ajustable",
 	"block.create.adjustable_pulse_repeater": "Repetidor de Pulso Ajustable",
 	"block.create.adjustable_repeater": "Repetidor Ajustable",
+	"block.create.aligner": "UNLOCALIZED: Aligner",
 	"block.create.analog_lever": "Palanca Analogica",
 	"block.create.andesite_belt_funnel": "UNLOCALIZED: Andesite Belt Funnel",
 	"block.create.andesite_bricks": "Ladrillos de Andesita",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 685",
+	"_": "Missing Localizations: 686",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -9,6 +9,7 @@
 	"block.create.adjustable_crate": "가변 창고",
 	"block.create.adjustable_pulse_repeater": "가변 펄스 리피터",
 	"block.create.adjustable_repeater": "가변 리피터",
+	"block.create.aligner": "UNLOCALIZED: Aligner",
 	"block.create.analog_lever": "아날로그 레버",
 	"block.create.andesite_belt_funnel": "안산암 깔때기",
 	"block.create.andesite_bricks": "안산암 벽돌",

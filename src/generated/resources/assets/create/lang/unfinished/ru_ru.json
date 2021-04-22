@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 529",
+	"_": "Missing Localizations: 530",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -9,6 +9,7 @@
 	"block.create.adjustable_crate": "Регулируемый ящик",
 	"block.create.adjustable_pulse_repeater": "Регулируемый импульсный повторитель",
 	"block.create.adjustable_repeater": "Регулируемый повторитель",
+	"block.create.aligner": "UNLOCALIZED: Aligner",
 	"block.create.analog_lever": "Аналоговый рычаг",
 	"block.create.andesite_belt_funnel": "Андезитовая конвейерная воронка",
 	"block.create.andesite_bricks": "Андезитовый кирпич",

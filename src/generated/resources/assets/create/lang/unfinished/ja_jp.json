@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 614",
+	"_": "Missing Localizations: 615",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -9,6 +9,7 @@
 	"block.create.adjustable_crate": "可変クレート",
 	"block.create.adjustable_pulse_repeater": "可変パルスリピーター",
 	"block.create.adjustable_repeater": "可変リピーター",
+	"block.create.aligner": "UNLOCALIZED: Aligner",
 	"block.create.analog_lever": "アナログレバー",
 	"block.create.andesite_belt_funnel": "安山岩のベルトファンネル",
 	"block.create.andesite_bricks": "安山岩レンガ",

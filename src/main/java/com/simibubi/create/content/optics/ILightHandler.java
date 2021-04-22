@@ -25,16 +25,16 @@ public interface ILightHandler {
 	}
 
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection) {
-		return constructOutBeam(parent, beamDirection, getBlockPos());
+		return constructOutBeam(parent, beamDirection, getBlockPos(), DyeColor.WHITE.getColorComponentValues());
 	}
 
-	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos) {
+	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos, float[] colorComponentValues) {
 		Beam beam = new Beam(parent, getHandlerWorld());
 		World world = getHandlerWorld();
 		if (world == null)
 			return beam;
 
-		float[] segmentColor = parent == null ? DyeColor.WHITE.getColorComponentValues() : parent.getColorAt(testBlockPos);
+		float[] segmentColor = parent == null ? colorComponentValues : parent.getColorAt(testBlockPos);
 		Vector3d direction = VecHelper.step(beamDirection);
 
 		Vector3d testPos = VecHelper.getCenterOf(testBlockPos);

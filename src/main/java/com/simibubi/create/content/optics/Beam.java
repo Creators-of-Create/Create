@@ -88,9 +88,7 @@ public class Beam extends ArrayList<BeamSegment> {
 	}
 
 	public boolean isRemoved() {
-		ILightHandler handler = getHandler();
-		removed = removed || isEmpty() || handler == null || handler.getTile()
-				.isRemoved() || (parent != null && parent.isRemovedSimple());
+		removed = isRemovedSimple() || (parent != null && parent.isRemovedSimple());
 		return removed;
 	}
 

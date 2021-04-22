@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BeaconHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
@@ -21,9 +22,11 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 	protected final T handler;
 	private final LightHandlingbehaviourProperties properties;
 	protected Set<Beam> beams;
+	@Nullable
 	protected Beam beaconBeam = null;
 	@Nullable
 	protected BeaconTileEntity beacon;
+	boolean needsBeamUpdate = false;
 
 	protected AbstractLightHandlingBehaviour(T te, LightHandlingbehaviourProperties properties) {
 		super(te);
@@ -37,6 +40,8 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 		super.tick();
 		if (properties.scansBeacon && beacon != null && beacon.isRemoved())
 			updateBeaconState();
+		if (needsBeamUpdate)
+			updateBeams();
 	}
 
 
@@ -48,11 +53,11 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 		if (beaconBefore != null) {
 			beaconBeam.clear();
 			beaconBeam = null;
-			updateBeams();
+			requestBeamUpdate();
 		}
 
 		if (beacon != null) {
-			beaconBeam = constructOutBeam(null, VecHelper.UP, beacon.getPos());
+			beaconBeam = constructOutBeam(null, VecHelper.UP, beacon.getPos(), DyeColor.WHITE.getColorComponentValues());
 			if (beaconBeam != null && !beaconBeam.isEmpty()) {
 				beaconBeam.addListener(this);
 				beaconBeam.onCreated();
@@ -70,9 +75,17 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 		super.lazyTick();
 		if (properties.scansBeacon)
 			updateBeaconState();
-		updateBeams();
+		requestBeamUpdate();
 	}
 
+	public void requestBeamUpdate() {
+		needsBeamUpdate = true;
+	}
+
+	@Override
+	public void updateBeams() {
+		needsBeamUpdate = false;
+	}
 
 	@Override
 	public Iterator<Beam> getRenderBeams() {
@@ -87,6 +100,8 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 	@Override
 	public void remove() {
 		beams.forEach(Beam::onRemoved);
+		if (beaconBeam != null)
+			beaconBeam.onRemoved();
 	}
 
 	@Override

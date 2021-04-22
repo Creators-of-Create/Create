@@ -22,6 +22,7 @@ public abstract class AbstractLightRelayBehaviour<T extends SmartTileEntity & IL
 
 	@Override
 	public void updateBeams() {
+		super.updateBeams();
 		if (isUpdating)
 			return;
 		isUpdating = true;
