@@ -40,7 +40,6 @@ import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.frame.FrameBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
 import com.simibubi.create.content.contraptions.components.mixer.BasinOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
@@ -54,6 +53,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.bea
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedBearingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.FrameBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
@@ -868,6 +868,7 @@ public class AllBlocks {
 	public static final BlockEntry<FrameBlock> FRAME_BLOCK =
 		REGISTRATE.block("frame_block", FrameBlock::new)
 			.initialProperties(SharedProperties::wooden)
+			.addLayer(() -> RenderType::getCutoutMipped)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeAll(c.getName(), p.modLoc("block/frame_block"))))
 			.item()
