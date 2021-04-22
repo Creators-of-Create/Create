@@ -1,22 +1,28 @@
 package com.simibubi.create.content.optics.behaviour;
 
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.content.optics.mirror.MirrorBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public class LightAcceptingBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends AbstractLightHandlingBehaviour<T> {
 	public static final BehaviourType<MirrorBehaviour> TYPE = new BehaviourType<>();
 	boolean isUpdating = false;
 
-	protected LightAcceptingBehaviour(T te) {
-		super(te);
+	public LightAcceptingBehaviour(T te, LightHandlingbehaviourProperties properties) {
+		super(te, properties);
+	}
+
+	public LightAcceptingBehaviour(T te) {
+		super(te, LightHandlingbehaviourProperties.create()
+				.withAbsorbsLight(true)
+				.withScansBeacons(true));
 	}
 
 	@Override

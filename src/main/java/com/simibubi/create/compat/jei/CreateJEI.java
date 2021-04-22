@@ -50,12 +50,14 @@ import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -238,6 +240,17 @@ public class CreateJEI implements IModPlugin {
 		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
 		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+		IRecipeManager manager = jeiRuntime.getRecipeManager();
+		ResourceLocation rl = new ResourceLocation(Create.ID + ":pressing/lily_pad");
+		manager.getRecipes(pressing)
+				.stream()
+				.filter(iRecipe -> iRecipe.getId().equals(rl))
+				.findFirst()
+				.ifPresent(r -> manager.hideRecipe(r, pressing.getUid()));
 	}
 
 	private class CategoryBuilder<T extends IRecipe<?>> {

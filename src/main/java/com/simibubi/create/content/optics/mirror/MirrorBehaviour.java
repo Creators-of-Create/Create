@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.behaviour.AbstractRotatedLightRelayBehaviour;
+import com.simibubi.create.content.optics.behaviour.LightHandlingbehaviourProperties;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -28,7 +29,9 @@ public class MirrorBehaviour extends AbstractRotatedLightRelayBehaviour<MirrorTi
 	Quaternion bufferedRotationQuaternion = null;
 
 	public MirrorBehaviour(MirrorTileEntity te) {
-		super(te);
+		super(te, LightHandlingbehaviourProperties.create()
+				.withAbsorbsLight(true)
+				.withScansBeacons(true));
 	}
 
 	private Vector3d getReflectionAngle(Vector3d inputAngle) {

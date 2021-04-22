@@ -26,7 +26,9 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 		LAPIS = create("lapis_block", b -> b.require(Blocks.LAPIS_BLOCK)
 			.output(AllItems.LAPIS_SHEET.get())),
 		BRASS = create("brass_ingot", b -> b.require(I.brass())
-			.output(AllItems.BRASS_SHEET.get()))
+			.output(AllItems.BRASS_SHEET.get())),
+		LILY_PAD = create("lily_pad", b -> b.require(Ingredient.fromItems(Items.GHAST_TEAR))
+				.output(Items.LILY_PAD));
 
 	;
 

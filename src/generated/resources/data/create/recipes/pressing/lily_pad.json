@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:ghast_tear"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:lily_pad"
+    }
+  ]
+}

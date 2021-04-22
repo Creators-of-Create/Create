@@ -20,12 +20,16 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public interface ILightHandler {
+	default Beam constructOutBeam(Vector3d beamDirection) {
+		return constructOutBeam(null, beamDirection);
+	}
+
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection) {
 		return constructOutBeam(parent, beamDirection, getBlockPos());
 	}
 
 	default Beam constructOutBeam(@Nullable Beam parent, Vector3d beamDirection, BlockPos testBlockPos) {
-		Beam beam = new Beam(parent);
+		Beam beam = new Beam(parent, getHandlerWorld());
 		World world = getHandlerWorld();
 		if (world == null)
 			return beam;
@@ -38,7 +42,7 @@ public interface ILightHandler {
 		BeamSegment segment = new BeamSegment(this, segmentColor, testPos, direction);
 		beam.add(segment);
 
-		for (int i = 0; i < 128; i++) {
+		for (int i = 0; i < getMaxScanRange(); i++) {
 			testPos = testPos.add(direction); // check next block
 			testBlockPos = new BlockPos(testPos.x, testPos.y, testPos.z);
 			BlockState testState = world.getBlockState(testBlockPos);
@@ -62,6 +66,10 @@ public interface ILightHandler {
 			segment.incrementLength();
 		}
 		return beam;
+	}
+
+	default int getMaxScanRange() {
+		return 128;
 	}
 
 	default World getHandlerWorld() {

@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 public abstract class AbstractLightRelayBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends AbstractLightHandlingBehaviour<T> {
 	private boolean isUpdating;
 
-	protected AbstractLightRelayBehaviour(T te) {
-		super(te);
+	protected AbstractLightRelayBehaviour(T te, LightHandlingbehaviourProperties properties) {
+		super(te, properties);
 		isUpdating = false;
 	}
 
@@ -29,12 +29,14 @@ public abstract class AbstractLightRelayBehaviour<T extends SmartTileEntity & IL
 		Set<Beam> oldBeams = new HashSet<>(beams);
 		beams.clear();
 		for (Beam child : oldBeams) {
-			Beam parent = child.getParent();
-
-			child.onRemoved();
-			if (parent == null || parent.isRemoved())
+			if (child.isNew()) {
+				beams.add(child);
 				continue;
-			constructSubBeams(parent).forEach(Beam::onCreated);
+			}
+			Beam parent = child.getParent();
+			child.onRemoved();
+			if (parent != null && !parent.isRemoved())
+				constructSubBeams(parent).forEach(Beam::onCreated);
 		}
 		isUpdating = false;
 	}

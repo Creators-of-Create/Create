@@ -2,6 +2,7 @@ package com.simibubi.create.content.optics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -13,16 +14,30 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 
 public class Beam extends ArrayList<BeamSegment> {
-	private final Set<ILightHandler> lightEventListeners;
+	private final transient Set<ILightHandler> lightEventListeners;
 	@Nullable
 	private final Beam parent;
+	private final long createdAt;
+	@Nullable
+	private final transient World world;
 	private boolean removed = false;
 
 	public Beam(@Nullable Beam parent) {
 		super();
 		this.parent = parent;
+		this.createdAt = 0;
+		this.world = null;
+		lightEventListeners = new HashSet<>();
+	}
+
+	public Beam(@Nullable Beam parent, @Nullable World world) {
+		super();
+		this.parent = parent;
+		this.world = world;
+		this.createdAt = world == null ? -1 : this.world.getGameTime();
 		lightEventListeners = new HashSet<>();
 	}
 
@@ -63,8 +78,13 @@ public class Beam extends ArrayList<BeamSegment> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		Beam that = (Beam) o;
-		return lightEventListeners.equals(that.lightEventListeners);
+		Beam beam = (Beam) o;
+		return createdAt == beam.createdAt && removed == beam.removed && lightEventListeners.equals(beam.lightEventListeners);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), lightEventListeners, createdAt, removed);
 	}
 
 	public boolean isRemoved() {
@@ -93,6 +113,10 @@ public class Beam extends ArrayList<BeamSegment> {
 		}
 
 		return out;
+	}
+
+	public boolean isNew() {
+		return world != null && world.getGameTime() == createdAt;
 	}
 
 

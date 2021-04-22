@@ -19,21 +19,23 @@ import net.minecraft.tileentity.TileEntity;
 
 public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends TileEntityBehaviour implements ILightHandler {
 	protected final T handler;
+	private final LightHandlingbehaviourProperties properties;
 	protected Set<Beam> beams;
 	protected Beam beaconBeam = null;
 	@Nullable
 	protected BeaconTileEntity beacon;
 
-	protected AbstractLightHandlingBehaviour(T te) {
+	protected AbstractLightHandlingBehaviour(T te, LightHandlingbehaviourProperties properties) {
 		super(te);
 		this.handler = te;
+		this.properties = properties;
 		beams = new HashSet<>();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (beacon != null && beacon.isRemoved())
+		if (properties.scansBeacon && beacon != null && beacon.isRemoved())
 			updateBeaconState();
 	}
 
@@ -66,7 +68,8 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		updateBeaconState();
+		if (properties.scansBeacon)
+			updateBeaconState();
 		updateBeams();
 	}
 
@@ -79,5 +82,20 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 
 	public Set<Beam> getBeams() {
 		return beams;
+	}
+
+	@Override
+	public void remove() {
+		beams.forEach(Beam::onRemoved);
+	}
+
+	@Override
+	public boolean absorbsLight() {
+		return properties.absorbsLight;
+	}
+
+	@Override
+	public int getMaxScanRange() {
+		return properties.scanRange;
 	}
 }
