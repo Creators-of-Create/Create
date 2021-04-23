@@ -7,6 +7,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class LightHandlerRenderer<T extends TileEntity & ILightHandler.ILightHandlerProvider> extends SafeTileEntityRenderer<T> {
 	public LightHandlerRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -17,5 +20,10 @@ public class LightHandlerRenderer<T extends TileEntity & ILightHandler.ILightHan
 		te.getHandler()
 				.getRenderBeams()
 				.forEachRemaining(beam -> beam.render(ms, buffer, partialTicks));
+	}
+
+	@Override
+	public boolean isGlobalRenderer(T te) {
+		return true;
 	}
 }

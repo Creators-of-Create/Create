@@ -40,7 +40,7 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 		super.tick();
 		if (properties.scansBeacon && beacon != null && beacon.isRemoved())
 			updateBeaconState();
-		if (needsBeamUpdate)
+		if (needsBeamUpdate && canUpdateFast())
 			updateBeams();
 	}
 
@@ -74,7 +74,10 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 		super.lazyTick();
 		if (properties.scansBeacon)
 			updateBeaconState();
-		requestBeamUpdate();
+		if (canUpdateFast())
+			requestBeamUpdate();
+		else
+			updateBeams();
 	}
 
 	public void requestBeamUpdate() {
@@ -111,5 +114,9 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 	@Override
 	public int getMaxScanRange() {
 		return properties.scanRange;
+	}
+
+	protected boolean canUpdateFast() {
+		return true;
 	}
 }

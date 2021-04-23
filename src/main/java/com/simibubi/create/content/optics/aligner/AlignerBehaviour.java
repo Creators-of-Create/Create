@@ -105,4 +105,9 @@ public class AlignerBehaviour extends AbstractLightHandlingBehaviour<AlignerTile
 		return Iterators.concat(super.getRenderBeams(), collectedBeam == null ? Collections.emptyIterator() : Collections.singleton(collectedBeam)
 				.iterator());
 	}
+
+	@Override
+	protected boolean canUpdateFast() {
+		return false;
+	}
 }
