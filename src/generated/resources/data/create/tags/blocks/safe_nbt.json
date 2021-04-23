@@ -17,6 +17,7 @@
     "create:rotation_speed_controller",
     "create:mirror",
     "create:aligner",
+    "create:radiant_beacon",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",
     "create:brass_funnel",

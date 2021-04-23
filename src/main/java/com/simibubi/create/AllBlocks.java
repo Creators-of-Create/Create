@@ -156,6 +156,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerato
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
 import com.simibubi.create.content.optics.aligner.AlignerBlock;
 import com.simibubi.create.content.optics.mirror.MirrorBlock;
+import com.simibubi.create.content.optics.radiant_beacon.RadiantBeaconBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
@@ -490,7 +491,7 @@ public class AllBlocks {
 	public static final BlockEntry<EjectorBlock> WEIGHTED_EJECTOR =
 		REGISTRATE.block("weighted_ejector", EjectorBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
 			.transform(StressConfigDefaults.setImpact(2.0))
 			.item(EjectorItem::new)
@@ -555,7 +556,7 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
 		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.encasedPipe())
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
@@ -641,7 +642,7 @@ public class AllBlocks {
 		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
 			.initialProperties(SharedProperties::softMetal)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(new FluidTankGenerator("creative_")::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::creative))
 			.addLayer(() -> RenderType::getCutoutMipped)
@@ -1110,7 +1111,7 @@ public class AllBlocks {
 	public static final BlockEntry<MirrorBlock> MIRROR =
 		REGISTRATE.block("mirror", MirrorBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::nonOpaque)
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(BlockStateGen.axisBlockProvider(true))
@@ -1129,6 +1130,15 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
+	public static final BlockEntry<RadiantBeaconBlock> RADIANT_BEACON =
+		REGISTRATE.block("radiant_beacon", RadiantBeaconBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(AbstractBlock.Properties::nonOpaque)
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(AllBlockTags.SAFE_NBT.tag)
+			.blockstate(BlockStateGen.directionalBlockProvider(false))
+			.simpleItem()
+			.register();
 
 	// Logistics
 
@@ -1355,7 +1365,7 @@ public class AllBlocks {
 			.transform(oxidizedBlockstate())
 			.register();
 
-	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
+	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
@@ -1365,7 +1375,7 @@ public class AllBlocks {
 		.lang("Block of Zinc")
 		.register();
 
-	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", p -> new Block(p))
+	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.cubeAll(c.getName(), p.modLoc("block/brass_storage_block"))))

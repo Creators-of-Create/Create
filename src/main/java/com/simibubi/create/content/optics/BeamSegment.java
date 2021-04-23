@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.Direction;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
@@ -51,9 +50,9 @@ public class BeamSegment {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void renderBeam(MatrixStack ms, IVertexBuilder builder, float[] colors, float alpha, float segmentLength, float p_228840_9_, float p_228840_10_, float p_228840_11_, float p_228840_12_, float p_228840_13_, float p_228840_14_, float p_228840_15_, float p_228840_18_, float p_228840_19_) {
-		MatrixStack.Entry matrixstack$entry = ms.peek();
-		Matrix4f model = matrixstack$entry.getModel();
-		Matrix3f normal = matrixstack$entry.getNormal();
+		MatrixStack.Entry entry = ms.peek();
+		Matrix4f model = entry.getModel();
+		Matrix3f normal = entry.getNormal();
 		putVertices(model, normal, builder, colors, alpha, segmentLength, 0F, p_228840_9_, p_228840_10_, p_228840_11_, p_228840_18_, p_228840_19_);
 		putVertices(model, normal, builder, colors, alpha, segmentLength, p_228840_14_, p_228840_15_, p_228840_12_, p_228840_13_, p_228840_18_, p_228840_19_);
 		putVertices(model, normal, builder, colors, alpha, segmentLength, p_228840_10_, p_228840_11_, p_228840_14_, p_228840_15_, p_228840_18_, p_228840_19_);
@@ -111,23 +110,12 @@ public class BeamSegment {
 	@Nonnull
 	public Quaternion getBeaconBeamModifier() {
 		if (beaconBeamModifier == null) {
-			double dotProd = getNormalized()
-					.dotProduct(UP);
-
-			Direction axis = getHandler().getBeamRotationAround();
-			if (axis == null) {
-				beaconBeamModifier = Quaternion.IDENTITY;
-			} else {
-				Vector3f unitVec = axis.getUnitVector();
-				beaconBeamModifier = unitVec.getRadialQuaternion((float) Math.acos(dotProd) * (new Vector3d(unitVec).dotProduct(getNormalized().crossProduct(UP)) > 0
-						^ axis.getAxis()
-						.isVertical() ? -1 : 1));
-				if (axis.getAxis()
-						.isVertical()) {
-					beaconBeamModifier.multiply(unitVec.getDegreesQuaternion(-90));
-					beaconBeamModifier.multiply(new Vector3f(getNormalized().crossProduct(Vector3d.of(axis.getDirectionVec()))).getDegreesQuaternion(90));
-				}
-			}
+			Vector3d axis = UP.crossProduct(getDirection())
+					.normalize();
+			if (axis.equals(Vector3d.ZERO))
+				axis = new Vector3d(1, 0, 0);
+			beaconBeamModifier = new Vector3f(axis).getRadialQuaternion((float) Math.acos(getNormalized()
+					.dotProduct(UP)));
 		}
 		return beaconBeamModifier;
 	}

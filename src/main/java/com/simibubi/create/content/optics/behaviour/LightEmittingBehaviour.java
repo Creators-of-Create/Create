@@ -21,12 +21,12 @@ public class LightEmittingBehaviour<T extends SmartTileEntity & ILightHandler.IL
 	boolean updating = false;
 
 
-	public LightEmittingBehaviour(T te, LightHandlingbehaviourProperties properties) {
+	public LightEmittingBehaviour(T te, LightHandlingBehaviourProperties properties) {
 		super(te, properties);
 	}
 
 	public LightEmittingBehaviour(T te) {
-		super(te, LightHandlingbehaviourProperties.create()
+		super(te, LightHandlingBehaviourProperties.create()
 				.withScansBeacons(false)
 				.withAbsorbsLight(true));
 	}
@@ -40,7 +40,7 @@ public class LightEmittingBehaviour<T extends SmartTileEntity & ILightHandler.IL
 
 		beams.forEach(Beam::onRemoved);
 		beams.clear();
-		getOutbeamDirections().map(this::constructOutBeam)
+		getOutBeamDirections().map(this::constructOutBeam)
 				.filter(Objects::nonNull)
 				.filter(((Predicate<Beam>) Beam::isEmpty).negate())
 				.peek(beams::add)
@@ -54,7 +54,7 @@ public class LightEmittingBehaviour<T extends SmartTileEntity & ILightHandler.IL
 		return TYPE;
 	}
 
-	public Stream<Vector3d> getOutbeamDirections() {
+	public Stream<Vector3d> getOutBeamDirections() {
 		return Stream.of(Vector3d.of(tileEntity.getBlockState()
 				.method_28500(BlockStateProperties.FACING)
 				.orElse(Direction.UP)

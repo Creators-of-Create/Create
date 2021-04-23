@@ -1,8 +1,9 @@
-package com.simibubi.create.content.optics.aligner;
+package com.simibubi.create.content.optics.radiant_beacon;
 
 import java.util.List;
 
 import com.simibubi.create.content.optics.ILightHandler;
+import com.simibubi.create.content.optics.behaviour.LightEmittingBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -11,23 +12,23 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AlignerTileEntity extends SmartTileEntity implements ILightHandler.ILightHandlerProvider {
-	protected AlignerBehaviour aligner;
+public class RadiantBeaconTileEntity extends SmartTileEntity implements ILightHandler.ILightHandlerProvider {
+	LightEmittingBehaviour<RadiantBeaconTileEntity> lightEmittingBehaviour;
 
-	public AlignerTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public RadiantBeaconTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		setLazyTickRate(20);
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		aligner = new AlignerBehaviour(this);
-		behaviours.add(aligner);
+		lightEmittingBehaviour = new LightEmittingBehaviour<>(this);
+		behaviours.add(lightEmittingBehaviour);
 	}
 
 	@Override
 	public ILightHandler getHandler() {
-		return aligner;
+		return lightEmittingBehaviour;
 	}
 
 	@Override

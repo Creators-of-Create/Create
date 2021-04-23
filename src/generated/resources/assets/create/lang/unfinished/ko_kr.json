@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 686",
+	"_": "Missing Localizations: 687",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -347,6 +347,7 @@
 	"block.create.purple_seat": "보라색 좌석",
 	"block.create.purple_valve_handle": "보라색 밸브 손잡이",
 	"block.create.radial_chassis": "원형 섀시",
+	"block.create.radiant_beacon": "UNLOCALIZED: Radiant Beacon",
 	"block.create.red_sail": "빨간색 날개",
 	"block.create.red_seat": "빨간색 좌석",
 	"block.create.red_valve_handle": "빨간색 밸브 손잡이",

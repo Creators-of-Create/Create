@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 633",
+	"_": "Missing Localizations: 634",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -347,6 +347,7 @@
 	"block.create.purple_seat": "Sedile viola",
 	"block.create.purple_valve_handle": "Maniglia per valvola viola",
 	"block.create.radial_chassis": "Telaio radiale",
+	"block.create.radiant_beacon": "UNLOCALIZED: Radiant Beacon",
 	"block.create.red_sail": "Vela rossa",
 	"block.create.red_seat": "Sedile rosso",
 	"block.create.red_valve_handle": "Maniglia per valvola rossa",

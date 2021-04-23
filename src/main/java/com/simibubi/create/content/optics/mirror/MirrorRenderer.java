@@ -37,7 +37,7 @@ public class MirrorRenderer extends KineticTileEntityRenderer {
 		final Direction.Axis facing = te.getBlockState()
 				.get(BlockStateProperties.AXIS);
 		SuperByteBuffer superBuffer = AllBlockPartials.MIRROR_PLANE.renderOnDirectionalSouth(te.getBlockState(), te.getHandler()
-				.getBeamRotationAround());
+				.getMirrorAxis());
 
 		float interpolatedAngle = te.getHandler()
 				.getInterpolatedAngle(partialTicks - 1);

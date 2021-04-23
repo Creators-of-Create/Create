@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.behaviour.AbstractRotatedLightRelayBehaviour;
-import com.simibubi.create.content.optics.behaviour.LightHandlingbehaviourProperties;
+import com.simibubi.create.content.optics.behaviour.LightHandlingBehaviourProperties;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -31,7 +31,7 @@ public class MirrorBehaviour extends AbstractRotatedLightRelayBehaviour<MirrorTi
 	Quaternion bufferedRotationQuaternion = null;
 
 	public MirrorBehaviour(MirrorTileEntity te) {
-		super(te, LightHandlingbehaviourProperties.create()
+		super(te, LightHandlingBehaviourProperties.create()
 				.withAbsorbsLight(true)
 				.withScansBeacons(true));
 	}
@@ -57,10 +57,10 @@ public class MirrorBehaviour extends AbstractRotatedLightRelayBehaviour<MirrorTi
 	@Nonnull
 	public Quaternion getBufferedRotationQuaternion() {
 		if (bufferedRotationQuaternion == null) {
-			bufferedRotationQuaternion = getBeamRotationAround().getUnitVector()
+			bufferedRotationQuaternion = getMirrorAxis().getUnitVector()
 					.getDegreesQuaternion(getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1));
-			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(getBeamRotationAround())));
-			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(AngleHelper.verticalAngle(getBeamRotationAround())));
+			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(getMirrorAxis())));
+			bufferedRotationQuaternion.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(AngleHelper.verticalAngle(getMirrorAxis())));
 		}
 		return bufferedRotationQuaternion;
 	}
@@ -72,8 +72,7 @@ public class MirrorBehaviour extends AbstractRotatedLightRelayBehaviour<MirrorTi
 	}
 
 	@Nonnull
-	@Override
-	public Direction getBeamRotationAround() {
+	public Direction getMirrorAxis() {
 		return Direction.getFacingFromAxisDirection(getAxis(), Direction.AxisDirection.POSITIVE);
 	}
 

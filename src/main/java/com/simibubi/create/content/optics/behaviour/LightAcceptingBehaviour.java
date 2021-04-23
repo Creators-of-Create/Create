@@ -14,12 +14,12 @@ public class LightAcceptingBehaviour<T extends SmartTileEntity & ILightHandler.I
 	public static final BehaviourType<LightAcceptingBehaviour<? extends SmartTileEntity>> TYPE = new BehaviourType<>();
 	boolean isUpdating = false;
 
-	public LightAcceptingBehaviour(T te, LightHandlingbehaviourProperties properties) {
+	public LightAcceptingBehaviour(T te, LightHandlingBehaviourProperties properties) {
 		super(te, properties);
 	}
 
 	public LightAcceptingBehaviour(T te) {
-		super(te, LightHandlingbehaviourProperties.create()
+		super(te, LightHandlingBehaviourProperties.create()
 				.withAbsorbsLight(true)
 				.withScansBeacons(true));
 	}

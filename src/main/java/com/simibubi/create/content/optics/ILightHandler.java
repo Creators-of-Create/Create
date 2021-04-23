@@ -82,11 +82,6 @@ public interface ILightHandler {
 
 	TileEntity getTile();
 
-	@Nullable
-	default Direction getBeamRotationAround() {
-		return null;
-	}
-
 	default Stream<Beam> constructSubBeams(Beam beam) {
 		return Stream.empty();
 	}

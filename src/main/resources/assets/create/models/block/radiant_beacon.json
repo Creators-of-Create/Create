@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
+  "parent": "block/block",
 	"textures": {
 		"0": "create:block/andesite_casing",
 		"1": "create:block/beacon",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 630",
+	"_": "Missing Localizations: 631",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -347,6 +347,7 @@
 	"block.create.purple_seat": "紫色坐垫",
 	"block.create.purple_valve_handle": "紫色阀门手轮",
 	"block.create.radial_chassis": "旋转底盘",
+	"block.create.radiant_beacon": "UNLOCALIZED: Radiant Beacon",
 	"block.create.red_sail": "红色风帆",
 	"block.create.red_seat": "红色坐垫",
 	"block.create.red_valve_handle": "红色阀门手轮",

@@ -7,14 +7,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Iterators;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.simibubi.create.content.optics.Beam;
 import com.simibubi.create.content.optics.behaviour.AbstractLightHandlingBehaviour;
-import com.simibubi.create.content.optics.behaviour.LightHandlingbehaviourProperties;
+import com.simibubi.create.content.optics.behaviour.LightHandlingBehaviourProperties;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -29,7 +28,7 @@ public class AlignerBehaviour extends AbstractLightHandlingBehaviour<AlignerTile
 	boolean updating = false;
 
 	protected AlignerBehaviour(AlignerTileEntity te) {
-		super(te, LightHandlingbehaviourProperties.create()
+		super(te, LightHandlingBehaviourProperties.create()
 				.withScansBeacons(true)
 				.withAbsorbsLight(true));
 	}
@@ -72,13 +71,7 @@ public class AlignerBehaviour extends AbstractLightHandlingBehaviour<AlignerTile
 		updating = false;
 	}
 
-	@Nonnull
-	@Override
-	public Direction getBeamRotationAround() {
-		return Direction.getFacingFromAxisDirection(getFacing().getAxis(), Direction.AxisDirection.POSITIVE);
-	}
-
-	private Direction getFacing() {
+	protected Direction getFacing() {
 		return tileEntity.getBlockState()
 				.get(BlockStateProperties.FACING);
 	}

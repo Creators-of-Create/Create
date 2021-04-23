@@ -20,7 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends TileEntityBehaviour implements ILightHandler {
 	protected final T handler;
-	private final LightHandlingbehaviourProperties properties;
+	private final LightHandlingBehaviourProperties properties;
 	protected Set<Beam> beams;
 	@Nullable
 	protected Beam beaconBeam = null;
@@ -28,7 +28,7 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 	protected BeaconTileEntity beacon;
 	boolean needsBeamUpdate = false;
 
-	protected AbstractLightHandlingBehaviour(T te, LightHandlingbehaviourProperties properties) {
+	protected AbstractLightHandlingBehaviour(T te, LightHandlingBehaviourProperties properties) {
 		super(te);
 		this.handler = te;
 		this.properties = properties;
@@ -46,11 +46,10 @@ public abstract class AbstractLightHandlingBehaviour<T extends SmartTileEntity &
 
 
 	protected void updateBeaconState() {
-		BeaconTileEntity beaconBefore = beacon;
 		beacon = BeaconHelper.getBeaconTE(getBlockPos(), getHandlerWorld())
 				.orElse(null);
 
-		if (beaconBefore != null) {
+		if (beaconBeam != null) {
 			beaconBeam.clear();
 			beaconBeam = null;
 			requestBeamUpdate();

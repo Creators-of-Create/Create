@@ -14,7 +14,7 @@ public abstract class AbstractRotatedLightRelayBehaviour<T extends KineticTileEn
 	protected float clientAngleDiff;
 	private float prevAngle;
 
-	protected AbstractRotatedLightRelayBehaviour(T te, LightHandlingbehaviourProperties properties) {
+	protected AbstractRotatedLightRelayBehaviour(T te, LightHandlingBehaviourProperties properties) {
 		super(te, properties);
 	}
 

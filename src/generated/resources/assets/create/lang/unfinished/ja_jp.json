@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 615",
+	"_": "Missing Localizations: 616",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -347,6 +347,7 @@
 	"block.create.purple_seat": "紫色のシート",
 	"block.create.purple_valve_handle": "紫色のバルブハンドル",
 	"block.create.radial_chassis": "ラジアルシャーシ",
+	"block.create.radiant_beacon": "UNLOCALIZED: Radiant Beacon",
 	"block.create.red_sail": "赤色の帆",
 	"block.create.red_seat": "赤色のシート",
 	"block.create.red_valve_handle": "赤色のバルブハンドル",

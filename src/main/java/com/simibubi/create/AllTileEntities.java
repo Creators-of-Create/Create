@@ -149,11 +149,12 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
-import com.simibubi.create.content.optics.aligner.AlignerRenderer;
+import com.simibubi.create.content.optics.LightHandlerRenderer;
 import com.simibubi.create.content.optics.aligner.AlignerTileEntity;
 import com.simibubi.create.content.optics.mirror.MirrorInstance;
 import com.simibubi.create.content.optics.mirror.MirrorRenderer;
 import com.simibubi.create.content.optics.mirror.MirrorTileEntity;
+import com.simibubi.create.content.optics.radiant_beacon.RadiantBeaconTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
@@ -598,7 +599,13 @@ public class AllTileEntities {
 	public static final TileEntityEntry<AlignerTileEntity> ALIGNER = Create.registrate()
 			.tileEntity("aligner", AlignerTileEntity::new)
 			.validBlocks(AllBlocks.ALIGNER)
-			.renderer(() -> AlignerRenderer::new)
+			.renderer(() -> LightHandlerRenderer::new)
+			.register();
+
+	public static final TileEntityEntry<RadiantBeaconTileEntity> RADIANT_BEACON = Create.registrate()
+			.tileEntity("radiant_beacon", RadiantBeaconTileEntity::new)
+			.validBlocks(AllBlocks.RADIANT_BEACON)
+			.renderer(() -> LightHandlerRenderer::new)
 			.register();
 
 	// Logistics

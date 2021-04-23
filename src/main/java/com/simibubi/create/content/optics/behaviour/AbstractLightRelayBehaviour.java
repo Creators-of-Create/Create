@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 public abstract class AbstractLightRelayBehaviour<T extends SmartTileEntity & ILightHandler.ILightHandlerProvider> extends AbstractLightHandlingBehaviour<T> {
 	private boolean isUpdating;
 
-	protected AbstractLightRelayBehaviour(T te, LightHandlingbehaviourProperties properties) {
+	protected AbstractLightRelayBehaviour(T te, LightHandlingBehaviourProperties properties) {
 		super(te, properties);
 		isUpdating = false;
 	}

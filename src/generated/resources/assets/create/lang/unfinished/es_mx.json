@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1274",
+	"_": "Missing Localizations: 1275",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -347,6 +347,7 @@
 	"block.create.purple_seat": "Asiento Morado",
 	"block.create.purple_valve_handle": "Manija de Válvula Morada",
 	"block.create.radial_chassis": "Chasis Radial",
+	"block.create.radiant_beacon": "UNLOCALIZED: Radiant Beacon",
 	"block.create.red_sail": "Vela Roja",
 	"block.create.red_seat": "Asiento Rojo",
 	"block.create.red_valve_handle": "Manija de Válvula Roja",
