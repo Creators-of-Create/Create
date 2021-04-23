@@ -51,7 +51,7 @@ public class EffectsHandler {
 
 	private final GlBuffer vbo = new GlBuffer(GL20.GL_ARRAY_BUFFER);
 
-	private final ArrayList<SphereFilterProgram.FilterSphere> spheres;
+	private final ArrayList<FilterSphere> spheres;
 
 	public EffectsHandler() {
 		spheres = new ArrayList<>();
@@ -74,7 +74,7 @@ public class EffectsHandler {
 
 	}
 
-	public void addSphere(SphereFilterProgram.FilterSphere sphere) {
+	public void addSphere(FilterSphere sphere) {
 		this.spheres.add(sphere);
 	}
 
@@ -115,7 +115,7 @@ public class EffectsHandler {
 
 		program.setCameraPos(cameraPos.inverse());
 
-		for (SphereFilterProgram.FilterSphere sphere : spheres) {
+		for (FilterSphere sphere : spheres) {
 			sphere.center = sphere.center.subtract(cameraPos);
 		}
 

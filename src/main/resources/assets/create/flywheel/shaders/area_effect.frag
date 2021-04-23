@@ -18,6 +18,7 @@ struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
     vec4 d1;// <float feather, float fade, float density, float blend mode>
     vec4 d2;// <float surfaceStrength, float bubbleStrength>
+    vec4 colorMask;// <vec3 rgb, float feather>
     mat4 colorOp;
 };
 
@@ -112,7 +113,6 @@ float filterStrength(vec3 worldDir, float depth, inout SphereFilter f) {
 vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
     vec3 worldPos = worldDir * depth;
 
-    vec3 hsv = rgb2hsv(diffuse);
     vec3 accum = vec3(diffuse);
 
     for (int i = 0; i < uCount; i++) {
@@ -123,12 +123,18 @@ vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
         if (strength > 0) {
             const float fcon = 0.;
 
-            //vec3 formatted = mix(diffuse, hsv, fcon);
-            vec3 filtered = filterColor(s.colorOp, mix(diffuse, accum, s.d1.w));
-            //filtered = mix(filtered, hsv2rgbWrapped(filtered), fcon);
+            vec3 baseColor = mix(diffuse, accum, s.d1.w);
 
+            vec3 filtered = filterColor(s.colorOp, baseColor);
+
+            vec3 baseHsv = rgb2hsv(baseColor);
+            vec3 maskHsv = rgb2hsv(s.colorMask.rgb);
+            vec3 diff = abs(baseHsv - maskHsv) * vec3(1., 1.1, 0.1);
+            float colorMask = step(s.colorMask.w, length(diff));
             float mixing = clamp(strength, 0., 1.);
-            accum = mix(accum, filtered, mixing);
+
+            accum = mix(accum, filtered, mixing * colorMask);
+            //accum = vec3(colorMask);
         }
     }
 

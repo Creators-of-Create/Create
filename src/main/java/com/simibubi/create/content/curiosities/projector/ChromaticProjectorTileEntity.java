@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.projector;
 
 import java.util.Vector;
 
-import com.simibubi.create.foundation.render.backend.effects.SphereFilterProgram;
+import com.simibubi.create.foundation.render.backend.effects.FilterSphere;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 
 import net.minecraft.tileentity.TileEntity;
@@ -24,17 +24,17 @@ public class ChromaticProjectorTileEntity extends TileEntity implements IInstanc
 		super(te);
 	}
 
-	public SphereFilterProgram.FilterSphere makeFilter() {
+	public FilterSphere makeFilter() {
 		Matrix4f filter = FilterStep.fold(stages);
 
 		BlockPos pos = getPos();
-		return new SphereFilterProgram.FilterSphere()
+		return new FilterSphere()
 				.setFilter(filter)
 				.setCenter(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)
 				.setRadius(radius)
 				.setDensity(density)
 				.setFeather(feather)
-				.setBlendOver(false)
+				.setBlendOver(true)
 				.setFade(fade);
 	}
 
@@ -49,12 +49,12 @@ public class ChromaticProjectorTileEntity extends TileEntity implements IInstanc
 	}
 
 	public ChromaticProjectorTileEntity setFeather(int feather) {
-		this.feather = feather / 4f;
+		this.feather = feather / 10f;
 		return this;
 	}
 
 	public ChromaticProjectorTileEntity setFade(int fade) {
-		this.fade = feather / 10f;
+		this.fade = fade / 10f;
 		return this;
 	}
 
