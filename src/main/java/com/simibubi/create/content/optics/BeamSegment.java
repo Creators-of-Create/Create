@@ -34,7 +34,7 @@ public class BeamSegment {
 	private final ILightHandler handler;
 	@Nullable
 	private Quaternion beaconBeamModifier;
-	private int length;
+	private double length;
 
 	public BeamSegment(ILightHandler handler, @Nonnull float[] color, Vector3d start, Vector3d direction) {
 		this.handler = handler;
@@ -86,7 +86,7 @@ public class BeamSegment {
 		return this.colors;
 	}
 
-	public int getLength() {
+	public double getLength() {
 		return this.length;
 	}
 
@@ -152,5 +152,9 @@ public class BeamSegment {
 				.25f, .25f, .25f, textureOffset2, textureOffset1);
 		stacker.pop()
 				.pop();
+	}
+
+	public void setLength(double length) {
+		this.length = length;
 	}
 }

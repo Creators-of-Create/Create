@@ -227,4 +227,8 @@ public class VecHelper {
 		}
 		return n;
 	}
+
+	public static Vector3d getRandom() {
+		return new Vector3d(Math.random(), Math.random(), Math.random()).normalize();
+	}
 }

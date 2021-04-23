@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.optics.ILightHandler;
 import com.simibubi.create.content.optics.behaviour.LightEmittingBehaviour;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -12,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RadiantBeaconTileEntity extends SmartTileEntity implements ILightHandler.ILightHandlerProvider {
+public class RadiantBeaconTileEntity extends SmartTileEntity implements ILightHandler.ILightHandlerProvider, ITE<RadiantBeaconTileEntity> {
 	LightEmittingBehaviour<RadiantBeaconTileEntity> lightEmittingBehaviour;
 
 	public RadiantBeaconTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -40,5 +41,10 @@ public class RadiantBeaconTileEntity extends SmartTileEntity implements ILightHa
 	@OnlyIn(Dist.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 256.0D;
+	}
+
+	@Override
+	public Class<RadiantBeaconTileEntity> getTileEntityClass() {
+		return RadiantBeaconTileEntity.class;
 	}
 }
