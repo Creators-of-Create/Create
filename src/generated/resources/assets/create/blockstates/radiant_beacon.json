@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "create:block/radiant_beacon",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "create:block/radiant_beacon"
+    },
+    "facing=north": {
+      "model": "create:block/radiant_beacon",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "create:block/radiant_beacon",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:block/radiant_beacon",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create:block/radiant_beacon",
+      "x": 90,
+      "y": 90
+    }
+  }
+}
