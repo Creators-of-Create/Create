@@ -30,4 +30,21 @@ public class ConfigTextField extends TextFieldWidget {
 
 		font.draw(ms, unit, x + getAdjustedWidth() - unitWidth, this.y + (this.height - 8) / 2, 0xcc_aaaaaa);
 	}
+
+	@Override
+	public void setFocused2(boolean focus) {
+		super.setFocused2(focus);
+
+		if (!focus) {
+			if (ConfigScreenList.currentText == this)
+				ConfigScreenList.currentText = null;
+
+			return;
+		}
+
+		if (ConfigScreenList.currentText != null && ConfigScreenList.currentText != this)
+			ConfigScreenList.currentText.setFocused2(false);
+
+		ConfigScreenList.currentText = this;
+	}
 }

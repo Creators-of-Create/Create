@@ -7,7 +7,6 @@ public class DelegatedStencilElement extends StencilElement {
 	protected static final ElementRenderer EMPTY_RENDERER = (ms, width, height) -> {};
 	protected static final ElementRenderer DEFAULT_ELEMENT = (ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, -3, 5, height+4, width+6, 0xff_10dd10, 0xff_1010dd);
 
-
 	protected ElementRenderer stencil;
 	protected ElementRenderer element;
 

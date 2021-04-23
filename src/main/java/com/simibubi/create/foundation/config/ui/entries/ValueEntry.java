@@ -6,44 +6,49 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.ConfigButton;
+import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
-import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
+	protected static final IFormattableTextComponent modComponent = new StringTextComponent("* ").formatted(TextFormatting.BOLD, TextFormatting.DARK_BLUE).append(StringTextComponent.EMPTY.copy().formatted(TextFormatting.RESET));
 	protected static final int resetWidth = 28;//including 6px offset on either side
 	public static final Pattern unitPattern = Pattern.compile("\\[(in .*)]");
+	//public static DelegatedStencilElement.ElementRenderer idle = (ms, w, h) -> UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2);
 
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
 	protected PonderButton resetButton;
 	protected boolean editable = true;
 	protected String unit = null;
+	protected String path;
 
 	public ValueEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label);
 		this.value = value;
 		this.spec = spec;
+		this.path = String.join(".", value.getPath());
 
-		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "R").centered(true, true);
-		text.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2));
 		resetButton = new PonderButton(0, 0, (_$, _$$) -> {
-			value.set((T) spec.getDefault());
+			setValue((T) spec.getDefault());
 			this.onReset();
-		}, resetWidth - 12, 16).showingUnscaled(text);
+		}, resetWidth - 12, 16)
+				.showing(AllIcons.I_CONFIG_RESET.asStencil()/*.withElementRenderer(idle)*/);
 		resetButton.fade(1);
 
 		listeners.add(resetButton);
@@ -82,12 +87,20 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	@Override
 	protected void setEditable(boolean b) {
 		editable = b;
-		resetButton.active = editable && !value.get().equals(spec.getDefault());
+		resetButton.active = editable && !isCurrentValueDefault();
 	}
 
 	@Override
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		if (isCurrentValueChanged()) {
+			IFormattableTextComponent original = label.getComponent();
+			IFormattableTextComponent changed = modComponent.copy().append(original);
+			label.withText(changed);
+			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+			label.withText(original);
+		} else {
+			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		}
 
 		resetButton.x = x + width - resetWidth + 6;
 		resetButton.y = y + 15;
@@ -99,18 +112,40 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		return (int) (totalWidth * labelWidthMult);
 	}
 
-	protected void onReset() {
-		onValueChange();
+	public void setValue(@Nonnull T value) {
+		if (value.equals(this.value.get())) {
+			ConfigScreen.changes.remove(path);
+			onValueChange(value);
+			return;
+		}
+
+		ConfigScreen.changes.put(path, value);
+		onValueChange(value);
 	}
 
-	protected void onValueChange() {
-		resetButton.active = editable && !value.get().equals(spec.getDefault());
+	@Nonnull
+	public T getValue() {
+		//noinspection unchecked
+		return (T) ConfigScreen.changes.getOrDefault(path, this.value.get());
+	}
 
-		if (!isForServer())
-			return;
+	protected boolean isCurrentValueChanged() {
+		return ConfigScreen.changes.containsKey(path);
+	}
 
-		String path = String.join(".", value.getPath());
-		AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(path, value.get()));
+	protected boolean isCurrentValueDefault() {
+		return spec.getDefault().equals(getValue());
+	}
+
+	public void onReset() {
+		onValueChange(getValue());
+	}
+
+	public void onValueChange() {
+		onValueChange(getValue());
+	}
+	public void onValueChange(T newValue) {
+		resetButton.active = editable && !isCurrentValueDefault();
 	}
 
 	protected void bumpCog() {bumpCog(10f);}

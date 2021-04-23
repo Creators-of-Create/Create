@@ -4,6 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.KHRDebug;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -22,8 +24,6 @@ public class UIRenderHelper {
 
 	public static void enableStencil() {
 		RenderSystem.recordRenderCall(() -> Minecraft.getInstance().getFramebuffer().enableStencil());
-		if (framebuffer != null)
-			RenderSystem.recordRenderCall(() -> framebuffer.enableStencil());
 	}
 
 	public static Framebuffer framebuffer;
@@ -33,11 +33,13 @@ public class UIRenderHelper {
 			MainWindow mainWindow = Minecraft.getInstance().getWindow();
 			framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true, Minecraft.IS_RUNNING_ON_MAC);
 			framebuffer.setFramebufferColor(0, 0, 0, 0);
+			KHRDebug.glObjectLabel(GL30.GL_FRAMEBUFFER, framebuffer.framebufferObject, "UIBuffer");
+			framebuffer.enableStencil();
 //			framebuffer.deleteFramebuffer();
 		});
 	}
 
-	public static void prepFramebufferSize() {
+	public static void prepFramebufferSize() {//TODO move this to a mixin
 		MainWindow window = Minecraft.getInstance().getWindow();
 		if (framebuffer.framebufferWidth != window.getFramebufferWidth() || framebuffer.framebufferHeight != window.getFramebufferHeight()) {
 			framebuffer.func_216491_a(window.getFramebufferWidth(), window.getFramebufferHeight(), Minecraft.IS_RUNNING_ON_MAC);
@@ -54,10 +56,6 @@ public class UIRenderHelper {
 		float ty = (float) framebuffer.framebufferHeight / (float) framebuffer.framebufferTextureHeight;
 
 		RenderSystem.enableTexture();
-		RenderSystem.enableBlend();
-		RenderSystem.disableLighting();
-		RenderSystem.disableAlphaTest();
-		RenderSystem.defaultBlendFunc();
 		RenderSystem.enableDepthTest();
 
 		framebuffer.bindFramebufferTexture();
@@ -73,8 +71,6 @@ public class UIRenderHelper {
 
 		tessellator.draw();
 		framebuffer.unbindFramebufferTexture();
-		RenderSystem.disableBlend();
-		RenderSystem.enableAlphaTest();
 	}
 
 	//angle in degrees; 0° -> fading to the right

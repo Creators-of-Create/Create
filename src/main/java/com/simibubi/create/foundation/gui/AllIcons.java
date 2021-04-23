@@ -124,8 +124,15 @@ public class AllIcons implements IScreenRenderable {
 		I_MTD_SCAN = next(),
 		I_MTD_REPLAY = next(),
 		I_MTD_USER_MODE = next(),
-		I_MTD_SLOW_MODE = next();
-	
+		I_MTD_SLOW_MODE = next(),
+
+		I_CONFIG_UNLOCKED = newRow(),
+		I_CONFIG_LOCKED = next(),
+		I_CONFIG_DISCARD = next(),
+		I_CONFIG_SAVE = next(),
+		I_CONFIG_RESET = next(),
+		I_CONFIG_BACK = next();
+
 	public AllIcons(int x, int y) {
 		iconX = x * 16;
 		iconY = y * 16;
@@ -177,6 +184,11 @@ public class AllIcons implements IScreenRenderable {
 		vertex(peek, builder, j, k, rgb, vec2, u2, v1);
 		vertex(peek, builder, j, k, rgb, vec3, u2, v2);
 		vertex(peek, builder, j, k, rgb, vec4, u1, v2);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public DelegatedStencilElement asStencil() {
+		return new DelegatedStencilElement().withStencilRenderer((ms, w, h) -> this.draw(ms, 0, 0)).withBounds(16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -35,12 +35,11 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	protected void cycleValue(int direction) {
-		Enum<?> e = value.get();
+		Enum<?> e = getValue();
 		Enum<?>[] options = e.getDeclaringClass().getEnumConstants();
 		e = options[Math.floorMod(e.ordinal() + direction, options.length)];
-		value.set(e);
+		setValue(e);
 		bumpCog(direction * 15f);
-		onValueChange();
 	}
 
 	@Override
@@ -79,8 +78,8 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	@Override
-	protected void onValueChange() {
-		super.onValueChange();
-		valueText.withText(value.get().name());
+	public void onValueChange(Enum<?> newValue) {
+		super.onValueChange(newValue);
+		valueText.withText(newValue.name());
 	}
 }

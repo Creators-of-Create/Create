@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.ponder;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -106,7 +107,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		if (transition.getChaseTarget() == 0) {
+		if (transition.getChaseTarget() == 0 || transition.settled()) {
 			renderBackground(ms);
 			return;
 		}
@@ -125,7 +126,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			ms.push();// 2
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindFramebuffer(true);
-			lastScreen.render(ms, mouseX, mouseY, 10);
+			lastScreen.render(ms, mouseX, mouseY, partialTicks);
 			ms.pop();// 2
 
 			// use the buffer texture
@@ -147,7 +148,12 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			ms.translate(dpx, dpy, 0);
 			ms.scale((float) scale, (float) scale, 1);
 			ms.translate(-dpx, -dpy, 0);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			RenderSystem.disableAlphaTest();
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
+			RenderSystem.disableBlend();
+			RenderSystem.enableAlphaTest();
 			ms.pop();// 1
 		}
 

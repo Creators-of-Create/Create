@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -11,10 +13,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.StencilElement;
-import com.simibubi.create.foundation.gui.TextStencilElement;
-import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.utility.animation.Force;
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
@@ -22,40 +23,32 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Direction;
 
-public abstract class ConfigScreen extends NavigatableSimiScreen {
+public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	/*
-	*
-	* TODO
-	* zelo's list for configUI
-	*
-	* match style with ponderUI
-	* cache changes before setting values and saving to file
-	* don't exit on ESC
-	* reset text field focus for any click inside screen
-	* adjust transition animation of screens
-	* allow backspace in text fields
-	* move config button's animations to ponder button or a new superclass
-	* get some proper icons for reset button and enum cycle
-	* some small shadow effect for top and bottom of the list
-	* add the 'think back' button back, just with a different caption
-	* add a title to the current config screen, maybe in the form of breadcrumbs
-	*
-	* some color themes maybe?
-	* at least a helper class to unite colors throughout different uis
-	*
-	* FIXME
-	*
-	* tooltip are hidden underneath the scrollbar, if the bar is near the middle
-	* misalignment of the label-streak and textboxes/enum stuff
-	*
-	* */
+	 *
+	 * TODO
+	 * zelo's list for configUI
+	 *
+	 * adjust transition animation of screens -> disabled for now
+	 * move config button's animations to ponder button or a new superclass
+	 * get some proper icons for reset button and enum cycle
+	 *
+	 * some color themes maybe?
+	 * at least a helper class to unite colors throughout different uis
+	 *
+	 * FIXME
+	 *
+	 * tooltip are hidden underneath the scrollbar, if the bar is near the middle
+	 * misalignment of the label-streak and textboxes/enum stuff
+	 * framebuffer blending is incorrect
+	 *
+	 * */
 
+	public static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
+	public static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
+	public static final Map<String, Object> changes = new HashMap<>();
 	protected final Screen parent;
-	protected static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
-	protected static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
-
-	protected StencilElement testStencil;
 
 	public ConfigScreen(Screen parent) {
 		this.parent = parent;
@@ -63,46 +56,23 @@ public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 	@Override
 	public void tick() {
-		cogSpin.tick();
-
-		widgets.stream()
-				.filter(w -> w instanceof ConfigButton)
-				.forEach(w -> ((ConfigButton) w).tick());
-
 		super.tick();
-	}
-
-	@Override
-	protected void init() {
-		/*super.init();
-		if (backTrack != null) {
-			widgets.remove(backTrack);
-			backTrack = null;
-		}*/
-
-
-		testStencil = new TextStencilElement(client.fontRenderer, "POGGERS").at(width*0.5f, height*0.5f, 0);
+		cogSpin.tick();
 	}
 
 	@Override
 	public void renderBackground(@Nonnull MatrixStack ms) {
-		//fill(ms, 0, 0, this.width, this.height, 0xe8_101010);
 		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this, ms));
 	}
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.disableDepthTest();
-		if (this.client != null && this.client.world != null){
+		if (this.client != null && this.client.world != null) {
 			fill(ms, 0, 0, this.width, this.height, 0xb0_282c34);
 		} else {
 			fill(ms, 0, 0, this.width, this.height, 0xff_282c34);
 		}
-
-		/*ms.push();
-		ms.translate(width*0.5f, height*0.5f, 0);
-		renderCog(ms, partialTicks);
-		ms.pop();*/
 
 		new StencilElement() {
 			@Override
@@ -118,18 +88,6 @@ public abstract class ConfigScreen extends NavigatableSimiScreen {
 
 		super.renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 
-	}
-
-	protected void renderCog(MatrixStack ms, float partialTicks) {
-		ms.push();
-
-		ms.translate(-100, 100, -200);
-		ms.scale(200, 200, .1f);
-		GuiGameElement.of(cogwheelState)
-				.rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
-				.render(ms);
-
-		ms.pop();
 	}
 
 	@Override
@@ -154,5 +112,17 @@ public abstract class ConfigScreen extends NavigatableSimiScreen {
 	public static String toHumanReadable(String key) {
 		String s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(key)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
 		return s;
+	}
+
+	protected void renderCog(MatrixStack ms, float partialTicks) {
+		ms.push();
+
+		ms.translate(-100, 100, -100);
+		ms.scale(200, 200, .1f);
+		GuiGameElement.of(cogwheelState)
+				.rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
+				.render(ms);
+
+		ms.pop();
 	}
 }

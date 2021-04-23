@@ -39,7 +39,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 30, unit);
-		textField.setText(String.valueOf(value.get()));
+		textField.setText(String.valueOf(getValue()));
 
 		Object range = spec.getRange();
 		try {
@@ -74,8 +74,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 					throw new IllegalArgumentException();
 
 				textField.setTextColor(0xff_20cc20);
-				value.set(number);
-				onValueChange();
+				setValue(number);
 
 			} catch (IllegalArgumentException ignored) {
 				textField.setTextColor(0xff_cc2020);
@@ -105,9 +104,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	}
 
 	@Override
-	protected void onReset() {
-		super.onReset();
-		textField.setText(String.valueOf(value.get()));
+	public void onValueChange(T newValue) {
+		super.onValueChange(newValue);
+		String newText = String.valueOf(newValue);
+		if (textField.getText().equals(newText))
+			return;
+
+		textField.setText(newText);
 	}
 
 	@Override

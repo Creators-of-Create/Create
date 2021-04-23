@@ -25,10 +25,8 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 				.centered(true, true)
 				.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
 
-		button = new PonderButton(0, 0, () -> {
-			value.set(!value.get());
-			onValueChange();
-		}).showingUnscaled(enabled);
+		button = new PonderButton(0, 0, () -> setValue(!getValue()))
+				.showingUnscaled(enabled);
 		button.fade(1);
 
 		listeners.add(button);
@@ -58,14 +56,9 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	protected void onValueChange() {
-		super.onValueChange();
-		button.showingUnscaled(value.get() ? enabled : disabled);
-		bumpCog(value.get() ? 15f : -16f);
+	public void onValueChange(Boolean newValue) {
+		super.onValueChange(newValue);
+		button.showingUnscaled(newValue ? enabled : disabled);
+		bumpCog(newValue ? 15f : -16f);
 	}
-
-	/*@Override
-	public boolean mouseClicked(double mX, double mY, int button) {
-		return this.button.mouseClicked(mX, mY, button) || super.mouseClicked(mX, mY, button);
-	}*/
 }

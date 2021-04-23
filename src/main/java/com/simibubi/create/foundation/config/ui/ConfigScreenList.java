@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
-	public TextFieldWidget currentText;
+	public static TextFieldWidget currentText;
 
 	public boolean isForServer = false;
 
@@ -31,12 +32,16 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		func_244605_b(false);
 		func_244606_c(false);
 		setRenderSelection(false);
+		currentText = null;
 	}
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		//render tmp background
-		fill(ms, left, top, left + width, top + height, 0x10_000000);
+		//fill(ms, left, top, left + width, top + height, 0x10_000000);
+
+		UIRenderHelper.angledGradient(ms, 90, left + width / 2, top, width, 5, 0x60_000000, 0x0);
+		UIRenderHelper.angledGradient(ms, -90, left + width / 2, bottom, width, 5, 0x60_000000, 0x0);
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 	}
@@ -48,6 +53,13 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		RenderSystem.enableScissor((int) (this.left * d0), (int) (window.getFramebufferHeight() - (this.bottom * d0)), (int) (this.width * d0), (int) (this.height * d0));
 		super.renderList(p_238478_1_, p_238478_2_, p_238478_3_, p_238478_4_, p_238478_5_, p_238478_6_);
 		RenderSystem.disableScissor();
+	}
+
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		children().stream().filter(e -> e instanceof NumberEntry<?>).forEach(e -> e.mouseClicked(x, y, button));
+
+		return super.mouseClicked(x, y, button);
 	}
 
 	@Override
