@@ -82,8 +82,12 @@ public class AlignerBehaviour extends AbstractLightHandlingBehaviour<AlignerTile
 
 	@Override
 	public Stream<Beam> constructSubBeams(Beam beam) {
+		if (beam == collectedBeam)
+			return Stream.empty();
 		Vector3d beamDir = beam.getDirection();
-		if (!beam.isRemoved() && beamDir != null && AngleHelper.deg(Math.cos(beamDir.dotProduct(getFacingVec()))) < 60) {
+		if (!beam.isRemoved() && beamDir != null && AngleHelper.deg(Math.cos(beamDir.dotProduct(getFacingVec()))) < 60
+				&& getFacing().getOpposite()
+				.equals(beam.getBlockEnterFace(getBlockPos()))) {
 			beams.add(beam);
 			requestBeamUpdate();
 		}
