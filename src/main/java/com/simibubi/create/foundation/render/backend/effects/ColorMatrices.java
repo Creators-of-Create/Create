@@ -92,6 +92,16 @@ public class ColorMatrices {
 		return mat;
 	}
 
+	public static Matrix4f darken(float amount) {
+		Matrix4f darken = new Matrix4f();
+		darken.loadIdentity();
+		darken.multiply(1f - amount);
+		darken.a03 = amount;
+		darken.a13 = amount;
+		darken.a23 = amount;
+		return darken;
+	}
+
 	public static Matrix4f identity() {
 		Matrix4f mat = new Matrix4f();
 		mat.loadIdentity();

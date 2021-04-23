@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render.backend.effects;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -28,8 +27,6 @@ public class SphereFilterProgram extends GlProgram {
 	protected static final int BUFFER_SIZE = EXTRA_INFO + ALL_FILTERS_SIZE;
 
 	public final GlBuffer effectsUBO;
-
-	protected final ArrayList<FilterSphere> filters = new ArrayList<>(16);
 
 	protected final int uniformBlock;
 
@@ -82,17 +79,15 @@ public class SphereFilterProgram extends GlProgram {
 		GL20.glUniform3f(uCameraPos, (float) pos.x, (float) pos.y, (float) pos.z);
 	}
 
-	public void clear() {
-		filters.clear();
-	}
-
-	public void addSphere(FilterSphere filterSphere) {
-		filters.add(filterSphere);
-	}
-
-	public void uploadFilters() {
+	public void uploadFilters(ArrayList<FilterSphere> filters) {
 		effectsUBO.bind(GL20.GL_ARRAY_BUFFER);
-		effectsUBO.map(GL20.GL_ARRAY_BUFFER, 0, BUFFER_SIZE, this::uploadUBO);
+		effectsUBO.map(GL20.GL_ARRAY_BUFFER, 0, BUFFER_SIZE, buf -> {
+			buf.putInt(filters.size());
+			buf.position(16);
+			FloatBuffer floatBuffer = buf.asFloatBuffer();
+
+			filters.forEach(it -> it.write(floatBuffer));
+		});
 		effectsUBO.unbind(GL20.GL_ARRAY_BUFFER);
 	}
 
@@ -114,14 +109,6 @@ public class SphereFilterProgram extends GlProgram {
 		GL20.glBindTexture(GL20.GL_TEXTURE_2D, textureObject);
 	}
 
-	private void uploadUBO(ByteBuffer buf) {
-		buf.putInt(filters.size());
-		buf.position(16);
-		FloatBuffer floatBuffer = buf.asFloatBuffer();
-
-		filters.forEach(it -> it.write(floatBuffer));
-	}
-
 	public static class FilterSphere {
 		public Vector3d center;
 		public float radius;
@@ -129,11 +116,17 @@ public class SphereFilterProgram extends GlProgram {
 		public float fade;
 		public float density = 2;
 		public float strength = 1;
+		public boolean blendOver = false;
 
 		public Matrix4f filter;
 
 		public FilterSphere setCenter(Vector3d center) {
 			this.center = center;
+			return this;
+		}
+
+		public FilterSphere setCenter(double x, double y, double z) {
+			this.center = new Vector3d(x, y, z);
 			return this;
 		}
 
@@ -167,6 +160,11 @@ public class SphereFilterProgram extends GlProgram {
 			return this;
 		}
 
+		public FilterSphere setBlendOver(boolean blendOver) {
+			this.blendOver = blendOver;
+			return this;
+		}
+
 		public void write(FloatBuffer buf) {
 			buf.put(new float[]{
 					(float) center.x,
@@ -176,7 +174,11 @@ public class SphereFilterProgram extends GlProgram {
 					feather,
 					fade,
 					density,
-					strength,
+					blendOver ? 1f : 0f,
+					1f,
+					1f,
+					0f,
+					0f,
 			});
 
 			buf.put(RenderUtil.writeMatrix(filter));

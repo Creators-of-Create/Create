@@ -1,8 +1,11 @@
 #version 140
 
 // scaling constants
-#define SXY 1.7282818// e - 0.99, this works too well
-#define SZ 1.905// who knows, but it works
+// e - 0.99, this works well, no idea why
+#define SXY 1.7282818
+// 1.90 -> highp close, mediump far
+// 1.91 -> mediump close, highp far
+#define SZ 1.905
 
 in vec4 aVertex;// <vec2 position, vec2 texCoords>
 

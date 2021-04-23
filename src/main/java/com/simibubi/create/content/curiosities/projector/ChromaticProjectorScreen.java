@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.projector;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -35,10 +37,22 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 
 	private Vector<Vector<ScrollInput>> inputs;
 
+	ChromaticProjectorTileEntity tile;
+
+	private ScrollInput radius;
+	private ScrollInput density;
+	private ScrollInput feather;
+	private ScrollInput fade;
+
 	public ChromaticProjectorScreen(ChromaticProjectorTileEntity te) {
+		this.tile = te;
 		this.stages = te.stages;
 		this.pos = te.getPos();
 		//compareTag = Instruction.serializeAll(stages);
+	}
+
+	private static Integer step(ScrollValueBehaviour.StepContext ctx, int base) {
+		return ctx.control ? 1 : base * (ctx.shift ? 5 : 1);
 	}
 
 	@Override
@@ -57,6 +71,32 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		confirmButton =
 				new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
+		radius = new ScrollInput(guiLeft + 46, guiTop + 117, 28, 18)
+				.titled(new StringTextComponent("Radius"))
+				.withStepFunction(ctx -> step(ctx, 2))
+				.calling(tile::setRadius)
+				.withRange(0, 201)
+				.setState((int) (tile.radius * 2));
+		feather = new ScrollInput(guiLeft + 46, guiTop + 139, 28, 18)
+				.titled(new StringTextComponent("Feather"))
+				.withStepFunction(ctx -> step(ctx, 5))
+				.calling(tile::setFeather)
+				.withRange(0, 201)
+				.setState((int) (tile.feather * 4));
+		fade = new ScrollInput(guiLeft + 117, guiTop + 139, 28, 18)
+				.titled(new StringTextComponent("Fade"))
+				.withStepFunction(ctx -> step(ctx, 1))
+				.calling(tile::setFade)
+				.withRange(0, 51)
+				.setState((int) (tile.fade * 10));
+		density = new ScrollInput(guiLeft + 117, guiTop + 117, 28, 18)
+				.titled(new StringTextComponent("Density"))
+				.withStepFunction(ctx -> step(ctx, 10))
+				.calling(tile::setDensity)
+				.withRange(0, 401)
+				.setState((int) (tile.density * 100));
+
+		Collections.addAll(widgets, radius, density, feather, fade);
 	}
 
 	public void initInputsOfRow(int row) {
@@ -73,10 +113,11 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		ScrollInput type =
 				new SelectionScrollInput(x, y + rowHeight * row, 86, 18).forOptions(ColorEffects.getOptions())
 						.calling(state -> instructionUpdated(index, state))
-						.setState(instruction.instruction.ordinal())
+						.setState(instruction.filter.ordinal())
 						.titled(Lang.translate("gui.chromatic_projector.filter"));
 		ScrollInput value =
-				new ScrollInput(x + 86 + 2, y + rowHeight * row, 28, 18).calling(state -> instruction.value = state);
+				new ScrollInput(x + 86 + 2, y + rowHeight * row, 28, 18)
+						.calling(state -> instruction.value = state);
 
 		rowInputs.add(type);
 		rowInputs.add(value);
@@ -88,15 +129,15 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	public void updateParamsOfRow(int row) {
 		FilterStep instruction = stages.get(row);
 		Vector<ScrollInput> rowInputs = inputs.get(row);
-		ColorEffects def = instruction.instruction;
+		ColorEffects def = instruction.filter;
 		boolean hasValue = def.hasParameter;
 
 		ScrollInput value = rowInputs.get(1);
 		value.active = value.visible = hasValue;
 		if (hasValue)
-			value.withRange(0, 100)
+			value.withRange(def.minValue, def.maxValue + 1)
 					//.titled(Lang.translate(def.parameterKey))
-					//.withShiftStep(def.shiftStep)
+					.withShiftStep(5)
 					.setState(instruction.value)
 					.onChanged();
 
@@ -116,25 +157,39 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 				continue;
 			}
 
-			FilterStep instruction = stages.get(row);
-			ColorEffects def = instruction.instruction;
+			FilterStep step = stages.get(row);
+			ColorEffects def = step.filter;
 			def.background.draw(matrixStack, guiLeft, guiTop + 14 + yOffset);
 
-			label(matrixStack, 36, yOffset - 3, Lang.translate(def.translationKey));
+			if (def != ColorEffects.END)
+				label(matrixStack, 36, yOffset - 3, Lang.translate(def.translationKey));
 			if (def.hasParameter) {
-				String text = instruction.value + " %";
+				String text = step.filter.formatValue(step.value);
 				int stringWidth = textRenderer.getStringWidth(text);
 				label(matrixStack, 118 + (12 - stringWidth / 2), yOffset - 3, new StringTextComponent(text));
 			}
 		}
 
+		renderScroll(matrixStack, radius, 2f);
+		renderScroll(matrixStack, density, 100f);
+		renderScroll(matrixStack, feather, 4f);
+		renderScroll(matrixStack, fade, 10f);
+
 		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 3,
 				0xffffff);
 
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + background.width + 10, guiTop + 100, -150)
+				.at(guiLeft + background.width + 10, guiTop + 140, -150)
 				.scale(5)
 				.render(matrixStack);
+	}
+
+	private void renderScroll(MatrixStack matrixStack, ScrollInput input, float divisor) {
+
+		String text = String.valueOf(input.getState() / divisor);
+
+		int stringWidth = textRenderer.getStringWidth(text);
+		textRenderer.drawWithShadow(matrixStack, text, input.x + (12 - stringWidth / 2), input.y + 5, 0xFFFFEE);
 	}
 
 	private void label(MatrixStack matrixStack, int x, int y, ITextComponent text) {
@@ -142,10 +197,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	}
 
 	public void sendPacket() {
-//		ListNBT serialized = Instruction.serializeAll(stages);
-//		if (serialized.equals(compareTag))
-//			return;
-//		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
+
 	}
 
 	@Override
@@ -155,7 +207,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 
 	private void instructionUpdated(int index, int state) {
 		ColorEffects newValue = ColorEffects.values()[state];
-		stages.get(index).instruction = newValue;
+		stages.get(index).filter = newValue;
 		stages.get(index).value = 100;
 		updateParamsOfRow(index);
 		if (newValue == ColorEffects.END) {

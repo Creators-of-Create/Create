@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.render.backend.effects;
 
+import java.util.ArrayList;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -14,6 +16,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.FramebufferConstants;
@@ -48,7 +51,11 @@ public class EffectsHandler {
 
 	private final GlBuffer vbo = new GlBuffer(GL20.GL_ARRAY_BUFFER);
 
+	private final ArrayList<SphereFilterProgram.FilterSphere> spheres;
+
 	public EffectsHandler() {
+		spheres = new ArrayList<>();
+
 		Framebuffer render = Minecraft.getInstance().getFramebuffer();
 		framebuffer = new Framebuffer(render.framebufferWidth, render.framebufferHeight, false, Minecraft.IS_RUNNING_ON_MAC);
 
@@ -64,21 +71,17 @@ public class EffectsHandler {
 
 		vao.unbind();
 		vbo.unbind();
+
 	}
 
-	public void prepFramebufferSize() {
-		MainWindow window = Minecraft.getInstance().getWindow();
-		if (framebuffer.framebufferWidth != window.getFramebufferWidth()
-				|| framebuffer.framebufferHeight != window.getFramebufferHeight()) {
-			framebuffer.func_216491_a(window.getFramebufferWidth(), window.getFramebufferHeight(),
-					Minecraft.IS_RUNNING_ON_MAC);
-		}
+	public void addSphere(SphereFilterProgram.FilterSphere sphere) {
+		this.spheres.add(sphere);
 	}
 
 	public void render(Matrix4f view) {
-//		if (true) {
-//			return;
-//		}
+		if (spheres.size() == 0) {
+			return;
+		}
 
 		GL20.glEnable(GL20.GL_DEPTH_TEST);
 
@@ -98,7 +101,8 @@ public class EffectsHandler {
 		program.bindDepthTexture(mainBuffer.getDepthAttachment());
 
 		GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-		Matrix4f projection = gameRenderer.getBasicProjectionMatrix(gameRenderer.getActiveRenderInfo(), AnimationTickHolder.getPartialTicks(), true);
+		ActiveRenderInfo activeRenderInfo = gameRenderer.getActiveRenderInfo();
+		Matrix4f projection = gameRenderer.getBasicProjectionMatrix(activeRenderInfo, AnimationTickHolder.getPartialTicks(), true);
 		projection.a33 = 1;
 		projection.invert();
 		program.bindInverseProjection(projection);
@@ -107,76 +111,17 @@ public class EffectsHandler {
 		inverseView.invert();
 		program.bindInverseView(inverseView);
 
-		Vector3d cameraPos = gameRenderer.getActiveRenderInfo().getProjectedView();
+		Vector3d cameraPos = activeRenderInfo.getProjectedView();
 
 		program.setCameraPos(cameraPos.inverse());
 
-//		int n = 64;
-//		double rad = 15;
-//		for (int i = 0; i < n; i++) {
-//			double angle = ((double) i) / n * Math.PI * 2;
-//			program.addSphere(new SphereFilterProgram.FilterSphere()
-//					.setCenter(new Vector3d(852, 77, -204).subtract(cameraPos).add(Math.sin(angle) * rad, 0, Math.cos(angle) * rad))
-//					.setRadius(15)
-//					.setFeather(3f)
-//					.setFade(1f)
-//					.setDensity(0.5f)
-//					.setFilter(ColorMatrices.hueShiftRGB((float) i / n * 360 + i / 2f)));
-//		}
+		for (SphereFilterProgram.FilterSphere sphere : spheres) {
+			sphere.center = sphere.center.subtract(cameraPos);
+		}
 
-		program.addSphere(new SphereFilterProgram.FilterSphere()
-				.setCenter(new Vector3d(865.5, 79, -240.5).subtract(cameraPos))
-				.setRadius(10f)
-				.setFeather(3f)
-				.setFade(1.8f)
-				.setDensity(1.3f)
-				.setFilter(ColorMatrices.grayscale()));
+		spheres.sort((o1, o2) -> (int) Math.signum(o2.center.length() - o1.center.length()));
 
-		program.addSphere(new SphereFilterProgram.FilterSphere()
-				.setCenter(new Vector3d(852.5, 70, -203.5).subtract(cameraPos))
-				.setRadius(20f)
-				.setFeather(3f)
-				.setFade(1f)
-				.setDensity(1.3f)
-				.setFilter(ColorMatrices.sepia(1f)));
-
-//		Matrix4f test = ColorMatrices.sepia(1f);
-//
-//
-//		test.multiply(ColorMatrices.invert());
-//
-//		Matrix4f darken = new Matrix4f();
-//		darken.loadIdentity();
-//		darken.multiply(0.7f);
-//		darken.a03 = 0.7f;
-//		darken.a13 = 0.7f;
-//		darken.a23 = 0.7f;
-//		test.multiply(darken);
-
-		Matrix4f test = ColorMatrices.saturate(2f);
-
-		test.multiply(ColorMatrices.hueShift(120f));
-
-		program.addSphere(new SphereFilterProgram.FilterSphere()
-				.setCenter(new Vector3d(858.5, 88, -259.5).subtract(cameraPos))
-				.setRadius(10f)
-				.setFeather(3f)
-				.setFade(1.8f)
-				.setDensity(0.5f)
-				.setStrength(1f)
-				.setFilter(test));
-
-
-		program.addSphere(new SphereFilterProgram.FilterSphere()
-				.setCenter(new Vector3d(2310, 60, -954).subtract(cameraPos))
-				.setRadius(8f)
-				.setFeather(3f)
-				.setFade(0.8f)
-				.setDensity(1.3f)
-				.setStrength(1f)
-				.setFilter(ColorMatrices.grayscale()));
-
-		program.uploadFilters();
+		program.uploadFilters(spheres);
 
 		program.setFarPlane(getFarPlane());
 		program.setNearPlane(getNearPlane());
@@ -189,8 +134,8 @@ public class EffectsHandler {
 		program.bindDepthTexture(0);
 		GL20.glActiveTexture(GL20.GL_TEXTURE0);
 
-		program.clear();
 		program.unbind();
+		spheres.clear();
 
 		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);
 		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
@@ -203,5 +148,14 @@ public class EffectsHandler {
 
 		vao.delete();
 		vbo.delete();
+	}
+
+	private void prepFramebufferSize() {
+		MainWindow window = Minecraft.getInstance().getWindow();
+		if (framebuffer.framebufferWidth != window.getFramebufferWidth()
+				|| framebuffer.framebufferHeight != window.getFramebufferHeight()) {
+			framebuffer.func_216491_a(window.getFramebufferWidth(), window.getFramebufferHeight(),
+					Minecraft.IS_RUNNING_ON_MAC);
+		}
 	}
 }

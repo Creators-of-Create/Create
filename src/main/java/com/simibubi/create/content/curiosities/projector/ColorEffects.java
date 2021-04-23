@@ -15,8 +15,9 @@ public enum ColorEffects {
 	INVERT(ColorMatrices::invert),
 	SEPIA(ColorMatrices::sepia),
 	GRAYSCALE(ColorMatrices::grayscale),
-	SATURATE(ColorMatrices::saturate),
-	HUE_SHIFT(ColorMatrices::hueShift),
+	DARKEN(ColorMatrices::darken),
+	SATURATE(ColorMatrices::saturate, 0, 200),
+	HUE_SHIFT(ColorMatrices::hueShift, 0, 360, 1f),
 	END(ColorMatrices::identity, AllGuiTextures.PROJECTOR_END),
 
 	;
@@ -25,6 +26,10 @@ public enum ColorEffects {
 	boolean hasParameter;
 	String translationKey;
 	AllGuiTextures background;
+
+	int minValue = 0;
+	int maxValue = 100;
+	float divisor = 100f;
 
 	ColorEffects(Supplier<Matrix4f> filter, AllGuiTextures background) {
 		this($ -> filter.get(), false, background);
@@ -35,7 +40,18 @@ public enum ColorEffects {
 	}
 
 	ColorEffects(FilterFactory filter) {
+		this(filter, 0, 100);
+	}
+
+	ColorEffects(FilterFactory filter, int minValue, int maxValue) {
+		this(filter, minValue, maxValue, 100f);
+	}
+
+	ColorEffects(FilterFactory filter, int minValue, int maxValue, float divisor) {
 		this(filter, true, AllGuiTextures.PROJECTOR_FILTER_STRENGTH);
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.divisor = divisor;
 	}
 
 	ColorEffects(FilterFactory filter, boolean hasParameter, AllGuiTextures background) {
@@ -43,6 +59,12 @@ public enum ColorEffects {
 		this.hasParameter = hasParameter;
 		this.background = background;
 		translationKey = "gui.chromatic_projector.filter." + Lang.asId(name());
+	}
+
+	String formatValue(int value) {
+		if (this == HUE_SHIFT)
+			return value + Lang.translate("generic.unit.degrees").getString();
+		return "" + value;
 	}
 
 	static List<ITextComponent> getOptions() {

@@ -16,33 +16,10 @@ uniform vec3 uCameraPos;
 
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
-    vec4 data;// <float feather, float fade, float density, float strength>
+    vec4 d1;// <float feather, float fade, float density, float blend mode>
+    vec4 d2;// <float surfaceStrength, float bubbleStrength>
     mat4 colorOp;
 };
-
-vec3 getPosition(SphereFilter f) {
-    return f.sphere.xyz;
-}
-
-float getRadius(SphereFilter f) {
-    return f.sphere.w;
-}
-
-float getFeather(SphereFilter f) {
-    return f.data.x;
-}
-
-float getFade(SphereFilter f) {
-    return f.data.y;
-}
-
-float getDensity(SphereFilter f) {
-    return f.data.z;
-}
-
-float getStrength(SphereFilter f) {
-    return f.data.w;
-}
 
     #define N 256
 layout (std140) uniform Filters {
@@ -113,17 +90,21 @@ float bubbleFilterStrength(vec3 worldDir, float depth, vec4 sphere, float feathe
     return clamp(strength, 0., 1.);// * boo;
 }
 
-float filterStrength(vec3 worldDir, float depth, vec4 sphere, vec4 data) {
+float filterStrength(vec3 worldDir, float depth, inout SphereFilter f) {
+    vec4 sphere = f.sphere;
+    vec4 data = f.d1;
     float feather = data.x;
 
     float strength = 0.;
     // transition effect
     float transitionRadius = sphere.w + feather;
     strength += 1. - smoothstep(transitionRadius, transitionRadius + data.y, length(sphere.xyz));
-    // surface effect
-    strength += surfaceFilterStrength(worldDir * depth, sphere, feather);
     // bubble effect
     strength += bubbleFilterStrength(worldDir, depth, sphere, feather, data.z);
+
+    strength *= f.d2.y;
+    // surface effect
+    strength += surfaceFilterStrength(worldDir * depth, sphere, feather) * f.d2.x;
 
     return strength;
 }
@@ -137,16 +118,16 @@ vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
     for (int i = 0; i < uCount; i++) {
         SphereFilter s = uSpheres[i];
 
-        float strength = filterStrength(worldDir, depth, s.sphere, s.data);
+        float strength = filterStrength(worldDir, depth, s);
 
         if (strength > 0) {
             const float fcon = 0.;
 
-            vec3 formatted = mix(diffuse, hsv, fcon);
-            vec3 filtered = filterColor(s.colorOp, formatted);
-            filtered = mix(filtered, hsv2rgbWrapped(filtered), fcon);
+            //vec3 formatted = mix(diffuse, hsv, fcon);
+            vec3 filtered = filterColor(s.colorOp, mix(diffuse, accum, s.d1.w));
+            //filtered = mix(filtered, hsv2rgbWrapped(filtered), fcon);
 
-            float mixing = clamp(strength * s.data.w, 0., 1.);
+            float mixing = clamp(strength, 0., 1.);
             accum = mix(accum, filtered, mixing);
         }
     }

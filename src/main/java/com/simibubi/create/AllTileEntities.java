@@ -116,6 +116,7 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxInstance;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorInstance;
 import com.simibubi.create.content.curiosities.projector.ChromaticProjectorTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
@@ -646,21 +647,23 @@ public class AllTileEntities {
 		.instance(() -> AdjustableRepeaterInstance::new)
 		.validBlocks(AllBlocks.ADJUSTABLE_REPEATER)
 		.renderer(() -> AdjustableRepeaterRenderer::new)
-		.register();
+			.register();
 
 	public static final TileEntityEntry<AdjustablePulseRepeaterTileEntity> ADJUSTABLE_PULSE_REPEATER =
-		Create.registrate()
-			.tileEntity("adjustable_pulse_repeater", AdjustablePulseRepeaterTileEntity::new)
-			.instance(() -> AdjustableRepeaterInstance::new)
-			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
-			.renderer(() -> AdjustableRepeaterRenderer::new)
-			.register();
+			Create.registrate()
+					.tileEntity("adjustable_pulse_repeater", AdjustablePulseRepeaterTileEntity::new)
+					.instance(() -> AdjustableRepeaterInstance::new)
+					.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
+					.renderer(() -> AdjustableRepeaterRenderer::new)
+					.register();
 
-	public static final TileEntityEntry<ChromaticProjectorTileEntity> TESTFX =
-		Create.registrate()
-			.tileEntity("chromatic_projector", ChromaticProjectorTileEntity::new)
-			.validBlocks(AllBlocks.CHROMATIC_PROJECTOR)
-			.register();
+	public static final TileEntityEntry<ChromaticProjectorTileEntity> CHROMATIC_PROJECTOR =
+			Create.registrate()
+					.tileEntity("chromatic_projector", ChromaticProjectorTileEntity::new)
+					.instance(() -> ChromaticProjectorInstance::new)
+					.validBlocks(AllBlocks.CHROMATIC_PROJECTOR)
+					.register();
 
-	public static void register() {}
+	public static void register() {
+	}
 }

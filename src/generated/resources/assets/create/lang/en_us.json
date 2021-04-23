@@ -1153,6 +1153,7 @@
   "create.gui.chromatic_projector.filter.grayscale": "Grayscale",
   "create.gui.chromatic_projector.filter.saturate": "Saturate",
   "create.gui.chromatic_projector.filter.hue_shift": "Hue shift",
+  "create.gui.chromatic_projector.filter.darken": "Darken",
   "create.gui.chromatic_projector.filter.end": "End",
   "create.gui.chromatic_projector.filter": "Filter",
   "_": "->------------------------]  Subtitles  [------------------------<-",
