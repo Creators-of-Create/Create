@@ -85,7 +85,7 @@ public class FilterSphere {
 				0.5f, //r,
 				0.1f, //g,
 				0.1f, //b,
-				0.12f, //colorFeather,
+				0f, //colorFeather,
 		});
 
 		buf.put(RenderUtil.writeMatrix(filter));

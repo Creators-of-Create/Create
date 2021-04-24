@@ -12,28 +12,23 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class ChromaticProjectorScreen extends AbstractSimiScreen {
-
-	public static final int MAX_STEPS = 4;
 
 	private final ItemStack renderedItem = AllBlocks.CHROMATIC_PROJECTOR.asStack();
 	private final AllGuiTextures background = AllGuiTextures.PROJECTOR;
 	private IconButton confirmButton;
 
 	private final ITextComponent title = Lang.translate("gui.chromatic_projector.title");
-	private ListNBT compareTag;
 	private Vector<FilterStep> stages;
-	private BlockPos pos;
 
 	private Vector<Vector<ScrollInput>> inputs;
 
@@ -47,8 +42,6 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	public ChromaticProjectorScreen(ChromaticProjectorTileEntity te) {
 		this.tile = te;
 		this.stages = te.stages;
-		this.pos = te.getPos();
-		//compareTag = Instruction.serializeAll(stages);
 	}
 
 	private static Integer step(ScrollValueBehaviour.StepContext ctx, int base) {
@@ -62,7 +55,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		super.init();
 		widgets.clear();
 
-		inputs = new Vector<>(MAX_STEPS);
+		inputs = new Vector<>(FilterStep.MAX_STEPS);
 		for (int row = 0; row < inputs.capacity(); row++)
 			inputs.add(new Vector<>(2));
 
@@ -203,7 +196,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	}
 
 	public void sendPacket() {
-
+		AllPackets.channel.sendToServer(new ConfigureProjectorPacket(tile));
 	}
 
 	@Override
