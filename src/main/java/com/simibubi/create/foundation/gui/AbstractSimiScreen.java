@@ -34,6 +34,13 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		widgets.stream().filter(w -> w instanceof AbstractSimiWidget).forEach(w -> ((AbstractSimiWidget) w).tick());
+	}
+
+	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = partialTicks == 10 ? 0
 			: Minecraft.getInstance()
@@ -46,8 +53,6 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			widget.render(ms, mouseX, mouseY, partialTicks);
 		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		for (Widget widget : widgets)
-			widget.renderToolTip(ms, mouseX, mouseY);
 
 		ms.pop();
 	}
@@ -131,8 +136,12 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (!widget.isHovered())
 				continue;
 
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
-				renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+			if (widget instanceof AbstractSimiWidget) {
+				if (!((AbstractSimiWidget) widget).getToolTip().isEmpty())
+					renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+
+			} else {
+				widget.renderToolTip(ms, mouseX, mouseY);
 			}
 		}
 	}

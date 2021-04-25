@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -69,7 +71,7 @@ public class Label extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (!visible)
 			return;
 		if (text == null || text.getString().isEmpty())

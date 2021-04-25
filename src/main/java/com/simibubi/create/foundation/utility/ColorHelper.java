@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.utility;
 
+import java.awt.Color;
 import java.util.UUID;
+
+import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -50,6 +53,18 @@ public class ColorHelper {
 		int color = ((int) (r1 + (r2 - r1) * w) << 16) + ((int) (g1 + (g2 - g1) * w) << 8) + (int) (b1 + (b2 - b1) * w);
 
 		return color;
+	}
+
+	@Nonnull
+	public static Color mixColors(@Nonnull Color c1, @Nonnull Color c2, float w) {
+		float[] cmp1 = c1.getRGBComponents(null);
+		float[] cmp2 = c2.getRGBComponents(null);
+		return new Color(
+			cmp1[0] + (cmp2[0] - cmp1[0]) * w,
+			cmp1[1] + (cmp2[1] - cmp1[1]) * w,
+			cmp1[2] + (cmp2[2] - cmp1[2]) * w,
+			cmp1[3] + (cmp2[3] - cmp1[3]) * w
+		);
 	}
 
 	public static int mixAlphaColors(int color1, int color2, float w) {

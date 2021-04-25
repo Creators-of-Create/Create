@@ -1,5 +1,13 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -10,18 +18,12 @@ import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -122,7 +124,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (lastScreen != null && lastScreen != this && !transition.settled()) {
 			ms.push();// 1
 			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-			UIRenderHelper.prepFramebufferSize();
+			//UIRenderHelper.prepFramebufferSize();
 			ms.push();// 2
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindFramebuffer(true);

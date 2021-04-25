@@ -9,6 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.MainWindow;
@@ -73,7 +74,14 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	public void tick() {
-		children().forEach(Entry::tick);
+		//children().forEach(Entry::tick);
+		for(int i = 0; i < getItemCount(); ++i) {
+			int top = this.getRowTop(i);
+			int bot = top + itemHeight;
+			if (bot >= this.top && top <= this.bottom)
+				this.getEntry(i).tick();
+		}
+
 	}
 
 	public void bumpCog(float force) {
@@ -126,7 +134,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().fontRenderer, label);
-			this.label.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2));
+			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.i(Theme.Key.TEXT_ACCENT_1), Theme.i(Theme.Key.TEXT_ACCENT_2)));
 			labelTooltip = new ArrayList<>();
 		}
 

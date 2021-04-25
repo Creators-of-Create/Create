@@ -1,43 +1,15 @@
 package com.simibubi.create.foundation.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-
 import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-public abstract class StencilElement implements IScreenRenderable {
+import net.minecraft.client.Minecraft;
 
-	protected int width = 0;
-	protected int height = 0;
-	float x, y , z;
-
-	public <T extends StencilElement> T at(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		//noinspection unchecked
-		return (T) this;
-	}
-
-	public <T extends StencilElement> T withBounds(int width, int height) {
-		this.width = width;
-		this.height = height;
-		//noinspection unchecked
-		return (T) this;
-	}
+public abstract class StencilElement extends RenderElement {
 
 	@Override
-	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
-		this.at(x, y, 0).render(ms);
-	}
-
-	@Override
-	public void draw(MatrixStack ms, int x, int y) {
-		this.at(x, y, 0).render(ms);
-	}
-
 	public void render(MatrixStack ms) {
 		ms.push();
 		transform(ms);
@@ -47,22 +19,6 @@ public abstract class StencilElement implements IScreenRenderable {
 		renderElement(ms);
 		cleanUp(ms);
 		ms.pop();
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	protected abstract void renderStencil(MatrixStack ms);

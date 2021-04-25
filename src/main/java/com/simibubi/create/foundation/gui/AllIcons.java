@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -188,7 +189,7 @@ public class AllIcons implements IScreenRenderable {
 
 	@OnlyIn(Dist.CLIENT)
 	public DelegatedStencilElement asStencil() {
-		return new DelegatedStencilElement().withStencilRenderer((ms, w, h) -> this.draw(ms, 0, 0)).withBounds(16, 16);
+		return new DelegatedStencilElement().withStencilRenderer((ms, w, h, alpha) -> this.draw(ms, 0, 0)).withBounds(16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)

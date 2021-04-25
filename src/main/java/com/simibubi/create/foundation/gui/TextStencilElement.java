@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class TextStencilElement extends DelegatedStencilElement {
 
@@ -70,7 +70,7 @@ public class TextStencilElement extends DelegatedStencilElement {
 
 		ms.push();
 		ms.translate(x, y, 0);
-		element.render(ms, font.getWidth(component), font.FONT_HEIGHT + 2);
+		element.render(ms, font.getWidth(component), font.FONT_HEIGHT + 2, alpha);
 		ms.pop();
 	}
 

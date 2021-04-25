@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -12,22 +12,22 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 
 	TextStencilElement enabled;
 	TextStencilElement disabled;
-	PonderButton button;
+	BoxWidget button;
 
 	public BooleanEntry(String label, ForgeConfigSpec.ConfigValue<Boolean> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 
 		enabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Enabled")
 				.centered(true, true)
-				.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_88f788, 0xff_20cc20));
+				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_88f788, 0xff_20cc20));
 
 		disabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Disabled")
 				.centered(true, true)
-				.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
+				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
 
-		button = new PonderButton(0, 0, () -> setValue(!getValue()))
-				.showingUnscaled(enabled);
-		button.fade(1);
+		button = new BoxWidget()
+				.showingElement(enabled)
+				.withCallback(() -> setValue(!getValue()));
 
 		listeners.add(button);
 		onReset();
@@ -42,6 +42,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	@Override
 	public void tick() {
 		super.tick();
+		button.tick();
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	@Override
 	public void onValueChange(Boolean newValue) {
 		super.onValueChange(newValue);
-		button.showingUnscaled(newValue ? enabled : disabled);
+		button.showingElement(newValue ? enabled : disabled);
 		bumpCog(newValue ? 15f : -16f);
 	}
 }

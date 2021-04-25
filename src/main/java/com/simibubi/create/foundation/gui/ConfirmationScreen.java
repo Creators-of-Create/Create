@@ -10,8 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.ponder.PonderUI;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -29,8 +28,9 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	private int textWidth;
 	private int textHeight;
 
-	private PonderButton confirm;
-	private PonderButton cancel;
+	private BoxWidget confirm;
+	private BoxWidget cancel;
+	private BoxElement textBackground;
 
 	/*
 	* Removes text lines from the back of the list
@@ -82,6 +82,13 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+		confirm.tick();
+		cancel.tick();
+	}
+
+	@Override
 	protected void init() {
 		widgets.clear();
 
@@ -106,17 +113,22 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		}
 
 		TextStencilElement confirmText = new TextStencilElement(client.fontRenderer, "Confirm").centered(true, true);
-		confirm = new PonderButton(x + 4, y + textHeight + 2, (_$, _$$) -> accept(true), textWidth/2 - 10, 20)
-				.showingUnscaled(confirmText);
-		confirm.fade(1);
+		confirm = new BoxWidget(x + 4, y + textHeight + 2 , textWidth/2 - 10, 20)
+				.withCallback(() -> accept(true));
+		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
 
 		TextStencilElement cancelText = new TextStencilElement(client.fontRenderer, "Cancel").centered(true, true);
-		cancel = new PonderButton(x + textWidth/2 + 6, y + textHeight + 2, (_$, _$$) -> accept(false), textWidth/2 - 10, 20)
-				.showingUnscaled(cancelText);
-		cancel.fade(1);
+		cancel = new BoxWidget(x + textWidth/2 + 6, y + textHeight + 2, textWidth/2 - 10, 20)
+				.withCallback(() -> accept(false));
+		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
 
 		widgets.add(confirm);
 		widgets.add(cancel);
+
+		textBackground = new BoxElement()
+				.gradientBorder(Theme.c(Theme.Key.BUTTON_DISABLE_1), Theme.c(Theme.Key.BUTTON_DISABLE_2))
+				.withBounds(textWidth, textHeight)
+				.at(x, y);
 
 	}
 
@@ -133,7 +145,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 
-		PonderUI.renderBox(ms, x, y, textWidth, textHeight, false);
+		textBackground.render(ms);
 		int offset = client.fontRenderer.FONT_HEIGHT + 1;
 		int lineY = y - offset;
 
@@ -157,11 +169,12 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-		UIRenderHelper.prepFramebufferSize();
+		//UIRenderHelper.prepFramebufferSize();
 
 		ms.push();
 		//ms.translate(0, 0, -50);
 		//ms.scale(1, 1, 0.01f);
+		//todo wait for jozu's framebuffer capabilities on the other branch and use them here
 		UIRenderHelper.framebuffer.bindFramebuffer(true);
 		source.render(ms, mouseX, mouseY, partialTicks);
 		UIRenderHelper.framebuffer.unbindFramebuffer();

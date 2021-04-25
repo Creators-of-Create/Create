@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
 import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class CombinedStencilElement extends StencilElement {
@@ -45,21 +46,23 @@ public class CombinedStencilElement extends StencilElement {
 	protected void renderStencil(MatrixStack ms) {
 		ms.push();
 		element1.transform(ms);
-		element1.withBounds(width, height).renderStencil(ms);
+		element1.withBounds(width, height);
+		element1.renderStencil(ms);
 		ms.pop();
 		ms.push();
 		element2.transform(ms);
-		element2.withBounds(width, height).renderStencil(ms);
+		element2.withBounds(width, height);
+		element2.renderStencil(ms);
 		ms.pop();
 	}
 
 	@Override
 	protected void renderElement(MatrixStack ms) {
 		if (mode.rendersFirst())
-			element1.withBounds(width, height).renderElement(ms);
+			element1.<StencilElement>withBounds(width, height).renderElement(ms);
 
 		if (mode.rendersSecond())
-			element2.withBounds(width, height).renderElement(ms);
+			element2.<StencilElement>withBounds(width, height).renderElement(ms);
 	}
 
 	public enum ElementMode {

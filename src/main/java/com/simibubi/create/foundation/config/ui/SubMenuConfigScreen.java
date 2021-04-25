@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config.ui;
 
+import java.awt.Color;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -17,10 +19,10 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ConfirmationScreen;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -38,11 +40,11 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected UnmodifiableConfig configGroup;
 	protected ConfigScreenList list;
 
-	protected PonderButton resetAll;
-	protected PonderButton saveChanges;
-	protected PonderButton discardChanges;
-	protected PonderButton goBack;
-	protected PonderButton serverLocked;
+	protected BoxWidget resetAll;
+	protected BoxWidget saveChanges;
+	protected BoxWidget discardChanges;
+	protected BoxWidget goBack;
+	protected BoxWidget serverLocked;
 	protected int listWidth;
 	protected String title;
 
@@ -117,60 +119,65 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		int listL = this.width / 2 - listWidth / 2;
 		int listR = this.width / 2 + listWidth / 2;
 
-		resetAll = new PonderButton(listR + 10, yCenter - 25, (x, y) -> {
-			new ConfirmationScreen()
-					.at(x, y)
-					.withText(ITextProperties.plain("You are about to reset all settings for the " + type.toString() + " config. Are you sure?"))
-					.withAction(success -> {
-						if (success)
-							resetConfig(spec.getValues());
-					})
-					.open(this);
-		})
-				.showing(AllIcons.I_CONFIG_RESET.asStencil());
-		resetAll.fade(1);
+		resetAll = new BoxWidget(listR + 10, yCenter - 25, 20, 20)
+				.withCallback((x, y) ->
+						new ConfirmationScreen()
+								.at(x, y)
+								.withText(ITextProperties.plain("You are about to reset all settings for the " + type.toString() + " config. Are you sure?"))
+								.withAction(success -> {
+									if (success)
+										resetConfig(spec.getValues());
+								})
+								.open(this)
+				);
+
+		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll))
+				.at(2, 2));
 		resetAll.getToolTip().add(new StringTextComponent("Reset All"));
 		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all configs to their default value.", TextFormatting.GRAY, TextFormatting.GRAY));
 
-		saveChanges = new PonderButton(listL - 30, yCenter - 25, (x, y) -> {
-			if (changes.isEmpty())
-				return;
+		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
+				.withCallback((x, y) -> {
+					if (changes.isEmpty())
+						return;
 
-			new ConfirmationScreen()
-					.at(x, y)
-					.withText(ITextProperties.plain("You are about to change " + changes.size() + " values. Are you sure?"))
-					.withAction(success -> {
-						if (success)
-							saveChanges();
-					})
-					.open(this);
-		})
-				.showing(AllIcons.I_CONFIG_SAVE.asStencil());
-		saveChanges.fade(1);
+					new ConfirmationScreen()
+							.at(x, y)
+							.withText(ITextProperties.plain("You are about to change " + changes.size() + " values. Are you sure?"))
+							.withAction(success -> {
+								if (success)
+									saveChanges();
+							})
+							.open(this);
+				});
+		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges))
+				.at(2, 2));
 		saveChanges.getToolTip().add(new StringTextComponent("Save Changes"));
 		saveChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to save your current changes.", TextFormatting.GRAY, TextFormatting.GRAY));
 
-		discardChanges = new PonderButton(listL - 30, yCenter + 5, (x, y) -> {
-			if (changes.isEmpty())
-				return;
+		discardChanges = new BoxWidget(listL - 30, yCenter + 5, 20, 20)
+				.withCallback((x, y) -> {
+					if (changes.isEmpty())
+						return;
 
-			new ConfirmationScreen()
-					.at(x, y)
-					.withText(ITextProperties.plain("You are about to discard " + changes.size() + " unsaved changes. Are you sure?"))
-					.withAction(success -> {
-						if (success)
-							clearChanges();
-					})
-					.open(this);
-		})
-				.showing(AllIcons.I_CONFIG_DISCARD.asStencil());
-		discardChanges.fade(1);
+					new ConfirmationScreen()
+							.at(x, y)
+							.withText(ITextProperties.plain("You are about to discard " + changes.size() + " unsaved changes. Are you sure?"))
+							.withAction(success -> {
+								if (success)
+									clearChanges();
+							})
+							.open(this);
+				});
+		discardChanges.showingElement(AllIcons.I_CONFIG_DISCARD.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(discardChanges))
+				.at(2, 2));
 		discardChanges.getToolTip().add(new StringTextComponent("Discard Changes"));
 		discardChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to discard all the changes you made.", TextFormatting.GRAY, TextFormatting.GRAY));
 
-		goBack = new PonderButton(listL - 30, yCenter + 65, this::attemptBackstep)
-				.showing(AllIcons.I_CONFIG_BACK);
-		goBack.fade(1);
+		goBack = new BoxWidget(listL - 30, yCenter + 65, 20, 20)
+				.withCallback(this::attemptBackstep);
+		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(goBack))
+				.at(2, 2));
 		goBack.getToolTip().add(new StringTextComponent("Go Back"));
 
 		widgets.add(resetAll);
@@ -214,36 +221,35 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			}
 		});
 
-		//extras for sever configs
+		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
 			return;
 
 		list.isForServer = true;
 		boolean canEdit = client != null && client.player != null && client.player.hasPermissionLevel(2);
 
-		int colRed1 = 0xff_f78888;
-		int colRed2 = 0xff_cc2020;
-		int colGreen1 = 0xff_88f788;
-		int colGreen2 = 0xff_20cc20;
+		Color colRed1 = Theme.c("button_fail_1");
+		Color colRed2 = Theme.c("button_fail_2");
+		Color colGreen1 = Theme.c("button_success_1");
+		Color colGreen2 = Theme.c("button_success_2");
 
 		DelegatedStencilElement stencil = new DelegatedStencilElement();
 
-		serverLocked = new PonderButton(listR + 10, yCenter + 5, () -> {})
-				.showing(stencil);
-		serverLocked.fade(1);
+		serverLocked = new BoxWidget(listR + 10, yCenter + 5, 20, 20)
+				.showingElement(stencil.at(2, 2));
 
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
-			stencil.withStencilRenderer((ms, w, h) -> AllIcons.I_CONFIG_LOCKED.draw(ms, 0, 0));
-			stencil.withElementRenderer((ms, w, h) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colRed1, colRed2));
-			serverLocked.customColors(colRed1, colRed2);
+			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_LOCKED.draw(ms, 0, 0));
+			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colRed1.getRGB(), colRed2.getRGB()));
+			serverLocked.withBorderColors(colRed1, colRed2);
 			serverLocked.getToolTip().add(new StringTextComponent("Locked").formatted(TextFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You don't have enough permissions to edit the server config. You can still look at the current values here though.", TextFormatting.GRAY, TextFormatting.GRAY));
 		} else {
-			stencil.withStencilRenderer((ms, w, h) -> AllIcons.I_CONFIG_UNLOCKED.draw(ms, 0, 0));
-			stencil.withElementRenderer((ms, w, h) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colGreen1, colGreen2));
-			serverLocked.customColors(colGreen1, colGreen2);
+			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.draw(ms, 0, 0));
+			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colGreen1.getRGB(), colGreen2.getRGB()));
+			serverLocked.withBorderColors(colGreen1, colGreen2);
 			serverLocked.getToolTip().add(new StringTextComponent("Unlocked").formatted(TextFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server once you saved them.", TextFormatting.GRAY, TextFormatting.GRAY));
 		}
@@ -256,7 +262,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 		int x = width/2;
-		drawCenteredString(ms, client.fontRenderer, "Editing config: " + type.toString() + "@" + title, x, 15, 0xff_eaeaea);
+		drawCenteredString(ms, client.fontRenderer, "Editing config: " + type.toString() + "@" + title, x, 15, Theme.i(Theme.Key.TEXT_1));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 	}

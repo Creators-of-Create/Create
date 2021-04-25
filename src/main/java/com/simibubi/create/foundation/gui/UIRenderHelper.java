@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
+import javax.annotation.Nonnull;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.KHRDebug;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
@@ -16,9 +16,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-
-import javax.annotation.Nonnull;
 
 public class UIRenderHelper {
 
@@ -39,12 +39,12 @@ public class UIRenderHelper {
 		});
 	}
 
-	public static void prepFramebufferSize() {//TODO move this to a mixin
+	/*public static void prepFramebufferSize() {
 		MainWindow window = Minecraft.getInstance().getWindow();
 		if (framebuffer.framebufferWidth != window.getFramebufferWidth() || framebuffer.framebufferHeight != window.getFramebufferHeight()) {
 			framebuffer.func_216491_a(window.getFramebufferWidth(), window.getFramebufferHeight(), Minecraft.IS_RUNNING_ON_MAC);
 		}
-	}
+	}*/
 
 	public static void drawFramebuffer(float alpha) {
 		MainWindow window = Minecraft.getInstance()

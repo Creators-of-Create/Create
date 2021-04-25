@@ -2,28 +2,27 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.TextStencilElement;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
-	protected PonderButton button;
+	protected BoxWidget button;
 
 	public SubMenuEntry(SubMenuConfigScreen parent, String label, ForgeConfigSpec spec, UnmodifiableConfig config) {
 		super(label);
 		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Click to open").centered(true, true);
-		text.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2));
-		button = new PonderButton(0, 0, () -> ScreenOpener.open(new SubMenuConfigScreen(parent, label, parent.type, spec, config)))
-				.showingUnscaled(text);
-		button.fade(1);
+
+		button = new BoxWidget()
+				.showingElement(text)
+				.withCallback(() -> ScreenOpener.open(new SubMenuConfigScreen(parent, label, parent.type, spec, config)));
+		text.withElementRenderer(BoxWidget.gradientFactory.apply(button));
 
 		listeners.add(button);
 	}
@@ -31,6 +30,7 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	@Override
 	public void tick() {
 		super.tick();
+		button.tick();
 	}
 
 	@Override

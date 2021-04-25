@@ -11,13 +11,11 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.ui.PonderButton;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -29,11 +27,10 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected static final IFormattableTextComponent modComponent = new StringTextComponent("* ").formatted(TextFormatting.BOLD, TextFormatting.DARK_BLUE).append(StringTextComponent.EMPTY.copy().formatted(TextFormatting.RESET));
 	protected static final int resetWidth = 28;//including 6px offset on either side
 	public static final Pattern unitPattern = Pattern.compile("\\[(in .*)]");
-	//public static DelegatedStencilElement.ElementRenderer idle = (ms, w, h) -> UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w, ConfigButton.Palette.button_idle_1, ConfigButton.Palette.button_idle_2);
 
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
-	protected PonderButton resetButton;
+	protected BoxWidget resetButton;
 	protected boolean editable = true;
 	protected String unit = null;
 	protected String path;
@@ -44,12 +41,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		this.spec = spec;
 		this.path = String.join(".", value.getPath());
 
-		resetButton = new PonderButton(0, 0, (_$, _$$) -> {
-			setValue((T) spec.getDefault());
-			this.onReset();
-		}, resetWidth - 12, 16)
-				.showing(AllIcons.I_CONFIG_RESET.asStencil()/*.withElementRenderer(idle)*/);
-		resetButton.fade(1);
+		resetButton = new BoxWidget(0, 0, resetWidth - 12, 16)
+				.showingElement(AllIcons.I_CONFIG_RESET.asStencil())
+				.withCallback(() -> {
+					setValue((T) spec.getDefault());
+					this.onReset();
+				});
+		resetButton.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(resetButton)));
 
 		listeners.add(resetButton);
 
@@ -88,6 +86,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected void setEditable(boolean b) {
 		editable = b;
 		resetButton.active = editable && !isCurrentValueDefault();
+		resetButton.animateGradientFromState();
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		resetButton.tick();
 	}
 
 	@Override
@@ -146,6 +151,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 	public void onValueChange(T newValue) {
 		resetButton.active = editable && !isCurrentValueDefault();
+		resetButton.animateGradientFromState();
 	}
 
 	protected void bumpCog() {bumpCog(10f);}

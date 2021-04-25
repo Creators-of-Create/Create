@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.config.ui.ConfigButton;
 import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -13,20 +14,22 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	protected static final int cycleWidth = 34;//including 2px offset on either side
 
 	protected TextStencilElement valueText;
-	protected ConfigButton cycleLeft;
-	protected ConfigButton cycleRight;
+	protected BoxWidget cycleLeft;
+	protected BoxWidget cycleRight;
 
 	public EnumEntry(String label, ForgeConfigSpec.ConfigValue<Enum<?>> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
-		valueText.withElementRenderer((ms, width, height) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, ConfigButton.Palette.button_hover_1, ConfigButton.Palette.button_hover_2));
+		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.i(Theme.Key.TEXT_1), Theme.i(Theme.Key.TEXT_2)));
 
 		TextStencilElement l = new TextStencilElement(Minecraft.getInstance().fontRenderer, "<").centered(true, true);
-		cycleLeft = ConfigButton.createAndInjectElementRenderer(0, 0, l).withBounds(30, 30).withCallback(() -> cycleValue(-1));
+		cycleLeft = new BoxWidget(0, 0, 22, 22).showingElement(l).withCallback(() -> cycleValue(-1));
+		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
 		TextStencilElement r = new TextStencilElement(Minecraft.getInstance().fontRenderer, ">").centered(true, true);
-		cycleRight = ConfigButton.createAndInjectElementRenderer(0, 0, r).withBounds(30, 30).withCallback(() -> cycleValue(1));
+		cycleRight = new BoxWidget(0, 0, 22, 22).showingElement(r).withCallback(() -> cycleValue(1));
+		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));
 
 		listeners.add(cycleLeft);
 		listeners.add(cycleRight);

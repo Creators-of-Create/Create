@@ -4,30 +4,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-import javax.annotation.Nonnull;
-
 public abstract class AbstractSimiWidget extends Widget {
 
-	protected List<ITextComponent> toolTip;
+	protected boolean wasHovered = false;
+	protected List<ITextComponent> toolTip = new LinkedList<>();
 	protected BiConsumer<Integer, Integer> onClick = (_$, _$$) -> {};
 
-	public AbstractSimiWidget(int xIn, int yIn, int widthIn, int heightIn) {
-		super(xIn, yIn, widthIn, heightIn, StringTextComponent.EMPTY);
-		toolTip = new LinkedList<>();
+	protected AbstractSimiWidget() {
+		this(0, 0);
 	}
-	
-	public List<ITextComponent> getToolTip() {
-		return toolTip;
+
+	protected AbstractSimiWidget(int x, int y) {
+		this(x, y, 16, 16);
 	}
-	
-	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+
+	protected AbstractSimiWidget(int x, int y, int width, int height) {
+		super(x, y, width, height, StringTextComponent.EMPTY);
 	}
 
 	public <T extends AbstractSimiWidget> T withCallback(BiConsumer<Integer, Integer> cb) {
@@ -38,6 +38,39 @@ public abstract class AbstractSimiWidget extends Widget {
 
 	public <T extends AbstractSimiWidget> T withCallback(Runnable cb) {
 		return withCallback((_$, _$$) -> cb.run());
+	}
+
+	public List<ITextComponent> getToolTip() {
+		return toolTip;
+	}
+
+	public void tick() {}
+
+	@Override
+	public void render(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		if (visible) {
+			hovered = isMouseOver(mouseX, mouseY);
+			beforeRender(ms, mouseX, mouseY, partialTicks);
+			renderButton(ms, mouseX, mouseY, partialTicks);
+			afterRender(ms, mouseX, mouseY, partialTicks);
+			wasHovered = isHovered();
+		}
+	}
+
+	@Override
+	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
+
+	@Override
+	protected boolean clicked(double mouseX, double mouseY) {
+		return active && visible && isMouseOver(mouseX, mouseY);
+	}
+
+	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		ms.push();
+	}
+
+	protected void afterRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		ms.pop();
 	}
 
 	public void runCallback(double mouseX, double mouseY) {
