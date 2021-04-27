@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -84,24 +85,26 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		int itemCenterY = getItemsY();
 
 		for (Item i : items) {
-			final boolean canClick = PonderRegistry.all.containsKey(i.getRegistryName());
-			PonderButton button =
-				new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (mouseX, mouseY) -> {
-					if (!canClick)
-						return;
+			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
+					.showing(new ItemStack(i));
+
+			if (PonderRegistry.all.containsKey(i.getRegistryName())) {
+				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
-				}).showing(new ItemStack(i));
-			if (!canClick)
+				});
+			} else {
 				if (i.getRegistryName()
-					.getNamespace()
-					.equals(Create.ID))
-					button.customColors(0x70984500, 0x70692400);
+						.getNamespace()
+						.equals(Create.ID))
+					b.withBorderColors(new Color(0x70984500, true), new Color(0x70692400, true))
+							.animateColors(false);
 				else
-					button.customColors(0x505000FF, 0x50300077);
+					b.withBorderColors(new Color(0x505000FF, true), new Color(0x50300077, true))
+							.animateColors(false);
+			}
 
-			button.fade(1);
-			widgets.add(button);
+			widgets.add(b);
 			layout.next();
 		}
 
@@ -109,23 +112,26 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			ResourceLocation registryName = tag.getMainItem()
 					.getItem()
 					.getRegistryName();
-			final boolean canClick = PonderRegistry.all.containsKey(registryName);
-			PonderButton button =
-					new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10, (mouseX, mouseY) -> {
-						if (!canClick)
-							return;
-						centerScalingOn(mouseX, mouseY);
-						ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
-					}).showing(tag.getMainItem());
-			if (!canClick)
+
+			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
+					.showing(tag.getMainItem());
+
+			if (PonderRegistry.all.containsKey(registryName)) {
+				b.withCallback((mouseX, mouseY) -> {
+					centerScalingOn(mouseX, mouseY);
+					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
+				});
+			} else {
 				if (registryName.getNamespace()
 						.equals(Create.ID))
-					button.customColors(0x70984500, 0x70692400);
+					b.withBorderColors(new Color(0x70984500, true), new Color(0x70692400, true))
+							.animateColors(false);
 				else
-					button.customColors(0x505000FF, 0x50300077);
+					b.withBorderColors(new Color(0x505000FF, true), new Color(0x50300077, true))
+							.animateColors(false);
+			}
 
-			button.fade(1);
-			widgets.add(button);
+			widgets.add(b);
 		}
 
 		// chapters
@@ -188,7 +194,13 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		int streakHeight = 35;
 		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240, 0x101010);
-		PonderUI.renderBox(ms, 21, 21, 30, 30, false);
+		//PonderUI.renderBox(ms, 21, 21, 30, 30, false);
+		new BoxElement()
+				.withBackground(0xff000000)
+				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.at(21, 21, 100)
+				.withBounds(30, 30)
+				.render(ms);
 
 		textRenderer.draw(ms, Lang.translate(PonderUI.PONDERING), x, y - 6, 0xffa3a3a3);
 		y += 8;
@@ -214,7 +226,14 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		int h = textRenderer.getWordWrappedHeight(desc, w);
 
 
-		PonderUI.renderBox(ms, x - 3, y - 3, w + 6, h + 6, false);
+		//PonderUI.renderBox(ms, x - 3, y - 3, w + 6, h + 6, false);
+		new BoxElement()
+				.withBackground(0xff000000)
+				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.at(x - 3, y - 3, 90)
+				.withBounds(w + 6, h + 6)
+				.render(ms);
+
 		ms.translate(0, 0, 100);
 		FontHelper.drawSplitString(ms, textRenderer, desc, x, y, w, 0xeeeeee);
 		ms.pop();
@@ -232,7 +251,14 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		ms.push();
 		ms.translate(x, y, 0);
-		PonderUI.renderBox(ms, (sWidth - stringWidth) / 2 - 5, itemArea.getY() - 21, stringWidth + 10, 10, false);
+		//PonderUI.renderBox(ms, (sWidth - stringWidth) / 2 - 5, itemArea.getY() - 21, stringWidth + 10, 10, false);
+		new BoxElement()
+				.withBackground(0xff000000)
+				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.at((sWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
+				.withBounds(stringWidth + 10, 10)
+				.render(ms);
+
 		ms.translate(0, 0, 200);
 
 //		UIRenderHelper.streak(0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 180, 0x101010);
@@ -291,7 +317,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		return hoveredItem;
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		MutableBoolean handled = new MutableBoolean(false);
 		widgets.forEach(w -> {
@@ -310,7 +336,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		if (handled.booleanValue())
 			return true;
 		return super.mouseClicked(x, y, button);
-	}
+	}*/
 
 	@Override
 	public boolean isEquivalentTo(NavigatableSimiScreen other) {

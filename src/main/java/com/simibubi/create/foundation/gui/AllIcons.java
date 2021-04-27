@@ -132,7 +132,9 @@ public class AllIcons implements IScreenRenderable {
 		I_CONFIG_DISCARD = next(),
 		I_CONFIG_SAVE = next(),
 		I_CONFIG_RESET = next(),
-		I_CONFIG_BACK = next();
+		I_CONFIG_BACK = next(),
+		I_CONFIG_PREV = next(),
+		I_CONFIG_NEXT = next();
 
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

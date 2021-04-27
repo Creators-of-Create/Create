@@ -13,6 +13,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
@@ -77,9 +78,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (screen instanceof PonderTagScreen)
 			icon = ((PonderTagScreen) screen).getTag();
 
-		widgets.add(backTrack = new PonderButton(31, height - 31 - PonderButton.SIZE, () -> {
-			ScreenOpener.openPreviousScreen(this, Optional.empty());
-		}).fade(0, -1));
+		widgets.add(backTrack = new PonderButton(31, height - 31 - 20)
+				.enableFade(0, 5)
+				.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
 		backTrack.fade(1);
 
 		if (icon != null)
@@ -98,7 +99,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.push();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
-			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, 0xffa3a3a3);
+			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, Theme.i(Theme.Key.TEXT_2));
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
 				arrowAnimation.setValue(1);//called twice to also set the previous value to 1
@@ -109,6 +110,17 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		if (backTrack != null) {
+			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
+			int maxX = backTrack.x + backTrack.getWidth();
+
+			if (x + 30 < backTrack.x)
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x70aa9999, 0x30aa9999);
+
+			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x70aa9999, 0x30aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x70aa9999, 0x30aa9999);
+		}
+
 		if (transition.getChaseTarget() == 0 || transition.settled()) {
 			renderBackground(ms);
 			return;
@@ -164,17 +176,6 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.translate(depthPointX, depthPointY, 0);
 		ms.scale((float) scale, (float) scale, 1);
 		ms.translate(-depthPointX, -depthPointY, 0);
-
-		if (backTrack != null) {
-			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
-			int maxX = backTrack.x + backTrack.getWidth();
-
-			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
-
-			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-		}
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -23,12 +25,18 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
 		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.i(Theme.Key.TEXT_1), Theme.i(Theme.Key.TEXT_2)));
 
-		TextStencilElement l = new TextStencilElement(Minecraft.getInstance().fontRenderer, "<").centered(true, true);
-		cycleLeft = new BoxWidget(0, 0, 22, 22).showingElement(l).withCallback(() -> cycleValue(-1));
+		DelegatedStencilElement l = AllIcons.I_CONFIG_PREV.asStencil();
+		cycleLeft = new BoxWidget(0, 0, 22, 22)
+				.showingElement(l)
+				.rescaleElement(16, 16)
+				.withCallback(() -> cycleValue(-1));
 		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
-		TextStencilElement r = new TextStencilElement(Minecraft.getInstance().fontRenderer, ">").centered(true, true);
-		cycleRight = new BoxWidget(0, 0, 22, 22).showingElement(r).withCallback(() -> cycleValue(1));
+		DelegatedStencilElement r = AllIcons.I_CONFIG_NEXT.asStencil();
+		cycleRight = new BoxWidget(0, 0, 22, 22)
+				.showingElement(r)
+				.rescaleElement(16, 16)
+				.withCallback(() -> cycleValue(1));
 		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));
 
 		listeners.add(cycleLeft);
@@ -66,16 +74,16 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		cycleLeft.x = x + getLabelWidth(width) + 2;
-		cycleLeft.y = y + 10;
+		cycleLeft.y = y + 12;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
 		valueText
-				.at(cycleLeft.x - 2 + cycleWidth, y + 10, 0)
-				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth, 30)
+				.at(cycleLeft.x - 4 + cycleWidth, y + 12, 0)
+				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 22)
 				.render(ms);
 
 		cycleRight.x = x + width - cycleWidth - resetWidth + 2;
-		cycleRight.y = y + 10;
+		cycleRight.y = y + 12;
 		cycleRight.render(ms, mouseX, mouseY, partialTicks);
 
 	}

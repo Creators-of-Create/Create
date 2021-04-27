@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -85,10 +86,11 @@ public class BoxElement extends RenderElement {
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
-		RenderSystem.color4f(1, 1, 1, alpha);
 
 		int f = borderOffset;
-		Color c1 = background, c2 = borderTop, c3 = borderBot;
+		Color c1 = ColorHelper.applyAlpha(background, alpha);
+		Color c2 = ColorHelper.applyAlpha(borderTop, alpha);
+		Color c3 = ColorHelper.applyAlpha(borderBot, alpha);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder b = tessellator.getBuffer();
 		Matrix4f model = ms.peek().getModel();
@@ -146,6 +148,5 @@ public class BoxElement extends RenderElement {
 		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		RenderSystem.enableTexture();
-		RenderSystem.color4f(1, 1, 1, 1);
 	}
 }

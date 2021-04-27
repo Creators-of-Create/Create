@@ -2,16 +2,15 @@ package com.simibubi.create.foundation.ponder.ui;
 
 import java.util.function.BiConsumer;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.content.PonderChapter;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-
-import javax.annotation.Nonnull;
 
 public class ChapterLabel extends AbstractSimiWidget {
 
@@ -21,7 +20,9 @@ public class ChapterLabel extends AbstractSimiWidget {
 	public ChapterLabel(PonderChapter chapter, int x, int y, BiConsumer<Integer, Integer> onClick) {
 		super(x, y, 175, 38);
 
-		this.button = new PonderButton(x + 4, y + 4, onClick, 30, 30).showing(chapter);
+		this.button = new PonderButton(x + 4, y + 4, 30, 30)
+				.showing(chapter)
+				.withCallback(onClick);
 		this.button.fade(1);
 
 		this.chapter = chapter;

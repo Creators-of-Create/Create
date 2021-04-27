@@ -27,21 +27,15 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	/*
 	 *
-	 * TODO
 	 * zelo's list for configUI
+	 * TODO
 	 *
-	 * adjust transition animation of screens -> disabled for now
-	 * move config button's animations to ponder button or a new superclass
-	 * get some proper icons for reset button and enum cycle
-	 *
-	 * some color themes maybe?
-	 * at least a helper class to unite colors throughout different uis
+	 * replace java's awt color with something mutable
 	 *
 	 * FIXME
 	 *
-	 * tooltip are hidden underneath the scrollbar, if the bar is near the middle
-	 * misalignment of the label-streak and textboxes/enum stuff
-	 * framebuffer blending is incorrect
+	 * tooltips are hidden underneath the scrollbar, if the bar is near the middle
+	 * framebuffer blending is incorrect -> wait for jozu's changes to merge
 	 *
 	 * */
 

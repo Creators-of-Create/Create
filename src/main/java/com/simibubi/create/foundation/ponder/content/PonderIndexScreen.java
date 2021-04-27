@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -106,17 +104,17 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		int itemCenterY = (int) (height * itemYmult);
 
 		for (Item item : items) {
-			PonderButton button =
-				new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {
-					if (!PonderRegistry.all.containsKey(item.getRegistryName()))
-						return;
+			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
+					.showing(new ItemStack(item))
+					.withCallback((x, y) -> {
+						if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+							return;
 
-					centerScalingOn(x, y);
-					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
-				}).showing(new ItemStack(item));
+						centerScalingOn(x, y);
+						ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
+					});
 
-			button.fade(1);
-			widgets.add(button);
+			widgets.add(b);
 			layout.next();
 		}
 
@@ -189,7 +187,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		ms.pop();
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		MutableBoolean handled = new MutableBoolean(false);
 		widgets.forEach(w -> {
@@ -207,7 +205,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		if (handled.booleanValue())
 			return true;
 		return super.mouseClicked(x, y, button);
-	}
+	}*/
 
 	@Override
 	public boolean isEquivalentTo(NavigatableSimiScreen other) {

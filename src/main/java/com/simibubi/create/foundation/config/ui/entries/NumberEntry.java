@@ -38,7 +38,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 30, unit);
+		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 26, unit);
 		textField.setText(String.valueOf(getValue()));
 
 		Object range = spec.getRange();
@@ -54,13 +54,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			if (!min.equals(getTypeMin())) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
-				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_ACCENT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_ACCENT_2).darker().getRGB()));
+				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
 				minOffset = font.getWidth(t);
 			}
 			if (!max.equals(getTypeMax())) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
-				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_ACCENT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_ACCENT_2).darker().getRGB()));
+				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
 				maxOffset = font.getWidth(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {
@@ -126,7 +126,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		textField.x = x + getLabelWidth(width) + minOffset;
 		textField.y = y + 10;
 		textField.setWidth(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset);
-		textField.setHeight(30);
+		textField.setHeight(26);
 		textField.render(ms, mouseX, mouseY, partialTicks);
 
 		if (minText != null)

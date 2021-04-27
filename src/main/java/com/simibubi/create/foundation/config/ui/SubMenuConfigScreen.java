@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -78,6 +79,9 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		changes.forEach((path, value) -> {
 			ForgeConfigSpec.ConfigValue configValue = values.get(path);
 			configValue.set(value);
+			if (type == ModConfig.Type.SERVER) {
+				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(path, value));
+			}
 		});
 		clearChanges();
 	}

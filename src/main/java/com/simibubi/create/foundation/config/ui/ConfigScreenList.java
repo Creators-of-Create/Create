@@ -43,6 +43,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		UIRenderHelper.angledGradient(ms, 90, left + width / 2, top, width, 5, 0x60_000000, 0x0);
 		UIRenderHelper.angledGradient(ms, -90, left + width / 2, bottom, width, 5, 0x60_000000, 0x0);
+		UIRenderHelper.angledGradient(ms, 0, left, top + height / 2, height, 5, 0x60_000000, 0x0);
+		UIRenderHelper.angledGradient(ms, 180, right, top + height / 2, height, 5, 0x60_000000, 0x0);
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 	}

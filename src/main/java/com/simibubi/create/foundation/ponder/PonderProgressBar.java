@@ -1,7 +1,12 @@
 package com.simibubi.create.foundation.ponder;
 
+import javax.annotation.Nonnull;
+
+import org.antlr.v4.runtime.misc.IntegerList;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.gui.BoxElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -11,9 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-
-import javax.annotation.Nonnull;
-import org.antlr.v4.runtime.misc.IntegerList;
 
 public class PonderProgressBar extends AbstractSimiWidget {
 
@@ -116,9 +118,16 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		*   gradients have to be in front of the box so z>+100
 		* */
 
-		ms.push();
-		PonderUI.renderBox(ms, x, y, width, height, false);
-		ms.pop();
+		new BoxElement()
+				.withBackground(0xff000000)
+				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.at(x, y, 100)
+				.withBounds(width, height)
+				.render(ms);
+
+		//ms.push();
+		//PonderUI.renderBox(ms, x, y, width, height, false);
+		//ms.pop();
 
 		ms.push();
 		ms.translate(x - 2, y - 2, 0);

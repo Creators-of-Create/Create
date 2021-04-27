@@ -23,8 +23,8 @@ public class BoxWidget extends ElementWidget {
 	protected Color customBorderBot;
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
-	protected Color gradientColor1 = Theme.c(Theme.Key.BUTTON_IDLE_1), gradientColor2 = Theme.c(Theme.Key.BUTTON_IDLE_2);
-	private Color colorTarget1, colorTarget2;
+	protected Color gradientColor1, gradientColor2;
+	private Color colorTarget1 = Theme.c(Theme.Key.BUTTON_IDLE_1), colorTarget2 = Theme.c(Theme.Key.BUTTON_IDLE_2);
 	private Color previousColor1, previousColor2;
 
 	public BoxWidget() {
@@ -34,28 +34,40 @@ public class BoxWidget extends ElementWidget {
 	public BoxWidget(int x, int y) {
 		this(x, y, 16, 16);
 	}
+
 	public BoxWidget(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		box = new BoxElement()
 				.at(x, y)
 				.withBounds(width, height);
+		gradientColor1 = colorTarget1;
+		gradientColor2 = colorTarget2;
 	}
 
-	public BoxWidget withBounds(int width, int height) {
+	public <T extends BoxWidget> T withBounds(int width, int height) {
 		this.width = width;
 		this.height = height;
-		return this;
+		//noinspection unchecked
+		return (T) this;
 	}
 
-	public BoxWidget withBorderColors(Color top, Color bot) {
+	public <T extends BoxWidget> T withBorderColors(Color top, Color bot) {
 		this.customBorderTop = top;
 		this.customBorderBot = bot;
 		updateColorsFromState();
-		return this;
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends BoxWidget> T animateColors(boolean b) {
+		this.animateColors = b;
+		//noinspection unchecked
+		return (T) this;
 	}
 
 	@Override
 	public void tick() {
+		super.tick();
 		colorAnimation.tickChaser();
 	}
 
@@ -66,23 +78,6 @@ public class BoxWidget extends ElementWidget {
 		gradientColor1 = Theme.c(Theme.Key.BUTTON_CLICK_1);
 		gradientColor2 = Theme.c(Theme.Key.BUTTON_CLICK_2);
 		startGradientAnimation(getColorForState(true), getColorForState(false), true, 0.15);
-	}
-
-	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		float fadeValue = fade.getValue(partialTicks);
-		if (fadeValue < .1f)
-			return;
-
-		box.withBackground(ColorHelper.applyAlpha(0xdd000000, fadeValue))
-				.gradientBorder(gradientColor1, gradientColor2)
-				.at(x, y)
-				.withBounds(width, height)
-				.render(ms);
-
-		super.renderButton(ms, mouseX, mouseY, partialTicks);
-
-		wasHovered = hovered;
 	}
 
 	@Override
@@ -97,12 +92,33 @@ public class BoxWidget extends ElementWidget {
 			);
 		}
 
-		if (!colorAnimation.settled()) {
+		if (colorAnimation.settled()) {
+			gradientColor1 = colorTarget1;
+			gradientColor2 = colorTarget2;
+		} else {
 			float animationValue = 1 - Math.abs(colorAnimation.getValue(partialTicks));
 			gradientColor1 = ColorHelper.mixColors(previousColor1, colorTarget1, animationValue);
 			gradientColor2 = ColorHelper.mixColors(previousColor2, colorTarget2, animationValue);
 		}
 
+	}
+
+	@Override
+	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		float fadeValue = fade.getValue(partialTicks);
+		if (fadeValue < .1f)
+			return;
+
+		box.withAlpha(fadeValue);
+		box.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND))
+				.gradientBorder(gradientColor1, gradientColor2)
+				.at(x, y, z)
+				.withBounds(width, height)
+				.render(ms);
+
+		super.renderButton(ms, mouseX, mouseY, partialTicks);
+
+		wasHovered = hovered;
 	}
 
 	@Override
@@ -122,8 +138,8 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	public void updateColorsFromState() {
-		gradientColor1 = getColorForState(true);
-		gradientColor2 = getColorForState(false);
+		colorTarget1 = getColorForState(true);
+		colorTarget2 = getColorForState(false);
 	}
 
 	public void animateGradientFromState() {
@@ -135,8 +151,12 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	private void startGradientAnimation(Color c1, Color c2, boolean positive, double expSpeed) {
+		if (!animateColors)
+			return;
+
 		colorAnimation.startWithValue(positive ? 1 : -1);
 		colorAnimation.chase(0, expSpeed, LerpedFloat.Chaser.EXP);
+		colorAnimation.tickChaser();
 
 		previousColor1 = gradientColor1;
 		previousColor2 = gradientColor2;

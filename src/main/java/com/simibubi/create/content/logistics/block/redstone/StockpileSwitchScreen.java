@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -13,12 +15,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-
-import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
 
 public class StockpileSwitchScreen extends AbstractSimiScreen {
 
@@ -125,7 +126,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 
 		matrixStack.push();
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 40, -250)
+				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + STOCKSWITCH.width + 15, guiTop + 40, -250)
 				.scale(5)
 				.render(matrixStack);
 		matrixStack.pop();

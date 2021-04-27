@@ -42,6 +42,10 @@ public class ColorHelper {
 		return (color & 0xFFFFFF) | alphaChannel << 24;
 	}
 
+	public static Color applyAlpha(Color c, float alpha) {
+		return new Color(applyAlpha(c.getRGB(), alpha), true);
+	}
+
 	public static int mixColors(int color1, int color2, float w) {
 		int r1 = (color1 >> 16);
 		int g1 = (color1 >> 8) & 0xFF;

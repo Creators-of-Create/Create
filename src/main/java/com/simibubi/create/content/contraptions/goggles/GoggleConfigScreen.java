@@ -8,7 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -22,6 +22,8 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	private int offsetX;
 	private int offsetY;
 	private final List<ITextComponent> tooltip;
+
+	private PonderButton w1, w2, w3;
 
 	public GoggleConfigScreen() {
 		ITextComponent componentSpacing = new StringTextComponent("    ");
@@ -47,6 +49,16 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 
 		offsetX = AllConfigs.CLIENT.overlayOffsetX.get();
 		offsetY = AllConfigs.CLIENT.overlayOffsetY.get();
+
+		widgets.clear();
+		widgets.add(w1 = new PonderButton(50, 50)
+				.enableFade(0, 5));
+
+		widgets.add(w2 = new PonderButton(100, 50)
+				.enableFade(0, 5));
+
+		widgets.add(w3 = new PonderButton(150, 50));
+
 	}
 
 	@Override
@@ -79,6 +91,17 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
 		renderTooltip(ms, tooltip, posX, posY);
+
+		w1.fade().setValue(0.5);
+		w1.fade().setValue(0.5);
+
+		w2.fade().setValue(0.75);
+		w2.fade().setValue(0.75);
+
+		w1.flash();
+		w2.flash();
+		w3.flash();
+
 
 		//UIRenderHelper.breadcrumbArrow(ms, 50, 50, 100, 50, 20, 10, 0x80aa9999, 0x10aa9999);
 		//UIRenderHelper.breadcrumbArrow(ms, 100, 80, 0, -50, 20, -10, 0x80aa9999, 0x10aa9999);

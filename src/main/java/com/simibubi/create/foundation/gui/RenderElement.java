@@ -8,6 +8,10 @@ public abstract class RenderElement implements IScreenRenderable {
 
 	public static RenderElement EMPTY = new RenderElement() {@Override public void render(MatrixStack ms) {}};
 
+	public static RenderElement of(IScreenRenderable renderable) {
+		return new SimpleRenderElement(renderable);
+	}
+
 	protected int width = 16, height = 16;
 	protected float x = 0, y = 0, z = 0;
 	protected float alpha = 1f;
@@ -48,6 +52,18 @@ public abstract class RenderElement implements IScreenRenderable {
 		return height;
 	}
 
+	public float getX() {
+		return x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public float getZ() {
+		return z;
+	}
+
 	public abstract void render(MatrixStack ms);
 
 	@Override
@@ -58,5 +74,19 @@ public abstract class RenderElement implements IScreenRenderable {
 	@Override
 	public void draw(MatrixStack ms, int x, int y) {
 		this.at(x, y).render(ms);
+	}
+
+	public static class SimpleRenderElement extends RenderElement {
+
+		private IScreenRenderable renderable;
+
+		public SimpleRenderElement(IScreenRenderable renderable) {
+			this.renderable = renderable;
+		}
+
+		@Override
+		public void render(MatrixStack ms) {
+			renderable.draw(ms, (int) x, (int) y);
+		}
 	}
 }

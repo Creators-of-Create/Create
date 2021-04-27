@@ -176,7 +176,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		//ms.scale(1, 1, 0.01f);
 		//todo wait for jozu's framebuffer capabilities on the other branch and use them here
 		UIRenderHelper.framebuffer.bindFramebuffer(true);
-		source.render(ms, mouseX, mouseY, partialTicks);
+		source.render(ms, mouseX, mouseY, 10);
 		UIRenderHelper.framebuffer.unbindFramebuffer();
 		Minecraft.getInstance().getFramebuffer().bindFramebuffer(true);
 		ms.pop();

@@ -14,6 +14,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 public abstract class AbstractSimiWidget extends Widget {
 
+	protected float z;
 	protected boolean wasHovered = false;
 	protected List<ITextComponent> toolTip = new LinkedList<>();
 	protected BiConsumer<Integer, Integer> onClick = (_$, _$$) -> {};
@@ -38,6 +39,12 @@ public abstract class AbstractSimiWidget extends Widget {
 
 	public <T extends AbstractSimiWidget> T withCallback(Runnable cb) {
 		return withCallback((_$, _$$) -> cb.run());
+	}
+
+	public <T extends AbstractSimiWidget> T atZLevel(float z) {
+		this.z = z;
+		//noinspection unchecked
+		return (T) this;
 	}
 
 	public List<ITextComponent> getToolTip() {
