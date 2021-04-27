@@ -108,13 +108,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		}
 
 		resetButton.x = x + width - resetWidth + 6;
-		resetButton.y = y + 15;
+		resetButton.y = y + 10;
 		resetButton.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected int getLabelWidth(int totalWidth) {
-		return (int) (totalWidth * labelWidthMult);
+		return (int) (totalWidth * labelWidthMult) + 30;
 	}
 
 	public void setValue(@Nonnull T value) {

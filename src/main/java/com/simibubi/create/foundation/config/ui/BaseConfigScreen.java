@@ -28,22 +28,22 @@ public class BaseConfigScreen extends ConfigScreen {
 		widgets.clear();
 		super.init();
 
-		TextStencilElement text = new TextStencilElement(client.fontRenderer, new StringTextComponent("CLIENT CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
-		widgets.add(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 50, 200, 30)
+		TextStencilElement text = new TextStencilElement(client.fontRenderer, new StringTextComponent("Client Settings").formatted(TextFormatting.BOLD)).centered(true, true);
+		widgets.add(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16)
 				.showingElement(text)
 				.withCallback(() -> ScreenOpener.open(new SubMenuConfigScreen(this, ModConfig.Type.CLIENT, AllConfigs.CLIENT.specification)))
 		);
 		text.withElementRenderer(BoxWidget.gradientFactory.apply(clientConfigWidget));
 
-		TextStencilElement text2 = new TextStencilElement(client.fontRenderer, new StringTextComponent("COMMON CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
-		widgets.add(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 30)
+		TextStencilElement text2 = new TextStencilElement(client.fontRenderer, new StringTextComponent("World Generation Settings").formatted(TextFormatting.BOLD)).centered(true, true);
+		widgets.add(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16)
 				.showingElement(text2)
 				.withCallback(() -> ScreenOpener.open(new SubMenuConfigScreen(this, ModConfig.Type.COMMON, AllConfigs.COMMON.specification)))
 		);
 		text2.withElementRenderer(BoxWidget.gradientFactory.apply(commonConfigWidget));
 
-		TextStencilElement text3 = new TextStencilElement(client.fontRenderer, new StringTextComponent("SERVER CONFIG").formatted(TextFormatting.BOLD)).centered(true, true);
-		widgets.add(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 50, 200, 30)
+		TextStencilElement text3 = new TextStencilElement(client.fontRenderer, new StringTextComponent("Gameplay Settings").formatted(TextFormatting.BOLD)).centered(true, true);
+		widgets.add(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16)
 			.showingElement(text3)
 		);
 

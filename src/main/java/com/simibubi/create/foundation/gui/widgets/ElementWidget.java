@@ -119,8 +119,8 @@ public class ElementWidget extends AbstractSimiWidget {
 		//element x/y get treated as a border around the element
 		float eX = element.getX();
 		float eY = element.getY();
-		float eWidth = width - 2 * eX;
-		float eHeight = height - 2 * eY;
+		float eWidth = width;// - 2 * eX;
+		float eHeight = height;// - 2 * eY;
 		if (rescaleElement) {
 			float xScale = eWidth / rescaleSizeX;
 			float yScale = eHeight / rescaleSizeY;

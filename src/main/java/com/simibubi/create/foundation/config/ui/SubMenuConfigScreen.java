@@ -117,7 +117,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.init();
 
 		//leave 40px on either side and dont be wider than 500px
-		listWidth = Math.min(width - 80, 500);
+		listWidth = Math.min(width - 80, 300);
 
 		int yCenter = height / 2;
 		int listL = this.width / 2 - listWidth / 2;
@@ -189,7 +189,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		widgets.add(discardChanges);
 		widgets.add(goBack);
 
-		list = new ConfigScreenList(client, listWidth, height - 60, 45, height - 15, 50);
+		list = new ConfigScreenList(client, listWidth, height - 60, 45, height - 15, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
 		children.add(list);

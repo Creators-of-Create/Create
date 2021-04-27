@@ -13,7 +13,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class EnumEntry extends ValueEntry<Enum<?>> {
 
-	protected static final int cycleWidth = 34;//including 2px offset on either side
+	protected static final int cycleWidth = 34;// including 2px offset on either side
 
 	protected TextStencilElement valueText;
 	protected BoxWidget cycleLeft;
@@ -23,20 +23,20 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		super(label, value, spec);
 
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
-		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.i(Theme.Key.TEXT_1), Theme.i(Theme.Key.TEXT_2)));
+		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
+			height, width, Theme.i(Theme.Key.TEXT_1), Theme.i(Theme.Key.TEXT_2)));
 
 		DelegatedStencilElement l = AllIcons.I_CONFIG_PREV.asStencil();
-		cycleLeft = new BoxWidget(0, 0, 22, 22)
-				.showingElement(l)
-				.rescaleElement(16, 16)
-				.withCallback(() -> cycleValue(-1));
+		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(l)
+//				.rescaleElement(16, 16)
+			.withCallback(() -> cycleValue(-1));
 		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
 		DelegatedStencilElement r = AllIcons.I_CONFIG_NEXT.asStencil();
-		cycleRight = new BoxWidget(0, 0, 22, 22)
-				.showingElement(r)
-				.rescaleElement(16, 16)
-				.withCallback(() -> cycleValue(1));
+		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(r)
+//				.rescaleElement(16, 16)
+			.withCallback(() -> cycleValue(1));
+		r.at(cycleWidth - 8, 0);
 		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));
 
 		listeners.add(cycleLeft);
@@ -47,7 +47,8 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 
 	protected void cycleValue(int direction) {
 		Enum<?> e = getValue();
-		Enum<?>[] options = e.getDeclaringClass().getEnumConstants();
+		Enum<?>[] options = e.getDeclaringClass()
+			.getEnumConstants();
 		e = options[Math.floorMod(e.ordinal() + direction, options.length)];
 		setValue(e);
 		bumpCog(direction * 15f);
@@ -70,21 +71,28 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+		boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		cycleLeft.x = x + getLabelWidth(width) + 2;
-		cycleLeft.y = y + 12;
+		cycleLeft.x = x + getLabelWidth(width) + 4;
+		cycleLeft.y = y + 10;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
-		valueText
-				.at(cycleLeft.x - 4 + cycleWidth, y + 12, 0)
-				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 22)
-				.render(ms);
+		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
+			.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
+			.render(ms);
 
-		cycleRight.x = x + width - cycleWidth - resetWidth + 2;
-		cycleRight.y = y + 12;
+		cycleRight.x = x + width - cycleWidth * 2 - resetWidth + 10;
+		cycleRight.y = y + 10;
 		cycleRight.render(ms, mouseX, mouseY, partialTicks);
+
+		BoxWidget boxWidget = new BoxWidget(0, 0, 10, 10);
+		boxWidget.x = cycleLeft.x + cycleWidth + 4;
+		boxWidget.y = cycleLeft.y + 3;
+		boxWidget.withBorderColors(java.awt.Color.black, java.awt.Color.black);
+		boxWidget.active = false;
+		boxWidget.render(ms, mouseX, mouseY, partialTicks);
 
 	}
 

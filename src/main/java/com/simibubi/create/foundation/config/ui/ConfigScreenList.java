@@ -142,12 +142,12 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-			UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 10, getLabelWidth(width) + ((width - getLabelWidth(width)) / 3), 0xdd_000000);
+			UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 10, width, 0xdd_000000);
 			IFormattableTextComponent component = label.getComponent();
 			if (Minecraft.getInstance().fontRenderer.getWidth(component) > getLabelWidth(width) - 10) {
 				label.withText(Minecraft.getInstance().fontRenderer.trimToWidth(component, getLabelWidth(width) - 15).getString() + "...");
 			}
-			label.at(x + 5, y + height / 2 - 4, 0).render(ms);
+			label.at(x + 10, y + height / 2 - 4, 0).render(ms);
 
 			if (mouseX > x && mouseX < x + getLabelWidth(width) && mouseY > y + 5 && mouseY < y + height - 5) {
 				List<ITextComponent> tooltip = getLabelTooltip();

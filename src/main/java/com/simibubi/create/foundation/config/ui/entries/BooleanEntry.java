@@ -1,33 +1,42 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.gui.TextStencilElement;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BooleanEntry extends ValueEntry<Boolean> {
 
-	TextStencilElement enabled;
-	TextStencilElement disabled;
+	RenderElement enabled;
+	RenderElement disabled;
 	BoxWidget button;
 
 	public BooleanEntry(String label, ForgeConfigSpec.ConfigValue<Boolean> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 
-		enabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Enabled")
-				.centered(true, true)
-				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_88f788, 0xff_20cc20));
+//		enabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Enabled")
+//				.centered(true, true)
+//				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_88f788, 0xff_20cc20));
+//
+//		disabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Disabled")
+//				.centered(true, true)
+//				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
 
-		disabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Disabled")
-				.centered(true, true)
-				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
+		enabled = AllIcons.I_CONFIRM.asStencil()
+			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
+				height, width, 0xff_88f788, 0xff_20cc20))
+			.<RenderElement>at(10, 0);
+		
+		disabled = AllIcons.I_DISABLE.asStencil()
+			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
+				height, width, 0xff_f78888, 0xff_cc2020))
+			.<RenderElement>at(10, 0);
 
-		button = new BoxWidget()
-				.showingElement(enabled)
-				.withCallback(() -> setValue(!getValue()));
+		button = new BoxWidget().showingElement(enabled)
+			.withCallback(() -> setValue(!getValue()));
 
 		listeners.add(button);
 		onReset();
@@ -46,12 +55,13 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+		boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + getLabelWidth(width);
+		button.x = x + width - 80 - resetWidth;
 		button.y = y + 10;
-		button.setWidth(width - getLabelWidth(width) - resetWidth - 4);
+		button.setWidth(35);
 		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}

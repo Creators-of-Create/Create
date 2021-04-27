@@ -38,7 +38,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 26, unit);
+		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 20, unit);
 		textField.setText(String.valueOf(getValue()));
 
 		Object range = spec.getRange();
@@ -51,13 +51,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			T max = (T) maxField.get(range);
 
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
-			if (!min.equals(getTypeMin())) {
+			if (min.doubleValue() > getTypeMin().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
 				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
 				minOffset = font.getWidth(t);
 			}
-			if (!max.equals(getTypeMax())) {
+			if (max.doubleValue() < getTypeMax().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
 				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
@@ -123,10 +123,10 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		textField.x = x + getLabelWidth(width) + minOffset;
-		textField.y = y + 10;
-		textField.setWidth(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset);
-		textField.setHeight(26);
+		textField.x = x + width - 82 - resetWidth;
+		textField.y = y + 8;
+		textField.setWidth(Math.min(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset, 40));
+		textField.setHeight(20);
 		textField.render(ms, mouseX, mouseY, partialTicks);
 
 		if (minText != null)
@@ -172,7 +172,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 		@Override
 		protected Float getTypeMin() {
-			return Float.MIN_VALUE;
+			return -Float.MAX_VALUE;
 		}
 
 		@Override
@@ -194,12 +194,12 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 		@Override
 		protected Double getTypeMin() {
-			return Double.MIN_VALUE;
+			return (double) -Float.MAX_VALUE;
 		}
 
 		@Override
 		protected Double getTypeMax() {
-			return Double.MAX_VALUE;
+			return (double) Float.MAX_VALUE;
 		}
 
 		@Override

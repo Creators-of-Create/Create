@@ -4,11 +4,11 @@ import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
@@ -17,12 +17,13 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 	public SubMenuEntry(SubMenuConfigScreen parent, String label, ForgeConfigSpec spec, UnmodifiableConfig config) {
 		super(label);
-		TextStencilElement text = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Click to open").centered(true, true);
-
+		DelegatedStencilElement element = AllIcons.I_CONFIG_OPEN.asStencil();
+		
 		button = new BoxWidget()
-				.showingElement(text)
+				.showingElement(element)
 				.withCallback(() -> ScreenOpener.open(new SubMenuConfigScreen(parent, label, parent.type, spec, config)));
-		text.withElementRenderer(BoxWidget.gradientFactory.apply(button));
+		element.withElementRenderer(BoxWidget.gradientFactory.apply(button));
+		element.at(10, 0);
 
 		listeners.add(button);
 	}
@@ -37,15 +38,15 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + getLabelWidth(width);
+		button.x = x + width - 108;
 		button.y = y + 10;
-		button.setWidth(width - getLabelWidth(width) - 4);
+		button.setWidth(35);
 		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected int getLabelWidth(int totalWidth) {
-		return (int) (totalWidth * labelWidthMult);
+		return (int) (totalWidth * labelWidthMult) + 30;
 	}
 }
