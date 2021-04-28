@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -124,6 +125,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		int listR = this.width / 2 + listWidth / 2;
 
 		resetAll = new BoxWidget(listR + 10, yCenter - 25, 20, 20)
+				.withPadding(2, 2)
 				.withCallback((x, y) ->
 						new ConfirmationScreen()
 								.at(x, y)
@@ -135,12 +137,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 								.open(this)
 				);
 
-		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll))
-				.at(2, 2));
+		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll)));
 		resetAll.getToolTip().add(new StringTextComponent("Reset All"));
 		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all configs to their default value.", TextFormatting.GRAY, TextFormatting.GRAY));
 
 		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
+				.withPadding(2, 2)
 				.withCallback((x, y) -> {
 					if (changes.isEmpty())
 						return;
@@ -154,12 +156,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 							})
 							.open(this);
 				});
-		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges))
-				.at(2, 2));
+		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges)));
 		saveChanges.getToolTip().add(new StringTextComponent("Save Changes"));
 		saveChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to save your current changes.", TextFormatting.GRAY, TextFormatting.GRAY));
 
 		discardChanges = new BoxWidget(listL - 30, yCenter + 5, 20, 20)
+				.withPadding(2, 2)
 				.withCallback((x, y) -> {
 					if (changes.isEmpty())
 						return;
@@ -173,15 +175,14 @@ public class SubMenuConfigScreen extends ConfigScreen {
 							})
 							.open(this);
 				});
-		discardChanges.showingElement(AllIcons.I_CONFIG_DISCARD.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(discardChanges))
-				.at(2, 2));
+		discardChanges.showingElement(AllIcons.I_CONFIG_DISCARD.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(discardChanges)));
 		discardChanges.getToolTip().add(new StringTextComponent("Discard Changes"));
 		discardChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to discard all the changes you made.", TextFormatting.GRAY, TextFormatting.GRAY));
 
 		goBack = new BoxWidget(listL - 30, yCenter + 65, 20, 20)
+				.withPadding(2, 2)
 				.withCallback(this::attemptBackstep);
-		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(goBack))
-				.at(2, 2));
+		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip().add(new StringTextComponent("Go Back"));
 
 		widgets.add(resetAll);
@@ -232,28 +233,27 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		list.isForServer = true;
 		boolean canEdit = client != null && client.player != null && client.player.hasPermissionLevel(2);
 
-		Color colRed1 = Theme.c("button_fail_1");
-		Color colRed2 = Theme.c("button_fail_2");
-		Color colGreen1 = Theme.c("button_success_1");
-		Color colGreen2 = Theme.c("button_success_2");
+		Couple<Color> red = Theme.p(Theme.Key.BUTTON_FAIL);
+		Couple<Color> green = Theme.p(Theme.Key.BUTTON_SUCCESS);
 
 		DelegatedStencilElement stencil = new DelegatedStencilElement();
 
 		serverLocked = new BoxWidget(listR + 10, yCenter + 5, 20, 20)
-				.showingElement(stencil.at(2, 2));
+				.withPadding(2, 2)
+				.showingElement(stencil);
 
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_LOCKED.draw(ms, 0, 0));
-			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colRed1.getRGB(), colRed2.getRGB()));
-			serverLocked.withBorderColors(colRed1, colRed2);
+			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, red));
+			serverLocked.withBorderColors(red);
 			serverLocked.getToolTip().add(new StringTextComponent("Locked").formatted(TextFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You don't have enough permissions to edit the server config. You can still look at the current values here though.", TextFormatting.GRAY, TextFormatting.GRAY));
 		} else {
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.draw(ms, 0, 0));
-			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, colGreen1.getRGB(), colGreen2.getRGB()));
-			serverLocked.withBorderColors(colGreen1, colGreen2);
+			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
+			serverLocked.withBorderColors(green);
 			serverLocked.getToolTip().add(new StringTextComponent("Unlocked").formatted(TextFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server once you saved them.", TextFormatting.GRAY, TextFormatting.GRAY));
 		}
@@ -266,7 +266,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 		int x = width/2;
-		drawCenteredString(ms, client.fontRenderer, "Editing config: " + type.toString() + "@" + title, x, 15, Theme.i(Theme.Key.TEXT_1));
+		drawCenteredString(ms, client.fontRenderer, "Editing config: " + type.toString() + "@" + title, x, 15, Theme.i(Theme.Key.TEXT));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 	}

@@ -99,7 +99,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.push();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
-			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, Theme.i(Theme.Key.TEXT_2));
+			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, Theme.i(Theme.Key.TEXT_DARKER));
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
 				arrowAnimation.setValue(1);//called twice to also set the previous value to 1

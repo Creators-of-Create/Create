@@ -24,17 +24,15 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
 		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
-			height, width, Theme.i(Theme.Key.TEXT_1), Theme.i(Theme.Key.TEXT_2)));
+			height, width, Theme.p(Theme.Key.TEXT)));
 
 		DelegatedStencilElement l = AllIcons.I_CONFIG_PREV.asStencil();
 		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(l)
-//				.rescaleElement(16, 16)
 			.withCallback(() -> cycleValue(-1));
 		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
 		DelegatedStencilElement r = AllIcons.I_CONFIG_NEXT.asStencil();
 		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(r)
-//				.rescaleElement(16, 16)
 			.withCallback(() -> cycleValue(1));
 		r.at(cycleWidth - 8, 0);
 		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));

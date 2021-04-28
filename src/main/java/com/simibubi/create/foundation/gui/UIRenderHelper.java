@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
+import java.awt.Color;
+
 import javax.annotation.Nonnull;
 
 import org.lwjgl.opengl.GL11;
@@ -9,6 +11,7 @@ import org.lwjgl.opengl.KHRDebug;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -106,6 +109,18 @@ public class UIRenderHelper {
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
 	}
 
+	/**
+	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
+	 */
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int breadth, int length, Couple<Color> c) {
+		angledGradient(ms, angle, x, y, 0, breadth, length, c);
+	}
+	/**
+	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
+	 */
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int breadth, int length, Couple<Color> c) {
+		angledGradient(ms, angle, x, y, z, breadth, length, c.getFirst().getRGB(), c.getSecond().getRGB());
+	}
 	/**
 	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
 	 */

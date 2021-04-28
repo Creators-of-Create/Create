@@ -120,7 +120,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		new BoxElement()
 				.withBackground(0xff000000)
-				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(x, y, 100)
 				.withBounds(width, height)
 				.render(ms);

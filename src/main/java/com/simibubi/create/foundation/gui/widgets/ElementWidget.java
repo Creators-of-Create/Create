@@ -23,6 +23,9 @@ public class ElementWidget extends AbstractSimiWidget {
 	protected float rescaleSizeX;
 	protected float rescaleSizeY;
 
+	protected float paddingX = 0;
+	protected float paddingY = 0;
+
 	public ElementWidget(int x, int y) {
 		super(x, y);
 	}
@@ -51,6 +54,13 @@ public class ElementWidget extends AbstractSimiWidget {
 	public <T extends ElementWidget> T mapElement(UnaryOperator<RenderElement> function) {
 		if (element != null)
 			element = function.apply(element);
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends ElementWidget> T withPadding(float paddingX, float paddingY) {
+		this.paddingX = paddingX;
+		this.paddingY = paddingY;
 		//noinspection unchecked
 		return (T) this;
 	}
@@ -115,19 +125,16 @@ public class ElementWidget extends AbstractSimiWidget {
 	@Override
 	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.push();
-		ms.translate(x, y, z);
-		//element x/y get treated as a border around the element
-		float eX = element.getX();
-		float eY = element.getY();
-		float eWidth = width;// - 2 * eX;
-		float eHeight = height;// - 2 * eY;
+		ms.translate(x + paddingX, y + paddingY, z);
+		float innerWidth = width - 2 * paddingX;
+		float innerHeight = height - 2 * paddingY;
 		if (rescaleElement) {
-			float xScale = eWidth / rescaleSizeX;
-			float yScale = eHeight / rescaleSizeY;
+			float xScale = innerWidth / rescaleSizeX;
+			float yScale = innerHeight / rescaleSizeY;
 			ms.scale(xScale, yScale, 1);
-			element.at(eX / xScale, eY / yScale);
+			element.at(element.getX() / xScale, element.getY() / yScale);
 		}
-		element.withBounds((int) eWidth, (int) eHeight).render(ms);
+		element.withBounds((int) innerWidth, (int) innerHeight).render(ms);
 		ms.pop();
 	}
 

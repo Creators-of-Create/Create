@@ -32,7 +32,6 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected ForgeConfigSpec.ValueSpec spec;
 	protected BoxWidget resetButton;
 	protected boolean editable = true;
-	protected String unit = null;
 	protected String path;
 
 	public ValueEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
@@ -75,8 +74,6 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 			if (u.equals("in Stress Units"))
 				u = "in SU";
 			unit = u;
-			commentLines = ArrayUtils.remove(commentLines, i);
-			break;
 		}
 		//add comment to tooltip
 		labelTooltip.addAll(Arrays.stream(commentLines).map(StringTextComponent::new).collect(Collectors.toList()));

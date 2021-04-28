@@ -197,7 +197,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		//PonderUI.renderBox(ms, 21, 21, 30, 30, false);
 		new BoxElement()
 				.withBackground(0xff000000)
-				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(21, 21, 100)
 				.withBounds(30, 30)
 				.render(ms);
@@ -229,7 +229,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		//PonderUI.renderBox(ms, x - 3, y - 3, w + 6, h + 6, false);
 		new BoxElement()
 				.withBackground(0xff000000)
-				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(x - 3, y - 3, 90)
 				.withBounds(w + 6, h + 6)
 				.render(ms);
@@ -254,7 +254,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		//PonderUI.renderBox(ms, (sWidth - stringWidth) / 2 - 5, itemArea.getY() - 21, stringWidth + 10, 10, false);
 		new BoxElement()
 				.withBackground(0xff000000)
-				.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at((sWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
 				.withBounds(stringWidth + 10, 10)
 				.render(ms);

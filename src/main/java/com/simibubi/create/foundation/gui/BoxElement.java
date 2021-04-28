@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -39,6 +40,13 @@ public class BoxElement extends RenderElement {
 
 	public <T extends BoxElement> T flatBorder(int color) {
 		return flatBorder(new Color(color, true));
+	}
+
+	public <T extends BoxElement> T gradientBorder(Couple<Color> colors) {
+		this.borderTop = colors.getFirst();
+		this.borderBot = colors.getSecond();
+		//noinspection unchecked
+		return (T) this;
 	}
 
 	public <T extends BoxElement> T gradientBorder(Color top, Color bot) {

@@ -54,13 +54,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			if (min.doubleValue() > getTypeMin().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
-				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
+				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
 				minOffset = font.getWidth(t);
 			}
 			if (max.doubleValue() < getTypeMax().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
-				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.c(Theme.Key.TEXT_1).darker().getRGB(), Theme.c(Theme.Key.TEXT_2).darker().getRGB()));
+				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
 				maxOffset = font.getWidth(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {

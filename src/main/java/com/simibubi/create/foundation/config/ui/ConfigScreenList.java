@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -34,6 +35,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		func_244606_c(false);
 		setRenderSelection(false);
 		currentText = null;
+		headerHeight = 3;
 	}
 
 	@Override
@@ -67,12 +69,12 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	@Override
 	public int getRowWidth() {
-		return width - 18;
+		return width - 16;
 	}
 
 	@Override
 	protected int getScrollbarPositionX() {
-		return left + this.width - 5;
+		return left + this.width - 6;
 	}
 
 	public void tick() {
@@ -119,12 +121,6 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		}
 
 		protected void setEditable(boolean b) {}
-
-		protected boolean isForServer() {
-			if (list == null)
-				return false;
-			return ((ConfigScreenList) list).isForServer;
-		}
 	}
 
 	public static class LabeledEntry extends Entry {
@@ -133,21 +129,30 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		protected TextStencilElement label;
 		protected List<ITextComponent> labelTooltip;
+		protected String unit = null;
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().fontRenderer, label);
-			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.i(Theme.Key.TEXT_ACCENT_1), Theme.i(Theme.Key.TEXT_ACCENT_2)));
+			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.TEXT_ACCENT)));
 			labelTooltip = new ArrayList<>();
 		}
 
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-			UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 10, width, 0xdd_000000);
+			UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 6, width, 0xdd_000000);
 			IFormattableTextComponent component = label.getComponent();
-			if (Minecraft.getInstance().fontRenderer.getWidth(component) > getLabelWidth(width) - 10) {
-				label.withText(Minecraft.getInstance().fontRenderer.trimToWidth(component, getLabelWidth(width) - 15).getString() + "...");
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			if (font.getWidth(component) > getLabelWidth(width) - 10) {
+				label.withText(font.trimToWidth(component, getLabelWidth(width) - 15).getString() + "...");
 			}
-			label.at(x + 10, y + height / 2 - 4, 0).render(ms);
+			if (unit != null) {
+				int unitWidth = font.getStringWidth(unit);
+				font.draw(ms, unit, x + getLabelWidth(width) - unitWidth - 5, y + height / 2 + 2, Theme.i(Theme.Key.TEXT_DARKER));
+				label.at(x + 10, y + height / 2 - 10, 0).render(ms);
+			} else {
+				label.at(x + 10, y + height / 2 - 4, 0).render(ms);
+			}
+
 
 			if (mouseX > x && mouseX < x + getLabelWidth(width) && mouseY > y + 5 && mouseY < y + height - 5) {
 				List<ITextComponent> tooltip = getLabelTooltip();
@@ -158,7 +163,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 				Screen screen = Minecraft.getInstance().currentScreen;
 				ms.push();
 				ms.translate(0, 0, 400);
-				GuiUtils.drawHoveringText(ms, tooltip, mouseX, mouseY, screen.width, screen.height, 300, Minecraft.getInstance().fontRenderer);
+				GuiUtils.drawHoveringText(ms, tooltip, mouseX, mouseY, screen.width, screen.height, 300, font);
 				ms.pop();
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 			}

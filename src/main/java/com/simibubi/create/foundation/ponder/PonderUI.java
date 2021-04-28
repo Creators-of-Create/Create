@@ -559,7 +559,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			//renderBox(ms, 21, 21, 30, 30, false);
 			new BoxElement()
 					.withBackground(0xff000000)
-					.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2))
+					.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 					.at(21, 21, 100)
 					.withBounds(30, 30)
 					.render(ms);
@@ -863,10 +863,6 @@ public class PonderUI extends NavigatableSimiScreen {
 		return hovered;
 	}
 
-	/*public static void renderBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted) {
-		renderBox(ms, x, y, w, h, 0xff000000, highlighted ? 0xf0ffeedd : 0x40ffeedd, highlighted ? 0x60ffeedd : 0x20ffeedd);
-	}*/
-
 	public static void renderSpeechBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted, Pointing pointing,
 		boolean returnWithLocalTransform) {
 		if (!returnWithLocalTransform)
@@ -914,17 +910,12 @@ public class PonderUI extends NavigatableSimiScreen {
 		}
 
 		//renderBox(ms, boxX, boxY, w, h, highlighted);
-		BoxElement box = new BoxElement()
+		new BoxElement()
 				.withBackground(0xff000000)
+				.gradientBorder(Theme.p(highlighted ? Theme.Key.PONDER_HIGHLIGHT : Theme.Key.PONDER_IDLE))
 				.at(boxX, boxY, 100)
-				.withBounds(w, h);
-
-		if (highlighted)
-			box.gradientBorder(Theme.i(Theme.Key.PONDER_IDLE_1), Theme.i(Theme.Key.PONDER_IDLE_2));
-		else
-			box.gradientBorder(Theme.i(Theme.Key.PONDER_HIGHLIGHT_1), Theme.i(Theme.Key.PONDER_HIGHLIGHT_2));
-
-		box.render(ms);
+				.withBounds(w, h)
+				.render(ms);
 
 		ms.push();
 		AllGuiTextures toRender = highlighted ? AllGuiTextures.SPEECH_TOOLTIP_HIGHLIGHT : AllGuiTextures.SPEECH_TOOLTIP;

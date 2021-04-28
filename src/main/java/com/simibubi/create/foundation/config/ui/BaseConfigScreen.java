@@ -53,7 +53,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		} else {
 			serverConfigWidget.active = false;
 			serverConfigWidget.updateColorsFromState();
-			text3.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.i(Theme.Key.BUTTON_DISABLE_1), Theme.i(Theme.Key.BUTTON_DISABLE_2) | 0x40_000000));
+			text3.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.i(Theme.Key.BUTTON_DISABLE, true), Theme.i(Theme.Key.BUTTON_DISABLE, false) | 0x40_000000));
 		}
 	}
 }

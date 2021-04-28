@@ -6,14 +6,14 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.Style;
 
@@ -126,7 +126,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		widgets.add(cancel);
 
 		textBackground = new BoxElement()
-				.gradientBorder(Theme.c(Theme.Key.BUTTON_DISABLE_1), Theme.c(Theme.Key.BUTTON_DISABLE_2))
+				.gradientBorder(Theme.p(Theme.Key.BUTTON_DISABLE))
 				.withBounds(textWidth, textHeight)
 				.at(x, y);
 
@@ -178,14 +178,13 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		UIRenderHelper.framebuffer.bindFramebuffer(true);
 		source.render(ms, mouseX, mouseY, 10);
 		UIRenderHelper.framebuffer.unbindFramebuffer();
-		Minecraft.getInstance().getFramebuffer().bindFramebuffer(true);
+		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 		ms.pop();
 
-		//RenderSystem.disableAlphaTest();
-		RenderSystem.disableBlend();
-		UIRenderHelper.drawFramebuffer(1);
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, UIRenderHelper.framebuffer.framebufferObject);
+		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
+		GL30.glBlitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0,  mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_LINEAR);
+		mainBuffer.bindFramebuffer(true);
 
 		this.fillGradient(ms, 0, 0, this.width, this.height, 0x70101010, 0x80101010);
 		//RenderSystem.enableAlphaTest();

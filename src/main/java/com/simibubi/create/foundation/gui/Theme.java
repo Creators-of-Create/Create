@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.Couple;
+
 public class Theme {
 
 	private static final Theme base = new Theme();
@@ -16,36 +18,39 @@ public class Theme {
 		custom = theme;
 	}
 
-	@Nonnull public static Color c(String key) {
-		Color r = null;
+	private static ColorHolder resolve(String key) {
+		ColorHolder h = null;
 
 		if (custom != null)
-			r = custom.get(key);
+			h = custom.get(key);
 
-		if (r == null)
-			r = base.get(key);
+		if (h == null)
+			h = base.get(key);
 
-		if (r == null)
-			r = Color.BLACK;
+		if (h == null)
+			h = ColorHolder.missing;
 
-		return r;
+		return h;
 	}
 
-	@Nonnull public static Color c(Key key) {
-		return c(key.get());
-	}
+	@Nonnull public static Couple<Color> p(@Nonnull Key key) {return p(key.get());}
+	@Nonnull public static Couple<Color> p(String key) {return resolve(key).asPair();}
 
-	public static int i(String key) {
-		return c(key).getRGB();
-	}
+	@Nonnull public static Color c(@Nonnull Key key, boolean first) {return c(key.get(), first);}
+	@Nonnull public static Color c(String key, boolean first) {return p(key).get(first);}
 
-	public static int i(Key key) {
-		return i(key.get());
-	}
+	public static int i(@Nonnull Key key, boolean first) {return i(key.get(), first);}
+	public static int i(String key, boolean first) {return p(key).get(first).getRGB();}
+
+	@Nonnull public static Color c(@Nonnull Key key) {return c(key.get());}
+	@Nonnull public static Color c(String key) {return resolve(key).get();}
+
+	public static int i(@Nonnull Key key) {return i(key.get());}
+	public static int i(String key) {return resolve(key).get().getRGB();}
 
 	//-----------//
 
-	protected final Map<String, Color> colors;
+	protected final Map<String, ColorHolder> colors;
 
 	protected Theme() {
 		colors = new HashMap<>();
@@ -53,77 +58,105 @@ public class Theme {
 	}
 
 	protected void init() {
-		put(Key.BUTTON_IDLE_1, new Color(0x60_c0c0ff, true));
-		put(Key.BUTTON_IDLE_2, new Color(0x30_c0c0ff, true));
-		put(Key.BUTTON_HOVER_1, new Color(0xa0_c0c0ff, true));
-		put(Key.BUTTON_HOVER_2, new Color(0x50_c0c0ff, true));
-		put(Key.BUTTON_CLICK_1, new Color(0xff_4b4bff));
-		put(Key.BUTTON_CLICK_2, new Color(0xff_3b3bdd));
-		put(Key.BUTTON_DISABLE_1, new Color(0x80_909090, true));
-		put(Key.BUTTON_DISABLE_2, new Color(0x20_909090, true));
-		put("button_success_1", new Color(0xcc_88f788, true));
-		put("button_success_2", new Color(0xcc_20cc20, true));
-		put("button_fail_1", new Color(0xcc_f78888, true));
-		put("button_fail_2", new Color(0xcc_cc2020, true));
-		put(Key.TEXT_1, new Color(0xff_eeeeee));
-		put(Key.TEXT_2, new Color(0xff_a3a3a3));
-		put(Key.TEXT_ACCENT_1, new Color(0xff_7b7ba3));
-		put(Key.TEXT_ACCENT_2, new Color(0xff_616192));
+		put(Key.BUTTON_IDLE, new Color(0x60_c0c0ff, true), new Color(0x30_c0c0ff, true));
+		put(Key.BUTTON_HOVER, new Color(0xa0_c0c0ff, true), new Color(0x50_c0c0ff, true));
+		put(Key.BUTTON_CLICK, new Color(0xff_4b4bff), new Color(0xff_3b3bdd));
+		put(Key.BUTTON_DISABLE, new Color(0x80_909090, true), new Color(0x20_909090, true));
+		put(Key.BUTTON_SUCCESS, new Color(0xcc_88f788, true), new Color(0xcc_20cc20, true));
+		put(Key.BUTTON_FAIL, new Color(0xcc_f78888, true), new Color(0xcc_cc2020, true));
+		put(Key.TEXT, new Color(0xff_eeeeee), new Color(0xff_a3a3a3));
+		put(Key.TEXT_DARKER, new Color(0xff_a3a3a3), new Color(0xff_808080));
+		put(Key.TEXT_ACCENT, new Color(0xff_7b7ba3), new Color(0xff_616192));
 		//values from PonderUI & PonderButton
 		put(Key.PONDER_BACKGROUND, new Color(0xdd_000000, true));
-		put(Key.PONDER_IDLE_1, new Color(0x40ffeedd, true));
-		put(Key.PONDER_IDLE_2, new Color(0x20ffeedd, true));
-		put(Key.PONDER_HOVER_1, new Color(0x70ffffff, true));
-		put(Key.PONDER_HOVER_2, new Color(0x30ffffff, true));
-		put(Key.PONDER_HIGHLIGHT_1, new Color(0xf0ffeedd, true));
-		put(Key.PONDER_HIGHLIGHT_2, new Color(0x60ffeedd, true));
+		put(Key.PONDER_IDLE, new Color(0x40ffeedd, true), new Color(0x20ffeedd, true));
+		put(Key.PONDER_HOVER, new Color(0x70ffffff, true), new Color(0x30ffffff, true));
+		put(Key.PONDER_HIGHLIGHT, new Color(0xf0ffeedd, true), new Color(0x60ffeedd, true));
+		put(Key.TEXT_WINDOW_BORDER, new Color(0x607a6000, true), new Color(0x207a6000, true));
+
 	}
 
 	protected void put(String key, Color c) {
-		colors.put(key, c);
+		colors.put(key, ColorHolder.single(c));
 	}
 
 	protected void put(Key key, Color c) {
 		put(key.get(), c);
 	}
 
-	@Nullable public Color get(String key) {
+	protected void put(String key, Color c1, Color c2) {
+		colors.put(key, ColorHolder.pair(c1, c2));
+	}
+
+	protected void put(Key key, Color c1, Color c2) {
+		put(key.get(), c1 , c2);
+	}
+
+	@Nullable protected ColorHolder get(String key) {
 		return colors.get(key);
 	}
 
-	public enum Key {
-		BUTTON_IDLE_1("button_idle_1"),
-		BUTTON_IDLE_2("button_idle_2"),
-		BUTTON_HOVER_1("button_hover_1"),
-		BUTTON_HOVER_2("button_hover_2"),
-		BUTTON_CLICK_1("button_click_1"),
-		BUTTON_CLICK_2("button_click_2"),
-		BUTTON_DISABLE_1("button_disable_1"),
-		BUTTON_DISABLE_2("button_disable_2"),
+	public static class Key {
 
-		TEXT_1("text_1"),
-		TEXT_2("text_2"),
-		TEXT_ACCENT_1("text_accent_1"),
-		TEXT_ACCENT_2("text_accent_2"),
+		public static Key BUTTON_IDLE = new Key();
+		public static Key BUTTON_HOVER = new Key();
+		public static Key BUTTON_CLICK = new Key();
+		public static Key BUTTON_DISABLE = new Key();
+		public static Key BUTTON_SUCCESS = new Key();
+		public static Key BUTTON_FAIL = new Key();
 
-		PONDER_BACKGROUND("ponder_background"),
-		PONDER_IDLE_1("ponder_idle_1"),
-		PONDER_IDLE_2("ponder_idle_2"),
-		PONDER_HOVER_1("ponder_hover_1"),
-		PONDER_HOVER_2("ponder_hover_2"),
-		PONDER_HIGHLIGHT_1("ponder_highlight_1"),
-		PONDER_HIGHLIGHT_2("ponder_highlight_2"),
+		public static Key TEXT = new Key();
+		public static Key TEXT_DARKER = new Key();
+		public static Key TEXT_ACCENT = new Key();
 
-		;
+		public static Key PONDER_BACKGROUND = new Key();
+		public static Key PONDER_IDLE = new Key();
+		public static Key PONDER_HOVER = new Key();
+		public static Key PONDER_HIGHLIGHT = new Key();
+		public static Key TEXT_WINDOW_BORDER = new Key();
 
-		String s;
+		private static int index = 0;
 
-		Key(String s) {
+		private final String s;
+
+		protected Key() {
+			this.s = "_" + index++;
+		}
+
+		protected Key(String s) {
 			this.s = s;
 		}
 
-		String get() {
+		public String get() {
 			return s;
 		}
+	}
+
+	private static class ColorHolder {
+
+		private static final ColorHolder missing = ColorHolder.single(Color.BLACK);
+
+		private Couple<Color> colors;
+
+		private static ColorHolder single(Color c) {
+			ColorHolder h = new ColorHolder();
+			h.colors = Couple.create(c, c);
+			return h;
+		}
+
+		private static ColorHolder pair(Color first, Color second) {
+			ColorHolder h = new ColorHolder();
+			h.colors = Couple.create(first, second);
+			return h;
+		}
+
+		private Color get() {
+			return colors.getFirst();
+		}
+
+		private Couple<Color> asPair() {
+			return colors;
+		}
+
 	}
 }

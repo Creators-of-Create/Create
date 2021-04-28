@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 public class BoxWidget extends ElementWidget {
@@ -24,7 +25,7 @@ public class BoxWidget extends ElementWidget {
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
 	protected Color gradientColor1, gradientColor2;
-	private Color colorTarget1 = Theme.c(Theme.Key.BUTTON_IDLE_1), colorTarget2 = Theme.c(Theme.Key.BUTTON_IDLE_2);
+	private Color colorTarget1 = Theme.c(Theme.Key.BUTTON_IDLE, true), colorTarget2 = Theme.c(Theme.Key.BUTTON_IDLE, false);
 	private Color previousColor1, previousColor2;
 
 	public BoxWidget() {
@@ -47,6 +48,14 @@ public class BoxWidget extends ElementWidget {
 	public <T extends BoxWidget> T withBounds(int width, int height) {
 		this.width = width;
 		this.height = height;
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends BoxWidget> T withBorderColors(Couple<Color> colors) {
+		this.customBorderTop = colors.getFirst();
+		this.customBorderBot = colors.getSecond();
+		updateColorsFromState();
 		//noinspection unchecked
 		return (T) this;
 	}
@@ -75,8 +84,8 @@ public class BoxWidget extends ElementWidget {
 	public void onClick(double x, double y) {
 		super.onClick(x, y);
 
-		gradientColor1 = Theme.c(Theme.Key.BUTTON_CLICK_1);
-		gradientColor2 = Theme.c(Theme.Key.BUTTON_CLICK_2);
+		gradientColor1 = Theme.c(Theme.Key.BUTTON_CLICK, true);
+		gradientColor2 = Theme.c(Theme.Key.BUTTON_CLICK, true);
 		startGradientAnimation(getColorForState(true), getColorForState(false), true, 0.15);
 	}
 
@@ -171,18 +180,18 @@ public class BoxWidget extends ElementWidget {
 
 	private Color getColorForState(boolean first) {
 		if (!active)
-			return first ? Theme.c(Theme.Key.BUTTON_DISABLE_1) : Theme.c(Theme.Key.BUTTON_DISABLE_2);
+			return Theme.p(Theme.Key.BUTTON_DISABLE).get(first);
 
 		if (hovered) {
 			if (first)
-				return customBorderTop != null ? customBorderTop.darker() : Theme.c(Theme.Key.BUTTON_HOVER_1);
+				return customBorderTop != null ? customBorderTop.darker() : Theme.c(Theme.Key.BUTTON_HOVER, true);
 			else
-				return customBorderBot != null ? customBorderBot.darker() : Theme.c(Theme.Key.BUTTON_HOVER_2);
+				return customBorderBot != null ? customBorderBot.darker() : Theme.c(Theme.Key.BUTTON_HOVER, false);
 		}
 
 		if (first)
-			return customBorderTop != null ? customBorderTop : Theme.c(Theme.Key.BUTTON_IDLE_1);
+			return customBorderTop != null ? customBorderTop : Theme.c(Theme.Key.BUTTON_IDLE, true);
 		else
-			return customBorderBot != null ? customBorderBot : Theme.c(Theme.Key.BUTTON_IDLE_2);
+			return customBorderBot != null ? customBorderBot : Theme.c(Theme.Key.BUTTON_IDLE, false);
 	}
 }

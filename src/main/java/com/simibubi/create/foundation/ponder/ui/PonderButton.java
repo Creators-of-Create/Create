@@ -32,6 +32,8 @@ public class PonderButton extends BoxWidget {
 	public PonderButton(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		z = 400;
+		paddingX = 2;
+		paddingY = 2;
 	}
 
 	public <T extends PonderButton> T withShortcut(KeyBinding key) {
@@ -44,12 +46,12 @@ public class PonderButton extends BoxWidget {
 		this.item = item;
 		return super.showingElement(GuiGameElement.of(item)
 				.scale(1.5f)
-				.at(-2, -2));
+				.at(-4, -4));
 	}
 
 	@Override
 	public <T extends ElementWidget> T showingElement(RenderElement element) {
-		return super.showingElement(element.at(2, 2));
+		return super.showingElement(element);
 	}
 
 	public void flash() {
@@ -93,7 +95,7 @@ public class PonderButton extends BoxWidget {
 
 		if (shortcut != null) {
 			ms.translate(0, 0, z+50);
-			drawCenteredText(ms, Minecraft.getInstance().fontRenderer, shortcut.getBoundKeyLocalizedText(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_2), fadeValue));
+			drawCenteredText(ms, Minecraft.getInstance().fontRenderer, shortcut.getBoundKeyLocalizedText(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_DARKER), fadeValue));
 		}
 	}
 

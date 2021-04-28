@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.BoxElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
@@ -113,7 +114,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		new BoxElement()
 				.withBackground(0xaa000000)
-				.gradientBorder(0x30eebb00, 0x10eebb00)
+				.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
 				.at(targetX - 10, 3, 100)
 				.withBounds(boxWidth, boxHeight - 1)
 				.render(ms);

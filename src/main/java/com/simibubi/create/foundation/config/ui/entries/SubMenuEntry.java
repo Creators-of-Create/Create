@@ -17,13 +17,11 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 	public SubMenuEntry(SubMenuConfigScreen parent, String label, ForgeConfigSpec spec, UnmodifiableConfig config) {
 		super(label);
-		DelegatedStencilElement element = AllIcons.I_CONFIG_OPEN.asStencil();
-		
-		button = new BoxWidget()
-				.showingElement(element)
+
+		button = new BoxWidget(0, 0, 35, 16)
+				.showingElement(AllIcons.I_CONFIG_OPEN.asStencil().at(10, 0))
 				.withCallback(() -> ScreenOpener.open(new SubMenuConfigScreen(parent, label, parent.type, spec, config)));
-		element.withElementRenderer(BoxWidget.gradientFactory.apply(button));
-		element.at(10, 0);
+		button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(button)));
 
 		listeners.add(button);
 	}
@@ -40,7 +38,6 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 		button.x = x + width - 108;
 		button.y = y + 10;
-		button.setWidth(35);
 		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
