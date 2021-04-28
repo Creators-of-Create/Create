@@ -25,10 +25,12 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 
 	private final ItemStack renderedItem = AllBlocks.CHROMATIC_PROJECTOR.asStack();
 	private final AllGuiTextures background = AllGuiTextures.PROJECTOR;
+	private final int guiBottom = guiTop + background.height;
+	private final int guiRight = guiLeft + background.width;
 	private IconButton confirmButton;
 
 	private final ITextComponent title = Lang.translate("gui.chromatic_projector.title");
-	private Vector<FilterStep> stages;
+	private final Vector<FilterStep> stages;
 
 	private Vector<Vector<ScrollInput>> inputs;
 
@@ -38,6 +40,15 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	private ScrollInput density;
 	private ScrollInput feather;
 	private ScrollInput fade;
+
+	private IconButton blend;
+
+	private ScrollInput strength;
+	private IconButton fieldEffect;
+
+	private IconButton rChannel;
+	private IconButton gChannel;
+	private IconButton bChannel;
 
 	public ChromaticProjectorScreen(ChromaticProjectorTileEntity te) {
 		this.tile = te;
@@ -62,35 +73,73 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		for (int row = 0; row < stages.size(); row++)
 			initInputsOfRow(row);
 
+		int guiBottom = guiTop + background.height;
+		int guiRight = guiLeft + background.width;
 		confirmButton =
-				new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+				new IconButton(guiRight - 33, guiBottom - 26, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
-		int xRight = guiLeft + 53;
-		int xLeft = guiLeft + 93;
-		int yTop = guiTop + 117;
-		int yBottom = guiTop + 139;
+		initEffectSettings();
+		initMetaSettings();
+	}
 
-		radius = new ScrollInput(xRight, yTop, 28, 18)
-				.titled(new StringTextComponent("Radius"))
+	private void initMetaSettings() {
+		int guiBottom = guiTop + background.height;
+		int y = guiBottom - 23;
+
+		blend = new IconButton(guiLeft + 16, y, AllIcons.I_FX_BLEND);
+		blend.setToolTip(Lang.translate("gui.chromatic_projector.blend"));
+
+		int channelX = guiLeft + 39;
+		rChannel = new IconButton(channelX, y, AllIcons.I_FX_BLEND);
+		rChannel.setToolTip(new StringTextComponent("R"));
+		channelX += 18;
+		gChannel = new IconButton(channelX, y, AllIcons.I_FX_BLEND);
+		gChannel.setToolTip(new StringTextComponent("G"));
+		channelX += 18;
+		bChannel = new IconButton(channelX, y, AllIcons.I_FX_BLEND);
+		bChannel.setToolTip(new StringTextComponent("B"));
+
+		fieldEffect = new IconButton(guiLeft + 135, y, tile.field ? AllIcons.I_FX_FIELD_ON : AllIcons.I_FX_FIELD_OFF);
+		fieldEffect.setToolTip(Lang.translate("gui.chromatic_projector.field"));
+
+		strength = new ScrollInput(guiLeft + 159, y, 25, 18)
+				.titled(Lang.translate("gui.chromatic_projector.strength"))
+				.withStepFunction(ctx -> step(ctx, 5))
+				.calling(tile::setStrength)
+				.withRange(0, 101)
+				.setState((int) (tile.strength * 100));
+
+		Collections.addAll(widgets, blend, rChannel, gChannel, bChannel, fieldEffect, strength);
+	}
+
+	private void initEffectSettings() {
+		int x = guiLeft + 188;
+		int y = guiTop + 40;
+
+		radius = new ScrollInput(x, y, 28, 18)
+				.titled(Lang.translate("gui.chromatic_projector.radius"))
 				.withStepFunction(ctx -> step(ctx, 2))
 				.calling(tile::setRadius)
 				.withRange(0, 201)
 				.setState((int) (tile.radius * 2));
-		feather = new ScrollInput(xRight, yBottom, 28, 18)
-				.titled(new StringTextComponent("Feather"))
+		y += 22;
+		feather = new ScrollInput(x, y, 28, 18)
+				.titled(Lang.translate("gui.chromatic_projector.feather"))
 				.withStepFunction(ctx -> step(ctx, 5))
 				.calling(tile::setFeather)
 				.withRange(0, 201)
 				.setState((int) (tile.feather * 10));
-		density = new ScrollInput(xLeft, yTop, 28, 18)
-				.titled(new StringTextComponent("Density"))
+		y += 22;
+		density = new ScrollInput(x, y, 28, 18)
+				.titled(Lang.translate("gui.chromatic_projector.density"))
 				.withStepFunction(ctx -> step(ctx, 10))
 				.calling(tile::setDensity)
 				.withRange(0, 401)
 				.setState((int) (tile.density * 100));
-		fade = new ScrollInput(xLeft, yBottom, 28, 18)
-				.titled(new StringTextComponent("Fade"))
+		y += 22;
+		fade = new ScrollInput(x, y, 28, 18)
+				.titled(Lang.translate("gui.chromatic_projector.fade"))
 				.withStepFunction(ctx -> step(ctx, 1))
 				.calling(tile::setFade)
 				.withRange(0, 51)
@@ -112,7 +161,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		ScrollInput type =
 				new SelectionScrollInput(x, y + rowHeight * row, 86, 18)
 						.forOptions(ColorEffect.getOptions())
-						.calling(state -> instructionUpdated(row, state))
+						.calling(state -> stageUpdated(row, state))
 						.setState(filter.filter.id)
 						.titled(Lang.translate("gui.chromatic_projector.filter"));
 		ScrollInput value =
@@ -174,6 +223,8 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		renderScroll(matrixStack, feather, 10f);
 		renderScroll(matrixStack, fade, 10f);
 
+		renderScroll(matrixStack, strength, 100f);
+
 		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 3,
 				0xffffff);
 
@@ -188,7 +239,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		String text = String.valueOf(input.getState() / divisor);
 
 		int stringWidth = textRenderer.getStringWidth(text);
-		textRenderer.drawWithShadow(matrixStack, text, input.x + (12 - stringWidth / 2), input.y + 5, 0xFFFFEE);
+		textRenderer.drawWithShadow(matrixStack, text, input.x + 2, input.y + 5, 0xFFFFEE);
 	}
 
 	private void label(MatrixStack matrixStack, int x, int y, ITextComponent text) {
@@ -204,7 +255,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 		sendPacket();
 	}
 
-	private void instructionUpdated(int index, int state) {
+	private void stageUpdated(int index, int state) {
 		ColorEffect newValue = ColorEffect.all.get(state);
 		stages.get(index).filter = newValue;
 		stages.get(index).value = newValue.defaultValue;
@@ -228,6 +279,33 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 	public boolean mouseClicked(double x, double y, int button) {
 		if (confirmButton.isHovered()) {
 			Minecraft.getInstance().player.closeScreen();
+			return true;
+		}
+
+		if (blend.isHovered()) {
+			tile.blend = !tile.blend;
+			return true;
+		}
+
+		if (fieldEffect.isHovered()) {
+			tile.field = !tile.field;
+
+			fieldEffect.setIcon(tile.field ? AllIcons.I_FX_FIELD_ON : AllIcons.I_FX_FIELD_OFF);
+			return fieldEffect.mouseClicked(x, y, button);
+		}
+
+		if (rChannel.isHovered()) {
+			tile.rMask = !tile.rMask;
+			return true;
+		}
+
+		if (gChannel.isHovered()) {
+			tile.gMask = !tile.gMask;
+			return true;
+		}
+
+		if (bChannel.isHovered()) {
+			tile.bMask = !tile.bMask;
 			return true;
 		}
 

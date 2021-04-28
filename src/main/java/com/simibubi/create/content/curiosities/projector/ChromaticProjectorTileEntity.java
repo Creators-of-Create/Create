@@ -10,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.common.util.Constants;
 
 public class ChromaticProjectorTileEntity extends SyncedTileEntity implements IInstanceRendered {
@@ -18,27 +17,49 @@ public class ChromaticProjectorTileEntity extends SyncedTileEntity implements II
 	Vector<FilterStep> stages = FilterStep.createDefault();
 
 	float radius = 3f;
-	float density = 1;
+
 	float feather = 1;
+	float density = 1;
 	float fade = 1;
 	boolean blend = true;
+
+	public boolean surface = true;
+	public boolean field = true;
+	public float strength = 1;
+
+	public boolean rMask = true;
+	public boolean gMask = true;
+	public boolean bMask = true;
 
 	public ChromaticProjectorTileEntity(TileEntityType<?> te) {
 		super(te);
 	}
 
-	public FilterSphere makeFilter() {
-		Matrix4f filter = FilterStep.fold(stages);
+	public FilterSphere getFilter() {
 
 		BlockPos pos = getPos();
-		return new FilterSphere()
-				.setFilter(filter)
-				.setCenter(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)
-				.setRadius(radius)
-				.setDensity(density)
-				.setFeather(feather)
-				.setBlendOver(true)
-				.setFade(fade);
+		FilterSphere sphere = new FilterSphere();
+
+		sphere.x = (float) (pos.getX() + 0.5);
+		sphere.y = (float) (pos.getY() + 0.5);
+		sphere.z = (float) (pos.getZ() + 0.5);
+		sphere.radius = radius;
+
+		sphere.feather = feather;
+		sphere.density = density;
+		sphere.fade = fade;
+		sphere.blend = blend;
+
+		sphere.surface = surface;
+		sphere.field = field;
+		sphere.strength = strength;
+
+		sphere.rMask = rMask;
+		sphere.gMask = gMask;
+		sphere.bMask = bMask;
+
+		sphere.filter = FilterStep.fold(stages);
+		return sphere;
 	}
 
 	public ChromaticProjectorTileEntity setRadius(int radius) {
@@ -66,6 +87,11 @@ public class ChromaticProjectorTileEntity extends SyncedTileEntity implements II
 		return this;
 	}
 
+	public ChromaticProjectorTileEntity setStrength(int strength) {
+		this.strength = strength / 100f;
+		return this;
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT tag) {
 		super.write(tag);
@@ -73,9 +99,19 @@ public class ChromaticProjectorTileEntity extends SyncedTileEntity implements II
 		tag.put("filters", FilterStep.writeAll(stages));
 
 		tag.putFloat("radius", radius);
-		tag.putFloat("density", density);
+
 		tag.putFloat("feather", feather);
+		tag.putFloat("density", density);
 		tag.putFloat("fade", fade);
+		tag.putBoolean("blend", blend);
+
+		tag.putBoolean("surface", surface);
+		tag.putBoolean("field", field);
+		tag.putFloat("strength", strength);
+
+		tag.putBoolean("rMask", rMask);
+		tag.putBoolean("gMask", gMask);
+		tag.putBoolean("bMask", bMask);
 
 		return tag;
 	}
@@ -87,8 +123,18 @@ public class ChromaticProjectorTileEntity extends SyncedTileEntity implements II
 		stages = FilterStep.readAll(tag.getList("filters", Constants.NBT.TAG_COMPOUND));
 
 		radius = tag.getFloat("radius");
-		density = tag.getFloat("density");
+
 		feather = tag.getFloat("feather");
+		density = tag.getFloat("density");
 		fade = tag.getFloat("fade");
+		blend = tag.getBoolean("blend");
+
+		surface = tag.getBoolean("surface");
+		field = tag.getBoolean("field");
+		strength = tag.getFloat("strength");
+
+		rMask = tag.getBoolean("rMask");
+		gMask = tag.getBoolean("gMask");
+		bMask = tag.getBoolean("bMask");
 	}
 }

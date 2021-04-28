@@ -93,13 +93,32 @@ public class ColorMatrices {
 	}
 
 	public static Matrix4f darken(float amount) {
-		Matrix4f darken = new Matrix4f();
-		darken.loadIdentity();
-		darken.multiply(1f - amount);
-		darken.a03 = amount;
-		darken.a13 = amount;
-		darken.a23 = amount;
-		return darken;
+		Matrix4f mat = new Matrix4f();
+		mat.loadIdentity();
+		mat.multiply(1f - amount);
+		return mat;
+	}
+
+	public static Matrix4f brightness(float amount) {
+		Matrix4f mat = new Matrix4f();
+		mat.loadIdentity();
+		mat.a03 = amount;
+		mat.a13 = amount;
+		mat.a23 = amount;
+		return mat;
+	}
+
+	public static Matrix4f contrast(float amount) {
+		Matrix4f sub = new Matrix4f();
+		sub.a00 = amount;
+		sub.a11 = amount;
+		sub.a22 = amount;
+		sub.a33 = 1;
+		sub.a30 = 0.5f - amount * 0.5f;
+		sub.a31 = 0.5f - amount * 0.5f;
+		sub.a32 = 0.5f - amount * 0.5f;
+
+		return sub;
 	}
 
 	public static Matrix4f identity() {

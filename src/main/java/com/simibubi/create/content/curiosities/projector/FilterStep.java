@@ -11,7 +11,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 public class FilterStep {
 
-	public static final int MAX_STEPS = 4;
+	public static final int MAX_STEPS = 6;
 	ColorEffect filter;
 	int value;
 

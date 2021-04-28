@@ -56,7 +56,7 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
-	PROJECTOR("projector.png", 173, 194),
+	PROJECTOR("projector.png", 235, 185),
 	PROJECTOR_FILTER_STRENGTH("projector.png", 0, 14, 162, 22),
 	PROJECTOR_FILTER("projector.png", 0, 36, 162, 22),
 	PROJECTOR_END("projector.png", 0, 58, 162, 22),

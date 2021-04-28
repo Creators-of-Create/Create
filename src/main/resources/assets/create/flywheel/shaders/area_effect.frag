@@ -17,8 +17,8 @@ uniform vec3 uCameraPos;
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
     vec4 d1;// <float feather, float fade, float density, float blend mode>
-    vec4 d2;// <float surfaceStrength, float bubbleStrength>
-    vec4 colorMask;// <vec3 rgb, float feather>
+    vec4 strength;// <float surfaceStrength, float bubbleStrength, float strength>
+    vec4 channelMask;// <vec3 rgb>
     mat4 colorOp;
 };
 
@@ -69,6 +69,12 @@ vec2 raySphere(vec3 worldDir, vec3 position, float radius) {
     return vec2(discriminant, hitDepth);
 }
 
+// if i == 0 return s
+// if i == 1 return 1 - s
+float invert(float s, float i) {
+    return i - 2*i*s + s;
+}
+
 float bubbleFilterStrength(vec3 worldDir, float depth, vec4 sphere, float feather, float density) {
     vec3 position = sphere.xyz;
 
@@ -96,18 +102,18 @@ float filterStrength(vec3 worldDir, float depth, inout SphereFilter f) {
     vec4 data = f.d1;
     float feather = data.x;
 
-    float strength = 0.;
+    float strength;
     // transition effect
     float transitionRadius = sphere.w + feather;
-    strength += 1. - smoothstep(transitionRadius, transitionRadius + data.y, length(sphere.xyz));
+    strength = 1. - smoothstep(transitionRadius, transitionRadius + max(0.5, data.y), length(sphere.xyz));
     // bubble effect
-    strength += bubbleFilterStrength(worldDir, depth, sphere, feather, data.z);
+    strength = max(strength, bubbleFilterStrength(worldDir, depth, sphere, feather, data.z));
 
-    strength *= f.d2.y;
+    strength *= f.strength.y;
     // surface effect
-    strength += surfaceFilterStrength(worldDir * depth, sphere, feather) * f.d2.x;
+    strength = max(strength, surfaceFilterStrength(worldDir * depth, sphere, feather) * f.strength.x);
 
-    return strength;
+    return strength * f.strength.z;
 }
 
 vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
@@ -127,13 +133,13 @@ vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
 
             vec3 filtered = filterColor(s.colorOp, baseColor);
 
-            vec3 baseHsv = rgb2hsv(baseColor);
-            vec3 maskHsv = rgb2hsv(s.colorMask.rgb);
-            vec3 diff = abs(baseHsv - maskHsv) * vec3(1., 1.1, 0.1);
-            float colorMask = step(s.colorMask.w, length(diff));
+            //            vec3 baseHsv = rgb2hsv(baseColor);
+            //            vec3 maskHsv = rgb2hsv(s.colorMask.rgb);
+            //            float diff = dot(abs(baseHsv - maskHsv), vec3(1., 1.1, 0.1));
+            //            float colorMask = step(s.colorMask.w, diff);
             float mixing = clamp(strength, 0., 1.);
 
-            accum = mix(accum, filtered, mixing * colorMask);
+            accum = mix(accum, filtered, mixing * s.channelMask.xyz);
             //accum = vec3(colorMask);
         }
     }

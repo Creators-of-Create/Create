@@ -12,9 +12,19 @@ public class ConfigureProjectorPacket extends TileEntityConfigurationPacket<Chro
 
 	Vector<CompoundNBT> stages;
 	float radius;
-	float density;
+
 	float feather;
+	float density;
 	float fade;
+	boolean blend;
+
+	public boolean surface;
+	public boolean field;
+	public float strength;
+
+	public boolean rMask;
+	public boolean gMask;
+	public boolean bMask;
 
 	public ConfigureProjectorPacket(PacketBuffer buffer) {
 		super(buffer);
@@ -26,18 +36,38 @@ public class ConfigureProjectorPacket extends TileEntityConfigurationPacket<Chro
 		stages = tile.stages.stream()
 				.map(FilterStep::write)
 				.collect(Collectors.toCollection(Vector::new));
-		this.radius = tile.radius;
-		this.density = tile.density;
-		this.feather = tile.feather;
-		this.fade = tile.fade;
+		radius = tile.radius;
+
+		feather = tile.feather;
+		density = tile.density;
+		fade = tile.fade;
+		blend = tile.blend;
+
+		surface = tile.surface;
+		field = tile.field;
+		strength = tile.strength;
+
+		rMask = tile.rMask;
+		gMask = tile.gMask;
+		bMask = tile.bMask;
 	}
 
 	@Override
 	protected void writeSettings(PacketBuffer buffer) {
 		buffer.writeFloat(radius);
-		buffer.writeFloat(density);
+
 		buffer.writeFloat(feather);
+		buffer.writeFloat(density);
 		buffer.writeFloat(fade);
+		buffer.writeBoolean(blend);
+
+		buffer.writeBoolean(surface);
+		buffer.writeBoolean(field);
+		buffer.writeFloat(strength);
+
+		buffer.writeBoolean(rMask);
+		buffer.writeBoolean(gMask);
+		buffer.writeBoolean(bMask);
 
 		buffer.writeInt(stages.size());
 		for (CompoundNBT stage : stages) {
@@ -48,9 +78,19 @@ public class ConfigureProjectorPacket extends TileEntityConfigurationPacket<Chro
 	@Override
 	protected void readSettings(PacketBuffer buffer) {
 		radius = buffer.readFloat();
-		density = buffer.readFloat();
+
 		feather = buffer.readFloat();
+		density = buffer.readFloat();
 		fade = buffer.readFloat();
+		blend = buffer.readBoolean();
+
+		surface = buffer.readBoolean();
+		field = buffer.readBoolean();
+		strength = buffer.readFloat();
+
+		rMask = buffer.readBoolean();
+		gMask = buffer.readBoolean();
+		bMask = buffer.readBoolean();
 
 		int count = buffer.readInt();
 		stages = new Vector<>(FilterStep.MAX_STEPS);
@@ -66,10 +106,20 @@ public class ConfigureProjectorPacket extends TileEntityConfigurationPacket<Chro
 				.map(FilterStep::new)
 				.collect(Collectors.toCollection(Vector::new));
 
-		tile.radius = this.radius;
-		tile.density = this.density;
-		tile.feather = this.feather;
-		tile.fade = this.fade;
+		tile.radius = radius;
+
+		tile.feather = feather;
+		tile.density = density;
+		tile.fade = fade;
+		tile.blend = blend;
+
+		tile.surface = surface;
+		tile.field = field;
+		tile.strength = strength;
+
+		tile.rMask = rMask;
+		tile.gMask = gMask;
+		tile.bMask = bMask;
 
 		tile.sendData();
 	}

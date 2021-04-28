@@ -51,16 +51,19 @@ public class AllIcons implements IScreenRenderable {
 		I_PLAY = newRow(), I_PAUSE = next(), I_STOP = next(), I_PLACEMENT_SETTINGS = next(), I_ROTATE_CCW = next(),
 		I_HOUR_HAND_FIRST = next(), I_MINUTE_HAND_FIRST = next(), I_HOUR_HAND_FIRST_24 = next(),
 
-		I_PATTERN_SOLID = newRow(), I_PATTERN_CHECKERED = next(), I_PATTERN_CHECKERED_INVERSED = next(),
-		I_PATTERN_CHANCE_25 = next(),
+	I_PATTERN_SOLID = newRow(), I_PATTERN_CHECKERED = next(), I_PATTERN_CHECKERED_INVERSED = next(),
+			I_PATTERN_CHANCE_25 = next(),
 
-		I_PATTERN_CHANCE_50 = newRow(), I_PATTERN_CHANCE_75 = next(), I_FOLLOW_DIAGONAL = next(),
-		I_FOLLOW_MATERIAL = next(),
+	I_PATTERN_CHANCE_50 = newRow(), I_PATTERN_CHANCE_75 = next(), I_FOLLOW_DIAGONAL = next(),
+			I_FOLLOW_MATERIAL = next(),
 
-		I_SCHEMATIC = newRow(),
+	I_SCHEMATIC = newRow(),
 
-		I_MTD_LEFT = newRow(), I_MTD_CLOSE = next(), I_MTD_RIGHT = next(), I_MTD_SCAN = next(), I_MTD_REPLAY = next(),
-		I_MTD_USER_MODE = next(), I_MTD_SLOW_MODE = next();
+	I_MTD_LEFT = newRow(), I_MTD_CLOSE = next(), I_MTD_RIGHT = next(), I_MTD_SCAN = next(), I_MTD_REPLAY = next(),
+			I_MTD_USER_MODE = next(), I_MTD_SLOW_MODE = next(),
+
+	I_FX_SURFACE_OFF = newRow(), I_FX_SURFACE_ON = next(), I_FX_FIELD_OFF = next(), I_FX_FIELD_ON = next(),
+			I_FX_BLEND = next(), I_FX_BLEND_OFF = next();
 
 	public AllIcons(int x, int y) {
 		iconX = x * 16;

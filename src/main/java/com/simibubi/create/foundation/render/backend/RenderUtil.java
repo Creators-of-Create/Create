@@ -6,7 +6,7 @@ import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class RenderUtil {
-	public static int nextPowerOf2(int a)  {
+	public static int nextPowerOf2(int a) {
 		int h = Integer.highestOneBit(a);
 		return (h == a) ? h : (h << 1);
 	}
@@ -16,13 +16,21 @@ public class RenderUtil {
 		return b == 0 && n != 0;
 	}
 
+	public static double lengthSqr(double x, double y, double z) {
+		return x * x + y * y + z * z;
+	}
+
+	public static double length(double x, double y, double z) {
+		return Math.sqrt(lengthSqr(x, y, z));
+	}
+
 	public static float[] writeMatrixStack(MatrixStack stack) {
 		return writeMatrixStack(stack.peek().getModel(), stack.peek().getNormal());
 	}
 
 	// GPUs want matrices in column major order.
 	public static float[] writeMatrixStack(Matrix4f model, Matrix3f normal) {
-		return new float[] {
+		return new float[]{
 				model.a00,
 				model.a10,
 				model.a20,

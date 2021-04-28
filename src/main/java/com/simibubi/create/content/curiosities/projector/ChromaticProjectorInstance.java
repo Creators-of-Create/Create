@@ -13,7 +13,7 @@ public class ChromaticProjectorInstance extends TileEntityInstance<ChromaticProj
 
 	@Override
 	public void beginFrame() {
-		Backend.effects.addSphere(tile.makeFilter());
+		Backend.effects.addSphere(tile.getFilter());
 	}
 
 	@Override

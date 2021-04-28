@@ -19,12 +19,13 @@ public class ColorEffect {
 	static final HashMap<String, ColorEffect> lookup = new HashMap<>();
 	private static int nextId = 0;
 
-	public static final ColorEffect INVERT = create("invert", ColorMatrices::invert);
 	public static final ColorEffect SEPIA = create("sepia", ColorMatrices::sepia);
 	public static final ColorEffect GRAYSCALE = create("grayscale", ColorMatrices::grayscale);
 	public static final ColorEffect DARKEN = create("darken", ColorMatrices::darken).setDefaultValue(20);
+	public static final ColorEffect CONTRAST = create("contrast", ColorMatrices::contrast).setRange(0, 200).setDefaultValue(100);
 	public static final ColorEffect SATURATE = create("saturate", ColorMatrices::saturate).setRange(0, 200);
 	public static final ColorEffect HUE_SHIFT = create("hue_shift", ColorMatrices::hueShift).setRange(0, 360).setDivisor(1f).setDefaultValue(120);
+	public static final ColorEffect INVERT = create("invert", ColorMatrices::invert);
 	public static final ColorEffect END = create("end", ColorMatrices::identity).setBackground(AllGuiTextures.PROJECTOR_END);
 
 	boolean hasParameter;

@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.backend.Backend;
+import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
 import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
 import com.simibubi.create.foundation.render.backend.gl.GlVertexArray;
@@ -116,10 +117,16 @@ public class EffectsHandler {
 		program.setCameraPos(cameraPos.inverse());
 
 		for (FilterSphere sphere : spheres) {
-			sphere.center = sphere.center.subtract(cameraPos);
+			sphere.x -= cameraPos.x;
+			sphere.y -= cameraPos.y;
+			sphere.z -= cameraPos.z;
 		}
 
-		spheres.sort((o1, o2) -> (int) Math.signum(o2.center.length() - o1.center.length()));
+		spheres.sort((o1, o2) -> {
+			double l1 = RenderUtil.length(o1.x, o1.y, o1.z);
+			double l2 = RenderUtil.length(o2.x, o2.y, o2.z);
+			return (int) Math.signum(l2 - l1);
+		});
 
 		program.uploadFilters(spheres);
 

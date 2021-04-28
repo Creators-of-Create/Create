@@ -50,4 +50,7 @@ public class IconButton extends AbstractSimiWidget {
 		toolTip.add(text);
 	}
 
+	public void setIcon(AllIcons icon) {
+		this.icon = icon;
+	}
 }
