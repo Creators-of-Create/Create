@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 613",
+	"_": "Missing Localizations: 619",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1155,6 +1155,8 @@
 
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
+	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
+	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "成功音",
@@ -1166,8 +1168,12 @@
 	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "メカニカルプレスが作動する",
+	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
+	"create.subtitle.crafter_craft": "UNLOCALIZED: Crafter crafts",
 	"create.subtitle.blockzapper_deny": "失敗音",
 	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
+	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
+	"create.subtitle.wrench_remove": "UNLOCALIZED: Component breaks",
 	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
 
 

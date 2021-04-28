@@ -581,7 +581,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			SoundScapes.playGeneralKineticAmbience(pos, pitch);
 
 		Block block = getBlockState().getBlock();
-		if (ICogWheel.isSmallCog(block) || ICogWheel.isSmallCog(block) || block instanceof GearboxBlock)
+		if (ICogWheel.isSmallCog(block) || ICogWheel.isLargeCog(block) || block instanceof GearboxBlock)
 			SoundScapes.playCogwheelAmbience(pos, pitch);
 	}
 

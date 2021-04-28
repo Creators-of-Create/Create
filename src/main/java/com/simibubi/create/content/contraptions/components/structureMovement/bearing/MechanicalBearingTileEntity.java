@@ -4,6 +4,7 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.List;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -168,6 +169,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		movedContraption.setRotationAxis(direction.getAxis());
 		world.addEntity(movedContraption);
+		
+		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 
 		running = true;
 		angle = 0;
@@ -181,8 +184,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		angle = 0;
 		if (isWindmill())
 			applyRotation();
-		if (movedContraption != null)
+		if (movedContraption != null) {
 			movedContraption.disassemble();
+			AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(world, pos);
+		}
 
 		movedContraption = null;
 		running = false;
