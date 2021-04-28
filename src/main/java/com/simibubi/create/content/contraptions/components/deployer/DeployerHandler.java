@@ -215,6 +215,7 @@ public class DeployerHandler {
 			if (blockBreakingProgress != null)
 				before = blockBreakingProgress.getValue();
 			progress += before;
+			world.playSound(null, clickedPos, clickedState.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
 
 			if (progress >= 1) {
 				tryHarvestBlock(player.interactionManager, clickedPos);

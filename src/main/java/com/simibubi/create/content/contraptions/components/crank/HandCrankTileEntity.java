@@ -84,10 +84,10 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	@Override
 	public void tickAudio() {
 		super.tickAudio();
-		if (inUse > 0 && AnimationTickHolder.getTicks() % 2 == 0) {
+		if (inUse > 0 && AnimationTickHolder.getTicks() % 10 == 0) {
 			if (!AllBlocks.HAND_CRANK.has(getBlockState()))
 				return;
-			AllSoundEvents.CRANKING.playAt(world, pos, (inUse) / 5f, .65f + (10 - inUse) / 10f, true);
+			AllSoundEvents.CRANKING.playAt(world, pos, (inUse) / 2.5f, .65f + (10 - inUse) / 10f, true);
 		}
 	}
 

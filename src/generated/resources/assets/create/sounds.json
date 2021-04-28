@@ -41,6 +41,58 @@
     ],
     "subtitle": "create.subtitle.cogs"
   },
+  "contraption_assemble": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wooden_trapdoor.open",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.contraption_assemble"
+  },
+  "contraption_assemble_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.chest.open",
+        "type": "event"
+      }
+    ]
+  },
+  "contraption_disassemble": {
+    "sounds": [
+      {
+        "name": "minecraft:block.iron_trapdoor.close",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.contraption_disassemble"
+  },
+  "crafter_click": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherite_block.hit",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.crafter_click"
+  },
+  "crafter_click_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wooden_trapdoor.open",
+        "type": "event"
+      }
+    ]
+  },
+  "crafter_craft": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.crafter_craft"
+  },
   "cranking": {
     "sounds": [
       {
@@ -179,5 +231,31 @@
       }
     ],
     "subtitle": "create.subtitle.slime_added"
+  },
+  "wrench_remove": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item.pickup",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.wrench_remove"
+  },
+  "wrench_remove_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherite_block.hit",
+        "type": "event"
+      }
+    ]
+  },
+  "wrench_rotate": {
+    "sounds": [
+      {
+        "name": "minecraft:block.wooden_trapdoor.close",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.wrench_rotate"
   }
 }

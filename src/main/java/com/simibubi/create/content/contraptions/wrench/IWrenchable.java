@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.wrench;
 
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
@@ -18,6 +20,8 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -40,6 +44,9 @@ public interface IWrenchable {
 			((GeneratingKineticTileEntity) te).reActivateSource = true;
 		}
 
+		if (world.getBlockState(context.getPos()) != state)
+			playRotateSound(world, context.getPos());
+
 		return ActionResultType.SUCCESS;
 	}
 
@@ -60,8 +67,17 @@ public interface IWrenchable {
 					});
 			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
 			world.destroyBlock(pos, false);
+			playRemoveSound(world, pos);
 		}
 		return ActionResultType.SUCCESS;
+	}
+
+	default void playRemoveSound(World world, BlockPos pos) {
+		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.random.nextFloat() * .5f + .5f);
+	}
+	
+	default void playRotateSound(World world, BlockPos pos) {
+		AllSoundEvents.WRENCH_ROTATE.playOnServer(world, pos, 1, Create.random.nextFloat() + .5f);
 	}
 
 	default BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
