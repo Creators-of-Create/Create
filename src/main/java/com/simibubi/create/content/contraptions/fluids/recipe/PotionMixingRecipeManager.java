@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
-import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -133,27 +133,17 @@ public class PotionMixingRecipeManager {
 			.collect(Collectors.toList());
 	}
 
-	public static final ReloadListener<Object> LISTENER = new ReloadListener<Object>() {
-
-		@Override
-		protected Object prepare(IResourceManager p_212854_1_, IProfiler p_212854_2_) {
-			return new Object();
-		}
-
-		@Override
-		protected void apply(Object p_212853_1_, IResourceManager p_212853_2_, IProfiler p_212853_3_) {
-			ALL.clear();
-			getAllBrewingRecipes().forEach(recipe -> {
-				for (Ingredient ingredient : recipe.getIngredients()) {
-					for (ItemStack itemStack : ingredient.getMatchingStacks()) {
-						ALL.computeIfAbsent(itemStack.getItem(), t -> new ArrayList<>())
-							.add(recipe);
-						return;
-					}
+	public static final ISimpleReloadListener LISTENER = (IResourceManager resourceManager, IProfiler profiler) -> {
+		ALL.clear();
+		getAllBrewingRecipes().forEach(recipe -> {
+			for (Ingredient ingredient : recipe.getIngredients()) {
+				for (ItemStack itemStack : ingredient.getMatchingStacks()) {
+					ALL.computeIfAbsent(itemStack.getItem(), t -> new ArrayList<>())
+						.add(recipe);
+					return;
 				}
-			});
-		}
-
+			}
+		});
 	};
 
 }
