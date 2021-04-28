@@ -1154,6 +1154,8 @@
 
 	"create.subtitle.cogs": "Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime squishes",
+	"create.subtitle.contraption_disassemble": "Contraption stops",
+	"create.subtitle.wrench_rotate": "Wrench used",
 	"create.subtitle.mixing": "Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "Mechanical Press bonks",
 	"create.subtitle.blockzapper_confirm": "Affirmative ding",
@@ -1165,8 +1167,12 @@
 	"create.subtitle.schematicannon_finish": "Schematicannon dings",
 	"create.subtitle.scroll_value": "Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
+	"create.subtitle.contraption_assemble": "Contraption moves",
+	"create.subtitle.crafter_craft": "Crafter crafts",
 	"create.subtitle.blockzapper_deny": "Declining boop",
 	"create.subtitle.cranking": "Hand Crank turns",
+	"create.subtitle.crafter_click": "Crafter clicks",
+	"create.subtitle.wrench_remove": "Component breaks",
 	"create.subtitle.depot_plop": "Item lands",
 
 

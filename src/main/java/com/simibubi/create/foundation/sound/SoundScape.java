@@ -82,7 +82,7 @@ class SoundScape {
 	public float getVolume() {
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
-		return MathHelper.clamp(soundCount / (argMax * 10f), 0, .05f);
+		return MathHelper.clamp(soundCount / (argMax * 10f), 0.075f, .15f);
 	}
 
 }
