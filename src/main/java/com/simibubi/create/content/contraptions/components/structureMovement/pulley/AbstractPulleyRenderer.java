@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -50,16 +51,16 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 		boolean running = isRunning(te);
 
 		Axis rotationAxis = ((IRotate) te.getBlockState()
-			.getBlock()).getRotationAxis(te.getBlockState());
+				.getBlock()).getRotationAxis(te.getBlockState());
 		kineticRotationTransform(getRotatedCoil(te), te, rotationAxis, AngleHelper.rad(offset * 180), light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 
 		World world = te.getWorld();
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getPos();
 
-		SuperByteBuffer halfMagnet = this.halfMagnet.renderOn(blockState);
-		SuperByteBuffer halfRope = this.halfRope.renderOn(blockState);
+		SuperByteBuffer halfMagnet = PartialBufferer.get(this.halfMagnet, blockState);
+		SuperByteBuffer halfRope = PartialBufferer.get(this.halfRope, blockState);
 		SuperByteBuffer magnet = renderMagnet(te);
 		SuperByteBuffer rope = renderRope(te);
 
@@ -106,8 +107,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return getCoil().renderOnDirectionalSouth(blockState,
-			Direction.getFacingFromAxis(AxisDirection.POSITIVE, getShaftAxis(te)));
+		return PartialBufferer.getDirectionalSouth(getCoil(), blockState, Direction.getFacingFromAxis(AxisDirection.POSITIVE, getShaftAxis(te)));
 	}
 
 }

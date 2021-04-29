@@ -29,7 +29,7 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected InstancedModel<OrientedData> getCoilModel() {
-		return AllBlockPartials.ROPE_COIL.getModel(getOrientedMaterial(), blockState, rotatingAbout);
+		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_COIL, blockState, rotatingAbout);
 	}
 
 	protected InstancedModel<OrientedData> getHalfRopeModel() {

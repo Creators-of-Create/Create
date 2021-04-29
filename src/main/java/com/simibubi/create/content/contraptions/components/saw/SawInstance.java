@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 
 public class SawInstance extends SingleRotatingInstance {
@@ -22,7 +23,8 @@ public class SawInstance extends SingleRotatingInstance {
     protected InstancedModel<RotatingData> getModel() {
         if (blockState.get(FACING).getAxis().isHorizontal()) {
 			BlockState referenceState = blockState.rotate(tile.getWorld(), tile.getPos(), Rotation.CLOCKWISE_180);
-			return AllBlockPartials.SHAFT_HALF.getModel(getRotatingMaterial(), referenceState, referenceState.get(FACING));
+			Direction facing = referenceState.get(FACING);
+			return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, referenceState, facing);
 		} else {
 			return getRotatingMaterial().getModel(shaft());
 		}

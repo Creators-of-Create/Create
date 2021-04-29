@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -11,6 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
@@ -95,8 +97,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 				AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-				SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
-													.light(light);
+				SuperByteBuffer beltBuffer = PartialBufferer.get(beltPartial, blockState)
+						.light(light);
 
 				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
 
@@ -127,18 +129,20 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			}
 
 			if (te.hasPulley()) {
-				// TODO 1.15 find a way to cache this model matrix computation
-				MatrixStack modelTransform = new MatrixStack();
-				Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
-				if (sideways) dir = Direction.UP;
-				msr = MatrixStacker.of(modelTransform);
-				msr.centre();
-				if (dir.getAxis() == Axis.X) msr.rotateY(90);
-				if (dir.getAxis() == Axis.Y) msr.rotateX(90);
-				msr.rotateX(90);
-				msr.unCentre();
+				Direction dir = sideways ? Direction.UP : blockState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
 
-				SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
+				Supplier<MatrixStack> matrixStackSupplier = () -> {
+					MatrixStack stack = new MatrixStack();
+					MatrixStacker stacker = MatrixStacker.of(stack);
+					stacker.centre();
+					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
+					if (dir.getAxis() == Axis.Y) stacker.rotateX(90);
+					stacker.rotateX(90);
+					stacker.unCentre();
+					return stack;
+				};
+
+				SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 			}
 		}

@@ -1,26 +1,15 @@
 package com.simibubi.create;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -186,61 +175,6 @@ public class AllBlockPartials {
 
 	public IBakedModel get() {
 		return bakedModel;
-	}
-
-	public SuperByteBuffer renderOn(BlockState referenceState) {
-		return CreateClient.bufferCache.renderPartial(this, referenceState);
-	}
-
-	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectionalSouth(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnDirectional(BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectional(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnHorizontal(BlockState referenceState) {
-		Direction facing = referenceState.get(HORIZONTAL_FACING);
-		return renderOnDirectionalSouth(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState, Direction facing) {
-		MatrixStack ms = new MatrixStack();
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStacker.of(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing))
-			.unCentre();
-		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
-	}
-
-	public SuperByteBuffer renderOnDirectional(BlockState referenceState, Direction facing) {
-		MatrixStack ms = new MatrixStack();
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStacker.of(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
-		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
-	}
-
-	public <M extends InstancedModel<?>> M getModel(RenderMaterial<?, M> mat, BlockState referenceState,
-		Direction facing) {
-		Supplier<MatrixStack> ms = () -> {
-			MatrixStack stack = new MatrixStack();
-			MatrixStacker.of(stack)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing))
-				.unCentre();
-			return stack;
-		};
-		return mat.getModel(this, referenceState, facing, ms);
 	}
 
 }

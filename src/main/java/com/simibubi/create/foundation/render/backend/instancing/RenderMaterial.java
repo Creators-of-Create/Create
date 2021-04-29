@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -104,8 +106,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
     }
 
     public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir) {
-        return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-                   () -> buildModel(partial.get(), referenceState));
+		return getModel(partial, referenceState, dir, rotateToFace(dir));
     }
 
     public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
@@ -132,14 +133,25 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
         return buildModel(dispatcher.getModelForState(renderedState), renderedState);
     }
 
-    private MODEL buildModel(IBakedModel model, BlockState renderedState) {
-        return buildModel(model, renderedState, new MatrixStack());
-    }
+	private MODEL buildModel(IBakedModel model, BlockState renderedState) {
+		return buildModel(model, renderedState, new MatrixStack());
+	}
 
-    private MODEL buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
-        BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
+	private MODEL buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+		BufferBuilder builder = SuperByteBufferCache.getBufferBuilder(model, referenceState, ms);
 
-        return factory.makeModel(renderer, builder);
-    }
+		return factory.makeModel(renderer, builder);
+	}
 
+	public static Supplier<MatrixStack> rotateToFace(Direction facing) {
+		return () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(AngleHelper.verticalAngle(facing))
+					.unCentre();
+			return stack;
+		};
+	}
 }

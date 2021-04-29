@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 
 public class PumpCogInstance extends SingleRotatingInstance {
 
@@ -19,7 +20,8 @@ public class PumpCogInstance extends SingleRotatingInstance {
 
     @Override
     protected InstancedModel<RotatingData> getModel() {
-        BlockState referenceState = tile.getBlockState();
-        return AllBlockPartials.MECHANICAL_PUMP_COG.getModel(getRotatingMaterial(), referenceState, referenceState.get(FACING));
-    }
+		BlockState referenceState = tile.getBlockState();
+		Direction facing = referenceState.get(FACING);
+		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, referenceState, facing);
+	}
 }

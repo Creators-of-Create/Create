@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 
@@ -38,10 +39,10 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 			return;
 
 		Direction facing = state.get(FACING);
-		SuperByteBuffer handle = renderedHandle.renderOnDirectionalSouth(state, facing.getOpposite());
+		SuperByteBuffer handle = PartialBufferer.getDirectionalSouth(renderedHandle, state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
-			(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
+				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
 		handle.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 

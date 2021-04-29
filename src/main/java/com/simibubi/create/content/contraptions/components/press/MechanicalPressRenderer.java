@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 
@@ -37,10 +38,10 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = ((MechanicalPressTileEntity) te).getRenderedHeadOffset(partialTicks);
 
-		SuperByteBuffer headRender = AllBlockPartials.MECHANICAL_PRESS_HEAD.renderOnHorizontal(blockState);
+		SuperByteBuffer headRender = PartialBufferer.getHorizontal(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState);
 		headRender.translate(0, -renderedHeadOffset, 0)
-				  .light(packedLightmapCoords)
-				  .renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.light(packedLightmapCoords)
+				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override

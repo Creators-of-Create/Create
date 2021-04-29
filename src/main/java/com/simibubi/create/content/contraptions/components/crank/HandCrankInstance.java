@@ -22,21 +22,22 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
 
     public HandCrankInstance(InstancedTileRenderer<?> modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
-        this.tile = tile;
+		this.tile = tile;
 
-        Block block = blockState.getBlock();
-        AllBlockPartials renderedHandle = null;
-        if (block instanceof HandCrankBlock)
-            renderedHandle = ((HandCrankBlock) block).getRenderedHandle();
-        if (renderedHandle == null)
-            return;
+		Block block = blockState.getBlock();
+		AllBlockPartials renderedHandle = null;
+		if (block instanceof HandCrankBlock)
+			renderedHandle = ((HandCrankBlock) block).getRenderedHandle();
+		if (renderedHandle == null)
+			return;
 
-        facing = blockState.get(BlockStateProperties.FACING);
-		InstancedModel<ModelData> model = renderedHandle.getModel(getTransformMaterial(), blockState, facing.getOpposite());
-        crank = model.createInstance();
+		facing = blockState.get(BlockStateProperties.FACING);
+		Direction opposite = facing.getOpposite();
+		InstancedModel<ModelData> model = getTransformMaterial().getModel(renderedHandle, blockState, opposite);
+		crank = model.createInstance();
 
-        rotateCrank();
-    }
+		rotateCrank();
+	}
 
     @Override
     public void beginFrame() {

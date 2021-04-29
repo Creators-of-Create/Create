@@ -36,20 +36,20 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
         RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
 
         for (Direction direction : Iterate.directions) {
-            final Direction.Axis axis = direction.getAxis();
-            if (boxAxis == axis)
-                continue;
+			final Direction.Axis axis = direction.getAxis();
+			if (boxAxis == axis)
+				continue;
 
-            InstancedModel<RotatingData> shaft = AllBlockPartials.SHAFT_HALF.getModel(rotatingMaterial, blockState, direction);
+			InstancedModel<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
 
-            RotatingData key = shaft.createInstance();
+			RotatingData key = shaft.createInstance();
 
-            key.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
-                    .setRotationalSpeed(getSpeed(direction))
-                    .setRotationOffset(getRotationOffset(axis)).setColor(tile)
-                    .setPosition(getInstancePosition())
-                    .setBlockLight(blockLight)
-                    .setSkyLight(skyLight);
+			key.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+					.setRotationalSpeed(getSpeed(direction))
+					.setRotationOffset(getRotationOffset(axis)).setColor(tile)
+					.setPosition(getInstancePosition())
+					.setBlockLight(blockLight)
+					.setSkyLight(skyLight);
 
             keys.put(direction, key);
         }

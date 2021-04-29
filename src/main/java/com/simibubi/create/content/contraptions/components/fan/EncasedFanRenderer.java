@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -30,17 +31,17 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		if (FastRenderDispatcher.available(te.getWorld())) return;
 
 		Direction direction = te.getBlockState()
-			.get(FACING);
+				.get(FACING);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
 
 		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
 		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
-		
+
 		SuperByteBuffer shaftHalf =
-			AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), direction.getOpposite());
+				PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
-			AllBlockPartials.ENCASED_FAN_INNER.renderOnDirectionalSouth(te.getBlockState(), direction.getOpposite());
-		
+				PartialBufferer.getDirectionalSouth(AllBlockPartials.ENCASED_FAN_INNER, te.getBlockState(), direction.getOpposite());
+
 		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 		float speed = te.getSpeed() * 5;
 		if (speed > 0)

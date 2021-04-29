@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -36,20 +37,20 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
 		// Handle
-		SuperByteBuffer handle = AllBlockPartials.ANALOG_LEVER_HANDLE.renderOn(leverState);
+		SuperByteBuffer handle = PartialBufferer.get(AllBlockPartials.ANALOG_LEVER_HANDLE, leverState);
 		float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
 		transform(handle, leverState).translate(1 / 2f, 1 / 16f, 1 / 2f)
-			.rotate(Direction.EAST, angle)
-			.translate(-1 / 2f, -1 / 16f, -1 / 2f);
+				.rotate(Direction.EAST, angle)
+				.translate(-1 / 2f, -1 / 16f, -1 / 2f);
 		handle.light(lightCoords)
-			.renderInto(ms, vb);
+				.renderInto(ms, vb);
 
 		// Indicator
 		int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, state / 15f);
-		SuperByteBuffer indicator = transform(AllBlockPartials.ANALOG_LEVER_INDICATOR.renderOn(leverState), leverState);
+		SuperByteBuffer indicator = transform(PartialBufferer.get(AllBlockPartials.ANALOG_LEVER_INDICATOR, leverState), leverState);
 		indicator.light(lightCoords)
-			.color(color)
-			.renderInto(ms, vb);
+				.color(color)
+				.renderInto(ms, vb);
 	}
 
 	private SuperByteBuffer transform(SuperByteBuffer buffer, BlockState leverState) {

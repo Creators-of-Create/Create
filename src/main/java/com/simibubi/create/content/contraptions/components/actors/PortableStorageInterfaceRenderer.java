@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -63,16 +64,16 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		for (MatrixStack ms : matrixStacks)
 			ms.push();
 
-		SuperByteBuffer middle = getMiddleForState(blockState, lit).renderOn(blockState);
-		SuperByteBuffer top = getTopForState(blockState).renderOn(blockState);
+		SuperByteBuffer middle = PartialBufferer.get(getMiddleForState(blockState, lit), blockState);
+		SuperByteBuffer top = PartialBufferer.get(getTopForState(blockState), blockState);
 
 		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
 		for (MatrixStack ms : matrixStacks)
 			MatrixStacker.of(ms)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.unCentre();
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+					.unCentre();
 
 		for (MatrixStack ms : matrixStacks) {
 			ms.translate(0, progress / 2f, 0);

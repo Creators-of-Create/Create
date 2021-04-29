@@ -19,17 +19,17 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     private final Direction opposite;
 
     public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
-        super(modelManager, tile);
+		super(modelManager, tile);
 
-        direction = blockState.get(FACING);
+		direction = blockState.get(FACING);
 
-        opposite = direction.getOpposite();
-        shaft = AllBlockPartials.SHAFT_HALF.getModel(getRotatingMaterial(), blockState, opposite).createInstance();
-        fan = AllBlockPartials.ENCASED_FAN_INNER.getModel(getRotatingMaterial(), blockState, opposite).createInstance();
+		opposite = direction.getOpposite();
+		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
+		fan = getRotatingMaterial().getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite).createInstance();
 
-        setup(shaft);
-        setup(fan, getFanSpeed());
-    }
+		setup(shaft);
+		setup(fan, getFanSpeed());
+	}
 
     private float getFanSpeed() {
         float speed = tile.getSpeed() * 5;

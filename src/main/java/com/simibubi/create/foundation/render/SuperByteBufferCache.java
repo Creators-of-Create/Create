@@ -46,9 +46,9 @@ public class SuperByteBufferCache {
 	}
 
 	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
-		MatrixStack modelTransform) {
+										 Supplier<MatrixStack> modelTransform) {
 		return get(Compartment.PARTIAL, partial,
-			() -> standardModelRender(partial.get(), referenceState, modelTransform));
+				() -> standardModelRender(partial.get(), referenceState, modelTransform.get()));
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState,
@@ -58,9 +58,9 @@ public class SuperByteBufferCache {
 	}
 
 	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir,
-		MatrixStack modelTransform) {
+													Supplier<MatrixStack> modelTransform) {
 		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-			() -> standardModelRender(partial.get(), referenceState, modelTransform));
+				() -> standardModelRender(partial.get(), referenceState, modelTransform.get()));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {

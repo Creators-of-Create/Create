@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -117,14 +118,13 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockPos pos = te.getPos();
 		Vector3d offset = getHandOffset(te, partialTicks, blockState);
 
-		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
-		SuperByteBuffer hand = te.getHandPose()
-			.renderOn(blockState);
+		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = PartialBufferer.get(te.getHandPose(), blockState);
 
 		transform(te.getWorld(), pole.translate(offset.x, offset.y, offset.z), blockState, pos, true).renderInto(ms,
-			vb);
+				vb);
 		transform(te.getWorld(), hand.translate(offset.x, offset.y, offset.z), blockState, pos, false).renderInto(ms,
-			vb);
+				vb);
 	}
 
 	protected Vector3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
@@ -155,7 +155,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
+		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
 		BlockPos pos = BlockPos.ZERO;
@@ -163,8 +163,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		World world = context.world;
 		AllBlockPartials handPose = getHandPose(mode);
 
-		SuperByteBuffer pole = AllBlockPartials.DEPLOYER_POLE.renderOn(blockState);
-		SuperByteBuffer hand = handPose.renderOn(blockState);
+		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = PartialBufferer.get(handPose, blockState);
 		pole = transform(world, pole, blockState, pos, true);
 		hand = transform(world, hand, blockState, pos, false);
 

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -70,9 +71,9 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 
 		ms.push();
 		for (AllBlockPartials bit : BITS) {
-			bit.renderOn(te.getBlockState())
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			PartialBufferer.get(bit, te.getBlockState())
+					.light(light)
+					.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);
 		}
 		ms.pop();

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -30,27 +31,27 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 
 		IBearingTileEntity bearingTe = (IBearingTileEntity) te;
 		final Direction facing = te.getBlockState()
-			.get(BlockStateProperties.FACING);
+				.get(BlockStateProperties.FACING);
 		AllBlockPartials top =
-			bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
-		SuperByteBuffer superBuffer = top.renderOn(te.getBlockState());
+				bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+		SuperByteBuffer superBuffer = PartialBufferer.get(top, te.getBlockState());
 
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
 
 		if (facing.getAxis()
-			.isHorizontal())
+				.isHorizontal())
 			superBuffer.rotateCentered(Direction.UP,
-				AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
+					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
 		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.SHAFT_HALF.renderOnDirectionalSouth(te.getBlockState(), te.getBlockState()
-			.get(BearingBlock.FACING)
-			.getOpposite());
+		return PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+				.get(BearingBlock.FACING)
+				.getOpposite());
 	}
 
 }

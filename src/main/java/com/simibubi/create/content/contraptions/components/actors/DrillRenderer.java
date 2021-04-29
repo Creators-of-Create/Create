@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -25,22 +26,18 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(te.getBlockState());
-	}
-
-	protected static SuperByteBuffer getRotatingModel(BlockState state) {
-		return AllBlockPartials.DRILL_HEAD.renderOnDirectionalSouth(state);
+		return PartialBufferer.getDirectionalSouth(AllBlockPartials.DRILL_HEAD, te.getBlockState());
 	}
 
 	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
+		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer = AllBlockPartials.DRILL_HEAD.renderOn(state);
+		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.DRILL_HEAD, state);
 		Direction facing = state.get(DrillBlock.FACING);
-		
+
 		float speed = (float) (context.contraption.stalled
-			|| !VecHelper.isVecPointingTowards(context.relativeMotion, facing
+				|| !VecHelper.isVecPointingTowards(context.relativeMotion, facing
 				.getOpposite()) ? context.getAnimationSpeed() : 0);
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
@@ -52,7 +49,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 				.rotateX(AngleHelper.verticalAngle(facing))
 				.rotateZ(angle)
 				.unCentre();
-		
+
 		superBuffer
 			.light(msLocal.peek()
 			.getModel())
