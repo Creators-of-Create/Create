@@ -13,8 +13,6 @@ import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
 import net.minecraft.world.World;
 
 /**
@@ -58,7 +56,7 @@ public class RecipeFinder {
 		return list;
 	}
 
-	public static final ISimpleReloadListener LISTENER = (IResourceManager resourceManager, IProfiler profiler) -> {
+	public static final ISimpleReloadListener LISTENER = (resourceManager, profiler) -> {
 		cachedSearches.invalidateAll();
 	};
 

@@ -7,15 +7,13 @@ import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
 
 public class FluidTransferRecipes {
 
 	public static List<ItemStack> POTION_ITEMS = new ArrayList<>();
 	public static List<Item> FILLED_BUCKETS = new ArrayList<>();
 
-	public static final ISimpleReloadListener LISTENER = (IResourceManager resourceManager, IProfiler profiler) -> {
+	public static final ISimpleReloadListener LISTENER = (resourceManager, profiler) -> {
 		POTION_ITEMS.clear();
 		FILLED_BUCKETS.clear();
 	};

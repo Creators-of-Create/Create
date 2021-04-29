@@ -24,8 +24,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionBrewing;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
@@ -133,7 +131,7 @@ public class PotionMixingRecipeManager {
 			.collect(Collectors.toList());
 	}
 
-	public static final ISimpleReloadListener LISTENER = (IResourceManager resourceManager, IProfiler profiler) -> {
+	public static final ISimpleReloadListener LISTENER = (resourceManager, profiler) -> {
 		ALL.clear();
 		getAllBrewingRecipes().forEach(recipe -> {
 			for (Ingredient ingredient : recipe.getIngredients()) {
