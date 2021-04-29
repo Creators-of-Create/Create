@@ -2,13 +2,13 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
@@ -25,11 +25,11 @@ import net.minecraft.world.World;
 
 public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
-	private AllBlockPartials halfRope;
-	private AllBlockPartials halfMagnet;
+	private PartialModel halfRope;
+	private PartialModel halfMagnet;
 
-	public AbstractPulleyRenderer(TileEntityRendererDispatcher dispatcher, AllBlockPartials halfRope,
-		AllBlockPartials halfMagnet) {
+	public AbstractPulleyRenderer(TileEntityRendererDispatcher dispatcher, PartialModel halfRope,
+		PartialModel halfMagnet) {
 		super(dispatcher);
 		this.halfRope = halfRope;
 		this.halfMagnet = halfMagnet;
@@ -90,7 +90,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected abstract Axis getShaftAxis(KineticTileEntity te);
 
-	protected abstract AllBlockPartials getCoil();
+	protected abstract PartialModel getCoil();
 
 	protected abstract SuperByteBuffer renderRope(KineticTileEntity te);
 
@@ -107,7 +107,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return PartialBufferer.getDirectionalSouth(getCoil(), blockState, Direction.getFacingFromAxis(AxisDirection.POSITIVE, getShaftAxis(te)));
+		return PartialBufferer.getFacing(getCoil(), blockState, Direction.getFacingFromAxis(AxisDirection.POSITIVE, getShaftAxis(te)));
 	}
 
 }

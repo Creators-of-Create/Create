@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -37,12 +37,12 @@ public abstract class EngineBlock extends HorizontalBlock implements IWrenchable
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		return ActionResultType.FAIL;
 	}
-	
+
 	@Override
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
@@ -88,14 +88,14 @@ public abstract class EngineBlock extends HorizontalBlock implements IWrenchable
 
 		return true;
 	}
-	
+
 	public static BlockPos getBaseBlockPos(BlockState state, BlockPos pos) {
 		return pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
 	}
 
 	@Nullable
 	@OnlyIn(Dist.CLIENT)
-	public abstract AllBlockPartials getFrameModel();
+	public abstract PartialModel getFrameModel();
 
 	protected abstract boolean isValidBaseBlock(BlockState baseBlock, IBlockReader world, BlockPos pos);
 

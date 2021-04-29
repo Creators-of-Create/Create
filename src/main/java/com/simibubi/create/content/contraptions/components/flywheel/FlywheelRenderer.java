@@ -72,7 +72,13 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 					.renderInto(ms, vb);
 		}
 
-		SuperByteBuffer wheel = PartialBufferer.getHorizontal(AllBlockPartials.FLYWHEEL, blockState.rotate(Rotation.CLOCKWISE_90));
+		renderFlywheel(te, ms, light, blockState, angle, vb);
+	}
+
+	private void renderFlywheel(KineticTileEntity te, MatrixStack ms, int light, BlockState blockState, float angle, IVertexBuilder vb) {
+		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
+		Direction facing = referenceState.get(BlockStateProperties.HORIZONTAL_FACING);
+		SuperByteBuffer wheel = PartialBufferer.getFacing(AllBlockPartials.FLYWHEEL, referenceState, facing);
 		kineticRotationTransform(wheel, te, blockState.get(HORIZONTAL_FACING)
 				.getAxis(), AngleHelper.rad(angle), light);
 		wheel.renderInto(ms, vb);
@@ -80,7 +86,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+		return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
 				.get(BlockStateProperties.HORIZONTAL_FACING)
 				.getOpposite());
 	}

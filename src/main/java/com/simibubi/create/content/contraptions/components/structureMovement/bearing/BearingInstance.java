@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -31,7 +32,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 
 		blockOrientation = getBlockStateOrientation(facing);
 
-		AllBlockPartials top =
+		PartialModel top =
 				bearing.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
 
 		topInstance = getOrientedMaterial().getModel(top, blockState).createInstance();

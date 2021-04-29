@@ -27,6 +27,7 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -100,7 +101,7 @@ public abstract class ArmInteractionPoint {
 	@OnlyIn(Dist.CLIENT)
 	void transformFlag(MatrixStack stack) {}
 
-	AllBlockPartials getFlagType() {
+	PartialModel getFlagType() {
 		return mode == Mode.TAKE ? AllBlockPartials.FLAG_LONG_OUT : AllBlockPartials.FLAG_LONG_IN;
 	}
 

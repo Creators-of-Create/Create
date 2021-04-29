@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -25,7 +25,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
 		this.tile = tile;
 
 		Block block = blockState.getBlock();
-		AllBlockPartials renderedHandle = null;
+		PartialModel renderedHandle = null;
 		if (block instanceof HandCrankBlock)
 			renderedHandle = ((HandCrankBlock) block).getRenderedHandle();
 		if (renderedHandle == null)

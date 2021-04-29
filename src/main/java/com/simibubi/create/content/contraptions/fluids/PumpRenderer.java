@@ -53,7 +53,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getDirectionalSouth(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
+		return PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
 	}
 
 }

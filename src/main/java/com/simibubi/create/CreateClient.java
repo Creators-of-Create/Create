@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.OptifineHandler;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
@@ -115,6 +116,8 @@ public class CreateClient {
 			.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
+
+		AllBlockPartials.clientInit();
 	}
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
@@ -128,7 +131,7 @@ public class CreateClient {
 
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
-		AllBlockPartials.onModelBake(event);
+		PartialModel.onModelBake(event);
 
 		getCustomBlockModels()
 			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
@@ -141,7 +144,7 @@ public class CreateClient {
 	}
 
 	public static void onModelRegistry(ModelRegistryEvent event) {
-		AllBlockPartials.onModelRegistry(event);
+		PartialModel.onModelRegistry(event);
 
 		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()

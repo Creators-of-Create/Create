@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHan
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -194,7 +195,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 
 	}
 
-	private SuperByteBuffer renderAndTransform(MechanicalCrafterTileEntity te, AllBlockPartials renderBlock,
+	private SuperByteBuffer renderAndTransform(MechanicalCrafterTileEntity te, PartialModel renderBlock,
 		BlockState crafterState, BlockPos pos) {
 		SuperByteBuffer buffer = PartialBufferer.get(renderBlock, crafterState);
 		float xRot = crafterState.get(MechanicalCrafterBlock.POINTING)

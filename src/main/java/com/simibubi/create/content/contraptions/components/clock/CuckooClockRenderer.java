@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity.Animation;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
@@ -79,9 +80,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		// Figure
 		if (clock.animationType != Animation.NONE) {
 			offset = -(angle / 135) * 1 / 2f + 10 / 16f;
-			AllBlockPartials allBlockPartials = (clock.animationType == Animation.PIG ? AllBlockPartials.CUCKOO_PIG : AllBlockPartials.CUCKOO_CREEPER);
+			PartialModel partialModel = (clock.animationType == Animation.PIG ? AllBlockPartials.CUCKOO_PIG : AllBlockPartials.CUCKOO_CREEPER);
 			SuperByteBuffer figure =
-					PartialBufferer.get(allBlockPartials, blockState);
+					PartialBufferer.get(partialModel, blockState);
 			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.rotateYCCW())));
 			figure.translate(offset, 0, 0);
 			figure.light(packedLightmapCoords)
@@ -95,8 +96,8 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		return transform(AllBlockPartials.SHAFT_HALF, te);
 	}
 
-	private SuperByteBuffer transform(AllBlockPartials partial, KineticTileEntity te) {
-		return PartialBufferer.getDirectionalSouth(partial, te.getBlockState(), te.getBlockState()
+	private SuperByteBuffer transform(PartialModel partial, KineticTileEntity te) {
+		return PartialBufferer.getFacing(partial, te.getBlockState(), te.getBlockState()
 				.get(CuckooClockBlock.HORIZONTAL_FACING)
 				.getOpposite());
 	}

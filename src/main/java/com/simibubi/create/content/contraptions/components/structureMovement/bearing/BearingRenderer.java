@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -32,7 +33,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 		IBearingTileEntity bearingTe = (IBearingTileEntity) te;
 		final Direction facing = te.getBlockState()
 				.get(BlockStateProperties.FACING);
-		AllBlockPartials top =
+		PartialModel top =
 				bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
 		SuperByteBuffer superBuffer = PartialBufferer.get(top, te.getBlockState());
 
@@ -49,7 +50,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
+		return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
 				.get(BearingBlock.FACING)
 				.getOpposite());
 	}

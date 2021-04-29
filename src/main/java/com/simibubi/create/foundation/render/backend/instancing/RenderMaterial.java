@@ -14,11 +14,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.backend.Backend;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderCallback;
@@ -101,15 +101,15 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
         models.put(instance, CacheBuilder.newBuilder().build());
     }
 
-    public MODEL getModel(AllBlockPartials partial, BlockState referenceState) {
+    public MODEL getModel(PartialModel partial, BlockState referenceState) {
         return get(PARTIAL, partial, () -> buildModel(partial.get(), referenceState));
     }
 
-    public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir) {
+    public MODEL getModel(PartialModel partial, BlockState referenceState, Direction dir) {
 		return getModel(partial, referenceState, dir, rotateToFace(dir));
     }
 
-    public MODEL getModel(AllBlockPartials partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
+    public MODEL getModel(PartialModel partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
         return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
                    () -> buildModel(partial.get(), referenceState, modelTransform.get()));
     }

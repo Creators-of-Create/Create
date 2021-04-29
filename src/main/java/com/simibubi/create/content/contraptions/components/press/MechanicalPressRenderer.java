@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.press;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -38,7 +40,7 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
 		float renderedHeadOffset = ((MechanicalPressTileEntity) te).getRenderedHeadOffset(partialTicks);
 
-		SuperByteBuffer headRender = PartialBufferer.getHorizontal(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState);
+		SuperByteBuffer headRender = PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState, blockState.get(HORIZONTAL_FACING));
 		headRender.translate(0, -renderedHeadOffset, 0)
 				.light(packedLightmapCoords)
 				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));

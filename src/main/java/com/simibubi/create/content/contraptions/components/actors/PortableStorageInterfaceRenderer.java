@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -110,7 +111,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		return psi;
 	}
 
-	static AllBlockPartials getMiddleForState(BlockState state, boolean lit) {
+	static PartialModel getMiddleForState(BlockState state, boolean lit) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
 			return lit ? AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
 				: AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE;
@@ -118,7 +119,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			: AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE;
 	}
 
-	static AllBlockPartials getTopForState(BlockState state) {
+	static PartialModel getTopForState(BlockState state) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
 			return AllBlockPartials.PORTABLE_FLUID_INTERFACE_TOP;
 		return AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP;

@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -161,7 +162,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockPos pos = BlockPos.ZERO;
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		World world = context.world;
-		AllBlockPartials handPose = getHandPose(mode);
+		PartialModel handPose = getHandPose(mode);
 
 		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = PartialBufferer.get(handPose, blockState);
@@ -192,7 +193,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.renderInto(ms, builder);
 	}
 
-	static AllBlockPartials getHandPose(DeployerTileEntity.Mode mode) {
+	static PartialModel getHandPose(DeployerTileEntity.Mode mode) {
 		return mode == DeployerTileEntity.Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
 	}
 

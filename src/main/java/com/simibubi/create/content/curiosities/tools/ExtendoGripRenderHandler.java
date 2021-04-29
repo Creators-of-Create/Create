@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.tools;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -28,7 +29,7 @@ public class ExtendoGripRenderHandler {
 
 	public static float mainHandAnimation;
 	public static float lastMainHandAnimation;
-	public static AllBlockPartials pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
+	public static PartialModel pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
 
 	public static void tick() {
 		lastMainHandAnimation = mainHandAnimation;

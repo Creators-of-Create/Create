@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -80,7 +80,7 @@ public abstract class SymmetryMirror {
 
 	public abstract String typeName();
 
-	public abstract AllBlockPartials getModel();
+	public abstract PartialModel getModel();
 
 	public void applyModelTransform(MatrixStack ms) {}
 

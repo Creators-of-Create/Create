@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.render.backend.core.OrientedData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -31,7 +32,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
     protected OrientedData hand;
 
-    AllBlockPartials currentHand;
+    PartialModel currentHand;
     float progress;
     private boolean newHand = false;
 
@@ -89,7 +90,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     }
 
     private boolean updateHandPose() {
-        AllBlockPartials handPose = tile.getHandPose();
+        PartialModel handPose = tile.getHandPose();
 
         if (currentHand == handPose) return false;
         currentHand = handPose;

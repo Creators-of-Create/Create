@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -95,7 +96,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			for (boolean bottom : Iterate.trueAndFalse) {
 
-				AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
+				PartialModel beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
 				SuperByteBuffer beltBuffer = PartialBufferer.get(beltPartial, blockState)
 						.light(light);
@@ -159,7 +160,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
 	}
 
-	public static AllBlockPartials getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
+	public static PartialModel getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
 		if (diagonal) {
 			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
 			if (end) return AllBlockPartials.BELT_DIAGONAL_END;

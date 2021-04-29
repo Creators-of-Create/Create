@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -46,9 +47,9 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
 		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), gaugeState, te.getPos());
 
-		AllBlockPartials allBlockPartials = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
+		PartialModel partialModel = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
-				PartialBufferer.get(allBlockPartials, gaugeState);
+				PartialBufferer.get(partialModel, gaugeState);
 		SuperByteBuffer dialBuffer = PartialBufferer.get(AllBlockPartials.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;

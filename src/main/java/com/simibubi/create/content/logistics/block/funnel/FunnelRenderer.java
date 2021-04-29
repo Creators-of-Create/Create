@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -34,9 +35,9 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		AllBlockPartials allBlockPartials = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
-		SuperByteBuffer flapBuffer = PartialBufferer.get(allBlockPartials, blockState);
+		SuperByteBuffer flapBuffer = PartialBufferer.get(partialModel, blockState);
 		Vector3d pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 

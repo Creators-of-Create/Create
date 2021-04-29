@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -54,7 +55,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light) {
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer superBuffer;
-		AllBlockPartials partial;
+		PartialModel partial;
 		float speed = te.getSpeed();
 
 		ms.push();
@@ -82,7 +83,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 						.rotateY(90)
 						.unCentre();
 		}
-		superBuffer = PartialBufferer.getDirectionalSouth(partial, blockState);
+		superBuffer = PartialBufferer.getFacing(partial, blockState);
 		superBuffer.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 
@@ -141,7 +142,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
 		if (state.get(FACING).getAxis().isHorizontal())
-			return PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
+			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
 		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
 				getRenderedBlockState(te));
 	}

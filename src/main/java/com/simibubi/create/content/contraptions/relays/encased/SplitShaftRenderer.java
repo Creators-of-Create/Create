@@ -52,7 +52,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 			angle = angle / 180f * (float) Math.PI;
 
 			SuperByteBuffer superByteBuffer =
-					PartialBufferer.getDirectionalSouth(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction);
+					PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction);
 			kineticRotationTransform(superByteBuffer, te, axis, angle, light);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 		}

@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -38,12 +39,12 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return AllShapes.CRANK.get(state.get(FACING));
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
-	public AllBlockPartials getRenderedHandle() {
+	public PartialModel getRenderedHandle() {
 		return AllBlockPartials.HAND_CRANK_HANDLE;
 	}
-	
+
 	public int getRotationSpeed() {
 		return 32;
 	}
@@ -117,7 +118,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	public Class<HandCrankTileEntity> getTileEntityClass() {
 		return HandCrankTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
