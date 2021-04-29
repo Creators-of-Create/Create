@@ -53,7 +53,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 		shaft = setup(shaftModel().createInstance());
 
 		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
-		wheel = getTransformMaterial().getModel(AllBlockPartials.FLYWHEEL, referenceState, facing).createInstance();
+		wheel = getTransformMaterial().getModel(AllBlockPartials.FLYWHEEL, referenceState, referenceState.get(HORIZONTAL_FACING)).createInstance();
 
 		connection = FlywheelBlock.getConnection(blockState);
 		if (connection != null) {
