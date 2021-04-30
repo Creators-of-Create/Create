@@ -2,42 +2,42 @@ package com.simibubi.create.foundation.render.backend.gl;
 
 // Utility class for safely dealing with gl object handles.
 public abstract class GlObject {
-    private static final int INVALID_HANDLE = Integer.MIN_VALUE;
+	private static final int INVALID_HANDLE = Integer.MIN_VALUE;
 
-    private int handle = INVALID_HANDLE;
+	private int handle = INVALID_HANDLE;
 
-    protected final void setHandle(int handle) {
-        this.handle = handle;
-    }
+	protected final void setHandle(int handle) {
+		this.handle = handle;
+	}
 
-    public final int handle() {
-        this.checkHandle();
+	public final int handle() {
+		this.checkHandle();
 
-        return this.handle;
-    }
+		return this.handle;
+	}
 
-    protected final void checkHandle() {
-        if (!this.isHandleValid()) {
-            throw new IllegalStateException("Handle is not valid");
-        }
-    }
+	protected final void checkHandle() {
+		if (!this.isHandleValid()) {
+			throw new IllegalStateException("Handle is not valid");
+		}
+	}
 
-    protected final boolean isHandleValid() {
-        return this.handle != INVALID_HANDLE;
-    }
+	protected final boolean isHandleValid() {
+		return this.handle != INVALID_HANDLE;
+	}
 
-    protected final void invalidateHandle() {
-        this.handle = INVALID_HANDLE;
-    }
+	protected final void invalidateHandle() {
+		this.handle = INVALID_HANDLE;
+	}
 
-    public final void delete() {
-        if (!isHandleValid()) {
-            throw new IllegalStateException("Handle already deleted.");
-        }
+	public final void delete() {
+		if (!isHandleValid()) {
+			throw new IllegalStateException("Handle already deleted.");
+		}
 
-        deleteInternal(handle);
-        invalidateHandle();
-    }
+		deleteInternal(handle);
+		invalidateHandle();
+	}
 
-    protected abstract void deleteInternal(int handle);
+	protected abstract void deleteInternal(int handle);
 }

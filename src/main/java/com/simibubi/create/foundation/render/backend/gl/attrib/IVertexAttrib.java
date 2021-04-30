@@ -2,11 +2,11 @@ package com.simibubi.create.foundation.render.backend.gl.attrib;
 
 public interface IVertexAttrib {
 
-    String attribName();
+	String attribName();
 
-    IAttribSpec attribSpec();
+	IAttribSpec attribSpec();
 
-    int getDivisor();
+	int getDivisor();
 
-    int getBufferIndex();
+	int getBufferIndex();
 }

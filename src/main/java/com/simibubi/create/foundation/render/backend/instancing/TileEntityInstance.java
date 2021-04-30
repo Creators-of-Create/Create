@@ -32,94 +32,96 @@ import net.minecraft.world.World;
  */
 public abstract class TileEntityInstance<T extends TileEntity> implements IInstance {
 
-    protected final InstancedTileRenderer<?> renderer;
-    protected final T tile;
-    protected final World world;
-    protected final BlockPos pos;
-    protected final BlockPos instancePos;
-    protected final BlockState blockState;
+	protected final InstancedTileRenderer<?> renderer;
+	protected final T tile;
+	protected final World world;
+	protected final BlockPos pos;
+	protected final BlockPos instancePos;
+	protected final BlockState blockState;
 
-    public TileEntityInstance(InstancedTileRenderer<?> renderer, T tile) {
-        this.renderer = renderer;
-        this.tile = tile;
-        this.world = tile.getWorld();
-        this.pos = tile.getPos();
-        this.blockState = tile.getBlockState();
-        this.instancePos = pos.subtract(renderer.getOriginCoordinate());
-    }
+	public TileEntityInstance(InstancedTileRenderer<?> renderer, T tile) {
+		this.renderer = renderer;
+		this.tile = tile;
+		this.world = tile.getWorld();
+		this.pos = tile.getPos();
+		this.blockState = tile.getBlockState();
+		this.instancePos = pos.subtract(renderer.getOriginCoordinate());
+	}
 
-    /**
-     * Update instance data here. Good for when data doesn't change very often and when animations are GPU based.
-     * Don't query lighting data here, that's handled separately in {@link #updateLight()}.
-     *
-     * <br><br> If your animations are complex or more CPU driven, see {@link IDynamicInstance} or {@link ITickableInstance}.
-     */
-    protected void update() { }
+	/**
+	 * Update instance data here. Good for when data doesn't change very often and when animations are GPU based.
+	 * Don't query lighting data here, that's handled separately in {@link #updateLight()}.
+	 *
+	 * <br><br> If your animations are complex or more CPU driven, see {@link IDynamicInstance} or {@link ITickableInstance}.
+	 */
+	protected void update() {
+	}
 
-    /**
-     * Called after construction and when a light update occurs in the world.
-     *
-     * <br> If your model needs it, update light here.
-     */
-    public void updateLight() { }
+	/**
+	 * Called after construction and when a light update occurs in the world.
+	 *
+	 * <br> If your model needs it, update light here.
+	 */
+	public void updateLight() {
+	}
 
-    /**
-     * Free any acquired resources.
-     *
-     * <br> eg. call {@link InstanceKey#delete()}.
-     */
-    public abstract void remove();
+	/**
+	 * Free any acquired resources.
+	 *
+	 * <br> eg. call {@link InstanceKey#delete()}.
+	 */
+	public abstract void remove();
 
-    /**
-     * Just before {@link #update()} would be called, <code>shouldReset()</code> is checked.
-     * If this function returns <code>true</code>, then this instance will be {@link #remove}d,
-     * and another instance will be constructed to replace it. This allows for more sane resource
-     * acquisition compared to trying to update everything within the lifetime of an instance.
-     *
-     * @return <code>true</code> if this instance should be discarded and refreshed.
-     */
-    public boolean shouldReset() {
-        return tile.getBlockState() != blockState;
-    }
+	/**
+	 * Just before {@link #update()} would be called, <code>shouldReset()</code> is checked.
+	 * If this function returns <code>true</code>, then this instance will be {@link #remove}d,
+	 * and another instance will be constructed to replace it. This allows for more sane resource
+	 * acquisition compared to trying to update everything within the lifetime of an instance.
+	 *
+	 * @return <code>true</code> if this instance should be discarded and refreshed.
+	 */
+	public boolean shouldReset() {
+		return tile.getBlockState() != blockState;
+	}
 
-    /**
-     * In order to accommodate for floating point precision errors at high coordinates,
-     * {@link InstancedTileRenderer}s are allowed to arbitrarily adjust the origin, and
-     * shift the world matrix provided as a shader uniform accordingly.
-     *
-     * @return The {@link BlockPos} at which the {@link TileEntity} this instance
-     *         represents should be rendered at to appear in the correct location.
-     */
-    public BlockPos getInstancePosition() {
-        return instancePos;
-    }
+	/**
+	 * In order to accommodate for floating point precision errors at high coordinates,
+	 * {@link InstancedTileRenderer}s are allowed to arbitrarily adjust the origin, and
+	 * shift the world matrix provided as a shader uniform accordingly.
+	 *
+	 * @return The {@link BlockPos} at which the {@link TileEntity} this instance
+	 * represents should be rendered at to appear in the correct location.
+	 */
+	public BlockPos getInstancePosition() {
+		return instancePos;
+	}
 
-    @Override
-    public BlockPos getWorldPosition() {
-        return pos;
-    }
+	@Override
+	public BlockPos getWorldPosition() {
+		return pos;
+	}
 
-    protected void relight(BlockPos pos, IFlatLight<?>... models) {
-        relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
-    }
+	protected void relight(BlockPos pos, IFlatLight<?>... models) {
+		relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
+	}
 
-    protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<L> models) {
-        relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
-    }
+	protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<L> models) {
+		relight(world.getLightLevel(LightType.BLOCK, pos), world.getLightLevel(LightType.SKY, pos), models);
+	}
 
-    protected void relight(int block, int sky, IFlatLight<?>... models) {
-        relight(block, sky, Arrays.stream(models));
-    }
+	protected void relight(int block, int sky, IFlatLight<?>... models) {
+		relight(block, sky, Arrays.stream(models));
+	}
 
-    protected <L extends IFlatLight<?>> void relight(int block, int sky, Stream<L> models) {
-        models.forEach(model -> model.setBlockLight(block).setSkyLight(sky));
-    }
+	protected <L extends IFlatLight<?>> void relight(int block, int sky, Stream<L> models) {
+		models.forEach(model -> model.setBlockLight(block).setSkyLight(sky));
+	}
 
-    protected RenderMaterial<?, InstancedModel<ModelData>> getTransformMaterial() {
-        return renderer.getTransformMaterial();
-    }
+	protected RenderMaterial<?, InstancedModel<ModelData>> getTransformMaterial() {
+		return renderer.getTransformMaterial();
+	}
 
-    protected RenderMaterial<?, InstancedModel<OrientedData>> getOrientedMaterial() {
-        return renderer.getOrientedMaterial();
-    }
+	protected RenderMaterial<?, InstancedModel<OrientedData>> getOrientedMaterial() {
+		return renderer.getOrientedMaterial();
+	}
 }
