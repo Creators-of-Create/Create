@@ -3,7 +3,9 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.AbstractPulleyRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction.Axis;
@@ -23,18 +25,18 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected AllBlockPartials getCoil() {
+	protected PartialModel getCoil() {
 		return AllBlockPartials.HOSE_COIL;
 	}
 
 	@Override
 	protected SuperByteBuffer renderRope(KineticTileEntity te) {
-		return AllBlockPartials.HOSE.renderOn(te.getBlockState());
+		return PartialBufferer.get(AllBlockPartials.HOSE, te.getBlockState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
-		return AllBlockPartials.HOSE_MAGNET.renderOn(te.getBlockState());
+		return PartialBufferer.get(AllBlockPartials.HOSE_MAGNET, te.getBlockState());
 	}
 
 	@Override

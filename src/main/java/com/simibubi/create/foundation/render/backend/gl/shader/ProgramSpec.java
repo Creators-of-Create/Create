@@ -10,15 +10,15 @@ import net.minecraft.util.ResourceLocation;
 
 public class ProgramSpec<P extends GlProgram> {
 
-    public final ResourceLocation name;
-    public final ResourceLocation vert;
-    public final ResourceLocation frag;
+	public final ResourceLocation name;
+	public final ResourceLocation vert;
+	public final ResourceLocation frag;
 
-    public final ShaderConstants defines;
+	public final ShaderConstants defines;
 
-    public final ArrayList<IVertexAttrib> attributes;
+	public final ArrayList<IVertexAttrib> attributes;
 
-    public final ShaderSpecLoader<P> finalizer;
+	public final ShaderSpecLoader<P> finalizer;
 
 	public static <P extends GlProgram> Builder<P> builder(String name, ShaderSpecLoader<P> factory) {
 		return builder(new ResourceLocation(Create.ID, name), factory);
@@ -38,14 +38,14 @@ public class ProgramSpec<P extends GlProgram> {
 		this.finalizer = finalizer;
 	}
 
-    public static class Builder<P extends GlProgram> {
-        private ResourceLocation vert;
-        private ResourceLocation frag;
+	public static class Builder<P extends GlProgram> {
+		private ResourceLocation vert;
+		private ResourceLocation frag;
 		private ShaderConstants defines = ShaderConstants.EMPTY;
 		private final ShaderSpecLoader<P> loader;
 
-        private final ResourceLocation name;
-        private final ArrayList<IVertexAttrib> attributes;
+		private final ResourceLocation name;
+		private final ArrayList<IVertexAttrib> attributes;
 
 		public Builder(ResourceLocation name, ShaderSpecLoader<P> factory) {
 			this.name = name;
@@ -53,29 +53,29 @@ public class ProgramSpec<P extends GlProgram> {
 			attributes = new ArrayList<>();
 		}
 
-        public Builder<P> setVert(ResourceLocation vert) {
-            this.vert = vert;
-            return this;
-        }
+		public Builder<P> setVert(ResourceLocation vert) {
+			this.vert = vert;
+			return this;
+		}
 
-        public Builder<P> setFrag(ResourceLocation frag) {
-            this.frag = frag;
-            return this;
-        }
+		public Builder<P> setFrag(ResourceLocation frag) {
+			this.frag = frag;
+			return this;
+		}
 
-        public Builder<P> setDefines(ShaderConstants defines) {
-            this.defines = defines;
-            return this;
-        }
+		public Builder<P> setDefines(ShaderConstants defines) {
+			this.defines = defines;
+			return this;
+		}
 
 		public <A extends Enum<A> & IVertexAttrib> Builder<P> addAttributes(Class<A> attributeEnum) {
-            attributes.addAll(Arrays.asList(attributeEnum.getEnumConstants()));
-            return this;
-        }
+			attributes.addAll(Arrays.asList(attributeEnum.getEnumConstants()));
+			return this;
+		}
 
-        public ProgramSpec<P> createProgramSpec() {
+		public ProgramSpec<P> createProgramSpec() {
 			return new ProgramSpec<>(name, vert, frag, defines, attributes, loader);
-        }
-    }
+		}
+	}
 
 }

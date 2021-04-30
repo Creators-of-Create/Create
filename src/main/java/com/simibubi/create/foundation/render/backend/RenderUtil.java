@@ -1,7 +1,12 @@
 package com.simibubi.create.foundation.render.backend;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.function.Supplier;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 
@@ -77,6 +82,18 @@ public class RenderUtil {
 				model.a13,
 				model.a23,
 				model.a33,
+		};
+	}
+
+	public static Supplier<MatrixStack> rotateToFace(Direction facing) {
+		return () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(AngleHelper.verticalAngle(facing))
+					.unCentre();
+			return stack;
 		};
 	}
 }

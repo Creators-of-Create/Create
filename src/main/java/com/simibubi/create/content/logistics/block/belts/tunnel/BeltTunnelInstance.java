@@ -66,7 +66,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
             tunnelFlaps.put(direction, flaps);
         });
     }
-    
+
 	@Override
 	public boolean shouldReset() {
 		return super.shouldReset() || tunnelFlaps.size() != tile.flaps.size();

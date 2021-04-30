@@ -67,7 +67,7 @@ public class ShaderLoader {
 		}
 	}
 
-	private void loadShaderSources(IResourceManager manager){
+	private void loadShaderSources(IResourceManager manager) {
 		Collection<ResourceLocation> allShaders = manager.getAllResourceLocations(SHADER_DIR, s -> {
 			for (String ext : EXTENSIONS) {
 				if (s.endsWith(ext)) return true;
@@ -173,7 +173,7 @@ public class ShaderLoader {
 		try {
 			bytebuffer = readToBuffer(is);
 			int i = bytebuffer.position();
-			((Buffer)bytebuffer).rewind();
+			((Buffer) bytebuffer).rewind();
 			return MemoryUtil.memASCII(bytebuffer, i);
 		} catch (IOException e) {
 
@@ -190,11 +190,12 @@ public class ShaderLoader {
 	public ByteBuffer readToBuffer(InputStream is) throws IOException {
 		ByteBuffer bytebuffer;
 		if (is instanceof FileInputStream) {
-			FileInputStream fileinputstream = (FileInputStream)is;
+			FileInputStream fileinputstream = (FileInputStream) is;
 			FileChannel filechannel = fileinputstream.getChannel();
-			bytebuffer = MemoryUtil.memAlloc((int)filechannel.size() + 1);
+			bytebuffer = MemoryUtil.memAlloc((int) filechannel.size() + 1);
 
-			while (filechannel.read(bytebuffer) != -1) { }
+			while (filechannel.read(bytebuffer) != -1) {
+			}
 		} else {
 			bytebuffer = MemoryUtil.memAlloc(8192);
 			ReadableByteChannel readablebytechannel = Channels.newChannel(is);

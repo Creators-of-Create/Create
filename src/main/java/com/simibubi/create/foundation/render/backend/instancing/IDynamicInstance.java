@@ -10,21 +10,21 @@ package com.simibubi.create.foundation.render.backend.instancing;
  * to parameterize the instances, you're encouraged to implement this for prototyping.
  */
 public interface IDynamicInstance extends IInstance {
-    /**
-     * Called every frame.
-     */
-    void beginFrame();
+	/**
+	 * Called every frame.
+	 */
+	void beginFrame();
 
-    /**
-     * As a further optimization, dynamic instances that are far away are ticked less often.
-     * This behavior can be disabled by returning false.
-     *
-     * <br> You might want to opt out of this if you want your animations to remain smooth
-     * even when far away from the camera. It is recommended to keep this as is, however.
-     *
-     * @return <code>true</code> if your instance should be slow ticked.
-     */
-    default boolean decreaseFramerateWithDistance() {
-        return true;
-    }
+	/**
+	 * As a further optimization, dynamic instances that are far away are ticked less often.
+	 * This behavior can be disabled by returning false.
+	 *
+	 * <br> You might want to opt out of this if you want your animations to remain smooth
+	 * even when far away from the camera. It is recommended to keep this as is, however.
+	 *
+	 * @return <code>true</code> if your instance should be slow ticked.
+	 */
+	default boolean decreaseFramerateWithDistance() {
+		return true;
+	}
 }

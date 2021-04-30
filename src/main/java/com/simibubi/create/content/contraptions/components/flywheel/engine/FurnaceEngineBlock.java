@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -41,7 +42,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	}
 
 	@Override
-	public AllBlockPartials getFrameModel() {
+	public PartialModel getFrameModel() {
 		return AllBlockPartials.FURNACE_GENERATOR_FRAME;
 	}
 

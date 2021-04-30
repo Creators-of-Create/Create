@@ -6,12 +6,12 @@ package com.simibubi.create.foundation.render.backend.gl.shader;
 @FunctionalInterface
 public interface ShaderCallback<P extends GlProgram> {
 
-    void call(P program);
+	void call(P program);
 
-    default ShaderCallback<P> andThen(ShaderCallback<P> other) {
-        return program -> {
-            call(program);
-            other.call(program);
-        };
-    }
+	default ShaderCallback<P> andThen(ShaderCallback<P> other) {
+		return program -> {
+			call(program);
+			other.call(program);
+		};
+	}
 }

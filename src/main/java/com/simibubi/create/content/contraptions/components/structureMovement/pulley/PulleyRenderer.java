@@ -6,6 +6,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction.Axis;
@@ -24,7 +25,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected AllBlockPartials getCoil() {
+	protected PartialModel getCoil() {
 		return AllBlockPartials.ROPE_COIL;
 	}
 

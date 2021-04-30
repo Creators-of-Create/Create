@@ -10,41 +10,41 @@ import net.minecraft.util.ResourceLocation;
 
 public class GlShader extends GlObject {
 
-    public final ResourceLocation name;
-    public final ShaderType type;
+	public final ResourceLocation name;
+	public final ShaderType type;
 
-    public GlShader(ShaderType type, ResourceLocation name, String source) {
-        this.type = type;
-        this.name = name;
-        int handle = GL20.glCreateShader(type.glEnum);
+	public GlShader(ShaderType type, ResourceLocation name, String source) {
+		this.type = type;
+		this.name = name;
+		int handle = GL20.glCreateShader(type.glEnum);
 
-        GlCompat.safeShaderSource(handle, source);
-        GL20.glCompileShader(handle);
+		GlCompat.safeShaderSource(handle, source);
+		GL20.glCompileShader(handle);
 
-        String log = GL20.glGetShaderInfoLog(handle);
+		String log = GL20.glGetShaderInfoLog(handle);
 
-        if (!log.isEmpty()) {
-            Backend.log.error("Shader compilation log for " + name + ": " + log);
-        }
+		if (!log.isEmpty()) {
+			Backend.log.error("Shader compilation log for " + name + ": " + log);
+		}
 
-        if (GL20.glGetShaderi(handle, GL20.GL_COMPILE_STATUS) != GL20.GL_TRUE) {
-            throw new RuntimeException("Could not compile shader. See log for details.");
-        }
+		if (GL20.glGetShaderi(handle, GL20.GL_COMPILE_STATUS) != GL20.GL_TRUE) {
+			throw new RuntimeException("Could not compile shader. See log for details.");
+		}
 
-        setHandle(handle);
-    }
+		setHandle(handle);
+	}
 
-    @Override
-    protected void deleteInternal(int handle) {
-        GL20.glDeleteShader(handle);
-    }
+	@Override
+	protected void deleteInternal(int handle) {
+		GL20.glDeleteShader(handle);
+	}
 
-    @FunctionalInterface
-    public interface PreProcessor {
-        String process(String source);
+	@FunctionalInterface
+	public interface PreProcessor {
+		String process(String source);
 
-        default PreProcessor andThen(PreProcessor that) {
-            return source -> that.process(this.process(source));
-        }
-    }
+		default PreProcessor andThen(PreProcessor that) {
+			return source -> that.process(this.process(source));
+		}
+	}
 }

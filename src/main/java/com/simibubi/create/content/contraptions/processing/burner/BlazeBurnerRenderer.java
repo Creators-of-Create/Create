@@ -3,7 +3,9 @@ package com.simibubi.create.content.contraptions.processing.burner;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -30,11 +32,11 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 13) * 16f;
 		float offset = (MathHelper.sin((float) ((renderTick / 16f) % (2 * Math.PI))) + .5f) / 16f;
 
-		AllBlockPartials blazeModel = AllBlockPartials.BLAZES.get(heatLevel);
-		SuperByteBuffer blazeBuffer = blazeModel.renderOn(te.getBlockState());
+		PartialModel blazeModel = AllBlockPartials.BLAZES.get(heatLevel);
+		SuperByteBuffer blazeBuffer = PartialBufferer.get(blazeModel, te.getBlockState());
 		blazeBuffer.rotateCentered(Direction.UP, AngleHelper.rad(te.headAngle.getValue(partialTicks)));
 		blazeBuffer.translate(0, offset, 0);
 		blazeBuffer.light(0xF000F0)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 }

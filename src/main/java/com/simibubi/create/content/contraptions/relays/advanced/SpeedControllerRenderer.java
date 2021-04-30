@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
@@ -43,10 +44,10 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		BlockState blockState = tileEntityIn.getBlockState();
 		boolean alongX = blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
-		SuperByteBuffer bracket = AllBlockPartials.SPEED_CONTROLLER_BRACKET.renderOn(blockState);
+		SuperByteBuffer bracket = PartialBufferer.get(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
-			(float) (alongX ? Math.PI : Math.PI / 2));
+				(float) (alongX ? Math.PI : Math.PI / 2));
 		bracket.light(WorldRenderer.getLightmapCoordinates(world, pos.up()));
 		bracket.renderInto(ms, builder);
 	}

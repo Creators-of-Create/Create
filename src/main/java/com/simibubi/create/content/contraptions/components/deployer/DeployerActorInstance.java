@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -48,7 +49,7 @@ public class DeployerActorInstance extends ActorInstance {
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
-        AllBlockPartials handPose = DeployerRenderer.getHandPose(mode);
+        PartialModel handPose = DeployerRenderer.getHandPose(mode);
 
         stationaryTimer = context.data.contains("StationaryTimer");
         facing = state.get(FACING);

@@ -49,11 +49,11 @@ public class LightUpdater {
 
 	/**
 	 * Add a listener associated with the given {@link BlockPos}.
-	 *
+	 * <p>
 	 * When a light update occurs in the chunk the position is contained in,
 	 * {@link LightUpdateListener#onLightUpdate} will be called.
 	 *
-	 * @param pos The position in the world that the listener cares about.
+	 * @param pos      The position in the world that the listener cares about.
 	 * @param listener The object that wants to receive light update notifications.
 	 */
 	public void startListening(BlockPos pos, LightUpdateListener listener) {
@@ -71,11 +71,11 @@ public class LightUpdater {
 
 	/**
 	 * Add a listener associated with the given {@link GridAlignedBB}.
-	 *
+	 * <p>
 	 * When a light update occurs in any chunk spanning the given volume,
 	 * {@link LightUpdateListener#onLightUpdate} will be called.
 	 *
-	 * @param volume The volume in the world that the listener cares about.
+	 * @param volume   The volume in the world that the listener cares about.
 	 * @param listener The object that wants to receive light update notifications.
 	 */
 	public void startListening(GridAlignedBB volume, LightUpdateListener listener) {
@@ -106,8 +106,8 @@ public class LightUpdater {
 	/**
 	 * Dispatch light updates to all registered {@link LightUpdateListener}s.
 	 *
-	 * @param world The world in which light was updated.
-	 * @param type The type of light that changed.
+	 * @param world      The world in which light was updated.
+	 * @param type       The type of light that changed.
 	 * @param sectionPos A long representing the section position where light changed.
 	 */
 	public void onLightUpdate(IBlockDisplayReader world, LightType type, long sectionPos) {

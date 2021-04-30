@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.Direction;
 
 public class DrillInstance extends SingleRotatingInstance {
 
@@ -20,6 +21,7 @@ public class DrillInstance extends SingleRotatingInstance {
     @Override
     protected InstancedModel<RotatingData> getModel() {
 		BlockState referenceState = tile.getBlockState();
-		return AllBlockPartials.DRILL_HEAD.getModel(getRotatingMaterial(), referenceState, referenceState.get(FACING));
+		Direction facing = referenceState.get(FACING);
+		return getRotatingMaterial().getModel(AllBlockPartials.DRILL_HEAD, referenceState, facing);
 	}
 }

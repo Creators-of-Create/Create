@@ -52,7 +52,7 @@ public class RedstoneLinkNetworkHandler {
 
 		@Override
 		public int hashCode() {
-			return item.hashCode() ^ color;
+			return (item.hashCode() * 31) ^ color;
 		}
 
 		@Override

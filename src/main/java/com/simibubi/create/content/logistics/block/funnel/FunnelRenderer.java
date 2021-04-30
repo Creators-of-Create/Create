@@ -3,8 +3,10 @@ package com.simibubi.create.content.logistics.block.funnel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -33,18 +35,19 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		SuperByteBuffer flapBuffer = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
-			: AllBlockPartials.BELT_FUNNEL_FLAP).renderOn(blockState);
+		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+				: AllBlockPartials.BELT_FUNNEL_FLAP);
+		SuperByteBuffer flapBuffer = PartialBufferer.get(partialModel, blockState);
 		Vector3d pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
-			.getOpposite());
+				.getOpposite());
 		float f = te.flap.get(partialTicks);
 
 		ms.push();
 		msr.centre()
-			.rotateY(horizontalAngle)
+				.rotateY(horizontalAngle)
 			.unCentre();
 		ms.translate(0, 0, -te.getFlapOffset());
 

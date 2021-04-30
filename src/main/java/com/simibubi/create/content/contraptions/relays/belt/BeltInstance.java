@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
@@ -57,7 +58,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         DyeColor color = tile.color.orElse(null);
 
         for (boolean bottom : Iterate.trueAndFalse) {
-            AllBlockPartials beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
+            PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
             InstancedModel<BeltData> beltModel = modelManager.getMaterial(KineticRenderMaterials.BELTS).getModel(beltPartial, blockState);

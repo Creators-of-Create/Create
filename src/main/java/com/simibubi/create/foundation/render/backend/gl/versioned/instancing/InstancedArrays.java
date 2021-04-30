@@ -22,26 +22,24 @@ public enum InstancedArrays implements GlVersioned {
 		@Override
 		public boolean supported(GLCapabilities caps) {
 			return caps.GL_ARB_instanced_arrays;
-        }
+		}
 
-        @Override
-        public void vertexAttribDivisor(int index, int divisor) {
-            ARBInstancedArrays.glVertexAttribDivisorARB(index, divisor);
-        }
-    },
-    UNSUPPORTED {
-        @Override
-        public boolean supported(GLCapabilities caps) {
-            return true;
-        }
+		@Override
+		public void vertexAttribDivisor(int index, int divisor) {
+			ARBInstancedArrays.glVertexAttribDivisorARB(index, divisor);
+		}
+	},
+	UNSUPPORTED {
+		@Override
+		public boolean supported(GLCapabilities caps) {
+			return true;
+		}
 
-        @Override
-        public void vertexAttribDivisor(int index, int divisor) {
-            throw new UnsupportedOperationException();
-        }
-    }
+		@Override
+		public void vertexAttribDivisor(int index, int divisor) {
+			throw new UnsupportedOperationException();
+		}
+	};
 
-    ;
-
-    public abstract void vertexAttribDivisor(int index, int divisor);
+	public abstract void vertexAttribDivisor(int index, int divisor);
 }

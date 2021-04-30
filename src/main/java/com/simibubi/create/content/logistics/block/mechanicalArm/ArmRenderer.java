@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -66,7 +67,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		float lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
 		float upperArmAngle = arm.upperArmAngle.get(pt) - 90;
 		float headAngle = arm.headAngle.get(pt);
-		
+
 		boolean rave = arm.phase == Phase.DANCING;
 		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 64);
 		if (rave) {
@@ -104,21 +105,21 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	private void renderArm(IVertexBuilder builder, MatrixStack ms, MatrixStack msLocal, MatrixStacker msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
-		SuperByteBuffer base = AllBlockPartials.ARM_BASE.renderOn(blockState).light(light);
-		SuperByteBuffer lowerBody = AllBlockPartials.ARM_LOWER_BODY.renderOn(blockState).light(light);
-		SuperByteBuffer upperBody = AllBlockPartials.ARM_UPPER_BODY.renderOn(blockState).light(light);
-		SuperByteBuffer head = AllBlockPartials.ARM_HEAD.renderOn(blockState).light(light);
-		SuperByteBuffer claw = AllBlockPartials.ARM_CLAW_BASE.renderOn(blockState).light(light);
-		SuperByteBuffer clawGrip = AllBlockPartials.ARM_CLAW_GRIP.renderOn(blockState);
+		SuperByteBuffer base = PartialBufferer.get(AllBlockPartials.ARM_BASE, blockState).light(light);
+		SuperByteBuffer lowerBody = PartialBufferer.get(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
+		SuperByteBuffer upperBody = PartialBufferer.get(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);
+		SuperByteBuffer head = PartialBufferer.get(AllBlockPartials.ARM_HEAD, blockState).light(light);
+		SuperByteBuffer claw = PartialBufferer.get(AllBlockPartials.ARM_CLAW_BASE, blockState).light(light);
+		SuperByteBuffer clawGrip = PartialBufferer.get(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 
 		transformBase(msr, baseAngle);
 		base.transform(msLocal)
-			.renderInto(ms, builder);
+				.renderInto(ms, builder);
 
 		transformLowerArm(msr, lowerArmAngle);
 		lowerBody.color(color)
-				 .transform(msLocal)
-				 .renderInto(ms, builder);
+				.transform(msLocal)
+				.renderInto(ms, builder);
 
 		transformUpperArm(msr, upperArmAngle);
 		upperBody.color(color)
@@ -182,7 +183,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.ARM_COG.renderOn(te.getBlockState());
+		return PartialBufferer.get(AllBlockPartials.ARM_COG, te.getBlockState());
 	}
 
 }

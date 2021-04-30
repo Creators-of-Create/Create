@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.render.backend.Backend;
 
 public class GlBuffer extends GlObject {
 
-    protected final int bufferType;
+	protected final int bufferType;
 
 	public GlBuffer(int bufferType) {
 		setHandle(GL20.glGenBuffers());

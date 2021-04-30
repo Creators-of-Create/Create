@@ -28,7 +28,7 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected InstancedModel<OrientedData> getCoilModel() {
-		return AllBlockPartials.HOSE_COIL.getModel(getOrientedMaterial(), blockState, rotatingAbout);
+		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_COIL, blockState, rotatingAbout);
 	}
 
 	protected InstancedModel<OrientedData> getHalfRopeModel() {

@@ -17,56 +17,56 @@ import net.minecraft.world.World;
 
 public class FastRenderDispatcher {
 
-    public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
+	public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
-    public static void enqueueUpdate(TileEntity te) {
-        queuedUpdates.get(te.getWorld()).add(te);
-    }
+	public static void enqueueUpdate(TileEntity te) {
+		queuedUpdates.get(te.getWorld()).add(te);
+	}
 
-    public static void tick() {
-        Minecraft mc = Minecraft.getInstance();
-        ClientWorld world = mc.world;
+	public static void tick() {
+		Minecraft mc = Minecraft.getInstance();
+		ClientWorld world = mc.world;
 
-        KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+		KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
 
-        Entity renderViewEntity = mc.renderViewEntity;
-        kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
+		Entity renderViewEntity = mc.renderViewEntity;
+		kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 
-        ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
-        map
-                .forEach(te -> {
-                    map.remove(te);
+		ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
+		map
+				.forEach(te -> {
+					map.remove(te);
 
-                    kineticRenderer.update(te);
-                });
-    }
+					kineticRenderer.update(te);
+				});
+	}
 
-    public static boolean available() {
-        return Backend.canUseInstancing();
-    }
+	public static boolean available() {
+		return Backend.canUseInstancing();
+	}
 
-    public static boolean available(World world) {
-        return Backend.canUseInstancing() && Backend.isFlywheelWorld(world);
-    }
+	public static boolean available(World world) {
+		return Backend.canUseInstancing() && Backend.isFlywheelWorld(world);
+	}
 
-    public static int getDebugMode() {
-        return KineticDebugger.isActive() ? 1 : 0;
-    }
+	public static int getDebugMode() {
+		return KineticDebugger.isActive() ? 1 : 0;
+	}
 
-    public static void refresh() {
-        RenderWork.enqueue(Minecraft.getInstance().worldRenderer::loadRenderers);
-    }
+	public static void refresh() {
+		RenderWork.enqueue(Minecraft.getInstance().worldRenderer::loadRenderers);
+	}
 
-    public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
-        if (!Backend.canUseInstancing()) return;
+	public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
+		if (!Backend.canUseInstancing()) return;
 
-        ClientWorld world = Minecraft.getInstance().world;
-        KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+		ClientWorld world = Minecraft.getInstance().world;
+		KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
 
-        layer.startDrawing();
+		layer.startDrawing();
 
-        kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
+		kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
 
-        layer.endDrawing();
-    }
+		layer.endDrawing();
+	}
 }

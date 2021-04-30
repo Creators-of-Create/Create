@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
@@ -26,7 +27,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
         if (!tile.hasFlap()) return;
 
-        AllBlockPartials flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+        PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
                 : AllBlockPartials.BELT_FUNNEL_FLAP);
         InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
                                                      .getModel(flapPartial, blockState);

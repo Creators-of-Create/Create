@@ -33,28 +33,30 @@ public abstract class GlProgram extends GlObject {
 		GL20.glUseProgram(0);
 	}
 
-    /**
-     * Retrieves the index of the uniform with the given name.
-     * @param uniform The name of the uniform to find the index of
-     * @return The uniform's index
-     */
-    public int getUniformLocation(String uniform) {
-        int index = GL20.glGetUniformLocation(this.handle(), uniform);
+	/**
+	 * Retrieves the index of the uniform with the given name.
+	 *
+	 * @param uniform The name of the uniform to find the index of
+	 * @return The uniform's index
+	 */
+	public int getUniformLocation(String uniform) {
+		int index = GL20.glGetUniformLocation(this.handle(), uniform);
 
-        if (index < 0) {
-            Backend.log.debug("No active uniform '{}' exists in program '{}'. Could be unused.", uniform, this.name);
-        }
+		if (index < 0) {
+			Backend.log.debug("No active uniform '{}' exists in program '{}'. Could be unused.", uniform, this.name);
+		}
 
-        return index;
-    }
+		return index;
+	}
 
-    /**
-     * Binds a sampler uniform to the given texture unit.
-     * @param name The name of the sampler uniform.
-     * @param binding The index of the texture unit.
-     * @return The sampler uniform's index.
-     * @throws NullPointerException If no uniform exists with the given name.
-     */
+	/**
+	 * Binds a sampler uniform to the given texture unit.
+	 *
+	 * @param name    The name of the sampler uniform.
+	 * @param binding The index of the texture unit.
+	 * @return The sampler uniform's index.
+	 * @throws NullPointerException If no uniform exists with the given name.
+	 */
 	public int setSamplerBinding(String name, int binding) {
 		int samplerUniform = getUniformLocation(name);
 

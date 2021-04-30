@@ -49,7 +49,11 @@ public class Pair<F, S> {
 
 	@Override
 	public int hashCode() {
-		return (first == null ? 0 : first.hashCode()) ^ (second == null ? 0 : second.hashCode());
+		return (nullHash(first) * 31) ^ nullHash(second);
+	}
+
+	int nullHash(Object o) {
+		return o == null ? 0 : o.hashCode();
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.backend.core.ModelData;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -25,7 +25,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
             return;
 
         EngineBlock engineBlock = (EngineBlock) block;
-        AllBlockPartials frame = engineBlock.getFrameModel();
+        PartialModel frame = engineBlock.getFrameModel();
 
         Direction facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 
