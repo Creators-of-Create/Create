@@ -17,7 +17,7 @@ uniform vec3 uCameraPos;
 struct SphereFilter {
     vec4 sphere;// <vec3 position, float radius>
     vec4 d1;// <float feather, float fade, float density, float blend mode>
-    vec4 strength;// <float surfaceStrength, float bubbleStrength, float strength>
+    vec4 strength;// <float surfaceStrength, float bubbleStrength, float strength, float invert>
     vec4 channelMask;// <vec3 rgb>
     mat4 colorOp;
 };
@@ -125,6 +125,8 @@ vec3 applyFilters(vec3 worldDir, float depth, vec3 diffuse) {
         SphereFilter s = uSpheres[i];
 
         float strength = filterStrength(worldDir, depth, s);
+
+        strength = invert(strength, s.strength.w);
 
         if (strength > 0) {
             const float fcon = 0.;

@@ -107,7 +107,7 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 				.titled(Lang.translate("gui.chromatic_projector.strength"))
 				.withStepFunction(ctx -> step(ctx, 5))
 				.calling(tile::setStrength)
-				.withRange(0, 101)
+				.withRange(-100, 101)
 				.setState((int) (tile.strength * 100));
 
 		Collections.addAll(widgets, blend, rChannel, gChannel, bChannel, fieldEffect, strength);

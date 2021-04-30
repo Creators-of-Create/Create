@@ -41,8 +41,8 @@ public class FilterSphere {
 
 				surface ? 1 : 0,
 				field ? 1 : 0,
-				strength,
-				0,        // padding
+				Math.abs(strength),
+				strength < 0 ? 1 : 0,
 
 				rMask ? 1 : 0,
 				gMask ? 1 : 0,
