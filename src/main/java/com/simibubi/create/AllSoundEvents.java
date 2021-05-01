@@ -91,7 +91,7 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		BLOCKZAPPER_PLACE = create("blockzapper_place").subtitle("Blockzapper zaps")
+		WORLDSHAPER_PLACE = create("worldshaper_place").subtitle("Worldshaper zaps")
 			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM)
 			.category(SoundCategory.PLAYERS)
 			.build(),
@@ -101,12 +101,12 @@ public class AllSoundEvents {
 			.category(SoundCategory.PLAYERS)
 			.build(),
 
-		BLOCKZAPPER_CONFIRM = create("blockzapper_confirm").subtitle("Affirmative ding")
+		CONFIRM = create("confirm").subtitle("Affirmative ding")
 			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_BELL, 0.5f, 0.8f)
 			.category(SoundCategory.PLAYERS)
 			.build(),
 
-		BLOCKZAPPER_DENY = create("blockzapper_deny").subtitle("Declining boop")
+		DENY = create("deny").subtitle("Declining boop")
 			.playExisting(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 1f, 0.5f)
 			.category(SoundCategory.PLAYERS)
 			.build(),
@@ -136,13 +136,13 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.BLOCK_NETHERITE_BLOCK_HIT, .25f, .75f)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		CRAFTER_CLICK = create("crafter_click").subtitle("Crafter clicks")
 			.playExisting(SoundEvents.BLOCK_NETHERITE_BLOCK_HIT, .25f, 1)
 			.playExisting(SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN, .125f, 1)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		CRAFTER_CRAFT = create("crafter_craft").subtitle("Crafter crafts")
 			.playExisting(SoundEvents.ENTITY_ITEM_BREAK, .125f, .75f)
 			.category(SoundCategory.BLOCKS)

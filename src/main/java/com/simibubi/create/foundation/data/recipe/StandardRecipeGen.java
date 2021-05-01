@@ -158,37 +158,21 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
 
-	GeneratedRecipe DEFORESTER = create(AllItems.DEFORESTER).unlockedBy(I::refinedRadiance)
+	GeneratedRecipe WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
 		.viaShaped(b -> b.key('E', I.refinedRadiance())
-			.key('G', I.cog())
+			.key('G', Tags.Items.GLASS_PANES_WHITE)
 			.key('O', Tags.Items.OBSIDIAN)
-			.patternLine("EG")
-			.patternLine("EO")
-			.patternLine(" O")),
-
-		WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.key('E', I.refinedRadiance())
-				.key('G', Tags.Items.GLASS_PANES_WHITE)
-				.key('O', Tags.Items.OBSIDIAN)
-				.key('L', I.brass())
-				.patternLine(" GE")
-				.patternLine("LEG")
-				.patternLine("OL ")),
+			.key('L', I.brass())
+			.patternLine(" GE")
+			.patternLine("LEG")
+			.patternLine("OL ")),
 
 		MINECART_COUPLING = create(AllItems.MINECART_COUPLING).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('E', I.andesite())
 				.key('O', I.ironSheet())
 				.patternLine("  E")
 				.patternLine(" O ")
-				.patternLine("E  ")),
-
-		BLOCKZAPPER = create(AllItems.BLOCKZAPPER).unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.key('E', I.refinedRadiance())
-				.key('A', I.andesite())
-				.key('O', Tags.Items.OBSIDIAN)
-				.patternLine("  E")
-				.patternLine(" O ")
-				.patternLine("OA "))
+				.patternLine("E  "))
 
 	;
 

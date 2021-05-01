@@ -113,9 +113,9 @@ public class ZapperRenderHandler {
 	}
 
 	public static void playSound(Hand hand, BlockPos position) {
-		float pitch = hand == Hand.MAIN_HAND ? 2f : 0.9f;
+		float pitch = hand == Hand.MAIN_HAND ? 0.1f : 0.9f;
 		Minecraft mc = Minecraft.getInstance();
-		AllSoundEvents.BLOCKZAPPER_PLACE.play(mc.world, mc.player, position, 0.8f, pitch);
+		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.world, mc.player, position, 0.1f, pitch);
 	}
 
 	public static void addBeam(LaserBeam beam) {
