@@ -180,6 +180,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.Rarity;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -337,6 +338,7 @@ public class AllBlocks {
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(StressConfigDefaults.setCapacity(16384.0))
 			.item()
+			.properties(p -> p.rarity(Rarity.EPIC))
 			.transform(customItemModel())
 			.register();
 
@@ -645,6 +647,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::creative))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.item(FluidTankItem::new)
+			.properties(p -> p.rarity(Rarity.EPIC))
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/fluid_tank/block_single_window"))
 				.texture("5", p.modLoc("block/creative_fluid_tank_window_single"))
 				.texture("1", p.modLoc("block/creative_fluid_tank"))

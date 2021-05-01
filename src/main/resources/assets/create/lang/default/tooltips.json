@@ -100,15 +100,6 @@
 	"item.create.wand_of_symmetry.tooltip.action2": "_Removes_ the active Mirror",
 	"item.create.wand_of_symmetry.tooltip.control3": "R-Click while Sneaking",
 	"item.create.wand_of_symmetry.tooltip.action3": "Opens the _Configuration Interface_",
-
-	"item.create.handheld_blockzapper.tooltip": "BLOCKZAPPER",
-	"item.create.handheld_blockzapper.tooltip.summary": "Novel gadget for placing or exchanging blocks at a distance.",
-	"item.create.handheld_blockzapper.tooltip.control1": "L-Click at Block",
-	"item.create.handheld_blockzapper.tooltip.action1": "Sets blocks placed by the tool to the targeted block.",
-	"item.create.handheld_blockzapper.tooltip.control2": "R-Click at Block",
-	"item.create.handheld_blockzapper.tooltip.action2": "_Places_ or _Replaces_ the targeted block.",
-	"item.create.handheld_blockzapper.tooltip.control3": "R-Click while Sneaking",
-	"item.create.handheld_blockzapper.tooltip.action3": "Opens the _Configuration Interface_.",
 	
 	"item.create.handheld_worldshaper.tooltip": "HANDHELD WORLDSHAPER",
 	"item.create.handheld_worldshaper.tooltip.summary": "Handy tool for creating _landscapes_ and _terrain features_.",
@@ -123,9 +114,6 @@
 	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals suitable for speeding up the growth of common tree types.",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on a Sapling",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees _regardless_ of their _spacing conditions_",
-	
-	"item.create.deforester.tooltip": "DEFORESTER",
-	"item.create.deforester.tooltip.summary": "A _radiant axe_ able to chop down trees in a split second.",
 
 	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
 	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases reach distance_ of the wielder.",
