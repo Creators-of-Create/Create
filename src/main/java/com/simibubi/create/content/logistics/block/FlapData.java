@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.block;
 
 import java.nio.ByteBuffer;
 
-import com.simibubi.create.foundation.render.backend.core.IFlatLight;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.core.IFlatLight;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;

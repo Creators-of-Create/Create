@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.base;
 
 import java.nio.ByteBuffer;
 
-import com.simibubi.create.foundation.render.backend.core.BasicData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.core.BasicData;
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.util.math.BlockPos;

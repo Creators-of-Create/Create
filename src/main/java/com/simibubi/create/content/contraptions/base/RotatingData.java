@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import java.nio.ByteBuffer;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;

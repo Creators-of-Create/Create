@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
 import net.minecraft.block.BlockState;

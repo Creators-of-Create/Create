@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.jozufozu.flywheel.backend.core.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.block.BlockState;

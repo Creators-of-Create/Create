@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
-import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
-import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
+import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
+import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;
+import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexAttribSpec;
 
 public enum ContraptionAttributes implements IVertexAttrib {
     VERTEX_POSITION("aPos", CommonAttributes.VEC3),

@@ -2,8 +2,8 @@ package com.simibubi.create.content.curiosities.projector;
 
 import java.util.Vector;
 
-import com.simibubi.create.foundation.render.backend.effects.FilterSphere;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.effects.FilterSphere;
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.block.BlockState;

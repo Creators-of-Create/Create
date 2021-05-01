@@ -5,9 +5,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.jozufozu.flywheel.backend.RenderWork;
+import com.jozufozu.flywheel.backend.light.LightUpdater;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.backend.RenderWork;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;

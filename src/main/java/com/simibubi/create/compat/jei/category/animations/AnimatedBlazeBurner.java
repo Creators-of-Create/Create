@@ -1,11 +1,11 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.util.math.vector.Vector3f;

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.simibubi.create.foundation.render.backend.gl.attrib.CommonAttributes;
-import com.simibubi.create.foundation.render.backend.gl.attrib.IAttribSpec;
-import com.simibubi.create.foundation.render.backend.gl.attrib.IVertexAttrib;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexAttribSpec;
+import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
+import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;
+import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexAttribSpec;
 
 public enum ActorVertexAttributes implements IVertexAttrib {
     INSTANCE_POSITION("aInstancePos", CommonAttributes.VEC3),

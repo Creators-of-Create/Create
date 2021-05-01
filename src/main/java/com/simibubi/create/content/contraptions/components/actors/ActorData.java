@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.nio.ByteBuffer;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;

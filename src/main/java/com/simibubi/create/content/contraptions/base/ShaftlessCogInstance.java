@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 
 public class ShaftlessCogInstance extends SingleRotatingInstance {
 

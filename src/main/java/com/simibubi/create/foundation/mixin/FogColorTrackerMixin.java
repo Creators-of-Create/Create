@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.jozufozu.flywheel.backend.gl.GlFog;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.foundation.render.backend.gl.GlFog;
 
 @Mixin(GlStateManager.class)
 public class FogColorTrackerMixin {

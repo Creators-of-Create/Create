@@ -2,18 +2,18 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import java.util.Arrays;
 
+import com.jozufozu.flywheel.backend.core.OrientedData;
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.util.ConditionalInstance;
+import com.jozufozu.flywheel.backend.instancing.util.InstanceGroup;
+import com.jozufozu.flywheel.backend.instancing.util.SelectInstance;
+import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.backend.light.LightUpdateListener;
+import com.jozufozu.flywheel.backend.light.LightUpdater;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.util.ConditionalInstance;
-import com.simibubi.create.foundation.render.backend.instancing.util.InstanceGroup;
-import com.simibubi.create.foundation.render.backend.instancing.util.SelectInstance;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;

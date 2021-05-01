@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.backend.core.BasicProgram;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
+import com.jozufozu.flywheel.backend.core.BasicProgram;
+import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;

@@ -3,9 +3,9 @@ package com.simibubi.create;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 

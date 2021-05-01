@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.simibubi.create.foundation.render.backend.OptifineHandler;
+import com.jozufozu.flywheel.backend.OptifineHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;

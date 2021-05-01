@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
+import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
+import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.ITickableInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 

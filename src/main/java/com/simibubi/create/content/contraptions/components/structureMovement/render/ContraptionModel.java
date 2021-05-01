@@ -5,10 +5,10 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.backend.BufferedModel;
-import com.simibubi.create.foundation.render.backend.gl.GlBuffer;
-import com.simibubi.create.foundation.render.backend.gl.GlPrimitiveType;
-import com.simibubi.create.foundation.render.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.backend.BufferedModel;
+import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
