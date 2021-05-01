@@ -1,7 +1,8 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
@@ -23,18 +24,16 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class WorldshaperRenderHandler {
 
-	private static List<BlockPos> renderedShape;
-	private static BlockPos renderedPosition;
+	private static Supplier<Collection<BlockPos>> renderedPositions;
 
 	public static void tick() {
 		gatherSelectedBlocks();
-		if (renderedPosition == null)
+		if (renderedPositions == null)
 			return;
 
-		CreateClient.outliner.showCluster("terrainZapper", renderedShape.stream()
-			.map(pos -> pos.add(renderedPosition))
-			.collect(Collectors.toList()))
+		CreateClient.outliner.showCluster("terrainZapper", renderedPositions.get())
 			.colored(0xbfbfbf)
+			.disableNormals()
 			.lineWidth(1 / 32f)
 			.withFaceTexture(AllSpecialTextures.CHECKERED);
 	}
@@ -60,21 +59,21 @@ public class WorldshaperRenderHandler {
 			return;
 		}
 
-		renderedPosition = null;
+		renderedPositions = null;
 	}
 
 	public static void createBrushOutline(CompoundNBT tag, ClientPlayerEntity player, ItemStack zapper) {
 		if (!tag.contains("BrushParams")) {
-			renderedPosition = null;
+			renderedPositions = null;
 			return;
 		}
 
 		Brush brush = NBTHelper.readEnum(tag, "Brush", TerrainBrushes.class)
 			.get();
 		PlacementOptions placement = NBTHelper.readEnum(tag, "Placement", PlacementOptions.class);
+		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
 		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
 		brush.set(params.getX(), params.getY(), params.getZ());
-		renderedShape = brush.getIncludedPositions();
 
 		Vector3d start = player.getPositionVec()
 			.add(0, player.getEyeHeight(), 0);
@@ -83,12 +82,14 @@ public class WorldshaperRenderHandler {
 		BlockRayTraceResult raytrace = player.world
 			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (raytrace == null || raytrace.getType() == Type.MISS) {
-			renderedPosition = null;
+			renderedPositions = null;
 			return;
 		}
 
-		BlockPos pos = raytrace.getPos();
-		renderedPosition = pos.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), placement));
+		BlockPos pos = raytrace.getPos()
+			.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), placement));
+		renderedPositions =
+			() -> brush.addToGlobalPositions(player.world, pos, raytrace.getFace(), new ArrayList<>(), tool);
 	}
 
 }

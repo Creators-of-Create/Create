@@ -31,6 +31,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.Rarity;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -211,6 +212,7 @@ public class BuilderTransformers {
 					});
 			})
 			.item()
+			.properties(p -> type.equals("creative") ? p : p.rarity(Rarity.EPIC))
 			.transform(ModelGen.customItemModel("crate", type, "single"));
 	}
 

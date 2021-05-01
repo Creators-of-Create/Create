@@ -13,10 +13,10 @@ public enum AllGuiTextures implements IScreenRenderable {
 
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
-	WAND_OF_SYMMETRY("curiosities.png", 188, 99),
+	WAND_OF_SYMMETRY("curiosities.png", 0, 131, 188, 101),
 	BLOCKZAPPER("curiosities.png", 0, 99, 214, 97),
-	TERRAINZAPPER("curiosities_2.png", 0, 0, 234, 101),
-	TERRAINZAPPER_INACTIVE_PARAM("curiosities_2.png", 238, 0, 18, 18),
+	TERRAINZAPPER("curiosities.png", 234, 103),
+	TERRAINZAPPER_INACTIVE_PARAM("curiosities.png", 238, 0, 18, 18),
 
 	SCHEMATIC("schematics.png", 192, 121),
 	SCHEMATIC_SLOT("widgets.png", 54, 0, 16, 16),

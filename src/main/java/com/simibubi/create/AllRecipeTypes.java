@@ -19,7 +19,6 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperUpgradeRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.inventory.IInventory;
@@ -34,9 +33,7 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipeTypes {
 
-	BLOCKZAPPER_UPGRADE(BlockzapperUpgradeRecipe.Serializer::new, IRecipeType.CRAFTING),
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
-
 	CONVERSION(processingSerializer(ConversionRecipe::new)),
 	CRUSHING(processingSerializer(CrushingRecipe::new)),
 	CUTTING(processingSerializer(CuttingRecipe::new)),

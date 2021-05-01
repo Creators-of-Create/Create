@@ -9,7 +9,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
-public class CuboidBrush extends Brush {
+public class CuboidBrush extends ShapedBrush {
 
 	public static final int MAX_SIZE = 32;
 	private List<BlockPos> positions;

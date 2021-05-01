@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -8,6 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 
 public abstract class Brush {
 
@@ -26,6 +27,22 @@ public abstract class Brush {
 		this.param2 = param2;
 	}
 
+	public TerrainTools[] getSupportedTools() {
+		return TerrainTools.values();
+	}
+	
+	public TerrainTools redirectTool(TerrainTools tool) {
+		return tool;
+	}
+
+	public boolean hasPlacementOptions() {
+		return true;
+	}
+
+	public boolean hasConnectivityOptions() {
+		return false;
+	}
+
 	int getMax(int paramIndex) {
 		return Integer.MAX_VALUE;
 	}
@@ -36,7 +53,7 @@ public abstract class Brush {
 
 	ITextComponent getParamLabel(int paramIndex) {
 		return Lang
-				.translate(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
+			.translate(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
 	}
 
 	public int get(int paramIndex) {
@@ -47,6 +64,7 @@ public abstract class Brush {
 		return BlockPos.ZERO;
 	}
 
-	abstract List<BlockPos> getIncludedPositions();
+	public abstract Collection<BlockPos> addToGlobalPositions(IWorld world, BlockPos targetPos, Direction targetFace,
+		Collection<BlockPos> affectedPositions, TerrainTools usedTool);
 
 }

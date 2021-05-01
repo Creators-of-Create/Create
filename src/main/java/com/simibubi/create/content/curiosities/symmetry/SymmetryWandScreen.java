@@ -60,9 +60,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		AllGuiTextures background = AllGuiTextures.WAND_OF_SYMMETRY;
 		this.setWindowSize(background.width + 50, background.height + 50);
 
-		labelType = new Label(guiLeft + 49, guiTop + 26, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelType = new Label(guiLeft + 49, guiTop + 28, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
-		labelAlign = new Label(guiLeft + 49, guiTop + 48, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelAlign = new Label(guiLeft + 49, guiTop + 50, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
 
 		int state =
@@ -118,12 +118,10 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		AllGuiTextures.WAND_OF_SYMMETRY.draw(matrixStack, this, guiLeft, guiTop);
-
-		textRenderer.drawWithShadow(matrixStack, wand.getDisplayName(), guiLeft + 11, guiTop + 3, 0xffffff);
-
+		textRenderer.draw(matrixStack, wand.getDisplayName(), guiLeft + 11, guiTop + 4, 0x6B3802);
 		renderBlock(matrixStack);
 		GuiGameElement.of(wand)
-			.at(guiLeft + 190, guiTop + 420, -150)
+			.at(guiLeft + 170, guiTop + 490, -150)
 			.scale(4)
 			.rotate(-70, 20, 20)
 			.render(matrixStack);
@@ -131,7 +129,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	protected void renderBlock(MatrixStack ms) {
 		ms.push();
-		ms.translate(guiLeft + 26f, guiTop + 37, 20);
+		ms.translate(guiLeft + 26f, guiTop + 39, 20);
 		ms.scale(16, 16, 16);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
 		currentElement.applyModelTransform(ms);
