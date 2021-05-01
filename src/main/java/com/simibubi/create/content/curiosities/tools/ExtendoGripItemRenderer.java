@@ -19,13 +19,12 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 	private static final Vector3d cogRotationOffset = new Vector3d(0, 1 / 16f, 0);
 
 	@Override
-	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,
+		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		MatrixStacker stacker = MatrixStacker.of(ms);
 		float animation = 0.25f;
-		TransformType perspective = model.getCurrentPerspective();
-		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
-		boolean rightHand = perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
+		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
+		boolean rightHand = transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
 		if (leftHand || rightHand)
 			animation = MathHelper.lerp(AnimationTickHolder.getPartialTicks(),
 										ExtendoGripRenderHandler.lastMainHandAnimation,
@@ -37,7 +36,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		float oppositeAngle = 180 - extensionAngle;
 
 		// grip
-		renderer.renderSolid(model.getBakedModel(), light);
+		renderer.renderSolid(model.getOriginalModel(), light);
 
 		// bits
 		ms.push();

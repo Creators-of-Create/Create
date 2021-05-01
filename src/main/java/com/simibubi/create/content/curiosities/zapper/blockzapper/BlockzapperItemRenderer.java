@@ -20,6 +20,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
@@ -28,14 +29,14 @@ import net.minecraft.util.math.vector.Vector3f;
 public class BlockzapperItemRenderer extends ZapperItemRenderer<BlockzapperModel> {
 
 	@Override
-	protected void render(ItemStack stack, BlockzapperModel model, PartialItemModelRenderer renderer, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
-		super.render(stack, model, renderer, ms, buffer, light, overlay);
+	protected void render(ItemStack stack, BlockzapperModel model, PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType,
+		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		super.render(stack, model, renderer, transformType, ms, buffer, light, overlay);
 
 		float pt = AnimationTickHolder.getPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 
-		renderer.render(model.getBakedModel(), light);
+		renderer.render(model.getOriginalModel(), light);
 		renderComponent(stack, model, Body, renderer, light);
 		renderComponent(stack, model, Amplifier, renderer, light);
 		renderComponent(stack, model, Retriever, renderer, light);

@@ -9,7 +9,6 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
@@ -20,15 +19,14 @@ import net.minecraft.util.math.vector.Vector3f;
 public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
-	public void render(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void render(ItemStack stack, TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
-		TransformType perspective = mainModel.getCurrentPerspective();
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
-		boolean leftHand = perspective == TransformType.FIRST_PERSON_LEFT_HAND;
-		boolean firstPerson = leftHand || perspective == TransformType.FIRST_PERSON_RIGHT_HAND;
+		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
+		boolean firstPerson = leftHand || transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
 
 		ms.push();
 		ms.translate(.5f, .5f, .5f);
@@ -39,7 +37,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		if (tag.contains("Polishing")) {
 			ms.push();
 
-			if (perspective == TransformType.GUI) {
+			if (transformType == TransformType.GUI) {
 				ms.translate(0.0F, .2f, 1.0F);
 				ms.scale(.75f, .75f, .75f);
 			} else {
@@ -53,7 +51,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			if (time / (float) stack.getUseDuration() < 0.8F) {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
-				if (perspective == TransformType.GUI)
+				if (transformType == TransformType.GUI)
 					ms.translate(bobbing, bobbing, 0.0F);
 				else
 					ms.translate(0.0f, bobbing, 0.0F);
@@ -76,7 +74,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			}
 		}
 
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getBakedModel());
+		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getOriginalModel());
 
 		ms.pop();
 	}

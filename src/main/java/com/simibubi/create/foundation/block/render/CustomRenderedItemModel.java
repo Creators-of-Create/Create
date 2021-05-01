@@ -9,18 +9,18 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.BakedModelWrapper;
 
 @SuppressWarnings("deprecation")
-public abstract class CustomRenderedItemModel extends WrappedBakedModel {
+public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedModel> {
 
 	protected String basePath;
 	protected Map<String, IBakedModel> partials = new HashMap<>();
-	protected TransformType currentPerspective;
 	protected ItemStackTileEntityRenderer renderer;
 
 	public CustomRenderedItemModel(IBakedModel template, String basePath) {
@@ -29,25 +29,30 @@ public abstract class CustomRenderedItemModel extends WrappedBakedModel {
 		this.renderer = createRenderer();
 	}
 
-	public final List<ResourceLocation> getModelLocations() {
-		return partials.keySet().stream().map(this::getPartialModelLocation).collect(Collectors.toList());
-	}
-	
-	public ItemStackTileEntityRenderer getRenderer() {
-		return renderer;
-	}
-
-	public abstract ItemStackTileEntityRenderer createRenderer();
-
 	@Override
 	public boolean isBuiltInRenderer() {
 		return true;
 	}
 
 	@Override
-	public IBakedModel handlePerspective(TransformType cameraTransformType, MatrixStack mat) {
-		currentPerspective = cameraTransformType;
-		return super.handlePerspective(cameraTransformType, mat);
+	public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+		// Super call returns originalModel, but we want to return this, else ISTER won't be used.
+		super.handlePerspective(cameraTransformType, mat);
+		return this;
+	}
+
+	public final IBakedModel getOriginalModel() {
+		return originalModel;
+	}
+
+	public ItemStackTileEntityRenderer getRenderer() {
+		return renderer;
+	}
+
+	public abstract ItemStackTileEntityRenderer createRenderer();
+
+	public final List<ResourceLocation> getModelLocations() {
+		return partials.keySet().stream().map(this::getPartialModelLocation).collect(Collectors.toList());
 	}
 
 	protected void addPartials(String... partials) {
@@ -70,10 +75,6 @@ public abstract class CustomRenderedItemModel extends WrappedBakedModel {
 		return new ResourceLocation(Create.ID, "item/" + basePath + "/" + name);
 	}
 
-	public TransformType getCurrentPerspective() {
-		return currentPerspective;
-	}
-	
 	public IBakedModel getPartial(String name) {
 		return partials.get(name);
 	}
