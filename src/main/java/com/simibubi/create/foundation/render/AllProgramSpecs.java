@@ -41,7 +41,7 @@ public class AllProgramSpecs {
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(TransformAttributes.class)
 			.setVert(Locations.MODEL_VERT)
-			.setFrag(Locations.MODEL_FRAG)
+			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
 
 	public static final ProgramSpec<BasicProgram> ORIENTED = register(ProgramSpec.builder("oriented", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
@@ -49,7 +49,7 @@ public class AllProgramSpecs {
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(OrientedAttributes.class)
 			.setVert(Locations.ORIENTED)
-			.setFrag(Locations.MODEL_FRAG)
+			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
 
 	public static final ProgramSpec<BasicProgram> ROTATING = register(ProgramSpec.builder("rotating", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
@@ -58,7 +58,7 @@ public class AllProgramSpecs {
 			.addAttributes(KineticAttributes.class)
 			.addAttributes(RotatingAttributes.class)
 			.setVert(Locations.ROTATING)
-			.setFrag(Locations.MODEL_FRAG)
+			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
 
 	public static final ProgramSpec<BasicProgram> BELT = register(ProgramSpec.builder("belt", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
@@ -67,26 +67,27 @@ public class AllProgramSpecs {
 			.addAttributes(KineticAttributes.class)
 			.addAttributes(BeltAttributes.class)
 			.setVert(Locations.BELT)
-			.setFrag(Locations.MODEL_FRAG)
+			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
 
 	public static final ProgramSpec<BasicProgram> FLAPS = register(ProgramSpec.builder("flap", new FogSensitiveProgram.SpecLoader<>(BasicProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(FlapAttributes.class)
 			.setVert(Locations.FLAP)
-			.setFrag(Locations.MODEL_FRAG)
+			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_STRUCTURE = register(ProgramSpec.builder("contraption_structure", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ContraptionAttributes.class)
 			.setVert(Locations.CONTRAPTION_STRUCTURE)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
+			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_MODEL = register(ProgramSpec.builder("contraption_model", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(TransformAttributes.class)
 			.setVert(Locations.MODEL_VERT)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_ORIENTED = register(ProgramSpec.builder("contraption_oriented", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
@@ -94,7 +95,7 @@ public class AllProgramSpecs {
 			.addAttributes(BasicAttributes.class)
 			.addAttributes(OrientedAttributes.class)
 			.setVert(Locations.ORIENTED)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_ROTATING = register(ProgramSpec.builder("contraption_rotating", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
@@ -103,7 +104,7 @@ public class AllProgramSpecs {
 			.addAttributes(KineticAttributes.class)
 			.addAttributes(RotatingAttributes.class)
 			.setVert(Locations.ROTATING)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_BELT = register(ProgramSpec.builder("contraption_belt", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
@@ -112,31 +113,30 @@ public class AllProgramSpecs {
 			.addAttributes(KineticAttributes.class)
 			.addAttributes(BeltAttributes.class)
 			.setVert(Locations.BELT)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_FLAPS = register(ProgramSpec.builder("contraption_flap", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(FlapAttributes.class)
 			.setVert(Locations.FLAP)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 	public static final ProgramSpec<ContraptionProgram> C_ACTOR = register(ProgramSpec.builder("contraption_actor", new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new))
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(ActorVertexAttributes.class)
 			.setVert(Locations.CONTRAPTION_ACTOR)
-			.setFrag(Locations.CONTRAPTION)
+			.setFrag(Locations.BLOCK)
+			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
 
 
 	public static class Locations {
-		public static final ResourceLocation EFFECT_VERT = loc("area_effect.vert");
-		public static final ResourceLocation EFFECT_FRAG = loc("area_effect.frag");
-		public static final ResourceLocation MODEL_FRAG = loc("model.frag");
+		public static final ResourceLocation BLOCK = loc("block.frag");
+
 		public static final ResourceLocation MODEL_VERT = loc("model.vert");
 		public static final ResourceLocation ORIENTED = loc("oriented.vert");
-		public static final ResourceLocation CONTRAPTION = loc("contraption.frag");
 
 		public static final ResourceLocation ROTATING = loc("rotating.vert");
 		public static final ResourceLocation BELT = loc("belt.vert");
@@ -144,6 +144,8 @@ public class AllProgramSpecs {
 		public static final ResourceLocation CONTRAPTION_STRUCTURE = loc("contraption_structure.vert");
 		public static final ResourceLocation CONTRAPTION_ACTOR = loc("contraption_actor.vert");
 
+		public static final ResourceLocation EFFECT_VERT = loc("area_effect.vert");
+		public static final ResourceLocation EFFECT_FRAG = loc("area_effect.frag");
 
 		private static ResourceLocation loc(String name) {
 			return new ResourceLocation(Create.ID, name);

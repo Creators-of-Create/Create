@@ -1,15 +1,12 @@
 #version 110
 
 varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
 varying vec2 Light;
-
-varying vec3 BoxCoord;
+varying float Diffuse;
+varying vec4 Color;
 
 uniform sampler2D uBlockAtlas;
 uniform sampler2D uLightMap;
-uniform sampler3D uLightVolume;
 
 #if defined(USE_FOG)
 varying float FragDistance;
@@ -31,19 +28,20 @@ float fogFactor() {
     float dist = FragDistance * uFogDensity;
     return 1. / exp2(dist * dist);
 }
-#endif
+    #endif
 
-vec4 light() {
-    vec2 lm = texture3D(uLightVolume, BoxCoord).rg * 0.9375 + 0.03125;
-    return texture2D(uLightMap, max(lm, Light));
-}
+    #ifdef CONTRAPTION
+    #flwinclude <"create:contraption/builtin.frag">
+    #else
+    #flwinclude <"create:std/builtin.frag">
+    #endif
 
 void main() {
     vec4 tex = texture2D(uBlockAtlas, TexCoords);
 
-    vec4 color = vec4(tex.rgb * light().rgb * Diffuse * Color.rgb, tex.a);
+    vec4 color = vec4(tex.rgb * FLWLight(Light, uLightMap).rgb * Diffuse, tex.a) * Color;
 
-#if defined(USE_FOG)
+    #if defined(USE_FOG)
     float fog = clamp(fogFactor(), 0., 1.);
 
     gl_FragColor = mix(uFogColor, color, fog);

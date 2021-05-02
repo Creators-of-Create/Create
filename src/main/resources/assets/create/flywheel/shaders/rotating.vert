@@ -32,9 +32,9 @@ varying float FragDistance;
 #endif
 
 #ifdef CONTRAPTION
-#flwinclude <"create:contraption/finalize.glsl">
+#flwinclude <"create:contraption/builtin.vert">
 #else
-#flwinclude <"create:std/finalize.glsl">
+#flwinclude <"create:std/builtin.vert">
 #endif
 
 mat4 kineticRotation() {

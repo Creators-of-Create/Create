@@ -46,6 +46,7 @@ public class ShaderLoader {
 
 	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
 	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
+	private static boolean debugDumpFile = false;
 
 	final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
@@ -162,6 +163,13 @@ public class ShaderLoader {
 		if (defines != null)
 			source = defines.process(source);
 
+		if (debugDumpFile) {
+			Backend.log.debug("Finished processing '" + name + "':");
+			int i = 1;
+			for (String s : source.split("\n")) {
+				Backend.log.debug(String.format("%1$4s: ", i++) + s);
+			}
+		}
 
 		return new GlShader(type, name, source);
 	}
