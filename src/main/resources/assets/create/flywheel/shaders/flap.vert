@@ -26,14 +26,6 @@ varying vec4 Color;
 varying float Diffuse;
 varying vec2 Light;
 
-#if defined(CONTRAPTION)
-varying vec3 BoxCoord;
-
-uniform vec3 uLightBoxSize;
-uniform vec3 uLightBoxMin;
-uniform mat4 uModel;
-#endif
-
 uniform float uTime;
 uniform mat4 uViewProjection;
 uniform int uDebug;
@@ -42,6 +34,12 @@ uniform vec3 uCameraPos;
 
 #if defined(USE_FOG)
 varying float FragDistance;
+#endif
+
+#ifdef CONTRAPTION
+#flwinclude <"create:contraption/finalize.glsl">
+#else
+#flwinclude <"create:std/finalize.glsl">
 #endif
 
 float toRad(float degrees) {
@@ -73,17 +71,8 @@ void main() {
     vec4 worldPos = vec4(rotated, 1.);
     vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, flapRotation), orientation);
 
-    #ifdef CONTRAPTION
-    worldPos = uModel * worldPos;
-    norm = modelToNormal(uModel) * norm;
-
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
-    #endif
-    #elif defined(USE_FOG)
-    FragDistance = length(worldPos.xyz - uCameraPos);
-    #endif
+    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;

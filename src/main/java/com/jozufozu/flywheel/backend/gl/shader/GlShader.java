@@ -28,7 +28,7 @@ public class GlShader extends GlObject {
 		}
 
 		if (GL20.glGetShaderi(handle, GL20.GL_COMPILE_STATUS) != GL20.GL_TRUE) {
-			throw new RuntimeException("Could not compile shader. See log for details.");
+			throw new RuntimeException("Could not compile " + name + ". See log for details.");
 		}
 
 		setHandle(handle);
