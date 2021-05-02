@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/handheld_blockzapper/item",
 	"textures": {
 		"0": "create:block/terrain_zapper_mesh",
 		"1": "block/smooth_stone_slab_side",
