@@ -506,7 +506,7 @@
 	"advancement.create.shifting_gears": "Механизм переключения",
 	"advancement.create.shifting_gears.desc": "Подсоедините большую шестерню к шестерне, что позволит изменить скорость вращения.",
 	"advancement.create.overstressed": "Перегрузка",
-	"advancement.create.overstressed.desc": "Испытайте предельную перегрузку из первых рук.",
+	"advancement.create.overstressed.desc": "Столкнитесь с предельной перегрузкой лицом к лицу.",
 	"advancement.create.belt": "Передайте за проезд!",
 	"advancement.create.belt.desc": "Соедините два вала с помощью механического ремня.",
 	"advancement.create.tunnel": "В укрытие!",
@@ -648,7 +648,7 @@
 	"advancement.create.extendo_grip": "Кипение!",
 	"advancement.create.extendo_grip.desc": "Возьмите в руки удлинённую руку",
 	"advancement.create.dual_extendo_grip": "Окончательное выкипание",
-	"advancement.create.dual_extendo_grip.desc": "Две удлинённой руки для сверхчеловеческого охвата.",
+	"advancement.create.dual_extendo_grip.desc": "Две удлинённых руки для сверхчеловеческого охвата.",
 	"advancement.create.eob": "Конец бета-версии",
 	"advancement.create.eob.desc": "Ожидайте больше контента здесь в будущем. <3",
 
