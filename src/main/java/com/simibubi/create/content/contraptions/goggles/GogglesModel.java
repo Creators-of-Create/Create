@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.goggles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.block.render.WrappedBakedModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraftforge.client.model.BakedModelWrapper;
 
-public class GogglesModel extends WrappedBakedModel {
+public class GogglesModel extends BakedModelWrapper<IBakedModel> {
 
 	public GogglesModel(IBakedModel template) {
 		super(template);
