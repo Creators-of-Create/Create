@@ -21,26 +21,20 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class PonderCommand {
-	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(
-		new ResourceLocation("all_ponders"),
-		(iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.func_212476_a(PonderRegistry.all.keySet()
-			.stream(), builder));
+	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.func_212476_a(PonderRegistry.all.keySet().stream(), builder));
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("ponder")
-			.requires(cs -> cs.hasPermissionLevel(0))
-			.executes(ctx -> openScene("index", ctx.getSource()
-				.asPlayer()))
-			.then(Commands.argument("scene", ResourceLocationArgument.resourceLocation())
-				.suggests(ITEM_PONDERS)
-				.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene")
-					.toString(),
-					ctx.getSource()
-						.asPlayer()))
-				.then(Commands.argument("targets", EntityArgument.players())
-					.requires(cs -> cs.hasPermissionLevel(2))
-					.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene")
-						.toString(), EntityArgument.getPlayers(ctx, "targets")))));
+				.requires(cs -> cs.hasPermissionLevel(0))
+				.executes(ctx -> openScene("index", ctx.getSource().asPlayer()))
+				.then(Commands.argument("scene", ResourceLocationArgument.resourceLocation())
+						.suggests(ITEM_PONDERS)
+						.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene").toString(), ctx.getSource().asPlayer()))
+						.then(Commands.argument("targets", EntityArgument.players())
+								.requires(cs -> cs.hasPermissionLevel(2))
+								.executes(ctx -> openScene(ResourceLocationArgument.getResourceLocation(ctx, "scene").toString(), EntityArgument.getPlayers(ctx, "targets")))
+						)
+				);
 
 	}
 
@@ -53,8 +47,9 @@ public class PonderCommand {
 			if (player instanceof FakePlayer)
 				continue;
 
-			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
-				new ConfigureConfigPacket(ConfigureConfigPacket.Actions.openPonder.name(), sceneId));
+			AllPackets.channel.send(
+					PacketDistributor.PLAYER.with(() -> player),
+					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId));
 		}
 		return Command.SINGLE_SUCCESS;
 	}

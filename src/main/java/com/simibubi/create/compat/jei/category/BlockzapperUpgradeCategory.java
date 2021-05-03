@@ -88,7 +88,7 @@ public class BlockzapperUpgradeCategory extends CreateRecipeCategory<Blockzapper
 		font.drawWithShadow(matrixStack, textComponent, (BLOCKZAPPER_UPGRADE_RECIPE.width - font.getStringWidth(textComponent.getString())) / 2f, 57, 0x8B8B8B);
 
 		GuiGameElement.of(recipe.getRecipeOutput())
-				.at(90, 0)
+				.<GuiGameElement.GuiRenderBuilder>at(90, 0)
 				.scale(3.5)
 				.render(matrixStack);
 	}

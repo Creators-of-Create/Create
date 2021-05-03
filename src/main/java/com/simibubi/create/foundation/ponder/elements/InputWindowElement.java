@@ -136,7 +136,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 
 		if (hasItem) {
 			GuiGameElement.of(item)
-				.at(keyWidth + (hasIcon ? 24 : 0), 0)
+				.<GuiGameElement.GuiRenderBuilder>at(keyWidth + (hasIcon ? 24 : 0), 0)
 				.scale(1.5)
 				.render(ms);
 			RenderSystem.disableDepthTest();

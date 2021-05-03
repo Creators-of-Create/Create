@@ -13,16 +13,18 @@ public class FabulousWarningCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("dismissFabulousWarning")
-			.requires(AllCommands.sourceIsPlayer)
-			.executes(ctx -> {
-				ServerPlayerEntity player = ctx.getSource()
-					.asPlayer();
+				.requires(AllCommands.sourceIsPlayer)
+				.executes(ctx -> {
+					ServerPlayerEntity player = ctx.getSource()
+							.asPlayer();
 
-				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
-					new ConfigureConfigPacket(ConfigureConfigPacket.Actions.fabulousWarning.name(), ""));
+					AllPackets.channel.send(
+							PacketDistributor.PLAYER.with(() -> player),
+							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fabulousWarning.name(), "")
+					);
 
-				return Command.SINGLE_SUCCESS;
-			});
+					return Command.SINGLE_SUCCESS;
+				});
 
 	}
 }

@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivit
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
+import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.foundation.ResourceReloadHandler;
 import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
@@ -80,6 +81,7 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
+		modEventBus.addListener(ClientEvents::loadCompleted);
 
 		Backend.init();
 		OptifineHandler.init();
@@ -110,11 +112,14 @@ public class CreateClient {
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
+		UIRenderHelper.enableStencil();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
+
+
 	}
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {

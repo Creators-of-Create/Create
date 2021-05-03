@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.ponder;
 
 import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREFIX;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -16,8 +16,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.content.DebugScenes;
@@ -29,6 +31,7 @@ import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -43,14 +46,12 @@ import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -166,13 +167,16 @@ public class PonderUI extends NavigatableSimiScreen {
 			int i = tagButtons.size();
 			int x = 31;
 			int y = 81 + i * 30;
-			PonderButton b = new PonderButton(x, y, (mouseX, mouseY) -> {
-				centerScalingOn(mouseX, mouseY);
-				ScreenOpener.transitionTo(new PonderTagScreen(t));
-			}).showing(t);
 
-			widgets.add(b);
-			tagButtons.add(b);
+			PonderButton b2 = new PonderButton(x, y)
+					.showing(t)
+					.withCallback((mX, mY) -> {
+						centerScalingOn(mX, mY);
+						ScreenOpener.transitionTo(new PonderTagScreen(t));
+					});
+
+			widgets.add(b2);
+			tagButtons.add(b2);
 
 			LerpedFloat chase = LerpedFloat.linear()
 				.startWithValue(0)
@@ -181,10 +185,10 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		});
 
-		if (chapter != null) {
+		/*if (chapter != null) {
 			widgets.add(chap = new PonderButton(width - 31 - 24, 31, () -> {
 			}).showing(chapter));
-		}
+		}*/
 
 		GameSettings bindings = client.gameSettings;
 		int spacing = 8;
@@ -193,53 +197,63 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		{
 			int pX = (width / 2) - 110;
-			int pY = bY + PonderButton.SIZE + 4;
+			int pY = bY + 20 + 4;
 			int pW = width - 2 * pX;
 			widgets.add(progressBar = new PonderProgressBar(this, pX, pY, pW, 1));
 		}
 
-		widgets.add(scan = new PonderButton(bX, bY, () -> {
-			identifyMode = !identifyMode;
-			if (!identifyMode)
-				scenes.get(index)
-					.deselect();
-			else
-				ponderPartialTicksPaused = client.getRenderPartialTicks();
-		}).showing(AllIcons.I_MTD_SCAN)
-			.shortcut(bindings.keyBindDrop)
-			.fade(0, -1));
+		widgets.add(scan = new PonderButton(bX, bY)
+				.withShortcut(bindings.keyBindDrop)
+				.showing(AllIcons.I_MTD_SCAN)
+				.enableFade(0, 5)
+				.withCallback(() -> {
+					identifyMode = !identifyMode;
+					if (!identifyMode)
+						scenes.get(index)
+								.deselect();
+					else
+						ponderPartialTicksPaused = client.getRenderPartialTicks();
+				}));
 
-		widgets.add(slowMode = new PonderButton(width - 20 - 31, bY, () -> {
-			setComfyReadingEnabled(!isComfyReadingEnabled());
-		}).showing(AllIcons.I_MTD_SLOW_MODE)
-			.fade(0, -1));
-
+		widgets.add(slowMode = new PonderButton(width - 20 - 31, bY)
+				.showing(AllIcons.I_MTD_SLOW_MODE)
+				.enableFade(0, 5)
+				.withCallback(() -> setComfyReadingEnabled(!isComfyReadingEnabled())));
+		
 		if (PonderIndex.EDITOR_MODE) {
-			widgets.add(userMode = new PonderButton(width - 50 - 31, bY, () -> {
-				userViewMode = !userViewMode;
-			}).showing(AllIcons.I_MTD_USER_MODE)
-				.fade(0, -1));
+			widgets.add(userMode = new PonderButton(width - 50 - 31, bY)
+					.showing(AllIcons.I_MTD_USER_MODE)
+					.enableFade(0, 5)
+					.withCallback(() -> userViewMode = !userViewMode));
 		}
 
 		bX += 50 + spacing;
-		widgets.add(left = new PonderButton(bX, bY, () -> this.scroll(false)).showing(AllIcons.I_MTD_LEFT)
-			.shortcut(bindings.keyBindLeft)
-			.fade(0, -1));
+		widgets.add(left = new PonderButton(bX, bY)
+				.withShortcut(bindings.keyBindLeft)
+				.showing(AllIcons.I_MTD_LEFT)
+				.enableFade(0, 5)
+				.withCallback(() -> this.scroll(false)));
 
 		bX += 20 + spacing;
-		widgets.add(close = new PonderButton(bX, bY, this::onClose).showing(AllIcons.I_MTD_CLOSE)
-			.shortcut(bindings.keyBindInventory)
-			.fade(0, -1));
+		widgets.add(close = new PonderButton(bX, bY)
+				.withShortcut(bindings.keyBindInventory)
+				.showing(AllIcons.I_MTD_CLOSE)
+				.enableFade(0, 5)
+				.withCallback(this::onClose));
 
 		bX += 20 + spacing;
-		widgets.add(right = new PonderButton(bX, bY, () -> this.scroll(true)).showing(AllIcons.I_MTD_RIGHT)
-			.shortcut(bindings.keyBindRight)
-			.fade(0, -1));
+		widgets.add(right = new PonderButton(bX, bY)
+				.withShortcut(bindings.keyBindRight)
+				.showing(AllIcons.I_MTD_RIGHT)
+				.enableFade(0, 5)
+				.withCallback(() -> this.scroll(true)));
 
 		bX += 50 + spacing;
-		widgets.add(replay = new PonderButton(bX, bY, this::replay).showing(AllIcons.I_MTD_REPLAY)
-			.shortcut(bindings.keyBindBack)
-			.fade(0, -1));
+		widgets.add(replay = new PonderButton(bX, bY)
+				.withShortcut(bindings.keyBindBack)
+				.showing(AllIcons.I_MTD_REPLAY)
+				.enableFade(0, 5)
+				.withCallback(this::replay));
 	}
 
 	@Override
@@ -527,17 +541,16 @@ public class PonderUI extends NavigatableSimiScreen {
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		float indexDiff = Math.abs(lazyIndexValue - index);
 		PonderScene activeScene = scenes.get(index);
-		int textColor = 0xeeeeee;
 
 		boolean noWidgetsHovered = true;
 		for (Widget widget : widgets)
 			noWidgetsHovered &= !widget.isMouseOver(mouseX, mouseY);
 
-		int tooltipColor = 0xffa3a3a3;
+		int tooltipColor = Theme.i(Theme.Key.TEXT_DARKER);
 		{
 			// Chapter title
 			ms.push();
-			ms.translate(0, 0, 300);
+			ms.translate(0, 0, 100);
 			int x = 31 + 20 + 8;
 			int y = 31;
 
@@ -545,14 +558,21 @@ public class PonderUI extends NavigatableSimiScreen {
 			int wordWrappedHeight = textRenderer.getWordWrappedHeight(title, left.x - 51);
 
 			int streakHeight = 35 - 9 + wordWrappedHeight;
-			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade), 0x101010);
-			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade), 0x101010);
-			renderBox(ms, 21, 21, 30, 30, false);
+			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
+			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade));
+			//renderBox(ms, 21, 21, 30, 30, false);
+			new BoxElement()
+					.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+					.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
+					.at(21, 21, 100)
+					.withBounds(30, 30)
+					.render(ms);
+
 
 			GuiGameElement.of(stack)
-				.at(x - 39, y - 11)
-				.scale(2)
-				.render(ms);
+					.scale(2)
+					.at(x - 39, y - 11)
+					.render(ms);
 
 			textRenderer.draw(ms, Lang.translate(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
@@ -562,19 +582,18 @@ public class PonderUI extends NavigatableSimiScreen {
 			ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(indexDiff * -75));
 			ms.translate(0, 0, 5);
 			FontHelper.drawSplitString(ms, textRenderer, title, 0, 0, left.x - 51,
-				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+				ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT), 1 - indexDiff));
 			ms.pop();
 
 			if (chapter != null) {
 				ms.push();
 
 				ms.translate(chap.x - 4 - 4, chap.y, 0);
-				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade), 0x101010);
+				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
 
-				drawRightAlignedString(textRenderer, ms, Lang.translate(IN_CHAPTER)
-					.getString(), 0, 0, tooltipColor);
-				drawRightAlignedString(textRenderer, ms, Lang.translate(LANG_PREFIX + "chapter." + chapter.getId())
-					.getString(), 0, 12, 0xffeeeeee);
+				drawRightAlignedString(textRenderer, ms, Lang.translate(IN_CHAPTER).getString(), 0, 0, tooltipColor);
+				drawRightAlignedString(textRenderer, ms,
+					Lang.translate(LANG_PREFIX + "chapter." + chapter.getId()).getString(), 0, 12, Theme.i(Theme.Key.TEXT));
 
 				ms.pop();
 			}
@@ -590,29 +609,24 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.push();
 				ms.translate(mouseX, mouseY, 100);
 				if (hoveredTooltipItem.isEmpty()) {
-					IFormattableTextComponent text = Lang
-						.translate(IDENTIFY_MODE,
-							((IFormattableTextComponent) client.gameSettings.keyBindDrop.getBoundKeyLocalizedText())
-								.formatted(TextFormatting.WHITE))
-						.formatted(TextFormatting.GRAY);
+					IFormattableTextComponent text = Lang.translate(
+							IDENTIFY_MODE,
+							((IFormattableTextComponent) client.gameSettings.keyBindDrop.getBoundKeyLocalizedText()).formatted(TextFormatting.WHITE)
+					).formatted(TextFormatting.GRAY);
 
-					// renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
-					renderWrappedToolTip(ms, textRenderer.getTextHandler()
-						.wrapLines(text, width / 3, Style.EMPTY), 0, 0, textRenderer);
-					/*
-					 * String tooltip = Lang
-					 * .createTranslationTextComponent(IDENTIFY_MODE, client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(TextFormatting.WHITE))
-					 * .applyTextStyle(TextFormatting.GRAY)
-					 * .getFormattedText();
-					 * renderTooltip(font.listFormattedStringToWidth(tooltip, width / 3), 0, 0);
-					 */
+					//renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
+					renderWrappedToolTip(ms, textRenderer.getTextHandler().wrapLines(text, width / 3, Style.EMPTY), 0, 0, textRenderer);
+					/*String tooltip = Lang
+						.createTranslationTextComponent(IDENTIFY_MODE, client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(TextFormatting.WHITE))
+						.applyTextStyle(TextFormatting.GRAY)
+						.getFormattedText();
+					renderTooltip(font.listFormattedStringToWidth(tooltip, width / 3), 0, 0);*/
 				} else
 					renderTooltip(ms, hoveredTooltipItem, 0, 0);
 				if (hoveredBlockPos != null && PonderIndex.EDITOR_MODE && !userViewMode) {
 					ms.translate(0, -15, 0);
 					boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
-					IFormattableTextComponent coords = new StringTextComponent(
-						hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
+					IFormattableTextComponent coords = new StringTextComponent(hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
 							.formatted(copied ? TextFormatting.GREEN : TextFormatting.GOLD);
 					renderTooltip(ms, coords, 0, 0);
 				}
@@ -649,15 +663,14 @@ public class PonderUI extends NavigatableSimiScreen {
 		// Widgets
 		widgets.forEach(w -> {
 			if (w instanceof PonderButton) {
-				PonderButton mtdButton = (PonderButton) w;
-				mtdButton.fade(fade);
+				((PonderButton) w).fade().startWithValue(fade);
 			}
 		});
 
 		if (index == 0 || index == 1 && lazyIndexValue < index)
-			left.fade(lazyIndexValue);
+			left.fade().startWithValue(lazyIndexValue);
 		if (index == scenes.size() - 1 || index == scenes.size() - 2 && lazyIndexValue > index)
-			right.fade(scenes.size() - lazyIndexValue - 1);
+			right.fade().startWithValue(scenes.size() - lazyIndexValue - 1);
 
 		boolean finished = activeScene.isFinished();
 		if (finished)
@@ -693,14 +706,14 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.translate(x, y + 5 * (1 - fade), 800);
 
 				float fadedWidth = 200 * chase.getValue(partialTicks);
-				UIRenderHelper.streak(ms, 0, 0, 12, 26, (int) fadedWidth, 0x101010);
+				UIRenderHelper.streak(ms, 0, 0, 12, 26, (int) fadedWidth);
 
 				GL11.glScissor((int) (x * s), 0, (int) (fadedWidth * s), (int) (height * s));
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 				String tagName = this.tags.get(i)
 					.getTitle();
-				textRenderer.draw(ms, tagName, 3, 8, 0xffeedd);
+				textRenderer.draw(ms, tagName, 3, 8, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT));
 
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
@@ -727,8 +740,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.pop();
 	}
 
-	protected void lowerButtonGroup(MatrixStack ms, int index, int mouseX, int mouseY, float fade, AllIcons icon,
-		KeyBinding key) {
+	/*protected void lowerButtonGroup(MatrixStack ms, int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
 		int bWidth = 20;
 		int bHeight = 20;
 		int bX = (width - bWidth) / 2 + (index - 1) * (bWidth + 8);
@@ -740,10 +752,9 @@ public class PonderUI extends NavigatableSimiScreen {
 		boolean hovered = isMouseOver(mouseX, mouseY, bX, bY, bWidth, bHeight);
 		renderBox(ms, bX, bY, bWidth, bHeight, hovered);
 		icon.draw(ms, bX + 2, bY + 2);
-		drawCenteredText(ms, textRenderer, key.getBoundKeyLocalizedText(), bX + bWidth / 2 + 8, bY + bHeight - 6,
-			0xff606060);
+		drawCenteredText(ms, textRenderer, key.getBoundKeyLocalizedText(), bX + bWidth / 2 + 8, bY + bHeight - 6, 0xff606060);
 		ms.pop();
-	}
+	}*/
 
 	private void renderOverlay(MatrixStack ms, int i, float partialTicks) {
 		if (identifyMode)
@@ -756,7 +767,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		MutableBoolean handled = new MutableBoolean(false);
+		/*MutableBoolean handled = new MutableBoolean(false);
 		widgets.forEach(w -> {
 			if (handled.booleanValue())
 				return;
@@ -771,7 +782,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		});
 
 		if (handled.booleanValue())
-			return true;
+			return true;*/
 
 		if (identifyMode && hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
 			long handle = client.getWindow()
@@ -843,8 +854,8 @@ public class PonderUI extends NavigatableSimiScreen {
 				.getString();
 
 		return stack.getItem()
-			.getName()
-			.getString();
+				.getName()
+				.getString();
 	}
 
 	public FontRenderer getFontRenderer() {
@@ -857,13 +868,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		return hovered;
 	}
 
-	public static void renderBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted) {
-		renderBox(ms, x, y, w, h, 0xff000000, highlighted ? 0xf0ffeedd : 0x40ffeedd,
-			highlighted ? 0x60ffeedd : 0x20ffeedd);
-	}
-
-	public static void renderSpeechBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted,
-		Pointing pointing, boolean returnWithLocalTransform) {
+	public static void renderSpeechBox(MatrixStack ms, int x, int y, int w, int h, boolean highlighted, Pointing pointing,
+		boolean returnWithLocalTransform) {
 		if (!returnWithLocalTransform)
 			ms.push();
 
@@ -875,6 +881,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		int divotSize = 8;
 		int distance = 1;
 		int divotRadius = divotSize / 2;
+		Couple<Color> borderColors = Theme.p(highlighted ? Theme.Key.PONDER_HIGHLIGHT : Theme.Key.PONDER_IDLE);
+		Color c;
 
 		switch (pointing) {
 		default:
@@ -884,6 +892,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h + divotSize + 1 + distance;
 			divotX -= divotRadius;
 			divotY -= divotSize + distance;
+			c = borderColors.getSecond();
 			break;
 		case LEFT:
 			divotRotation = 90;
@@ -891,6 +900,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h / 2;
 			divotX += distance;
 			divotY -= divotRadius;
+			c = ColorHelper.mixColors(borderColors, 0.5f);
 			break;
 		case RIGHT:
 			divotRotation = 270;
@@ -898,6 +908,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h / 2;
 			divotX -= divotSize + distance;
 			divotY -= divotRadius;
+			c = ColorHelper.mixColors(borderColors, 0.5f);
 			break;
 		case UP:
 			divotRotation = 180;
@@ -905,17 +916,24 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY += divotSize + 1 + distance;
 			divotX -= divotRadius;
 			divotY += distance;
+			c = borderColors.getFirst();
 			break;
 		}
 
-		renderBox(ms, boxX, boxY, w, h, highlighted);
+		//renderBox(ms, boxX, boxY, w, h, highlighted);
+		new BoxElement()
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.gradientBorder(borderColors)
+				.at(boxX, boxY, 100)
+				.withBounds(w, h)
+				.render(ms);
 
 		ms.push();
-		AllGuiTextures toRender = highlighted ? AllGuiTextures.SPEECH_TOOLTIP_HIGHLIGHT : AllGuiTextures.SPEECH_TOOLTIP;
 		ms.translate(divotX + divotRadius, divotY + divotRadius, 10);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(divotRotation));
 		ms.translate(-divotRadius, -divotRadius, 0);
-		toRender.draw(ms, 0, 0);
+		AllGuiTextures.SPEECH_TOOLTIP_BACKGROUND.draw(ms, 0, 0);
+		AllGuiTextures.SPEECH_TOOLTIP_COLOR.draw(ms, 0, 0, c);
 		ms.pop();
 
 		if (returnWithLocalTransform) {
@@ -927,23 +945,20 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	}
 
-	public static void renderBox(MatrixStack ms, int x, int y, int w, int h, int backgroundColor, int borderColorStart,
+	/*public static void renderBox(MatrixStack ms, int x, int y, int w, int h, int backgroundColor, int borderColorStart,
 		int borderColorEnd) {
 		int z = 100;
-		Matrix4f model = ms.peek()
-			.getModel();
+		Matrix4f model = ms.peek().getModel();
 		GuiUtils.drawGradientRect(model, z, x - 3, y - 4, x + w + 3, y - 3, backgroundColor, backgroundColor);
 		GuiUtils.drawGradientRect(model, z, x - 3, y + h + 3, x + w + 3, y + h + 4, backgroundColor, backgroundColor);
 		GuiUtils.drawGradientRect(model, z, x - 3, y - 3, x + w + 3, y + h + 3, backgroundColor, backgroundColor);
 		GuiUtils.drawGradientRect(model, z, x - 4, y - 3, x - 3, y + h + 3, backgroundColor, backgroundColor);
 		GuiUtils.drawGradientRect(model, z, x + w + 3, y - 3, x + w + 4, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart,
-			borderColorEnd);
-		GuiUtils.drawGradientRect(model, z, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart,
-			borderColorEnd);
+		GuiUtils.drawGradientRect(model, z, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart, borderColorEnd);
+		GuiUtils.drawGradientRect(model, z, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart, borderColorEnd);
 		GuiUtils.drawGradientRect(model, z, x - 3, y - 3, x + w + 3, y - 3 + 1, borderColorStart, borderColorStart);
 		GuiUtils.drawGradientRect(model, z, x - 3, y + h + 2, x + w + 3, y + h + 3, borderColorEnd, borderColorEnd);
-	}
+	}*/
 
 	public ItemStack getHoveredTooltipItem() {
 		return hoveredTooltipItem;

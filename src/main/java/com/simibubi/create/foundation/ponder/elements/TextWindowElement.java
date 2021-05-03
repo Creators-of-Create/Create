@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.gui.BoxElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
@@ -110,7 +112,14 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		ms.push();
 		ms.translate(0, sceneToScreen.y, 400);
 
-		PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
+		new BoxElement()
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
+				.at(targetX - 10, 3, 100)
+				.withBounds(boxWidth, boxHeight - 1)
+				.render(ms);
+
+		//PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
 		int brighterColor = ColorHelper.mixAlphaColors(color, 0xFFffffdd, 1 / 2f);
 		if (vec != null) {

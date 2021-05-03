@@ -30,6 +30,7 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -78,7 +79,11 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -308,6 +313,11 @@ public class ClientEvents {
 		if (stack.getItem() instanceof ZapperItem) {
 			AllPackets.channel.sendToServer(new LeftClickPacket());
 		}
+	}
+
+	public static void loadCompleted(FMLLoadCompleteEvent event) {
+		ModContainer createContainer = ModList.get().getModContainerById("create").orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen));
 	}
 
 }

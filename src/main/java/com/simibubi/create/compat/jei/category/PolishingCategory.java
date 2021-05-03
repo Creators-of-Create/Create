@@ -73,7 +73,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
 		GuiGameElement.of(renderedSandpaper)
-				.at(getBackground().getWidth() / 2 - 16, 0, 0)
+				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)
 				.scale(2)
 				.render(matrixStack);
 	}

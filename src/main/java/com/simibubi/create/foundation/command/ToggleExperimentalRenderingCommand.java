@@ -13,7 +13,9 @@ public class ToggleExperimentalRenderingCommand extends ConfigureConfigCommand {
 
 	@Override
 	protected void sendPacket(ServerPlayerEntity player, String option) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
-			new ConfigureConfigPacket(ConfigureConfigPacket.Actions.experimentalRendering.name(), option));
+		AllPackets.channel.send(
+				PacketDistributor.PLAYER.with(() -> player),
+				new SConfigureConfigPacket(SConfigureConfigPacket.Actions.experimentalRendering.name(), option)
+		);
 	}
 }

@@ -69,8 +69,6 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
 		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
-		for (Widget widget : widgets)
-			widget.renderToolTip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override
@@ -152,9 +150,12 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			if (!widget.isHovered())
 				continue;
 
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip()
-				.isEmpty()) {
-				renderTooltip(matrixStack, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+			if (widget instanceof AbstractSimiWidget) {
+				if (!((AbstractSimiWidget) widget).getToolTip().isEmpty())
+					renderTooltip(matrixStack, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+
+			} else {
+				widget.renderToolTip(matrixStack, mouseX, mouseY);
 			}
 		}
 	}

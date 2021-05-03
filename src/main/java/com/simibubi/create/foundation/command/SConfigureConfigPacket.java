@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -31,17 +32,17 @@ import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class ConfigureConfigPacket extends SimplePacketBase {
+public class SConfigureConfigPacket extends SimplePacketBase {
 
 	private final String option;
 	private final String value;
 
-	public ConfigureConfigPacket(String option, String value) {
+	public SConfigureConfigPacket(String option, String value) {
 		this.option = option;
 		this.value = value;
 	}
 
-	public ConfigureConfigPacket(PacketBuffer buffer) {
+	public SConfigureConfigPacket(PacketBuffer buffer) {
 		this.option = buffer.readString(32767);
 		this.value = buffer.readString(32767);
 	}
@@ -69,7 +70,8 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 			.setPacketHandled(true);
 	}
 
-	enum Actions {
+	public enum Actions {
+		configScreen(() -> Actions::configScreen),
 		rainbowDebug(() -> Actions::rainbowDebug),
 		overlayScreen(() -> Actions::overlayScreen),
 		fixLighting(() -> Actions::experimentalLighting),
@@ -89,6 +91,11 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 		void performAction(String value) {
 			consumer.get()
 				.accept(value);
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static void configScreen(String value) {
+			ScreenOpener.open(new BaseConfigScreen(null));
 		}
 
 		@OnlyIn(Dist.CLIENT)

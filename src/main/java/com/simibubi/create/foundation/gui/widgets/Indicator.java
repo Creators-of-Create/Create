@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -22,7 +24,7 @@ public class Indicator extends AbstractSimiWidget {
 	}
 	
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
+	public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
 		AllGuiTextures toDraw;
 		switch(state) {
 			case ON: toDraw = AllGuiTextures.INDICATOR_WHITE; break;
