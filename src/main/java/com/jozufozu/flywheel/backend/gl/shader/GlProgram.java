@@ -105,13 +105,7 @@ public abstract class GlProgram extends GlObject {
 		}
 
 		/**
-		 * Links the attached shaders to this program and returns a user-defined container which wraps the shader
-		 * program. This container can, for example, provide methods for updating the specific uniforms of that shader
-		 * set.
-		 *
-		 * @param factory The factory which will create the shader program's container
-		 * @param <P>     The type which should be instantiated with the new program's handle
-		 * @return An instantiated shader container as provided by the factory
+		 * Links the attached shaders to this program.
 		 */
 		public Builder link() {
 			GL20.glLinkProgram(this.program);

@@ -1,6 +1,7 @@
 #version 110
 #define PI 3.1415926538
 
+#flwbuiltins
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
@@ -27,16 +28,6 @@ uniform int uDebug;
 
 uniform vec3 uCameraPos;
 
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-#ifdef CONTRAPTION
-#flwinclude <"create:contraption/builtin.vert">
-#else
-#flwinclude <"create:std/builtin.vert">
-#endif
-
 mat4 kineticRotation() {
     float degrees = aOffset + uTime * aSpeed * 3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
@@ -50,7 +41,7 @@ void main() {
 
     vec3 norm = modelToNormal(kineticRotation) * aNormal;
 
-    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeWorldPos(worldPos, uCameraPos);
     FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);

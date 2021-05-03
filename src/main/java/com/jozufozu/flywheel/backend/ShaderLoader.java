@@ -46,7 +46,8 @@ public class ShaderLoader {
 
 	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
 	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
-	private static boolean debugDumpFile = false;
+	private static final Pattern builtinPattern = Pattern.compile("#flwbuiltins");
+	private static boolean debugDumpFile = true;
 
 	final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
@@ -64,6 +65,9 @@ public class ShaderLoader {
 				Backend.registry.values().forEach(this::loadProgramFromSpec);
 
 				Backend.log.info("Loaded all shader programs.");
+
+				// no need to hog all that memory
+				shaderSource.clear();
 			}
 		}
 	}
@@ -125,7 +129,54 @@ public class ShaderLoader {
 		}
 	}
 
-	private String processIncludes(ResourceLocation baseName, String source) {
+	public GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
+		String source = shaderSource.get(name);
+
+		source = expandBuiltins(source, type);
+		source = processIncludes(source, name);
+
+		if (defines != null)
+			source = defines.process(source);
+
+		if (debugDumpFile) {
+			Backend.log.debug("Finished processing '" + name + "':");
+			int i = 1;
+			for (String s : source.split("\n")) {
+				Backend.log.debug(String.format("%1$4s: ", i++) + s);
+			}
+		}
+
+		return new GlShader(type, name, source);
+	}
+
+	private String expandBuiltins(String source, ShaderType type) {
+		return lines(source).flatMap(line -> {
+			Matcher matcher = builtinPattern.matcher(line);
+
+			if (matcher.find()) {
+				ResourceLocation builtins;
+
+				switch (type) {
+					case FRAGMENT:
+						builtins = new ResourceLocation("create", "std/builtin.frag");
+						break;
+					case VERTEX:
+						builtins = new ResourceLocation("create", "std/builtin.vert");
+						break;
+					default:
+						builtins = null;
+				}
+
+				String includeSource = shaderSource.get(builtins);
+
+				return lines(includeSource);
+			}
+
+			return Stream.of(line);
+		}).collect(Collectors.joining("\n"));
+	}
+
+	private String processIncludes(String source, ResourceLocation baseName) {
 		HashSet<ResourceLocation> seen = new HashSet<>();
 		seen.add(baseName);
 
@@ -133,7 +184,7 @@ public class ShaderLoader {
 	}
 
 	private Stream<String> includeRecursive(String source, Set<ResourceLocation> seen) {
-		return new BufferedReader(new StringReader(source)).lines().flatMap(line -> {
+		return lines(source).flatMap(line -> {
 
 			Matcher matcher = includePattern.matcher(line);
 
@@ -155,23 +206,8 @@ public class ShaderLoader {
 		});
 	}
 
-	public GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
-		String source = shaderSource.get(name);
-
-		source = processIncludes(name, source);
-
-		if (defines != null)
-			source = defines.process(source);
-
-		if (debugDumpFile) {
-			Backend.log.debug("Finished processing '" + name + "':");
-			int i = 1;
-			for (String s : source.split("\n")) {
-				Backend.log.debug(String.format("%1$4s: ", i++) + s);
-			}
-		}
-
-		return new GlShader(type, name, source);
+	public static Stream<String> lines(String s) {
+		return new BufferedReader(new StringReader(s)).lines();
 	}
 
 	public String readToString(InputStream is) {

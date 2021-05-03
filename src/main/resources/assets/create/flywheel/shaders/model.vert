@@ -1,5 +1,6 @@
 #version 110
 
+#flwbuiltins
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
@@ -23,24 +24,13 @@ uniform int uDebug;
 
 uniform vec3 uCameraPos;
 
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-#ifdef CONTRAPTION
-#flwinclude <"create:contraption/builtin.vert">
-#else
-#flwinclude <"create:std/builtin.vert">
-#endif
-
-
 void main() {
     vec4 worldPos = aTransform * vec4(aPos, 1.);
 
     vec3 norm = aNormalMat * aNormal;
 
+    FLWFinalizeWorldPos(worldPos, uCameraPos);
     FLWFinalizeNormal(norm);
-    FLWFinalizeWorldPos(worldPos);
 
     norm = normalize(norm);
 

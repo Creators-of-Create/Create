@@ -19,7 +19,6 @@ attribute vec4 aInstanceRot;
 attribute vec3 aRotationCenter;
 attribute float aSpeed;
 
-
 varying float Diffuse;
 varying vec2 TexCoords;
 varying vec4 Color;

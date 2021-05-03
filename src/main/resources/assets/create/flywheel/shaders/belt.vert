@@ -1,6 +1,7 @@
 #version 110
 #define PI 3.1415926538
 
+#flwbuiltins
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
@@ -30,16 +31,6 @@ uniform int uDebug;
 
 uniform vec3 uCameraPos;
 
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-#ifdef CONTRAPTION
-#flwinclude <"create:contraption/builtin.vert">
-#else
-#flwinclude <"create:std/builtin.vert">
-#endif
-
 void main() {
     vec3 rotated = rotateVertexByQuat(aPos - .5, aInstanceRot) + aInstancePos + .5;
 
@@ -47,7 +38,7 @@ void main() {
 
     vec3 norm = rotateVertexByQuat(aNormal, aInstanceRot);
 
-    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeWorldPos(worldPos, uCameraPos);
     FLWFinalizeNormal(norm);
 
     float scrollSize = aScrollTexture.w - aScrollTexture.y;

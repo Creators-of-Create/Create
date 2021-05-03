@@ -1,6 +1,7 @@
 #version 110
 #define PI 3.1415926538
 
+#flwbuiltins
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/diffuse.glsl">
@@ -32,16 +33,6 @@ uniform int uDebug;
 
 uniform vec3 uCameraPos;
 
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-#ifdef CONTRAPTION
-#flwinclude <"create:contraption/builtin.vert">
-#else
-#flwinclude <"create:std/builtin.vert">
-#endif
-
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
 }
@@ -71,7 +62,7 @@ void main() {
     vec4 worldPos = vec4(rotated, 1.);
     vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, flapRotation), orientation);
 
-    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeWorldPos(worldPos, uCameraPos);
     FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);
