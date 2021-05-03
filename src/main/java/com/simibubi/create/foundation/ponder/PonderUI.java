@@ -219,7 +219,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				.showing(AllIcons.I_MTD_SLOW_MODE)
 				.enableFade(0, 5)
 				.withCallback(() -> setComfyReadingEnabled(!isComfyReadingEnabled())));
-		
+
 		if (PonderIndex.EDITOR_MODE) {
 			widgets.add(userMode = new PonderButton(width - 50 - 31, bY)
 					.showing(AllIcons.I_MTD_USER_MODE)
@@ -443,7 +443,6 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		MutableBoundingBox bounds = story.getBounds();
 		ms.push();
-		// ms.peek().getModel().multiply(ms.peek().getModel());
 
 		// kool shadow fx
 		{
@@ -560,7 +559,6 @@ public class PonderUI extends NavigatableSimiScreen {
 			int streakHeight = 35 - 9 + wordWrappedHeight;
 			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
 			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade));
-			//renderBox(ms, 21, 21, 30, 30, false);
 			new BoxElement()
 					.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 					.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
@@ -577,7 +575,6 @@ public class PonderUI extends NavigatableSimiScreen {
 			textRenderer.draw(ms, Lang.translate(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
 			x += 0;
-			// ms.translate(0, 3 * (indexDiff), 0);
 			ms.translate(x, y, 0);
 			ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(indexDiff * -75));
 			ms.translate(0, 0, 5);
@@ -740,22 +737,6 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.pop();
 	}
 
-	/*protected void lowerButtonGroup(MatrixStack ms, int index, int mouseX, int mouseY, float fade, AllIcons icon, KeyBinding key) {
-		int bWidth = 20;
-		int bHeight = 20;
-		int bX = (width - bWidth) / 2 + (index - 1) * (bWidth + 8);
-		int bY = height - bHeight - 31;
-
-		ms.push();
-		if (fade < fadeIn.getChaseTarget())
-			ms.translate(0, (1 - fade) * 5, 0);
-		boolean hovered = isMouseOver(mouseX, mouseY, bX, bY, bWidth, bHeight);
-		renderBox(ms, bX, bY, bWidth, bHeight, hovered);
-		icon.draw(ms, bX + 2, bY + 2);
-		drawCenteredText(ms, textRenderer, key.getBoundKeyLocalizedText(), bX + bWidth / 2 + 8, bY + bHeight - 6, 0xff606060);
-		ms.pop();
-	}*/
-
 	private void renderOverlay(MatrixStack ms, int i, float partialTicks) {
 		if (identifyMode)
 			return;
@@ -767,23 +748,6 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		/*MutableBoolean handled = new MutableBoolean(false);
-		widgets.forEach(w -> {
-			if (handled.booleanValue())
-				return;
-			if (!w.isMouseOver(x, y))
-				return;
-			if (w instanceof PonderButton) {
-				PonderButton mtdButton = (PonderButton) w;
-				mtdButton.runCallback(x, y);
-				handled.setTrue();
-				return;
-			}
-		});
-
-		if (handled.booleanValue())
-			return true;*/
-
 		if (identifyMode && hoveredBlockPos != null && PonderIndex.EDITOR_MODE) {
 			long handle = client.getWindow()
 				.getHandle();
@@ -920,7 +884,6 @@ public class PonderUI extends NavigatableSimiScreen {
 			break;
 		}
 
-		//renderBox(ms, boxX, boxY, w, h, highlighted);
 		new BoxElement()
 				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(borderColors)
@@ -944,21 +907,6 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.pop();
 
 	}
-
-	/*public static void renderBox(MatrixStack ms, int x, int y, int w, int h, int backgroundColor, int borderColorStart,
-		int borderColorEnd) {
-		int z = 100;
-		Matrix4f model = ms.peek().getModel();
-		GuiUtils.drawGradientRect(model, z, x - 3, y - 4, x + w + 3, y - 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x - 3, y + h + 3, x + w + 3, y + h + 4, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x - 3, y - 3, x + w + 3, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x - 4, y - 3, x - 3, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x + w + 3, y - 3, x + w + 4, y + h + 3, backgroundColor, backgroundColor);
-		GuiUtils.drawGradientRect(model, z, x - 3, y - 3 + 1, x - 3 + 1, y + h + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(model, z, x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, borderColorStart, borderColorEnd);
-		GuiUtils.drawGradientRect(model, z, x - 3, y - 3, x + w + 3, y - 3 + 1, borderColorStart, borderColorStart);
-		GuiUtils.drawGradientRect(model, z, x - 3, y + h + 2, x + w + 3, y + h + 3, borderColorEnd, borderColorEnd);
-	}*/
 
 	public ItemStack getHoveredTooltipItem() {
 		return hoveredTooltipItem;

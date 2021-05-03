@@ -56,7 +56,6 @@ public class TextStencilElement extends DelegatedStencilElement {
 			y = height / 2f - font.FONT_HEIGHT / 2f;
 
 		font.draw(ms, component, x, y, 0xff_000000);
-		//font.draw(ms, component, 0, 0, 0xff_000000);
 	}
 
 	@Override

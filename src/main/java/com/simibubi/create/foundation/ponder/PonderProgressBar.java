@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.ponder;
 
 import javax.annotation.Nonnull;
 
-import org.antlr.v4.runtime.misc.IntegerList;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
@@ -27,20 +25,20 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		this.ponder = ponder;
 		progress = LerpedFloat.linear()
-			.startWithValue(0);
+				.startWithValue(0);
 	}
 
 	public void tick() {
 		progress.chase(ponder.getActiveScene()
-			.getSceneProgress(), .5f, LerpedFloat.Chaser.EXP);
+				.getSceneProgress(), .5f, LerpedFloat.Chaser.EXP);
 		progress.tickChaser();
 	}
 
 	@Override
 	protected boolean clicked(double mouseX, double mouseY) {
 		return this.active && this.visible && !ponder.getActiveScene().keyframeTimes.isEmpty()
-			&& mouseX >= (double) this.x && mouseX < (double) (this.x + this.width + 4) && mouseY >= (double) this.y - 3
-			&& mouseY < (double) (this.y + this.height + 20);
+				&& mouseX >= (double) this.x && mouseX < (double) (this.x + this.width + 4) && mouseY >= (double) this.y - 3
+				&& mouseY < (double) (this.y + this.height + 20);
 	}
 
 	@Override
@@ -101,7 +99,6 @@ public class PonderProgressBar extends AbstractSimiWidget {
 				.withBounds(width, height)
 				.render(ms);
 
-
 		ms.push();
 		ms.translate(x - 2, y - 2, 150);
 
@@ -157,7 +154,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		if (selected) {
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			GuiUtils.drawGradientRect(ms.peek()
-				.getModel(), 100, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
+					.getModel(), 100, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
 			ms.push();
 			ms.translate(0, 0, 100);
 			String text;
@@ -174,7 +171,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		}
 
 		GuiUtils.drawGradientRect(ms.peek()
-			.getModel(), 500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
+				.getModel(), 500, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
 	}
 
 	@Override

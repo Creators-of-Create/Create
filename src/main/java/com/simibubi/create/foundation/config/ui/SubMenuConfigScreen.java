@@ -148,7 +148,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 					new ConfirmationScreen()
 							.at(x, y)
-							.withText(ITextProperties.plain("You are about to change " + changes.size() + " values. Are you sure?"))
+							.withText(ITextProperties.plain("You are about to change " + changes.size() + " value" + (changes.size() != 1 ? "s" : "") + ". Are you sure?"))
 							.withAction(success -> {
 								if (success)
 									saveChanges();
@@ -167,7 +167,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 					new ConfirmationScreen()
 							.at(x, y)
-							.withText(ITextProperties.plain("You are about to discard " + changes.size() + " unsaved changes. Are you sure?"))
+							.withText(ITextProperties.plain("You are about to discard " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + ". Are you sure?"))
 							.withAction(success -> {
 								if (success)
 									clearChanges();
@@ -307,7 +307,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		if (!changes.isEmpty() && parent instanceof BaseConfigScreen) {
 			new ConfirmationScreen()
 					.centered()
-					.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved changes for this config."))
+					.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + " for this config."))
 					.addText(ITextProperties.plain("Leaving this screen will discard them without saving. Are you sure?"))
 					.withAction(success -> {
 						if (!success)
@@ -331,7 +331,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		new ConfirmationScreen()
 				.centered()
-				.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved changes for this config."))
+				.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + " for this config."))
 				.addText(ITextProperties.plain("Leaving this screen will discard them without saving. Are you sure?"))
 				.withAction(success -> {
 					if (!success)

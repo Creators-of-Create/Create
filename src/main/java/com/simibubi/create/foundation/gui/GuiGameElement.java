@@ -64,7 +64,6 @@ public class GuiGameElement {
 	}
 
 	public static abstract class GuiRenderBuilder extends RenderElement {
-		//double xBeforeScale, yBeforeScale, zBeforeScale = 0;
 		double xLocal, yLocal, zLocal;
 		double xRot, yRot, zRot;
 		double scale = 1;
@@ -77,19 +76,6 @@ public class GuiGameElement {
 			this.zLocal = z;
 			return this;
 		}
-
-		/*public GuiRenderBuilder at(double x, double y) {
-			this.xBeforeScale = x;
-			this.yBeforeScale = y;
-			return this;
-		}
-
-		public GuiRenderBuilder at(double x, double y, double z) {
-			this.xBeforeScale = x;
-			this.yBeforeScale = y;
-			this.zBeforeScale = z;
-			return this;
-		}*/
 
 		public GuiRenderBuilder rotate(double xRot, double yRot, double zRot) {
 			this.xRot = xRot;
@@ -272,23 +258,10 @@ public class GuiGameElement {
 		@Override
 		public void render(MatrixStack matrixStack) {
 			prepareMatrix(matrixStack);
-//			matrixStack.translate(0, 80, 0);
 			transformMatrix(matrixStack);
 			renderItemIntoGUI(matrixStack, stack);
 			cleanUpMatrix(matrixStack);
 		}
-		/*
-		 * public void render() {
-		 * prepare();
-		 * transform();
-		 * RenderSystem.scaled(1, -1, 1);
-		 * RenderSystem.translated(0, 0, -75);
-		 * Minecraft.getInstance()
-		 * .getItemRenderer()
-		 * .renderItemIntoGUI(stack, 0, 0);
-		 * cleanUp();
-		 * }
-		 */
 
 		public static void renderItemIntoGUI(MatrixStack matrixStack, ItemStack stack) {
 			ItemRenderer renderer = Minecraft.getInstance()

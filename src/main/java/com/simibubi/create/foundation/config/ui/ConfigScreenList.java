@@ -40,9 +40,6 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		//render tmp background
-		//fill(ms, left, top, left + width, top + height, 0x10_000000);
-
 		UIRenderHelper.angledGradient(ms, 90, left + width / 2, top, width, 5, 0x60_000000, 0x0);
 		UIRenderHelper.angledGradient(ms, -90, left + width / 2, bottom, width, 5, 0x60_000000, 0x0);
 		UIRenderHelper.angledGradient(ms, 0, left, top + height / 2, height, 5, 0x60_000000, 0x0);
@@ -78,7 +75,6 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	public void tick() {
-		//children().forEach(Entry::tick);
 		for(int i = 0; i < getItemCount(); ++i) {
 			int top = this.getRowTop(i);
 			int bot = top + itemHeight;

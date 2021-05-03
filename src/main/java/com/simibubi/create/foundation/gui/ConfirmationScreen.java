@@ -169,25 +169,21 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-		//UIRenderHelper.prepFramebufferSize();
 
 		ms.push();
-		//ms.translate(0, 0, -50);
-		//ms.scale(1, 1, 0.01f);
-		//todo wait for jozu's framebuffer capabilities on the other branch and use them here
 		UIRenderHelper.framebuffer.bindFramebuffer(true);
 		source.render(ms, mouseX, mouseY, 10);
 		UIRenderHelper.framebuffer.unbindFramebuffer();
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 		ms.pop();
 
+		//fixme replace with glVersioned-backend calls once they are merged from jozu's branch
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, UIRenderHelper.framebuffer.framebufferObject);
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
 		GL30.glBlitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0,  mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_LINEAR);
 		mainBuffer.bindFramebuffer(true);
 
 		this.fillGradient(ms, 0, 0, this.width, this.height, 0x70101010, 0x80101010);
-		//RenderSystem.enableAlphaTest();
 	}
 
 	@Override

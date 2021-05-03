@@ -78,7 +78,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleLeft.y = y + 10;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
-		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
+		valueText.at(cycleLeft.x + cycleWidth - 8, y + 11, 200)
 			.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
 			.render(ms);
 

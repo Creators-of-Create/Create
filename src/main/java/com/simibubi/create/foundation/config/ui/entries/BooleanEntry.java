@@ -18,18 +18,10 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	public BooleanEntry(String label, ForgeConfigSpec.ConfigValue<Boolean> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 
-//		enabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Enabled")
-//				.centered(true, true)
-//				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_88f788, 0xff_20cc20));
-//
-//		disabled = new TextStencilElement(Minecraft.getInstance().fontRenderer, "Disabled")
-//				.centered(true, true)
-//				.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height/2, height, width, 0xff_f78888, 0xff_cc2020));
-
 		enabled = AllIcons.I_CONFIRM.asStencil()
 			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_SUCCESS)))
 			.at(10, 0);
-		
+
 		disabled = AllIcons.I_DISABLE.asStencil()
 			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_FAIL)))
 			.at(10, 0);

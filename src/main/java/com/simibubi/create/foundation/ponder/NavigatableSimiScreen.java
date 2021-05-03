@@ -134,14 +134,14 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		// draw last screen into buffer
 		if (lastScreen != null && lastScreen != this && !transition.settled()) {
-			ms.push();// 1
+			ms.push();
 			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-			//UIRenderHelper.prepFramebufferSize();
-			ms.push();// 2
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindFramebuffer(true);
 			lastScreen.render(ms, mouseX, mouseY, partialTicks);
-			ms.pop();// 2
+
+			ms.pop();
+			ms.push();
 
 			// use the buffer texture
 			Minecraft.getInstance()
@@ -157,10 +157,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
 			}
 
-			// transitionV is 1/-1 when the older screen is hidden
-			// transitionV is 0 when the older screen is still fully visible
 			ms.translate(dpx, dpy, 0);
-			ms.scale((float) scale, (float) scale, 1);
+			ms.scale(scale, scale, 1);
 			ms.translate(-dpx, -dpy, 0);
 			RenderSystem.enableBlend();
 			RenderSystem.defaultBlendFunc();
@@ -168,13 +166,13 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
 			RenderSystem.disableBlend();
 			RenderSystem.enableAlphaTest();
-			ms.pop();// 1
+			ms.pop();
 		}
 
 		// modify current screen as well
 		scale = transitionValue > 0 ? 1 - 0.5f * (1 - transitionValue) : 1 + .5f * (1 + transitionValue);
 		ms.translate(depthPointX, depthPointY, 0);
-		ms.scale((float) scale, (float) scale, 1);
+		ms.scale(scale, scale, 1);
 		ms.translate(-depthPointX, -depthPointY, 0);
 	}
 

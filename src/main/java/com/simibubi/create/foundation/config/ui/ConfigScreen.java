@@ -27,14 +27,14 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	/*
 	 *
 	 * zelo's list for configUI
-	 * TODO
 	 *
-	 * replace java's awt color with something mutable
+	 * reduce number of packets sent to the server when saving a bunch of values
+	 * maybe replace java's awt color with something mutable
+	 * find out why framebuffer blending is incorrect
 	 *
 	 * FIXME
 	 *
 	 * tooltips are hidden underneath the scrollbar, if the bar is near the middle
-	 * framebuffer blending is incorrect -> wait for jozu's changes to merge
 	 *
 	 * */
 
@@ -60,7 +60,6 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		//RenderSystem.disableDepthTest();
 		if (this.client != null && this.client.world != null) {
 			fill(ms, 0, 0, this.width, this.height, 0xb0_282c34);
 		} else {
@@ -84,16 +83,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int x = (int) (width * 0.5f);
-		int y = (int) (height * 0.5f);
-		//this.drawHorizontalLine(ms, x-25, x+25, y, 0xff_807060);
-		//this.drawVerticalLine(ms, x, y-25, y+25, 0xff_90a0b0);
-
-		//this.testStencil.render(ms);
-
-		//UIRenderHelper.streak(ms, 0, mouseX, mouseY, 16, 50, 0xaa_1e1e1e);
-	}
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
@@ -113,7 +103,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		ms.push();
 
 		ms.translate(-100, 100, -100);
-		ms.scale(200, 200, .1f);
+		ms.scale(200, 200, 1);
 		GuiGameElement.of(cogwheelState)
 				.rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
 				.render(ms);
