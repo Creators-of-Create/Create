@@ -119,7 +119,7 @@ public class BoxWidget extends ElementWidget {
 			return;
 
 		box.withAlpha(fadeValue);
-		box.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND))
+		box.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
 				.gradientBorder(gradientColor1, gradientColor2)
 				.at(x, y, z)
 				.withBounds(width, height)

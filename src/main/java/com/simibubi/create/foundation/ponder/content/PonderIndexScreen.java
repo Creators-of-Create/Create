@@ -8,6 +8,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -156,8 +157,8 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			ms.push();
 			ms.translate(x, y, 0);
 
-			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
-			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
+			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
+			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
 			ms.pop();
 		}
@@ -168,8 +169,8 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		ms.push();
 		ms.translate(x, y, 0);
 
-		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220, 0x101010);
-		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, 0xffddeeff);
+		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220);
+		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
 		ms.pop();
 	}

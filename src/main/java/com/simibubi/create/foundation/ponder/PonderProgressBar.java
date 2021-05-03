@@ -8,8 +8,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
@@ -20,7 +18,6 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class PonderProgressBar extends AbstractSimiWidget {
 
 	LerpedFloat progress;
-	LerpedFloat flash;
 
 	PonderUI ponder;
 
@@ -30,27 +27,12 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		this.ponder = ponder;
 		progress = LerpedFloat.linear()
 			.startWithValue(0);
-		flash = LerpedFloat.linear()
-			.startWithValue(0);
 	}
 
 	public void tick() {
 		progress.chase(ponder.getActiveScene()
 			.getSceneProgress(), .5f, LerpedFloat.Chaser.EXP);
 		progress.tickChaser();
-
-		if (hovered)
-			flash();
-	}
-
-	public void flash() {
-		float value = flash.getValue();
-		flash.setValue(value + (1 - value) * .2f);
-	}
-
-	public void dim() {
-		float value = flash.getValue();
-		flash.setValue(value * .5f);
 	}
 
 	@Override
@@ -111,36 +93,26 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 		hovered = clicked(mouseX, mouseY);
 
-		ms.push();
-		ms.translate(0, 0, 150);
-		/*  ponderButtons are at z+400
-		*   renderBox is at z+100
-		*   gradients have to be in front of the box so z>+100
-		* */
-
 		new BoxElement()
-				.withBackground(0xff000000)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
-				.at(x, y, 100)
+				.at(x, y, 250)
 				.withBounds(width, height)
 				.render(ms);
 
-		//ms.push();
-		//PonderUI.renderBox(ms, x, y, width, height, false);
-		//ms.pop();
 
 		ms.push();
-		ms.translate(x - 2, y - 2, 0);
+		ms.translate(x - 2, y - 2, 150);
 
 		ms.push();
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 3, 1, 4, 0x80ffeedd, 0x80ffeedd);
-		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 4, 1, 5, 0x50ffeedd, 0x50ffeedd);
+		int c1 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, true);
+		int c2 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, false);
+		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 3, 1, 4, c1, c1);
+		GuiUtils.drawGradientRect(ms.peek().getModel(), 110, 0, 4, 1, 5, c2, c2);
 		ms.pop();
 
 		renderKeyframes(ms, mouseX, partialTicks);
-
-		ms.pop();
 
 		ms.pop();
 	}
@@ -148,21 +120,16 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	private void renderKeyframes(MatrixStack ms, int mouseX, float partialTicks) {
 		PonderScene activeScene = ponder.getActiveScene();
 
-		int hoverStartColor;
-		int hoverEndColor;
+		int hoverStartColor = Theme.i(Theme.Key.PONDER_HOVER, true) | 0xa0_000000;
+		int hoverEndColor = Theme.i(Theme.Key.PONDER_HOVER, false) | 0xa0_000000;
+		int idleStartColor = Theme.i(Theme.Key.PONDER_IDLE, true) | 0x40_000000;
+		int idleEndColor = Theme.i(Theme.Key.PONDER_IDLE, false) | 0x40_000000;
 		int hoverIndex;
 
 		if (hovered) {
 			hoverIndex = getHoveredKeyframeIndex(activeScene, mouseX);
-			float flashValue = flash.getValue(partialTicks) * 3
-				+ (float) Math.sin((AnimationTickHolder.getTicks() + partialTicks) / 6);
-
-			hoverEndColor = ColorHelper.applyAlpha(0x70ffffff, flashValue);
-			hoverStartColor = ColorHelper.applyAlpha(0x30ffffff, flashValue);
 		} else {
 			hoverIndex = -2;
-			hoverEndColor = 0;
-			hoverStartColor = 0;
 		}
 		IntegerList keyframeTimes = activeScene.keyframeTimes;
 
@@ -176,8 +143,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			int keyframePos = (int) (((float) keyframeTime) / ((float) activeScene.totalTime) * (width + 4));
 
 			boolean selected = i == hoverIndex;
-			int startColor = selected ? hoverStartColor : 0x30ffeedd;
-			int endColor = selected ? hoverEndColor : 0x60ffeedd;
+			int startColor = selected ? hoverStartColor : idleStartColor;
+			int endColor = selected ? hoverEndColor : idleEndColor;
 			int height = selected ? 8 : 4;
 
 			drawKeyframe(ms, activeScene, selected, keyframeTime, keyframePos, startColor, endColor, height);

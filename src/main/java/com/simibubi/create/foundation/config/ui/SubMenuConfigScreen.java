@@ -117,7 +117,6 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		widgets.clear();
 		super.init();
 
-		//leave 40px on either side and dont be wider than 500px
 		listWidth = Math.min(width - 80, 300);
 
 		int yCenter = height / 2;
@@ -255,7 +254,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
 			serverLocked.withBorderColors(green);
 			serverLocked.getToolTip().add(new StringTextComponent("Unlocked").formatted(TextFormatting.BOLD));
-			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server once you saved them.", TextFormatting.GRAY, TextFormatting.GRAY));
+			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server when you save them.", TextFormatting.GRAY, TextFormatting.GRAY));
 		}
 
 		widgets.add(serverLocked);

@@ -40,6 +40,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		super(label, value, spec);
 		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 20, unit);
 		textField.setText(String.valueOf(getValue()));
+		textField.setTextColor(Theme.i(Theme.Key.TEXT));
 
 		Object range = spec.getRange();
 		try {
@@ -73,11 +74,11 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 				if (!spec.test(number))
 					throw new IllegalArgumentException();
 
-				textField.setTextColor(0xff_20cc20);
+				textField.setTextColor(Theme.i(Theme.Key.TEXT));
 				setValue(number);
 
 			} catch (IllegalArgumentException ignored) {
-				textField.setTextColor(0xff_cc2020);
+				textField.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
 			}
 		});
 

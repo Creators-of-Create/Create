@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -97,10 +96,10 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 				if (i.getRegistryName()
 						.getNamespace()
 						.equals(Create.ID))
-					b.withBorderColors(new Color(0x70984500, true), new Color(0x70692400, true))
+					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_CREATE))
 							.animateColors(false);
 				else
-					b.withBorderColors(new Color(0x505000FF, true), new Color(0x50300077, true))
+					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_VANILLA))
 							.animateColors(false);
 			}
 
@@ -124,10 +123,10 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			} else {
 				if (registryName.getNamespace()
 						.equals(Create.ID))
-					b.withBorderColors(new Color(0x70984500, true), new Color(0x70692400, true))
+					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_CREATE))
 							.animateColors(false);
 				else
-					b.withBorderColors(new Color(0x505000FF, true), new Color(0x50300077, true))
+					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_VANILLA))
 							.animateColors(false);
 			}
 
@@ -193,21 +192,21 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		String title = tag.getTitle();
 
 		int streakHeight = 35;
-		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240, 0x101010);
+		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240);
 		//PonderUI.renderBox(ms, 21, 21, 30, 30, false);
 		new BoxElement()
-				.withBackground(0xff000000)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(21, 21, 100)
 				.withBounds(30, 30)
 				.render(ms);
 
-		textRenderer.draw(ms, Lang.translate(PonderUI.PONDERING), x, y - 6, 0xffa3a3a3);
+		textRenderer.draw(ms, Lang.translate(PonderUI.PONDERING), x, y - 6, Theme.i(Theme.Key.TEXT_DARKER));
 		y += 8;
 		x += 0;
 		ms.translate(x, y, 0);
 		ms.translate(0, 0, 5);
-		textRenderer.draw(ms, title, 0, 0, 0xeeeeee);
+		textRenderer.draw(ms, title, 0, 0, Theme.i(Theme.Key.TEXT));
 		ms.pop();
 
 		ms.push();
@@ -228,14 +227,14 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		//PonderUI.renderBox(ms, x - 3, y - 3, w + 6, h + 6, false);
 		new BoxElement()
-				.withBackground(0xff000000)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(x - 3, y - 3, 90)
 				.withBounds(w + 6, h + 6)
 				.render(ms);
 
 		ms.translate(0, 0, 100);
-		FontHelper.drawSplitString(ms, textRenderer, desc, x, y, w, 0xeeeeee);
+		FontHelper.drawSplitString(ms, textRenderer, desc, x, y, w, Theme.i(Theme.Key.TEXT));
 		ms.pop();
 	}
 
@@ -253,7 +252,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.translate(x, y, 0);
 		//PonderUI.renderBox(ms, (sWidth - stringWidth) / 2 - 5, itemArea.getY() - 21, stringWidth + 10, 10, false);
 		new BoxElement()
-				.withBackground(0xff000000)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at((sWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
 				.withBounds(stringWidth + 10, 10)
@@ -262,12 +261,12 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.translate(0, 0, 200);
 
 //		UIRenderHelper.streak(0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 180, 0x101010);
-		drawCenteredString(ms, textRenderer, relatedTitle, sWidth / 2, itemArea.getY() - 20, 0xeeeeee);
+		drawCenteredString(ms, textRenderer, relatedTitle, sWidth / 2, itemArea.getY() - 20, Theme.i(Theme.Key.TEXT));
 
 		ms.translate(0,0, -200);
 
-		UIRenderHelper.streak(ms, 0, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75, 0x101010);
-		UIRenderHelper.streak(ms, 180, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75, 0x101010);
+		UIRenderHelper.streak(ms, 0, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
+		UIRenderHelper.streak(ms, 180, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
 
 		ms.pop();
 
@@ -287,8 +286,8 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.push();
 		ms.translate(chapterX, chapterY, 0);
 
-		UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
-		textRenderer.draw(ms, "More Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
+		UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
+		textRenderer.draw(ms, "More Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT));
 
 		ms.pop();
 	}

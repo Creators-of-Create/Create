@@ -115,10 +115,10 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x70aa9999, 0x30aa9999);
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
 
-			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x70aa9999, 0x30aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x70aa9999, 0x30aa9999);
+			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
+			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
 		}
 
 		if (transition.getChaseTarget() == 0 || transition.settled()) {

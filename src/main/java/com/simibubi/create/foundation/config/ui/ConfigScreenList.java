@@ -133,7 +133,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().fontRenderer, label);
-			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.TEXT_ACCENT)));
+			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.TEXT_ACCENT_STRONG)));
 			labelTooltip = new ArrayList<>();
 		}
 

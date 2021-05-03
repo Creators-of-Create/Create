@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -61,7 +60,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.disableDepthTest();
+		//RenderSystem.disableDepthTest();
 		if (this.client != null && this.client.world != null) {
 			fill(ms, 0, 0, this.width, this.height, 0xb0_282c34);
 		} else {
@@ -104,7 +103,9 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	}
 
 	public static String toHumanReadable(String key) {
-		String s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(key)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
+		String s = key.replaceAll("_", " ");
+		s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(s)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
+		s = s.replaceAll("\\s\\s+", " ");
 		return s;
 	}
 

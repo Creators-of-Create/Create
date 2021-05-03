@@ -17,6 +17,7 @@ import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -75,6 +76,8 @@ public class UIRenderHelper {
 		tessellator.draw();
 		framebuffer.unbindFramebufferTexture();
 	}
+
+	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length) {streak(ms, angle, x, y, breadth, length, Theme.i(Theme.Key.STREAK));}
 
 	//angle in degrees; 0° -> fading to the right
 	//x and y specify the middle point of the starting edge
@@ -147,6 +150,8 @@ public class UIRenderHelper {
 
 		ms.pop();
 	}
+
+	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, Couple<Color> colors) {breadcrumbArrow(matrixStack, x, y, z, width, height, indent, colors.getFirst().getRGB(), colors.getSecond().getRGB());}
 
 	//draws a wide chevron-style breadcrumb arrow pointing left
 	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, int startColor, int endColor) {
@@ -230,5 +235,31 @@ public class UIRenderHelper {
 		RenderSystem.enableCull();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
+	}
+
+	//just like AbstractGui#drawTexture, but with a color at every vertex
+	public static void drawColoredTexture(MatrixStack ms, Color c, int x, int y, int tex_left, int tex_top, int width, int height) {
+		drawColoredTexture(ms, c, x, y, 0, (float)tex_left, (float)tex_top, width, height, 256, 256);
+	}
+
+	public static void drawColoredTexture(MatrixStack ms, Color c, int x, int y, int z, float tex_left, float tex_top, int width, int height, int sheet_width, int sheet_height) {
+		drawColoredTexture(ms, c, x, x + width, y, y + height, z, width, height, tex_left, tex_top, sheet_width, sheet_height);
+	}
+
+	private static void drawColoredTexture(MatrixStack ms, Color c, int left, int right, int top, int bot, int z, int tex_width, int tex_height, float tex_left, float tex_top, int sheet_width, int sheet_height) {
+		drawTexturedQuad(ms.peek().getModel(), c, left, right, top, bot, z, (tex_left + 0.0F) / (float)sheet_width, (tex_left + (float)tex_width) / (float)sheet_width, (tex_top + 0.0F) / (float)sheet_height, (tex_top + (float)tex_height) / (float)sheet_height);
+	}
+
+	private static void drawTexturedQuad(Matrix4f m, Color c, int left, int right, int top, int bot, int z, float u1, float u2, float v1, float v2) {
+		RenderSystem.enableBlend();
+		BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR_TEXTURE);
+		bufferbuilder.vertex(m, (float)left , (float)bot, (float)z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).texture(u1, v2).endVertex();
+		bufferbuilder.vertex(m, (float)right, (float)bot, (float)z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).texture(u2, v2).endVertex();
+		bufferbuilder.vertex(m, (float)right, (float)top, (float)z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).texture(u2, v1).endVertex();
+		bufferbuilder.vertex(m, (float)left , (float)top, (float)z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).texture(u1, v1).endVertex();
+		bufferbuilder.finishDrawing();
+		RenderSystem.enableAlphaTest();
+		WorldVertexBufferUploader.draw(bufferbuilder);
 	}
 }

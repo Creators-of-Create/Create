@@ -66,14 +66,21 @@ public class Theme {
 		put(Key.BUTTON_FAIL, new Color(0xcc_f78888, true), new Color(0xcc_cc2020, true));
 		put(Key.TEXT, new Color(0xff_eeeeee), new Color(0xff_a3a3a3));
 		put(Key.TEXT_DARKER, new Color(0xff_a3a3a3), new Color(0xff_808080));
-		put(Key.TEXT_ACCENT, new Color(0xff_7b7ba3), new Color(0xff_616192));
-		//values from PonderUI & PonderButton
-		put(Key.PONDER_BACKGROUND, new Color(0xdd_000000, true));
+		put(Key.TEXT_ACCENT_STRONG, new Color(0xff_7b7ba3), new Color(0xff_616192));
+		put(Key.TEXT_ACCENT_SLIGHT, new Color(0xff_ddeeff), new Color(0xff_a0b0c0));
+		put(Key.STREAK, new Color(0x101010, false));
+
+		put(Key.PONDER_BACKGROUND_TRANSPARENT, new Color(0xdd_000000, true));
+		put(Key.PONDER_BACKGROUND_FLAT, new Color(0xff_000000, false));
 		put(Key.PONDER_IDLE, new Color(0x40ffeedd, true), new Color(0x20ffeedd, true));
 		put(Key.PONDER_HOVER, new Color(0x70ffffff, true), new Color(0x30ffffff, true));
 		put(Key.PONDER_HIGHLIGHT, new Color(0xf0ffeedd, true), new Color(0x60ffeedd, true));
 		put(Key.TEXT_WINDOW_BORDER, new Color(0x607a6000, true), new Color(0x207a6000, true));
-
+		put(Key.PONDER_BACK_ARROW, new Color(0x70aa9999, true), new Color(0x30aa9999, true));
+		put(Key.PONDER_PROGRESSBAR, new Color(0x80ffeedd, true), new Color(0x50ffeedd, true));
+		put(Key.PONDER_MISSING_CREATE, new Color(0x70_984500, true), new Color(0x70_692400, true));
+		put(Key.PONDER_MISSING_VANILLA, new Color(0x50_5000ff, true), new Color(0x50_300077, true));
+		//put(Key., new Color(0x, true), new Color(0x, true));
 	}
 
 	protected void put(String key, Color c) {
@@ -107,13 +114,21 @@ public class Theme {
 
 		public static Key TEXT = new Key();
 		public static Key TEXT_DARKER = new Key();
-		public static Key TEXT_ACCENT = new Key();
+		public static Key TEXT_ACCENT_STRONG = new Key();
+		public static Key TEXT_ACCENT_SLIGHT = new Key();
 
-		public static Key PONDER_BACKGROUND = new Key();
+		public static Key STREAK = new Key();
+
+		public static Key PONDER_BACKGROUND_TRANSPARENT = new Key();
+		public static Key PONDER_BACKGROUND_FLAT = new Key();
 		public static Key PONDER_IDLE = new Key();
 		public static Key PONDER_HOVER = new Key();
 		public static Key PONDER_HIGHLIGHT = new Key();
 		public static Key TEXT_WINDOW_BORDER = new Key();
+		public static Key PONDER_BACK_ARROW = new Key();
+		public static Key PONDER_PROGRESSBAR = new Key();
+		public static Key PONDER_MISSING_CREATE = new Key();
+		public static Key PONDER_MISSING_VANILLA = new Key();
 
 		private static int index = 0;
 

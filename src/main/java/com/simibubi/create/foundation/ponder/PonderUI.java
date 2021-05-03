@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder;
 
 import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREFIX;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.simibubi.create.foundation.ponder.elements.TextWindowElement;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -536,13 +538,12 @@ public class PonderUI extends NavigatableSimiScreen {
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		float indexDiff = Math.abs(lazyIndexValue - index);
 		PonderScene activeScene = scenes.get(index);
-		int textColor = 0xeeeeee;
 
 		boolean noWidgetsHovered = true;
 		for (Widget widget : widgets)
 			noWidgetsHovered &= !widget.isMouseOver(mouseX, mouseY);
 
-		int tooltipColor = 0xffa3a3a3;
+		int tooltipColor = Theme.i(Theme.Key.TEXT_DARKER);
 		{
 			// Chapter title
 			ms.push();
@@ -554,11 +555,11 @@ public class PonderUI extends NavigatableSimiScreen {
 			int wordWrappedHeight = textRenderer.getWordWrappedHeight(title, left.x - 51);
 
 			int streakHeight = 35 - 9 + wordWrappedHeight;
-			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade), 0x101010);
-			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade), 0x101010);
+			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
+			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade));
 			//renderBox(ms, 21, 21, 30, 30, false);
 			new BoxElement()
-					.withBackground(0xff000000)
+					.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 					.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 					.at(21, 21, 100)
 					.withBounds(30, 30)
@@ -566,9 +567,9 @@ public class PonderUI extends NavigatableSimiScreen {
 
 
 			GuiGameElement.of(stack)
-				.<GuiGameElement.GuiRenderBuilder>at(x - 39, y - 11)
-				.scale(2)
-				.render(ms);
+					.scale(2)
+					.at(x - 39, y - 11)
+					.render(ms);
 
 			textRenderer.draw(ms, Lang.translate(PONDERING), x, y - 6, tooltipColor);
 			y += 8;
@@ -578,18 +579,18 @@ public class PonderUI extends NavigatableSimiScreen {
 			ms.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(indexDiff * -75));
 			ms.translate(0, 0, 5);
 			FontHelper.drawSplitString(ms, textRenderer, title, 0, 0, left.x - 51,
-				ColorHelper.applyAlpha(textColor, 1 - indexDiff));
+				ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT), 1 - indexDiff));
 			ms.pop();
 
 			if (chapter != null) {
 				ms.push();
 
 				ms.translate(chap.x - 4 - 4, chap.y, 0);
-				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade), 0x101010);
+				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
 
 				drawRightAlignedString(textRenderer, ms, Lang.translate(IN_CHAPTER).getString(), 0, 0, tooltipColor);
 				drawRightAlignedString(textRenderer, ms,
-					Lang.translate(LANG_PREFIX + "chapter." + chapter.getId()).getString(), 0, 12, 0xffeeeeee);
+					Lang.translate(LANG_PREFIX + "chapter." + chapter.getId()).getString(), 0, 12, Theme.i(Theme.Key.TEXT));
 
 				ms.pop();
 			}
@@ -702,14 +703,14 @@ public class PonderUI extends NavigatableSimiScreen {
 				ms.translate(x, y + 5 * (1 - fade), 800);
 
 				float fadedWidth = 200 * chase.getValue(partialTicks);
-				UIRenderHelper.streak(ms, 0, 0, 12, 26, (int) fadedWidth, 0x101010);
+				UIRenderHelper.streak(ms, 0, 0, 12, 26, (int) fadedWidth);
 
 				GL11.glScissor((int) (x * s), 0, (int) (fadedWidth * s), (int) (height * s));
 				GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 				String tagName = this.tags.get(i)
 					.getTitle();
-				textRenderer.draw(ms, tagName, 3, 8, 0xffeedd);
+				textRenderer.draw(ms, tagName, 3, 8, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT));
 
 				GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
@@ -876,6 +877,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		int divotSize = 8;
 		int distance = 1;
 		int divotRadius = divotSize / 2;
+		Couple<Color> borderColors = Theme.p(highlighted ? Theme.Key.PONDER_HIGHLIGHT : Theme.Key.PONDER_IDLE);
+		Color c;
 
 		switch (pointing) {
 		default:
@@ -885,6 +888,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h + divotSize + 1 + distance;
 			divotX -= divotRadius;
 			divotY -= divotSize + distance;
+			c = borderColors.getSecond();
 			break;
 		case LEFT:
 			divotRotation = 90;
@@ -892,6 +896,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h / 2;
 			divotX += distance;
 			divotY -= divotRadius;
+			c = ColorHelper.mixColors(borderColors, 0.5f);
 			break;
 		case RIGHT:
 			divotRotation = 270;
@@ -899,6 +904,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY -= h / 2;
 			divotX -= divotSize + distance;
 			divotY -= divotRadius;
+			c = ColorHelper.mixColors(borderColors, 0.5f);
 			break;
 		case UP:
 			divotRotation = 180;
@@ -906,23 +912,24 @@ public class PonderUI extends NavigatableSimiScreen {
 			boxY += divotSize + 1 + distance;
 			divotX -= divotRadius;
 			divotY += distance;
+			c = borderColors.getFirst();
 			break;
 		}
 
 		//renderBox(ms, boxX, boxY, w, h, highlighted);
 		new BoxElement()
-				.withBackground(0xff000000)
-				.gradientBorder(Theme.p(highlighted ? Theme.Key.PONDER_HIGHLIGHT : Theme.Key.PONDER_IDLE))
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.gradientBorder(borderColors)
 				.at(boxX, boxY, 100)
 				.withBounds(w, h)
 				.render(ms);
 
 		ms.push();
-		AllGuiTextures toRender = highlighted ? AllGuiTextures.SPEECH_TOOLTIP_HIGHLIGHT : AllGuiTextures.SPEECH_TOOLTIP;
 		ms.translate(divotX + divotRadius, divotY + divotRadius, 10);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(divotRotation));
 		ms.translate(-divotRadius, -divotRadius, 0);
-		toRender.draw(ms, 0, 0);
+		AllGuiTextures.SPEECH_TOOLTIP_BACKGROUND.draw(ms, 0, 0);
+		AllGuiTextures.SPEECH_TOOLTIP_COLOR.draw(ms, 0, 0, c);
 		ms.pop();
 
 		if (returnWithLocalTransform) {

@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
@@ -13,7 +14,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class EnumEntry extends ValueEntry<Enum<?>> {
 
-	protected static final int cycleWidth = 34;// including 2px offset on either side
+	protected static final int cycleWidth = 34;
 
 	protected TextStencilElement valueText;
 	protected BoxWidget cycleLeft;
@@ -85,13 +86,12 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleRight.y = y + 10;
 		cycleRight.render(ms, mouseX, mouseY, partialTicks);
 
-		BoxWidget boxWidget = new BoxWidget(0, 0, 10, 10);
-		boxWidget.x = cycleLeft.x + cycleWidth + 4;
-		boxWidget.y = cycleLeft.y + 3;
-		boxWidget.withBorderColors(java.awt.Color.black, java.awt.Color.black);
-		boxWidget.active = false;
-		boxWidget.render(ms, mouseX, mouseY, partialTicks);
-
+		new BoxElement()
+				.withBackground(0)
+				.flatBorder(0)
+				.withBounds(10, 10)
+				.at(cycleLeft.x + cycleWidth + 4, cycleLeft.y + 3)
+				.render(ms);
 	}
 
 	@Override

@@ -113,7 +113,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		ms.translate(0, sceneToScreen.y, 400);
 
 		new BoxElement()
-				.withBackground(0xaa000000)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
 				.at(targetX - 10, 3, 100)
 				.withBounds(boxWidth, boxHeight - 1)
