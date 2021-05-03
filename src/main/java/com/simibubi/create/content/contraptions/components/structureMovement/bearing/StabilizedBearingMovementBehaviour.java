@@ -12,8 +12,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -34,8 +36,8 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 		if (FastRenderDispatcher.available()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
-		AllBlockPartials top = AllBlockPartials.BEARING_TOP;
-		SuperByteBuffer superBuffer = top.renderOn(context.state);
+		PartialModel top = AllBlockPartials.BEARING_TOP;
+		SuperByteBuffer superBuffer = PartialBufferer.get(top, context.state);
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate

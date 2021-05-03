@@ -60,9 +60,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		AllGuiTextures background = AllGuiTextures.WAND_OF_SYMMETRY;
 		this.setWindowSize(background.width + 50, background.height + 50);
 
-		labelType = new Label(guiLeft + 49, guiTop + 26, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelType = new Label(guiLeft + 49, guiTop + 28, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
-		labelAlign = new Label(guiLeft + 49, guiTop + 48, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelAlign = new Label(guiLeft + 49, guiTop + 50, StringTextComponent.EMPTY).colored(0xFFFFFFFF)
 			.withShadow();
 
 		int state =
@@ -96,14 +96,14 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		widgets.add(labelAlign);
 		widgets.add(areaType);
 		widgets.add(labelType);
-		
+
 		confirmButton = new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
 	}
 
 	private void initAlign(SymmetryMirror element) {
-		if (areaAlign != null) 
+		if (areaAlign != null)
 			widgets.remove(areaAlign);
 
 		areaAlign = new SelectionScrollInput(guiLeft + 45, guiTop + 43, 109, 18).forOptions(element.getAlignToolTips())
@@ -118,20 +118,18 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		AllGuiTextures.WAND_OF_SYMMETRY.draw(matrixStack, this, guiLeft, guiTop);
-
-		textRenderer.drawWithShadow(matrixStack, wand.getDisplayName(), guiLeft + 11, guiTop + 3, 0xffffff);
-
+		textRenderer.draw(matrixStack, wand.getDisplayName(), guiLeft + 11, guiTop + 4, 0x6B3802);
 		renderBlock(matrixStack);
 		GuiGameElement.of(wand)
-			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 190, guiTop + 420, -150)
-			.scale(4)
-			.rotate(-70, 20, 20)
-			.render(matrixStack);
+				.scale(4)
+				.rotate(-70, 20, 20)
+				.at(guiLeft + 170, guiTop + 490, -150)
+				.render(matrixStack);
 	}
 
 	protected void renderBlock(MatrixStack ms) {
 		ms.push();
-		ms.translate(guiLeft + 26f, guiTop + 37, 20);
+		ms.translate(guiLeft + 26f, guiTop + 39, 20);
 		ms.scale(16, 16, 16);
 		ms.multiply(new Vector3f(.3f, 1f, 0f).getDegreesQuaternion(-22.5f));
 		currentElement.applyModelTransform(ms);
@@ -152,7 +150,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		client.player.setHeldItem(hand, heldItem);
 		super.removed();
 	}
-	
+
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		if (confirmButton.isHovered()) {

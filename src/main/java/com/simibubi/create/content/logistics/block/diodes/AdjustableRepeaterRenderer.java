@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -20,7 +21,7 @@ public class AdjustableRepeaterRenderer extends ColoredOverlayTileEntityRenderer
 
 	@Override
 	protected SuperByteBuffer getOverlayBuffer(AdjustableRepeaterTileEntity te) {
-		return AllBlockPartials.FLEXPEATER_INDICATOR.renderOn(te.getBlockState());
+		return PartialBufferer.get(AllBlockPartials.FLEXPEATER_INDICATOR, te.getBlockState());
 	}
 
 }

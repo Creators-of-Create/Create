@@ -23,7 +23,6 @@ import static com.simibubi.create.AllBlocks.SPEEDOMETER;
 import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
-import static com.simibubi.create.AllItems.BLOCKZAPPER;
 import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
 import static com.simibubi.create.AllItems.CRUSHED_COPPER;
 import static com.simibubi.create.AllItems.CRUSHED_GOLD;
@@ -178,7 +177,6 @@ public class RemapHelper {
 //		reMap.put("zinc_handle", HAND_CRANK.getId());
 //		reMap.put("rose_quartz_axe", );
 //		reMap.put("shadow_steel_pickaxe", );
-		reMap.put("placement_handgun", BLOCKZAPPER.getId());
 		reMap.put("crushed_zinc", CRUSHED_ZINC.getId());
 //		reMap.put("rose_quartz_pickaxe", );
 //		reMap.put("blazing_pickaxe", );

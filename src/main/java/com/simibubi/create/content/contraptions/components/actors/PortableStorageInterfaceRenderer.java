@@ -8,7 +8,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -63,16 +65,16 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		for (MatrixStack ms : matrixStacks)
 			ms.push();
 
-		SuperByteBuffer middle = getMiddleForState(blockState, lit).renderOn(blockState);
-		SuperByteBuffer top = getTopForState(blockState).renderOn(blockState);
+		SuperByteBuffer middle = PartialBufferer.get(getMiddleForState(blockState, lit), blockState);
+		SuperByteBuffer top = PartialBufferer.get(getTopForState(blockState), blockState);
 
 		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
 		for (MatrixStack ms : matrixStacks)
 			MatrixStacker.of(ms)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.unCentre();
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+					.unCentre();
 
 		for (MatrixStack ms : matrixStacks) {
 			ms.translate(0, progress / 2f, 0);
@@ -109,7 +111,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		return psi;
 	}
 
-	static AllBlockPartials getMiddleForState(BlockState state, boolean lit) {
+	static PartialModel getMiddleForState(BlockState state, boolean lit) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
 			return lit ? AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
 				: AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE;
@@ -117,7 +119,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			: AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE;
 	}
 
-	static AllBlockPartials getTopForState(BlockState state) {
+	static PartialModel getTopForState(BlockState state) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
 			return AllBlockPartials.PORTABLE_FLUID_INTERFACE_TOP;
 		return AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP;

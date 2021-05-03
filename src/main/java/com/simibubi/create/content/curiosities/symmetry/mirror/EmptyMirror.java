@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -17,13 +17,13 @@ public class EmptyMirror extends SymmetryMirror {
 
 	public static enum Align implements IStringSerializable {
 		None("none");
-		
+
 		private final String name;
 		private Align(String name) { this.name = name; }
 		@Override public String getString() { return name; }
 		@Override public String toString() { return name; }
 	}
-	
+
 	public EmptyMirror(Vector3d pos) {
 		super(pos);
 		orientation = Align.None;
@@ -50,10 +50,10 @@ public class EmptyMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public AllBlockPartials getModel() {
+	public PartialModel getModel() {
 		return null;
 	}
-	
+
 	@Override
 	public List<ITextComponent> getAlignToolTips() {
 		return ImmutableList.of();

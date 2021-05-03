@@ -28,7 +28,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	public ProcessingViaFanCategory(IDrawable icon) {
 		this(177, icon);
 	}
-	
+
 	protected ProcessingViaFanCategory(int width, IDrawable icon) {
 		super(icon, emptyBackground(width, 71));
 	}

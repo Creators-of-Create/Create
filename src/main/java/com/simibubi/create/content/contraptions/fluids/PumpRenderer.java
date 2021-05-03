@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -34,17 +35,17 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		float angle = MathHelper.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
 		for (float yRot : new float[] { 0, 90 }) {
 			ms.push();
-			SuperByteBuffer arrow = AllBlockPartials.MECHANICAL_PUMP_ARROW.renderOn(blockState);
+			SuperByteBuffer arrow = PartialBufferer.get(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 			Direction direction = blockState.get(PumpBlock.FACING);
 			MatrixStacker.of(ms)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(direction) + 180)
-				.rotateX(-AngleHelper.verticalAngle(direction) - 90)
-				.unCentre()
-				.translate(rotationOffset)
-				.rotateY(yRot)
-				.rotateZ(angle)
-				.translateBack(rotationOffset);
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
+					.rotateX(-AngleHelper.verticalAngle(direction) - 90)
+					.unCentre()
+					.translate(rotationOffset)
+					.rotateY(yRot)
+					.rotateZ(angle)
+					.translateBack(rotationOffset);
 			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 			ms.pop();
 		}
@@ -52,7 +53,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return AllBlockPartials.MECHANICAL_PUMP_COG.renderOnDirectionalSouth(te.getBlockState());
+		return PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PUMP_COG, te.getBlockState());
 	}
 
 }

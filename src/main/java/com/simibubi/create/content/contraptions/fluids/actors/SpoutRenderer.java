@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -20,7 +22,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 		super(dispatcher);
 	}
 
-	static final AllBlockPartials[] BITS =
+	static final PartialModel[] BITS =
 		{ AllBlockPartials.SPOUT_TOP, AllBlockPartials.SPOUT_MIDDLE, AllBlockPartials.SPOUT_BOTTOM };
 
 	@Override
@@ -69,10 +71,10 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			squeeze = -1;
 
 		ms.push();
-		for (AllBlockPartials bit : BITS) {
-			bit.renderOn(te.getBlockState())
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		for (PartialModel bit : BITS) {
+			PartialBufferer.get(bit, te.getBlockState())
+					.light(light)
+					.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);
 		}
 		ms.pop();

@@ -8,8 +8,8 @@ import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
@@ -53,7 +53,7 @@ public class GuiGameElement {
 		return new GuiBlockStateRenderBuilder(state);
 	}
 
-	public static GuiRenderBuilder of(AllBlockPartials partial) {
+	public static GuiRenderBuilder of(PartialModel partial) {
 		return new GuiBlockPartialRenderBuilder(partial);
 	}
 
@@ -237,7 +237,7 @@ public class GuiGameElement {
 
 	public static class GuiBlockPartialRenderBuilder extends GuiBlockModelRenderBuilder {
 
-		public GuiBlockPartialRenderBuilder(AllBlockPartials partial) {
+		public GuiBlockPartialRenderBuilder(PartialModel partial) {
 			super(partial.get(), null);
 		}
 

@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 
-public class CylinderBrush extends Brush {
+public class CylinderBrush extends ShapedBrush {
 
 	public static final int MAX_RADIUS = 8;
 	public static final int MAX_HEIGHT = 8;

@@ -1,12 +1,17 @@
 package com.simibubi.create.foundation.render.backend;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.function.Supplier;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class RenderUtil {
-	public static int nextPowerOf2(int a)  {
+	public static int nextPowerOf2(int a) {
 		int h = Integer.highestOneBit(a);
 		return (h == a) ? h : (h << 1);
 	}
@@ -22,7 +27,7 @@ public class RenderUtil {
 
 	// GPUs want matrices in column major order.
 	public static float[] writeMatrixStack(Matrix4f model, Matrix3f normal) {
-		return new float[] {
+		return new float[]{
 				model.a00,
 				model.a10,
 				model.a20,
@@ -69,6 +74,18 @@ public class RenderUtil {
 				model.a13,
 				model.a23,
 				model.a33,
+		};
+	}
+
+	public static Supplier<MatrixStack> rotateToFace(Direction facing) {
+		return () -> {
+			MatrixStack stack = new MatrixStack();
+			MatrixStacker.of(stack)
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(AngleHelper.verticalAngle(facing))
+					.unCentre();
+			return stack;
 		};
 	}
 }

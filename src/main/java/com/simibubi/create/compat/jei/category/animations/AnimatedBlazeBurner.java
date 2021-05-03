@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.util.math.vector.Vector3f;
@@ -30,7 +31,7 @@ public class AnimatedBlazeBurner implements IDrawable {
 			.scale(scale)
 			.render(matrixStack);
 
-		AllBlockPartials blaze = AllBlockPartials.BLAZES.get(heatLevel);
+		PartialModel blaze = AllBlockPartials.BLAZES.get(heatLevel);
 		GuiGameElement.of(blaze)
 			.atLocal(1, 1.65, 1)
 			.rotate(0, 180, 0)

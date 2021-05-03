@@ -7,7 +7,7 @@ package com.simibubi.create.foundation.render.backend.instancing;
  * <code>Minecraft.getInstance().world</code> will always support Flywheel.
  */
 public interface IFlywheelWorld {
-    default boolean supportsFlywheel() {
-        return true;
-    }
+	default boolean supportsFlywheel() {
+		return true;
+	}
 }

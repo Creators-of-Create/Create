@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
@@ -32,7 +33,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 
 		if (FastRenderDispatcher.available(te.getWorld())) return;
 
-		SuperByteBuffer flapBuffer = AllBlockPartials.BELT_TUNNEL_FLAP.renderOn(te.getBlockState());
+		SuperByteBuffer flapBuffer = PartialBufferer.get(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 		Vector3d pivot = VecHelper.voxelSpace(0, 10, 1f);
 		MatrixStacker msr = MatrixStacker.of(ms);

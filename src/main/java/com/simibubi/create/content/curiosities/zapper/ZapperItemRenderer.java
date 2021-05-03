@@ -18,10 +18,10 @@ import net.minecraft.util.math.MathHelper;
 public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> extends CustomRenderedItemModelRenderer<M> {
 
 	@Override
-	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, TransformType transformType,
+		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		// Block indicator
-		if (model.getCurrentPerspective() == TransformType.GUI && stack.hasTag() && stack.getTag()
+		if (transformType == TransformType.GUI && stack.hasTag() && stack.getTag()
 			.contains("BlockUsed"))
 			renderBlockUsed(stack, ms, buffer, light, overlay);
 	}

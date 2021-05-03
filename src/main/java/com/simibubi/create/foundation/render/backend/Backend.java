@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.backend.gl.GlFog;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.IMultiProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;

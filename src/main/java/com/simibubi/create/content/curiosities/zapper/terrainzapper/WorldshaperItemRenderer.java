@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
@@ -20,14 +21,14 @@ import net.minecraft.util.math.vector.Vector3f;
 public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
 
 	@Override
-	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
-		super.render(stack, model, renderer, ms, buffer, light, overlay);
+	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType,
+		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		super.render(stack, model, renderer, transformType, ms, buffer, light, overlay);
 
 		float pt = AnimationTickHolder.getPartialTicks();
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 
-		renderer.renderSolid(model.getBakedModel(), light);
+		renderer.renderSolid(model.getOriginalModel(), light);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;

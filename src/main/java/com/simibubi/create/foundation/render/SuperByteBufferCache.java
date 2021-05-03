@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
@@ -41,26 +41,26 @@ public class SuperByteBufferCache {
 		return getGeneric(toRender, () -> standardBlockRender(toRender));
 	}
 
-	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState) {
+	public SuperByteBuffer renderPartial(PartialModel partial, BlockState referenceState) {
 		return get(Compartment.PARTIAL, partial, () -> standardModelRender(partial.get(), referenceState));
 	}
 
-	public SuperByteBuffer renderPartial(AllBlockPartials partial, BlockState referenceState,
-		MatrixStack modelTransform) {
+	public SuperByteBuffer renderPartial(PartialModel partial, BlockState referenceState,
+										 Supplier<MatrixStack> modelTransform) {
 		return get(Compartment.PARTIAL, partial,
-			() -> standardModelRender(partial.get(), referenceState, modelTransform));
+				() -> standardModelRender(partial.get(), referenceState, modelTransform.get()));
 	}
 
-	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState,
-		Direction dir) {
+	public SuperByteBuffer renderDirectionalPartial(PartialModel partial, BlockState referenceState,
+													Direction dir) {
 		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
 			() -> standardModelRender(partial.get(), referenceState));
 	}
 
-	public SuperByteBuffer renderDirectionalPartial(AllBlockPartials partial, BlockState referenceState, Direction dir,
-		MatrixStack modelTransform) {
+	public SuperByteBuffer renderDirectionalPartial(PartialModel partial, BlockState referenceState, Direction dir,
+													Supplier<MatrixStack> modelTransform) {
 		return get(Compartment.DIRECTIONAL_PARTIAL, Pair.of(dir, partial),
-			() -> standardModelRender(partial.get(), referenceState, modelTransform));
+				() -> standardModelRender(partial.get(), referenceState, modelTransform.get()));
 	}
 
 	public SuperByteBuffer renderBlockIn(Compartment<BlockState> compartment, BlockState toRender) {

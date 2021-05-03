@@ -7,24 +7,24 @@ import com.simibubi.create.foundation.render.backend.RenderUtil;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
 public class ModelData extends BasicData {
-    private static final float[] empty = new float[25];
+	private static final float[] empty = new float[25];
 
-    private float[] matrices = empty;
+	private float[] matrices = empty;
 
-    public ModelData(InstancedModel<?> owner) {
-        super(owner);
-    }
+	public ModelData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
-    public ModelData setTransform(MatrixStack stack) {
-        matrices = RenderUtil.writeMatrixStack(stack);
-        markDirty();
-        return this;
-    }
+	public ModelData setTransform(MatrixStack stack) {
+		matrices = RenderUtil.writeMatrixStack(stack);
+		markDirty();
+		return this;
+	}
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
-        buf.asFloatBuffer().put(matrices);
-        buf.position(buf.position() + matrices.length * 4);
-    }
+	@Override
+	public void write(ByteBuffer buf) {
+		super.write(buf);
+		buf.asFloatBuffer().put(matrices);
+		buf.position(buf.position() + matrices.length * 4);
+	}
 }

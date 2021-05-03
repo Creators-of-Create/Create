@@ -8,7 +8,7 @@ import java.util.List;
 import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
 import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
-public class InstanceGroup<D extends InstanceData> extends AbstractCollection<D>  {
+public class InstanceGroup<D extends InstanceData> extends AbstractCollection<D> {
 
 	final InstancedModel<D> model;
 	final List<D> backing;
@@ -30,7 +30,6 @@ public class InstanceGroup<D extends InstanceData> extends AbstractCollection<D>
 	}
 
 	/**
-	 *
 	 * @param count
 	 * @return True if the number of elements changed.
 	 */

@@ -25,7 +25,6 @@ import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHa
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
@@ -125,7 +124,6 @@ public class ClientEvents {
 		ChassisRangeDisplay.tick();
 		EdgeInteractionRenderer.tick();
 		WorldshaperRenderHandler.tick();
-		BlockzapperRenderHandler.tick();
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
 		KineticDebugger.tick();

@@ -10,6 +10,7 @@ public interface IMultiProgram<P extends GlProgram> {
 
 	/**
 	 * Get the shader program most suited for the current game state.
+	 *
 	 * @return The one true program.
 	 */
 	P get();

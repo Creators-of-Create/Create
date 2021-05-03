@@ -16,9 +16,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components;
 import com.simibubi.create.content.logistics.InWorldProcessing;
 
 import net.minecraft.advancements.Advancement;
@@ -425,22 +422,6 @@ public class AllAdvancements implements IDataProvider {
 			.withCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
 			.withCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
 			.register(t, id + ":chromatic_eob");
-
-		Advancement deforester =
-			itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)
-				.register(t, id + ":deforester");
-
-		Advancement zapper =
-			itemAdvancement("zapper", AllItems.BLOCKZAPPER, TaskType.NORMAL).withParent(refined_radiance)
-				.register(t, id + ":zapper");
-
-		ItemStack gunWithPurpurStuff = AllItems.BLOCKZAPPER.asStack();
-		for (Components c : Components.values())
-			BlockzapperItem.setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
-		Advancement upgraded_zapper = advancement("upgraded_zapper", gunWithPurpurStuff, TaskType.CHALLENGE)
-			.withCriterion("0", AllTriggers.UPGRADED_ZAPPER.instance())
-			.withParent(zapper)
-			.register(t, id + ":upgraded_zapper");
 
 		Advancement symmetry_wand =
 			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)

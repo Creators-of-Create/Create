@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
@@ -31,6 +32,8 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -67,7 +70,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				return stack;
 			if (te.covered)
 				return stack;
-			return super.insertItem(slot, stack, simulate);
+			ItemStack insertItem = super.insertItem(slot, stack, simulate);
+			if (insertItem.getCount() != stack.getCount() && !simulate)
+				te.getWorld()
+					.playSound(null, te.getPos(), SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f,
+						.5f);
+			return insertItem;
 		}
 
 	}
@@ -173,10 +181,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 			groupedItemsBeforeCraft = before;
 		if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
 			Direction facing = getBlockState().get(MechanicalCrafterBlock.HORIZONTAL_FACING);
-			Vector3d vec = Vector3d.of(facing.getDirectionVec()).scale(.75)
+			Vector3d vec = Vector3d.of(facing.getDirectionVec())
+				.scale(.75)
 				.add(VecHelper.getCenterOf(pos));
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(getBlockState());
-			vec = vec.add(Vector3d.of(targetDirection.getDirectionVec()).scale(1));
+			vec = vec.add(Vector3d.of(targetDirection.getDirectionVec())
+				.scale(1));
 			world.addParticle(ParticleTypes.CRIT, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 	}
@@ -275,6 +285,10 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				Pointing pointing = getBlockState().get(MechanicalCrafterBlock.POINTING);
 				groupedItems.mergeOnto(targetingCrafter.groupedItems, pointing);
 				groupedItems = new GroupedItems();
+				
+				float pitch = targetingCrafter.groupedItems.grid.size() * 1/16f + .5f;
+				AllSoundEvents.CRAFTER_CLICK.playOnServer(world, pos, 1, pitch);
+
 				phase = Phase.WAITING;
 				countDown = 0;
 				sendData();
@@ -319,7 +333,14 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				}
 			}
 
+			int prev = countDown;
 			countDown -= getCountDownSpeed();
+			
+			if (countDown < 1000 && prev >= 1000) {
+				AllSoundEvents.CRAFTER_CLICK.playOnServer(world, pos, 1, 2);
+				AllSoundEvents.CRAFTER_CRAFT.playOnServer(world, pos);
+			}
+			
 			if (countDown < 0) {
 				countDown = 0;
 				if (!runLogic)
@@ -391,7 +412,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		BlockState blockState = getBlockState();
 		boolean present = AllBlocks.MECHANICAL_CRAFTER.has(blockState);
 		Vector3d vec = present ? Vector3d.of(blockState.get(HORIZONTAL_FACING)
-			.getDirectionVec()).scale(.75f) : Vector3d.ZERO;
+			.getDirectionVec())
+			.scale(.75f) : Vector3d.ZERO;
 		Vector3d ejectPos = VecHelper.getCenterOf(pos)
 			.add(vec);
 		groupedItems.grid.forEach((pair, stack) -> dropItem(ejectPos, stack));

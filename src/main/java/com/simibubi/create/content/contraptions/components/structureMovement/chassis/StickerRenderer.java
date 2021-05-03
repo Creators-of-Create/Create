@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -28,7 +29,7 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 		if (FastRenderDispatcher.available(te.getWorld())) return;
 
 		BlockState state = te.getBlockState();
-		SuperByteBuffer head = AllBlockPartials.STICKER_HEAD.renderOn(state);
+		SuperByteBuffer head = PartialBufferer.get(AllBlockPartials.STICKER_HEAD, state);
 		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks(te.getWorld()));
 
 		if (te.getWorld() != Minecraft.getInstance().world && !te.isVirtual())
@@ -36,9 +37,9 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 
 		Direction facing = state.get(StickerBlock.FACING);
 		head.matrixStacker()
-			.nudge(te.hashCode())
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
+				.nudge(te.hashCode())
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)
 			.unCentre()
 			.translate(0, (offset * offset) * 4 / 16f, 0);

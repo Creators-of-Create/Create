@@ -6,8 +6,10 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -25,11 +27,11 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 	public static GaugeRenderer speed(TileEntityRendererDispatcher dispatcher) {
 		return new GaugeRenderer(dispatcher, Type.SPEED);
 	}
-	
+
 	public static GaugeRenderer stress(TileEntityRendererDispatcher dispatcher) {
 		return new GaugeRenderer(dispatcher, Type.STRESS);
 	}
-	
+
 	protected GaugeRenderer(TileEntityRendererDispatcher dispatcher, GaugeBlock.Type type) {
 		super(dispatcher);
 		this.type = type;
@@ -45,17 +47,17 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
 		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), gaugeState, te.getPos());
 
+		PartialModel partialModel = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
-			(type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS)
-				.renderOn(gaugeState);
-		SuperByteBuffer dialBuffer = AllBlockPartials.GAUGE_DIAL.renderOn(gaugeState);
+				PartialBufferer.get(partialModel, gaugeState);
+		SuperByteBuffer dialBuffer = PartialBufferer.get(AllBlockPartials.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;
 		float progress = MathHelper.lerp(partialTicks, gaugeTE.prevDialState, gaugeTE.dialState);
 
 		for (Direction facing : Iterate.directions) {
 			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(te.getWorld(), te.getPos(), gaugeState,
-				facing))
+					facing))
 				continue;
 
 			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());

@@ -30,12 +30,12 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
-            InstancedModel<RotatingData> half = AllBlockPartials.SHAFT_HALF.getModel(rotatingMaterial, blockState, dir);
+			InstancedModel<RotatingData> half = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, dir);
 
-            float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
+			float splitSpeed = speed * tile.getRotationSpeedModifier(dir);
 
-            keys.add(setup(half.createInstance(), splitSpeed));
-        }
+			keys.add(setup(half.createInstance(), splitSpeed));
+		}
     }
 
     @Override

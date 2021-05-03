@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -82,7 +83,7 @@ public class PlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public AllBlockPartials getModel() {
+	public PartialModel getModel() {
 		return AllBlockPartials.SYMMETRY_PLANE;
 	}
 

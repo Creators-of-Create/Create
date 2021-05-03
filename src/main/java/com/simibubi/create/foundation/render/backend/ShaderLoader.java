@@ -28,14 +28,14 @@ import org.lwjgl.system.MemoryUtil;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.render.backend.gl.GlFogMode;
-import com.simibubi.create.foundation.render.backend.gl.shader.SingleProgram;
+import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.GlShader;
-import com.simibubi.create.foundation.render.backend.gl.shader.FogSensitiveProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.IMultiProgram;
 import com.simibubi.create.foundation.render.backend.gl.shader.ProgramSpec;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderConstants;
 import com.simibubi.create.foundation.render.backend.gl.shader.ShaderType;
+import com.simibubi.create.foundation.render.backend.gl.shader.SingleProgram;
 
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
@@ -70,7 +70,7 @@ public class ShaderLoader {
 		}
 	}
 
-	private void loadShaderSources(IResourceManager manager){
+	private void loadShaderSources(IResourceManager manager) {
 		Collection<ResourceLocation> allShaders = manager.getAllResourceLocations(SHADER_DIR, s -> {
 			for (String ext : EXTENSIONS) {
 				if (s.endsWith(ext)) return true;
@@ -185,7 +185,7 @@ public class ShaderLoader {
 		try {
 			bytebuffer = readToBuffer(is);
 			int i = bytebuffer.position();
-			((Buffer)bytebuffer).rewind();
+			((Buffer) bytebuffer).rewind();
 			return MemoryUtil.memASCII(bytebuffer, i);
 		} catch (IOException e) {
 
@@ -202,11 +202,12 @@ public class ShaderLoader {
 	public ByteBuffer readToBuffer(InputStream is) throws IOException {
 		ByteBuffer bytebuffer;
 		if (is instanceof FileInputStream) {
-			FileInputStream fileinputstream = (FileInputStream)is;
+			FileInputStream fileinputstream = (FileInputStream) is;
 			FileChannel filechannel = fileinputstream.getChannel();
-			bytebuffer = MemoryUtil.memAlloc((int)filechannel.size() + 1);
+			bytebuffer = MemoryUtil.memAlloc((int) filechannel.size() + 1);
 
-			while (filechannel.read(bytebuffer) != -1) { }
+			while (filechannel.read(bytebuffer) != -1) {
+			}
 		} else {
 			bytebuffer = MemoryUtil.memAlloc(8192);
 			ReadableByteChannel readablebytechannel = Channels.newChannel(is);

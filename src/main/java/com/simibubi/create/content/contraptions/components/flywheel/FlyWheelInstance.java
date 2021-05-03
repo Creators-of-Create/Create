@@ -46,24 +46,24 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     protected float lastAngle = Float.NaN;
 
     public FlyWheelInstance(InstancedTileRenderer<?> modelManager, FlywheelTileEntity tile) {
-        super(modelManager, tile);
+		super(modelManager, tile);
 
-        facing = blockState.get(HORIZONTAL_FACING);
+		facing = blockState.get(HORIZONTAL_FACING);
 
-        shaft = setup(shaftModel().createInstance());
+		shaft = setup(shaftModel().createInstance());
 
-        BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
-        wheel = AllBlockPartials.FLYWHEEL.getModel(getTransformMaterial(), referenceState, referenceState.get(HORIZONTAL_FACING)).createInstance();
+		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
+		wheel = getTransformMaterial().getModel(AllBlockPartials.FLYWHEEL, referenceState, referenceState.get(HORIZONTAL_FACING)).createInstance();
 
-        connection = FlywheelBlock.getConnection(blockState);
-        if (connection != null) {
-            connectedLeft = blockState.get(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
+		connection = FlywheelBlock.getConnection(blockState);
+		if (connection != null) {
+			connectedLeft = blockState.get(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
 
-            boolean flipAngle = connection.getAxis() == Direction.Axis.X ^ connection.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
+			boolean flipAngle = connection.getAxis() == Direction.Axis.X ^ connection.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
 
-            connectorAngleMult = flipAngle ? -1 : 1;
+			connectorAngleMult = flipAngle ? -1 : 1;
 
-            RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+			RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
 
             upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
             lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
@@ -159,8 +159,9 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     }
 
     protected InstancedModel<RotatingData> shaftModel() {
-        return AllBlockPartials.SHAFT_HALF.getModel(getRotatingMaterial(), blockState, facing.getOpposite());
-    }
+		Direction opposite = facing.getOpposite();
+		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite);
+	}
 
     protected void transformConnector(MatrixStacker ms, boolean upper, boolean rotating, float angle, boolean flip) {
         float shift = upper ? 1 / 4f : -1 / 8f;
