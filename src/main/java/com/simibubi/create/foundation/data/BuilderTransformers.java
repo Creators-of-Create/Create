@@ -63,7 +63,7 @@ public class BuilderTransformers {
 			.transform(StressConfigDefaults.setNoImpact())
 			.loot((p, b) -> p.registerDropping(b, AllBlocks.SHAFT.get()))
 			.item()
-			.model(AssetLookup.customItemModel("encased_shaft", "item_" + casing))
+			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
 	}
 

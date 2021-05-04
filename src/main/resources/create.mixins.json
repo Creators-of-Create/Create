@@ -4,6 +4,8 @@
     "package": "com.simibubi.create.foundation.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
+	"mixins": [
+	],
     "client": [
         "TileWorldHookMixin",
         "CancelTileEntityRenderMixin",
@@ -13,6 +15,7 @@
         "RenderHooksMixin",
         "ShaderCloseMixin",
         "TileRemoveMixin",
+        "HeavyBootsOnPlayerMixin",
         "EntityContraptionInteractionMixin",
         "StoreProjectionMatrixMixin"
     ],

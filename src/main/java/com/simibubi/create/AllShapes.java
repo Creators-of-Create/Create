@@ -141,6 +141,8 @@ public class AllShapes {
 		BASIN_COLLISION_SHAPE = shape(0, 2, 0, 16, 13, 16).erase(2, 5, 2, 14, 16, 14)
 			.add(2, 0, 2, 14, 2, 14)
 			.build(),
+		BACKTANK = shape(3, 0, 3, 13, 12, 13).add(SIX_VOXEL_POLE.get(Axis.Y))
+			.build(),
 		SPEED_CONTROLLER = shape(0, 0, 0, 16, 4, 16).add(1, 1, 1, 15, 13, 15)
 			.add(0, 8, 0, 16, 14, 16)
 			.build(),

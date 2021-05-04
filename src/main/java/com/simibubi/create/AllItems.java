@@ -29,6 +29,10 @@ import com.simibubi.create.content.curiosities.CombustibleItem;
 import com.simibubi.create.content.curiosities.RefinedRadianceItem;
 import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
+import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
+import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
+import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
@@ -47,6 +51,7 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
@@ -168,12 +173,12 @@ public class AllItems {
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-			.model(AssetLookup.<VerticalGearboxItem>customItemModel("gearbox", "item_vertical"))
+			.model(AssetLookup.<VerticalGearboxItem>customBlockItemModel("gearbox", "item_vertical"))
 			.register();
 
 	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
 		REGISTRATE.item("empty_blaze_burner", BlazeBurnerBlockItem::empty)
-			.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block"))
+			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block"))
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
@@ -208,13 +213,13 @@ public class AllItems {
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
-	
+
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
 			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
+
 	public static final ItemEntry<WorldshaperItem> WORLDSHAPER =
 		REGISTRATE.item("handheld_worldshaper", WorldshaperItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
@@ -258,6 +263,19 @@ public class AllItems {
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
+			.register();
+
+	public static final ItemEntry<? extends CopperArmorItem>
+
+	DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+		.register(),
+
+		COPPER_BACKTANK = REGISTRATE
+			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
+			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+			.register(),
+
+		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
 			.register();
 
 	// Schematics

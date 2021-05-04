@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "齿轮",
 	"block.create.content_observer": "物品侦测器",
 	"block.create.controller_rail": "控制铁轨",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "铜块",
 	"block.create.copper_casing": "铜机壳",
 	"block.create.copper_ore": "铜矿石",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "巧克力包层浆果",
 	"item.create.chromatic_compound": "异彩化合物",
 	"item.create.cinder_flour": "下界面粉",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "铜锭",
 	"item.create.copper_nugget": "铜粒",
 	"item.create.copper_sheet": "铜板",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "粉碎锡矿石",
 	"item.create.crushed_uranium_ore": "粉碎铀矿石",
 	"item.create.crushed_zinc_ore": "粉碎锌矿石",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "面团",
 	"item.create.electron_tube": "电子管",
 	"item.create.empty_blaze_burner": "空的烈焰人燃烧室",

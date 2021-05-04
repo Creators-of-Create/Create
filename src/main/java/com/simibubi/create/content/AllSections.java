@@ -21,12 +21,12 @@ public enum AllSections {
 
 	/** Decorative blocks */
 	PALETTES(Palette.Green),
+	
+	/** Helpful gadgets and other shenanigans */
+	CURIOSITIES(Palette.Purple),
 
 	/** Base materials, ingredients and tools */
 	MATERIALS(Palette.Green),
-
-	/** Helpful gadgets and other shenanigans */
-	CURIOSITIES(Palette.Purple),
 
 	/** Fallback section */
 	UNASSIGNED(Palette.Gray)

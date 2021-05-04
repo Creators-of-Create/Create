@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 550",
+	"_": "Missing Localizations: 554",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "Шестерня",
 	"block.create.content_observer": "Наблюдетель за содержимым",
 	"block.create.controller_rail": "Контролирующая рельса",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "Медный блок",
 	"block.create.copper_casing": "Медный корпус",
 	"block.create.copper_ore": "Медная руда",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "Ягоды в шоколадной глазури",
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "Незераковая пыль",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Медный слиток",
 	"item.create.copper_nugget": "Кусочек меди",
 	"item.create.copper_sheet": "Медный лист",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "Дроблёная оловянная руда",
 	"item.create.crushed_uranium_ore": "Дроблёная урановая руда",
 	"item.create.crushed_zinc_ore": "Дроблёная цинковая руда",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Тесто",
 	"item.create.electron_tube": "Электронная лампа",
 	"item.create.empty_blaze_burner": "Пустая горелека Всполоха",

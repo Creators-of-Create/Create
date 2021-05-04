@@ -187,6 +187,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 		}
 
+		if (AllItems.DIVING_BOOTS.get()
+			.isWornBy(entityIn))
+			return;
+
 		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
 		if (belt == null)
 			return;

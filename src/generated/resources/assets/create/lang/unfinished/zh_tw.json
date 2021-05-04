@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 655",
+	"_": "Missing Localizations: 659",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "齒輪",
 	"block.create.content_observer": "物品偵測器",
 	"block.create.controller_rail": "控制鐵軌",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "銅磚",
 	"block.create.copper_casing": "銅機殼",
 	"block.create.copper_ore": "銅礦石",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "異彩化合物",
 	"item.create.cinder_flour": "地獄麵粉",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "銅錠",
 	"item.create.copper_nugget": "銅粒",
 	"item.create.copper_sheet": "銅板",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "碎狀錫礦石",
 	"item.create.crushed_uranium_ore": "碎狀鈾礦石",
 	"item.create.crushed_zinc_ore": "碎狀鋅礦石",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "麵團",
 	"item.create.electron_tube": "真空管",
 	"item.create.empty_blaze_burner": "空的烈焰使者動力爐",

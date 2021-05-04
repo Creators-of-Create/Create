@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 17",
+	"_": "Missing Localizations: 21",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "歯車",
 	"block.create.content_observer": "コンテンツオブザーバー",
 	"block.create.controller_rail": "コントローラーレール",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "銅ブロック",
 	"block.create.copper_casing": "銅ケーシング",
 	"block.create.copper_ore": "銅鉱石",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "チョコレートグレーズドベリー",
 	"item.create.chromatic_compound": "色彩の化合物",
 	"item.create.cinder_flour": "ネザーラックの粉",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "銅インゴット",
 	"item.create.copper_nugget": "銅塊",
 	"item.create.copper_sheet": "銅板",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "砕いた錫鉱石",
 	"item.create.crushed_uranium_ore": "砕いたウラン鉱石",
 	"item.create.crushed_zinc_ore": "砕いた亜鉛鉱石",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "生地",
 	"item.create.electron_tube": "電子管",
 	"item.create.empty_blaze_burner": "空のブレイズバーナー",

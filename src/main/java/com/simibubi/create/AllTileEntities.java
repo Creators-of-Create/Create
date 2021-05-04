@@ -116,6 +116,9 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxInstance;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -654,6 +657,13 @@ public class AllTileEntities {
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
+	
+	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
+		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
+		.instance(() -> CopperBacktankInstance::new)
+		.validBlocks(AllBlocks.COPPER_BACKTANK)
+		.renderer(() -> CopperBacktankRenderer::new)
+		.register();
 
 	public static void register() {}
 }

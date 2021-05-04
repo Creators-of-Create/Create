@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 653",
+	"_": "Missing Localizations: 657",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "Ruota dentata",
 	"block.create.content_observer": "Osservatore dei contenuti",
 	"block.create.controller_rail": "Binario di controllo",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "Blocco di rame",
 	"block.create.copper_casing": "Involucro di rame",
 	"block.create.copper_ore": "Rame grezzo",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Composto cromatico",
 	"item.create.cinder_flour": "Cenere farinosa",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingotto di rame",
 	"item.create.copper_nugget": "Pepita di rame",
 	"item.create.copper_sheet": "Lamiera di rame",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "Stagno grezzo frantumato",
 	"item.create.crushed_uranium_ore": "Uranio grezzo frantumato",
 	"item.create.crushed_zinc_ore": "Zinco grezzo frantumato",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Impasto",
 	"item.create.electron_tube": "Valvola",
 	"item.create.empty_blaze_burner": "Inceneritore di blaze vuoto",
