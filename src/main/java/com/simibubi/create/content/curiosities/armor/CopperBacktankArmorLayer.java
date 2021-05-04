@@ -60,7 +60,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		BipedModel<?> model = (BipedModel<?>) entityModel;
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
 			.with(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		RenderType renderType = RenderType.getSolid();
+		RenderType renderType = RenderType.getCutout();
 
 		SuperByteBuffer backtank = CreateClient.bufferCache.renderBlock(renderedState);
 		SuperByteBuffer cogs =
