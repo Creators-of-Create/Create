@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/copper_backtank",
+		"particle": "create:block/copper_backtank"
+	},
+	"elements": [
+		{
+			"from": [6.5, 12, 6.5],
+			"to": [9.5, 13, 9.5],
+			"faces": {
+				"north": {"uv": [14.5, 4, 16, 4.5], "texture": "#0"},
+				"east": {"uv": [14.5, 3.5, 16, 4], "texture": "#0"},
+				"south": {"uv": [14.5, 3.5, 16, 4], "texture": "#0"},
+				"west": {"uv": [14.5, 3, 16, 3.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 13, 6],
+			"to": [10, 16, 10],
+			"faces": {
+				"north": {"uv": [14, 2, 16, 3.5], "texture": "#0"},
+				"east": {"uv": [14, 2, 16, 3.5], "texture": "#0"},
+				"south": {"uv": [14, 2, 16, 3.5], "texture": "#0"},
+				"west": {"uv": [14, 2, 16, 3.5], "texture": "#0"},
+				"up": {"uv": [14, 0, 16, 2], "texture": "#0"},
+				"down": {"uv": [15.5, 5, 16, 5.5], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Axle",
+			"origin": [8, 8, 8],
+			"children": []
+		}, 0, 1]
+}

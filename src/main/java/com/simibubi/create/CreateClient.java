@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -118,6 +119,10 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 
 		AllBlockPartials.clientInit();
+		
+		event.enqueueWork(() -> {
+			CopperBacktankArmorLayer.register();
+		});
 	}
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {

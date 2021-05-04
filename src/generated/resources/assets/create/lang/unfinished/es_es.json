@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 636",
+	"_": "Missing Localizations: 640",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "Rueda dentada",
 	"block.create.content_observer": "Observador de contenidos",
 	"block.create.controller_rail": "Raíl de control",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "Bloque de cobre",
 	"block.create.copper_casing": "Revestidor de caliza",
 	"block.create.copper_ore": "Mineral de cobre",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Compuesto cromático",
 	"item.create.cinder_flour": "Harina de ceniza",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingote de cobre",
 	"item.create.copper_nugget": "Pepita de cobre",
 	"item.create.copper_sheet": "Lámina de cobre",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "Mineral de estaño molido",
 	"item.create.crushed_uranium_ore": "Mineral de uranio molido",
 	"item.create.crushed_zinc_ore": "Mineral de zinc molido",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Masilla",
 	"item.create.electron_tube": "Tubo de electrones",
 	"item.create.empty_blaze_burner": "Quemador de Blaze vacío",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 31",
+	"_": "Missing Localizations: 35",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "Koło zębate",
 	"block.create.content_observer": "Detektor zawartości",
 	"block.create.controller_rail": "Tory sterujące",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "Blok miedzi",
 	"block.create.copper_casing": "Miedziana Obudowa",
 	"block.create.copper_ore": "Ruda miedzi",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "Jagody w czekoladzie",
 	"item.create.chromatic_compound": "Związek chromatyczny",
 	"item.create.cinder_flour": "Rozżarzona mąka",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Sztabka miedzi",
 	"item.create.copper_nugget": "Bryłka miedzi",
 	"item.create.copper_sheet": "Arkusz miedzi",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "Rozkruszona ruda cyny",
 	"item.create.crushed_uranium_ore": "Rozkruszona ruda uranu",
 	"item.create.crushed_zinc_ore": "Rozkruszona ruda cynku",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Ciasto",
 	"item.create.electron_tube": "Lampa elektronowa",
 	"item.create.empty_blaze_burner": "Pusty płomienny palnik",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1622",
+	"_": "Missing Localizations: 1626",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,6 +58,7 @@
 	"block.create.cogwheel": "Roda Dentada",
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
 	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
+	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"block.create.copper_block": "UNLOCALIZED: Block of Copper",
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
 	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",
@@ -438,6 +439,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
+	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "UNLOCALIZED: Copper Ingot",
 	"item.create.copper_nugget": "UNLOCALIZED: Copper Nugget",
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
@@ -456,6 +458,8 @@
 	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
 	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "UNLOCALIZED: Crushed Zinc Ore",
+	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
+	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Massa",
 	"item.create.electron_tube": "UNLOCALIZED: Electron Tube",
 	"item.create.empty_blaze_burner": "UNLOCALIZED: Empty Blaze Burner",
