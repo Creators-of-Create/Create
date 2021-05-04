@@ -97,11 +97,12 @@ public class UIRenderHelper {
 	private static void streak(MatrixStack ms, int width, int height, int c1, int c2, int c3, int c4) {
 		double split1 = .5;
 		double split2 = .75;
-		Matrix4f model = ms.peek()
-				.getModel();
+		Matrix4f model = ms.peek().getModel();
+		RenderSystem.disableAlphaTest();
 		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
+		RenderSystem.enableAlphaTest();
 	}
 
 	/**
