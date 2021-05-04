@@ -28,7 +28,6 @@ import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.GlShader;
-import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderConstants;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
@@ -46,10 +45,9 @@ public class ShaderLoader {
 
 	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
 	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
-	private static final Pattern builtinPattern = Pattern.compile("#flwbuiltins");
 	private static boolean debugDumpFile = true;
 
-	final Map<ResourceLocation, String> shaderSource = new HashMap<>();
+	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
 	void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
@@ -60,9 +58,9 @@ public class ShaderLoader {
 				shaderSource.clear();
 				loadShaderSources(manager);
 
-				Backend.programs.values().forEach(IMultiProgram::delete);
-				Backend.programs.clear();
-				Backend.registry.values().forEach(this::loadProgramFromSpec);
+				for (ShaderContext<?> context : Backend.contexts.values()) {
+					context.load(this);
+				}
 
 				Backend.log.info("Loaded all shader programs.");
 
@@ -70,6 +68,10 @@ public class ShaderLoader {
 				shaderSource.clear();
 			}
 		}
+	}
+
+	public String getShaderSource(ResourceLocation loc) {
+		return shaderSource.get(loc);
 	}
 
 	private void loadShaderSources(IResourceManager manager) {
@@ -96,27 +98,20 @@ public class ShaderLoader {
 		}
 	}
 
-	private <P extends GlProgram, S extends ProgramSpec<P>> void loadProgramFromSpec(S programSpec) {
-
-		Backend.programs.put(programSpec, programSpec.finalizer.create(this, programSpec));
-
-		Backend.log.debug("Loaded program {}", programSpec.name);
+	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ProgramSpec programSpec) {
+		return loadProgram(ctx, programSpec, programSpec.defines);
 	}
 
-	public GlProgram.Builder loadProgram(ProgramSpec<?> programSpec) {
-		return loadProgram(programSpec, programSpec.defines);
+	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ProgramSpec programSpec, ShaderConstants defines) {
+		return loadProgram(ctx, programSpec.name, programSpec.vert, programSpec.frag, programSpec.attributes, defines);
 	}
 
-	public GlProgram.Builder loadProgram(ProgramSpec<?> programSpec, ShaderConstants defines) {
-		return loadProgram(programSpec.name, programSpec.vert, programSpec.frag, programSpec.attributes, defines);
-	}
-
-	public GlProgram.Builder loadProgram(ResourceLocation name, ResourceLocation vert, ResourceLocation frag, Collection<IVertexAttrib> attribs, ShaderConstants defines) {
+	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ResourceLocation name, ResourceLocation vert, ResourceLocation frag, Collection<IVertexAttrib> attribs, ShaderConstants defines) {
 		GlShader vsh = null;
 		GlShader fsh = null;
 		try {
-			vsh = loadShader(vert, ShaderType.VERTEX, defines);
-			fsh = loadShader(frag, ShaderType.FRAGMENT, defines);
+			vsh = loadShader(ctx, vert, ShaderType.VERTEX, defines);
+			fsh = loadShader(ctx, frag, ShaderType.FRAGMENT, defines);
 
 			return GlProgram.builder(name)
 					.attachShader(vsh)
@@ -129,10 +124,10 @@ public class ShaderLoader {
 		}
 	}
 
-	public GlShader loadShader(ResourceLocation name, ShaderType type, ShaderConstants defines) {
+	public GlShader loadShader(ShaderContext<?> ctx, ResourceLocation name, ShaderType type, ShaderConstants defines) {
 		String source = shaderSource.get(name);
 
-		source = expandBuiltins(source, type);
+		source = ctx.preProcess(this, source, type);
 		source = processIncludes(source, name);
 
 		if (defines != null)
@@ -147,33 +142,6 @@ public class ShaderLoader {
 		}
 
 		return new GlShader(type, name, source);
-	}
-
-	private String expandBuiltins(String source, ShaderType type) {
-		return lines(source).flatMap(line -> {
-			Matcher matcher = builtinPattern.matcher(line);
-
-			if (matcher.find()) {
-				ResourceLocation builtins;
-
-				switch (type) {
-					case FRAGMENT:
-						builtins = new ResourceLocation("create", "std/builtin.frag");
-						break;
-					case VERTEX:
-						builtins = new ResourceLocation("create", "std/builtin.vert");
-						break;
-					default:
-						builtins = null;
-				}
-
-				String includeSource = shaderSource.get(builtins);
-
-				return lines(includeSource);
-			}
-
-			return Stream.of(line);
-		}).collect(Collectors.joining("\n"));
 	}
 
 	private String processIncludes(String source, ResourceLocation baseName) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.RenderWork;
+import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -36,7 +37,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
-import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
@@ -144,7 +144,7 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers(world);
 			AnimationTickHolder.reset();
-			KineticRenderer renderer = CreateClient.kineticRenderer.get(world);
+			BasicInstancedTileRenderer renderer = CreateClient.kineticRenderer.get(world);
 			renderer.invalidate();
 			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}

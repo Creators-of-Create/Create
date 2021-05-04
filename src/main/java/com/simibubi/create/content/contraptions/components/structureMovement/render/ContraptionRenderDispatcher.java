@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL40;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.core.ContraptionContext;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -81,12 +82,12 @@ public class ContraptionRenderDispatcher {
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         if (Backend.canUseVBOs()) {
-            ContraptionProgram structureShader = Backend.getProgram(AllProgramSpecs.C_STRUCTURE);
-            structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
-            for (RenderedContraption renderer : renderers.values()) {
-                renderer.doRenderLayer(layer, structureShader);
-            }
-        }
+			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.C_STRUCTURE);
+			structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
+			for (RenderedContraption renderer : renderers.values()) {
+				renderer.doRenderLayer(layer, structureShader);
+			}
+		}
 
         if (Backend.canUseInstancing()) {
             for (RenderedContraption renderer : renderers.values()) {

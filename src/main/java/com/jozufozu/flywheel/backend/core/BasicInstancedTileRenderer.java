@@ -2,11 +2,8 @@ package com.jozufozu.flywheel.backend.core;
 
 import java.util.ArrayList;
 
-import com.jozufozu.flywheel.backend.MaterialTypes;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
-import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.RenderType;
@@ -20,11 +17,8 @@ public class BasicInstancedTileRenderer extends InstancedTileRenderer<BasicProgr
 
 	public BlockPos originCoordinate = BlockPos.ZERO;
 
-	@Override
-	public void registerMaterials() {
-		materials.put(MaterialTypes.TRANSFORMED,
-				new RenderMaterial<>(this, AllProgramSpecs.MODEL, TransformedModel::new));
-		materials.put(MaterialTypes.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.ORIENTED, OrientedModel::new));
+	public BasicInstancedTileRenderer() {
+		super(WorldContext.INSTANCE);
 	}
 
 	@Override

@@ -7,22 +7,15 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.MaterialTypes;
-import com.jozufozu.flywheel.backend.core.OrientedModel;
-import com.jozufozu.flywheel.backend.core.TransformedModel;
+import com.jozufozu.flywheel.backend.core.ContraptionContext;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.base.RotatingModel;
 import com.simibubi.create.content.contraptions.components.actors.ActorData;
-import com.simibubi.create.content.contraptions.components.actors.ActorModel;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.relays.belt.BeltInstancedModel;
-import com.simibubi.create.content.logistics.block.FlapModel;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.math.BlockPos;
@@ -35,19 +28,9 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
     private final WeakReference<RenderedContraption> contraption;
 
     ContraptionKineticRenderer(RenderedContraption contraption) {
-        this.contraption = new WeakReference<>(contraption);
-    }
-
-    @Override
-    public void registerMaterials() {
-        materials.put(MaterialTypes.TRANSFORMED, new RenderMaterial<>(this, AllProgramSpecs.C_MODEL, TransformedModel::new));
-        materials.put(MaterialTypes.ORIENTED, new RenderMaterial<>(this, AllProgramSpecs.C_ORIENTED, OrientedModel::new));
-
-        materials.put(KineticRenderMaterials.BELTS, new RenderMaterial<>(this, AllProgramSpecs.C_BELT, BeltInstancedModel::new));
-        materials.put(KineticRenderMaterials.ROTATING, new RenderMaterial<>(this, AllProgramSpecs.C_ROTATING, RotatingModel::new));
-        materials.put(KineticRenderMaterials.FLAPS, new RenderMaterial<>(this, AllProgramSpecs.C_FLAPS, FlapModel::new));
-        materials.put(KineticRenderMaterials.ACTORS, new RenderMaterial<>(this, AllProgramSpecs.C_ACTOR, ActorModel::new));
-    }
+		super(ContraptionContext.INSTANCE);
+		this.contraption = new WeakReference<>(contraption);
+	}
 
     public void tick() {
         actors.forEach(ActorInstance::tick);

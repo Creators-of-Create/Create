@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.KineticRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -96,7 +96,7 @@ public class RenderHooksMixin {
 		Backend.refresh();
 
 		if (Backend.canUseInstancing() && world != null) {
-			KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+			BasicInstancedTileRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
 			kineticRenderer.invalidate();
 			world.loadedTileEntityList.forEach(kineticRenderer::add);
 		}

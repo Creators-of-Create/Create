@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.KineticRenderer;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -46,7 +46,7 @@ public class TileWorldHookMixin {
 	@Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;clear()V", ordinal = 0), method = "tickBlockEntities")
 	private void onChunkUnload(CallbackInfo ci) {
 		if (isRemote) {
-			KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(self);
+			BasicInstancedTileRenderer kineticRenderer = CreateClient.kineticRenderer.get(self);
 			for (TileEntity tile : tileEntitiesToBeRemoved) {
 				kineticRenderer.remove(tile);
 			}

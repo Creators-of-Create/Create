@@ -7,8 +7,10 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.MaterialType;
 import com.jozufozu.flywheel.backend.MaterialTypes;
+import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.ModelData;
 import com.jozufozu.flywheel.backend.core.OrientedData;
@@ -32,18 +34,20 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
 	protected Map<TileEntity, IDynamicInstance> dynamicInstances = new HashMap<>();
 
+	public final ShaderContext<P> context;
+
 	protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
 	protected int frame;
 	protected int tick;
 
-	protected InstancedTileRenderer() {
-		registerMaterials();
+	protected InstancedTileRenderer(ShaderContext<P> context) {
+		this.context = context;
+
+		FastRenderDispatcher.materials.forEach((key, value) -> materials.put(key, value.create(this)));
 	}
 
 	public abstract BlockPos getOriginCoordinate();
-
-	public abstract void registerMaterials();
 
 	public void tick(double cameraX, double cameraY, double cameraZ) {
 		tick++;

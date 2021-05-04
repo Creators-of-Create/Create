@@ -3,6 +3,7 @@ package com.jozufozu.flywheel.backend.gl.shader;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.GlFog;
 import com.jozufozu.flywheel.backend.gl.GlFogMode;
@@ -36,7 +37,7 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 		}
 
 		@Override
-		public IMultiProgram<P> create(ShaderLoader loader, ProgramSpec<P> spec) {
+		public IMultiProgram<P> create(ShaderLoader loader, ShaderContext<P> ctx, ProgramSpec spec) {
 			Map<GlFogMode, P> programs = new EnumMap<>(GlFogMode.class);
 
 			for (GlFogMode fogMode : GlFogMode.values()) {
@@ -44,7 +45,7 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 
 				defines.defineAll(fogMode.getDefines());
 
-				GlProgram.Builder builder = loader.loadProgram(spec, defines);
+				GlProgram.Builder builder = loader.loadProgram(ctx, spec, defines);
 
 				programs.put(fogMode, fogProgramLoader.create(builder.name, builder.program, fogMode.getFogFactory()));
 			}

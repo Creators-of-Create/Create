@@ -1,9 +1,5 @@
 #flwinclude <"create:std/fog.glsl">
 
-#if defined(CONTRAPTION)
-#flwinclude <"create:contraption/builtin.frag">
-#else
-
 void FLWFinalizeColor(vec4 color) {
     #if defined(USE_FOG)
     float a = color.a;
@@ -18,4 +14,3 @@ vec4 FLWLight(vec2 lightCoords, sampler2D lightMap) {
     vec2 lm = lightCoords * 0.9375 + 0.03125;
     return texture2D(lightMap, lm);
 }
-    #endif

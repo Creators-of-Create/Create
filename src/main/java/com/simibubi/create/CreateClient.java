@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -27,7 +28,6 @@ import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
@@ -65,7 +65,7 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static WorldAttached<KineticRenderer> kineticRenderer;
+	public static WorldAttached<BasicInstancedTileRenderer> kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 	public static GhostBlocks ghostBlocks;
 
@@ -88,7 +88,7 @@ public class CreateClient {
 
 	public static void clientInit(FMLClientSetupEvent event) {
 		AllProgramSpecs.init();
-		kineticRenderer = new WorldAttached<>(KineticRenderer::new);
+		kineticRenderer = new WorldAttached<>(BasicInstancedTileRenderer::new);
 
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();

@@ -1,6 +1,3 @@
-#if defined(CONTRAPTION)
-#flwinclude <"create:contraption/builtin.vert">
-#else
 
 #if defined(USE_FOG)
 varying float FragDistance;
@@ -15,4 +12,3 @@ void FLWFinalizeWorldPos(inout vec4 worldPos, vec3 cameraPos) {
 void FLWFinalizeNormal(inout vec3 normal) {
     // noop
 }
-    #endif

@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.RenderUtil;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
@@ -30,20 +29,20 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel<?>> {
 
-	protected final InstancedTileRenderer<?> renderer;
+	protected final InstancedTileRenderer<P> renderer;
 	protected final Cache<Object, MODEL> models;
 	protected final ModelFactory<MODEL> factory;
-	protected final ProgramSpec<P> programSpec;
+	protected final ProgramSpec programSpec;
 	protected final Predicate<RenderType> layerPredicate;
 
 	/**
 	 * Creates a material that renders in the default layer (CUTOUT_MIPPED)
 	 */
-	public RenderMaterial(InstancedTileRenderer<?> renderer, ProgramSpec<P> programSpec, ModelFactory<MODEL> factory) {
+	public RenderMaterial(InstancedTileRenderer<P> renderer, ProgramSpec programSpec, ModelFactory<MODEL> factory) {
 		this(renderer, programSpec, factory, type -> type == RenderType.getCutoutMipped());
 	}
 
-	public RenderMaterial(InstancedTileRenderer<?> renderer, ProgramSpec<P> programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+	public RenderMaterial(InstancedTileRenderer<P> renderer, ProgramSpec programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
 		this.renderer = renderer;
 		this.models = CacheBuilder.newBuilder()
 				.removalListener(notification -> ((InstancedModel<?>) notification.getValue()).delete())
@@ -62,7 +61,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 	}
 
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
-		P program = Backend.getProgram(programSpec);
+		P program = renderer.context.getProgram(programSpec);
 		program.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
 
 		if (setup != null) setup.call(program);

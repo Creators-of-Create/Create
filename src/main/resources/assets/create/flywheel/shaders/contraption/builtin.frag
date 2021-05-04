@@ -1,3 +1,5 @@
+#flwinclude <"create:std/fog.glsl">
+
 varying vec3 BoxCoord;
 uniform sampler3D uLightVolume;
 

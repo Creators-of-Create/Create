@@ -8,9 +8,10 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
+import com.jozufozu.flywheel.backend.core.ContraptionContext;
+import com.jozufozu.flywheel.backend.core.EffectsContext;
+import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.effects.EffectsHandler;
-import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
-import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
@@ -38,28 +39,41 @@ public class Backend {
 	private static boolean instancingAvailable;
 	private static boolean enabled;
 
-	static final Map<ResourceLocation, ProgramSpec<?>> registry = new HashMap<>();
-	static final Map<ProgramSpec<?>, IMultiProgram<?>> programs = new HashMap<>();
+	static final Map<ResourceLocation, ShaderContext<?>> contexts = new HashMap<>();
+	static final Map<ResourceLocation, ProgramSpec> specRegistry = new HashMap<>();
+
+	static {
+		register(WorldContext.INSTANCE);
+		register(ContraptionContext.INSTANCE);
+		register(EffectsContext.INSTANCE);
+	}
 
 	public Backend() {
 		throw new IllegalStateException();
 	}
 
 	/**
-	 * Register a shader program. TODO: replace with forge registry?
+	 * Register a shader program.
 	 */
-	public static <P extends GlProgram, S extends ProgramSpec<P>> S register(S spec) {
+	public static ProgramSpec register(ProgramSpec spec) {
 		ResourceLocation name = spec.name;
-		if (registry.containsKey(name)) {
+		if (specRegistry.containsKey(name)) {
 			throw new IllegalStateException("Program spec '" + name + "' already registered.");
 		}
-		registry.put(name, spec);
+		specRegistry.put(name, spec);
 		return spec;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <P extends GlProgram, S extends ProgramSpec<P>> P getProgram(S spec) {
-		return (P) programs.get(spec).get();
+	/**
+	 * Register a shader context.
+	 */
+	public static ShaderContext<?> register(ShaderContext<?> spec) {
+		ResourceLocation name = spec.getRoot();
+		if (contexts.containsKey(name)) {
+			throw new IllegalStateException("Program spec '" + name + "' already registered.");
+		}
+		contexts.put(name, spec);
+		return spec;
 	}
 
 	public static boolean isFlywheelWorld(World world) {

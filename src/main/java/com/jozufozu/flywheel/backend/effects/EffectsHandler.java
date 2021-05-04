@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderUtil;
+import com.jozufozu.flywheel.backend.core.EffectsContext;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
@@ -95,7 +96,7 @@ public class EffectsHandler {
 		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
 		GL11.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-		SphereFilterProgram program = Backend.getProgram(AllProgramSpecs.CHROMATIC);
+		SphereFilterProgram program = EffectsContext.INSTANCE.getProgram(AllProgramSpecs.CHROMATIC);
 		program.bind();
 
 		program.bindColorTexture(mainBuffer.getColorAttachment());
