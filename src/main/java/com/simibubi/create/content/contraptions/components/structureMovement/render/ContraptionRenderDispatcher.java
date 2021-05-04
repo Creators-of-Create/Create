@@ -82,7 +82,7 @@ public class ContraptionRenderDispatcher {
         GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
         if (Backend.canUseVBOs()) {
-			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.C_STRUCTURE);
+			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.STRUCTURE);
 			structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
 			for (RenderedContraption renderer : renderers.values()) {
 				renderer.doRenderLayer(layer, structureShader);

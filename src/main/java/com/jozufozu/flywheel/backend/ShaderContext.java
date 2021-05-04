@@ -23,14 +23,7 @@ public abstract class ShaderContext<P extends GlProgram> {
 
 	public abstract ShaderSpecLoader<P> getLoader();
 
-	public void load(ShaderLoader loader) {
-		programs.values().forEach(IMultiProgram::delete);
-		programs.clear();
-
-		for (ProgramSpec programSpec : Backend.specRegistry.values()) {
-			loadProgramFromSpec(loader, programSpec);
-		}
-	}
+	public abstract void load(ShaderLoader loader);
 
 	public void loadProgramFromSpec(ShaderLoader loader, ProgramSpec programSpec) {
 

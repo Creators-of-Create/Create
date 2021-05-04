@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.jozufozu.flywheel.backend.core.OrientedModel;
 import com.jozufozu.flywheel.backend.core.TransformedModel;
-import com.jozufozu.flywheel.backend.instancing.MaterialFactory;
+import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 
 public class FastRenderDispatcher {
 
-	public static Map<MaterialType<?>, MaterialFactory> materials = new HashMap<>();
+	public static Map<MaterialType<?>, MaterialSpec> materials = new HashMap<>();
 
 	static {
 		registerMaterials();
@@ -37,12 +37,12 @@ public class FastRenderDispatcher {
 	public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
 	public static void registerMaterials() {
-		materials.put(MaterialTypes.TRANSFORMED, new MaterialFactory(AllProgramSpecs.MODEL, TransformedModel::new));
-		materials.put(MaterialTypes.ORIENTED, new MaterialFactory(AllProgramSpecs.ORIENTED, OrientedModel::new));
-		materials.put(KineticRenderMaterials.BELTS, new MaterialFactory(AllProgramSpecs.BELT, BeltInstancedModel::new));
-		materials.put(KineticRenderMaterials.ROTATING, new MaterialFactory(AllProgramSpecs.ROTATING, RotatingModel::new));
-		materials.put(KineticRenderMaterials.FLAPS, new MaterialFactory(AllProgramSpecs.FLAPS, FlapModel::new));
-		materials.put(KineticRenderMaterials.ACTORS, new MaterialFactory(AllProgramSpecs.C_ACTOR, ActorModel::new));
+		materials.put(MaterialTypes.TRANSFORMED, new MaterialSpec(AllProgramSpecs.MODEL, TransformedModel::new));
+		materials.put(MaterialTypes.ORIENTED, new MaterialSpec(AllProgramSpecs.ORIENTED, OrientedModel::new));
+		materials.put(KineticRenderMaterials.BELTS, new MaterialSpec(AllProgramSpecs.BELT, BeltInstancedModel::new));
+		materials.put(KineticRenderMaterials.ROTATING, new MaterialSpec(AllProgramSpecs.ROTATING, RotatingModel::new));
+		materials.put(KineticRenderMaterials.FLAPS, new MaterialSpec(AllProgramSpecs.FLAPS, FlapModel::new));
+		materials.put(KineticRenderMaterials.ACTORS, new MaterialSpec(AllProgramSpecs.ACTOR, ActorModel::new));
 	}
 
 	public static void enqueueUpdate(TileEntity te) {

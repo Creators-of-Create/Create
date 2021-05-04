@@ -71,13 +71,13 @@ public class AllProgramSpecs {
 			.setVert(Locations.FLAP)
 			.setFrag(Locations.BLOCK)
 			.createProgramSpec());
-	public static final ProgramSpec C_STRUCTURE = register(builder("contraption_structure")
+	public static final ProgramSpec STRUCTURE = register(builder("contraption_structure")
 			.addAttributes(ContraptionAttributes.class)
 			.setVert(Locations.CONTRAPTION_STRUCTURE)
 			.setFrag(Locations.BLOCK)
 			.setDefines(ShaderConstants.define("CONTRAPTION"))
 			.createProgramSpec());
-	public static final ProgramSpec C_ACTOR = register(builder("contraption_actor")
+	public static final ProgramSpec ACTOR = register(builder("contraption_actor")
 			.addAttributes(ModelAttributes.class)
 			.addAttributes(ActorVertexAttributes.class)
 			.setVert(Locations.CONTRAPTION_ACTOR)
