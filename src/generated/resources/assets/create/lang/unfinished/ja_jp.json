@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 21",
+	"_": "Missing Localizations: 22",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "ブレイズの咀嚼音",
 	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
 	"create.subtitle.funnel_flap": "ファンネルがはためく",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
 	"create.subtitle.scroll_value": "スクロールのカチカチ音",
 	"create.subtitle.mechanical_press_activation": "メカニカルプレスがガーンと鳴る",

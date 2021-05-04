@@ -41,7 +41,7 @@ public class CogwheelBlockItem extends BlockItem {
 		large = block.isLarge;
 
 		placementHelperId = PlacementHelpers.register(large ? new LargeCogHelper() : new SmallCogHelper());
-		integratedCogHelperId = large ? PlacementHelpers.register(new IntegratedCogHelper()) : -1;
+		integratedCogHelperId = PlacementHelpers.register(large ? new IntegratedLargeCogHelper() : new IntegratedSmallCogHelper());
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class CogwheelBlockItem extends BlockItem {
 				for (int offset1 : Iterate.positiveAndNegative) {
 					for (int offset2 : Iterate.positiveAndNegative) {
 						BlockPos connectedPos = pos.offset(d1, offset1)
-							.offset(d2, offset2);
+								.offset(d2, offset2);
 						BlockState blockState = world.getBlockState(connectedPos);
 						if (!(blockState.getBlock() instanceof CogWheelBlock))
 							continue;
@@ -123,7 +123,7 @@ public class CogwheelBlockItem extends BlockItem {
 
 			if (!((CogWheelBlock) state.getBlock()).isLarge) {
 				List<Direction> directions =
-					IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(AXIS));
+						IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(AXIS));
 
 				for (Direction dir : directions) {
 					BlockPos newPos = pos.offset(dir);
@@ -132,8 +132,8 @@ public class CogwheelBlockItem extends BlockItem {
 						continue;
 
 					if (!world.getBlockState(newPos)
-						.getMaterial()
-						.isReplaceable())
+							.getMaterial()
+							.isReplaceable())
 						continue;
 
 					return PlacementOffset.success(newPos, s -> s.with(AXIS, state.get(AXIS)));
@@ -162,19 +162,19 @@ public class CogwheelBlockItem extends BlockItem {
 
 			if (((CogWheelBlock) state.getBlock()).isLarge) {
 				Direction side = IPlacementHelper.orderedByDistanceOnlyAxis(pos, ray.getHitVec(), state.get(AXIS))
-					.get(0);
+						.get(0);
 				List<Direction> directions =
-					IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(AXIS));
+						IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(AXIS));
 				for (Direction dir : directions) {
 					BlockPos newPos = pos.offset(dir)
-						.offset(side);
+							.offset(side);
 
 					if (!CogWheelBlock.isValidCogwheelPosition(true, world, newPos, dir.getAxis()))
 						continue;
 
 					if (!world.getBlockState(newPos)
-						.getMaterial()
-						.isReplaceable())
+							.getMaterial()
+							.isReplaceable())
 						continue;
 
 					return PlacementOffset.success(newPos, s -> s.with(AXIS, dir.getAxis()));
@@ -199,16 +199,16 @@ public class CogwheelBlockItem extends BlockItem {
 		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
 			// diagonal gears of different size
 			Direction closest = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(AXIS))
-				.get(0);
+					.get(0);
 			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(),
-				state.get(AXIS), d -> d.getAxis() != closest.getAxis());
+					state.get(AXIS), d -> d.getAxis() != closest.getAxis());
 
 			for (Direction dir : directions) {
 				BlockPos newPos = pos.offset(dir)
-					.offset(closest);
+						.offset(closest);
 				if (!world.getBlockState(newPos)
-					.getMaterial()
-					.isReplaceable())
+						.getMaterial()
+						.isReplaceable())
 					continue;
 
 				if (!CogWheelBlock.isValidCogwheelPosition(ICogWheel.isLargeCog(state), world, newPos, state.get(AXIS)))
@@ -222,16 +222,16 @@ public class CogwheelBlockItem extends BlockItem {
 
 		protected boolean hitOnShaft(BlockState state, BlockRayTraceResult ray) {
 			return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS))
-				.getBoundingBox()
-				.grow(0.001)
-				.contains(ray.getHitVec()
-					.subtract(ray.getHitVec()
-						.align(Iterate.axisSet)));
+					.getBoundingBox()
+					.grow(0.001)
+					.contains(ray.getHitVec()
+							.subtract(ray.getHitVec()
+									.align(Iterate.axisSet)));
 		}
 	}
 
 	@MethodsReturnNonnullByDefault
-	public static class IntegratedCogHelper implements IPlacementHelper {
+	public static class IntegratedLargeCogHelper implements IPlacementHelper {
 
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
@@ -250,10 +250,10 @@ public class CogwheelBlockItem extends BlockItem {
 
 			if (state.contains(HorizontalKineticBlock.HORIZONTAL_FACING))
 				newAxis = state.get(HorizontalKineticBlock.HORIZONTAL_FACING)
-					.getAxis();
+						.getAxis();
 			else if (state.contains(DirectionalKineticBlock.FACING))
 				newAxis = state.get(DirectionalKineticBlock.FACING)
-					.getAxis();
+						.getAxis();
 			else
 				newAxis = Axis.Y;
 
@@ -261,21 +261,74 @@ public class CogwheelBlockItem extends BlockItem {
 				return PlacementOffset.fail();
 
 			List<Direction> directions =
-				IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), face.getAxis(), newAxis);
+					IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), face.getAxis(), newAxis);
 
 			for (Direction d : directions) {
 				BlockPos newPos = pos.offset(face)
-					.offset(d);
+						.offset(d);
 
 				if (!world.getBlockState(newPos)
-					.getMaterial()
-					.isReplaceable())
+						.getMaterial()
+						.isReplaceable())
 					continue;
 
 				if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, newAxis))
 					return PlacementOffset.fail();
 
 				return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));
+			}
+
+			return PlacementOffset.fail();
+		}
+
+	}
+
+	@MethodsReturnNonnullByDefault
+	public static class IntegratedSmallCogHelper implements IPlacementHelper {
+
+		@Override
+		public Predicate<ItemStack> getItemPredicate() {
+			return ((Predicate<ItemStack>) ICogWheel::isSmallCogItem).and(ICogWheel::isDedicatedCogItem);
+		}
+
+		@Override
+		public Predicate<BlockState> getStatePredicate() {
+			return s -> !ICogWheel.isDedicatedCogWheel(s.getBlock()) && ICogWheel.isSmallCog(s);
+		}
+
+		@Override
+		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+			Direction face = ray.getFace();
+			Axis newAxis;
+
+			if (state.contains(HorizontalKineticBlock.HORIZONTAL_FACING))
+				newAxis = state.get(HorizontalKineticBlock.HORIZONTAL_FACING)
+						.getAxis();
+			else if (state.contains(DirectionalKineticBlock.FACING))
+				newAxis = state.get(DirectionalKineticBlock.FACING)
+						.getAxis();
+			else
+				newAxis = Axis.Y;
+
+			if (face.getAxis() == newAxis)
+				return PlacementOffset.fail();
+
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), newAxis);
+
+			for (Direction d : directions) {
+				BlockPos newPos = pos.offset(d);
+
+				if (!world.getBlockState(newPos)
+						.getMaterial()
+						.isReplaceable())
+					continue;
+
+				if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, newAxis))
+					return PlacementOffset.fail();
+
+				return PlacementOffset.success()
+						.at(newPos)
+						.withTransform(s -> s.with(CogWheelBlock.AXIS, newAxis));
 			}
 
 			return PlacementOffset.fail();

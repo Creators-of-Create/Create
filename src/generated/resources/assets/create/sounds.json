@@ -49,6 +49,15 @@
     ],
     "subtitle": "create.subtitle.contraption_disassemble"
   },
+  "copper_armor_equip": {
+    "sounds": [
+      {
+        "name": "minecraft:item.armor.equip_gold",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.copper_armor_equip"
+  },
   "crafter_click": {
     "sounds": [
       {

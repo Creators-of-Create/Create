@@ -135,9 +135,9 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 	protected void renderZapper(MatrixStack matrixStack) {
 		GuiGameElement.of(zapper)
-			.at((this.width - this.sWidth) / 2 + 220, this.height / 2 - this.sHeight / 4 + 27, -150)
-			.scale(4)
-			.render(matrixStack);
+				.scale(4)
+				.at((this.width - this.sWidth) / 2 + 220, this.height / 2 - this.sHeight / 4 + 27, -150)
+				.render(matrixStack);
 	}
 
 	protected void renderBlock(MatrixStack matrixStack) {

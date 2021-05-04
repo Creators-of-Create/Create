@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 657",
+	"_": "Missing Localizations: 658",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "Il blaze lo gusta felicemente",
 	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",

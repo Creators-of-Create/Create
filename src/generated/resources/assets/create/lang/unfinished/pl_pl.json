@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 35",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "Płomyk szczęśliwie przeżuwa",
 	"create.subtitle.schematicannon_launch_block": "Schematoarmata strzela",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "Schematoarmata skończyła",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Mechaniczna prasa się uruchamia",

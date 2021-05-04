@@ -63,31 +63,17 @@ public class GuiGameElement {
 			.with(FlowingFluidBlock.LEVEL, 0));
 	}
 
-	public static abstract class GuiRenderBuilder {
-		double xBeforeScale, yBeforeScale, zBeforeScale = 0;
-		double x, y, z;
+	public static abstract class GuiRenderBuilder extends RenderElement {
+		double xLocal, yLocal, zLocal;
 		double xRot, yRot, zRot;
 		double scale = 1;
 		int color = 0xFFFFFF;
 		Vector3d rotationOffset = Vector3d.ZERO;
 
 		public GuiRenderBuilder atLocal(double x, double y, double z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			return this;
-		}
-
-		public GuiRenderBuilder at(double x, double y) {
-			this.xBeforeScale = x;
-			this.yBeforeScale = y;
-			return this;
-		}
-
-		public GuiRenderBuilder at(double x, double y, double z) {
-			this.xBeforeScale = x;
-			this.yBeforeScale = y;
-			this.zBeforeScale = z;
+			this.xLocal = x;
+			this.yLocal = y;
+			this.zLocal = z;
 			return this;
 		}
 
@@ -136,9 +122,9 @@ public class GuiGameElement {
 
 		@Deprecated
 		protected void transform() {
-			RenderSystem.translated(xBeforeScale, yBeforeScale, 0);
+			RenderSystem.translated(x, y, 0);
 			RenderSystem.scaled(scale, scale, scale);
-			RenderSystem.translated(x, y, z);
+			RenderSystem.translated(xLocal, yLocal, zLocal);
 			RenderSystem.scaled(1, -1, 1);
 			RenderSystem.translated(rotationOffset.x, rotationOffset.y, rotationOffset.z);
 			RenderSystem.rotatef((float) zRot, 0, 0, 1);
@@ -148,9 +134,9 @@ public class GuiGameElement {
 		}
 
 		protected void transformMatrix(MatrixStack matrixStack) {
-			matrixStack.translate(xBeforeScale, yBeforeScale, zBeforeScale);
-			matrixStack.scale((float) scale, (float) scale, (float) scale);
 			matrixStack.translate(x, y, z);
+			matrixStack.scale((float) scale, (float) scale, (float) scale);
+			matrixStack.translate(xLocal, yLocal, zLocal);
 			matrixStack.scale(1, -1, 1);
 			matrixStack.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
 			matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) zRot));
@@ -272,23 +258,10 @@ public class GuiGameElement {
 		@Override
 		public void render(MatrixStack matrixStack) {
 			prepareMatrix(matrixStack);
-//			matrixStack.translate(0, 80, 0);
 			transformMatrix(matrixStack);
 			renderItemIntoGUI(matrixStack, stack);
 			cleanUpMatrix(matrixStack);
 		}
-		/*
-		 * public void render() {
-		 * prepare();
-		 * transform();
-		 * RenderSystem.scaled(1, -1, 1);
-		 * RenderSystem.translated(0, 0, -75);
-		 * Minecraft.getInstance()
-		 * .getItemRenderer()
-		 * .renderItemIntoGUI(stack, 0, 0);
-		 * cleanUp();
-		 * }
-		 */
 
 		public static void renderItemIntoGUI(MatrixStack matrixStack, ItemStack stack) {
 			ItemRenderer renderer = Minecraft.getInstance()

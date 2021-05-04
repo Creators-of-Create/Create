@@ -81,4 +81,22 @@ public interface Force {
             return timeRemaining <= 0;
         }
     }
+
+    class Static implements Force {
+        float force;
+
+        public Static(float force) {
+            this.force = force;
+        }
+
+        @Override
+        public float get(float mass, float value, float speed) {
+            return force;
+        }
+
+        @Override
+        public boolean finished() {
+            return false;
+        }
+    }
 }

@@ -38,8 +38,9 @@ import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
-import com.simibubi.create.foundation.command.ConfigureConfigPacket;
+import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
+import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -80,12 +81,13 @@ public enum AllPackets {
 	PLACE_EJECTOR(EjectorPlacementPacket.class, EjectorPlacementPacket::new, PLAY_TO_SERVER),
 	TRIGGER_EJECTOR(EjectorTriggerPacket.class, EjectorTriggerPacket::new, PLAY_TO_SERVER),
 	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket::new, PLAY_TO_SERVER),
+	C_CONFIGURE_CONFIG(CConfigureConfigPacket.class, CConfigureConfigPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
 	SERVER_SPEED(ServerSpeedProvider.Packet.class, ServerSpeedProvider.Packet::new, PLAY_TO_CLIENT),
 	BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new, PLAY_TO_CLIENT),
-	CONFIGURE_CONFIG(ConfigureConfigPacket.class, ConfigureConfigPacket::new, PLAY_TO_CLIENT),
+	S_CONFIGURE_CONFIG(SConfigureConfigPacket.class, SConfigureConfigPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_STALL(ContraptionStallPacket.class, ContraptionStallPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_DISASSEMBLE(ContraptionDisassemblyPacket.class, ContraptionDisassemblyPacket::new, PLAY_TO_CLIENT),
 	GLUE_EFFECT(GlueEffectPacket.class, GlueEffectPacket::new, PLAY_TO_CLIENT),

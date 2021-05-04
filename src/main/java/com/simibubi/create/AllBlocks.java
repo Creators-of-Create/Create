@@ -1292,6 +1292,7 @@ public class AllBlocks {
 		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.loot((lt, block) -> {
 				Builder builder = LootTable.builder();

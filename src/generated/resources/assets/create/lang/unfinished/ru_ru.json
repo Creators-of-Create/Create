@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 554",
+	"_": "Missing Localizations: 555",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "Всполох радостно жуёт",
 	"create.subtitle.schematicannon_launch_block": "Выстрелы схематичной пушки",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "Схематичная пушка закончила работу",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "Механический пресс активирован",

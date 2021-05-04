@@ -10,6 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -106,17 +107,17 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		int itemCenterY = (int) (height * itemYmult);
 
 		for (Item item : items) {
-			PonderButton button =
-				new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4, (x, y) -> {
-					if (!PonderRegistry.all.containsKey(item.getRegistryName()))
-						return;
+			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
+					.showing(new ItemStack(item))
+					.withCallback((x, y) -> {
+						if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+							return;
 
-					centerScalingOn(x, y);
-					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
-				}).showing(new ItemStack(item));
+						centerScalingOn(x, y);
+						ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
+					});
 
-			button.fade(1);
-			widgets.add(button);
+			widgets.add(b);
 			layout.next();
 		}
 
@@ -158,8 +159,8 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			ms.push();
 			ms.translate(x, y, 0);
 
-			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220, 0x101010);
-			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, 0xffddeeff);
+			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
+			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
 			ms.pop();
 		}
@@ -170,8 +171,8 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		ms.push();
 		ms.translate(x, y, 0);
 
-		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220, 0x101010);
-		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, 0xffddeeff);
+		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220);
+		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
 		ms.pop();
 	}
@@ -189,7 +190,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		ms.pop();
 	}
 
-	@Override
+	/*@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		MutableBoolean handled = new MutableBoolean(false);
 		widgets.forEach(w -> {
@@ -207,7 +208,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		if (handled.booleanValue())
 			return true;
 		return super.mouseClicked(x, y, button);
-	}
+	}*/
 
 	@Override
 	public boolean isEquivalentTo(NavigatableSimiScreen other) {
