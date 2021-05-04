@@ -3,21 +3,20 @@ package com.simibubi.create.content.curiosities.armor;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum AllArmorMaterials implements IArmorMaterial {
 
-	COPPER("copper", 7, new int[] { 1, 3, 5, 2 }, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F, 0.0F, () -> {
-		return Ingredient.fromItems(AllItems.COPPER_INGOT.get());
-	})
+	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
+		() -> Ingredient.fromItems(AllItems.COPPER_INGOT.get()))
 
 	;
 

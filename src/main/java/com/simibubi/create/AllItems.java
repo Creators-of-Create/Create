@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -261,21 +261,22 @@ public class AllItems {
 		REGISTRATE.startSection(CURIOSITIES);
 	}
 
-	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
-		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
-			.register();
-
 	public static final ItemEntry<? extends CopperArmorItem>
 
-	DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
-		.register(),
-
-		COPPER_BACKTANK = REGISTRATE
+	COPPER_BACKTANK =
+		REGISTRATE
 			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
 			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
 			.register(),
 
+		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+			.register(),
+
 		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+			.register();
+
+	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
+		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
 			.register();
 
 	// Schematics

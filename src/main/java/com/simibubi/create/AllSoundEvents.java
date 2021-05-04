@@ -148,6 +148,11 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		COPPER_ARMOR_EQUIP = create("copper_armor_equip").subtitle("Diving equipment clinks")
+			.playExisting(SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 1f, 1f)
+			.category(SoundCategory.PLAYERS)
+			.build(),
+
 		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
 			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)
 			.category(SoundCategory.BLOCKS)
@@ -161,6 +166,11 @@ public class AllSoundEvents {
 		IForgeRegistry<SoundEvent> registry = event.getRegistry();
 		for (SoundEntry entry : entries.values())
 			entry.register(registry);
+	}
+	
+	public static void prepare() {
+		for (SoundEntry entry : entries.values())
+			entry.prepare();
 	}
 
 	public static JsonElement provideLangEntries() {
@@ -278,6 +288,8 @@ public class AllSoundEvents {
 			this.category = category;
 		}
 
+		public abstract void prepare();
+
 		public abstract void register(IForgeRegistry<SoundEvent> registry);
 
 		public abstract void write(JsonObject json);
@@ -346,16 +358,21 @@ public class AllSoundEvents {
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
 		}
-
+		
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
+		public void prepare() {
 			for (int i = 0; i < wrappedEvents.size(); i++) {
 				ResourceLocation location = Create.asResource(getIdOf(i));
 				SoundEvent sound = new SoundEvent(location).setRegistryName(location);
-				registry.register(sound);
 				compiledEvents.add(Pair.of(sound, wrappedEvents.get(i)
 					.getSecond()));
 			}
+		}
+
+		@Override
+		public void register(IForgeRegistry<SoundEvent> registry) {
+			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) 
+				registry.register(pair.getFirst());
 		}
 
 		@Override
@@ -413,11 +430,16 @@ public class AllSoundEvents {
 		public CustomSoundEntry(String id, String subtitle, SoundCategory category) {
 			super(id, subtitle, category);
 		}
+		
+		@Override
+		public void prepare() {
+			ResourceLocation location = getLocation();
+			event = new SoundEvent(location).setRegistryName(location);
+		}
 
 		@Override
 		public void register(IForgeRegistry<SoundEvent> registry) {
-			ResourceLocation location = getLocation();
-			registry.register(event = new SoundEvent(location).setRegistryName(location));
+			registry.register(event);
 		}
 
 		@Override
