@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -30,6 +31,7 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -95,7 +97,7 @@ public class ClientEvents {
 		World world = Minecraft.getInstance().world;
 		if (!isGameActive())
 			return;
-		
+
 		if (event.phase == Phase.START) {
 			AirCurrent.tickClientPlayerSounds();
 			return;
@@ -276,11 +278,20 @@ public class ClientEvents {
 		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
 			event.setCanceled(true);
+			return;
 		}
 
 		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
+			return;
+		}
+
+		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
+			.isWornBy(Minecraft.getInstance().renderViewEntity)) {
+			event.setDensity(0.010f);
+			event.setCanceled(true);
+			return;
 		}
 	}
 
