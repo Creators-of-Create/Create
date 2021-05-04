@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 640",
+	"_": "Missing Localizations: 641",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "Blaze mastica felizmente",
 	"create.subtitle.schematicannon_launch_block": "Disparos de Schematicannon",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "Acabados de Schematicannon",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "La Prensa Mecánica se activa",

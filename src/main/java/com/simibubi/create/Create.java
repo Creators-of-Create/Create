@@ -78,6 +78,7 @@ public class Create {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();
 
+		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();

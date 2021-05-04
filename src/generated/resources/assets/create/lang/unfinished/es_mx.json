@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1263",
+	"_": "Missing Localizations: 1264",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1147,6 +1147,7 @@
 	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze Burner munches",
 	"create.subtitle.schematicannon_launch_block": "UNLOCALIZED: Schematicannon fires",
 	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "UNLOCALIZED: Schematicannon dings",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.mechanical_press_activation": "UNLOCALIZED: Mechanical Press clangs",
