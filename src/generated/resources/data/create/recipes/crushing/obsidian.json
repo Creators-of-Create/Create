@@ -10,7 +10,7 @@
       "item": "create:powdered_obsidian"
     },
     {
-      "item": "minecraft:obsidian",
+      "item": "create:powdered_obsidian",
       "chance": 0.75
     }
   ],
