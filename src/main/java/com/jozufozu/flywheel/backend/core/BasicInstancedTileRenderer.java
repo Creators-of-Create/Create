@@ -27,10 +27,10 @@ public class BasicInstancedTileRenderer extends InstancedTileRenderer<BasicProgr
 	}
 
 	@Override
-	public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
-		int cX = MathHelper.floor(cameraX);
-		int cY = MathHelper.floor(cameraY);
-		int cZ = MathHelper.floor(cameraZ);
+	public void beginFrame(ActiveRenderInfo info) {
+		int cX = MathHelper.floor(info.getProjectedView().x);
+		int cY = MathHelper.floor(info.getProjectedView().y);
+		int cZ = MathHelper.floor(info.getProjectedView().z);
 
 		int dX = Math.abs(cX - originCoordinate.getX());
 		int dY = Math.abs(cY - originCoordinate.getY());
@@ -45,7 +45,7 @@ public class BasicInstancedTileRenderer extends InstancedTileRenderer<BasicProgr
 			instancedTiles.forEach(this::add);
 		}
 
-		super.beginFrame(info, cameraX, cameraY, cameraZ);
+		super.beginFrame(info);
 	}
 
 	@Override

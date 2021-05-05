@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.simibubi.create.CreateClient;
+import com.jozufozu.flywheel.backend.Backend;
 
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +24,7 @@ public class TileRemoveMixin {
 	@Inject(at = @At("TAIL"), method = "remove")
 	private void onRemove(CallbackInfo ci) {
 		if (world instanceof ClientWorld)
-			CreateClient.kineticRenderer.get(this.world)
-				.remove((TileEntity) (Object) this);
+			Backend.tileRenderer.get(this.world)
+					.remove((TileEntity) (Object) this);
 	}
 }

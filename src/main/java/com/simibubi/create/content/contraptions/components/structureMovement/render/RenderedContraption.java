@@ -89,7 +89,7 @@ public class RenderedContraption {
     }
 
     public void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
-        kinetics.beginFrame(info, camX, camY, camZ);
+        kinetics.beginFrame(info);
 
         AbstractContraptionEntity entity = contraption.entity;
         float pt = AnimationTickHolder.getPartialTicks();

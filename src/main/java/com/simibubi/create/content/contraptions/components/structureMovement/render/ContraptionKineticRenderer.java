@@ -37,11 +37,11 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
     }
 
     @Override
-    public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
-        super.beginFrame(info, cameraX, cameraY, cameraZ);
+	public void beginFrame(ActiveRenderInfo info) {
+		super.beginFrame(info);
 
-        actors.forEach(ActorInstance::beginFrame);
-    }
+		actors.forEach(ActorInstance::beginFrame);
+	}
 
     @Override
     protected boolean shouldTick(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {

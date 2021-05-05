@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.light.LightUpdater;
-import com.simibubi.create.CreateClient;
 
 import net.minecraft.client.multiplayer.ClientChunkProvider;
 import net.minecraft.client.world.ClientWorld;
@@ -46,8 +46,8 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
 					.getY()) == sectionY)
 				.map(Map.Entry::getValue)
 				.forEach(tile -> {
-					CreateClient.kineticRenderer.get(world)
-						.onLightUpdate(tile);
+					Backend.tileRenderer.get(world)
+							.onLightUpdate(tile);
 				});
 		}
 

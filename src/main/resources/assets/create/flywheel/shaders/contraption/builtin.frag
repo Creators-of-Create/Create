@@ -3,7 +3,7 @@
 varying vec3 BoxCoord;
 uniform sampler3D uLightVolume;
 
-void FLWFinalizeColor(vec4 color) {
+void FLWFinalizeColor(inout vec4 color) {
     #if defined(USE_FOG)
     float a = color.a;
     float fog = clamp(FLWFogFactor(), 0., 1.);

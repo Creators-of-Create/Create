@@ -9,11 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
-import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -24,7 +21,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,6 +31,13 @@ public class RenderHooksMixin {
 	@Shadow
 	private ClientWorld world;
 
+	@Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")
+	private void setupFrame(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
+							ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f p_228426_9_,
+							CallbackInfo ci) {
+		Backend.listeners.setupFrame(world, stack, info, gameRenderer, lightTexture);
+	}
+
 	/**
 	 * JUSTIFICATION: This method is called once per layer per frame. It allows us to perform
 	 * layer-correct custom rendering. RenderWorldLast is not refined enough for rendering world objects.
@@ -42,35 +45,28 @@ public class RenderHooksMixin {
 	 */
 	@Inject(at = @At("TAIL"), method = "renderLayer")
 	private void renderLayer(RenderType type, MatrixStack stack, double camX, double camY, double camZ,
-		CallbackInfo ci) {
+							 CallbackInfo ci) {
 		if (!Backend.available())
 			return;
 
 		Matrix4f view = stack.peek()
 				.getModel();
 		Matrix4f viewProjection = view.copy();
-		viewProjection.multiplyBackward(Backend.projectionMatrix);
+		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
 
-		Backend.renderLayer(type, viewProjection, camX, camY, camZ);
-
-		ContraptionRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
-
+		Backend.listeners.renderLayer(world, type, viewProjection, camX, camY, camZ);
 		GL20.glUseProgram(0);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "net.minecraft.client.renderer.WorldRenderer.updateChunks(J)V"), method = "render")
-	private void setupFrame(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
-		ActiveRenderInfo info, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_,
-		CallbackInfo ci) {
-		Vector3d cameraPos = info.getProjectedView();
-		double camX = cameraPos.getX();
-		double camY = cameraPos.getY();
-		double camZ = cameraPos.getZ();
+	@Inject(at = @At("TAIL"), method = "loadRenderers")
+	private void refresh(CallbackInfo ci) {
+		OptifineHandler.refresh();
+		Backend.refresh();
 
-		CreateClient.kineticRenderer.get(world)
-				.beginFrame(info, camX, camY, camZ);
-		ContraptionRenderDispatcher.beginFrame(info, camX, camY, camZ);
+		Backend.listeners.refresh(world);
 	}
+
+	// Effects system
 
 	@Inject(method = "render", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/client/shader/ShaderGroup;render(F)V"))
 	private void disableTransparencyShaderDepth(MatrixStack p_228426_1_, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo p_228426_6_, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
@@ -82,22 +78,11 @@ public class RenderHooksMixin {
 		Backend.effects.render(stack.peek().getModel());
 	}
 
+	// Instancing
+
 	@Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
 	private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
-		CreateClient.kineticRenderer.get(world)
+		Backend.tileRenderer.get(world)
 				.update(world.getTileEntity(pos));
-	}
-
-	@Inject(at = @At("TAIL"), method = "loadRenderers")
-	private void refresh(CallbackInfo ci) {
-		ContraptionRenderDispatcher.invalidateAll();
-		OptifineHandler.refresh();
-		Backend.refresh();
-
-		if (Backend.canUseInstancing() && world != null) {
-			BasicInstancedTileRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
-			kineticRenderer.invalidate();
-			world.loadedTileEntityList.forEach(kineticRenderer::add);
-		}
 	}
 }

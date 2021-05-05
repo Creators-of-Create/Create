@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
-import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -30,7 +29,6 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -66,7 +64,6 @@ public class CreateClient {
 	public static SchematicHandler schematicHandler;
 	public static SchematicAndQuillHandler schematicAndQuillHandler;
 	public static SuperByteBufferCache bufferCache;
-	public static WorldAttached<BasicInstancedTileRenderer> kineticRenderer;
 	public static final Outliner outliner = new Outliner();
 	public static GhostBlocks ghostBlocks;
 
@@ -84,13 +81,13 @@ public class CreateClient {
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 
 		Backend.init();
+		ContraptionRenderDispatcher.init();
 		OptifineHandler.init();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
 		AllProgramSpecs.init();
 		AllMaterialSpecs.init();
-		kineticRenderer = new WorldAttached<>(BasicInstancedTileRenderer::new);
 
 		schematicSender = new ClientSchematicLoader();
 		schematicHandler = new SchematicHandler();
@@ -221,10 +218,10 @@ public class CreateClient {
 		bufferCache.invalidate();
 
 		if (world != null) {
-			kineticRenderer.get(world)
-				.invalidate();
+			Backend.tileRenderer.get(world)
+					.invalidate();
 		} else {
-			kineticRenderer.forEach(InstancedTileRenderer::invalidate);
+			Backend.tileRenderer.forEach(InstancedTileRenderer::invalidate);
 		}
 
 		ContraptionRenderDispatcher.invalidateAll();

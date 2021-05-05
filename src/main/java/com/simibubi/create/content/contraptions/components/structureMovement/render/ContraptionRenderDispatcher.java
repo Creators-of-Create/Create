@@ -34,6 +34,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
@@ -42,6 +43,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.LightType;
@@ -55,6 +57,13 @@ public class ContraptionRenderDispatcher {
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 	protected static PlacementSimulationWorld renderWorld;
 
+	public static void init() {
+		Backend.register(ContraptionContext.INSTANCE);
+		Backend.listeners.renderLayerListener(ContraptionRenderDispatcher::renderLayer);
+		Backend.listeners.setupFrameListener(ContraptionRenderDispatcher::beginFrame);
+		Backend.listeners.refreshListener($ -> ContraptionRenderDispatcher.invalidateAll());
+	}
+
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;
 
@@ -65,22 +74,25 @@ public class ContraptionRenderDispatcher {
 		}
 	}
 
-	public static void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
+	public static void beginFrame(ClientWorld world, MatrixStack stack, ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture) {
+		double camX = info.getProjectedView().x;
+		double camY = info.getProjectedView().y;
+		double camZ = info.getProjectedView().z;
 		for (RenderedContraption renderer : renderers.values()) {
 			renderer.beginFrame(info, camX, camY, camZ);
 		}
 	}
 
-	public static void renderLayer(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
-        removeDeadContraptions();
+	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
+		removeDeadContraptions();
 
-        if (renderers.isEmpty()) return;
+		if (renderers.isEmpty()) return;
 
-        layer.startDrawing();
-        GL11.glEnable(GL13.GL_TEXTURE_3D);
-        GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
+		layer.startDrawing();
+		GL11.glEnable(GL13.GL_TEXTURE_3D);
+		GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
-        if (Backend.canUseVBOs()) {
+		if (Backend.canUseVBOs()) {
 			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.STRUCTURE);
 			structureShader.bind(viewProjection, camX, camY, camZ, Backend.getDebugMode());
 			for (RenderedContraption renderer : renderers.values()) {

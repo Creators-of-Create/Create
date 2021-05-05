@@ -9,15 +9,13 @@ uniform vec2 uFogRange;
 float FLWFogFactor() {
     return (uFogRange.y - FragDistance) / (uFogRange.y - uFogRange.x);
 }
-    #elif defined(USE_FOG_EXP2)
+    #endif
+
+    #if defined(USE_FOG_EXP2)
 uniform float uFogDensity;
 
 float FLWFogFactor() {
     float dist = FragDistance * uFogDensity;
     return 1. / exp2(dist * dist);
-}
-    #else
-float FLWFogFactor() {
-    return 0.;
 }
     #endif

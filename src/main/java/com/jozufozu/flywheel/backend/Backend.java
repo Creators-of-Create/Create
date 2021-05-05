@@ -3,7 +3,6 @@ package com.jozufozu.flywheel.backend;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +10,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
-import com.jozufozu.flywheel.backend.core.ContraptionContext;
 import com.jozufozu.flywheel.backend.core.EffectsContext;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.effects.EffectsHandler;
@@ -21,7 +19,6 @@ import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -42,25 +39,41 @@ public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
 
 	public static final ShaderLoader shaderLoader = new ShaderLoader();
-	public static EffectsHandler effects;
-
-	public static Matrix4f projectionMatrix = new Matrix4f();
+	public static final FlywheelListeners listeners = new FlywheelListeners();
 
 	public static GLCapabilities capabilities;
 	public static GlCompat compat;
-	public static WorldAttached<ConcurrentHashMap.KeySetView<TileEntity, Boolean>> queuedUpdates = new WorldAttached<>(ConcurrentHashMap::newKeySet);
 
+	public static EffectsHandler effects;
+	public static WorldAttached<BasicInstancedTileRenderer> tileRenderer = new WorldAttached<>(BasicInstancedTileRenderer::new);
+
+	private static Matrix4f projectionMatrix = new Matrix4f();
 	private static boolean instancingAvailable;
 	private static boolean enabled;
 
-	static Map<ResourceLocation, MaterialSpec<?>> materialRegistry = new HashMap<>();
+	static final Map<ResourceLocation, MaterialSpec<?>> materialRegistry = new HashMap<>();
 	static final Map<ResourceLocation, ShaderContext<?>> contexts = new HashMap<>();
 	static final Map<ResourceLocation, ProgramSpec> programSpecRegistry = new HashMap<>();
 
 	static {
 		register(WorldContext.INSTANCE);
-		register(ContraptionContext.INSTANCE);
 		register(EffectsContext.INSTANCE);
+
+		listeners.refreshListener(world -> {
+			if (canUseInstancing() && world != null) {
+				BasicInstancedTileRenderer tileRenderer = Backend.tileRenderer.get(world);
+				tileRenderer.invalidate();
+				world.loadedTileEntityList.forEach(tileRenderer::add);
+			}
+		});
+
+		listeners.setupFrameListener((world, stack, info, gameRenderer, lightTexture) -> {
+
+			Backend.tileRenderer.get(world)
+					.beginFrame(info);
+		});
+
+		listeners.renderLayerListener(Backend::renderLayer);
 	}
 
 	public Backend() {
@@ -161,35 +174,25 @@ public class Backend {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 
-		BasicInstancedTileRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+		BasicInstancedTileRenderer instancer = tileRenderer.get(world);
 
 		Entity renderViewEntity = mc.renderViewEntity;
-		kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
-
-		ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
-		map
-				.forEach(te -> {
-					map.remove(te);
-
-					kineticRenderer.update(te);
-				});
+		instancer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 	}
 
-	public static void renderLayer(RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
-		if (!canUseInstancing()) return;
-
-		ClientWorld world = Minecraft.getInstance().world;
-		BasicInstancedTileRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
+		if (!canUseInstancing(world)) return;
 
 		layer.startDrawing();
 
-		kineticRenderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
+		tileRenderer.get(world)
+				.render(layer, viewProjection, cameraX, cameraY, cameraZ);
 
 		layer.endDrawing();
 	}
 
 	public static void enqueueUpdate(TileEntity te) {
-		queuedUpdates.get(te.getWorld()).add(te);
+		tileRenderer.get(te.getWorld()).queueUpdate(te);
 	}
 
 	public static void reloadWorldRenderers() {
@@ -214,5 +217,13 @@ public class Backend {
 
 	public static Collection<ProgramSpec> allPrograms() {
 		return programSpecRegistry.values();
+	}
+
+	public static Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+
+	public static void setProjectionMatrix(Matrix4f projectionMatrix) {
+		Backend.projectionMatrix = projectionMatrix;
 	}
 }

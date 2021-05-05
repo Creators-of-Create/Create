@@ -3,6 +3,7 @@ package com.jozufozu.flywheel.backend.instancing;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -25,16 +26,17 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 public abstract class InstancedTileRenderer<P extends BasicProgram> {
-	protected ArrayList<TileEntity> queuedAdditions = new ArrayList<>(64);
-
-	protected Map<TileEntity, TileEntityInstance<?>> instances = new HashMap<>();
-
-	protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
-	protected Map<TileEntity, IDynamicInstance> dynamicInstances = new HashMap<>();
 
 	public final WorldContext<P> context;
 
-	protected Map<MaterialSpec<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
+	protected final Map<MaterialSpec<?>, RenderMaterial<P, ?>> materials;
+
+	protected final ArrayList<TileEntity> queuedAdditions;
+	protected final ConcurrentHashMap.KeySetView<TileEntity, Boolean> queuedUpdates;
+
+	protected final Map<TileEntity, TileEntityInstance<?>> instances;
+	protected final Map<TileEntity, ITickableInstance> tickableInstances;
+	protected final Map<TileEntity, IDynamicInstance> dynamicInstances;
 
 	protected int frame;
 	protected int tick;
@@ -42,9 +44,16 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	protected InstancedTileRenderer(WorldContext<P> context) {
 		this.context = context;
 
+		materials = new HashMap<>();
 		for (MaterialSpec<?> spec : Backend.allMaterials()) {
 			materials.put(spec, spec.create(this));
 		}
+
+		queuedUpdates = ConcurrentHashMap.newKeySet(64);
+		queuedAdditions = new ArrayList<>(64);
+		dynamicInstances = new HashMap<>();
+		tickableInstances = new HashMap<>();
+		instances = new HashMap<>();
 	}
 
 	public abstract BlockPos getOriginCoordinate();
@@ -74,9 +83,15 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 					instance.tick();
 			}
 		}
+
+		queuedUpdates.forEach(te -> {
+			queuedUpdates.remove(te);
+
+			update(te);
+		});
 	}
 
-	public void beginFrame(ActiveRenderInfo info, double cameraX, double cameraY, double cameraZ) {
+	public void beginFrame(ActiveRenderInfo info) {
 		frame++;
 		processQueuedAdditions();
 
@@ -86,9 +101,9 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 		float lookZ = look.getZ();
 
 		// integer camera pos
-		int cX = (int) cameraX;
-		int cY = (int) cameraY;
-		int cZ = (int) cameraZ;
+		int cX = (int) info.getProjectedView().x;
+		int cY = (int) info.getProjectedView().y;
+		int cZ = (int) info.getProjectedView().z;
 
 		if (dynamicInstances.size() > 0) {
 			for (IDynamicInstance dyn : dynamicInstances.values()) {
@@ -193,6 +208,12 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 		if (!Backend.canUseInstancing()) return;
 
 		queuedAdditions.add(tile);
+	}
+
+	public synchronized <T extends TileEntity> void queueUpdate(T tile) {
+		if (!Backend.canUseInstancing()) return;
+
+		queuedUpdates.add(tile);
 	}
 
 	protected synchronized void processQueuedAdditions() {

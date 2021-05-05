@@ -144,7 +144,7 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers(world);
 			AnimationTickHolder.reset();
-			BasicInstancedTileRenderer renderer = CreateClient.kineticRenderer.get(world);
+			BasicInstancedTileRenderer renderer = Backend.tileRenderer.get(world);
 			renderer.invalidate();
 			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
