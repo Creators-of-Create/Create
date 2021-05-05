@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -31,7 +31,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.canUseInstancing(te.getWorld())) return;
 
 		SuperByteBuffer flapBuffer = PartialBufferer.get(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());

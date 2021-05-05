@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -52,7 +51,7 @@ public class RenderHooksMixin {
 		Matrix4f viewProjection = view.copy();
 		viewProjection.multiplyBackward(Backend.projectionMatrix);
 
-		FastRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
+		Backend.renderLayer(type, viewProjection, camX, camY, camZ);
 
 		ContraptionRenderDispatcher.renderLayer(type, viewProjection, camX, camY, camZ);
 

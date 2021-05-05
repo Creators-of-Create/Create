@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -30,7 +30,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (!te.hasFlap() || FastRenderDispatcher.available(te.getWorld()))
+		if (!te.hasFlap() || Backend.canUseInstancing(te.getWorld()))
 			return;
 
 		BlockState blockState = te.getBlockState();

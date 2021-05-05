@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -36,7 +36,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.canUseInstancing(te.getWorld())) return;
 
 		BlockState blockState = te.getBlockState();
 		FlywheelTileEntity wte = (FlywheelTileEntity) te;

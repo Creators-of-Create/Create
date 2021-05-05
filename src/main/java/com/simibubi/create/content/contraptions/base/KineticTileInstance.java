@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -85,7 +86,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
     }
 
     protected final RenderMaterial<?, InstancedModel<RotatingData>> getRotatingMaterial() {
-        return renderer.getMaterial(KineticRenderMaterials.ROTATING);
+		return renderer.getMaterial(AllMaterialSpecs.ROTATING);
     }
 
     public static BlockState shaft(Direction.Axis axis) {

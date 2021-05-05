@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.block;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -46,7 +46,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(tileEntityIn.getWorld())) return;
+		if (Backend.canUseInstancing(tileEntityIn.getWorld())) return;
 
 		BlockPos pos = tileEntityIn.getPos();
 

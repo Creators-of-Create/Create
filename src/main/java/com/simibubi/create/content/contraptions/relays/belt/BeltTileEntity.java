@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.light.GridAlignedBB;
 import com.jozufozu.flywheel.backend.light.LightUpdateListener;
 import com.jozufozu.flywheel.backend.light.LightUpdater;
@@ -267,7 +267,7 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Backend.enqueueUpdate(belt));
 		}
 	}
 

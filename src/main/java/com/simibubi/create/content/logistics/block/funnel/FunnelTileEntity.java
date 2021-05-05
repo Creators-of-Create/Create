@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.funnel;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
@@ -327,7 +327,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Backend.enqueueUpdate(this));
 	}
 
 	@Override

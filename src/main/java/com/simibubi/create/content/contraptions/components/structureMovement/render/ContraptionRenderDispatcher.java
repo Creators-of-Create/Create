@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
 import com.jozufozu.flywheel.backend.core.ContraptionContext;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -83,7 +82,7 @@ public class ContraptionRenderDispatcher {
 
         if (Backend.canUseVBOs()) {
 			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.STRUCTURE);
-			structureShader.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
+			structureShader.bind(viewProjection, camX, camY, camZ, Backend.getDebugMode());
 			for (RenderedContraption renderer : renderers.values()) {
 				renderer.doRenderLayer(layer, structureShader);
 			}

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -32,14 +32,14 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.canUseInstancing(te.getWorld())) return;
 
 		BlockState state = te.getBlockState();
 		Direction facing = state.get(GantryCarriageBlock.FACING);
 		Boolean alongFirst = state.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
 		Axis rotationAxis = getRotationAxisOf(te);
 		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? te.getPos()
-			: te.getPos()
+				: te.getPos()
 				.offset(facing.getOpposite());
 		float angleForTe = getAngleForTe(te, visualPos, rotationAxis);
 

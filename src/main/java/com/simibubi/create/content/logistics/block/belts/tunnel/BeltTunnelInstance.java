@@ -11,9 +11,9 @@ import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -28,8 +28,8 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-        InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
+		InstancedModel<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
+				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);

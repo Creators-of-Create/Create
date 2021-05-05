@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
@@ -129,12 +129,12 @@ public class ConfigureConfigPacket extends SimplePacketBase {
 			AllConfigs.CLIENT.experimentalRendering.set(parsedBoolean);
 
 			ITextComponent text = boolToText(AllConfigs.CLIENT.experimentalRendering.get())
-				.append(new StringTextComponent(" Experimental Rendering").formatted(TextFormatting.WHITE));
+					.append(new StringTextComponent(" Experimental Rendering").formatted(TextFormatting.WHITE));
 			ITextComponent error = new StringTextComponent("Experimental Rendering does not support Optifine Shaders")
-				.formatted(TextFormatting.RED);
+					.formatted(TextFormatting.RED);
 
 			player.sendStatusMessage(cannotUseER ? error : text, false);
-			FastRenderDispatcher.refresh();
+			Backend.reloadWorldRenderers();
 		}
 
 		@OnlyIn(Dist.CLIENT)

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.tileEntity.renderer;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
@@ -19,7 +19,7 @@ public abstract class ColoredOverlayTileEntityRenderer<T extends TileEntity> ext
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.canUseInstancing(te.getWorld())) return;
 
 		SuperByteBuffer render = render(getOverlayBuffer(te), getColor(te, partialTicks), light);
 		render.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));

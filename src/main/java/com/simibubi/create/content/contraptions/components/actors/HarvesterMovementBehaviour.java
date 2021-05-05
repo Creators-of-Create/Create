@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -54,7 +54,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		if (!FastRenderDispatcher.available())
+		if (!Backend.canUseInstancing())
 			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 

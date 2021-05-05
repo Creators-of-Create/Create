@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderUtil;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
@@ -62,7 +62,7 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
 		P program = renderer.context.getProgram(programSpec);
-		program.bind(viewProjection, camX, camY, camZ, FastRenderDispatcher.getDebugMode());
+		program.bind(viewProjection, camX, camY, camZ, Backend.getDebugMode());
 
 		if (setup != null) setup.call(program);
 

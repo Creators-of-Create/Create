@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -45,7 +45,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		float lidProgress = ((EjectorTileEntity) te).getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.canUseInstancing(te.getWorld())) {
 			SuperByteBuffer model = PartialBufferer.get(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
 			applyLidAngle(te, angle, model.matrixStacker());
 			model.light(light)
@@ -55,7 +55,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		MatrixStacker msr = MatrixStacker.of(ms);
 
 		float maxTime =
-			(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
+				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
 		for (IntAttached<ItemStack> intAttached : ejector.launchedItems) {
 			float time = intAttached.getFirst() + partialTicks;
 			if (time > maxTime)

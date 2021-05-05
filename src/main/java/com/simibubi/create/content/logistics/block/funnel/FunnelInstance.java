@@ -9,8 +9,8 @@ import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -27,10 +27,10 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
         if (!tile.hasFlap()) return;
 
-        PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
-                : AllBlockPartials.BELT_FUNNEL_FLAP);
-        InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(flapPartial, blockState);
+		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+				: AllBlockPartials.BELT_FUNNEL_FLAP);
+		InstancedModel<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
+				.getModel(flapPartial, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);

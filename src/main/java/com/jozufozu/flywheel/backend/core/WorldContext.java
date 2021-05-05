@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
@@ -40,7 +40,7 @@ public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
 		programs.values().forEach(IMultiProgram::delete);
 		programs.clear();
 
-		FastRenderDispatcher.materials.values()
+		Backend.allMaterials()
 				.stream()
 				.map(MaterialSpec::getProgramSpec)
 				.forEach(spec -> loadProgramFromSpec(loader, spec));

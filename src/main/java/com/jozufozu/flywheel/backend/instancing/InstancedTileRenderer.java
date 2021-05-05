@@ -7,14 +7,12 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
-import com.jozufozu.flywheel.backend.MaterialType;
-import com.jozufozu.flywheel.backend.MaterialTypes;
-import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.ModelData;
 import com.jozufozu.flywheel.backend.core.OrientedData;
+import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -34,17 +32,19 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	protected Map<TileEntity, ITickableInstance> tickableInstances = new HashMap<>();
 	protected Map<TileEntity, IDynamicInstance> dynamicInstances = new HashMap<>();
 
-	public final ShaderContext<P> context;
+	public final WorldContext<P> context;
 
-	protected Map<MaterialType<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
+	protected Map<MaterialSpec<?>, RenderMaterial<P, ?>> materials = new HashMap<>();
 
 	protected int frame;
 	protected int tick;
 
-	protected InstancedTileRenderer(ShaderContext<P> context) {
+	protected InstancedTileRenderer(WorldContext<P> context) {
 		this.context = context;
 
-		FastRenderDispatcher.materials.forEach((key, value) -> materials.put(key, value.create(this)));
+		for (MaterialSpec<?> spec : Backend.allMaterials()) {
+			materials.put(spec, spec.create(this));
+		}
 	}
 
 	public abstract BlockPos getOriginCoordinate();
@@ -115,16 +115,16 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialType<M> materialType) {
+	public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialSpec<M> materialType) {
 		return (RenderMaterial<P, M>) materials.get(materialType);
 	}
 
 	public RenderMaterial<P, InstancedModel<ModelData>> getTransformMaterial() {
-		return getMaterial(MaterialTypes.TRANSFORMED);
+		return getMaterial(AllMaterialSpecs.TRANSFORMED);
 	}
 
 	public RenderMaterial<P, InstancedModel<OrientedData>> getOrientedMaterial() {
-		return getMaterial(MaterialTypes.ORIENTED);
+		return getMaterial(AllMaterialSpecs.ORIENTED);
 	}
 
 	@SuppressWarnings("unchecked")

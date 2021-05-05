@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -32,7 +32,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		if (!FastRenderDispatcher.available(tileEntityIn.getWorld())) {
+		if (!Backend.canUseInstancing(tileEntityIn.getWorld())) {
 			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
 		}
 

@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.WorldAttached;
@@ -88,6 +89,7 @@ public class CreateClient {
 
 	public static void clientInit(FMLClientSetupEvent event) {
 		AllProgramSpecs.init();
+		AllMaterialSpecs.init();
 		kineticRenderer = new WorldAttached<>(BasicInstancedTileRenderer::new);
 
 		schematicSender = new ClientSchematicLoader();

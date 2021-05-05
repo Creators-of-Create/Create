@@ -3,7 +3,7 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderWork;
 import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -98,7 +98,7 @@ public class ClientEvents {
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
-		FastRenderDispatcher.tick();
+		Backend.tick();
 		ScrollValueHandler.tick();
 
 		CreateClient.schematicSender.tick();

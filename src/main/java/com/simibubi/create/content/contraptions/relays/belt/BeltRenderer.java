@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -57,7 +57,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.canUseInstancing(te.getWorld())) {
 
 			BlockState blockState = te.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;

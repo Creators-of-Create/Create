@@ -10,13 +10,13 @@ import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -63,9 +63,9 @@ public class DeployerActorInstance extends ActorInstance {
         hand = mat.getModel(handPose, state).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-        shaft = modelManager.getMaterial(KineticRenderMaterials.ROTATING)
-                            .getModel(KineticTileInstance.shaft(axis))
-                            .createInstance();
+		shaft = modelManager.getMaterial(AllMaterialSpecs.ROTATING)
+				.getModel(KineticTileInstance.shaft(axis))
+				.createInstance();
 
         int blockLight = localBlockLight();
 

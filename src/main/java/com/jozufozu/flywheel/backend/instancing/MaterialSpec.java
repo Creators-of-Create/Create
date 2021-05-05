@@ -3,12 +3,17 @@ package com.jozufozu.flywheel.backend.instancing;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 
-public class MaterialSpec {
+import net.minecraft.util.ResourceLocation;
+
+public class MaterialSpec<M extends InstancedModel<?>> {
+
+	public final ResourceLocation name;
 
 	private final ProgramSpec programSpec;
-	private final ModelFactory<?> modelFactory;
+	private final ModelFactory<M> modelFactory;
 
-	public MaterialSpec(ProgramSpec programSpec, ModelFactory<?> modelFactory) {
+	public MaterialSpec(ResourceLocation name, ProgramSpec programSpec, ModelFactory<M> modelFactory) {
+		this.name = name;
 		this.programSpec = programSpec;
 		this.modelFactory = modelFactory;
 	}
@@ -17,11 +22,11 @@ public class MaterialSpec {
 		return programSpec;
 	}
 
-	public ModelFactory<?> getModelFactory() {
+	public ModelFactory<M> getModelFactory() {
 		return modelFactory;
 	}
 
-	public <P extends BasicProgram> RenderMaterial<P, ?> create(InstancedTileRenderer<P> renderer) {
+	public <P extends BasicProgram> RenderMaterial<P, M> create(InstancedTileRenderer<P> renderer) {
 		return new RenderMaterial<>(renderer, programSpec, modelFactory);
 	}
 }

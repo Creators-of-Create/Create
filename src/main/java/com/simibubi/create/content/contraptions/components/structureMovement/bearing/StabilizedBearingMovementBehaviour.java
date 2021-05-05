@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -33,7 +33,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffer) {
-		if (FastRenderDispatcher.available()) return;
+		if (Backend.canUseInstancing()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
 		PartialModel top = AllBlockPartials.BEARING_TOP;

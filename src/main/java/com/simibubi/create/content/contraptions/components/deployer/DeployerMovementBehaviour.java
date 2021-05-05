@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -256,7 +256,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
 		IRenderTypeBuffer buffers) {
-		if (!FastRenderDispatcher.available())
+		if (!Backend.canUseInstancing())
 			DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
 	}
 

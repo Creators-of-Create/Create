@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -42,7 +42,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
 		ArmTileEntity arm = (ArmTileEntity) te;
 
-		boolean usingFlywheel = FastRenderDispatcher.available(te.getWorld());
+		boolean usingFlywheel = Backend.canUseInstancing(te.getWorld());
 
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
@@ -50,7 +50,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		if (usingFlywheel && !hasItem) return;
 
 		ItemRenderer itemRenderer = Minecraft.getInstance()
-											 .getItemRenderer();
+				.getItemRenderer();
 
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
 				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)

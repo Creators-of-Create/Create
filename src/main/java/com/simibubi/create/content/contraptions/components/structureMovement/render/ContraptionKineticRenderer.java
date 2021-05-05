@@ -12,10 +12,10 @@ import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.components.actors.ActorData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.util.math.BlockPos;
@@ -67,7 +67,7 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
     }
 
     public RenderMaterial<?, InstancedModel<ActorData>> getActorMaterial() {
-        return getMaterial(KineticRenderMaterials.ACTORS);
+		return getMaterial(AllMaterialSpecs.ACTORS);
     }
 
     public RenderedContraption getContraption() {

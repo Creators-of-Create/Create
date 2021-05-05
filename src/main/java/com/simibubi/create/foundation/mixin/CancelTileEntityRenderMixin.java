@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 
 import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
@@ -27,7 +27,7 @@ public class CancelTileEntityRenderMixin {
 	 */
 	@Inject(at = @At("RETURN"), method = "getTileEntities", cancellable = true)
 	private void noRenderInstancedTiles(CallbackInfoReturnable<List<TileEntity>> cir) {
-		if (FastRenderDispatcher.available()) {
+		if (Backend.canUseInstancing()) {
 			List<TileEntity> tiles = cir.getReturnValue();
 
 			tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());

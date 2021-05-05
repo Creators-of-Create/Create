@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
@@ -70,7 +70,7 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Backend.enqueueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {

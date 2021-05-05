@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.FastRenderDispatcher;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
@@ -257,7 +257,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			FastRenderDispatcher.enqueueUpdate(this);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Backend.enqueueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -552,7 +552,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.removed) {
-			FastRenderDispatcher.enqueueUpdate(this);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Backend.enqueueUpdate(this));
 		}
 	}
 
