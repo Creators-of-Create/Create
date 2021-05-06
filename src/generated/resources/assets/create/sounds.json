@@ -110,6 +110,15 @@
     ],
     "subtitle": "create.subtitle.deny"
   },
+  "deployer_polish": {
+    "sounds": [
+      {
+        "name": "minecraft:ui.stonecutter.take_result",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.deployer_polish"
+  },
   "depot_plop": {
     "sounds": [
       {

@@ -19,6 +19,7 @@ import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
+import com.simibubi.create.compat.jei.category.DeployingCategory;
 import com.simibubi.create.compat.jei.category.FanBlastingCategory;
 import com.simibubi.create.compat.jei.category.FanSmokingCategory;
 import com.simibubi.create.compat.jei.category.FanWashingCategory;
@@ -33,6 +34,7 @@ import com.simibubi.create.compat.jei.category.PressingCategory;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.SawingCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
@@ -162,6 +164,14 @@ public class CreateJEI implements IModPlugin {
 		polishing = register("sandpaper_polishing", PolishingCategory::new).recipes(AllRecipeTypes.SANDPAPER_POLISHING)
 			.catalyst(AllItems.SAND_PAPER::get)
 			.catalyst(AllItems.RED_SAND_PAPER::get)
+			.build(),
+			
+		deploying = register("deploying", DeployingCategory::new)
+			.recipeList(() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
+			.recipes(AllRecipeTypes.DEPLOYING)
+			.catalyst(AllBlocks.DEPLOYER::get)
+			.catalyst(AllBlocks.DEPOT::get)
+			.catalyst(AllItems.BELT_CONNECTOR::get)
 			.build(),
 
 		mysteryConversion = register("mystery_conversion", MysteriousItemConversionCategory::new)

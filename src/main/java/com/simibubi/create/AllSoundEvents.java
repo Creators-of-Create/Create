@@ -152,6 +152,11 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 1f, 1f)
 			.category(SoundCategory.PLAYERS)
 			.build(),
+			
+		AUTO_POLISH = create("deployer_polish").subtitle("Deployer applies polish")
+			.playExisting(SoundEvents.UI_STONECUTTER_TAKE_RESULT, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
 
 		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
 			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)

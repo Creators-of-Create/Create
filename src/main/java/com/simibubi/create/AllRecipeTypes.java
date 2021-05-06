@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingRecipe;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.millstone.MillingRecipe;
 import com.simibubi.create.content.contraptions.components.mixer.CompactingRecipe;
@@ -44,6 +45,7 @@ public enum AllRecipeTypes {
 	PRESSING(processingSerializer(PressingRecipe::new)),
 	SANDPAPER_POLISHING(processingSerializer(SandPaperPolishingRecipe::new)),
 	SPLASHING(processingSerializer(SplashingRecipe::new)),
+	DEPLOYING(processingSerializer(DeployerApplicationRecipe::new)),
 	FILLING(processingSerializer(FillingRecipe::new)),
 	EMPTYING(processingSerializer(EmptyingRecipe::new)),
 

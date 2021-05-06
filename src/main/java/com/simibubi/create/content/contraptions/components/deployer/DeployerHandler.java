@@ -6,11 +6,16 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -93,7 +98,7 @@ public class DeployerHandler {
 		}
 	}
 
-	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos) {
+	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos, @Nullable Direction facing) {
 		if (held.getItem() instanceof BlockItem)
 			if (world.getBlockState(targetPos)
 				.getBlock() == ((BlockItem) held.getItem()).getBlock())
@@ -107,10 +112,15 @@ public class DeployerHandler {
 				return false;
 		}
 
+		if (!held.isEmpty() && facing == Direction.DOWN
+			&& TileEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			return false;
+
 		return true;
 	}
 
-	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector, Mode mode) {
+	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
+		Mode mode) {
 		Multimap<Attribute, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
 			.getAttributeModifiers(EquipmentSlotType.MAINHAND);
 		player.getAttributes()
@@ -120,8 +130,8 @@ public class DeployerHandler {
 			.addTemporaryModifiers(attributeModifiers);
 	}
 
-	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
-		Mode mode) {
+	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos,
+		Vector3d extensionVector, Mode mode) {
 
 		Vector3d rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
 		Vector3d rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
@@ -148,10 +158,11 @@ public class DeployerHandler {
 					return;
 				}
 				if (cancelResult == null) {
-					if (entity.processInitialInteract(player, hand).isAccepted())
+					if (entity.processInitialInteract(player, hand)
+						.isAccepted())
 						success = true;
-					else if (entity instanceof LivingEntity
-						&& stack.useOnEntity(player, (LivingEntity) entity, hand).isAccepted())
+					else if (entity instanceof LivingEntity && stack.useOnEntity(player, (LivingEntity) entity, hand)
+						.isAccepted())
 						success = true;
 				}
 				if (!success && stack.isFood() && entity instanceof PlayerEntity) {
@@ -215,7 +226,8 @@ public class DeployerHandler {
 			if (blockBreakingProgress != null)
 				before = blockBreakingProgress.getValue();
 			progress += before;
-			world.playSound(null, clickedPos, clickedState.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
+			world.playSound(null, clickedPos, clickedState.getSoundType()
+				.getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
 
 			if (progress >= 1) {
 				tryHarvestBlock(player.interactionManager, clickedPos);
@@ -300,8 +312,10 @@ public class DeployerHandler {
 		}
 
 		CompoundNBT tag = stack.getTag();
-		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
+		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing")) {
 			player.spawnedItemEffects = ItemStack.read(tag.getCompound("Polishing"));
+			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
+		}
 
 		if (!player.getActiveItemStack()
 			.isEmpty())
@@ -359,7 +373,7 @@ public class DeployerHandler {
 	protected static ActionResultType safeOnBeehiveUse(BlockState state, World world, BlockPos pos, PlayerEntity player,
 		Hand hand) {
 		// <> BeehiveBlock#onUse
-		
+
 		BeehiveBlock block = (BeehiveBlock) state.getBlock();
 		ItemStack prevHeldItem = player.getHeldItem(hand);
 		int honeyLevel = state.get(BeehiveBlock.HONEY_LEVEL);

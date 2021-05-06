@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 41",
+	"_": "Missing Localizations: 43",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -682,6 +682,7 @@
 	"create.recipe.fan_blasting.fan": "在熔岩后放置鼓风机",
 	"create.recipe.pressing": "金属压片",
 	"create.recipe.mixing": "混合搅拌",
+	"create.recipe.deploying": "UNLOCALIZED: Deploying",
 	"create.recipe.automatic_shapeless": "自动搅拌",
 	"create.recipe.automatic_brewing": "自动酿造",
 	"create.recipe.packing": "压块塑形",
@@ -1142,6 +1143,7 @@
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
+	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
 	"create.subtitle.blaze_munch": "烈焰人：咀嚼",
