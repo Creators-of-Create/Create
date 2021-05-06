@@ -5,7 +5,23 @@ import net.minecraft.util.Direction.Axis;
 
 public class AngleHelper {
 
+	/**
+	 * Legacy method. See {@link #horizontalAngleNew(Direction)} for new method.
+	 */
 	public static float horizontalAngle(Direction facing) {
+		float angle = facing.getHorizontalAngle();
+		if (facing.getAxis() == Axis.X)
+			angle = -angle;
+		return angle;
+	}
+
+	/**
+	 * Same as {@link #horizontalAngle(Direction)}, but returns 0 instead of -90 for vertical directions.
+	 */
+	public static float horizontalAngleNew(Direction facing) {
+		if (facing.getAxis().isVertical()) {
+			return 0;
+		}
 		float angle = facing.getHorizontalAngle();
 		if (facing.getAxis() == Axis.X)
 			angle = -angle;

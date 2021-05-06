@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,10 +32,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 	private ResourceLocation regular = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
 
-	private Vector3d[] quad1;
-	private Vector3d[] quad2;
-	private float[] u = { 0, 1, 1, 0 };
-	private float[] v = { 0, 0, 1, 1 };
+	private float[] insideQuad;
+	private float[] outsideQuad;
 
 	public SuperGlueRenderer(EntityRendererManager renderManager) {
 		super(renderManager);
@@ -47,17 +46,23 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	@Override
-	public void render(SuperGlueEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack ms,
+	public boolean shouldRender(SuperGlueEntity entity, ClippingHelper frustum, double x, double y, double z) {
+		if (super.shouldRender(entity, frustum, x, y, z)) {
+			PlayerEntity player = Minecraft.getInstance().player;
+			boolean visible = entity.isVisible();
+			boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getHeldItemMainhand())
+				|| AllItems.SUPER_GLUE.isIn(player.getHeldItemOffhand());
+
+			if (visible || holdingGlue)
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void render(SuperGlueEntity entity, float yaw, float partialTicks, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light) {
-		super.render(entity, p_225623_2_, p_225623_3_, ms, buffer, light);
-
-		PlayerEntity player = Minecraft.getInstance().player;
-		boolean visible = entity.isVisible();
-		boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getHeldItemMainhand())
-			|| AllItems.SUPER_GLUE.isIn(player.getHeldItemOffhand());
-
-		if (!visible && !holdingGlue)
-			return;
+		super.render(entity, yaw, partialTicks, ms, buffer, light);
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntityCutout(getEntityTexture(entity)));
 		light = getBrightnessForRender(entity);
@@ -65,24 +70,13 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 		ms.push();
 		MatrixStacker.of(ms)
-			.rotateY(AngleHelper.horizontalAngle(face))
+			.rotateY(AngleHelper.horizontalAngleNew(face))
 			.rotateX(AngleHelper.verticalAngle(face));
 		Entry peek = ms.peek();
 
-		Vector3d[][] quads = { quad1, quad2 };
-		for (Vector3d[] quad : quads) {
-			for (int i = 0; i < 4; i++) {
-				Vector3d vertex = quad[i];
-				builder.vertex(peek.getModel(), (float) vertex.x, (float) vertex.y, (float) vertex.z)
-					.color(255, 255, 255, 255)
-					.texture(u[i], v[i])
-					.overlay(OverlayTexture.DEFAULT_UV)
-					.light(light)
-					.normal(peek.getNormal(), face.getXOffset(), face.getYOffset(), face.getZOffset())
-					.endVertex();
-			}
-			face = face.getOpposite();
-		}
+		renderQuad(builder, peek, insideQuad, light, -1);
+		renderQuad(builder, peek, outsideQuad, light, 1);
+
 		ms.pop();
 	}
 
@@ -111,8 +105,18 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		Vector3d a4 = plane.add(start);
 		Vector3d b4 = plane.add(end);
 
-		quad1 = new Vector3d[] { a2, a3, a4, a1 };
-		quad2 = new Vector3d[] { b3, b2, b1, b4 };
+		insideQuad = new float[] {
+				(float) a1.x, (float) a1.y, (float) a1.z, 1, 0,
+				(float) a2.x, (float) a2.y, (float) a2.z, 1, 1,
+				(float) a3.x, (float) a3.y, (float) a3.z, 0, 1,
+				(float) a4.x, (float) a4.y, (float) a4.z, 0, 0,
+		};
+		outsideQuad = new float[] {
+				(float) b4.x, (float) b4.y, (float) b4.z, 0, 0,
+				(float) b3.x, (float) b3.y, (float) b3.z, 0, 1,
+				(float) b2.x, (float) b2.y, (float) b2.z, 1, 1,
+				(float) b1.x, (float) b1.y, (float) b1.z, 1, 0,
+		};
 	}
 
 	private int getBrightnessForRender(SuperGlueEntity entity) {
@@ -124,6 +128,19 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		int light = world.isBlockPresent(blockpos) ? WorldRenderer.getLightmapCoordinates(world, blockpos) : 15;
 		int light2 = world.isBlockPresent(blockpos2) ? WorldRenderer.getLightmapCoordinates(world, blockpos2) : 15;
 		return Math.max(light, light2);
+	}
+
+	// Vertex format: pos x, pos y, pos z, u, v
+	private void renderQuad(IVertexBuilder builder, Entry matrix, float[] data, int light, float normalZ) {
+		for (int i = 0; i < 4; i++) {
+			builder.vertex(matrix.getModel(), data[5 * i], data[5 * i + 1], data[5 * i + 2])
+				.color(255, 255, 255, 255)
+				.texture(data[5 * i + 3], data[5 * i + 4])
+				.overlay(OverlayTexture.DEFAULT_UV)
+				.light(light)
+				.normal(matrix.getNormal(), 0.0f, 0.0f, normalZ)
+				.endVertex();
+		}
 	}
 
 }
