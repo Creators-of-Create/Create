@@ -63,7 +63,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		tryGrabbingItem(context);
 		DeployerFakePlayer player = getPlayer(context);
 		Mode mode = getMode(context);
-		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getHeldItemMainhand(), context.world, pos))
+		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getHeldItemMainhand(), context.world, pos, null))
 			return;
 
 		activate(context, pos, player, mode);
@@ -115,7 +115,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 		List<ItemStack> requiredItems = requirement.getRequiredItems();
 		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
-		
+
 		if (!context.contraption.hasUniversalCreativeCrate) {
 			IItemHandler iItemHandler = context.contraption.inventory;
 			for (ItemStack required : requiredItems) {
