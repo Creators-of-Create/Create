@@ -12,13 +12,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class BasicInstancedTileRenderer extends InstancedTileRenderer<BasicProgram> {
+public class WorldTileRenderer<P extends BasicProgram> extends InstancedTileRenderer<P> {
 	public static int MAX_ORIGIN_DISTANCE = 100;
 
 	public BlockPos originCoordinate = BlockPos.ZERO;
 
-	public BasicInstancedTileRenderer() {
-		super(WorldContext.INSTANCE);
+	public WorldTileRenderer(WorldContext<P> context) {
+		super(context);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BasicInstancedTileRenderer extends InstancedTileRenderer<BasicProgr
 
 	@Override
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ,
-					   ShaderCallback<BasicProgram> callback) {
+					   ShaderCallback<P> callback) {
 		BlockPos originCoordinate = getOriginCoordinate();
 
 		camX -= originCoordinate.getX();

@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -64,6 +65,23 @@ public class RenderHooksMixin {
 		Backend.refresh();
 
 		Backend.listeners.refresh(world);
+	}
+
+	@Inject(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;long2ObjectEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;"), method = "render")
+	private void renderBlockBreaking(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
+									 ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f p_228426_9_,
+									 CallbackInfo ci) {
+		if (!Backend.available())
+			return;
+
+		Matrix4f view = stack.peek()
+				.getModel();
+		Matrix4f viewProjection = view.copy();
+		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
+
+		Vector3d cameraPos = info.getProjectedView();
+		Backend.renderBreaking(world, viewProjection, cameraPos.x, cameraPos.y, cameraPos.z);
+		GL20.glUseProgram(0);
 	}
 
 	// Effects system

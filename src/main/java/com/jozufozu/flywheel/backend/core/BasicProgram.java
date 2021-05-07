@@ -1,6 +1,8 @@
 package com.jozufozu.flywheel.backend.core;
 
-import org.lwjgl.opengl.GL20;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform3f;
 
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
@@ -42,11 +44,11 @@ public class BasicProgram extends GlProgram {
 	public void bind(Matrix4f viewProjection, double camX, double camY, double camZ, int debugMode) {
 		super.bind();
 
-		GL20.glUniform1i(uDebug, debugMode);
-		GL20.glUniform1f(uTime, AnimationTickHolder.getRenderTime());
+		glUniform1i(uDebug, debugMode);
+		glUniform1f(uTime, AnimationTickHolder.getRenderTime());
 
 		uploadMatrixUniform(uViewProjection, viewProjection);
-		GL20.glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
+		glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
 
 		fogMode.bind();
 	}

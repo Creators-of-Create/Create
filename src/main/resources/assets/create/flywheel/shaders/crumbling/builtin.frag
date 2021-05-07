@@ -1,10 +1,11 @@
 #flwinclude <"create:std/fog.glsl">
 
+uniform vec2 uTextureScale;
 uniform sampler2D uBlockAtlas;
 uniform sampler2D uLightMap;
 
 vec4 FLWBlockTexture(vec2 texCoords) {
-    return texture2D(uBlockAtlas, texCoords);
+    return texture2D(uBlockAtlas, texCoords * uTextureScale);
 }
 
 void FLWFinalizeColor(inout vec4 color) {
@@ -18,6 +19,5 @@ void FLWFinalizeColor(inout vec4 color) {
 }
 
 vec4 FLWLight(vec2 lightCoords) {
-    vec2 lm = lightCoords * 0.9375 + 0.03125;
-    return texture2D(uLightMap, lm);
+    return vec4(1.);
 }

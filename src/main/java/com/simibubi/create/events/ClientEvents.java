@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderWork;
-import com.jozufozu.flywheel.backend.core.BasicInstancedTileRenderer;
+import com.jozufozu.flywheel.backend.core.BasicProgram;
+import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -144,7 +145,7 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers(world);
 			AnimationTickHolder.reset();
-			BasicInstancedTileRenderer renderer = Backend.tileRenderer.get(world);
+			WorldTileRenderer<BasicProgram> renderer = Backend.tileRenderer.get(world);
 			renderer.invalidate();
 			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
