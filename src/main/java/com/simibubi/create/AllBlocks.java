@@ -174,6 +174,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
@@ -1383,6 +1384,36 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Brass")
 		.register();
+
+	public static final BlockEntry<FallingBlock> CRUSHED_BASALT = REGISTRATE.block("crushed_basalt", p -> new FallingBlock(p))
+			.initialProperties(() -> Blocks.GRAVEL)
+			.tag(Tags.Blocks.GRAVEL)
+			.tag(BlockTags.ENDERMAN_HOLDABLE)
+			.transform(tagBlockAndItem("gravel/crushed_basalt"))
+			.tag(Tags.Items.GRAVEL)
+			.build()
+			.lang("Crushed Basalt")
+			.register();
+
+	public static final BlockEntry<FallingBlock> CRUSHED_DIORITE = REGISTRATE.block("crushed_diorite", p -> new FallingBlock(p))
+			.initialProperties(() -> Blocks.GRAVEL)
+			.tag(Tags.Blocks.GRAVEL)
+			.tag(BlockTags.ENDERMAN_HOLDABLE)
+			.transform(tagBlockAndItem("gravel/crushed_diorite"))
+			.tag(Tags.Items.GRAVEL)
+			.build()
+			.lang("Crushed Diorite")
+			.register();
+
+	public static final BlockEntry<FallingBlock> CRUSHED_OBSIDIAN = REGISTRATE.block("crushed_obsidian", p -> new FallingBlock(p))
+			.initialProperties(() -> Blocks.GRAVEL)
+			.tag(Tags.Blocks.GRAVEL)
+			.tag(BlockTags.ENDERMAN_HOLDABLE)
+			.transform(tagBlockAndItem("gravel/crushed_obsidian"))
+			.tag(Tags.Items.GRAVEL)
+			.build()
+			.lang("Crushed Obsidian")
+			.register();
 
 	// Load this class
 

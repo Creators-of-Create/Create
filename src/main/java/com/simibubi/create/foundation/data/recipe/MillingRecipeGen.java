@@ -41,8 +41,6 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(AllPaletteBlocks.LIMESAND.get())),
 		SANDSTONE = create(() -> Blocks.SANDSTONE, b -> b.duration(150)
 			.output(Blocks.SAND)),
-		DIORITE = create(() -> Blocks.DIORITE, b -> b.duration(200)
-			.output(AllPaletteBlocks.LIMESAND.get())),
 
 		COPPER_ORE = metalOre("copper", AllItems.CRUSHED_COPPER, 350),
 		ZINC_ORE = metalOre("zinc", AllItems.CRUSHED_ZINC, 350),

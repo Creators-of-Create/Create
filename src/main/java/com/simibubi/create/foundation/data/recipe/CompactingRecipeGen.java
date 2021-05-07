@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
@@ -39,7 +40,16 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Tags.Items.EGGS)
 			.require(Items.SUGAR)
 			.require(AllItems.CINDER_FLOUR.get())
-			.output(AllItems.BLAZE_CAKE_BASE.get(), 1))
+			.output(AllItems.BLAZE_CAKE_BASE.get(), 1)),
+
+
+
+		OBSIDIAN = create("obsidian", b -> b.require(Tags.Items.GRAVEL)
+				.require(AllBlocks.CRUSHED_OBSIDIAN.get())
+				.require(AllBlocks.CRUSHED_OBSIDIAN.get())
+				.require(AllBlocks.CRUSHED_OBSIDIAN.get())
+				.require(AllBlocks.CRUSHED_OBSIDIAN.get())
+				.output(Items.OBSIDIAN, 1))
 
 	;
 

@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
@@ -29,7 +30,13 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 		OBSIDIAN = create(() -> Blocks.OBSIDIAN, b -> b.duration(500)
 			.output(AllItems.POWDERED_OBSIDIAN.get())
-			.output(.75f, Blocks.OBSIDIAN)),
+			.output(AllBlocks.CRUSHED_OBSIDIAN.get(),4)),
+
+		DIORITE = create(() -> Blocks.DIORITE, b -> b.duration(400)
+				.output(AllBlocks.CRUSHED_DIORITE.get())),
+
+		BASALT = create(() -> Blocks.BASALT, b -> b.duration(400)
+				.output(AllBlocks.CRUSHED_BASALT.get())),
 
 		WOOL = create("wool", b -> b.duration(100)
 			.require(ItemTags.WOOL)

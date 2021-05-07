@@ -10,6 +10,7 @@ import static com.simibubi.create.foundation.data.recipe.Mods.TH;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -45,6 +46,12 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		RED_SAND = create(() -> Blocks.RED_SAND, b -> b.output(.125f, Items.GOLD_NUGGET, 3)
 			.output(.05f, Items.DEAD_BUSH)),
 		SAND = create(() -> Blocks.SAND, b -> b.output(.25f, Items.CLAY_BALL)),
+
+		CRUSHED_OBSIDIAN = create(() -> AllBlocks.CRUSHED_OBSIDIAN.get(), b -> b.output(.25f, Items.QUARTZ,4)),
+		CRUSHED_DIORITE = create(() -> AllBlocks.CRUSHED_DIORITE.get(),  b -> b.output(.25f, Items.FLINT)
+				.output(.125f, AllItems.ZINC_NUGGET.get())),
+		CRUSHED_BASALT = create(() -> AllBlocks.CRUSHED_BASALT.get(), b -> b.output(.25f, Items.FLINT)
+				.output(.125f, AllItems.COPPER_NUGGET.get())),
 
 		CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER, AllItems.COPPER_NUGGET::get),
 		CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC, AllItems.ZINC_NUGGET::get),
