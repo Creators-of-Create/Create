@@ -2,24 +2,29 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "buzzierbees"
+      "modid": "environmental"
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzierbees:red_hibiscus"
+      "item": "environmental:bird_of_paradise"
     }
   ],
   "results": [
     {
-      "item": "minecraft:red_dye",
-      "count": 2
+      "item": "minecraft:orange_dye",
+      "count": 3
+    },
+    {
+      "item": "minecraft:blue_dye",
+      "count": 1,
+      "chance": 0.25
     },
     {
       "item": "minecraft:red_dye",
       "count": 1,
-      "chance": 0.1
+      "chance": 0.25
     }
   ],
   "processingTime": 50

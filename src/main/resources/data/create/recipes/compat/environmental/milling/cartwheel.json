@@ -2,22 +2,22 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "buzzierbees"
+      "modid": "environmental"
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzierbees:jolyce"
+      "item": "environmental:cartwheel"
     }
   ],
   "results": [
     {
-      "item": "minecraft:green_dye",
+      "item": "minecraft:pink_dye",
       "count": 2
     },
     {
-      "item": "minecraft:green_dye",
+      "item": "minecraft:orange_dye",
       "count": 1,
       "chance": 0.1
     }
