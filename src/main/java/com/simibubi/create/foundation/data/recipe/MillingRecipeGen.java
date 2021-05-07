@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
@@ -41,6 +42,8 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(AllPaletteBlocks.LIMESAND.get())),
 		SANDSTONE = create(() -> Blocks.SANDSTONE, b -> b.duration(150)
 			.output(Blocks.SAND)),
+		CRUSHED_DIORITE = create(() -> AllBlocks.CRUSHED_DIORITE.get(), b -> b.duration(150)
+				.output(AllPaletteBlocks.LIMESAND.get())),
 
 		COPPER_ORE = metalOre("copper", AllItems.CRUSHED_COPPER, 350),
 		ZINC_ORE = metalOre("zinc", AllItems.CRUSHED_ZINC, 350),
