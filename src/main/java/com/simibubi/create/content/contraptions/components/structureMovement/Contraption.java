@@ -33,6 +33,7 @@ import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -342,6 +343,10 @@ public abstract class Contraption {
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
+		
+		// WM Bearings attach their structure when moved
+		if (AllBlocks.WINDMILL_BEARING.has(state))
+			moveWindmillBearing(pos, frontier, visited, state);
 
 		// Seats transfer their passenger to the contraption
 		if (state.getBlock() instanceof SeatBlock)
@@ -495,6 +500,13 @@ public abstract class Contraption {
 					frontier.add(offset);
 			}
 		}
+	}
+
+	private void moveWindmillBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
+		Direction facing = state.get(WindmillBearingBlock.FACING);
+		BlockPos offset = pos.offset(facing);
+		if (!visited.contains(offset))
+			frontier.add(offset);
 	}
 
 	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
@@ -701,8 +713,8 @@ public abstract class Contraption {
 			c -> seatMapping.put(NBTUtil.readUniqueId(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
 
 		stabilizedSubContraptions.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND), c -> stabilizedSubContraptions
-			.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
+		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND),
+			c -> stabilizedSubContraptions.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
@@ -831,7 +843,9 @@ public abstract class Contraption {
 
 	private CompoundNBT writeBlocksCompound() {
 		CompoundNBT compound = new CompoundNBT();
-		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+			throw new IllegalStateException("Palette Map index exceeded maximum");
+		}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 		ListNBT blockList = new ListNBT();
 
 		for (BlockInfo block : this.blocks.values()) {
@@ -857,7 +871,9 @@ public abstract class Contraption {
 		ListNBT blockList;
 		if (usePalettedDeserialization) {
 			CompoundNBT c = ((CompoundNBT) compound);
-			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+				throw new IllegalStateException("Palette Map index exceeded maximum");
+			}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 			palette.read(c.getList("Palette", 10));
 
 			blockList = c.getList("BlockList", 10);
@@ -906,19 +922,15 @@ public abstract class Contraption {
 	}
 
 	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, HashMapPalette<BlockState> palette) {
-		return new BlockInfo(
-				BlockPos.fromLong(blockListEntry.getLong("Pos")),
-				Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(BlockPos.fromLong(blockListEntry.getLong("Pos")),
+			Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	private static BlockInfo legacyReadBlockInfo(CompoundNBT blockListEntry) {
-		return new BlockInfo(
-				NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
-				NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
+			NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	public void removeBlocksFromWorld(World world, BlockPos offset) {
@@ -999,8 +1011,7 @@ public abstract class Contraption {
 				}
 				if (state.getBlock() instanceof IWaterLoggable && state.contains(BlockStateProperties.WATERLOGGED)) {
 					FluidState FluidState = world.getFluidState(targetPos);
-					state = state.with(BlockStateProperties.WATERLOGGED,
-						FluidState.getFluid() == Fluids.WATER);
+					state = state.with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER);
 				}
 
 				world.destroyBlock(targetPos, true);
@@ -1232,8 +1243,8 @@ public abstract class Contraption {
 
 			float distSq = a * a + b * b;
 
-
-			if (distSq > maxDistSq) maxDistSq = distSq;
+			if (distSq > maxDistSq)
+				maxDistSq = distSq;
 		}
 
 		return maxDistSq;

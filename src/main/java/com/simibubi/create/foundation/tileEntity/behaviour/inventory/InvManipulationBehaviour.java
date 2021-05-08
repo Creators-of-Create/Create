@@ -160,7 +160,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	@Override
 	public void tick() {
 		super.tick();
-		if (findNewNextTick) {
+		if (findNewNextTick || getWorld().getGameTime() % 64 == 0) {
 			findNewNextTick = false;
 			findNewCapability();
 		}

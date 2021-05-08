@@ -948,6 +948,27 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		.viaShapeless(b -> b.addIngredient(AllItems.WHEAT_FLOUR.get())
 			.addIngredient(Items.WATER_BUCKET)),
 
+		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', Tags.Items.GLASS)
+				.key('P', I.copper())
+				.patternLine("PPP")
+				.patternLine("PGP")),
+
+		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', I.shaft())
+				.key('A', I.andesite())
+				.key('P', I.copper())
+				.patternLine("AGA")
+				.patternLine("PPP")
+				.patternLine(" P ")),
+
+		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', I.andesite())
+				.key('P', I.copper())
+				.patternLine("P P")
+				.patternLine("P P")
+				.patternLine("G G")),
+
 		SLIME_BALL = create(() -> Items.SLIME_BALL).unlockedBy(AllItems.DOUGH::get)
 			.viaShapeless(b -> b.addIngredient(AllItems.DOUGH.get())
 				.addIngredient(Tags.Items.DYES_LIME)),
