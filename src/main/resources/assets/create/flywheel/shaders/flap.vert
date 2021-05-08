@@ -27,12 +27,6 @@ varying vec4 Color;
 varying float Diffuse;
 varying vec2 Light;
 
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
 }
@@ -62,13 +56,12 @@ void main() {
     vec4 worldPos = vec4(rotated, 1.);
     vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, flapRotation), orientation);
 
-    FLWFinalizeWorldPos(worldPos, uCameraPos);
+    FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aLight;
-    gl_Position = uViewProjection * worldPos;
 
     Color = vec4(1.);
 }

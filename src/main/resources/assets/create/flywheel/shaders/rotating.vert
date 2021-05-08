@@ -22,12 +22,6 @@ varying vec4 Color;
 varying float Diffuse;
 varying vec2 Light;
 
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
 mat4 kineticRotation() {
     float degrees = aOffset + uTime * aSpeed * 3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
@@ -41,13 +35,12 @@ void main() {
 
     vec3 norm = modelToNormal(kineticRotation) * aNormal;
 
-    FLWFinalizeWorldPos(worldPos, uCameraPos);
+    FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aLight;
-    gl_Position = uViewProjection * worldPos;
 
     #ifdef CONTRAPTION
     if (uDebug == 2) {

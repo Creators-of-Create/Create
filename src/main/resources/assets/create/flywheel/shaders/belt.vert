@@ -25,12 +25,6 @@ varying vec4 Color;
 varying float Diffuse;
 varying vec2 Light;
 
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
 void main() {
     vec3 rotated = rotateVertexByQuat(aPos - .5, aInstanceRot) + aInstancePos + .5;
 
@@ -38,7 +32,7 @@ void main() {
 
     vec3 norm = rotateVertexByQuat(aNormal, aInstanceRot);
 
-    FLWFinalizeWorldPos(worldPos, uCameraPos);
+    FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
     float scrollSize = aScrollTexture.w - aScrollTexture.y;
@@ -47,7 +41,6 @@ void main() {
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords - aSourceTexture + aScrollTexture.xy + vec2(0, scroll);
     Light = aLight;
-    gl_Position = uViewProjection * worldPos;
 
     #ifdef CONTRAPTION
     if (uDebug == 2) {

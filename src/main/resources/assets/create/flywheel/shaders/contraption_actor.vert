@@ -1,6 +1,7 @@
 #version 110
 #define PI 3.1415926538
 
+#flwbuiltins
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/diffuse.glsl">
@@ -22,22 +23,7 @@ attribute float aSpeed;
 varying float Diffuse;
 varying vec2 TexCoords;
 varying vec4 Color;
-varying vec3 BoxCoord;
 varying vec2 Light;
-
-uniform vec3 uLightBoxSize;
-uniform vec3 uLightBoxMin;
-uniform mat4 uModel;
-
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
 
 void main() {
     float degrees = aOffset + uTime * aSpeed / 20.;
@@ -45,22 +31,16 @@ void main() {
 
     vec4 kineticRot = quat(aAxis, degrees);
     vec3 rotated = rotateVertexByQuat(aPos - aRotationCenter, kineticRot) + aRotationCenter;
-    vec3 localPos = rotateVertexByQuat(rotated - .5, aInstanceRot) + aInstancePos + .5;
 
-    vec4 worldPos = uModel * vec4(localPos, 1.);
-
+    vec4 worldPos = vec4(rotateVertexByQuat(rotated - .5, aInstanceRot) + aInstancePos + .5, 1.);
     vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, kineticRot), aInstanceRot);
-    norm = modelToNormal(uModel) * norm;
 
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
+    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeNormal(norm);
+
     Diffuse = diffuse(norm);
     TexCoords = aTexCoords;
     Light = aModelLight;
-    gl_Position = uViewProjection * worldPos;
-
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
-    #endif
 
     if (uDebug == 2) {
         Color = vec4(norm, 1.);

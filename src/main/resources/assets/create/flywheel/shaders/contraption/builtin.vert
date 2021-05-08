@@ -8,7 +8,12 @@ uniform vec3 uLightBoxSize;
 uniform vec3 uLightBoxMin;
 uniform mat4 uModel;
 
-void FLWFinalizeWorldPos(inout vec4 worldPos, vec3 cameraPos) {
+uniform float uTime;
+uniform mat4 uViewProjection;
+uniform int uDebug;
+uniform vec3 uCameraPos;
+
+void FLWFinalizeWorldPos(inout vec4 worldPos) {
     worldPos = uModel * worldPos;
 
     BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
@@ -16,6 +21,8 @@ void FLWFinalizeWorldPos(inout vec4 worldPos, vec3 cameraPos) {
     #if defined(USE_FOG)
     FragDistance = length(worldPos.xyz);
     #endif
+
+    gl_Position = uViewProjection * worldPos;
 }
 
 void FLWFinalizeNormal(inout vec3 normal) {
