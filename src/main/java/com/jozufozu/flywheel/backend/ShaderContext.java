@@ -32,7 +32,7 @@ public abstract class ShaderContext<P extends GlProgram> {
 		Backend.log.debug("Loaded program {}", programSpec.name);
 	}
 
-	public String preProcess(ShaderLoader loader, String shaderSrc, ShaderType type) {
+	public String preProcess(ShaderLoader loader, ShaderType type, ResourceLocation shader, String shaderSrc) {
 		return shaderSrc;
 	}
 

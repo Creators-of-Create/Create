@@ -2,6 +2,7 @@ package com.jozufozu.flywheel.backend.core;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -18,7 +19,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
 
-	private static final Pattern builtinPattern = Pattern.compile("#flwbuiltins");
+	private static final String declaration = "#flwbuiltins";
+	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
 	public static final WorldContext<BasicProgram> INSTANCE = new WorldContext<>(new ResourceLocation("create", "std"), new FogSensitiveProgram.SpecLoader<>(BasicProgram::new));
 	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation("create", "crumbling"), new FogSensitiveProgram.SpecLoader<>(CrumblingProgram::new));
@@ -48,11 +50,15 @@ public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
 	}
 
 	@Override
-	public String preProcess(ShaderLoader loader, String shaderSrc, ShaderType type) {
+	public String preProcess(ShaderLoader loader, ShaderType type, ResourceLocation shader, String shaderSrc) {
 		String builtinSrc = loader.getShaderSource(builtins.get(type));
 
-		return builtinPattern.matcher(shaderSrc)
-				.replaceFirst(builtinSrc);
+		Matcher matcher = builtinPattern.matcher(shaderSrc);
+
+		if (matcher.find())
+			return matcher.replaceFirst(builtinSrc);
+
+		throw new RuntimeException(String.format("%s shader '%s' is missing %s, cannot use in World Context", type.name, shader, declaration));
 	}
 
 	@Override

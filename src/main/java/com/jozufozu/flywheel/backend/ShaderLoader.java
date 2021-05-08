@@ -127,7 +127,7 @@ public class ShaderLoader {
 	public GlShader loadShader(ShaderContext<?> ctx, ResourceLocation name, ShaderType type, ShaderConstants defines) {
 		String source = shaderSource.get(name);
 
-		source = ctx.preProcess(this, source, type);
+		source = ctx.preProcess(this, type, name, source);
 		source = processIncludes(source, name);
 
 		if (defines != null)
