@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.core.BasicAttributes;
+import com.jozufozu.flywheel.backend.core.materials.BasicAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;

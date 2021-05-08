@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.materials;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;

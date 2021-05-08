@@ -1,8 +1,15 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.LightType;
+
 import java.util.Arrays;
 
-import com.jozufozu.flywheel.backend.core.OrientedData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
@@ -14,13 +21,6 @@ import com.jozufozu.flywheel.backend.light.LightUpdateListener;
 import com.jozufozu.flywheel.backend.light.LightUpdater;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.LightType;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
 

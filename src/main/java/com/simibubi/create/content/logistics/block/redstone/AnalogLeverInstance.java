@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;

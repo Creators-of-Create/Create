@@ -1,20 +1,19 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.materials;
 
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
-import com.jozufozu.flywheel.backend.gl.attrib.VertexAttribSpec;
 
-public enum ModelAttributes implements IVertexAttrib {
-	VERTEX_POSITION("aPos", CommonAttributes.VEC3),
-	NORMAL("aNormal", CommonAttributes.NORMAL),
-	TEXTURE("aTexCoords", CommonAttributes.UV),
+public enum OrientedAttributes implements IVertexAttrib {
+	INSTANCE_POS("aInstancePos", CommonAttributes.VEC3),
+	PIVOT("aPivot", CommonAttributes.VEC3),
+	ROTATION("aRotation", CommonAttributes.QUATERNION),
 	;
 
 	private final String name;
-	private final VertexAttribSpec spec;
+	private final IAttribSpec spec;
 
-	ModelAttributes(String name, VertexAttribSpec spec) {
+	OrientedAttributes(String name, IAttribSpec spec) {
 		this.name = name;
 		this.spec = spec;
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block;
 
 import java.nio.ByteBuffer;
 
-import com.jozufozu.flywheel.backend.core.IFlatLight;
+import com.jozufozu.flywheel.backend.core.materials.IFlatLight;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 

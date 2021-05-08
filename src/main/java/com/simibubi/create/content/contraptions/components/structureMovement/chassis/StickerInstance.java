@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;

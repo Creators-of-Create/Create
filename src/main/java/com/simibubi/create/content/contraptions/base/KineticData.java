@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import java.nio.ByteBuffer;
 
-import com.jozufozu.flywheel.backend.core.BasicData;
+import com.jozufozu.flywheel.backend.core.materials.BasicData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 

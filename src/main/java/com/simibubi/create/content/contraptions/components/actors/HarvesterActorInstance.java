@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.mojang.blaze3d.matrix.MatrixStack;

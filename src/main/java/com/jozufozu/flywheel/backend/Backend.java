@@ -1,18 +1,16 @@
 package com.jozufozu.flywheel.backend;
 
-import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +18,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import com.jozufozu.flywheel.backend.core.BasicProgram;
-import com.jozufozu.flywheel.backend.core.CrumblingProgram;
+import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
 import com.jozufozu.flywheel.backend.core.EffectsContext;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
@@ -31,14 +29,13 @@ import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -47,10 +44,10 @@ import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -68,7 +65,13 @@ public class Backend {
 
 	public static EffectsHandler effects;
 	public static WorldAttached<WorldTileRenderer<BasicProgram>> tileRenderer = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.INSTANCE));
-	public static WorldAttached<WorldTileRenderer<CrumblingProgram>> blockBreaking = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.CRUMBLING));
+	public static LazyValue<Vector<CrumblingRenderer>> blockBreaking = new LazyValue<>(() -> {
+		Vector<CrumblingRenderer> renderers = new Vector<>(10);
+		for (int i = 0; i < 10; i++) {
+			renderers.add(new CrumblingRenderer());
+		}
+		return renderers;
+	});
 
 	private static Matrix4f projectionMatrix = new Matrix4f();
 	private static boolean instancingAvailable;
@@ -215,67 +218,49 @@ public class Backend {
 		layer.endDrawing();
 	}
 
+	private static final RenderType CRUMBLING = ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(0);
+
 	public static void renderBreaking(ClientWorld world, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
 		if (!canUseInstancing(world)) return;
-		WorldTileRenderer<CrumblingProgram> renderer = blockBreaking.get(world);
-		if (renderer == null) return;
 
 		WorldRenderer worldRenderer = Minecraft.getInstance().worldRenderer;
 		Long2ObjectMap<SortedSet<DestroyBlockProgress>> breakingProgressions = worldRenderer.blockBreakingProgressions;
 
 		if (breakingProgressions.isEmpty()) return;
+		Vector<CrumblingRenderer> renderers = blockBreaking.getValue();
+
+		BitSet bitSet = new BitSet(10);
 
 		for (Long2ObjectMap.Entry<SortedSet<DestroyBlockProgress>> entry : breakingProgressions.long2ObjectEntrySet()) {
 			BlockPos breakingPos = BlockPos.fromLong(entry.getLongKey());
 
-			SortedSet<DestroyBlockProgress> sortedset1 = entry.getValue();
-			if (sortedset1 != null && !sortedset1.isEmpty()) {
-				renderer.add(world.getTileEntity(breakingPos));
+			SortedSet<DestroyBlockProgress> progresses = entry.getValue();
+			if (progresses != null && !progresses.isEmpty()) {
+				int blockDamage = progresses.last().getPartialBlockDamage();
+				bitSet.set(blockDamage);
+				renderers.get(blockDamage).add(world.getTileEntity(breakingPos));
 			}
 		}
 
-		renderer.beginFrame(Minecraft.getInstance().gameRenderer.getActiveRenderInfo());
-
-		RenderType layer = RenderType.getCutoutMipped();
-
-		layer.startDrawing();
+		TextureManager textureManager = Minecraft.getInstance().textureManager;
+		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 
 		glActiveTexture(GL_TEXTURE0);
 
-		TextureManager textureManager = Minecraft.getInstance().textureManager;
-		Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(5));
+		CRUMBLING.startDrawing();
+		bitSet.stream().forEach(i -> {
+			Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(i));
+			CrumblingRenderer renderer = renderers.get(i);
+			renderer.beginFrame(info);
 
-		if (breaking != null) {
+			if (breaking != null) {
+				glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
+				renderer.render(RenderType.getCutoutMipped(), viewProjection, cameraX, cameraY, cameraZ, program -> program.setTextureScale(64, 64));
+			}
 
-			glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-			RenderSystem.enableBlend();
-			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
-			RenderSystem.enableAlphaTest();
-			RenderSystem.alphaFunc(516, 0.003921569F);
-
-			RenderSystem.polygonOffset(-1.0F, -10.0F);
-			RenderSystem.enablePolygonOffset();
-		}
-
-		renderer.render(layer, viewProjection, cameraX, cameraY, cameraZ, program -> program.setTextureScale(64, 64));
-
-		if (breaking != null) {
-			glBindTexture(GL_TEXTURE_2D, textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE).getGlTextureId());
-
-			RenderSystem.disableBlend();
-			RenderSystem.defaultBlendFunc();
-
-			RenderSystem.polygonOffset(0.0F, 0.0F);
-			RenderSystem.disablePolygonOffset();
-		}
-
-		layer.endDrawing();
-
-		renderer.invalidate();
+			renderer.invalidate();
+		});
+		CRUMBLING.endDrawing();
 	}
 
 	public static void enqueueUpdate(TileEntity te) {

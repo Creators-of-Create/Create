@@ -3,9 +3,9 @@ package com.jozufozu.flywheel.backend.instancing;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import com.jozufozu.flywheel.backend.core.IFlatLight;
-import com.jozufozu.flywheel.backend.core.ModelData;
-import com.jozufozu.flywheel.backend.core.OrientedData;
+import com.jozufozu.flywheel.backend.core.materials.IFlatLight;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;

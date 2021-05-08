@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.jozufozu.flywheel.backend.core.OrientedData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;

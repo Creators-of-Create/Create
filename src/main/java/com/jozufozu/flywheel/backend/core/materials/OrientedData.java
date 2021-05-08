@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.materials;
 
 import java.nio.ByteBuffer;
 

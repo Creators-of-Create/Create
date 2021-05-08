@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.materials;
 
 import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;

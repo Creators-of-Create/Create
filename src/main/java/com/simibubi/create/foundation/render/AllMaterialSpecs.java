@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.render;
 
 import static com.jozufozu.flywheel.backend.Backend.register;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
-import com.jozufozu.flywheel.backend.core.OrientedData;
-import com.jozufozu.flywheel.backend.core.OrientedModel;
-import com.jozufozu.flywheel.backend.core.TransformedModel;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedModel;
+import com.jozufozu.flywheel.backend.core.materials.TransformedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.simibubi.create.Create;

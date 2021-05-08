@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-import com.jozufozu.flywheel.backend.core.OrientedData;
 import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;

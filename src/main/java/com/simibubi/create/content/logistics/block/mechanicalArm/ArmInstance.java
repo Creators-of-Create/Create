@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;

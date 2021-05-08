@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
 import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.mojang.blaze3d.matrix.MatrixStack;

@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
-import com.jozufozu.flywheel.backend.core.ModelData;
-import com.jozufozu.flywheel.backend.core.OrientedData;
 import com.jozufozu.flywheel.backend.core.WorldContext;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
@@ -107,21 +107,29 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
 		if (dynamicInstances.size() > 0) {
 			for (IDynamicInstance dyn : dynamicInstances.values()) {
-				if (!dyn.decreaseFramerateWithDistance()) {
-					dyn.beginFrame();
-					continue;
-				}
-
-				if (shouldTick(dyn.getWorldPosition(), lookX, lookY, lookZ, cX, cY, cZ))
+				if (!dyn.decreaseFramerateWithDistance() || shouldTick(dyn.getWorldPosition(), lookX, lookY, lookZ, cX, cY, cZ))
 					dyn.beginFrame();
 			}
 		}
 	}
 
+	/**
+	 * Render every model for every material.
+	 *
+	 * @param layer          Which vanilla {@link RenderType} is being drawn?
+	 * @param viewProjection How do we get from camera space to clip space?
+	 */
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
 		render(layer, viewProjection, camX, camY, camZ, null);
 	}
 
+	/**
+	 * Render every model for every material.
+	 *
+	 * @param layer          Which vanilla {@link RenderType} is being drawn?
+	 * @param viewProjection How do we get from camera space to clip space?
+	 * @param callback       Provide additional uniforms or state here.
+	 */
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
 		for (RenderMaterial<P, ?> material : materials.values()) {
 			if (material.canRenderInLayer(layer))

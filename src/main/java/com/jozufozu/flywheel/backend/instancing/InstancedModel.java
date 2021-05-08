@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.BufferedModel;
-import com.jozufozu.flywheel.backend.core.ModelAttributes;
+import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;

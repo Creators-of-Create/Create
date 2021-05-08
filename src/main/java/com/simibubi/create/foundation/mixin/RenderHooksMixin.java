@@ -67,7 +67,14 @@ public class RenderHooksMixin {
 		Backend.listeners.refresh(world);
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;long2ObjectEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;"), method = "render")
+
+	@Inject(at =
+	@At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/WorldRenderer;checkEmpty(Lcom/mojang/blaze3d/matrix/MatrixStack;)V",
+			ordinal = 2 // after the game renders the breaking overlay normally
+	),
+			method = "render")
 	private void renderBlockBreaking(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
 									 ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f p_228426_9_,
 									 CallbackInfo ci) {

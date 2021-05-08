@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;

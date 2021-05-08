@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.render;
 
 import static com.jozufozu.flywheel.backend.Backend.register;
 
-import com.jozufozu.flywheel.backend.core.BasicAttributes;
-import com.jozufozu.flywheel.backend.core.ModelAttributes;
-import com.jozufozu.flywheel.backend.core.OrientedAttributes;
-import com.jozufozu.flywheel.backend.core.TransformAttributes;
+import com.jozufozu.flywheel.backend.core.materials.BasicAttributes;
+import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
+import com.jozufozu.flywheel.backend.core.materials.OrientedAttributes;
+import com.jozufozu.flywheel.backend.core.materials.TransformAttributes;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderConstants;
 import com.simibubi.create.Create;

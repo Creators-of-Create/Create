@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import com.jozufozu.flywheel.backend.core.ModelData;
+import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;

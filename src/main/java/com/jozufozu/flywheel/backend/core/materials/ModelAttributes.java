@@ -1,18 +1,20 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.materials;
 
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexAttribSpec;
 
-public enum BasicAttributes implements IVertexAttrib {
-	LIGHT("aLight", CommonAttributes.LIGHT),
-	COLOR("aColor", CommonAttributes.RGBA),
+public enum ModelAttributes implements IVertexAttrib {
+	VERTEX_POSITION("aPos", CommonAttributes.VEC3),
+	NORMAL("aNormal", CommonAttributes.NORMAL),
+	TEXTURE("aTexCoords", CommonAttributes.UV),
 	;
 
 	private final String name;
-	private final IAttribSpec spec;
+	private final VertexAttribSpec spec;
 
-	BasicAttributes(String name, IAttribSpec spec) {
+	ModelAttributes(String name, VertexAttribSpec spec) {
 		this.name = name;
 		this.spec = spec;
 	}
