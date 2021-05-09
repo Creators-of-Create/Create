@@ -12,7 +12,7 @@ public class ContraptionContext extends WorldContext<ContraptionProgram> {
 	public static final ContraptionContext INSTANCE = new ContraptionContext();
 
 	public ContraptionContext() {
-		super(new ResourceLocation("create", "contraption"), new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
+		super(new ResourceLocation("create", "context/contraption"), new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
 	}
 
 	@Override

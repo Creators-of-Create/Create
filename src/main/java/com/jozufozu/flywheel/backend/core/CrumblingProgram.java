@@ -8,11 +8,18 @@ import net.minecraft.util.ResourceLocation;
 
 public class CrumblingProgram extends BasicProgram {
 	protected final int uTextureScale;
+	protected int uCrumbling;
 
 	public CrumblingProgram(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory) {
 		super(name, handle, fogFactory);
 
 		uTextureScale = getUniformLocation("uTextureScale");
+	}
+
+	@Override
+	protected void registerSamplers() {
+		super.registerSamplers();
+		uCrumbling = setSamplerBinding("uCrumbling", 4);
 	}
 
 	public void setTextureScale(float x, float y) {

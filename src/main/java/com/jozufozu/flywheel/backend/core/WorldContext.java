@@ -22,8 +22,8 @@ public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
 	private static final String declaration = "#flwbuiltins";
 	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
-	public static final WorldContext<BasicProgram> INSTANCE = new WorldContext<>(new ResourceLocation("create", "std"), new FogSensitiveProgram.SpecLoader<>(BasicProgram::new));
-	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation("create", "crumbling"), new FogSensitiveProgram.SpecLoader<>(CrumblingProgram::new));
+	public static final WorldContext<BasicProgram> INSTANCE = new WorldContext<>(new ResourceLocation("create", "context/std"), new FogSensitiveProgram.SpecLoader<>(BasicProgram::new));
+	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation("create", "context/crumbling"), new FogSensitiveProgram.SpecLoader<>(CrumblingProgram::new));
 
 	private final ShaderSpecLoader<P> loader;
 

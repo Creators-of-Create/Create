@@ -1,9 +1,10 @@
 package com.jozufozu.flywheel.backend;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL20.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glBindTexture;
 
 import java.util.BitSet;
 import java.util.Collection;
@@ -44,6 +45,7 @@ import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.tileentity.TileEntity;
@@ -246,6 +248,9 @@ public class Backend {
 		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
 
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE).getGlTextureId());
+
+		glActiveTexture(GL_TEXTURE4);
 
 		CRUMBLING.startDrawing();
 		bitSet.stream().forEach(i -> {
@@ -261,6 +266,11 @@ public class Backend {
 			renderer.invalidate();
 		});
 		CRUMBLING.endDrawing();
+
+		glActiveTexture(GL_TEXTURE0);
+		Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(0));
+		if (breaking != null)
+			glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
 	}
 
 	public static void enqueueUpdate(TileEntity te) {

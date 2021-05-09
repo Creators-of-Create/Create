@@ -13,6 +13,4 @@ void main() {
     vec4 color = vec4(tex.rgb * FLWLight(Light).rgb * Diffuse, tex.a) * Color;
 
     FLWFinalizeColor(color);
-
-    gl_FragColor = color;
 }
