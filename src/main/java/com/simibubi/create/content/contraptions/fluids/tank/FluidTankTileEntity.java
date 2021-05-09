@@ -141,6 +141,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 					if (tankAt == null)
 						continue;
+					world.updateComparatorOutputLevel(pos, tankAt.getBlockState()
+						.getBlock());
 					if (tankAt.luminosity == actualLuminosity)
 						continue;
 					tankAt.setLuminosity(actualLuminosity);
@@ -315,8 +317,11 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		FluidTankTileEntity controllerTE = getControllerTE();
+		if (controllerTE == null)
+			return false;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+			controllerTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 	@Override

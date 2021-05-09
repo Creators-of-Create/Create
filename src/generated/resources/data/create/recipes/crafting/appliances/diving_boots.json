@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P P",
+    "P P",
+    "G G"
+  ],
+  "key": {
+    "G": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "result": {
+    "item": "create:diving_boots"
+  }
+}
