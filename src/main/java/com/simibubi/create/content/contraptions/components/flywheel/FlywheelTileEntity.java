@@ -88,17 +88,6 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			return;
 		}
 
-		// Checks for Connection as well as block in blacklist, and if there, destroys the block
-		if (FlywheelBlock.getConnection(getBlockState()) != null) {
-			BlockPos furnacePos = pos.offset(FlywheelBlock.getConnection(getBlockState()));
-			for (Direction d : Direction.values()) {
-				if (AllTags.AllBlockTags.FLYWHEELBLACKLIST.matches(world.getBlockState(furnacePos.offset(d)))) {
-					world.destroyBlock(furnacePos.offset(d), true);
-					return;
-				}
-			}
-		}
-
 		/*
 		 * After getting moved by pistons the generatedSpeed attribute reads 16 but the
 		 * actual speed stays at 0, if it happens update rotation
