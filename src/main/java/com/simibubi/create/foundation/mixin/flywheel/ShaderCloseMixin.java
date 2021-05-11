@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.flywheel;
 
 import javax.annotation.Nullable;
 

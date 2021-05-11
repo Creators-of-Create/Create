@@ -6,16 +6,17 @@
     "refmap": "create.refmap.json",
     "client": [
       "BreakProgressMixin",
-      "CancelTileEntityRenderMixin",
+      "ChromaticProjectorHooksMixin",
       "EntityContraptionInteractionMixin",
-      "FogColorTrackerMixin",
-      "LightUpdateMixin",
-      "NetworkLightUpdateMixin",
-      "RenderHooksMixin",
-      "ShaderCloseMixin",
-      "StoreProjectionMatrixMixin",
-      "TileRemoveMixin",
-      "TileWorldHookMixin"
+      "flywheel.CancelTileEntityRenderMixin",
+      "flywheel.FogColorTrackerMixin",
+      "flywheel.RenderHooksMixin",
+      "flywheel.ShaderCloseMixin",
+      "flywheel.StoreProjectionMatrixMixin",
+      "flywheel.TileRemoveMixin",
+      "flywheel.TileWorldHookMixin",
+      "flywheel.light.LightUpdateMixin",
+      "flywheel.light.NetworkLightUpdateMixin"
     ],
     "injectors": {
         "defaultRequire": 1
