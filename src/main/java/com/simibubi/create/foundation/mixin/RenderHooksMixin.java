@@ -11,6 +11,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.simibubi.create.foundation.render.effects.EffectsHandler;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -100,7 +101,9 @@ public class RenderHooksMixin {
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/WorldRenderer;renderChunkDebugInfo(Lnet/minecraft/client/renderer/ActiveRenderInfo;)V"))
 	private void applyFilters(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_, ActiveRenderInfo p_228426_6_, GameRenderer p_228426_7_, LightTexture p_228426_8_, Matrix4f p_228426_9_, CallbackInfo ci) {
-		Backend.effects.render(stack.peek().getModel());
+		EffectsHandler instance = EffectsHandler.getInstance();
+		if (instance != null)
+			instance.render(stack.peek().getModel());
 	}
 
 	// Instancing

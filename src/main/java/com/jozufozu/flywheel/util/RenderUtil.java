@@ -1,14 +1,14 @@
-package com.jozufozu.flywheel.backend;
+package com.jozufozu.flywheel.util;
 
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class RenderUtil {
 	public static int nextPowerOf2(int a) {
@@ -88,11 +88,15 @@ public class RenderUtil {
 	public static Supplier<MatrixStack> rotateToFace(Direction facing) {
 		return () -> {
 			MatrixStack stack = new MatrixStack();
-			MatrixStacker.of(stack)
-					.centre()
-					.rotateY(AngleHelper.horizontalAngle(facing))
-					.rotateX(AngleHelper.verticalAngle(facing))
-					.unCentre();
+//			MatrixStacker.of(stack)
+//					.centre()
+//					.rotateY(AngleHelper.horizontalAngle(facing))
+//					.rotateX(AngleHelper.verticalAngle(facing))
+//					.unCentre();
+			stack.peek().getModel().setTranslation(0.5f, 0.5f, 0.5f);
+			stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(facing)));
+			stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(AngleHelper.verticalAngle(facing)));
+			stack.translate(-0.5f, -0.5f, -0.5f);
 			return stack;
 		};
 	}

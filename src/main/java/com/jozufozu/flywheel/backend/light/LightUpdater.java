@@ -3,7 +3,7 @@ package com.jozufozu.flywheel.backend.light;
 import java.util.WeakHashMap;
 import java.util.function.LongConsumer;
 
-import com.simibubi.create.foundation.utility.WeakHashSet;
+import com.jozufozu.flywheel.util.WeakHashSet;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;

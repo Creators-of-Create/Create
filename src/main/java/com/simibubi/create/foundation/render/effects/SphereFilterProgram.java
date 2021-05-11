@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.effects;
+package com.simibubi.create.foundation.render.effects;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;

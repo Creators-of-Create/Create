@@ -17,9 +17,9 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import java.util.Collection;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.RenderUtil;
 import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;

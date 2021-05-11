@@ -2,8 +2,8 @@ package com.jozufozu.flywheel.backend.core.materials;
 
 import java.nio.ByteBuffer;
 
-import com.jozufozu.flywheel.backend.RenderUtil;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.util.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 public class ModelData extends BasicData {

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.utility;
+package com.jozufozu.flywheel.util;
 
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;

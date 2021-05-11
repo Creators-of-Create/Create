@@ -1,6 +1,8 @@
-package com.jozufozu.flywheel.backend.effects;
+package com.simibubi.create.foundation.render.effects;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -8,11 +10,10 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.RenderUtil;
-import com.jozufozu.flywheel.backend.core.EffectsContext;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.util.RenderUtil;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -26,6 +27,22 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class EffectsHandler {
+
+	private static EffectsHandler instance;
+
+	@Nullable
+	public static EffectsHandler getInstance() {
+		if (Backend.available() && instance == null) {
+			instance = new EffectsHandler();
+		}
+
+		if (!Backend.available() && instance != null) {
+			instance.delete();
+			instance = null;
+		}
+
+		return instance;
+	}
 
 	public static float getNearPlane() {
 		return 0.05f;

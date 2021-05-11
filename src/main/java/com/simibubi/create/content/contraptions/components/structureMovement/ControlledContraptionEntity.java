@@ -132,7 +132,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	protected void tickContraption() {
 		prevAngle = angle;
 		tickActors();
-		
+
 		if (controllerPos == null)
 			return;
 		if (!world.isBlockPresent(controllerPos))

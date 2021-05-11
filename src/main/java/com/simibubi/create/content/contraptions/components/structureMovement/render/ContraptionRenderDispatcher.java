@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL40;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.ContraptionContext;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -56,13 +55,6 @@ public class ContraptionRenderDispatcher {
 	public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 	protected static PlacementSimulationWorld renderWorld;
-
-	public static void init() {
-		Backend.register(ContraptionContext.INSTANCE);
-		Backend.listeners.renderLayerListener(ContraptionRenderDispatcher::renderLayer);
-		Backend.listeners.setupFrameListener(ContraptionRenderDispatcher::beginFrame);
-		Backend.listeners.refreshListener($ -> ContraptionRenderDispatcher.invalidateAll());
-	}
 
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;

@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.effects;
+package com.simibubi.create.foundation.render.effects;
 
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.IAttribSpec;

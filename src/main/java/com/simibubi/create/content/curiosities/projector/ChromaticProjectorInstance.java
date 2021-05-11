@@ -1,9 +1,9 @@
 package com.simibubi.create.content.curiosities.projector;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.render.effects.EffectsHandler;
 
 public class ChromaticProjectorInstance extends TileEntityInstance<ChromaticProjectorTileEntity> implements IDynamicInstance {
 
@@ -13,7 +13,7 @@ public class ChromaticProjectorInstance extends TileEntityInstance<ChromaticProj
 
 	@Override
 	public void beginFrame() {
-		Backend.effects.addSphere(tile.getFilter());
+		EffectsHandler.getInstance().addSphere(tile.getFilter());
 	}
 
 	@Override

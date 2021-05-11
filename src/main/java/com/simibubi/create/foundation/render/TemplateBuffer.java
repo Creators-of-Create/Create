@@ -13,15 +13,19 @@ public class TemplateBuffer {
 	protected int formatSize;
 	protected int vertexCount;
 
+	public TemplateBuffer() {
+
+	}
+
 	public TemplateBuffer(BufferBuilder buf) {
 		Pair<BufferBuilder.DrawState, ByteBuffer> state = buf.popData();
 		ByteBuffer rendered = state.getSecond();
 		rendered.order(ByteOrder.nativeOrder()); // Vanilla bug, endianness does not carry over into sliced buffers
 
 		formatSize = buf.getVertexFormat()
-			.getSize();
+				.getSize();
 		vertexCount = state.getFirst()
-			.getCount();
+				.getCount();
 		int size = vertexCount * formatSize;
 
 		template = ByteBuffer.allocate(size);

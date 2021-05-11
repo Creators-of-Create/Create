@@ -1,8 +1,8 @@
-package com.jozufozu.flywheel.backend.effects;
+package com.simibubi.create.foundation.render.effects;
 
 import java.nio.FloatBuffer;
 
-import com.jozufozu.flywheel.backend.RenderUtil;
+import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.math.vector.Matrix4f;
 

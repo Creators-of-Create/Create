@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.gui;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
@@ -12,7 +13,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

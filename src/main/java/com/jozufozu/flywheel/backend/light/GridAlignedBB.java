@@ -1,8 +1,8 @@
 package com.jozufozu.flywheel.backend.light;
 
-import static com.jozufozu.flywheel.backend.RenderUtil.isPowerOf2;
+import static com.jozufozu.flywheel.util.RenderUtil.isPowerOf2;
 
-import com.jozufozu.flywheel.backend.RenderUtil;
+import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;

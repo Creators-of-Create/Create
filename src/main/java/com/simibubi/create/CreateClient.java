@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
+import com.simibubi.create.foundation.render.CreateFlywheelHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
@@ -81,7 +82,7 @@ public class CreateClient {
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 
 		Backend.init();
-		ContraptionRenderDispatcher.init();
+		CreateFlywheelHandler.init();
 		OptifineHandler.init();
 	}
 

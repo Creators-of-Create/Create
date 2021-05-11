@@ -20,19 +20,17 @@ import org.lwjgl.opengl.GLCapabilities;
 
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
-import com.jozufozu.flywheel.backend.core.EffectsContext;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
-import com.jozufozu.flywheel.backend.effects.EffectsHandler;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
+import com.jozufozu.flywheel.util.WorldAttached;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.Minecraft;
@@ -65,7 +63,6 @@ public class Backend {
 	public static GLCapabilities capabilities;
 	public static GlCompat compat;
 
-	public static EffectsHandler effects;
 	public static WorldAttached<WorldTileRenderer<BasicProgram>> tileRenderer = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.INSTANCE));
 	public static LazyValue<Vector<CrumblingRenderer>> blockBreaking = new LazyValue<>(() -> {
 		Vector<CrumblingRenderer> renderers = new Vector<>(10);
@@ -86,7 +83,6 @@ public class Backend {
 	static {
 		register(WorldContext.INSTANCE);
 		register(WorldContext.CRUMBLING);
-		register(EffectsContext.INSTANCE);
 
 		listeners.refreshListener(world -> {
 			if (canUseInstancing() && world != null) {
@@ -191,11 +187,6 @@ public class Backend {
 				compat.instancedArraysSupported();
 
 		enabled = AllConfigs.CLIENT.experimentalRendering.get() && !OptifineHandler.usingShaders();
-
-		if (enabled) {
-			if (effects != null) effects.delete();
-			effects = new EffectsHandler();
-		}
 	}
 
 	public static void tick() {
@@ -211,7 +202,6 @@ public class Backend {
 	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
 		if (!canUseInstancing(world)) return;
 		WorldTileRenderer<BasicProgram> renderer = tileRenderer.get(world);
-		if (renderer == null) return;
 
 		layer.startDrawing();
 

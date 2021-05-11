@@ -1,8 +1,7 @@
-package com.jozufozu.flywheel.backend.core;
+package com.simibubi.create.foundation.render.effects;
 
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
-import com.jozufozu.flywheel.backend.effects.SphereFilterProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.gl.shader.SingleProgram;
 import com.simibubi.create.foundation.render.AllProgramSpecs;

@@ -261,7 +261,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				((ITickableTileEntity) te).tick();
 		});
 	}
-	
+
 	@Override
 	public void whileSkipping(PonderScene scene) {
 		if (redraw)
