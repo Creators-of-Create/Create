@@ -5,16 +5,17 @@
     "compatibilityLevel": "JAVA_8",
     "refmap": "create.refmap.json",
     "client": [
-        "TileWorldHookMixin",
-        "CancelTileEntityRenderMixin",
-        "FogColorTrackerMixin",
-        "LightUpdateMixin",
-        "NetworkLightUpdateMixin",
-        "RenderHooksMixin",
-        "ShaderCloseMixin",
-        "TileRemoveMixin",
-        "EntityContraptionInteractionMixin",
-        "StoreProjectionMatrixMixin"
+      "BreakProgressMixin",
+      "CancelTileEntityRenderMixin",
+      "EntityContraptionInteractionMixin",
+      "FogColorTrackerMixin",
+      "LightUpdateMixin",
+      "NetworkLightUpdateMixin",
+      "RenderHooksMixin",
+      "ShaderCloseMixin",
+      "StoreProjectionMatrixMixin",
+      "TileRemoveMixin",
+      "TileWorldHookMixin"
     ],
     "injectors": {
         "defaultRequire": 1

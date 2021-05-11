@@ -126,7 +126,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	/*
 	 * FIXME
-	 * 
+	 *
 	 * @Override
 	 * public Material getMaterial(BlockState state) {
 	 * return state.get(CASING) ? Material.WOOD : Material.WOOL;
@@ -474,6 +474,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos currentPos = nextSegmentPosition(state, pos, forward);
 			if (currentPos == null)
 				continue;
+			world.sendBlockBreakProgress(currentPos.hashCode(), currentPos, -1);
 			BlockState currentState = world.getBlockState(currentPos);
 			if (!AllBlocks.BELT.has(currentState))
 				continue;
