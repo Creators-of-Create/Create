@@ -153,8 +153,8 @@ public class AllTags {
 		VALVE_HANDLES,
 		FAN_TRANSPARENT,
 		SAFE_NBT,
-		SLIMY_LOGS(TIC)
-
+		SLIMY_LOGS(TIC),
+		FLYWHEELBLACKLIST
 		;
 
 		public ITag.INamedTag<Block> tag;

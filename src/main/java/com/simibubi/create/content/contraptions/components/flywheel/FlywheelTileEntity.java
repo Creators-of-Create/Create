@@ -1,12 +1,15 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
@@ -83,6 +86,17 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			angle += visualSpeed.value * 3 / 10f;
 			angle %= 360;
 			return;
+		}
+
+		// Checks for Connection as well as block in blacklist, and if there, destroys the block
+		if (FlywheelBlock.getConnection(getBlockState()) != null) {
+			BlockPos furnacePos = pos.offset(FlywheelBlock.getConnection(getBlockState()));
+			for (Direction d : Direction.values()) {
+				if (AllTags.AllBlockTags.FLYWHEELBLACKLIST.matches(world.getBlockState(furnacePos.offset(d)))) {
+					world.destroyBlock(furnacePos.offset(d), true);
+					return;
+				}
+			}
 		}
 
 		/*
