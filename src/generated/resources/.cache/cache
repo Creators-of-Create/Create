@@ -1652,7 +1652,7 @@ d080b1b25e5bc8baf5aee68691b08c7f12ece3b0 assets/create/models/item/windmill_bear
 a80fb25a0b655e76be986b5b49fcb0f03461a1ab assets/create/models/item/zinc_nugget.json
 b1689617190c05ef34bd18456b0c7ae09bb3210f assets/create/models/item/zinc_ore.json
 096382a4c025b5ffdde9c496ee9da0d5345fbe17 assets/create/sounds.json
-0f1b4b980afba9bf2caf583b88e261bba8b10313 data/create/advancements/aesthetics.json
+5d0cc4c0255dc241e61c173b31ddca70c88d08e4 data/create/advancements/aesthetics.json
 187921fa131b06721bfaf63f2623a28c141aae9a data/create/advancements/andesite_alloy.json
 0ea2db7173b5be28b289ea7c9a6a0cf5805c60c7 data/create/advancements/andesite_casing.json
 83c046bd200623933545c9e4326f782fb02c87fa data/create/advancements/arm_blaze_burner.json
@@ -3675,6 +3675,8 @@ aa729fedc4fcca0f0a18bf7b00075af06bf5357f data/forge/tags/fluids/milk.json
 d6a4e4fe1204b718010543a28a9b9ec4e0977bd7 data/forge/tags/fluids/tea.json
 d9ffc62a496946fc4848934e7c0a6e917337f8be data/forge/tags/items/beacon_payment.json
 05ca51cdc60a5e109b5a0e3b782de13d34ebcb24 data/forge/tags/items/cobblestone.json
+a3ea70dc4ecbf3beeded920313e2770dd4a2dd6a data/forge/tags/items/dusts.json
+a3ea70dc4ecbf3beeded920313e2770dd4a2dd6a data/forge/tags/items/dusts/obsidian.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data/forge/tags/items/glass/colorless.json
 81d3eb40b048160fcc2d6bb7ff12b49276297efd data/forge/tags/items/glass_panes.json
 d9ffc62a496946fc4848934e7c0a6e917337f8be data/forge/tags/items/ingots.json

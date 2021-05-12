@@ -84,8 +84,8 @@ public class AllTags {
 		INGOTS(FORGE),
 		NUGGETS(FORGE),
 		PLATES(FORGE),
-		COBBLESTONE(FORGE)
-
+		COBBLESTONE(FORGE),
+		DUSTS(FORGE)
 		;
 
 		public ITag.INamedTag<Item> tag;
