@@ -95,5 +95,4 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 			return;
 		poweredWheel.setRotation(appliedSpeed, appliedCapacity);
 	}
-
 }

@@ -105,4 +105,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 			updateGeneratedRotation();
 		}
 	}
+
+	public void setStoppingCooldown(int stoppingCooldown) {
+		this.stoppingCooldown = stoppingCooldown;
+	}
 }
