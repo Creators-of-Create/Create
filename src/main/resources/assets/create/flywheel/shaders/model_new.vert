@@ -29,11 +29,10 @@ Raster FLWMain(Vertex v, Instance i) {
     vec4 worldPos = i.transform * vec4(v.pos, 1.);
 
     vec3 norm = i.normalMat * v.normal;
+    norm = normalize(norm);
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
-
-    norm = normalize(norm);
 
     Raster r;
     r.diffuse = diffuse(norm);

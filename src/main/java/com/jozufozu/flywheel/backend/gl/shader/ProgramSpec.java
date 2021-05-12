@@ -3,7 +3,12 @@ package com.jozufozu.flywheel.backend.gl.shader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jozufozu.flywheel.backend.ShaderContext;
+import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.backend.loading.InstancedArraysTemplate;
+import com.jozufozu.flywheel.backend.loading.Shader;
+import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -28,6 +33,24 @@ public class ProgramSpec {
 		this.defines = defines;
 
 		this.attributes = attributes;
+	}
+
+	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ShaderConstants defines, ShaderLoader loader) {
+		InstancedArraysTemplate template = new InstancedArraysTemplate(loader);
+
+		ShaderTransformer transformer = new ShaderTransformer()
+				.pushStage(ctx.loadingStage(loader))
+//				.pushStage(loader::processIncludes)
+//				.pushStage(template)
+				.pushStage(loader::processIncludes);
+
+		if (defines != null)
+			transformer.pushStage(defines);
+
+		Shader vertexFile = loader.source(vert, ShaderType.VERTEX);
+		Shader fragmentFile = loader.source(frag, ShaderType.FRAGMENT);
+		return loader.loadProgram(name, transformer, vertexFile, fragmentFile)
+				.addAttributes(attributes);
 	}
 
 	public static class Builder {

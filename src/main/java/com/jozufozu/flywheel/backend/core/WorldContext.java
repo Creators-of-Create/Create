@@ -14,6 +14,7 @@ import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
+import com.jozufozu.flywheel.backend.loading.Shader;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -50,15 +51,15 @@ public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
 	}
 
 	@Override
-	public String preProcess(ShaderLoader loader, ShaderType type, ResourceLocation shader, String shaderSrc) {
-		String builtinSrc = loader.getShaderSource(builtins.get(type));
+	public void preProcess(ShaderLoader loader, Shader shader) {
+		String builtinSrc = loader.getShaderSource(builtins.get(shader.type));
 
-		Matcher matcher = builtinPattern.matcher(shaderSrc);
+		Matcher matcher = builtinPattern.matcher(shader.getSource());
 
 		if (matcher.find())
-			return matcher.replaceFirst(builtinSrc);
-
-		throw new RuntimeException(String.format("%s shader '%s' is missing %s, cannot use in World Context", type.name, shader, declaration));
+			shader.setSource(matcher.replaceFirst(builtinSrc));
+		else
+			throw new RuntimeException(String.format("%s shader '%s' is missing %s, cannot use in World Context", shader.type.name, shader.name, declaration));
 	}
 
 	@Override

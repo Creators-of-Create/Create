@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -25,12 +26,12 @@ import java.util.stream.Stream;
 import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
+import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.GlShader;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderConstants;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
+import com.jozufozu.flywheel.backend.loading.Shader;
+import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.resources.IResource;
@@ -58,15 +59,24 @@ public class ShaderLoader {
 				shaderSource.clear();
 				loadShaderSources(manager);
 
-//				ResourceLocation test = new ResourceLocation("create", "model_new.vert");
-//				ResourceLocation vert = new ResourceLocation("create", "skeleton/instanced/instanced.vert");
+//				InstancedArraysTemplate template = new InstancedArraysTemplate(this);
 //
-//				InstancedArraysShaderTemplate template = new InstancedArraysShaderTemplate(getShaderSource(vert));
-//				ParsedShader parsedShader = new ParsedShader(getShaderSource(test));
+//				ResourceLocation name = new ResourceLocation("create", "test");
+//				ResourceLocation vert = new ResourceLocation("create", "model_new.vert");
+//				ResourceLocation frag = new ResourceLocation("create", "block_new.frag");
 //
-//				String apply = template.apply(parsedShader);
+//				ShaderTransformer transformer = new ShaderTransformer()
+//						.pushStage(WorldContext.INSTANCE.loadingStage(this))
+//						.pushStage(this::processIncludes)
+//						.pushStage(template)
+//						.pushStage(this::processIncludes);
 //
-//				printSource(test, apply);
+//				Shader vertexFile = this.source(vert, ShaderType.VERTEX);
+//				Shader fragmentFile = this.source(frag, ShaderType.FRAGMENT);
+//
+//				GlProgram.Builder builder = loadProgram(name, transformer, vertexFile, fragmentFile);
+//
+//				BasicProgram program = new BasicProgram(builder, GlFogMode.NONE.getFogFactory());
 
 				for (ShaderContext<?> context : Backend.contexts.values()) {
 					context.load(this);
@@ -108,46 +118,39 @@ public class ShaderLoader {
 		}
 	}
 
-	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ProgramSpec programSpec) {
-		return loadProgram(ctx, programSpec, programSpec.defines);
+	public Shader source(ResourceLocation name, ShaderType type) {
+		return new Shader(type, name, getShaderSource(name));
 	}
 
-	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ProgramSpec programSpec, ShaderConstants defines) {
-		return loadProgram(ctx, programSpec.name, programSpec.vert, programSpec.frag, programSpec.attributes, defines);
+	public GlProgram.Builder loadProgram(ResourceLocation name, ShaderTransformer transformer, Shader... shaders) {
+		return loadProgram(name, transformer, Lists.newArrayList(shaders));
 	}
 
-	public GlProgram.Builder loadProgram(ShaderContext<?> ctx, ResourceLocation name, ResourceLocation vert, ResourceLocation frag, Collection<IVertexAttrib> attribs, ShaderConstants defines) {
-		GlShader vsh = null;
-		GlShader fsh = null;
+	/**
+	 * Ingests the given shaders, compiling them and linking them together after applying the transformer to the source.
+	 *
+	 * @param name        What should we call this program if something goes wrong?
+	 * @param transformer What should we do to the sources before compilation?
+	 * @param shaders     What are the different shader stages that should be linked together?
+	 * @return A linked program builder.
+	 */
+	public GlProgram.Builder loadProgram(ResourceLocation name, ShaderTransformer transformer, Collection<Shader> shaders) {
+		List<GlShader> compiled = new ArrayList<>(shaders.size());
 		try {
-			vsh = loadShader(ctx, vert, ShaderType.VERTEX, defines);
-			fsh = loadShader(ctx, frag, ShaderType.FRAGMENT, defines);
+			GlProgram.Builder builder = GlProgram.builder(name);
 
-			return GlProgram.builder(name)
-					.attachShader(vsh)
-					.attachShader(fsh)
-					.addAttributes(attribs)
-					.link();
+			for (Shader shader : shaders) {
+				transformer.transformSource(shader);
+				GlShader sh = new GlShader(shader);
+				compiled.add(sh);
+
+				builder.attachShader(sh);
+			}
+
+			return builder.link();
 		} finally {
-			if (vsh != null) vsh.delete();
-			if (fsh != null) fsh.delete();
+			compiled.forEach(GlObject::delete);
 		}
-	}
-
-	public GlShader loadShader(ShaderContext<?> ctx, ResourceLocation name, ShaderType type, ShaderConstants defines) {
-		String source = shaderSource.get(name);
-
-		source = ctx.preProcess(this, type, name, source);
-		source = processIncludes(source, name);
-
-		if (defines != null)
-			source = defines.process(source);
-
-		if (debugDumpFile) {
-			printSource(name, source);
-		}
-
-		return new GlShader(type, name, source);
 	}
 
 	private void printSource(ResourceLocation name, String source) {
@@ -158,11 +161,12 @@ public class ShaderLoader {
 		}
 	}
 
-	private String processIncludes(String source, ResourceLocation baseName) {
+	public void processIncludes(Shader shader) {
 		HashSet<ResourceLocation> seen = new HashSet<>();
-		seen.add(baseName);
+		seen.add(shader.name);
 
-		return includeRecursive(source, seen).collect(Collectors.joining("\n"));
+		String includesInjected = includeRecursive(shader.getSource(), seen).collect(Collectors.joining("\n"));
+		shader.setSource(includesInjected);
 	}
 
 	private Stream<String> includeRecursive(String source, Set<ResourceLocation> seen) {

@@ -5,17 +5,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.util.ResourceLocation;
+
 public class ParsedShader {
 	private static final Pattern decorator = Pattern.compile("#\\[([\\w_]*)]");
 	private static final Pattern taggedStruct = Pattern.compile("#\\[([\\w_]*)]\\s*struct\\s+([\\w\\d_]*)\\s*\\{(\\s*(?:.*;\\s*\\n)+\\s*)}\\s*;");
 
+	final ResourceLocation loc;
 	final String src;
 
 	final Map<String, TaggedStruct> tag2Struct = new HashMap<>();
 	final Map<String, TaggedStruct> name2Struct = new HashMap<>();
 
-	public ParsedShader(String src) {
-
+	public ParsedShader(ResourceLocation loc, String src) {
+		this.loc = loc;
 		Matcher structs = taggedStruct.matcher(src);
 
 		StringBuffer strippedSrc = new StringBuffer();

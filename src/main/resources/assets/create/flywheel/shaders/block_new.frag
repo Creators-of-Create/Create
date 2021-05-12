@@ -1,5 +1,3 @@
-#version 110
-
 #flwbuiltins
 
 #[FLWFragment]

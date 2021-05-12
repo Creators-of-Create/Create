@@ -22,6 +22,10 @@ public class BasicProgram extends GlProgram {
 	protected int uBlockAtlas;
 	protected int uLightMap;
 
+	public BasicProgram(GlProgram.Builder builder, ProgramFogMode.Factory fogFactory) {
+		this(builder.name, builder.program, fogFactory);
+	}
+
 	public BasicProgram(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory) {
 		super(name, handle);
 		uTime = getUniformLocation("uTime");

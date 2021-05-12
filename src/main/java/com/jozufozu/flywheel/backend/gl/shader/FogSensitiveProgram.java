@@ -45,7 +45,7 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 
 				defines.defineAll(fogMode.getDefines());
 
-				GlProgram.Builder builder = loader.loadProgram(ctx, spec, defines);
+				GlProgram.Builder builder = spec.loadProgram(ctx, defines, loader);
 
 				programs.put(fogMode, fogProgramLoader.create(builder.name, builder.program, fogMode.getFogFactory()));
 			}

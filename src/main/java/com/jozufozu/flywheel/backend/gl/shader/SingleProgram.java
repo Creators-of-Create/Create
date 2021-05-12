@@ -31,7 +31,7 @@ public class SingleProgram<P extends GlProgram> implements IMultiProgram<P> {
 
 		@Override
 		public IMultiProgram<P> create(ShaderLoader loader, ShaderContext<P> ctx, ProgramSpec spec) {
-			GlProgram.Builder builder = loader.loadProgram(ctx, spec);
+			GlProgram.Builder builder = spec.loadProgram(ctx, spec.defines, loader);
 
 			return new SingleProgram<>(factory.create(builder.name, builder.program));
 		}

@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL20;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
+import com.jozufozu.flywheel.backend.loading.Shader;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -12,6 +13,10 @@ public class GlShader extends GlObject {
 
 	public final ResourceLocation name;
 	public final ShaderType type;
+
+	public GlShader(Shader shader) {
+		this(shader.type, shader.name, shader.getSource());
+	}
 
 	public GlShader(ShaderType type, ResourceLocation name, String source) {
 		this.type = type;
@@ -37,14 +42,5 @@ public class GlShader extends GlObject {
 	@Override
 	protected void deleteInternal(int handle) {
 		GL20.glDeleteShader(handle);
-	}
-
-	@FunctionalInterface
-	public interface PreProcessor {
-		String process(String source);
-
-		default PreProcessor andThen(PreProcessor that) {
-			return source -> that.process(this.process(source));
-		}
 	}
 }

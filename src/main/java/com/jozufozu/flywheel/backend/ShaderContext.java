@@ -7,7 +7,8 @@ import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
+import com.jozufozu.flywheel.backend.loading.ProcessingStage;
+import com.jozufozu.flywheel.backend.loading.Shader;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -32,8 +33,11 @@ public abstract class ShaderContext<P extends GlProgram> {
 		Backend.log.debug("Loaded program {}", programSpec.name);
 	}
 
-	public String preProcess(ShaderLoader loader, ShaderType type, ResourceLocation shader, String shaderSrc) {
-		return shaderSrc;
+	public void preProcess(ShaderLoader loader, Shader shader) {
+	}
+
+	public ProcessingStage loadingStage(ShaderLoader loader) {
+		return shader -> this.preProcess(loader, shader);
 	}
 
 	public P getProgram(ProgramSpec spec) {

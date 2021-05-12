@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
+import com.jozufozu.flywheel.backend.loading.ProcessingStage;
+import com.jozufozu.flywheel.backend.loading.Shader;
 
-public class ShaderConstants implements GlShader.PreProcessor {
+public class ShaderConstants implements ProcessingStage {
 	public static final ShaderConstants EMPTY = new ShaderConstants();
 
 	private final ArrayList<String> defines;
@@ -45,8 +47,8 @@ public class ShaderConstants implements GlShader.PreProcessor {
 	}
 
 	@Override
-	public String process(String source) {
-		return new BufferedReader(new StringReader(source)).lines().flatMap(line -> {
+	public void process(Shader shader) {
+		shader.setSource(new BufferedReader(new StringReader(shader.getSource())).lines().flatMap(line -> {
 			Stream<String> map = Stream.of(line);
 
 			if (line.startsWith("#version")) {
@@ -54,6 +56,6 @@ public class ShaderConstants implements GlShader.PreProcessor {
 			}
 
 			return map;
-		}).collect(Collectors.joining("\n"));
+		}).collect(Collectors.joining("\n")));
 	}
 }
