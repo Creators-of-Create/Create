@@ -17,6 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class FurnaceEngineTileEntity extends EngineTileEntity {
+	float modifier = 0;
+	boolean active = false;
+	float speed = 0;
+	float capacity = 0;
 
 	public FurnaceEngineTileEntity(TileEntityType<? extends FurnaceEngineTileEntity> type) {
 		super(type);
@@ -37,6 +41,7 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 	public void updateFurnace() {
 		BlockPos furnacePos = EngineBlock.getBaseBlockPos(getBlockState(), pos);
 		BlockState state = world.getBlockState(furnacePos);
+		if (world.getTileEntity(furnacePos) == null) {return;}
 		if (!(state.getBlock() instanceof AbstractFurnaceBlock))
 			return;
 
@@ -48,40 +53,30 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 			}
 		}
 
-		float modifier = state.getBlock() == Blocks.BLAST_FURNACE ? 2 : 1;
-		boolean active = state.contains(AbstractFurnaceBlock.LIT) && state.get(AbstractFurnaceBlock.LIT);
-		float speed = active ? 16 * modifier : 0;
-		float capacity =
-			(float) (active ? AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(AllBlocks.FURNACE_ENGINE.get())
-				: 0);
+		modifier = state.getBlock() == Blocks.BLAST_FURNACE ? 2 : 1;
+		speed = active ? 16 * modifier : 0;
+		capacity = (float)
+				(active ? AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(AllBlocks.FURNACE_ENGINE.get()) : 0);
 
-		appliedCapacity = capacity;
-		appliedSpeed = speed;
 		refreshWheelSpeed();
 	}
 
 	public void slimUpdateFurnace() {
 		BlockPos furnacePos = EngineBlock.getBaseBlockPos(getBlockState(), pos);
-		BlockState state = world.getBlockState(furnacePos);
-		if (!(state.getBlock() instanceof AbstractFurnaceBlock) || !(world.getTileEntity(furnacePos) instanceof AbstractFurnaceTileEntity))
-			return;
+		if (world.getTileEntity(furnacePos) == null) {return;}
+		if (!(world.getTileEntity(furnacePos) instanceof AbstractFurnaceTileEntity)) {return;}
 
 		AbstractFurnaceTileEntity furnace = (AbstractFurnaceTileEntity) world.getTileEntity(furnacePos);
 		NonNullList<ItemStack> items = ObfuscationReflectionHelper.getPrivateValue(AbstractFurnaceTileEntity.class, furnace, "items");
 
-		float modifier = state.getBlock() == Blocks.BLAST_FURNACE ? 2 : 1;
-		boolean active = items != null && items.get(0).getCount() != 0;
-		float speed = active ? 16 * modifier : 0;
-		float capacity =
-				(float) (active ? AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(AllBlocks.FURNACE_ENGINE.get())
-						: 0);
+		active = items != null && items.get(0).getCount() != 0;
 
 		appliedCapacity = active ? capacity : 0;
 		appliedSpeed = active ? speed : 0;
 
 		if (!active && poweredWheel != null) {
 			poweredWheel.setStoppingCooldown(1);
+			refreshWheelSpeed();
 		}
-		refreshWheelSpeed();
 	}
 }
