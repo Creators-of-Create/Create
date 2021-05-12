@@ -58,6 +58,16 @@ public class ShaderLoader {
 				shaderSource.clear();
 				loadShaderSources(manager);
 
+//				ResourceLocation test = new ResourceLocation("create", "model_new.vert");
+//				ResourceLocation vert = new ResourceLocation("create", "skeleton/instanced/instanced.vert");
+//
+//				InstancedArraysShaderTemplate template = new InstancedArraysShaderTemplate(getShaderSource(vert));
+//				ParsedShader parsedShader = new ParsedShader(getShaderSource(test));
+//
+//				String apply = template.apply(parsedShader);
+//
+//				printSource(test, apply);
+
 				for (ShaderContext<?> context : Backend.contexts.values()) {
 					context.load(this);
 				}
@@ -134,14 +144,18 @@ public class ShaderLoader {
 			source = defines.process(source);
 
 		if (debugDumpFile) {
-			Backend.log.debug("Finished processing '" + name + "':");
-			int i = 1;
-			for (String s : source.split("\n")) {
-				Backend.log.debug(String.format("%1$4s: ", i++) + s);
-			}
+			printSource(name, source);
 		}
 
 		return new GlShader(type, name, source);
+	}
+
+	private void printSource(ResourceLocation name, String source) {
+		Backend.log.debug("Finished processing '" + name + "':");
+		int i = 1;
+		for (String s : source.split("\n")) {
+			Backend.log.debug(String.format("%1$4s: ", i++) + s);
+		}
 	}
 
 	private String processIncludes(String source, ResourceLocation baseName) {

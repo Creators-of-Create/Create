@@ -1,17 +1,19 @@
 #version 110
+
+#flwbeginbody
 #FLWPrefixFields(FLWVertexData, attribute __a_)
 #FLWPrefixFields(FLWInstanceData, attribute __a_)
 
-#FLWPrefixFields(FLWOut, varying __v2f_)
+#FLWPrefixFields(FLWFragment, varying __v2f_)
 
 void main() {
     FLWVertexData v;
-    #FLWAssignToFields(FLWVertexData, v, a_)
+    #FLWAssignFields(FLWVertexData, v., __a_)
 
     FLWInstanceData i;
-    #FLWAssignToFields(FLWInstanceData, i, a_)
+    #FLWAssignFields(FLWInstanceData, i., __a_)
 
-    FLWOut o = FLWMain(v, i);
+    FLWFragment o = FLWMain(v, i);
 
-    #FLWAssignFromFields(FLWOut, o, v2f_)
+    #FLWAssignFields(FLWFragment, __v2f_, o.)
 }
