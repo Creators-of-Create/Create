@@ -11,9 +11,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.Direction;
@@ -21,6 +23,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -28,17 +31,41 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidRenderer {
 
+	// If we draw to BufferBuilder that minecraft provides for RenderType.getTranslucent(), minecraft draws the contents
+	// to the wrong framebuffer. If we tried to inject a custom RenderType into RenderTypeBuffers, we'd have the same
+	// issue. This is because minecraft calls IRenderTypeBuffer.Impl::draw just before clearing the transparency
+	// framebuffer, so anything we put into the normal RenderTypeBuffers will never be seen. By using our own
+	// BufferBuilder, we can avoid getting our contents wiped. Then, using Flywheel's renderLayer hook, we can draw our
+	// buffer at the same time the transparent world layer is drawn.
+	private static final BufferBuilder _builder = new BufferBuilder(RenderType.getTranslucent().getExpectedBufferSize());
+
+	private static BufferBuilder getBuilder() {
+		if (!_builder.isBuilding()) {
+			RenderType type = RenderType.getTranslucent();
+
+			_builder.begin(type.getDrawMode(), type.getVertexFormat());
+		}
+
+		return _builder;
+	}
+
+	public static void renderLayer(ClientWorld world, RenderType type, Matrix4f viewProjection, double camX, double camY, double camZ) {
+		if (type == RenderType.getTranslucent()) {
+			type.draw(_builder, 0, 0, 0);
+		}
+	}
+
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
-		boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
+										 boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
-			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+				.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
 		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
 		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = getBuilder();
 		MatrixStacker msr = MatrixStacker.of(ms);
 		int blockLightIn = (light >> 4) & 0xf;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
@@ -82,11 +109,11 @@ public class FluidRenderer {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
-			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE)
-			.apply(fluidAttributes.getStillTexture(fluidStack));
+				.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE)
+				.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = getBuilder();
 		MatrixStacker msr = MatrixStacker.of(ms);
 		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 
@@ -96,7 +123,7 @@ public class FluidRenderer {
 
 		ms.push();
 		if (fluidStack.getFluid()
-			.getAttributes()
+				.getAttributes()
 			.isLighterThanAir())
 			MatrixStacker.of(ms)
 				.translate(center)
@@ -113,20 +140,20 @@ public class FluidRenderer {
 
 				if (side.getAxisDirection() == AxisDirection.NEGATIVE)
 					msr.translate(center)
-						.rotateY(180)
-						.translateBack(center);
+							.rotateY(180)
+							.translateBack(center);
 
 				boolean X = side.getAxis() == Axis.X;
 				int darkColor = ColorHelper.mixColors(color, 0xff000011, 1 / 4f);
-				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, builder,
-					ms, light, darkColor, fluidTexture);
+				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, _builder,
+						ms, light, darkColor, fluidTexture);
 
 				ms.pop();
 				continue;
 			}
 
-			renderTiledVerticalFace(side == Direction.UP ? yMax : yMin, side, xMin, zMin, xMax, zMax, builder, ms,
-				light, color, fluidTexture);
+			renderTiledVerticalFace(side == Direction.UP ? yMax : yMin, side, xMin, zMin, xMax, zMax, _builder, ms,
+					light, color, fluidTexture);
 		}
 
 		ms.pop();
