@@ -3,6 +3,8 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
@@ -16,10 +18,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.lighting.WorldLightManager;
 
 public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelWorld {
-	public HashMap<BlockPos, BlockState> blocksAdded;
-	public HashMap<BlockPos, TileEntity> tesAdded;
+	public Map<BlockPos, BlockState> blocksAdded;
+	public Map<BlockPos, TileEntity> tesAdded;
 
-	public HashSet<SectionPos> spannedChunks;
+	public Set<SectionPos> spannedSections;
 	public WorldLightManager lighter;
 	public WrappedChunkProvider chunkProvider;
 	private final BlockPos.Mutable scratch = new BlockPos.Mutable();
@@ -31,7 +33,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	public PlacementSimulationWorld(World wrapped, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
 		this.chunkProvider = chunkProvider.setWorld(this);
-		spannedChunks = new HashSet<>();
+		spannedSections = new HashSet<>();
 		lighter = new WorldLightManager(chunkProvider, true, false); // blockLight, skyLight
 		blocksAdded = new HashMap<>();
 		tesAdded = new HashMap<>();
@@ -40,6 +42,17 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	@Override
 	public WorldLightManager getLightingProvider() {
 		return lighter;
+	}
+
+	public void updateLightSources() {
+		for (Map.Entry<BlockPos, BlockState> entry : blocksAdded.entrySet()) {
+			BlockPos pos = entry.getKey();
+			BlockState state = entry.getValue();
+			int light = state.getLightValue(this, pos);
+			if (light > 0) {
+				lighter.func_215573_a(pos, light);
+			}
+		}
 	}
 
 	public void setTileEntities(Collection<TileEntity> tileEntities) {
@@ -53,16 +66,15 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 
 	@Override
 	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+		blocksAdded.put(pos, newState);
 
 		SectionPos sectionPos = SectionPos.from(pos);
-
-		if (spannedChunks.add(sectionPos)) {
+		if (spannedSections.add(sectionPos)) {
 			lighter.updateSectionStatus(sectionPos, false);
 		}
 
 		lighter.checkBlock(pos);
 
-		blocksAdded.put(pos, newState);
 		return true;
 	}
 
@@ -100,8 +112,6 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 		BlockState state = blocksAdded.get(pos);
 		if (state != null)
 			return state;
-		else
-			return Blocks.AIR.getDefaultState();
+		return Blocks.AIR.getDefaultState();
 	}
-
 }
