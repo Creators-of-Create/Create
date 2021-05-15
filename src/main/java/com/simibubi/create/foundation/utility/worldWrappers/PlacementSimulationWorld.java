@@ -73,7 +73,9 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 			lighter.updateSectionStatus(sectionPos, false);
 		}
 
-		lighter.checkBlock(pos);
+		if ((flags & 128) == 0) {
+			lighter.checkBlock(pos);
+		}
 
 		return true;
 	}

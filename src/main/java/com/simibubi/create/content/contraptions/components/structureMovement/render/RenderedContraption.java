@@ -175,20 +175,22 @@ public class RenderedContraption {
 
         for (Template.BlockInfo info : c.getBlocks()
                                         .values())
-            renderWorld.setBlockState(info.pos, info.state);
+            // Skip individual lighting updates to prevent lag with large contraptions
+            renderWorld.setBlockState(info.pos, info.state, 128);
 
+        renderWorld.updateLightSources();
         renderWorld.lighter.tick(Integer.MAX_VALUE, false, false);
 
         return renderWorld;
     }
 
     private static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
-        ForgeHooksClient.setRenderLayer(layer);
         MatrixStack ms = new MatrixStack();
         Random random = new Random();
         BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
+        ForgeHooksClient.setRenderLayer(layer);
         BlockModelRenderer.enableCache();
         for (Template.BlockInfo info : c.getBlocks()
                                         .values()) {
@@ -208,6 +210,7 @@ public class RenderedContraption {
             ms.pop();
         }
         BlockModelRenderer.disableCache();
+        ForgeHooksClient.setRenderLayer(null);
 
         builder.finishDrawing();
         return builder;
