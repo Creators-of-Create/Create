@@ -1,6 +1,6 @@
 package com.jozufozu.flywheel.backend.instancing;
 
-import com.jozufozu.flywheel.backend.gl.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
 public abstract class InstanceData {
 

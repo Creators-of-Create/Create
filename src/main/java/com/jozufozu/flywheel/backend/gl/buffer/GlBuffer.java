@@ -1,8 +1,12 @@
-package com.jozufozu.flywheel.backend.gl;
+package com.jozufozu.flywheel.backend.gl.buffer;
 
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.GlObject;
+import com.jozufozu.flywheel.backend.gl.versioned.MapBufferRange;
 
 public class GlBuffer extends GlObject {
 
@@ -43,8 +47,14 @@ public class GlBuffer extends GlObject {
 		GL15.glBufferData(type.glEnum, size, usage.glEnum);
 	}
 
-	public MappedBufferRange getBuffer(int offset, int length) {
-		return MappedBufferRange.create(this, offset, length, GL30.GL_MAP_WRITE_BIT);
+	public MappedBuffer getBuffer(int offset, int length) {
+		if (Backend.compat.mapBufferRange == MapBufferRange.UNSUPPORTED) {
+			return new MappedBufferRange(this, offset, length, GL30.GL_MAP_WRITE_BIT);
+		} else {
+			MappedFullBuffer fullBuffer = new MappedFullBuffer(this, MappedBufferUsage.WRITE_ONLY);
+			fullBuffer.position(offset);
+			return fullBuffer;
+		}
 	}
 
 	protected void deleteInternal(int handle) {

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL31;
 
-import com.jozufozu.flywheel.backend.gl.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.GlBufferType;
-import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 import net.minecraft.util.ResourceLocation;
@@ -81,13 +81,13 @@ public class SphereFilterProgram extends GlProgram {
 
 	public void uploadFilters(ArrayList<FilterSphere> filters) {
 		effectsUBO.bind(GlBufferType.ARRAY_BUFFER);
-		MappedBufferRange buffer = effectsUBO.getBuffer(0, BUFFER_SIZE);
+		MappedBuffer buffer = effectsUBO.getBuffer(0, BUFFER_SIZE);
 		buffer.putInt(filters.size())
 				.position(16);
 
 		filters.forEach(it -> it.write(buffer));
 
-		buffer.unmap();
+		buffer.flush();
 
 		effectsUBO.unbind(GlBufferType.ARRAY_BUFFER);
 	}

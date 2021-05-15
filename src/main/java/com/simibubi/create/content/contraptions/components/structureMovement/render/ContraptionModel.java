@@ -3,11 +3,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.backend.BufferedModel;
-import com.jozufozu.flywheel.backend.gl.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
-import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
@@ -57,17 +57,17 @@ public class ContraptionModel extends BufferedModel {
 		ebo.bind();
 
 		ebo.alloc(indicesSize);
-		MappedBufferRange indices = ebo.getBuffer(0, indicesSize);
+		MappedBuffer indices = ebo.getBuffer(0, indicesSize);
 		for (int i = 0; i < vertexCount; i++) {
 			indices.putInt(i);
 		}
-		indices.unmap();
+		indices.flush();
 
 		ebo.unbind();
 	}
 
 	@Override
-	protected void copyVertex(MappedBufferRange to, int vertex) {
+	protected void copyVertex(MappedBuffer to, int vertex) {
 		to.putFloat(getX(template, vertex));
 		to.putFloat(getY(template, vertex));
 		to.putFloat(getZ(template, vertex));

@@ -9,11 +9,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
-import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -81,9 +81,9 @@ public class EffectsHandler {
 
 		vbo.bind();
 		vbo.alloc(bufferSize);
-		MappedBufferRange buffer = vbo.getBuffer(0, bufferSize);
+		MappedBuffer buffer = vbo.getBuffer(0, bufferSize);
 		buffer.putFloatArray(vertices);
-		buffer.unmap();
+		buffer.flush();
 
 		vao.bind();
 

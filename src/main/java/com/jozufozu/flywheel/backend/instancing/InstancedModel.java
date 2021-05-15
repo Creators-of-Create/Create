@@ -9,11 +9,11 @@ import org.lwjgl.opengl.GL11;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.BufferedModel;
 import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
-import com.jozufozu.flywheel.backend.gl.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
-import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
 import net.minecraft.client.renderer.BufferBuilder;
 
@@ -128,9 +128,9 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		final int offset = size * getInstanceFormat().getStride();
 		final int length = glBufferSize - offset;
 		if (length > 0) {
-			MappedBufferRange buffer = instanceVBO.getBuffer(offset, length);
+			MappedBuffer buffer = instanceVBO.getBuffer(offset, length);
 			buffer.putByteArray(new byte[length]);
-			buffer.unmap();
+			buffer.flush();
 		}
 	}
 
@@ -151,14 +151,15 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		final int length = (1 + lastDirty - firstDirty) * stride;
 
 		if (length > 0) {
-			MappedBufferRange mapped = instanceVBO.getBuffer(offset, length);
+			MappedBuffer mapped = instanceVBO.getBuffer(offset, length);
+
 			dirtySet.stream().forEach(i -> {
 				final D d = data.get(i);
 
-				mapped.position(i * stride - offset);
+				mapped.position(i * stride);
 				d.write(mapped);
 			});
-			mapped.unmap();
+			mapped.flush();
 		}
 	}
 
@@ -185,11 +186,11 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 			glBufferSize = requiredSize + stride * 16;
 			instanceVBO.alloc(glBufferSize);
 
-			MappedBufferRange buffer = instanceVBO.getBuffer(0, glBufferSize);
+			MappedBuffer buffer = instanceVBO.getBuffer(0, glBufferSize);
 			for (D datum : data) {
 				datum.write(buffer);
 			}
-			buffer.unmap();
+			buffer.flush();
 
 			glInstanceCount = size;
 			return true;
@@ -232,7 +233,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	}
 
 	@Override
-	protected void copyVertex(MappedBufferRange constant, int i) {
+	protected void copyVertex(MappedBuffer constant, int i) {
 		constant.putFloat(getX(template, i));
 		constant.putFloat(getY(template, i));
 		constant.putFloat(getZ(template, i));

@@ -3,10 +3,10 @@ package com.jozufozu.flywheel.backend;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.gl.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.GlBufferType;
-import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.simibubi.create.foundation.render.TemplateBuffer;
 
 import net.minecraft.client.renderer.BufferBuilder;
@@ -38,14 +38,14 @@ public abstract class BufferedModel extends TemplateBuffer {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
 		// mirror it in system memory so we can write to it
-		MappedBufferRange buffer = modelVBO.getBuffer(0, invariantSize);
+		MappedBuffer buffer = modelVBO.getBuffer(0, invariantSize);
 		for (int i = 0; i < vertexCount; i++) {
 			copyVertex(buffer, i);
 		}
-		buffer.unmap();
+		buffer.flush();
 	}
 
-	protected abstract void copyVertex(MappedBufferRange to, int index);
+	protected abstract void copyVertex(MappedBuffer to, int index);
 
 	protected abstract VertexFormat getModelFormat();
 
