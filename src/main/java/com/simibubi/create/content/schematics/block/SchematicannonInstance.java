@@ -2,7 +2,6 @@ package com.simibubi.create.content.schematics.block;
 
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
@@ -21,7 +20,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+        RenderMaterial<?, ModelData> mat = getTransformMaterial();
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();

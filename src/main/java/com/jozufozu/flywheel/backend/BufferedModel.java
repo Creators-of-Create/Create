@@ -13,16 +13,45 @@ import net.minecraft.client.renderer.BufferBuilder;
 
 public abstract class BufferedModel extends TemplateBuffer {
 
+	protected final VertexFormat modelFormat;
 	protected GlBuffer modelVBO;
-	protected boolean removed;
+	private boolean initialized; // lazy init
+	private boolean removed;
 
-	protected BufferedModel(BufferBuilder buf) {
+	protected BufferedModel(VertexFormat modelFormat, BufferBuilder buf) {
 		super(buf);
-		if (vertexCount > 0) init();
+		this.modelFormat = modelFormat;
+	}
+
+	/**
+	 * Renders this model, checking first if there is anything to render.
+	 */
+	public final void render() {
+		if (vertexCount == 0 || removed) return;
+
+		if (!initialized) {
+			// Lazily acquire resources in order to get around initialization order, as #getTotalShaderAttributeCount
+			// might depend on fields in subclasses.
+			init();
+			initialized = true;
+		}
+
+		doRender();
+	}
+
+	/**
+	 * Set up any state and make the draw calls.
+	 */
+	protected abstract void doRender();
+
+	public final void delete() {
+		removed = true;
+		if (initialized) {
+			RenderWork.enqueue(this::deleteInternal);
+		}
 	}
 
 	protected void init() {
-
 		modelVBO = new GlBuffer(GlBufferType.ARRAY_BUFFER);
 
 		modelVBO.bind();
@@ -31,7 +60,7 @@ public abstract class BufferedModel extends TemplateBuffer {
 	}
 
 	protected void initModel() {
-		int stride = getModelFormat().getStride();
+		int stride = modelFormat.getStride();
 		int invariantSize = vertexCount * stride;
 
 		// allocate the buffer on the gpu
@@ -47,25 +76,9 @@ public abstract class BufferedModel extends TemplateBuffer {
 
 	protected abstract void copyVertex(MappedBuffer to, int index);
 
-	protected abstract VertexFormat getModelFormat();
-
 	protected int getTotalShaderAttributeCount() {
-		return getModelFormat().getShaderAttributeCount();
+		return modelFormat.getShaderAttributeCount();
 	}
-
-	/**
-	 * Renders this model, checking first if there is anything to render.
-	 */
-	public final void render() {
-		if (vertexCount == 0 || removed) return;
-
-		doRender();
-	}
-
-	/**
-	 * Set up any state and make the draw calls.
-	 */
-	protected abstract void doRender();
 
 	protected void setupAttributes() {
 		int numAttributes = getTotalShaderAttributeCount();
@@ -73,14 +86,7 @@ public abstract class BufferedModel extends TemplateBuffer {
 			GL20.glEnableVertexAttribArray(i);
 		}
 
-		getModelFormat().vertexAttribPointers(0);
-	}
-
-	public final void delete() {
-		removed = true;
-		if (vertexCount > 0) {
-			RenderWork.enqueue(this::deleteInternal);
-		}
+		modelFormat.vertexAttribPointers(0);
 	}
 
 	protected void deleteInternal() {

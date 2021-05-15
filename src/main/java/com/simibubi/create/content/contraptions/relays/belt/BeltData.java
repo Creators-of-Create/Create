@@ -21,9 +21,9 @@ public class BeltData extends KineticData {
     private float maxV;
     private byte scrollMult;
 
-    protected BeltData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public BeltData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
     public BeltData setRotation(Quaternion q) {
         this.qX = q.getX();

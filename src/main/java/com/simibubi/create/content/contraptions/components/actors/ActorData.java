@@ -28,9 +28,9 @@ public class ActorData extends InstanceData {
 
     private float speed;
 
-    protected ActorData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public ActorData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
 
     public ActorData setPosition(BlockPos pos) {

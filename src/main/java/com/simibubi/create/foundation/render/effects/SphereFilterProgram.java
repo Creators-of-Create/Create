@@ -81,8 +81,8 @@ public class SphereFilterProgram extends GlProgram {
 
 	public void uploadFilters(ArrayList<FilterSphere> filters) {
 		effectsUBO.bind(GlBufferType.ARRAY_BUFFER);
-		MappedBuffer buffer = effectsUBO.getBuffer(0, BUFFER_SIZE);
-		buffer.putInt(filters.size())
+		MappedBuffer buffer = effectsUBO.getBuffer(0, BUFFER_SIZE)
+				.putInt(filters.size())
 				.position(16);
 
 		filters.forEach(it -> it.write(buffer));

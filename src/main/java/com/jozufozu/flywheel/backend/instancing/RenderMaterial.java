@@ -3,7 +3,6 @@ package com.jozufozu.flywheel.backend.instancing;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -13,7 +12,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
@@ -32,33 +30,19 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel<?>> {
+public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
 
 	protected final InstancedTileRenderer<P> renderer;
-	protected final Cache<Object, MODEL> models;
-	protected final ModelFactory<MODEL> factory;
-	protected final ProgramSpec programSpec;
-	protected final Predicate<RenderType> layerPredicate;
+	protected final Cache<Object, InstancedModel<D>> models;
+	protected final MaterialSpec<D> spec;
 
-	/**
-	 * Creates a material that renders in the default layer (CUTOUT_MIPPED)
-	 */
-	public RenderMaterial(InstancedTileRenderer<P> renderer, ProgramSpec programSpec, ModelFactory<MODEL> factory) {
-		this(renderer, programSpec, factory, type -> type == RenderType.getCutoutMipped());
-	}
-
-	public RenderMaterial(InstancedTileRenderer<P> renderer, ProgramSpec programSpec, ModelFactory<MODEL> factory, Predicate<RenderType> layerPredicate) {
+	public RenderMaterial(InstancedTileRenderer<P> renderer, MaterialSpec<D> spec) {
 		this.renderer = renderer;
+		this.spec = spec;
+
 		this.models = CacheBuilder.newBuilder()
 				.removalListener(notification -> ((InstancedModel<?>) notification.getValue()).delete())
 				.build();
-		this.factory = factory;
-		this.programSpec = programSpec;
-		this.layerPredicate = layerPredicate;
-	}
-
-	public boolean canRenderInLayer(RenderType layer) {
-		return layerPredicate.test(layer);
 	}
 
 	public void render(RenderType layer, Matrix4f projection, double camX, double camY, double camZ) {
@@ -66,9 +50,9 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 	}
 
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
-		if (!canRenderInLayer(layer)) return;
+		if (!(layer == RenderType.getCutoutMipped())) return;
 
-		P program = renderer.context.getProgram(programSpec);
+		P program = renderer.context.getProgram(this.spec.getProgramSpec());
 		program.bind();
 		program.uploadViewProjection(viewProjection);
 		program.uploadCameraPos(camX, camY, camZ);
@@ -87,30 +71,30 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 		runOnAll(InstancedModel::render);
 	}
 
-	public void runOnAll(Consumer<MODEL> f) {
-		for (MODEL model : models.asMap().values()) {
+	public void runOnAll(Consumer<InstancedModel<D>> f) {
+		for (InstancedModel<D> model : models.asMap().values()) {
 			f.accept(model);
 		}
 	}
 
-	public MODEL getModel(PartialModel partial, BlockState referenceState) {
+	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState) {
 		return get(partial, () -> buildModel(partial.get(), referenceState));
 	}
 
-	public MODEL getModel(PartialModel partial, BlockState referenceState, Direction dir) {
+	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState, Direction dir) {
 		return getModel(partial, referenceState, dir, RenderUtil.rotateToFace(dir));
 	}
 
-	public MODEL getModel(PartialModel partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
+	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
 		return get(Pair.of(dir, partial),
 				() -> buildModel(partial.get(), referenceState, modelTransform.get()));
 	}
 
-	public MODEL getModel(BlockState toRender) {
+	public InstancedModel<D> getModel(BlockState toRender) {
 		return get(toRender, () -> buildModel(toRender));
 	}
 
-	public MODEL get(Object key, Supplier<MODEL> supplier) {
+	public InstancedModel<D> get(Object key, Supplier<InstancedModel<D>> supplier) {
 		try {
 			return models.get(key, supplier::get);
 		} catch (ExecutionException e) {
@@ -119,19 +103,19 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 		}
 	}
 
-	private MODEL buildModel(BlockState renderedState) {
+	private InstancedModel<D> buildModel(BlockState renderedState) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		return buildModel(dispatcher.getModelForState(renderedState), renderedState);
 	}
 
-	private MODEL buildModel(IBakedModel model, BlockState renderedState) {
+	private InstancedModel<D> buildModel(IBakedModel model, BlockState renderedState) {
 		return buildModel(model, renderedState, new MatrixStack());
 	}
 
-	private MODEL buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+	private InstancedModel<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		BufferBuilder builder = getBufferBuilder(model, referenceState, ms);
 
-		return factory.makeModel(renderer, builder);
+		return new InstancedModel<>(renderer, spec.getInstanceFormat(), spec.getInstanceFactory(), builder);
 	}
 
 	private static final Direction[] dirs;

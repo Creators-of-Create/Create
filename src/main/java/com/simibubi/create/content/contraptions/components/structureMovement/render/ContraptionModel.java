@@ -21,7 +21,7 @@ public class ContraptionModel extends BufferedModel {
     protected GlBuffer ebo;
 
     public ContraptionModel(BufferBuilder buf) {
-        super(buf);
+        super(FORMAT, buf);
     }
 
     @Override
@@ -91,11 +91,6 @@ public class ContraptionModel extends BufferedModel {
 
         to.put(block);
         to.put(sky);
-    }
-
-    @Override
-    protected VertexFormat getModelFormat() {
-        return FORMAT;
     }
 
     @Override

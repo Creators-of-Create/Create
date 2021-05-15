@@ -11,9 +11,9 @@ public class RotatingData extends KineticData {
     private byte rotationAxisY;
     private byte rotationAxisZ;
 
-    protected RotatingData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public RotatingData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
     public RotatingData setRotationAxis(Direction.Axis axis) {
         Direction orientation = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);

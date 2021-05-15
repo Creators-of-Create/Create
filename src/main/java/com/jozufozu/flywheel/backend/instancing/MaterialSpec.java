@@ -1,32 +1,35 @@
 package com.jozufozu.flywheel.backend.instancing;
 
-import com.jozufozu.flywheel.backend.core.BasicProgram;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 
 import net.minecraft.util.ResourceLocation;
 
-public class MaterialSpec<M extends InstancedModel<?>> {
+public class MaterialSpec<D extends InstanceData> {
 
 	public final ResourceLocation name;
 
 	private final ProgramSpec programSpec;
-	private final ModelFactory<M> modelFactory;
+	private final VertexFormat instanceFormat;
+	private final InstanceFactory<D> instanceFactory;
 
-	public MaterialSpec(ResourceLocation name, ProgramSpec programSpec, ModelFactory<M> modelFactory) {
+	public MaterialSpec(ResourceLocation name, ProgramSpec programSpec, VertexFormat instanceFormat, InstanceFactory<D> instanceFactory) {
 		this.name = name;
 		this.programSpec = programSpec;
-		this.modelFactory = modelFactory;
+		this.instanceFormat = instanceFormat;
+		this.instanceFactory = instanceFactory;
 	}
 
 	public ProgramSpec getProgramSpec() {
 		return programSpec;
 	}
 
-	public ModelFactory<M> getModelFactory() {
-		return modelFactory;
+	public VertexFormat getInstanceFormat() {
+		return instanceFormat;
 	}
 
-	public <P extends BasicProgram> RenderMaterial<P, M> create(InstancedTileRenderer<P> renderer) {
-		return new RenderMaterial<>(renderer, programSpec, modelFactory);
+	public InstanceFactory<D> getInstanceFactory() {
+		return instanceFactory;
 	}
+
 }

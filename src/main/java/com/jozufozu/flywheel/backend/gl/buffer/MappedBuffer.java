@@ -20,6 +20,9 @@ public abstract class MappedBuffer implements AutoCloseable {
 
 	protected abstract void checkAndMap();
 
+	/**
+	 * Make the changes in client memory available to the GPU.
+	 */
 	public void flush() {
 		if (mapped) {
 			GL15.glUnmapBuffer(owner.type.glEnum);
@@ -51,7 +54,6 @@ public abstract class MappedBuffer implements AutoCloseable {
 	/**
 	 * Position this buffer relative to the 0-index in GPU memory.
 	 *
-	 * @param p
 	 * @return This buffer.
 	 */
 	public MappedBuffer position(int p) {

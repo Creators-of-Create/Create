@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.simibubi.create.AllMovementBehaviours;
@@ -65,9 +64,9 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
         return null;
     }
 
-    public RenderMaterial<?, InstancedModel<ActorData>> getActorMaterial() {
+    public RenderMaterial<?, ActorData> getActorMaterial() {
 		return getMaterial(AllMaterialSpecs.ACTORS);
-    }
+	}
 
     public RenderedContraption getContraption() {
         return contraption.get();

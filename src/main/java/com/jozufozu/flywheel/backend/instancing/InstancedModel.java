@@ -17,11 +17,13 @@ import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
 import net.minecraft.client.renderer.BufferBuilder;
 
-public abstract class InstancedModel<D extends InstanceData> extends BufferedModel {
+public class InstancedModel<D extends InstanceData> extends BufferedModel {
 	public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
 
 	public final InstancedTileRenderer<?> renderer;
 
+	protected final VertexFormat instanceFormat;
+	protected final InstanceFactory<D> factory;
 	protected GlVertexArray vao;
 	protected GlBuffer instanceVBO;
 	protected int glBufferSize = -1;
@@ -32,9 +34,20 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	boolean anyToRemove;
 	boolean anyToUpdate;
 
-	public InstancedModel(InstancedTileRenderer<?> renderer, BufferBuilder buf) {
-		super(buf);
+	public InstancedModel(InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, InstanceFactory<D> factory, BufferBuilder buf) {
+		super(FORMAT, buf);
+		this.factory = factory;
+		this.instanceFormat = instanceFormat;
 		this.renderer = renderer;
+	}
+
+	public synchronized D createInstance() {
+		D instanceData = factory.create(this);
+		instanceData.dirty = true;
+		anyToUpdate = true;
+		data.add(instanceData);
+
+		return instanceData;
 	}
 
 	@Override
@@ -53,14 +66,6 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		setupAttributes();
 	}
 
-	public int instanceCount() {
-		return data.size();
-	}
-
-	public boolean isEmpty() {
-		return instanceCount() == 0;
-	}
-
 	protected void deleteInternal() {
 		super.deleteInternal();
 
@@ -68,23 +73,13 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		vao.delete();
 	}
 
-	public synchronized D createInstance() {
-		D instanceData = newInstance();
-		instanceData.dirty = true;
-		anyToUpdate = true;
-		data.add(instanceData);
-
-		return instanceData;
-	}
-
-	protected abstract D newInstance();
-
 	protected void doRender() {
 		vao.bind();
 		renderSetup();
 
 		if (glInstanceCount > 0)
 			Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
+
 		vao.unbind();
 	}
 
@@ -115,22 +110,22 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	}
 
 	private void informAttribDivisors() {
-		int staticAttributes = getModelFormat().getShaderAttributeCount();
-		getInstanceFormat().vertexAttribPointers(staticAttributes);
+		int staticAttributes = modelFormat.getShaderAttributeCount();
+		instanceFormat.vertexAttribPointers(staticAttributes);
 
-		for (int i = 0; i < getInstanceFormat().getShaderAttributeCount(); i++) {
+		for (int i = 0; i < instanceFormat.getShaderAttributeCount(); i++) {
 			Backend.compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
 		}
 	}
 
 	private void clearBufferTail() {
 		int size = data.size();
-		final int offset = size * getInstanceFormat().getStride();
+		final int offset = size * instanceFormat.getStride();
 		final int length = glBufferSize - offset;
 		if (length > 0) {
-			MappedBuffer buffer = instanceVBO.getBuffer(offset, length);
-			buffer.putByteArray(new byte[length]);
-			buffer.flush();
+			instanceVBO.getBuffer(offset, length)
+					.putByteArray(new byte[length])
+					.flush();
 		}
 	}
 
@@ -139,7 +134,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
 		if (size <= 0) return;
 
-		final int stride = getInstanceFormat().getStride();
+		final int stride = instanceFormat.getStride();
 		final BitSet dirtySet = getDirtyBitSet();
 
 		if (dirtySet.isEmpty()) return;
@@ -180,7 +175,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 
 	private boolean realloc() {
 		int size = this.data.size();
-		int stride = getInstanceFormat().getStride();
+		int stride = instanceFormat.getStride();
 		int requiredSize = size * stride;
 		if (requiredSize > glBufferSize) {
 			glBufferSize = requiredSize + stride * 16;
@@ -199,9 +194,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	}
 
 	private void removeDeletedInstances() {
-		// figure out which elements are to be removed
-		// any exception thrown from the filter predicate at this stage
-		// will leave the collection unmodified
+		// Figure out which elements are to be removed.
 		final int oldSize = this.data.size();
 		int removeCount = 0;
 		final BitSet removeSet = new BitSet(oldSize);
@@ -246,14 +239,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		constant.putFloat(getV(template, i));
 	}
 
-	@Override
-	protected VertexFormat getModelFormat() {
-		return FORMAT;
-	}
-
-	protected abstract VertexFormat getInstanceFormat();
-
 	protected int getTotalShaderAttributeCount() {
-		return getInstanceFormat().getShaderAttributeCount() + super.getTotalShaderAttributeCount();
+		return instanceFormat.getShaderAttributeCount() + super.getTotalShaderAttributeCount();
 	}
 }
