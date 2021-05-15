@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -41,8 +42,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			.renderInto(ms, vb), ms);
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
 		BlockState blockState = context.state;
 		PortableStorageInterfaceTileEntity te = getTargetPSI(context);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
@@ -56,7 +57,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		}
 
 		render(blockState, progress, lit, sbb -> sbb.light(msLocal.peek()
-			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
+			.getModel(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(ms, vb), ms, msLocal);
 	}
 

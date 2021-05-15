@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -254,10 +255,10 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffers) {
 		if (!Backend.canUseInstancing())
-			DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
+			DeployerRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffers);
 	}
 
 	@Override

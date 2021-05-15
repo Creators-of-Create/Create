@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -154,8 +155,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		return buffer;
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
 		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
@@ -187,9 +188,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.getModel();
 		for (MatrixStack m : matrixStacks)
 			m.translate(offset.x, offset.y, offset.z);
-		pole.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
+		pole.light(lighting, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(ms, builder);
-		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
+		hand.light(lighting, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(ms, builder);
 	}
 

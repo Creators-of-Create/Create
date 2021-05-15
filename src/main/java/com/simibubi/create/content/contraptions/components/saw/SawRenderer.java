@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -151,8 +152,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
 		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
 		BlockState state = context.state;
 		SuperByteBuffer superBuffer;
@@ -196,8 +197,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		}
 
 		superBuffer
-			.light(msLocal.peek()
-						  .getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
+			.light(msLocal.peek().getModel(),
+					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 

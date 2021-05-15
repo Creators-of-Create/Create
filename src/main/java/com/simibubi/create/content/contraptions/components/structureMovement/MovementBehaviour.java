@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
@@ -60,8 +61,8 @@ public abstract class MovementBehaviour {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {}
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable

@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -13,6 +12,7 @@ import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -40,8 +40,8 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	// Vertex Lighting
 	private boolean shouldLight;
+	private boolean hybridLight;
 	private int packedLightCoords;
-	private int otherBlockLight;
 	private Matrix4f lightTransform;
 
 	// Vertex Coloring
@@ -149,12 +149,15 @@ public class SuperByteBuffer extends TemplateBuffer {
 					lightPos.transform(localTransforms);
 					lightPos.transform(lightTransform);
 
-					light = getLight(Minecraft.getInstance().world, lightPos);
-					if (otherBlockLight >= 0) {
-						light = ContraptionRenderDispatcher.getMaxBlockLight(light, otherBlockLight);
+					int worldLight = getLight(Minecraft.getInstance().world, lightPos);
+					if (light >= 0) {
+						light = maxLight(worldLight, light);
 					}
 				}
-				builder.light(light);
+				if (hybridLight)
+					builder.light(maxLight(light, getLight(buffer, i)));
+				else
+					builder.light(light);
 			} else
 				builder.light(getLight(buffer, i));
 
@@ -167,7 +170,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 		spriteShiftFunc = null;
 		shouldColor = false;
 		shouldLight = false;
-		otherBlockLight = -1;
+		hybridLight = false;
 	}
 
 	public MatrixStacker matrixStacker() {
@@ -271,10 +274,15 @@ public class SuperByteBuffer extends TemplateBuffer {
 		return this;
 	}
 
-	public SuperByteBuffer light(Matrix4f lightTransform, int otherBlockLight) {
+	public SuperByteBuffer light(Matrix4f lightTransform, int packedLightCoords) {
 		shouldLight = true;
 		this.lightTransform = lightTransform;
-		this.otherBlockLight = otherBlockLight;
+		this.packedLightCoords = packedLightCoords;
+		return this;
+	}
+
+	public SuperByteBuffer hybridLight() {
+		hybridLight = true;
 		return this;
 	}
 
@@ -285,6 +293,14 @@ public class SuperByteBuffer extends TemplateBuffer {
 		b = (color & 0xFF);
 		a = 255;
 		return this;
+	}
+
+	public static int maxLight(int packedLight1, int packedLight2) {
+		int blockLight1 = LightTexture.getBlockLightCoordinates(packedLight1);
+		int skyLight1 = LightTexture.getSkyLightCoordinates(packedLight1);
+		int blockLight2 = LightTexture.getBlockLightCoordinates(packedLight2);
+		int skyLight2 = LightTexture.getSkyLightCoordinates(packedLight2);
+		return LightTexture.pack(Math.max(blockLight1, blockLight2), Math.max(skyLight1, skyLight2));
 	}
 
 	private static int getLight(World world, Vector4f lightPos) {

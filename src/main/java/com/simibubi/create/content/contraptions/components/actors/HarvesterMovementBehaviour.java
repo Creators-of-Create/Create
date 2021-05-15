@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -52,10 +53,10 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffers) {
 		if (!Backend.canUseInstancing())
-			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
+			HarvesterRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffers);
 	}
 
 	@Override

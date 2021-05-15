@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -31,9 +32,9 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
-		PortableStorageInterfaceRenderer.renderInContraption(context, ms, msLocal, buffer);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
+		PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffer);
 	}
 
 	@Override

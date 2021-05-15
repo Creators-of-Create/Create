@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,8 +40,8 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.get(HORIZONTAL_FACING);
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
@@ -52,8 +53,9 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 
 		transform(context.world, facing, superBuffer, speed);
 
-		superBuffer.light(msLocal.peek()
-				.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
+		superBuffer
+			.light(msLocal.peek().getModel(),
+					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
 

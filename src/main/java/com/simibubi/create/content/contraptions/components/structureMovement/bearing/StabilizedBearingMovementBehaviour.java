@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,8 +32,8 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
 		if (Backend.canUseInstancing()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
@@ -55,9 +56,10 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 		superBuffer.rotateCentered(orientation);
 
 		// render
-		superBuffer.light(msLocal.peek()
-			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
-		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		superBuffer
+			.light(msLocal.peek().getModel(),
+				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override

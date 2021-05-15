@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -34,10 +35,10 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
 		if (!Backend.canUseInstancing())
-			DrillRenderer.renderInContraption(context, ms, msLocal, buffer);
+			DrillRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffer);
 	}
 
 	@Override

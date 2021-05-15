@@ -63,7 +63,7 @@ public class TileEntityRenderHelper {
 				Vector4f vec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 				vec.transform(matrix);
 				BlockPos lightPos = new BlockPos(vec.getX(), vec.getY(), vec.getZ());
-				int worldLight = ContraptionRenderDispatcher.getLightOnContraption(world, renderWorld, pos, lightPos);
+				int worldLight = ContraptionRenderDispatcher.getContraptionLightAt(world, renderWorld, pos, lightPos);
 				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.DEFAULT_UV);
 
 			} catch (Exception e) {
