@@ -1,4 +1,5 @@
 #flwinclude <"create:context/std/fog.glsl">
+#flwinclude <"create:core/lightutil.glsl">
 
 uniform sampler2D uBlockAtlas;
 uniform sampler2D uLightMap;
@@ -20,6 +21,5 @@ void FLWFinalizeColor(vec4 color) {
 }
 
 vec4 FLWLight(vec2 lightCoords) {
-    vec2 lm = lightCoords * 0.9375 + 0.03125;
-    return texture2D(uLightMap, lm);
+    return texture2D(uLightMap, shiftLight(lightCoords));
 }

@@ -1,4 +1,5 @@
 #flwinclude <"create:context/std/fog.glsl">
+#flwinclude <"create:core/lightutil.glsl">
 
 varying vec3 BoxCoord;
 uniform sampler3D uLightVolume;
@@ -23,6 +24,7 @@ void FLWFinalizeColor(vec4 color) {
 }
 
 vec4 FLWLight(vec2 lightCoords) {
-    vec2 lm = max(lightCoords, texture3D(uLightVolume, BoxCoord).rg);
-    return texture2D(uLightMap, lm * 0.99609375 + 0.03125); // * 255/256 + 1/32
+    lightCoords = max(lightCoords, texture3D(uLightVolume, BoxCoord).rg);
+
+    return texture2D(uLightMap, shiftLight(lightCoords));
 }
