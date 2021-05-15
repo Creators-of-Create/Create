@@ -24,11 +24,11 @@ void main() {
     FLWFinalizeNormal(norm);
 
     Diffuse = diffuse(norm);
-    Color = aColor / diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aModelLight;
-
     if (uDebug == 2) {
         Color = vec4(norm, 1.);
+    } else {
+        Color = aColor / diffuse(aNormal);
     }
+    TexCoords = aTexCoords;
+    Light = aModelLight;
 }

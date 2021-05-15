@@ -24,5 +24,5 @@ void FLWFinalizeColor(vec4 color) {
 
 vec4 FLWLight(vec2 lightCoords) {
     vec2 lm = max(lightCoords, texture3D(uLightVolume, BoxCoord).rg);
-    return texture2D(uLightMap, lm * 0.9375 + 0.03125);
+    return texture2D(uLightMap, lm * 0.99609375 + 0.03125); // * 255/256 + 1/32
 }
