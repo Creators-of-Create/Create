@@ -86,8 +86,8 @@ public class ContraptionModel extends BufferedModel {
 
 		int light = getLight(template, vertex);
 
-		byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
-		byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
+        byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
+        byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
 
         to.put(block);
         to.put(sky);
