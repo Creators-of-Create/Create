@@ -1,12 +1,17 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import static org.lwjgl.opengl.GL13.GL_QUADS;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_3D;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.glDisable;
+import static org.lwjgl.opengl.GL13.glEnable;
+
 import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL40;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -81,27 +86,31 @@ public class ContraptionRenderDispatcher {
 		if (renderers.isEmpty()) return;
 
 		layer.startDrawing();
-		GL11.glEnable(GL13.GL_TEXTURE_3D);
-		GL13.glActiveTexture(GL40.GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
+		glEnable(GL_TEXTURE_3D);
+		glActiveTexture(GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
 		if (Backend.canUseVBOs()) {
 			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.STRUCTURE);
-			structureShader.bind(viewProjection, camX, camY, camZ, Backend.getDebugMode());
+
+			structureShader.bind();
+			structureShader.uploadViewProjection(viewProjection);
+			structureShader.uploadCameraPos(camX, camY, camZ);
+
 			for (RenderedContraption renderer : renderers.values()) {
 				renderer.doRenderLayer(layer, structureShader);
 			}
 		}
 
-        if (Backend.canUseInstancing()) {
-            for (RenderedContraption renderer : renderers.values()) {
+		if (Backend.canUseInstancing()) {
+			for (RenderedContraption renderer : renderers.values()) {
 				renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
 				renderer.teardown();
 			}
 		}
 
 		layer.endDrawing();
-		GL11.glDisable(GL13.GL_TEXTURE_3D);
-		GL13.glActiveTexture(GL40.GL_TEXTURE0);
+		glDisable(GL_TEXTURE_3D);
+		glActiveTexture(GL_TEXTURE0);
 	}
 
 	private static RenderedContraption getRenderer(World world, Contraption c) {
@@ -199,25 +208,25 @@ public class ContraptionRenderDispatcher {
 		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
 			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
 
-        ForgeHooksClient.setRenderLayer(layer);
-        MatrixStack ms = new MatrixStack();
-        BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-            .getBlockRendererDispatcher();
-        BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
-        Random random = new Random();
-        BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-        renderWorld.setTileEntities(c.presentTileEntities.values());
+		ForgeHooksClient.setRenderLayer(layer);
+		MatrixStack ms = new MatrixStack();
+		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
+				.getBlockRendererDispatcher();
+		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
+		Random random = new Random();
+		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
+		builder.begin(GL_QUADS, DefaultVertexFormats.BLOCK);
+		renderWorld.setTileEntities(c.presentTileEntities.values());
 
-        for (Template.BlockInfo info : c.getBlocks()
-            .values())
-            renderWorld.setBlockState(info.pos, info.state);
+		for (Template.BlockInfo info : c.getBlocks()
+				.values())
+			renderWorld.setBlockState(info.pos, info.state);
 
-        for (Template.BlockInfo info : c.getBlocks()
-            .values()) {
-            BlockState state = info.state;
+		for (Template.BlockInfo info : c.getBlocks()
+				.values()) {
+			BlockState state = info.state;
 
-            if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
+			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
                 continue;
             if (!RenderTypeLookup.canRenderInLayer(state, layer))
                 continue;

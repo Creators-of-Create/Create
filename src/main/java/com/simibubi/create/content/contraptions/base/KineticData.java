@@ -1,8 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import java.nio.ByteBuffer;
-
 import com.jozufozu.flywheel.backend.core.materials.BasicData;
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
@@ -73,28 +72,26 @@ public class KineticData extends BasicData {
     }
 
     public KineticData setRotationalSpeed(float rotationalSpeed) {
-        this.rotationalSpeed = rotationalSpeed;
-        return this;
-    }
+		this.rotationalSpeed = rotationalSpeed;
+		return this;
+	}
 
-    public KineticData setRotationOffset(float rotationOffset) {
-        this.rotationOffset = rotationOffset;
-        return this;
-    }
+	public KineticData setRotationOffset(float rotationOffset) {
+		this.rotationOffset = rotationOffset;
+		return this;
+	}
 
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
+	@Override
+	public void write(MappedBuffer buf) {
+		super.write(buf);
 
-        buf.asFloatBuffer().put(new float[] {
-                x,
-                y,
-                z,
-                rotationalSpeed,
-                rotationOffset
-        });
-
-        buf.position(buf.position() + 5 * 4);
-    }
+		buf.putFloatArray(new float[]{
+				x,
+				y,
+				z,
+				rotationalSpeed,
+				rotationOffset
+		});
+	}
 }

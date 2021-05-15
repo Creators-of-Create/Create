@@ -1,19 +1,18 @@
 package com.jozufozu.flywheel.backend.instancing;
 
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.BufferedModel;
 import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;
@@ -41,9 +40,11 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	@Override
 	protected void init() {
 		vao = new GlVertexArray();
-		instanceVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
+		instanceVBO = new GlBuffer(GlBufferType.ARRAY_BUFFER);
 
-		vao.with(vao -> super.init());
+		vao.bind();
+		super.init();
+		vao.unbind();
 	}
 
 	@Override
@@ -79,12 +80,12 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	protected abstract D newInstance();
 
 	protected void doRender() {
-		vao.with(vao -> {
-			renderSetup();
+		vao.bind();
+		renderSetup();
 
-			if (glInstanceCount > 0)
-				Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
-		});
+		if (glInstanceCount > 0)
+			Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
+		vao.unbind();
 	}
 
 	protected void renderSetup() {
@@ -127,9 +128,9 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		final int offset = size * getInstanceFormat().getStride();
 		final int length = glBufferSize - offset;
 		if (length > 0) {
-			instanceVBO.map(offset, length, buffer -> {
-				buffer.put(new byte[length]);
-			});
+			MappedBufferRange buffer = instanceVBO.getBuffer(offset, length);
+			buffer.putByteArray(new byte[length]);
+			buffer.unmap();
 		}
 	}
 
@@ -150,14 +151,14 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		final int length = (1 + lastDirty - firstDirty) * stride;
 
 		if (length > 0) {
-			instanceVBO.map(offset, length, buffer -> {
-				dirtySet.stream().forEach(i -> {
-					final D d = data.get(i);
+			MappedBufferRange mapped = instanceVBO.getBuffer(offset, length);
+			dirtySet.stream().forEach(i -> {
+				final D d = data.get(i);
 
-					buffer.position(i * stride - offset);
-					d.write(buffer);
-				});
+				mapped.position(i * stride - offset);
+				d.write(mapped);
 			});
+			mapped.unmap();
 		}
 	}
 
@@ -182,13 +183,13 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 		int requiredSize = size * stride;
 		if (requiredSize > glBufferSize) {
 			glBufferSize = requiredSize + stride * 16;
-			instanceVBO.alloc(glBufferSize, GL15.GL_STATIC_DRAW);
+			instanceVBO.alloc(glBufferSize);
 
-			instanceVBO.map(glBufferSize, buffer -> {
-				for (D datum : data) {
-					datum.write(buffer);
-				}
-			});
+			MappedBufferRange buffer = instanceVBO.getBuffer(0, glBufferSize);
+			for (D datum : data) {
+				datum.write(buffer);
+			}
+			buffer.unmap();
 
 			glInstanceCount = size;
 			return true;
@@ -231,7 +232,7 @@ public abstract class InstancedModel<D extends InstanceData> extends BufferedMod
 	}
 
 	@Override
-	protected void copyVertex(ByteBuffer constant, int i) {
+	protected void copyVertex(MappedBufferRange constant, int i) {
 		constant.putFloat(getX(template, i));
 		constant.putFloat(getY(template, i));
 		constant.putFloat(getZ(template, i));

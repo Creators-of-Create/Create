@@ -132,8 +132,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	 */
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
 		for (RenderMaterial<P, ?> material : materials.values()) {
-			if (material.canRenderInLayer(layer))
-				material.render(layer, viewProjection, camX, camY, camZ, callback);
+			material.render(layer, viewProjection, camX, camY, camZ, callback);
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.Direction;
@@ -25,20 +24,20 @@ public class RotatingData extends KineticData {
     public RotatingData setRotationAxis(Vector3f axis) {
         setRotationAxis(axis.getX(), axis.getY(), axis.getZ());
         return this;
-    }
+	}
 
-    public RotatingData setRotationAxis(float rotationAxisX, float rotationAxisY, float rotationAxisZ) {
-        this.rotationAxisX = (byte) (rotationAxisX * 127);
-        this.rotationAxisY = (byte) (rotationAxisY * 127);
-        this.rotationAxisZ = (byte) (rotationAxisZ * 127);
-        markDirty();
-        return this;
-    }
+	public RotatingData setRotationAxis(float rotationAxisX, float rotationAxisY, float rotationAxisZ) {
+		this.rotationAxisX = (byte) (rotationAxisX * 127);
+		this.rotationAxisY = (byte) (rotationAxisY * 127);
+		this.rotationAxisZ = (byte) (rotationAxisZ * 127);
+		markDirty();
+		return this;
+	}
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
+	@Override
+	public void write(MappedBuffer buf) {
+		super.write(buf);
 
-        putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
-    }
+		buf.putVec3(rotationAxisX, rotationAxisY, rotationAxisZ);
+	}
 }

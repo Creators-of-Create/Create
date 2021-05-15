@@ -1,7 +1,6 @@
 package com.jozufozu.flywheel.backend.core.materials;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -22,9 +21,8 @@ public class ModelData extends BasicData {
 	}
 
 	@Override
-	public void write(ByteBuffer buf) {
+	public void write(MappedBuffer buf) {
 		super.write(buf);
-		buf.asFloatBuffer().put(matrices);
-		buf.position(buf.position() + matrices.length * 4);
+		buf.putFloatArray(matrices);
 	}
 }

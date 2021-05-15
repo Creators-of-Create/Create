@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -47,24 +46,22 @@ public class BeltData extends KineticData {
         this.maxV = target.getMaxV();
         markDirty();
 
-        return this;
-    }
+		return this;
+	}
 
-    public BeltData setScrollMult(float scrollMult) {
-        this.scrollMult = (byte) (scrollMult * 127);
-        markDirty();
-        return this;
-    }
+	public BeltData setScrollMult(float scrollMult) {
+		this.scrollMult = (byte) (scrollMult * 127);
+		markDirty();
+		return this;
+	}
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
+	@Override
+	public void write(MappedBuffer buf) {
+		super.write(buf);
 
-        putVec4(buf, qX, qY, qZ, qW);
-
-        putVec2(buf, sourceU, sourceV);
-        putVec4(buf, minU, minV, maxU, maxV);
-
-        put(buf, scrollMult);
-    }
+		buf.putVec4(qX, qY, qZ, qW);
+		buf.putVec2(sourceU, sourceV);
+		buf.putVec4(minU, minV, maxU, maxV);
+		buf.put(scrollMult);
+	}
 }

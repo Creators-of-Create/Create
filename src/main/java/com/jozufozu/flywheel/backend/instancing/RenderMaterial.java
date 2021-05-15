@@ -1,24 +1,20 @@
 package com.jozufozu.flywheel.backend.instancing;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
-import com.jozufozu.flywheel.util.BakedQuadWrapper;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -29,14 +25,12 @@ import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraftforge.client.model.data.IModelData;
 
 public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel<?>> {
 
@@ -72,8 +66,12 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 	}
 
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
+		if (!canRenderInLayer(layer)) return;
+
 		P program = renderer.context.getProgram(programSpec);
-		program.bind(viewProjection, camX, camY, camZ, Backend.getDebugMode());
+		program.bind();
+		program.uploadViewProjection(viewProjection);
+		program.uploadCameraPos(camX, camY, camZ);
 
 		if (setup != null) setup.call(program);
 
@@ -150,12 +148,12 @@ public class RenderMaterial<P extends BasicProgram, MODEL extends InstancedModel
 		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		BufferBuilder builder = new BufferBuilder(512);
 
-		BakedQuadWrapper quadReader = new BakedQuadWrapper();
-
-		IModelData modelData = model.getModelData(mc.world, BlockPos.ZERO.up(255), referenceState, VirtualEmptyModelData.INSTANCE);
-		List<BakedQuad> quads = Arrays.stream(dirs)
-				.flatMap(dir -> model.getQuads(referenceState, dir, mc.world.rand, modelData).stream())
-				.collect(Collectors.toList());
+//		BakedQuadWrapper quadReader = new BakedQuadWrapper();
+//
+//		IModelData modelData = model.getModelData(mc.world, BlockPos.ZERO.up(255), referenceState, VirtualEmptyModelData.INSTANCE);
+//		List<BakedQuad> quads = Arrays.stream(dirs)
+//				.flatMap(dir -> model.getQuads(referenceState, dir, mc.world.rand, modelData).stream())
+//				.collect(Collectors.toList());
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,

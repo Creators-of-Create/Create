@@ -1,62 +1,50 @@
 package com.jozufozu.flywheel.backend.gl;
 
-import java.nio.ByteBuffer;
-import java.util.function.Consumer;
-
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
-
-import com.jozufozu.flywheel.backend.Backend;
+import org.lwjgl.opengl.GL30;
 
 public class GlBuffer extends GlObject {
 
-	protected final int bufferType;
+	protected final GlBufferType type;
+	protected final GlBufferUsage usage;
 
-	public GlBuffer(int bufferType) {
-		setHandle(GL20.glGenBuffers());
-		this.bufferType = bufferType;
+	public GlBuffer(GlBufferType type) {
+		this(type, GlBufferUsage.STATIC_DRAW);
 	}
 
-	public int getBufferType() {
-		return bufferType;
+	public GlBuffer(GlBufferType type, GlBufferUsage usage) {
+		setHandle(GL20.glGenBuffers());
+		this.type = type;
+		this.usage = usage;
+	}
+
+	public GlBufferType getBufferTarget() {
+		return type;
 	}
 
 	public void bind() {
-		bind(bufferType);
+		bind(type);
 	}
 
-	public void bind(int type) {
-		GL20.glBindBuffer(type, handle());
+	public void bind(GlBufferType type) {
+		GL20.glBindBuffer(type.glEnum, handle());
 	}
 
 	public void unbind() {
-		unbind(bufferType);
+		unbind(type);
 	}
 
-	public void unbind(int bufferType) {
-		GL20.glBindBuffer(bufferType, 0);
+	public void unbind(GlBufferType bufferType) {
+		GL20.glBindBuffer(bufferType.glEnum, 0);
 	}
 
-	public void alloc(int size, int usage) {
-		GL15.glBufferData(bufferType, size, usage);
+	public void alloc(int size) {
+		GL15.glBufferData(type.glEnum, size, usage.glEnum);
 	}
 
-	public void with(Consumer<GlBuffer> action) {
-		bind();
-		action.accept(this);
-		unbind();
-	}
-
-	public void map(int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer.mapBuffer(bufferType, 0, length, upload);
-	}
-
-	public void map(int offset, int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer.mapBuffer(bufferType, offset, length, upload);
-	}
-
-	public void map(int type, int offset, int length, Consumer<ByteBuffer> upload) {
-		Backend.compat.mapBuffer.mapBuffer(type, offset, length, upload);
+	public MappedBufferRange getBuffer(int offset, int length) {
+		return MappedBufferRange.create(this, offset, length, GL30.GL_MAP_WRITE_BIT);
 	}
 
 	protected void deleteInternal(int handle) {

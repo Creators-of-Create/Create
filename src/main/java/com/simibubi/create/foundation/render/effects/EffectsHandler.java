@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
+import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -68,7 +69,7 @@ public class EffectsHandler {
 	private final Framebuffer framebuffer;
 	private final GlVertexArray vao = new GlVertexArray();
 
-	private final GlBuffer vbo = new GlBuffer(GL20.GL_ARRAY_BUFFER);
+	private final GlBuffer vbo = new GlBuffer(GlBufferType.ARRAY_BUFFER);
 
 	private final ArrayList<FilterSphere> spheres;
 
@@ -79,8 +80,10 @@ public class EffectsHandler {
 		framebuffer = new Framebuffer(render.framebufferWidth, render.framebufferHeight, false, Minecraft.IS_RUNNING_ON_MAC);
 
 		vbo.bind();
-		vbo.alloc(bufferSize, GL15.GL_STATIC_DRAW);
-		vbo.map(bufferSize, buf -> buf.asFloatBuffer().put(vertices));
+		vbo.alloc(bufferSize);
+		MappedBufferRange buffer = vbo.getBuffer(0, bufferSize);
+		buffer.putFloatArray(vertices);
+		buffer.unmap();
 
 		vao.bind();
 

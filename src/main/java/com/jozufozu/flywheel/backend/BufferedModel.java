@@ -1,11 +1,11 @@
 package com.jozufozu.flywheel.backend;
 
-import java.nio.ByteBuffer;
-
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.simibubi.create.foundation.render.TemplateBuffer;
 
@@ -23,9 +23,11 @@ public abstract class BufferedModel extends TemplateBuffer {
 
 	protected void init() {
 
-		modelVBO = new GlBuffer(GL20.GL_ARRAY_BUFFER);
+		modelVBO = new GlBuffer(GlBufferType.ARRAY_BUFFER);
 
-		modelVBO.with(vbo -> initModel());
+		modelVBO.bind();
+		initModel();
+		modelVBO.unbind();
 	}
 
 	protected void initModel() {
@@ -36,14 +38,14 @@ public abstract class BufferedModel extends TemplateBuffer {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
 
 		// mirror it in system memory so we can write to it
-		modelVBO.map(invariantSize, buffer -> {
-			for (int i = 0; i < vertexCount; i++) {
-				copyVertex(buffer, i);
-			}
-		});
+		MappedBufferRange buffer = modelVBO.getBuffer(0, invariantSize);
+		for (int i = 0; i < vertexCount; i++) {
+			copyVertex(buffer, i);
+		}
+		buffer.unmap();
 	}
 
-	protected abstract void copyVertex(ByteBuffer to, int index);
+	protected abstract void copyVertex(MappedBufferRange to, int index);
 
 	protected abstract VertexFormat getModelFormat();
 

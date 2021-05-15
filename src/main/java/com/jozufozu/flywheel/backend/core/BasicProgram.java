@@ -1,7 +1,6 @@
 package com.jozufozu.flywheel.backend.core;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
@@ -14,7 +13,6 @@ import net.minecraft.util.math.vector.Matrix4f;
 public class BasicProgram extends GlProgram {
 	protected final int uTime;
 	protected final int uViewProjection;
-	protected final int uDebug;
 	protected final int uCameraPos;
 
 	protected final ProgramFogMode fogMode;
@@ -30,7 +28,6 @@ public class BasicProgram extends GlProgram {
 		super(name, handle);
 		uTime = getUniformLocation("uTime");
 		uViewProjection = getUniformLocation("uViewProjection");
-		uDebug = getUniformLocation("uDebug");
 		uCameraPos = getUniformLocation("uCameraPos");
 
 		fogMode = fogFactory.create(this);
@@ -45,14 +42,23 @@ public class BasicProgram extends GlProgram {
 		uLightMap = setSamplerBinding("uLightMap", 2);
 	}
 
-	public void bind(Matrix4f viewProjection, double camX, double camY, double camZ, int debugMode) {
+	public void uploadViewProjection(Matrix4f viewProjection) {
+		uploadMatrixUniform(uViewProjection, viewProjection);
+	}
+
+	public void uploadCameraPos(double camX, double camY, double camZ) {
+		glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
+	}
+
+	public void uploadTime(float renderTime) {
+		glUniform1f(uTime, renderTime);
+	}
+
+	@Override
+	public void bind() {
 		super.bind();
 
-		glUniform1i(uDebug, debugMode);
-		glUniform1f(uTime, AnimationTickHolder.getRenderTime());
-
-		uploadMatrixUniform(uViewProjection, viewProjection);
-		glUniform3f(uCameraPos, (float) camX, (float) camY, (float) camZ);
+		uploadTime(AnimationTickHolder.getRenderTime());
 
 		fogMode.bind();
 	}

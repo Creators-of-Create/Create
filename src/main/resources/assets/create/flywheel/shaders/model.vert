@@ -1,7 +1,6 @@
 #version 110
 
 #flwbuiltins
-#flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
 attribute vec3 aPos;

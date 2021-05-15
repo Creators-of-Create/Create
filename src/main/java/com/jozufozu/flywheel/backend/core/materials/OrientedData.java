@@ -1,7 +1,6 @@
 package com.jozufozu.flywheel.backend.core.materials;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.math.BlockPos;
@@ -82,10 +81,10 @@ public class OrientedData extends BasicData {
 	}
 
 	@Override
-	public void write(ByteBuffer buf) {
+	public void write(MappedBuffer buf) {
 		super.write(buf);
 
-		buf.asFloatBuffer().put(new float[]{
+		buf.putFloatArray(new float[]{
 				posX,
 				posY,
 				posZ,
@@ -97,8 +96,6 @@ public class OrientedData extends BasicData {
 				qZ,
 				qW
 		});
-
-		buf.position(buf.position() + 10 * 4);
 	}
 }
 

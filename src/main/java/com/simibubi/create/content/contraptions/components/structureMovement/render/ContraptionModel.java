@@ -1,13 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.nio.ByteBuffer;
-
-import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.backend.BufferedModel;
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
+import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 
 import net.minecraft.client.renderer.BufferBuilder;
@@ -50,45 +49,45 @@ public class ContraptionModel extends BufferedModel {
     }
 
     protected final void createEBO() {
-        ebo = new GlBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-        eboIndexType = GlPrimitiveType.UINT; // TODO: choose this based on the number of vertices
+		ebo = new GlBuffer(GlBufferType.ELEMENT_ARRAY_BUFFER);
+		eboIndexType = GlPrimitiveType.UINT; // TODO: choose this based on the number of vertices
 
-        int indicesSize = vertexCount * eboIndexType.getSize();
+		int indicesSize = vertexCount * eboIndexType.getSize();
 
-        ebo.bind();
+		ebo.bind();
 
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesSize, GL15.GL_STATIC_DRAW);
-        ebo.map(indicesSize, indices -> {
-            for (int i = 0; i < vertexCount; i++) {
-                indices.putInt(i);
-            }
-        });
+		ebo.alloc(indicesSize);
+		MappedBufferRange indices = ebo.getBuffer(0, indicesSize);
+		for (int i = 0; i < vertexCount; i++) {
+			indices.putInt(i);
+		}
+		indices.unmap();
 
-        ebo.unbind();
-    }
+		ebo.unbind();
+	}
 
-    @Override
-    protected void copyVertex(ByteBuffer to, int vertex) {
-        to.putFloat(getX(template, vertex));
-        to.putFloat(getY(template, vertex));
-        to.putFloat(getZ(template, vertex));
+	@Override
+	protected void copyVertex(MappedBufferRange to, int vertex) {
+		to.putFloat(getX(template, vertex));
+		to.putFloat(getY(template, vertex));
+		to.putFloat(getZ(template, vertex));
 
-        to.put(getNX(template, vertex));
-        to.put(getNY(template, vertex));
-        to.put(getNZ(template, vertex));
+		to.put(getNX(template, vertex));
+		to.put(getNY(template, vertex));
+		to.put(getNZ(template, vertex));
 
-        to.putFloat(getU(template, vertex));
-        to.putFloat(getV(template, vertex));
+		to.putFloat(getU(template, vertex));
+		to.putFloat(getV(template, vertex));
 
-        to.put(getR(template, vertex));
-        to.put(getG(template, vertex));
-        to.put(getB(template, vertex));
-        to.put(getA(template, vertex));
+		to.put(getR(template, vertex));
+		to.put(getG(template, vertex));
+		to.put(getB(template, vertex));
+		to.put(getA(template, vertex));
 
-        int light = getLight(template, vertex);
+		int light = getLight(template, vertex);
 
-        byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
-        byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
+		byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
+		byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
 
         to.put(block);
         to.put(sky);

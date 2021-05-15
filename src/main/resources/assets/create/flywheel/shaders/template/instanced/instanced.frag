@@ -2,11 +2,11 @@
 
 #flwbeginbody
 
-#FLWPrefixFields(FLWFragment, varying, v2f_)
+#FLWPrefixFields(Fragment, varying, v2f_)
 
 void main() {
-    FLWFragment f;
-    #FLWAssignFields(FLWFragment, f., v2f_)
+    Fragment f;
+    #FLWAssignFields(Fragment, f., v2f_)
 
     FLWMain(f);
 }

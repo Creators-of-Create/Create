@@ -1,7 +1,6 @@
 package com.jozufozu.flywheel.backend.core.materials;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
@@ -72,7 +71,7 @@ public class BasicData extends InstanceData implements IFlatLight<BasicData> {
 	}
 
 	@Override
-	public void write(ByteBuffer buf) {
-		buf.put(new byte[]{blockLight, skyLight, r, g, b, a});
+	public void write(MappedBuffer buf) {
+		buf.putByteArray(new byte[]{blockLight, skyLight, r, g, b, a});
 	}
 }

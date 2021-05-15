@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.render.effects;
 
-import java.nio.FloatBuffer;
-
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.math.vector.Matrix4f;
@@ -27,8 +26,8 @@ public class FilterSphere {
 
 	public Matrix4f filter;
 
-	public void write(FloatBuffer buf) {
-		buf.put(new float[]{
+	public void write(MappedBuffer buf) {
+		buf.putFloatArray(new float[]{
 				x,
 				y,
 				z,
@@ -50,6 +49,6 @@ public class FilterSphere {
 				0,        // padding
 		});
 
-		buf.put(RenderUtil.writeMatrix(filter));
+		buf.putFloatArray(RenderUtil.writeMatrix(filter));
 	}
 }

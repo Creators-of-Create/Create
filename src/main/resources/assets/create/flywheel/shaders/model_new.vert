@@ -1,23 +1,25 @@
 #flwbuiltins
-#flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
-#[FLWVertexData]
+#[VertexData]
 struct Vertex {
+#[Layout(float)]
     vec3 pos;
     vec3 normal;
     vec2 texCoords;
 };
 
-#[FLWInstanceData]
+#[InstanceData]
 struct Instance {
+#[Normalized(ushort)]
     vec2 light;
+    #[Normalized(ubyte)]
     vec4 color;
     mat4 transform;
     mat3 normalMat;
 };
 
-#[FLWFragment]
+#[Fragment]
 struct Raster {
     vec2 texCoords;
     vec4 color;

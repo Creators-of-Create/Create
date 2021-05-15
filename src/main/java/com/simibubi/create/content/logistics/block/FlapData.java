@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics.block;
 
-import java.nio.ByteBuffer;
-
 import com.jozufozu.flywheel.backend.core.materials.IFlatLight;
+import com.jozufozu.flywheel.backend.gl.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
@@ -114,17 +113,17 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	}
 
 	@Override
-	public void write(ByteBuffer buf) {
-		putVec3(buf, x, y, z);
-		putVec2(buf, blockLight, skyLight);
+	public void write(MappedBuffer buf) {
+		buf.putVec3(x, y, z);
+		buf.putVec2(blockLight, skyLight);
 
-		putVec3(buf, segmentOffsetX, segmentOffsetY, segmentOffsetZ);
-		putVec3(buf, pivotX, pivotY, pivotZ);
+		buf.putVec3(segmentOffsetX, segmentOffsetY, segmentOffsetZ);
+		buf.putVec3(pivotX, pivotY, pivotZ);
 
-		put(buf, horizontalAngle);
-		put(buf, intensity);
-		put(buf, flapScale);
+		buf.putFloat(horizontalAngle);
+		buf.putFloat(intensity);
+		buf.putFloat(flapScale);
 
-		put(buf, flapness);
+		buf.putFloat(flapness);
 	}
 }

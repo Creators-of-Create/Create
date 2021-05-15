@@ -1,12 +1,13 @@
 package com.simibubi.create.foundation.render.effects;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL31;
 
 import com.jozufozu.flywheel.backend.gl.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.GlBufferType;
+import com.jozufozu.flywheel.backend.gl.MappedBufferRange;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 import net.minecraft.util.ResourceLocation;
@@ -43,15 +44,15 @@ public class SphereFilterProgram extends GlProgram {
 	public SphereFilterProgram(ResourceLocation name, int handle) {
 		super(name, handle);
 
-		effectsUBO = new GlBuffer(GL31.GL_UNIFORM_BUFFER);
+		effectsUBO = new GlBuffer(GlBufferType.UNIFORM_BUFFER);
 
 		uniformBlock = GL31.glGetUniformBlockIndex(handle, "Filters");
 
 		GL31.glUniformBlockBinding(handle, uniformBlock, UBO_BINDING);
 
 		effectsUBO.bind();
-		effectsUBO.alloc(BUFFER_SIZE, GL20.GL_STATIC_DRAW);
-		GL31.glBindBufferBase(effectsUBO.getBufferType(), UBO_BINDING, effectsUBO.handle());
+		effectsUBO.alloc(BUFFER_SIZE);
+		GL31.glBindBufferBase(effectsUBO.getBufferTarget().glEnum, UBO_BINDING, effectsUBO.handle());
 		effectsUBO.unbind();
 
 		uInverseProjection = getUniformLocation("uInverseProjection");
@@ -79,15 +80,16 @@ public class SphereFilterProgram extends GlProgram {
 	}
 
 	public void uploadFilters(ArrayList<FilterSphere> filters) {
-		effectsUBO.bind(GL20.GL_ARRAY_BUFFER);
-		effectsUBO.map(GL20.GL_ARRAY_BUFFER, 0, BUFFER_SIZE, buf -> {
-			buf.putInt(filters.size());
-			buf.position(16);
-			FloatBuffer floatBuffer = buf.asFloatBuffer();
+		effectsUBO.bind(GlBufferType.ARRAY_BUFFER);
+		MappedBufferRange buffer = effectsUBO.getBuffer(0, BUFFER_SIZE);
+		buffer.putInt(filters.size())
+				.position(16);
 
-			filters.forEach(it -> it.write(floatBuffer));
-		});
-		effectsUBO.unbind(GL20.GL_ARRAY_BUFFER);
+		filters.forEach(it -> it.write(buffer));
+
+		buffer.unmap();
+
+		effectsUBO.unbind(GlBufferType.ARRAY_BUFFER);
 	}
 
 	public void bindInverseProjection(Matrix4f mat) {

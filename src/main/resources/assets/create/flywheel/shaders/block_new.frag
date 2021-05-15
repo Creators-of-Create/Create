@@ -1,6 +1,6 @@
 #flwbuiltins
 
-#[FLWFragment]
+#[Fragment]
 struct Raster {
     vec2 texCoords;
     vec4 color;
