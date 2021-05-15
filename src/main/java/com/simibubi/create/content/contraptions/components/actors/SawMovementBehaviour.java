@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;

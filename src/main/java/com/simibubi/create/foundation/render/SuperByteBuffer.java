@@ -150,10 +150,9 @@ public class SuperByteBuffer extends TemplateBuffer {
 					lightPos.transform(lightTransform);
 
 					int worldLight = getLight(Minecraft.getInstance().world, lightPos);
-					if (light >= 0) {
-						light = maxLight(worldLight, light);
-					}
+					light = maxLight(worldLight, light);
 				}
+
 				if (hybridLight)
 					builder.light(maxLight(light, getLight(buffer, i)));
 				else
@@ -165,12 +164,22 @@ public class SuperByteBuffer extends TemplateBuffer {
 				.endVertex();
 		}
 
-		transforms = new MatrixStack();
+		reset();
+	}
 
+	public SuperByteBuffer reset() {
+		transforms = new MatrixStack();
 		spriteShiftFunc = null;
-		shouldColor = false;
 		shouldLight = false;
 		hybridLight = false;
+		packedLightCoords = 0;
+		lightTransform = null;
+		shouldColor = false;
+		r = 0;
+		g = 0;
+		b = 0;
+		a = 0;
+		return this;
 	}
 
 	public MatrixStacker matrixStacker() {
@@ -263,7 +272,6 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	public SuperByteBuffer light(int packedLightCoords) {
 		shouldLight = true;
-		lightTransform = null;
 		this.packedLightCoords = packedLightCoords;
 		return this;
 	}

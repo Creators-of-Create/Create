@@ -58,7 +58,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class ContraptionRenderDispatcher {
 	private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());
 	private static final BlockModelShapes BLOCK_MODELS = Minecraft.getInstance().getModelManager().getBlockModelShapes();
-	private static int ticksUntilHolderRefresh;
+	private static int worldHolderRefreshCounter;
 
 	public static final Int2ObjectMap<RenderedContraption> RENDERERS = new Int2ObjectOpenHashMap<>();
 	public static final Int2ObjectMap<ContraptionWorldHolder> WORLD_HOLDERS = new Int2ObjectOpenHashMap<>();
@@ -73,9 +73,10 @@ public class ContraptionRenderDispatcher {
 			contraption.kinetics.tick();
 		}
 
-		if (ticksUntilHolderRefresh <= 0) {
+		worldHolderRefreshCounter++;
+		if (worldHolderRefreshCounter >= 20) {
 			removeDeadHolders();
-			ticksUntilHolderRefresh = 20;
+			worldHolderRefreshCounter = 0;
 		}
 	}
 
