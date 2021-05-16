@@ -1,5 +1,7 @@
 package com.jozufozu.flywheel.backend.instancing;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -12,7 +14,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
+import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -31,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
+	public static final VertexFormat MODEL_FORMAT = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
 
 	protected final InstancedTileRenderer<P> renderer;
 	protected final Cache<Object, InstancedModel<D>> models;
@@ -113,9 +119,30 @@ public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
 	}
 
 	private InstancedModel<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
-		BufferBuilder builder = getBufferBuilder(model, referenceState, ms);
+		BufferBuilderReader reader = new BufferBuilderReader(getBufferBuilder(model, referenceState, ms));
 
-		return new InstancedModel<>(renderer, spec.getInstanceFormat(), spec.getInstanceFactory(), builder);
+		VertexFormat format = MODEL_FORMAT;
+		int vertexCount = reader.getVertexCount();
+
+		ByteBuffer to = ByteBuffer.allocate(vertexCount * format.getStride());
+		to.order(ByteOrder.nativeOrder());
+
+		for (int i = 0; i < vertexCount; i++) {
+			to.putFloat(reader.getX(i));
+			to.putFloat(reader.getY(i));
+			to.putFloat(reader.getZ(i));
+
+			to.put(reader.getNX(i));
+			to.put(reader.getNY(i));
+			to.put(reader.getNZ(i));
+
+			to.putFloat(reader.getU(i));
+			to.putFloat(reader.getV(i));
+		}
+
+		to.rewind();
+
+		return new InstancedModel<>(format, to, vertexCount, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
 	}
 
 	private static final Direction[] dirs;

@@ -1,16 +1,23 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.core.IndexedModel;
+import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -25,6 +32,7 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -40,17 +48,21 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class RenderedContraption {
-    private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());
-    private static final BlockModelShapes BLOCK_MODELS = Minecraft.getInstance().getModelManager().getBlockModelShapes();
+	public static final VertexFormat FORMAT = VertexFormat.builder()
+			.addAttributes(ContraptionAttributes.class)
+			.build();
 
-    public Contraption contraption;
-    private final ContraptionLighter<?> lighter;
-    public final ContraptionKineticRenderer kinetics;
-    public final PlacementSimulationWorld renderWorld;
+	private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());
+	private static final BlockModelShapes BLOCK_MODELS = Minecraft.getInstance().getModelManager().getBlockModelShapes();
 
-    private final Map<RenderType, ContraptionModel> renderLayers = new HashMap<>();
+	public Contraption contraption;
+	private final ContraptionLighter<?> lighter;
+	public final ContraptionKineticRenderer kinetics;
+	public final PlacementSimulationWorld renderWorld;
 
-    private Matrix4f model;
+	private final Map<RenderType, IndexedModel> renderLayers = new HashMap<>();
+
+	private Matrix4f model;
     private AxisAlignedBB lightBox;
 
     public RenderedContraption(World world, Contraption contraption) {
@@ -79,7 +91,7 @@ public class RenderedContraption {
     }
 
     public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
-        ContraptionModel structure = renderLayers.get(layer);
+		IndexedModel structure = renderLayers.get(layer);
         if (structure != null) {
             setup(shader);
             structure.render();
@@ -120,9 +132,9 @@ public class RenderedContraption {
     }
 
     void invalidate() {
-        for (ContraptionModel buffer : renderLayers.values()) {
-            buffer.delete();
-        }
+		for (IndexedModel buffer : renderLayers.values()) {
+			buffer.delete();
+		}
         renderLayers.clear();
 
         lighter.lightVolume.delete();
@@ -131,17 +143,18 @@ public class RenderedContraption {
     }
 
     private void buildLayers() {
-        for (ContraptionModel buffer : renderLayers.values()) {
-            buffer.delete();
-        }
+		for (IndexedModel buffer : renderLayers.values()) {
+			buffer.delete();
+		}
 
         renderLayers.clear();
 
         List<RenderType> blockLayers = RenderType.getBlockLayers();
 
         for (RenderType layer : blockLayers) {
-            renderLayers.put(layer, buildStructureModel(renderWorld, contraption, layer));
-        }
+			IndexedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
+			if (layerModel != null) renderLayers.put(layer, layerModel);
+		}
     }
 
     private void buildInstancedTiles() {
@@ -153,29 +166,67 @@ public class RenderedContraption {
                     BlockPos pos = te.getPos();
                     te.setLocation(renderWorld, pos);
                     kinetics.add(te);
-                    te.setLocation(world, pos);
-                }
-            }
-        }
-    }
+					te.setLocation(world, pos);
+				}
+			}
+		}
+	}
 
-    private void buildActors() {
-        contraption.getActors().forEach(kinetics::createActor);
-    }
+	private void buildActors() {
+		contraption.getActors().forEach(kinetics::createActor);
+	}
 
-    private static ContraptionModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
-        BufferBuilder builder = buildStructure(renderWorld, c, layer);
-        return new ContraptionModel(builder);
-    }
+	@Nullable
+	private static IndexedModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+		BufferBuilderReader reader = new BufferBuilderReader(buildStructure(renderWorld, c, layer));
 
-    private static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
-        PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
+		int vertexCount = reader.getVertexCount();
+		if (vertexCount == 0) return null;
 
-        renderWorld.setTileEntities(c.presentTileEntities.values());
+		VertexFormat format = FORMAT;
 
-        for (Template.BlockInfo info : c.getBlocks()
-                                        .values())
-            // Skip individual lighting updates to prevent lag with large contraptions
+		ByteBuffer to = ByteBuffer.allocate(format.getStride() * vertexCount);
+		to.order(ByteOrder.nativeOrder());
+
+		for (int i = 0; i < vertexCount; i++) {
+			to.putFloat(reader.getX(i));
+			to.putFloat(reader.getY(i));
+			to.putFloat(reader.getZ(i));
+
+			to.put(reader.getNX(i));
+			to.put(reader.getNY(i));
+			to.put(reader.getNZ(i));
+
+			to.putFloat(reader.getU(i));
+			to.putFloat(reader.getV(i));
+
+			to.put(reader.getR(i));
+			to.put(reader.getG(i));
+			to.put(reader.getB(i));
+			to.put(reader.getA(i));
+
+			int light = reader.getLight(i);
+
+			byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
+			byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
+
+			to.put(block);
+			to.put(sky);
+		}
+
+		to.rewind();
+
+		return new IndexedModel(format, to, vertexCount);
+	}
+
+	private static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
+		PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
+
+		renderWorld.setTileEntities(c.presentTileEntities.values());
+
+		for (Template.BlockInfo info : c.getBlocks()
+				.values())
+			// Skip individual lighting updates to prevent lag with large contraptions
             renderWorld.setBlockState(info.pos, info.state, 128);
 
         renderWorld.updateLightSources();

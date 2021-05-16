@@ -1,24 +1,21 @@
 package com.jozufozu.flywheel.backend.instancing;
 
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 
 import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.BufferedModel;
-import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
+import com.jozufozu.flywheel.backend.core.BufferedModel;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
-import net.minecraft.client.renderer.BufferBuilder;
-
 public class InstancedModel<D extends InstanceData> extends BufferedModel {
-	public static final VertexFormat FORMAT = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
 
 	public final InstancedTileRenderer<?> renderer;
 
@@ -34,8 +31,8 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 	boolean anyToRemove;
 	boolean anyToUpdate;
 
-	public InstancedModel(InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, InstanceFactory<D> factory, BufferBuilder buf) {
-		super(FORMAT, buf);
+	public InstancedModel(VertexFormat modelFormat, ByteBuffer buf, int vertices, InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, InstanceFactory<D> factory) {
+		super(modelFormat, buf, vertices);
 		this.factory = factory;
 		this.instanceFormat = instanceFormat;
 		this.renderer = renderer;
@@ -223,20 +220,6 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 
 		data.subList(newSize, oldSize).clear();
 
-	}
-
-	@Override
-	protected void copyVertex(MappedBuffer constant, int i) {
-		constant.putFloat(getX(template, i));
-		constant.putFloat(getY(template, i));
-		constant.putFloat(getZ(template, i));
-
-		constant.put(getNX(template, i));
-		constant.put(getNY(template, i));
-		constant.put(getNZ(template, i));
-
-		constant.putFloat(getU(template, i));
-		constant.putFloat(getV(template, i));
 	}
 
 	protected int getTotalShaderAttributeCount() {

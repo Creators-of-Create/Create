@@ -1,33 +1,35 @@
-package com.jozufozu.flywheel.backend;
+package com.jozufozu.flywheel.backend.core;
 
-import org.lwjgl.opengl.GL15;
+import java.nio.ByteBuffer;
+
 import org.lwjgl.opengl.GL20;
 
+import com.jozufozu.flywheel.backend.RenderWork;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
-import com.simibubi.create.foundation.render.TemplateBuffer;
 
-import net.minecraft.client.renderer.BufferBuilder;
+public abstract class BufferedModel {
 
-public abstract class BufferedModel extends TemplateBuffer {
-
+	protected final ByteBuffer data;
 	protected final VertexFormat modelFormat;
+	protected final int vertexCount;
 	protected GlBuffer modelVBO;
 	private boolean initialized; // lazy init
 	private boolean removed;
 
-	protected BufferedModel(VertexFormat modelFormat, BufferBuilder buf) {
-		super(buf);
+	protected BufferedModel(VertexFormat modelFormat, ByteBuffer data, int vertices) {
+		this.data = data;
 		this.modelFormat = modelFormat;
+		this.vertexCount = vertices;
 	}
 
 	/**
 	 * Renders this model, checking first if there is anything to render.
 	 */
 	public final void render() {
-		if (vertexCount == 0 || removed) return;
+		if (vertexCount <= 0 || removed) return;
 
 		if (!initialized) {
 			// Lazily acquire resources in order to get around initialization order, as #getTotalShaderAttributeCount
@@ -60,21 +62,14 @@ public abstract class BufferedModel extends TemplateBuffer {
 	}
 
 	protected void initModel() {
-		int stride = modelFormat.getStride();
-		int invariantSize = vertexCount * stride;
-
 		// allocate the buffer on the gpu
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, invariantSize, GL15.GL_STATIC_DRAW);
+		modelVBO.alloc(data.capacity());
 
 		// mirror it in system memory so we can write to it
-		MappedBuffer buffer = modelVBO.getBuffer(0, invariantSize);
-		for (int i = 0; i < vertexCount; i++) {
-			copyVertex(buffer, i);
-		}
+		MappedBuffer buffer = modelVBO.getBuffer(0, data.capacity());
+		buffer.put(data);
 		buffer.flush();
 	}
-
-	protected abstract void copyVertex(MappedBuffer to, int index);
 
 	protected int getTotalShaderAttributeCount() {
 		return modelFormat.getShaderAttributeCount();

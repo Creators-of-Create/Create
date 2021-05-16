@@ -80,6 +80,12 @@ public abstract class MappedBuffer implements AutoCloseable {
 		return this;
 	}
 
+	public MappedBuffer put(ByteBuffer b) {
+		checkAndMap();
+		internal.put(b);
+		return this;
+	}
+
 	public MappedBuffer putVec4(float x, float y, float z, float w) {
 		checkAndMap();
 		internal.putFloat(x);
