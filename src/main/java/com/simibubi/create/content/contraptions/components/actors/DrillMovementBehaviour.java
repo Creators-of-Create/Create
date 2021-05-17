@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -36,9 +36,9 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		if (!Backend.canUseInstancing())
-			DrillRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffer);
+			DrillRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
 	@Override

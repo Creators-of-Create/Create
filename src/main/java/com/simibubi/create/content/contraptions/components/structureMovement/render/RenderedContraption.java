@@ -72,7 +72,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
         double z = MathHelper.lerp(pt, entity.lastTickPosZ, entity.getZ()) - camZ;
         stack.translate(x, y, z);
 
-        entity.doLocalTransforms(pt, new MatrixStack[]{ stack });
+        entity.doLocalTransforms(pt, new MatrixStack[] { stack });
 
         model = stack.peek().getModel();
 

@@ -2,9 +2,9 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.Optional;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -33,8 +33,8 @@ public class PortableStorageInterfaceMovement extends MovementBehaviour {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, ms, msLocal, buffer);
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		PortableStorageInterfaceRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
 	@Override

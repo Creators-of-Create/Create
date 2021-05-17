@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -32,8 +33,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		BlockState state = context.state;
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.DRILL_HEAD, state);
 		Direction facing = state.get(DrillBlock.FACING);
@@ -44,18 +44,22 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
-		for (MatrixStack m : matrixStacks)
-			MatrixStacker.of(m)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing))
-				.rotateZ(angle)
-				.unCentre();
+		MatrixStack m = matrices.contraptionStack;
+		m.push();
+		MatrixStacker.of(m)
+			.centre()
+			.rotateY(AngleHelper.horizontalAngle(facing))
+			.rotateX(AngleHelper.verticalAngle(facing))
+			.rotateZ(angle)
+			.unCentre();
 
 		superBuffer
-			.light(msLocal.peek().getModel(),
+			.transform(matrices.contraptionStack)
+			.light(matrices.entityMatrix,
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getSolid()));
+
+		m.pop();
 	}
 
 }

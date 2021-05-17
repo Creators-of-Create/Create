@@ -122,20 +122,20 @@ public class ContraptionRenderDispatcher {
 		glActiveTexture(GL_TEXTURE0);
 	}
 
-	public static void render(AbstractContraptionEntity entity, MatrixStack ms, IRenderTypeBuffer buffers,
-							  MatrixStack msLocal, Contraption contraption) {
+	public static void render(AbstractContraptionEntity entity, Contraption contraption,
+							  ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		World world = entity.world;
 		if (Backend.canUseVBOs() && Backend.isFlywheelWorld(world)) {
 			RenderedContraption renderer = getRenderer(world, contraption);
 			PlacementSimulationWorld renderWorld = renderer.renderWorld;
 
-			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, ms, msLocal, buffers);
+			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
 		} else {
 			ContraptionWorldHolder holder = getWorldHolder(world, contraption);
 			PlacementSimulationWorld renderWorld = holder.renderWorld;
 
-			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, ms, msLocal, buffers);
-			ContraptionRenderDispatcher.renderStructure(world, renderWorld, contraption, ms, msLocal, buffers);
+			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
+			ContraptionRenderDispatcher.renderStructure(world, renderWorld, contraption, matrices, buffers);
 		}
 	}
 
@@ -182,21 +182,21 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static void renderDynamic(World world, PlacementSimulationWorld renderWorld, Contraption c,
-									 MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		renderTileEntities(world, renderWorld, c, ms, msLocal, buffer);
+									 ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		renderTileEntities(world, renderWorld, c, matrices, buffer);
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
-		renderActors(world, renderWorld, c, ms, msLocal, buffer);
+		renderActors(world, renderWorld, c, matrices, buffer);
 	}
 
 	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld, Contraption c,
-										  MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities, ms, msLocal, buffer);
+										  ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities,
+				matrices.getFinalStack(), matrices.getFinalLight(), buffer);
 	}
 
 	protected static void renderActors(World world, PlacementSimulationWorld renderWorld, Contraption c,
-									   MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[] {ms, msLocal};
+									   ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		for (Pair<Template.BlockInfo, MovementContext> actor : c.getActors()) {
 			MovementContext context = actor.getRight();
 			if (context == null)
@@ -204,23 +204,22 @@ public class ContraptionRenderDispatcher {
 			if (context.world == null)
 				context.world = world;
 			Template.BlockInfo blockInfo = actor.getLeft();
-			for (MatrixStack m : matrixStacks) {
-				m.push();
-				MatrixStacker.of(m)
-						.translate(blockInfo.pos);
-			}
+
+			MatrixStack m = matrices.contraptionStack;
+			m.push();
+			MatrixStacker.of(m)
+				.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 			if (movementBehaviour != null)
-				movementBehaviour.renderInContraption(context, renderWorld, ms, msLocal, buffer);
+				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 
-			for (MatrixStack m : matrixStacks)
-				m.pop();
+			m.pop();
 		}
 	}
 
 	public static void renderStructure(World world, PlacementSimulationWorld renderWorld, Contraption c,
-										MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
+									   ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
 		List<RenderType> blockLayers = RenderType.getBlockLayers();
 
@@ -231,11 +230,11 @@ public class ContraptionRenderDispatcher {
 			SuperByteBuffer contraptionBuffer = bufferCache.get(CONTRAPTION, key, () -> buildStructureBuffer(renderWorld, c, layer));
 			if (contraptionBuffer.isEmpty())
 				continue;
-			Matrix4f model = msLocal.peek()
-					.getModel();
-			contraptionBuffer.light(model)
+			contraptionBuffer
+					.transform(matrices.contraptionStack)
+					.light(matrices.entityMatrix)
 					.hybridLight()
-					.renderInto(ms, buffer.getBuffer(layer));
+					.renderInto(matrices.entityStack, buffer.getBuffer(layer));
 		}
 	}
 
@@ -278,29 +277,18 @@ public class ContraptionRenderDispatcher {
 
 	public static int getLight(World world, float lx, float ly, float lz) {
 		BlockPos.Mutable pos = new BlockPos.Mutable();
-		float sky = 0, block = 0;
+		float block = 0, sky = 0;
 		float offset = 1 / 8f;
 
 		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset)
 			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset)
 				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
 					pos.setPos(lx + xOffset, ly + yOffset, lz + zOffset);
-					sky += world.getLightLevel(LightType.SKY, pos) / 8f;
 					block += world.getLightLevel(LightType.BLOCK, pos) / 8f;
+					sky += world.getLightLevel(LightType.SKY, pos) / 8f;
 				}
 
-		return ((int) sky) << 20 | ((int) block) << 4;
-	}
-
-	public static int getContraptionLightAt(World world, PlacementSimulationWorld renderWorld, BlockPos pos, BlockPos lightPos) {
-		int worldLight = WorldRenderer.getLightmapCoordinates(world, lightPos);
-
-		if (renderWorld != null) {
-			int renderWorldLight = WorldRenderer.getLightmapCoordinates(renderWorld, pos);
-			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
-		}
-
-		return worldLight;
+		return LightTexture.pack((int) block, (int) sky);
 	}
 
 	public static int getContraptionWorldLight(MovementContext context, PlacementSimulationWorld renderWorld) {

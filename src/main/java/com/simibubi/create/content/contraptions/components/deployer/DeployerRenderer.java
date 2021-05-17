@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -36,7 +37,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -156,8 +156,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
 		BlockPos pos = BlockPos.ZERO;
@@ -167,8 +166,6 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = PartialBufferer.get(handPose, blockState);
-		pole = transform(world, pole, blockState, pos, true);
-		hand = transform(world, hand, blockState, pos, false);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
@@ -184,14 +181,21 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		Vector3d offset = Vector3d.of(blockState.get(FACING)
 			.getDirectionVec()).scale(factor);
 
-		Matrix4f lighting = msLocal.peek()
-			.getModel();
-		for (MatrixStack m : matrixStacks)
-			m.translate(offset.x, offset.y, offset.z);
-		pole.light(lighting, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(ms, builder);
-		hand.light(lighting, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(ms, builder);
+		MatrixStack m = matrices.contraptionStack;
+		m.push();
+		m.translate(offset.x, offset.y, offset.z);
+
+		pole.transform(m);
+		hand.transform(m);
+		pole = transform(world, pole, blockState, pos, true);
+		hand = transform(world, hand, blockState, pos, false);
+
+		pole.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, builder);
+		hand.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, builder);
+
+		m.pop();
 	}
 
 	static PartialModel getHandPose(DeployerTileEntity.Mode mode) {

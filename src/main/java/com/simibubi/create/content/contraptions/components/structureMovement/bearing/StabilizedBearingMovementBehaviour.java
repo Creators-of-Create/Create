@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -13,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -33,7 +33,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffer) {
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		if (Backend.canUseInstancing()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
@@ -53,13 +53,14 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		orientation = rotation;
 
+		superBuffer.transform(matrices.contraptionStack);
 		superBuffer.rotateCentered(orientation);
 
 		// render
 		superBuffer
-			.light(msLocal.peek().getModel(),
+			.light(matrices.entityMatrix,
 				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override

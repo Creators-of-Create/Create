@@ -5,6 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -41,7 +42,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		MatrixStack ms, MatrixStack msLocal, IRenderTypeBuffer buffers) {
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.get(HORIZONTAL_FACING);
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
@@ -51,12 +52,13 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		if (context.contraption.stalled)
 			speed = 0;
 
+		superBuffer.transform(matrices.contraptionStack);
 		transform(context.world, facing, superBuffer, speed);
 
 		superBuffer
-			.light(msLocal.peek().getModel(),
+			.light(matrices.entityMatrix,
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
+			.renderInto(matrices.entityStack, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
 
 	public static void transform(World world, Direction facing, SuperByteBuffer superBuffer, float speed) {
