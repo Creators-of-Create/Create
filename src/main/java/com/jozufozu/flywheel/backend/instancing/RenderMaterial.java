@@ -14,7 +14,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
-import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
@@ -36,7 +35,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
-	public static final VertexFormat MODEL_FORMAT = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
 
 	protected final InstancedTileRenderer<P> renderer;
 	protected final Cache<Object, InstancedModel<D>> models;
@@ -121,7 +119,7 @@ public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
 	private InstancedModel<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		BufferBuilderReader reader = new BufferBuilderReader(getBufferBuilder(model, referenceState, ms));
 
-		VertexFormat format = MODEL_FORMAT;
+		VertexFormat format = spec.getModelFormat();
 		int vertexCount = reader.getVertexCount();
 
 		ByteBuffer to = ByteBuffer.allocate(vertexCount * format.getStride());
