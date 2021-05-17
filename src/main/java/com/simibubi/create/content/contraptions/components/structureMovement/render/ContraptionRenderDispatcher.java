@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -247,7 +247,7 @@ public class ContraptionRenderDispatcher {
 		MatrixStack ms = new MatrixStack();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		builder.begin(GL_QUADS, DefaultVertexFormats.BLOCK);
 
 		ForgeHooksClient.setRenderLayer(layer);
 		BlockModelRenderer.enableCache();

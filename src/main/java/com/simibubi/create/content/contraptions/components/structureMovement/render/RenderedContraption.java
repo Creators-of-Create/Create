@@ -37,106 +37,106 @@ public class RenderedContraption extends ContraptionWorldHolder {
 			.addAttributes(ContraptionAttributes.class)
 			.build();
 
-    private final ContraptionLighter<?> lighter;
-    public final ContraptionKineticRenderer kinetics;
+	private final ContraptionLighter<?> lighter;
+	public final ContraptionKineticRenderer kinetics;
 
 	private final Map<RenderType, IndexedModel> renderLayers = new HashMap<>();
 
 	private Matrix4f model;
-    private AxisAlignedBB lightBox;
+	private AxisAlignedBB lightBox;
 
-    public RenderedContraption(World world, PlacementSimulationWorld renderWorld, Contraption contraption) {
-        super(contraption, renderWorld);
-        this.lighter = contraption.makeLighter();
-        this.kinetics = new ContraptionKineticRenderer(this);
+	public RenderedContraption(World world, PlacementSimulationWorld renderWorld, Contraption contraption) {
+		super(contraption, renderWorld);
+		this.lighter = contraption.makeLighter();
+		this.kinetics = new ContraptionKineticRenderer(this);
 
-        buildLayers();
-        if (Backend.canUseInstancing()) {
-            buildInstancedTiles();
-            buildActors();
-        }
-    }
+		buildLayers();
+		if (Backend.canUseInstancing()) {
+			buildInstancedTiles();
+			buildActors();
+		}
+	}
 
-    public ContraptionLighter<?> getLighter() {
-        return lighter;
-    }
+	public ContraptionLighter<?> getLighter() {
+		return lighter;
+	}
 
-    public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
+	public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
 		IndexedModel structure = renderLayers.get(layer);
-        if (structure != null) {
-            setup(shader);
-            structure.render();
-            teardown();
-        }
-    }
+		if (structure != null) {
+			setup(shader);
+			structure.render();
+			teardown();
+		}
+	}
 
-    public void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
-        kinetics.beginFrame(info);
+	public void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
+		kinetics.beginFrame(info);
 
-        AbstractContraptionEntity entity = contraption.entity;
-        float pt = AnimationTickHolder.getPartialTicks();
+		AbstractContraptionEntity entity = contraption.entity;
+		float pt = AnimationTickHolder.getPartialTicks();
 
-        MatrixStack stack = new MatrixStack();
+		MatrixStack stack = new MatrixStack();
 
-        double x = MathHelper.lerp(pt, entity.lastTickPosX, entity.getX()) - camX;
-        double y = MathHelper.lerp(pt, entity.lastTickPosY, entity.getY()) - camY;
-        double z = MathHelper.lerp(pt, entity.lastTickPosZ, entity.getZ()) - camZ;
-        stack.translate(x, y, z);
+		double x = MathHelper.lerp(pt, entity.lastTickPosX, entity.getX()) - camX;
+		double y = MathHelper.lerp(pt, entity.lastTickPosY, entity.getY()) - camY;
+		double z = MathHelper.lerp(pt, entity.lastTickPosZ, entity.getZ()) - camZ;
+		stack.translate(x, y, z);
 
-        entity.doLocalTransforms(pt, new MatrixStack[] { stack });
+		entity.doLocalTransforms(pt, new MatrixStack[] { stack });
 
-        model = stack.peek().getModel();
+		model = stack.peek().getModel();
 
-        AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
+		AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
 
-        this.lightBox = lightBox.offset(-camX, -camY, -camZ);
-    }
+		this.lightBox = lightBox.offset(-camX, -camY, -camZ);
+	}
 
-    void setup(ContraptionProgram shader) {
-        if (model == null || lightBox == null) return;
-        shader.bind(model, lightBox);
-        lighter.lightVolume.bind();
-    }
+	void setup(ContraptionProgram shader) {
+		if (model == null || lightBox == null) return;
+		shader.bind(model, lightBox);
+		lighter.lightVolume.bind();
+	}
 
-    void teardown() {
-        lighter.lightVolume.unbind();
-    }
+	void teardown() {
+		lighter.lightVolume.unbind();
+	}
 
-    void invalidate() {
+	void invalidate() {
 		for (IndexedModel buffer : renderLayers.values()) {
 			buffer.delete();
 		}
-        renderLayers.clear();
+		renderLayers.clear();
 
-        lighter.lightVolume.delete();
+		lighter.lightVolume.delete();
 
-        kinetics.invalidate();
-    }
+		kinetics.invalidate();
+	}
 
-    private void buildLayers() {
+	private void buildLayers() {
 		for (IndexedModel buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 
-        renderLayers.clear();
+		renderLayers.clear();
 
-        List<RenderType> blockLayers = RenderType.getBlockLayers();
+		List<RenderType> blockLayers = RenderType.getBlockLayers();
 
-        for (RenderType layer : blockLayers) {
+		for (RenderType layer : blockLayers) {
 			IndexedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
 			if (layerModel != null) renderLayers.put(layer, layerModel);
 		}
-    }
+	}
 
-    private void buildInstancedTiles() {
-        Collection<TileEntity> tileEntities = contraption.maybeInstancedTileEntities;
-        if (!tileEntities.isEmpty()) {
-            for (TileEntity te : tileEntities) {
-                if (te instanceof IInstanceRendered) {
-                    World world = te.getWorld();
-                    BlockPos pos = te.getPos();
-                    te.setLocation(renderWorld, pos);
-                    kinetics.add(te);
+	private void buildInstancedTiles() {
+		Collection<TileEntity> tileEntities = contraption.maybeInstancedTileEntities;
+		if (!tileEntities.isEmpty()) {
+			for (TileEntity te : tileEntities) {
+				if (te instanceof IInstanceRendered) {
+					World world = te.getWorld();
+					BlockPos pos = te.getPos();
+					te.setLocation(renderWorld, pos);
+					kinetics.add(te);
 					te.setLocation(world, pos);
 				}
 			}

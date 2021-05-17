@@ -54,7 +54,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 			.unCentre();
 
 		superBuffer
-			.transform(matrices.contraptionStack)
+			.transform(m)
 			.light(matrices.entityMatrix,
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getSolid()));
