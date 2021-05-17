@@ -1,6 +1,6 @@
 package com.jozufozu.flywheel.backend.core.materials;
 
-import com.jozufozu.flywheel.backend.gl.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;

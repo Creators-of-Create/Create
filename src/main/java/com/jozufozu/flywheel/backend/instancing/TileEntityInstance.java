@@ -117,11 +117,11 @@ public abstract class TileEntityInstance<T extends TileEntity> implements IInsta
 		models.forEach(model -> model.setBlockLight(block).setSkyLight(sky));
 	}
 
-	protected RenderMaterial<?, InstancedModel<ModelData>> getTransformMaterial() {
+	protected RenderMaterial<?, ModelData> getTransformMaterial() {
 		return renderer.getTransformMaterial();
 	}
 
-	protected RenderMaterial<?, InstancedModel<OrientedData>> getOrientedMaterial() {
+	protected RenderMaterial<?, OrientedData> getOrientedMaterial() {
 		return renderer.getOrientedMaterial();
 	}
 }

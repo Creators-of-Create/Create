@@ -47,7 +47,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	public ArmInstance(InstancedTileRenderer<?> modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
 
-		RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+		RenderMaterial<?, ModelData> mat = getTransformMaterial();
 
 		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
 		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();

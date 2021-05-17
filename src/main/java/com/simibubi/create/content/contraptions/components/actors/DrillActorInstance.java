@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -21,7 +20,7 @@ public class DrillActorInstance extends ActorInstance {
     public DrillActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<?, InstancedModel<ActorData>> renderMaterial = modelManager.getActorMaterial();
+        RenderMaterial<?, ActorData> renderMaterial = modelManager.getActorMaterial();
 
         BlockState state = context.state;
 

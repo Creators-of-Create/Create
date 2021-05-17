@@ -5,7 +5,6 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -45,7 +44,7 @@ public class DeployerActorInstance extends ActorInstance {
     public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
         super(modelManager, context);
 
-        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.getTransformMaterial();
+        RenderMaterial<ContraptionProgram, ModelData> mat = modelManager.getTransformMaterial();
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);

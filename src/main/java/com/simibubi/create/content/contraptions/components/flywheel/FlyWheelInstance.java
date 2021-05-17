@@ -63,15 +63,15 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 			connectorAngleMult = flipAngle ? -1 : 1;
 
-			RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+			RenderMaterial<?, ModelData> mat = getTransformMaterial();
 
-            upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
-            lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
-            upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING, blockState).createInstance();
-            lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING, blockState).createInstance();
+			upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
+			lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();
+			upperSliding = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_SLIDING, blockState).createInstance();
+			lowerSliding = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_SLIDING, blockState).createInstance();
 
-            connectors = Lists.newArrayList(upperRotating, lowerRotating, upperSliding, lowerSliding);
-        } else {
+			connectors = Lists.newArrayList(upperRotating, lowerRotating, upperSliding, lowerSliding);
+		} else {
             connectors = Collections.emptyList();
         }
 

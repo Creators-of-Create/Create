@@ -46,7 +46,7 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 
 		materials = new HashMap<>();
 		for (MaterialSpec<?> spec : Backend.allMaterials()) {
-			materials.put(spec, spec.create(this));
+			materials.put(spec, new RenderMaterial<>(this, spec));
 		}
 
 		queuedUpdates = ConcurrentHashMap.newKeySet(64);
@@ -137,15 +137,15 @@ public abstract class InstancedTileRenderer<P extends BasicProgram> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <M extends InstancedModel<?>> RenderMaterial<P, M> getMaterial(MaterialSpec<M> materialType) {
-		return (RenderMaterial<P, M>) materials.get(materialType);
+	public <D extends InstanceData> RenderMaterial<P, D> getMaterial(MaterialSpec<D> materialType) {
+		return (RenderMaterial<P, D>) materials.get(materialType);
 	}
 
-	public RenderMaterial<P, InstancedModel<ModelData>> getTransformMaterial() {
+	public RenderMaterial<P, ModelData> getTransformMaterial() {
 		return getMaterial(AllMaterialSpecs.TRANSFORMED);
 	}
 
-	public RenderMaterial<P, InstancedModel<OrientedData>> getOrientedMaterial() {
+	public RenderMaterial<P, OrientedData> getOrientedMaterial() {
 		return getMaterial(AllMaterialSpecs.ORIENTED);
 	}
 

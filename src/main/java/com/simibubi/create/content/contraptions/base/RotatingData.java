@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.gl.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 
 import net.minecraft.util.Direction;
@@ -11,9 +11,9 @@ public class RotatingData extends KineticData {
     private byte rotationAxisY;
     private byte rotationAxisZ;
 
-    protected RotatingData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public RotatingData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
     public RotatingData setRotationAxis(Direction.Axis axis) {
         Direction orientation = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);

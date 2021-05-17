@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.backend.core.materials.BasicData;
-import com.jozufozu.flywheel.backend.gl.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.foundation.utility.ColorHelper;
 

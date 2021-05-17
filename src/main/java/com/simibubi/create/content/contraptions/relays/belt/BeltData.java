@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import com.jozufozu.flywheel.backend.gl.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -21,9 +21,9 @@ public class BeltData extends KineticData {
     private float maxV;
     private byte scrollMult;
 
-    protected BeltData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public BeltData(InstancedModel<?> owner) {
+		super(owner);
+	}
 
     public BeltData setRotation(Quaternion q) {
         this.qX = q.getX();

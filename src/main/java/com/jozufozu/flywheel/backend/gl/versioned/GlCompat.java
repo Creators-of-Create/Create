@@ -23,7 +23,7 @@ import com.jozufozu.flywheel.backend.gl.versioned.instancing.VertexArrayObject;
  * most appropriate version of a feature for the current system.
  */
 public class GlCompat {
-	public final MapBuffer mapBuffer;
+	public final MapBufferRange mapBufferRange;
 
 	public final VertexArrayObject vao;
 	public final InstancedArrays instancedArrays;
@@ -34,7 +34,7 @@ public class GlCompat {
 	public final RGPixelFormat pixelFormat;
 
 	public GlCompat(GLCapabilities caps) {
-		mapBuffer = getLatest(MapBuffer.class, caps);
+		mapBufferRange = getLatest(MapBufferRange.class, caps);
 
 		vao = getLatest(VertexArrayObject.class, caps);
 		instancedArrays = getLatest(InstancedArrays.class, caps);

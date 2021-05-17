@@ -33,7 +33,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
         int skyLight = world.getLightLevel(LightType.SKY, pos);
         updateSourceFacing();
 
-        RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
+        RenderMaterial<?, RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction direction : Iterate.directions) {
 			final Direction.Axis axis = direction.getAxis();

@@ -1,8 +1,6 @@
 package com.simibubi.create.foundation.render;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -26,7 +24,9 @@ import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 
-public class SuperByteBuffer extends TemplateBuffer {
+public class SuperByteBuffer {
+
+	private final BufferBuilderReader template;
 
 	// Vertex Position
 	private MatrixStack transforms;
@@ -46,7 +46,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	private Matrix4f lightTransform;
 
 	public SuperByteBuffer(BufferBuilder buf) {
-		super(buf);
+		template = new BufferBuilderReader(buf);
 		transforms = new MatrixStack();
 	}
 
@@ -66,21 +66,19 @@ public class SuperByteBuffer extends TemplateBuffer {
 	Vector4f lightPos = new Vector4f();
 
 	public void renderInto(MatrixStack input, IVertexBuilder builder) {
-		ByteBuffer buffer = template;
-		if (((Buffer) buffer).limit() == 0)
+		if (isEmpty())
 			return;
-		((Buffer) buffer).rewind();
 
 		Matrix3f normalMat = transforms.peek()
-			.getNormal()
-			.copy();
+				.getNormal()
+				.copy();
 
 		Matrix4f modelMat = input.peek()
-			.getModel()
-			.copy();
+				.getModel()
+				.copy();
 
 		Matrix4f localTransforms = transforms.peek()
-			.getModel();
+				.getModel();
 		modelMat.multiply(localTransforms);
 
 		if (useWorldLight) {
@@ -89,18 +87,18 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 		boolean hasDefaultLight = packedLightCoords != 0;
 		float f = .5f;
-		int vertexCount = vertexCount(buffer);
+		int vertexCount = template.getVertexCount();
 		for (int i = 0; i < vertexCount; i++) {
-			float x = getX(buffer, i);
-			float y = getY(buffer, i);
-			float z = getZ(buffer, i);
-			byte r = getR(buffer, i);
-			byte g = getG(buffer, i);
-			byte b = getB(buffer, i);
-			byte a = getA(buffer, i);
-			float normalX = getNX(buffer, i) / 127f;
-			float normalY = getNY(buffer, i) / 127f;
-			float normalZ = getNZ(buffer, i) / 127f;
+			float x = template.getX(i);
+			float y = template.getY(i);
+			float z = template.getZ(i);
+			byte r = template.getR(i);
+			byte g = template.getG(i);
+			byte b = template.getB(i);
+			byte a = template.getA(i);
+			float normalX = template.getNX(i) / 127f;
+			float normalY = template.getNY(i) / 127f;
+			float normalZ = template.getNZ(i) / 127f;
 
 			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
 			normal.set(normalX, normalY, normalZ);
@@ -134,8 +132,8 @@ public class SuperByteBuffer extends TemplateBuffer {
 				builder.color(colorR, colorG, colorB, a);
 			}
 
-			float u = getU(buffer, i);
-			float v = getV(buffer, i);
+			float u = template.getU(i);
+			float v = template.getV(i);
 
 			if (spriteShiftFunc != null) {
 				spriteShiftFunc.shift(builder, u, v);
@@ -157,11 +155,11 @@ public class SuperByteBuffer extends TemplateBuffer {
 			} else if (hasDefaultLight) {
 				light = packedLightCoords;
 			} else {
-				light = getLight(buffer, i);
+				light = template.getLight(i);
 			}
 
 			if (hybridLight) {
-				builder.light(maxLight(light, getLight(buffer, i)));
+				builder.light(maxLight(light, template.getLight(i)));
 			} else {
 				builder.light(light);
 			}
@@ -333,7 +331,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 	}
 
 	public boolean isEmpty() {
-		return ((Buffer) template).limit() == 0;
+		return template.isEmpty();
 	}
 
 	@FunctionalInterface

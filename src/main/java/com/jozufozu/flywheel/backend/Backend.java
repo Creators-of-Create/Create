@@ -26,10 +26,9 @@ import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.util.WorldAttached;
-import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -131,7 +130,7 @@ public class Backend {
 	/**
 	 * Register an instancing material.
 	 */
-	public static <M extends InstancedModel<?>> MaterialSpec<M> register(MaterialSpec<M> spec) {
+	public static <D extends InstanceData> MaterialSpec<D> register(MaterialSpec<D> spec) {
 		ResourceLocation name = spec.name;
 		if (materialRegistry.containsKey(name)) {
 			throw new IllegalStateException("Material spec '" + name + "' already registered.");
@@ -273,14 +272,6 @@ public class Backend {
 
 	public static boolean canUseInstancing(World world) {
 		return canUseInstancing() && isFlywheelWorld(world);
-	}
-
-	/**
-	 * TODO: Remove in favor of separate debug programs specified by the SpecLoader/IMultiProgram
-	 */
-	@Deprecated
-	public static int getDebugMode() {
-		return KineticDebugger.isActive() ? 1 : 0;
 	}
 
 	public static Collection<MaterialSpec<?>> allMaterials() {

@@ -26,7 +26,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
         float speed = tile.getSpeed();
 
-        RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
+        RenderMaterial<?, RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
