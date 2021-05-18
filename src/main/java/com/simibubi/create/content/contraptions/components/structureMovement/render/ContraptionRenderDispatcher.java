@@ -59,15 +59,17 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.common.util.Lazy;
 
 public class ContraptionRenderDispatcher {
-	private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());
-	private static final BlockModelShapes BLOCK_MODELS = Minecraft.getInstance().getModelManager().getBlockModelShapes();
+	private static final Lazy<BlockModelRenderer> MODEL_RENDERER = Lazy.of(() -> new BlockModelRenderer(Minecraft.getInstance().getBlockColors()));
+	private static final Lazy<BlockModelShapes> BLOCK_MODELS = Lazy.of(() -> Minecraft.getInstance().getModelManager().getBlockModelShapes());
 	private static int worldHolderRefreshCounter;
 
 	public static final Int2ObjectMap<RenderedContraption> RENDERERS = new Int2ObjectOpenHashMap<>();
 	public static final Int2ObjectMap<ContraptionWorldHolder> WORLD_HOLDERS = new Int2ObjectOpenHashMap<>();
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
+
 	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
 	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new), () -> Stream.of(AllProgramSpecs.STRUCTURE), ModelTemplate::new);
 	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
@@ -272,8 +274,8 @@ public class ContraptionRenderDispatcher {
 
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			MODEL_RENDERER.renderModel(renderWorld, BLOCK_MODELS.getModel(state), state, pos, ms, builder, true,
-									   random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+			MODEL_RENDERER.get().renderModel(renderWorld, BLOCK_MODELS.get().getModel(state), state, pos, ms, builder, true,
+					random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
 			ms.pop();
 		}
 		BlockModelRenderer.disableCache();
