@@ -18,7 +18,7 @@ struct Rotating {
 #flwinclude <"create:data/blockfragment.glsl">
 
 mat4 kineticRotation(float offset, float speed, vec3 axis) {
-    float degrees = offset + uTime * speed * 3./10.;
+    float degrees = offset + uTime * speed * -3./10.;
     float angle = fract(degrees / 360.) * PI * 2.;
 
     return rotate(axis, angle);
