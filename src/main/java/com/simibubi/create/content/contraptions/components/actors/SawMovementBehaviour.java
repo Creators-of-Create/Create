@@ -1,12 +1,13 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -75,9 +76,9 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-									IRenderTypeBuffer buffer) {
-		SawRenderer.renderInContraption(context, ms, msLocal, buffer);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+									ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import static org.lwjgl.opengl.GL13.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL13.glDisable;
-import static org.lwjgl.opengl.GL13.glEnable;
 
 import java.util.List;
 import java.util.Random;
@@ -40,7 +40,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -48,7 +48,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
@@ -62,20 +61,30 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class ContraptionRenderDispatcher {
-	public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
+	private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());
+	private static final BlockModelShapes BLOCK_MODELS = Minecraft.getInstance().getModelManager().getBlockModelShapes();
+	private static int worldHolderRefreshCounter;
+
+	public static final Int2ObjectMap<RenderedContraption> RENDERERS = new Int2ObjectOpenHashMap<>();
+	public static final Int2ObjectMap<ContraptionWorldHolder> WORLD_HOLDERS = new Int2ObjectOpenHashMap<>();
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
 	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new), () -> Stream.of(AllProgramSpecs.STRUCTURE), ModelTemplate::new);
 	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
-	protected static PlacementSimulationWorld renderWorld;
 
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;
 
-		for (RenderedContraption contraption : renderers.values()) {
+		for (RenderedContraption contraption : RENDERERS.values()) {
 			contraption.getLighter().tick(contraption);
 
 			contraption.kinetics.tick();
+		}
+
+		worldHolderRefreshCounter++;
+		if (worldHolderRefreshCounter >= 20) {
+			removeDeadHolders();
+			worldHolderRefreshCounter = 0;
 		}
 	}
 
@@ -83,7 +92,7 @@ public class ContraptionRenderDispatcher {
 		double camX = info.getProjectedView().x;
 		double camY = info.getProjectedView().y;
 		double camZ = info.getProjectedView().z;
-		for (RenderedContraption renderer : renderers.values()) {
+		for (RenderedContraption renderer : RENDERERS.values()) {
 			renderer.beginFrame(info, camX, camY, camZ);
 		}
 	}
@@ -91,7 +100,7 @@ public class ContraptionRenderDispatcher {
 	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
 		removeDeadContraptions();
 
-		if (renderers.isEmpty()) return;
+		if (RENDERERS.isEmpty()) return;
 
 		layer.startDrawing();
 		glEnable(GL_TEXTURE_3D);
@@ -104,13 +113,13 @@ public class ContraptionRenderDispatcher {
 			structureShader.uploadViewProjection(viewProjection);
 			structureShader.uploadCameraPos(camX, camY, camZ);
 
-			for (RenderedContraption renderer : renderers.values()) {
+			for (RenderedContraption renderer : RENDERERS.values()) {
 				renderer.doRenderLayer(layer, structureShader);
 			}
 		}
 
 		if (Backend.canUseInstancing()) {
-			for (RenderedContraption renderer : renderers.values()) {
+			for (RenderedContraption renderer : RENDERERS.values()) {
 				renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
 				renderer.teardown();
 			}
@@ -121,70 +130,81 @@ public class ContraptionRenderDispatcher {
 		glActiveTexture(GL_TEXTURE0);
 	}
 
+	public static void render(AbstractContraptionEntity entity, Contraption contraption,
+							  ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		World world = entity.world;
+		if (Backend.canUseVBOs() && Backend.isFlywheelWorld(world)) {
+			RenderedContraption renderer = getRenderer(world, contraption);
+			PlacementSimulationWorld renderWorld = renderer.renderWorld;
+
+			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
+		} else {
+			ContraptionWorldHolder holder = getWorldHolder(world, contraption);
+			PlacementSimulationWorld renderWorld = holder.renderWorld;
+
+			ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
+			ContraptionRenderDispatcher.renderStructure(world, renderWorld, contraption, matrices, buffers);
+		}
+	}
+
 	private static RenderedContraption getRenderer(World world, Contraption c) {
 		int entityId = c.entity.getEntityId();
-		RenderedContraption contraption = renderers.get(entityId);
+		RenderedContraption contraption = RENDERERS.get(entityId);
 
 		if (contraption == null) {
-			contraption = new RenderedContraption(world, c);
-			renderers.put(entityId, contraption);
+			PlacementSimulationWorld renderWorld = setupRenderWorld(world, c);
+			contraption = new RenderedContraption(world, renderWorld, c);
+			RENDERERS.put(entityId, contraption);
 		}
 
 		return contraption;
 	}
 
-	public static void render(AbstractContraptionEntity entity, MatrixStack ms, IRenderTypeBuffer buffers,
-							  MatrixStack msLocal, Contraption contraption) {
-		if (Backend.canUseVBOs() && Backend.isFlywheelWorld(entity.world)) {
-			ContraptionRenderDispatcher.renderDynamic(entity.world, contraption, ms, msLocal, buffers);
-		} else {
-			ContraptionRenderDispatcher.renderDynamic(entity.world, contraption, ms, msLocal, buffers);
-			ContraptionRenderDispatcher.renderStructure(entity.world, contraption, ms, msLocal, buffers);
+	private static ContraptionWorldHolder getWorldHolder(World world, Contraption c) {
+		int entityId = c.entity.getEntityId();
+		ContraptionWorldHolder holder = WORLD_HOLDERS.get(entityId);
+
+		if (holder == null) {
+			PlacementSimulationWorld renderWorld = setupRenderWorld(world, c);
+			holder = new ContraptionWorldHolder(c, renderWorld);
+			WORLD_HOLDERS.put(entityId, holder);
 		}
+
+		return holder;
 	}
 
-	public static void renderStructure(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-									   IRenderTypeBuffer buffer) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
-		List<RenderType> blockLayers = RenderType.getBlockLayers();
+	public static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
+		PlacementSimulationWorld renderWorld = new PlacementSimulationWorld(world);
 
-		buffer.getBuffer(RenderType.getSolid());
-		for (int i = 0; i < blockLayers.size(); i++) {
-			RenderType layer = blockLayers.get(i);
-			Pair<Contraption, Integer> key = Pair.of(c, i);
-			SuperByteBuffer contraptionBuffer = bufferCache.get(CONTRAPTION, key, () -> buildStructureBuffer(c, layer));
-			if (contraptionBuffer.isEmpty())
-				continue;
-			Matrix4f model = msLocal.peek()
-					.getModel();
-			contraptionBuffer.light(model)
-					.renderInto(ms, buffer.getBuffer(layer));
-		}
+		renderWorld.setTileEntities(c.presentTileEntities.values());
+
+		for (Template.BlockInfo info : c.getBlocks()
+										.values())
+			// Skip individual lighting updates to prevent lag with large contraptions
+			renderWorld.setBlockState(info.pos, info.state, 128);
+
+		renderWorld.updateLightSources();
+		renderWorld.lighter.tick(Integer.MAX_VALUE, false, false);
+
+		return renderWorld;
 	}
 
-	public static void renderDynamic(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-									 IRenderTypeBuffer buffer) {
-		renderTileEntities(world, c, ms, msLocal, buffer);
+	public static void renderDynamic(World world, PlacementSimulationWorld renderWorld, Contraption c,
+									 ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		renderTileEntities(world, renderWorld, c, matrices, buffer);
 		if (buffer instanceof IRenderTypeBuffer.Impl)
 			((IRenderTypeBuffer.Impl) buffer).draw();
-		renderActors(world, c, ms, msLocal, buffer);
+		renderActors(world, renderWorld, c, matrices, buffer);
 	}
 
-	public static void renderTileEntities(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-										  IRenderTypeBuffer buffer) {
-		PlacementSimulationWorld renderWorld = null;
-		if (Backend.canUseVBOs() && Backend.isFlywheelWorld(world)) {
-			RenderedContraption renderer = getRenderer(world, c);
-
-			renderWorld = renderer.renderWorld;
-		}
-		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities, ms, msLocal, buffer);
-
+	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld, Contraption c,
+										  ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities,
+				matrices.getFinalStack(), matrices.getFinalLight(), buffer);
 	}
 
-	protected static void renderActors(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
-									   IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
+	protected static void renderActors(World world, PlacementSimulationWorld renderWorld, Contraption c,
+									   ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		for (Pair<Template.BlockInfo, MovementContext> actor : c.getActors()) {
 			MovementContext context = actor.getRight();
 			if (context == null)
@@ -192,128 +212,117 @@ public class ContraptionRenderDispatcher {
 			if (context.world == null)
 				context.world = world;
 			Template.BlockInfo blockInfo = actor.getLeft();
-			for (MatrixStack m : matrixStacks) {
-				m.push();
-				MatrixStacker.of(m)
-						.translate(blockInfo.pos);
-			}
+
+			MatrixStack m = matrices.contraptionStack;
+			m.push();
+			MatrixStacker.of(m)
+				.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 			if (movementBehaviour != null)
-				movementBehaviour.renderInContraption(context, ms, msLocal, buffer);
+				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 
-			for (MatrixStack m : matrixStacks)
-				m.pop();
+			m.pop();
 		}
 	}
 
-	private static SuperByteBuffer buildStructureBuffer(Contraption c, RenderType layer) {
-		BufferBuilder builder = buildStructure(c, layer);
+	public static void renderStructure(World world, PlacementSimulationWorld renderWorld, Contraption c,
+									   ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		List<RenderType> blockLayers = RenderType.getBlockLayers();
+
+		buffer.getBuffer(RenderType.getSolid());
+		for (int i = 0; i < blockLayers.size(); i++) {
+			RenderType layer = blockLayers.get(i);
+			Pair<Contraption, Integer> key = Pair.of(c, i);
+			SuperByteBuffer contraptionBuffer = bufferCache.get(CONTRAPTION, key, () -> buildStructureBuffer(renderWorld, c, layer));
+			if (contraptionBuffer.isEmpty())
+				continue;
+			contraptionBuffer
+					.transform(matrices.contraptionStack)
+					.light(matrices.entityMatrix)
+					.hybridLight()
+					.renderInto(matrices.entityStack, buffer.getBuffer(layer));
+		}
+	}
+
+	private static SuperByteBuffer buildStructureBuffer(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+		BufferBuilder builder = buildStructure(renderWorld, c, layer);
 		return new SuperByteBuffer(builder);
 	}
 
-	public static BufferBuilder buildStructure(Contraption c, RenderType layer) {
-		if (renderWorld == null || renderWorld.getWorld() != Minecraft.getInstance().world)
-			renderWorld = new PlacementSimulationWorld(Minecraft.getInstance().world);
-
-		ForgeHooksClient.setRenderLayer(layer);
+	public static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
 		MatrixStack ms = new MatrixStack();
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-				.getBlockRendererDispatcher();
-		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL_QUADS, DefaultVertexFormats.BLOCK);
-		renderWorld.setTileEntities(c.presentTileEntities.values());
 
+		ForgeHooksClient.setRenderLayer(layer);
+		BlockModelRenderer.enableCache();
 		for (Template.BlockInfo info : c.getBlocks()
-				.values())
-			renderWorld.setBlockState(info.pos, info.state);
-
-		for (Template.BlockInfo info : c.getBlocks()
-				.values()) {
+										.values()) {
 			BlockState state = info.state;
 
-			if (state.getRenderType() == BlockRenderType.ENTITYBLOCK_ANIMATED)
-                continue;
-            if (!RenderTypeLookup.canRenderInLayer(state, layer))
-                continue;
+			if (state.getRenderType() != BlockRenderType.MODEL)
+				continue;
+			if (!RenderTypeLookup.canRenderInLayer(state, layer))
+				continue;
 
-            IBakedModel originalModel = dispatcher.getModelForState(state);
-            ms.push();
-            ms.translate(info.pos.getX(), info.pos.getY(), info.pos.getZ());
-            blockRenderer.renderModel(renderWorld, originalModel, state, info.pos, ms, builder, true, random, 42,
-                OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
-            ms.pop();
-        }
+			BlockPos pos = info.pos;
 
-        builder.finishDrawing();
-        renderWorld.clear();
-        renderWorld = null;
-        return builder;
-    }
-
-    public static int getLight(World world, float lx, float ly, float lz) {
-        BlockPos.Mutable pos = new BlockPos.Mutable();
-        float sky = 0, block = 0;
-        float offset = 1 / 8f;
-
-        for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset)
-            for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset)
-                for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
-                    pos.setPos(lx + xOffset, ly + yOffset, lz + zOffset);
-                    sky += world.getLightLevel(LightType.SKY, pos) / 8f;
-                    block += world.getLightLevel(LightType.BLOCK, pos) / 8f;
-                }
-
-        return ((int) sky) << 20 | ((int) block) << 4;
-    }
-
-    public static int getLightOnContraption(World world, PlacementSimulationWorld renderWorld, BlockPos pos, BlockPos lightPos) {
-        int worldLight = WorldRenderer.getLightmapCoordinates(world, lightPos);
-
-        if (renderWorld != null)
-            return getMaxBlockLight(worldLight, renderWorld.getLightLevel(LightType.BLOCK, pos));
-
-        return worldLight;
-    }
-
-    public static int getMaxBlockLight(int packedLight, int blockLightValue) {
-        int unpackedBlockLight = LightTexture.getBlockLightCoordinates(packedLight);
-
-        if (blockLightValue > unpackedBlockLight) {
-            packedLight = (packedLight & 0xFFFF0000) | (blockLightValue << 4);
-        }
-
-        return packedLight;
-    }
-
-	public static int getLightOnContraption(MovementContext context) {
-		int entityId = context.contraption.entity.getEntityId();
-
-		RenderedContraption renderedContraption = renderers.get(entityId);
-		if (renderedContraption != null) {
-			return renderedContraption.renderWorld.getLightLevel(LightType.BLOCK, context.localPos);
-		} else {
-			return -1;
+			ms.push();
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			MODEL_RENDERER.renderModel(renderWorld, BLOCK_MODELS.getModel(state), state, pos, ms, builder, true,
+									   random, 42, OverlayTexture.DEFAULT_UV, EmptyModelData.INSTANCE);
+			ms.pop();
 		}
+		BlockModelRenderer.disableCache();
+		ForgeHooksClient.setRenderLayer(null);
+
+		builder.finishDrawing();
+		return builder;
+	}
+
+	public static int getLight(World world, float lx, float ly, float lz) {
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+		float block = 0, sky = 0;
+		float offset = 1 / 8f;
+
+		for (float zOffset = offset; zOffset >= -offset; zOffset -= 2 * offset)
+			for (float yOffset = offset; yOffset >= -offset; yOffset -= 2 * offset)
+				for (float xOffset = offset; xOffset >= -offset; xOffset -= 2 * offset) {
+					pos.setPos(lx + xOffset, ly + yOffset, lz + zOffset);
+					block += world.getLightLevel(LightType.BLOCK, pos) / 8f;
+					sky += world.getLightLevel(LightType.SKY, pos) / 8f;
+				}
+
+		return LightTexture.pack((int) block, (int) sky);
+	}
+
+	public static int getContraptionWorldLight(MovementContext context, PlacementSimulationWorld renderWorld) {
+		return WorldRenderer.getLightmapCoordinates(renderWorld, context.localPos);
 	}
 
 	public static void invalidateAll() {
-		for (RenderedContraption renderer : renderers.values()) {
+		for (RenderedContraption renderer : RENDERERS.values()) {
 			renderer.invalidate();
 		}
 
-		renderers.clear();
+		RENDERERS.clear();
+		WORLD_HOLDERS.clear();
 	}
 
 	public static void removeDeadContraptions() {
-		renderers.values().removeIf(renderer -> {
+		RENDERERS.values().removeIf(renderer -> {
 			if (renderer.isDead()) {
 				renderer.invalidate();
 				return true;
 			}
 			return false;
 		});
+	}
+
+	public static void removeDeadHolders() {
+		WORLD_HOLDERS.values().removeIf(ContraptionWorldHolder::isDead);
 	}
 }

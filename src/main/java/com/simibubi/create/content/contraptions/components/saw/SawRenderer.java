@@ -10,6 +10,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -18,6 +19,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -151,11 +153,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[] { ms, msLocal };
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer;
 		Direction facing = state.get(SawBlock.FACING);
 
 		Vector3d facingVec = Vector3d.of(context.state.get(SawBlock.FACING)
@@ -171,6 +171,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		boolean shouldAnimate =
 			(context.contraption.stalled && horizontal) || (!context.contraption.stalled && !backwards && moving);
 
+		SuperByteBuffer superBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
 				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
@@ -183,22 +184,26 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
-		for (MatrixStack m : matrixStacks) {
+		MatrixStack m = matrices.contraptionStack;
+		m.push();
+		MatrixStacker.of(m)
+			.centre()
+			.rotateY(AngleHelper.horizontalAngle(facing))
+			.rotateX(AngleHelper.verticalAngle(facing));
+		if (!SawBlock.isHorizontal(state))
 			MatrixStacker.of(m)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(AngleHelper.verticalAngle(facing));
-			if (!SawBlock.isHorizontal(state))
-				MatrixStacker.of(m)
-					.rotateZ(state.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 0 : 90);
-			MatrixStacker.of(m)
-				.unCentre();
-		}
+				.rotateZ(state.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 0 : 90);
+		MatrixStacker.of(m)
+			.unCentre();
 
 		superBuffer
-			.light(msLocal.peek()
-						  .getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
+			.transform(m)
+			.disableDiffuseTransform()
+			.light(matrices.entityMatrix,
+				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getCutoutMipped()));
+
+		m.pop();
 	}
 
 }

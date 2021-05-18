@@ -369,7 +369,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
 		loadTEsIfMissing(world);
-		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer, pt);
+		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {

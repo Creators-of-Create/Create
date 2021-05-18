@@ -7,13 +7,14 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -52,10 +53,10 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		if (!Backend.canUseInstancing())
-			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
+			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Override

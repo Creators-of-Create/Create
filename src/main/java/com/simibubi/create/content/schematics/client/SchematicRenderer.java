@@ -78,8 +78,7 @@ public class SchematicRenderer {
 			SuperByteBuffer superByteBuffer = bufferCache.get(layer);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(layer));
 		}
-		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, new MatrixStack(),
-			buffer);
+		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffer);
 	}
 
 	protected void redraw(Minecraft minecraft) {
