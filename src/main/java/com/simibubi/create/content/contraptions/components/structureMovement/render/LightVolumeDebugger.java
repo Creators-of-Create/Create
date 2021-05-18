@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 public class LightVolumeDebugger {
 	public static void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
-		ContraptionRenderDispatcher.renderers.values()
+		ContraptionRenderDispatcher.RENDERERS.values()
 				.stream()
 				.flatMap(r -> {
 					GridAlignedBB texture = r.getLighter().lightVolume.getTextureVolume();
