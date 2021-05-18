@@ -1,4 +1,3 @@
-#version 110
 #define PI 3.1415926538
 
 #flwbuiltins
@@ -6,45 +5,38 @@
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
-// model data
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Actor {
+    vec3 pos;
+    vec2 light;
+    float offset;
+    vec3 axis;
+    vec4 rotation;
+    vec3 rotationCenter;
+    float speed;
+};
 
-// instance data
-attribute vec3 aInstancePos;
-attribute vec2 aModelLight;
-attribute float aOffset;
-attribute vec3 aAxis;
-attribute vec4 aInstanceRot;
-attribute vec3 aRotationCenter;
-attribute float aSpeed;
+#flwinclude <"create:data/modelvertex.glsl">
+#flwinclude <"create:data/blockfragment.glsl">
 
-varying float Diffuse;
-varying vec2 TexCoords;
-varying vec4 Color;
-varying vec2 Light;
-
-void main() {
-    float degrees = aOffset + uTime * aSpeed / 20.;
+BlockFrag FLWMain(Vertex v, Actor instance) {
+    float degrees = instance.offset + uTime * instance.speed / 20.;
     //float angle = fract(degrees / 360.) * PI * 2.;
 
-    vec4 kineticRot = quat(aAxis, degrees);
-    vec3 rotated = rotateVertexByQuat(aPos - aRotationCenter, kineticRot) + aRotationCenter;
+    vec4 kineticRot = quat(instance.axis, degrees);
+    vec3 rotated = rotateVertexByQuat(v.pos - instance.rotationCenter, kineticRot) + instance.rotationCenter;
 
-    vec4 worldPos = vec4(rotateVertexByQuat(rotated - .5, aInstanceRot) + aInstancePos + .5, 1.);
-    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, kineticRot), aInstanceRot);
+    vec4 worldPos = vec4(rotateVertexByQuat(rotated - .5, instance.rotation) + instance.pos + .5, 1.);
+    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(v.normal, kineticRot), instance.rotation);
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aModelLight;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords;
+    b.light = instance.light;
+    b.color = vec4(1.);
 
-    if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    return b;
 }

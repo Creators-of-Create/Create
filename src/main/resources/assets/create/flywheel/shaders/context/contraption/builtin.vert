@@ -10,7 +10,6 @@ uniform mat4 uModel;
 
 uniform float uTime;
 uniform mat4 uViewProjection;
-uniform int uDebug;
 uniform vec3 uCameraPos;
 
 void FLWFinalizeWorldPos(inout vec4 worldPos) {

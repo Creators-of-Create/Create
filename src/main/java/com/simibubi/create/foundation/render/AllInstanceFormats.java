@@ -1,39 +1,47 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.core.materials.BasicAttributes;
-import com.jozufozu.flywheel.backend.core.materials.OrientedAttributes;
-import com.jozufozu.flywheel.backend.core.materials.TransformAttributes;
+import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
+import com.jozufozu.flywheel.backend.gl.attrib.MatrixAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.simibubi.create.content.contraptions.base.KineticAttributes;
-import com.simibubi.create.content.contraptions.base.RotatingAttributes;
-import com.simibubi.create.content.contraptions.components.actors.ActorVertexAttributes;
-import com.simibubi.create.content.contraptions.relays.belt.BeltAttributes;
-import com.simibubi.create.content.logistics.block.FlapAttributes;
 
 public class AllInstanceFormats {
 
-	public static final VertexFormat MODEL = VertexFormat.builder()
-			.addAttributes(BasicAttributes.class)
-			.addAttributes(TransformAttributes.class)
+	public static final VertexFormat MODEL = litInstance()
+			.addAttributes(MatrixAttributes.MAT4,
+					MatrixAttributes.MAT3)
 			.build();
-	public static final VertexFormat ORIENTED = VertexFormat.builder()
-			.addAttributes(BasicAttributes.class)
-			.addAttributes(OrientedAttributes.class)
+
+	public static final VertexFormat ORIENTED = litInstance()
+			.addAttributes(CommonAttributes.VEC3, CommonAttributes.VEC3, CommonAttributes.QUATERNION)
 			.build();
-	public static VertexFormat ROTATING = VertexFormat.builder()
-			.addAttributes(BasicAttributes.class)
-			.addAttributes(KineticAttributes.class)
-			.addAttributes(RotatingAttributes.class)
+
+	public static VertexFormat ROTATING = kineticInstance()
+			.addAttributes(CommonAttributes.NORMAL)
 			.build();
+
+	public static VertexFormat BELT = kineticInstance()
+			.addAttributes(CommonAttributes.QUATERNION, CommonAttributes.UV, CommonAttributes.VEC4,
+					CommonAttributes.NORMALIZED_BYTE)
+			.build();
+
 	public static VertexFormat ACTOR = VertexFormat.builder()
-			.addAttributes(ActorVertexAttributes.class)
+			.addAttributes(CommonAttributes.VEC3, CommonAttributes.LIGHT, CommonAttributes.FLOAT,
+					CommonAttributes.NORMAL, CommonAttributes.QUATERNION, CommonAttributes.NORMAL,
+					CommonAttributes.FLOAT)
 			.build();
-	public static VertexFormat BELT = VertexFormat.builder()
-			.addAttributes(BasicAttributes.class)
-			.addAttributes(KineticAttributes.class)
-			.addAttributes(BeltAttributes.class)
-			.build();
+
 	public static VertexFormat FLAP = VertexFormat.builder()
-			.addAttributes(FlapAttributes.class)
+			.addAttributes(CommonAttributes.VEC3, CommonAttributes.LIGHT, CommonAttributes.VEC3, CommonAttributes.VEC3,
+					CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT)
 			.build();
+
+	private static VertexFormat.Builder litInstance() {
+		return VertexFormat.builder()
+				.addAttributes(CommonAttributes.LIGHT, CommonAttributes.RGBA);
+	}
+
+	private static VertexFormat.Builder kineticInstance() {
+		return litInstance()
+				.addAttributes(CommonAttributes.VEC3, CommonAttributes.FLOAT, CommonAttributes.FLOAT);
+	}
 }

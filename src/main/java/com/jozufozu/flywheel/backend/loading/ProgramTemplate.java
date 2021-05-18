@@ -6,7 +6,7 @@ import java.util.Map;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
-public class ProgramTemplate implements ProcessingStage {
+public abstract class ProgramTemplate implements ProcessingStage {
 
 	protected final ShaderLoader loader;
 	protected Map<ShaderType, ShaderTemplate> templates = new EnumMap<>(ShaderType.class);
@@ -21,8 +21,10 @@ public class ProgramTemplate implements ProcessingStage {
 
 		if (template == null) return;
 
-		ParsedShader parsedShader = new ParsedShader(shader.name, shader.getSource());
+		shader.setSource(template.apply(shader));
+	}
 
-		shader.setSource(template.apply(parsedShader));
+	public void attachAttributes(Program builder) {
+
 	}
 }

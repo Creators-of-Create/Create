@@ -1,24 +1,13 @@
 package com.jozufozu.flywheel.backend.gl.shader;
 
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.GL_TRUE;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glBindAttribLocation;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
 import static org.lwjgl.opengl.GL20.glDeleteProgram;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-import java.util.Collection;
-
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlObject;
-import com.jozufozu.flywheel.backend.gl.attrib.IVertexAttrib;
 import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.ResourceLocation;
@@ -31,10 +20,6 @@ public abstract class GlProgram extends GlObject {
 	protected GlProgram(ResourceLocation name, int handle) {
 		setHandle(handle);
 		this.name = name;
-	}
-
-	public static Builder builder(ResourceLocation name) {
-		return new Builder(name);
 	}
 
 	public void bind() {
@@ -88,53 +73,4 @@ public abstract class GlProgram extends GlObject {
 		glDeleteProgram(handle);
 	}
 
-	public static class Builder {
-		public final ResourceLocation name;
-		public final int program;
-
-		private int attributeIndex;
-
-		public Builder(ResourceLocation name) {
-			this.name = name;
-			this.program = glCreateProgram();
-		}
-
-		public Builder attachShader(GlShader shader) {
-			glAttachShader(this.program, shader.handle());
-
-			return this;
-		}
-
-		public <A extends IVertexAttrib> Builder addAttributes(Collection<A> attributes) {
-			attributes.forEach(this::addAttribute);
-			return this;
-		}
-
-		public <A extends IVertexAttrib> Builder addAttribute(A attrib) {
-			glBindAttribLocation(this.program, attributeIndex, attrib.attribName());
-			attributeIndex += attrib.attribSpec().getAttributeCount();
-			return this;
-		}
-
-		/**
-		 * Links the attached shaders to this program.
-		 */
-		public Builder link() {
-			glLinkProgram(this.program);
-
-			String log = glGetProgramInfoLog(this.program);
-
-			if (!log.isEmpty()) {
-				Backend.log.debug("Program link log for " + this.name + ": " + log);
-			}
-
-			int result = glGetProgrami(this.program, GL_LINK_STATUS);
-
-			if (result != GL_TRUE) {
-				throw new RuntimeException("Shader program linking failed, see log for details");
-			}
-
-			return this;
-		}
-	}
 }

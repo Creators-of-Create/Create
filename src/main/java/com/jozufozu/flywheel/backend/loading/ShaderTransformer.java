@@ -16,6 +16,11 @@ public class ShaderTransformer {
 		return this;
 	}
 
+	public ShaderTransformer popStage() {
+		stages.removeLast();
+		return this;
+	}
+
 	public ShaderTransformer prependStage(ProcessingStage stage) {
 		if (stage != null) {
 			stages.addFirst(stage);

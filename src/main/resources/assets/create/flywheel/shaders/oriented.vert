@@ -1,36 +1,32 @@
-#version 110
-
 #flwbuiltins
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Oriented {
+    vec2 light;
+    vec4 color;
+    vec3 pos;
+    vec3 pivot;
+    vec4 rotation;
+};
 
-attribute vec2 aLight;
-attribute vec4 aColor;
-attribute vec3 aInstancePos;
-attribute vec3 aPivot;
-attribute vec4 aRotation;
+#flwinclude <"create:data/modelvertex.glsl">
+#flwinclude <"create:data/blockfragment.glsl">
 
-varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
-varying vec2 Light;
+BlockFrag FLWMain(Vertex v, Oriented o) {
+    vec4 worldPos = vec4(rotateVertexByQuat(v.pos - o.pivot, o.rotation) + o.pivot + o.pos, 1.);
 
-void main() {
-    vec4 worldPos = vec4(rotateVertexByQuat(aPos - aPivot, aRotation) + aPivot + aInstancePos, 1.);
-
-    vec3 norm = rotateVertexByQuat(aNormal, aRotation);
+    vec3 norm = rotateVertexByQuat(v.normal, o.rotation);
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aLight;
-
-    Color = aColor;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords;
+    b.light = o.light;
+    b.color = o.color;
+    return b;
 }

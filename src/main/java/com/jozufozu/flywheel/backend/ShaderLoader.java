@@ -27,11 +27,10 @@ import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.gl.GlObject;
-import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.GlShader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
+import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
-import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.resources.IResource;
@@ -59,26 +58,7 @@ public class ShaderLoader {
 				shaderSource.clear();
 				loadShaderSources(manager);
 
-//				InstancedArraysTemplate template = new InstancedArraysTemplate(this);
-//
-//				ResourceLocation name = new ResourceLocation("create", "test");
-//				ResourceLocation vert = new ResourceLocation("create", "model_new.vert");
-//				ResourceLocation frag = new ResourceLocation("create", "block_new.frag");
-//
-//				ShaderTransformer transformer = new ShaderTransformer()
-//						.pushStage(WorldContext.INSTANCE.loadingStage(this))
-//						.pushStage(this::processIncludes)
-//						.pushStage(template)
-//						.pushStage(this::processIncludes);
-//
-//				Shader vertexFile = this.source(vert, ShaderType.VERTEX);
-//				Shader fragmentFile = this.source(frag, ShaderType.FRAGMENT);
-//
-//				GlProgram.Builder builder = loadProgram(name, transformer, vertexFile, fragmentFile);
-//
-//				BasicProgram program = new BasicProgram(builder, GlFogMode.NONE.getFogFactory());
-
-				for (ShaderContext<?> context : Backend.contexts.values()) {
+				for (ShaderContext<?> context : Backend.contexts) {
 					context.load(this);
 				}
 
@@ -122,32 +102,30 @@ public class ShaderLoader {
 		return new Shader(type, name, getShaderSource(name));
 	}
 
-	public GlProgram.Builder loadProgram(ResourceLocation name, ShaderTransformer transformer, Shader... shaders) {
-		return loadProgram(name, transformer, Lists.newArrayList(shaders));
+	public Program loadProgram(ResourceLocation name, Shader... shaders) {
+		return loadProgram(name, Lists.newArrayList(shaders));
 	}
 
 	/**
 	 * Ingests the given shaders, compiling them and linking them together after applying the transformer to the source.
 	 *
-	 * @param name        What should we call this program if something goes wrong?
-	 * @param transformer What should we do to the sources before compilation?
-	 * @param shaders     What are the different shader stages that should be linked together?
-	 * @return A linked program builder.
+	 * @param name    What should we call this program if something goes wrong?
+	 * @param shaders What are the different shader stages that should be linked together?
+	 * @return A program with all provided shaders attached
 	 */
-	public GlProgram.Builder loadProgram(ResourceLocation name, ShaderTransformer transformer, Collection<Shader> shaders) {
+	public Program loadProgram(ResourceLocation name, Collection<Shader> shaders) {
 		List<GlShader> compiled = new ArrayList<>(shaders.size());
 		try {
-			GlProgram.Builder builder = GlProgram.builder(name);
+			Program builder = new Program(name);
 
 			for (Shader shader : shaders) {
-				transformer.transformSource(shader);
 				GlShader sh = new GlShader(shader);
 				compiled.add(sh);
 
-				builder.attachShader(sh);
+				builder.attachShader(shader, sh);
 			}
 
-			return builder.link();
+			return builder;
 		} finally {
 			compiled.forEach(GlObject::delete);
 		}
@@ -180,7 +158,7 @@ public class ShaderLoader {
 				ResourceLocation include = new ResourceLocation(includeName);
 
 				if (seen.add(include)) {
-					String includeSource = shaderSource.get(include);
+					String includeSource = getShaderSource(include);
 
 					if (includeSource != null) {
 						return includeRecursive(includeSource, seen);

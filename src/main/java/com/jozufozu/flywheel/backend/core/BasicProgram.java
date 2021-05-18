@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.glUniform3f;
 
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
+import com.jozufozu.flywheel.backend.loading.Program;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,7 @@ public class BasicProgram extends GlProgram {
 	protected int uBlockAtlas;
 	protected int uLightMap;
 
-	public BasicProgram(GlProgram.Builder builder, ProgramFogMode.Factory fogFactory) {
+	public BasicProgram(Program builder, ProgramFogMode.Factory fogFactory) {
 		this(builder.name, builder.program, fogFactory);
 	}
 

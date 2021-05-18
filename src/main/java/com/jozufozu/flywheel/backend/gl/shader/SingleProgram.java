@@ -2,6 +2,7 @@ package com.jozufozu.flywheel.backend.gl.shader;
 
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.loading.Program;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -31,7 +32,7 @@ public class SingleProgram<P extends GlProgram> implements IMultiProgram<P> {
 
 		@Override
 		public IMultiProgram<P> create(ShaderLoader loader, ShaderContext<P> ctx, ProgramSpec spec) {
-			GlProgram.Builder builder = spec.loadProgram(ctx, spec.defines, loader);
+			Program builder = ctx.loadProgram(spec, spec.defines, loader);
 
 			return new SingleProgram<>(factory.create(builder.name, builder.program));
 		}

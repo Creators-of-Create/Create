@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.render;
 
 import static com.jozufozu.flywheel.backend.Backend.register;
 
-import com.jozufozu.flywheel.backend.core.materials.ModelAttributes;
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.core.materials.OrientedData;
+import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.simibubi.create.Create;
@@ -20,7 +20,9 @@ public class AllMaterialSpecs {
 		// noop, make sure the static field are loaded.
 	}
 
-	public static final VertexFormat UNLIT_MODEL = VertexFormat.builder().addAttributes(ModelAttributes.class).build();
+	public static final VertexFormat UNLIT_MODEL = VertexFormat.builder()
+			.addAttributes(CommonAttributes.VEC3, CommonAttributes.NORMAL, CommonAttributes.UV)
+			.build();
 
 	public static final MaterialSpec<ModelData> TRANSFORMED = register(new MaterialSpec<>(Locations.MODEL, AllProgramSpecs.MODEL, UNLIT_MODEL, AllInstanceFormats.MODEL, ModelData::new));
 	public static final MaterialSpec<OrientedData> ORIENTED = register(new MaterialSpec<>(Locations.ORIENTED, AllProgramSpecs.ORIENTED, UNLIT_MODEL, AllInstanceFormats.ORIENTED, OrientedData::new));

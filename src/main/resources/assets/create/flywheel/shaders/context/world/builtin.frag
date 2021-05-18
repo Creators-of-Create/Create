@@ -1,4 +1,4 @@
-#flwinclude <"create:context/std/fog.glsl">
+#flwinclude <"create:context/world/fog.glsl">
 #flwinclude <"create:core/lightutil.glsl">
 
 uniform sampler2D uBlockAtlas;

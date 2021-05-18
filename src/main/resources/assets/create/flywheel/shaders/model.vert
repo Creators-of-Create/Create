@@ -1,35 +1,31 @@
-#version 110
-
 #flwbuiltins
 #flwinclude <"create:core/diffuse.glsl">
 
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Instance {
+    vec2 light;
+    vec4 color;
+    mat4 transform;
+    mat3 normalMat;
+};
 
-attribute vec2 aLight;
-attribute vec4 aColor;
-attribute mat4 aTransform;
-attribute mat3 aNormalMat;
+#flwinclude <"create:data/modelvertex.glsl">
+#flwinclude <"create:data/blockfragment.glsl">
 
-varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
-varying vec2 Light;
+BlockFrag FLWMain(Vertex v, Instance i) {
+    vec4 worldPos = i.transform * vec4(v.pos, 1.);
 
-void main() {
-    vec4 worldPos = aTransform * vec4(aPos, 1.);
-
-    vec3 norm = aNormalMat * aNormal;
+    vec3 norm = i.normalMat * v.normal;
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
     norm = normalize(norm);
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aLight;
-
-    Color = aColor;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords;
+    b.light = i.light;
+    b.color = i.color;
+    return b;
 }

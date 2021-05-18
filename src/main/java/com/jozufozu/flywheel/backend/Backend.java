@@ -6,9 +6,11 @@ import static org.lwjgl.opengl.GL20.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL20.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glBindTexture;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.Vector;
@@ -76,7 +78,7 @@ public class Backend {
 	private static boolean enabled;
 
 	static final Map<ResourceLocation, MaterialSpec<?>> materialRegistry = new HashMap<>();
-	static final Map<ResourceLocation, ShaderContext<?>> contexts = new HashMap<>();
+	static final List<ShaderContext<?>> contexts = new ArrayList<>();
 	static final Map<ResourceLocation, ProgramSpec> programSpecRegistry = new HashMap<>();
 
 	static {
@@ -119,11 +121,7 @@ public class Backend {
 	 * Register a shader context.
 	 */
 	public static <P extends GlProgram> ShaderContext<P> register(ShaderContext<P> spec) {
-		ResourceLocation name = spec.getRoot();
-		if (contexts.containsKey(name)) {
-			throw new IllegalStateException("Program spec '" + name + "' already registered.");
-		}
-		contexts.put(name, spec);
+		contexts.add(spec);
 		return spec;
 	}
 

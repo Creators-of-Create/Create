@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.IndexedModel;
+import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.jozufozu.flywheel.backend.light.GridAlignedBB;
@@ -49,7 +50,11 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class RenderedContraption {
 	public static final VertexFormat FORMAT = VertexFormat.builder()
-			.addAttributes(ContraptionAttributes.class)
+			.addAttributes(CommonAttributes.VEC3,
+					CommonAttributes.NORMAL,
+					CommonAttributes.UV,
+					CommonAttributes.RGBA,
+					CommonAttributes.LIGHT)
 			.build();
 
 	private static final BlockModelRenderer MODEL_RENDERER = new BlockModelRenderer(Minecraft.getInstance().getBlockColors());

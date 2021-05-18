@@ -1,4 +1,3 @@
-#version 110
 #define PI 3.1415926538
 
 #flwbuiltins
@@ -6,55 +5,45 @@
 #flwinclude <"create:core/matutils.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Belt {
+    vec2 light;
+    vec4 color;
+    vec3 pos;
+    float speed;
+    float offset;
+    vec4 rotation;
+    vec2 sourceTexture;
+    vec4 scrollTexture;
+    float scrollMult;
+};
 
-attribute vec2 aLight;
-attribute vec4 aColor;
-attribute vec3 aInstancePos;
-attribute float aSpeed;
-attribute float aOffset;
-attribute vec4 aInstanceRot;
-attribute vec2 aSourceTexture;
-attribute vec4 aScrollTexture;
-attribute float aScrollMult;
+#flwinclude <"create:data/modelvertex.glsl">
+#flwinclude <"create:data/blockfragment.glsl">
 
-varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
-varying vec2 Light;
-
-void main() {
-    vec3 rotated = rotateVertexByQuat(aPos - .5, aInstanceRot) + aInstancePos + .5;
+BlockFrag FLWMain(Vertex v, Belt instance) {
+    vec3 rotated = rotateVertexByQuat(v.pos - .5, instance.rotation) + instance.pos + .5;
 
     vec4 worldPos = vec4(rotated, 1.);
 
-    vec3 norm = rotateVertexByQuat(aNormal, aInstanceRot);
+    vec3 norm = rotateVertexByQuat(v.normal, instance.rotation);
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
-    float scrollSize = aScrollTexture.w - aScrollTexture.y;
-    float scroll = fract(aSpeed * uTime / (31.5 * 16.) + aOffset) * scrollSize * aScrollMult;
+    float scrollSize = instance.scrollTexture.w - instance.scrollTexture.y;
+    float scroll = fract(instance.speed * uTime / (31.5 * 16.) + instance.offset) * scrollSize * instance.scrollMult;
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords - aSourceTexture + aScrollTexture.xy + vec2(0, scroll);
-    Light = aLight;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
+    b.light = instance.light;
 
-    #ifdef CONTRAPTION
-    if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    #if defined(RAINBOW_DEBUG)
+    b.color = instance.color;
     #else
-    if (uDebug == 1) {
-        Color = aColor;
-    } else if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    b.color = vec4(1.);
     #endif
+
+    return b;
 }

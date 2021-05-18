@@ -1,6 +1,5 @@
 uniform float uTime;
 uniform mat4 uViewProjection;
-uniform int uDebug;
 uniform vec3 uCameraPos;
 
 #if defined(USE_FOG)

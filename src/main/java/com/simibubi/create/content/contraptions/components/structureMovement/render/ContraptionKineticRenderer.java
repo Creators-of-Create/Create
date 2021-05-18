@@ -26,7 +26,7 @@ public class ContraptionKineticRenderer extends InstancedTileRenderer<Contraptio
     private final WeakReference<RenderedContraption> contraption;
 
     ContraptionKineticRenderer(RenderedContraption contraption) {
-		super(ContraptionContext.INSTANCE);
+		super(ContraptionRenderDispatcher.TILES);
 		this.contraption = new WeakReference<>(contraption);
 	}
 

@@ -1,4 +1,3 @@
-#version 110
 #define PI 3.1415926538
 
 #flwbuiltins
@@ -6,62 +5,58 @@
 #flwinclude <"create:core/quaternion.glsl">
 #flwinclude <"create:core/diffuse.glsl">
 
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Flap {
+    vec3 instancePos;
+    vec2 light;
+    vec3 segmentOffset;
+    vec3 pivot;
+    float horizontalAngle;
+    float intensity;
+    float flapScale;
+    float flapness;
+};
 
-attribute vec3 aInstancePos;
-attribute vec2 aLight;
+#flwinclude <"create:data/modelvertex.glsl">
+#flwinclude <"create:data/blockfragment.glsl">
 
-attribute vec3 aSegmentOffset;
-attribute vec3 aPivot;
-attribute float aHorizontalAngle;
-attribute float aIntensity;
-attribute float aFlapScale;
-
-attribute float aFlapness;
-
-// outputs
-varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
-varying vec2 Light;
 
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
 }
 
-float getFlapAngle() {
-    float absFlap = abs(aFlapness);
+float getFlapAngle(float flapness, float intensity, float scale) {
+    float absFlap = abs(flapness);
 
-    float angle = sin((1. - absFlap) * PI * aIntensity) * 30. * aFlapness * aFlapScale;
+    float angle = sin((1. - absFlap) * PI * intensity) * 30. * flapness * scale;
 
     float halfAngle = angle * 0.5;
 
-    float which = step(0., aFlapness);
-    float degrees = which * halfAngle + (1. - which) * angle; // branchless conditional multiply
+    float which = step(0., flapness);// 0 if negative, 1 if positive
+    float degrees = which * halfAngle + (1. - which) * angle;// branchless conditional multiply
 
     return degrees;
 }
 
-void main() {
-    float flapAngle = getFlapAngle();
+BlockFrag FLWMain(Vertex v, Flap flap) {
+    float flapAngle = getFlapAngle(flap.flapness, flap.intensity, flap.flapScale);
 
-    vec4 orientation = quat(vec3(0., 1., 0.), -aHorizontalAngle);
+    vec4 orientation = quat(vec3(0., 1., 0.), -flap.horizontalAngle);
     vec4 flapRotation = quat(vec3(1., 0., 0.), flapAngle);
 
-    vec3 rotated = rotateVertexByQuat(aPos - aPivot, flapRotation) + aPivot + aSegmentOffset;
-    rotated = rotateVertexByQuat(rotated - .5, orientation) + aInstancePos + .5;
+    vec3 rotated = rotateVertexByQuat(v.pos - flap.pivot, flapRotation) + flap.pivot + flap.segmentOffset;
+    rotated = rotateVertexByQuat(rotated - .5, orientation) + flap.instancePos + .5;
 
     vec4 worldPos = vec4(rotated, 1.);
-    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, flapRotation), orientation);
+    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(v.normal, flapRotation), orientation);
 
     FLWFinalizeWorldPos(worldPos);
     FLWFinalizeNormal(norm);
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aLight;
-
-    Color = vec4(1.);
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords;
+    b.light = flap.light;
+    b.color = vec4(1.);
+    return b;
 }

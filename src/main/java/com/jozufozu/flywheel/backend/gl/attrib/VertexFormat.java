@@ -1,21 +1,20 @@
 package com.jozufozu.flywheel.backend.gl.attrib;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class VertexFormat {
 
-	private final ArrayList<IVertexAttrib> allAttributes;
+	private final ArrayList<IAttribSpec> allAttributes;
 
 	private final int numAttributes;
 	private final int stride;
 
-	public VertexFormat(ArrayList<IVertexAttrib> allAttributes) {
+	public VertexFormat(ArrayList<IAttribSpec> allAttributes) {
 		this.allAttributes = allAttributes;
 
 		int numAttributes = 0, stride = 0;
-		for (IVertexAttrib attrib : allAttributes) {
-			IAttribSpec spec = attrib.attribSpec();
+		for (IAttribSpec spec : allAttributes) {
 			numAttributes += spec.getAttributeCount();
 			stride += spec.getSize();
 		}
@@ -33,8 +32,7 @@ public class VertexFormat {
 
 	public void vertexAttribPointers(int index) {
 		int offset = 0;
-		for (IVertexAttrib attrib : this.allAttributes) {
-			IAttribSpec spec = attrib.attribSpec();
+		for (IAttribSpec spec : this.allAttributes) {
 			spec.vertexAttribPointer(stride, index, offset);
 			index += spec.getAttributeCount();
 			offset += spec.getSize();
@@ -45,16 +43,14 @@ public class VertexFormat {
 		return new Builder();
 	}
 
-
 	public static class Builder {
-		private final ArrayList<IVertexAttrib> allAttributes;
+		private final ArrayList<IAttribSpec> allAttributes = new ArrayList<>();
 
 		public Builder() {
-			allAttributes = new ArrayList<>();
 		}
 
-		public <A extends Enum<A> & IVertexAttrib> Builder addAttributes(Class<A> attribEnum) {
-			allAttributes.addAll(Arrays.asList(attribEnum.getEnumConstants()));
+		public Builder addAttributes(IAttribSpec... attributes) {
+			Collections.addAll(allAttributes, attributes);
 			return this;
 		}
 

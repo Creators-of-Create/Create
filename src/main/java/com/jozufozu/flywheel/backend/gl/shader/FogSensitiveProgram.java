@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.GlFog;
 import com.jozufozu.flywheel.backend.gl.GlFogMode;
+import com.jozufozu.flywheel.backend.loading.Program;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -45,7 +46,7 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 
 				defines.defineAll(fogMode.getDefines());
 
-				GlProgram.Builder builder = spec.loadProgram(ctx, defines, loader);
+				Program builder = ctx.loadProgram(spec, defines, loader);
 
 				programs.put(fogMode, fogProgramLoader.create(builder.name, builder.program, fogMode.getFogFactory()));
 			}

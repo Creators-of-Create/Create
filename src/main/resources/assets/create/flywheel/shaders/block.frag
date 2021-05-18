@@ -1,16 +1,11 @@
-#version 110
-
 #flwbuiltins
 
-varying vec2 TexCoords;
-varying vec2 Light;
-varying float Diffuse;
-varying vec4 Color;
+#flwinclude <"create:data/blockfragment.glsl">
 
-void main() {
-    vec4 tex = FLWBlockTexture(TexCoords);
+void FLWMain(BlockFrag r) {
+    vec4 tex = FLWBlockTexture(r.texCoords);
 
-    vec4 color = vec4(tex.rgb * FLWLight(Light).rgb * Diffuse, tex.a) * Color;
+    vec4 color = vec4(tex.rgb * FLWLight(r.light).rgb * r.diffuse, tex.a) * r.color;
 
     FLWFinalizeColor(color);
 }

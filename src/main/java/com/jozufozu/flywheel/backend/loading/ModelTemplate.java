@@ -5,23 +5,20 @@ import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
 import net.minecraft.util.ResourceLocation;
 
-public class InstancedArraysTemplate extends ProgramTemplate {
-
+public class ModelTemplate extends ProgramTemplate {
 	public static final String vertexData = "VertexData";
-	public static final String instanceData = "InstanceData";
 	public static final String fragment = "Fragment";
 
 	public static final String vertexPrefix = "a_v_";
-	public static final String instancePrefix = "a_i_";
 
-	public static final String[] requiredVert = new String[]{instanceData, vertexData, fragment};
+	public static final String[] requiredVert = new String[]{vertexData, fragment};
 
 	public static final String[] requiredFrag = {fragment};
 
-	public static final ResourceLocation vert = new ResourceLocation("create", "template/instanced/instanced.vert");
-	public static final ResourceLocation frag = new ResourceLocation("create", "template/instanced/instanced.frag");
+	public static final ResourceLocation vert = new ResourceLocation("create", "template/model/model.vert");
+	public static final ResourceLocation frag = new ResourceLocation("create", "template/model/model.frag");
 
-	public InstancedArraysTemplate(ShaderLoader loader) {
+	public ModelTemplate(ShaderLoader loader) {
 		super(loader);
 
 		templates.put(ShaderType.VERTEX, new ShaderTemplate(requiredVert, loader.getShaderSource(vert)));
@@ -33,6 +30,5 @@ public class InstancedArraysTemplate extends ProgramTemplate {
 		Shader shader = builder.attached.get(ShaderType.VERTEX);
 
 		shader.getTag(vertexData).addPrefixedAttributes(builder, vertexPrefix);
-		shader.getTag(instanceData).addPrefixedAttributes(builder, instancePrefix);
 	}
 }

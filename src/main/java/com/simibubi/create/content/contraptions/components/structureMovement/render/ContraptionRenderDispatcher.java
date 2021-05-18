@@ -10,10 +10,14 @@ import static org.lwjgl.opengl.GL13.glEnable;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.core.WorldContext;
+import com.jozufozu.flywheel.backend.gl.shader.FogSensitiveProgram;
+import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -48,6 +52,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.LightType;
@@ -59,6 +64,9 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 public class ContraptionRenderDispatcher {
 	public static final Int2ObjectMap<RenderedContraption> renderers = new Int2ObjectOpenHashMap<>();
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
+	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
+	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new), () -> Stream.of(AllProgramSpecs.STRUCTURE), ModelTemplate::new);
+	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
 	protected static PlacementSimulationWorld renderWorld;
 
 	public static void tick() {
@@ -90,7 +98,7 @@ public class ContraptionRenderDispatcher {
 		glActiveTexture(GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
 		if (Backend.canUseVBOs()) {
-			ContraptionProgram structureShader = ContraptionContext.INSTANCE.getProgram(AllProgramSpecs.STRUCTURE);
+			ContraptionProgram structureShader = STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
 
 			structureShader.bind();
 			structureShader.uploadViewProjection(viewProjection);

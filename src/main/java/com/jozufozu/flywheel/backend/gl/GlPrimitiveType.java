@@ -1,5 +1,12 @@
 package com.jozufozu.flywheel.backend.gl;
 
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,6 +21,10 @@ public enum GlPrimitiveType {
 	SHORT(2, "short", GL11.GL_SHORT),
 	UINT(4, "uint", GL11.GL_UNSIGNED_INT),
 	INT(4, "int", GL11.GL_INT);
+
+	private static final GlPrimitiveType[] VALUES = values();
+	private static final Map<String, GlPrimitiveType> NAME_LOOKUP = Arrays.stream(VALUES)
+			.collect(Collectors.toMap(GlPrimitiveType::getDisplayName, type -> type));
 
 	private final int size;
 	private final String displayName;
@@ -35,5 +46,10 @@ public enum GlPrimitiveType {
 
 	public int getGlConstant() {
 		return this.glConstant;
+	}
+
+	@Nullable
+	public static GlPrimitiveType byName(String name) {
+		return name == null ? null : NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
 	}
 }

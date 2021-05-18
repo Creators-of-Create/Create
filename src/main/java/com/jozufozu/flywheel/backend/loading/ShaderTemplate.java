@@ -2,7 +2,6 @@ package com.jozufozu.flywheel.backend.loading;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,14 +31,14 @@ public class ShaderTemplate {
 
 	}
 
-	public String apply(ParsedShader shader) {
+	public String apply(Shader shader) {
 
 		return header +
-				shader.src +
+				shader.getSource() +
 				processBody(shader);
 	}
 
-	public String processBody(ParsedShader shader) {
+	public String processBody(Shader shader) {
 		String s = body;
 
 		List<String> missing = new ArrayList<>();
@@ -55,7 +54,7 @@ public class ShaderTemplate {
 		}
 
 		if (!missing.isEmpty()) {
-			String err = shader.loc + " is missing: " + String.join(", ", missing);
+			String err = shader.name + " is missing: " + String.join(", ", missing);
 			throw new RuntimeException(err);
 		}
 
@@ -65,7 +64,7 @@ public class ShaderTemplate {
 		return s;
 	}
 
-	private String fillPrefixes(ParsedShader shader, String s) {
+	private String fillPrefixes(Shader shader, String s) {
 		Matcher prefixMatches = prefixer.matcher(s);
 
 		StringBuffer out = new StringBuffer();
@@ -77,13 +76,13 @@ public class ShaderTemplate {
 			TaggedStruct struct = shader.getStruct(structName);
 
 			StringBuilder builder = new StringBuilder();
-			for (Map.Entry<String, String> field : struct.fields.entrySet()) {
+			for (TaggedField field : struct.fields) {
 				builder.append(modifier);
 				builder.append(' ');
-				builder.append(field.getValue());
+				builder.append(field.getType());
 				builder.append(' ');
 				builder.append(prefix);
-				builder.append(field.getKey());
+				builder.append(field.getName());
 				builder.append(";\n");
 			}
 
@@ -93,7 +92,7 @@ public class ShaderTemplate {
 		return out.toString();
 	}
 
-	private String fillAssigns(ParsedShader shader, String s) {
+	private String fillAssigns(Shader shader, String s) {
 		Matcher assignMatches = assigner.matcher(s);
 
 		StringBuffer out = new StringBuffer();
@@ -105,12 +104,12 @@ public class ShaderTemplate {
 			TaggedStruct struct = shader.getStruct(structName);
 
 			StringBuilder builder = new StringBuilder();
-			for (String field : struct.fields.keySet()) {
+			for (TaggedField field : struct.fields) {
 				builder.append(lhs);
-				builder.append(field);
+				builder.append(field.getName());
 				builder.append(" = ");
 				builder.append(rhs);
-				builder.append(field);
+				builder.append(field.getName());
 				builder.append(";\n");
 			}
 

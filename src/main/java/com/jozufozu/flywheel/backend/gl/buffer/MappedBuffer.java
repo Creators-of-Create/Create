@@ -38,8 +38,12 @@ public abstract class MappedBuffer implements AutoCloseable {
 
 	public MappedBuffer putFloatArray(float[] floats) {
 		checkAndMap();
-		internal.asFloatBuffer().put(floats);
-		internal.position(internal.position() + floats.length * 4);
+
+		for (float f : floats) {
+			internal.putFloat(f);
+		}
+//		internal.asFloatBuffer().put(floats);
+//		internal.position(internal.position() + floats.length * 4);
 
 		return this;
 	}
