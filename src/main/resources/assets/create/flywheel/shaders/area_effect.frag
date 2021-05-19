@@ -1,6 +1,6 @@
 #version 140
 
-#flwinclude <"create:core/color.glsl">
+#flwinclude <"flywheel:core/color.glsl">
 
 in vec2 ScreenCoord;
 in vec3 WorldDir;

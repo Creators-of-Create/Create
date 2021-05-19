@@ -1,5 +1,5 @@
 #flwbuiltins
-#flwinclude <"create:core/diffuse.glsl">
+#flwinclude <"flywheel:core/diffuse.glsl">
 
 #[InstanceData]
 struct Instance {
@@ -9,8 +9,8 @@ struct Instance {
     mat3 normalMat;
 };
 
-#flwinclude <"create:data/modelvertex.glsl">
-#flwinclude <"create:data/blockfragment.glsl">
+#flwinclude <"flywheel:data/modelvertex.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
 
 BlockFrag FLWMain(Vertex v, Instance i) {
     vec4 worldPos = i.transform * vec4(v.pos, 1.);
@@ -26,6 +26,10 @@ BlockFrag FLWMain(Vertex v, Instance i) {
     b.diffuse = diffuse(norm);
     b.texCoords = v.texCoords;
     b.light = i.light;
+    #if defined(NORMAL_DEBUG)
+    b.color = vec4(norm, 1.);
+    #else
     b.color = i.color;
+    #endif
     return b;
 }

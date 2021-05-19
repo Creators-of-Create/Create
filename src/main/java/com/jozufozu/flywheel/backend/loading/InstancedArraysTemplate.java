@@ -1,5 +1,6 @@
 package com.jozufozu.flywheel.backend.loading;
 
+import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
@@ -18,8 +19,8 @@ public class InstancedArraysTemplate extends ProgramTemplate {
 
 	public static final String[] requiredFrag = {fragment};
 
-	public static final ResourceLocation vert = new ResourceLocation("create", "template/instanced/instanced.vert");
-	public static final ResourceLocation frag = new ResourceLocation("create", "template/instanced/instanced.frag");
+	public static final ResourceLocation vert = new ResourceLocation(Flywheel.ID, "template/instanced/instanced.vert");
+	public static final ResourceLocation frag = new ResourceLocation(Flywheel.ID, "template/instanced/instanced.frag");
 
 	public InstancedArraysTemplate(ShaderLoader loader) {
 		super(loader);

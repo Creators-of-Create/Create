@@ -1,5 +1,5 @@
-#flwinclude <"create:context/world/fog.glsl">
-#flwinclude <"create:core/lightutil.glsl">
+#flwinclude <"flywheel:context/world/fog.glsl">
+#flwinclude <"flywheel:core/lightutil.glsl">
 
 uniform sampler2D uBlockAtlas;
 uniform sampler2D uLightMap;

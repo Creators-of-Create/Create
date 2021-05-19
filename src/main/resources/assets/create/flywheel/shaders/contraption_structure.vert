@@ -1,8 +1,8 @@
 #define PI 3.1415926538
 
 #flwbuiltins
-#flwinclude <"create:core/matutils.glsl">
-#flwinclude <"create:core/diffuse.glsl">
+#flwinclude <"flywheel:core/matutils.glsl">
+#flwinclude <"flywheel:core/diffuse.glsl">
 
 #[VertexData]
 struct Vertex {
@@ -13,7 +13,7 @@ struct Vertex {
     vec2 modelLight;
 };
 
-#flwinclude <"create:data/blockfragment.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
 
 BlockFrag FLWMain(Vertex v) {
     vec4 worldPos = vec4(v.pos, 1.);
@@ -24,9 +24,14 @@ BlockFrag FLWMain(Vertex v) {
 
     BlockFrag b;
     b.diffuse = diffuse(norm);
-    b.color = v.color / diffuse(v.normal);
     b.texCoords = v.texCoords;
     b.light = v.modelLight;
+
+    #if defined(NORMAL_DEBUG)
+    b.color = vec4(norm, 1.);
+    #else
+    b.color = v.color / diffuse(v.normal);
+    #endif
 
     return b;
 }

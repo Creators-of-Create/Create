@@ -1,9 +1,9 @@
 #define PI 3.1415926538
 
 #flwbuiltins
-#flwinclude <"create:core/matutils.glsl">
-#flwinclude <"create:core/quaternion.glsl">
-#flwinclude <"create:core/diffuse.glsl">
+#flwinclude <"flywheel:core/matutils.glsl">
+#flwinclude <"flywheel:core/quaternion.glsl">
+#flwinclude <"flywheel:core/diffuse.glsl">
 
 #[InstanceData]
 struct Actor {
@@ -16,8 +16,8 @@ struct Actor {
     float speed;
 };
 
-#flwinclude <"create:data/modelvertex.glsl">
-#flwinclude <"create:data/blockfragment.glsl">
+#flwinclude <"flywheel:data/modelvertex.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
 
 BlockFrag FLWMain(Vertex v, Actor instance) {
     float degrees = instance.offset + uTime * instance.speed / 20.;
@@ -36,7 +36,12 @@ BlockFrag FLWMain(Vertex v, Actor instance) {
     b.diffuse = diffuse(norm);
     b.texCoords = v.texCoords;
     b.light = instance.light;
+
+    #if defined(NORMAL_DEBUG)
+    b.color = vec4(norm, 1.);
+    #else
     b.color = vec4(1.);
+    #endif
 
     return b;
 }

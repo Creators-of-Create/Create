@@ -9,8 +9,8 @@ import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
+import com.jozufozu.flywheel.backend.loading.Program;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 
@@ -41,14 +41,14 @@ public class SphereFilterProgram extends GlProgram {
 
 	protected final int uCameraPos;
 
-	public SphereFilterProgram(ResourceLocation name, int handle) {
-		super(name, handle);
+	public SphereFilterProgram(Program program) {
+		super(program);
 
 		effectsUBO = new GlBuffer(GlBufferType.UNIFORM_BUFFER);
 
-		uniformBlock = GL31.glGetUniformBlockIndex(handle, "Filters");
+		uniformBlock = GL31.glGetUniformBlockIndex(program.program, "Filters");
 
-		GL31.glUniformBlockBinding(handle, uniformBlock, UBO_BINDING);
+		GL31.glUniformBlockBinding(program.program, uniformBlock, UBO_BINDING);
 
 		effectsUBO.bind();
 		effectsUBO.alloc(BUFFER_SIZE);

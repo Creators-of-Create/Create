@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlObject;
+import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.util.RenderUtil;
 
 import net.minecraft.util.ResourceLocation;
@@ -17,9 +18,9 @@ public abstract class GlProgram extends GlObject {
 
 	public final ResourceLocation name;
 
-	protected GlProgram(ResourceLocation name, int handle) {
-		setHandle(handle);
-		this.name = name;
+	protected GlProgram(Program program) {
+		setHandle(program.program);
+		this.name = program.name;
 	}
 
 	public void bind() {

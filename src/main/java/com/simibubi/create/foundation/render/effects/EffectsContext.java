@@ -6,14 +6,12 @@ import com.jozufozu.flywheel.backend.gl.shader.SingleProgram;
 import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 
-import net.minecraft.util.ResourceLocation;
-
 public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 
 	public static final EffectsContext INSTANCE = new EffectsContext();
 
 	public EffectsContext() {
-		super(new ResourceLocation("create", "effects"), new SingleProgram.SpecLoader<>(SphereFilterProgram::new));
+		super(new SingleProgram.SpecLoader<>(SphereFilterProgram::new));
 	}
 
 	@Override

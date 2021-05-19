@@ -16,35 +16,6 @@ vec4 quatMult(vec4 q1, vec4 q2) {
 
     return a + b + c + d;
 }
-//
-//vec4 exp(vec4 q) {
-//    vec3 i = q.xyz;
-//    float r = sqrt(dot(i, i));
-//    float et = exp(q.w);
-//    float s = et * sin(r) / r;
-//
-//    vec4 qr;
-//    qr.w = et * cos(r);
-//    qr.xyz = i * s;
-//
-//    return qr;
-//}
-//
-//vec4 ln(vec4 q) {
-//    vec3 i = q.xyz;
-//    float r = sqrt(dot(i, i));
-//    float t = atan(r, q.w) / r;
-//
-//    vec4 qr;
-//    qr.w = log(dot(q, q)) * 0.5;
-//    qr.xyz = i * t;
-//
-//    return qr;
-//}
-//
-//vec4 pow(vec4 q, float n) {
-//    return exp(ln(q) * n);
-//}
 
 vec3 rotateVertexByQuat(vec3 v, vec4 q) {
     vec3 i = q.xyz;

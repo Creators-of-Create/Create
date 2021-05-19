@@ -1,17 +1,20 @@
 package com.jozufozu.flywheel.backend.loading;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
 import net.minecraft.util.ResourceLocation;
 
 public class Shader {
+	public static final Pattern versionDetector = Pattern.compile("#version[^\\n]*");
 	private static final Pattern decorator = Pattern.compile("#\\[([\\w_]*)]");
 
 	public final ResourceLocation name;
@@ -51,6 +54,21 @@ public class Shader {
 		if (!parsed) {
 			parsed = true;
 			parseStructs();
+		}
+	}
+
+	public void defineAll(Collection<String> defines) {
+		Matcher matcher = versionDetector.matcher(source);
+
+		if (matcher.find()) {
+			StringBuffer sourceWithDefines = new StringBuffer();
+			String lines = defines.stream().map(it -> "#define " + it).collect(Collectors.joining("\n"));
+
+			matcher.appendReplacement(sourceWithDefines, matcher.group() + '\n' + lines);
+
+			matcher.appendTail(sourceWithDefines);
+
+			source = sourceWithDefines.toString();
 		}
 	}
 

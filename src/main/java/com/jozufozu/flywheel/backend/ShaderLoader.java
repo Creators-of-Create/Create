@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -23,6 +22,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.collect.Lists;
@@ -31,6 +32,7 @@ import com.jozufozu.flywheel.backend.gl.shader.GlShader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
+import com.jozufozu.flywheel.backend.loading.ShaderLoadingException;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.resources.IResource;
@@ -49,6 +51,8 @@ public class ShaderLoader {
 
 	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
+	private boolean shouldCrash;
+
 	void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
 			OptifineHandler.refresh();
@@ -56,10 +60,17 @@ public class ShaderLoader {
 
 			if (Backend.gl20()) {
 				shaderSource.clear();
+
+				shouldCrash = false;
+
 				loadShaderSources(manager);
 
 				for (ShaderContext<?> context : Backend.contexts) {
 					context.load(this);
+				}
+
+				if (shouldCrash) {
+					throw new ShaderLoadingException("could not load all shaders, see log for details");
 				}
 
 				Backend.log.info("Loaded all shader programs.");
@@ -70,8 +81,19 @@ public class ShaderLoader {
 		}
 	}
 
+	public void notifyError() {
+		shouldCrash = true;
+	}
+
+	@Nonnull
 	public String getShaderSource(ResourceLocation loc) {
-		return shaderSource.get(loc);
+		String source = shaderSource.get(loc);
+
+		if (source == null) {
+			throw new ShaderLoadingException(String.format("shader '%s' does not exist", loc));
+		}
+
+		return source;
 	}
 
 	private void loadShaderSources(IResourceManager manager) {
@@ -158,12 +180,13 @@ public class ShaderLoader {
 				ResourceLocation include = new ResourceLocation(includeName);
 
 				if (seen.add(include)) {
-					String includeSource = getShaderSource(include);
-
-					if (includeSource != null) {
-						return includeRecursive(includeSource, seen);
+					try {
+						return includeRecursive(getShaderSource(include), seen);
+					} catch (ShaderLoadingException e) {
+						throw new ShaderLoadingException("could not resolve import: " + e.getMessage());
 					}
 				}
+
 			}
 
 			return Stream.of(line);
@@ -181,7 +204,7 @@ public class ShaderLoader {
 		try {
 			bytebuffer = readToBuffer(is);
 			int i = bytebuffer.position();
-			((Buffer) bytebuffer).rewind();
+			bytebuffer.rewind();
 			return MemoryUtil.memASCII(bytebuffer, i);
 		} catch (IOException e) {
 

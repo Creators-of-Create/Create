@@ -8,7 +8,6 @@ import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class BasicProgram extends GlProgram {
@@ -21,12 +20,8 @@ public class BasicProgram extends GlProgram {
 	protected int uBlockAtlas;
 	protected int uLightMap;
 
-	public BasicProgram(Program builder, ProgramFogMode.Factory fogFactory) {
-		this(builder.name, builder.program, fogFactory);
-	}
-
-	public BasicProgram(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory) {
-		super(name, handle);
+	public BasicProgram(Program program, ProgramFogMode.Factory fogFactory) {
+		super(program);
 		uTime = getUniformLocation("uTime");
 		uViewProjection = getUniformLocation("uViewProjection");
 		uCameraPos = getUniformLocation("uCameraPos");

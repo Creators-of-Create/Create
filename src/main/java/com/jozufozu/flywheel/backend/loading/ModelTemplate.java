@@ -1,5 +1,6 @@
 package com.jozufozu.flywheel.backend.loading;
 
+import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
@@ -15,8 +16,8 @@ public class ModelTemplate extends ProgramTemplate {
 
 	public static final String[] requiredFrag = {fragment};
 
-	public static final ResourceLocation vert = new ResourceLocation("create", "template/model/model.vert");
-	public static final ResourceLocation frag = new ResourceLocation("create", "template/model/model.frag");
+	public static final ResourceLocation vert = new ResourceLocation(Flywheel.ID, "template/model/model.vert");
+	public static final ResourceLocation frag = new ResourceLocation(Flywheel.ID, "template/model/model.frag");
 
 	public ModelTemplate(ShaderLoader loader) {
 		super(loader);

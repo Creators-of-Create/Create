@@ -1,5 +1,5 @@
-#flwinclude <"create:context/world/fog.glsl">
-#flwinclude <"create:core/lightutil.glsl">
+#flwinclude <"flywheel:context/world/fog.glsl">
+#flwinclude <"flywheel:core/lightutil.glsl">
 
 varying vec3 BoxCoord;
 uniform sampler3D uLightVolume;
