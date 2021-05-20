@@ -126,6 +126,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
+    implementation fg.deobf("curse.maven:dynamictrees-252818:3302576")
+
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")

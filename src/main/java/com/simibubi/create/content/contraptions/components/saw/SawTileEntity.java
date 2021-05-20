@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.saw;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
@@ -280,7 +282,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		 * RecipeConditions.isOfType(IRecipeType.STONECUTTING,
 		 * AllRecipeTypes.CUTTING.getType()) :
 		 * RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
-		 * 
+		 *
 		 */
 
 		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),
@@ -366,6 +368,12 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public void onBlockBroken(BlockState stateToBreak) {
+		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(stateToBreak.getBlock(), breakingPos);
+		if (dynamicTree.isPresent()) {
+			dynamicTree.get().destroyBlocks(world, null, this::dropItemFromCutTree);
+			return;
+		}
+
 		super.onBlockBroken(stateToBreak);
 		TreeCutter.findTree(world, breakingPos).destroyBlocks(world, null, this::dropItemFromCutTree);
 	}
