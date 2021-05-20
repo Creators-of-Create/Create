@@ -32,10 +32,10 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-		client {
+        client {
             workingDirectory project.file('run')
             arg '-mixin.config=create.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
@@ -107,6 +107,10 @@ repositories {
     maven {
         url = "https://www.cursemaven.com"
     }
+    maven {
+        //location of the maven for dynamic trees
+        url "http://harleyoconnor.com/maven"
+    }
 }
 
 configurations {
@@ -126,8 +130,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    implementation fg.deobf("curse.maven:dynamictrees-252818:3302576")
-
+    implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")
+    //implementation fg.deobf("curse.maven:dynamictrees-252818:3302576")
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
@@ -142,14 +146,14 @@ jar {
     classifier = 'slim'
     manifest {
         attributes([
-            "Specification-Title": "create",
-            "Specification-Vendor": "simibubi",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"simibubi",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "create.mixins.json"
+                "Specification-Title": "create",
+                "Specification-Vendor": "simibubi",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"simibubi",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "create.mixins.json"
         ])
     }
 }
@@ -214,7 +218,7 @@ curseforge {
             displayName = "Create - ${version}"
         }
         relations {
-        	optionalDependency 'jei'
+            optionalDependency 'jei'
         }
     }
 }
