@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.gl;
+package com.jozufozu.flywheel.backend.core.shader;
 
 import org.lwjgl.opengl.GL11;
 

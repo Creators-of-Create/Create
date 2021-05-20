@@ -2,14 +2,17 @@ package com.jozufozu.flywheel.backend.core;
 
 import static org.lwjgl.opengl.GL20.glUniform2f;
 
-import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
+import java.util.List;
+
+import com.jozufozu.flywheel.backend.core.shader.ProgramExtender;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.loading.Program;
 
-public class CrumblingProgram extends BasicProgram {
+public class CrumblingProgram extends WorldProgram {
 	protected final int uTextureScale;
 	protected int uCrumbling;
 
-	public CrumblingProgram(Program program, ProgramFogMode.Factory fogFactory) {
+	public CrumblingProgram(Program program, List<ProgramExtender> fogFactory) {
 		super(program, fogFactory);
 
 		uTextureScale = getUniformLocation("uTextureScale");

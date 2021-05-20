@@ -12,9 +12,9 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
-import com.jozufozu.flywheel.backend.gl.shader.FogSensitiveProgram;
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
@@ -27,13 +27,13 @@ import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 
 import net.minecraft.util.ResourceLocation;
 
-public class WorldContext<P extends BasicProgram> extends ShaderContext<P> {
+public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 
 	private static final String declaration = "#flwbuiltins";
 	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
-	public static final WorldContext<BasicProgram> INSTANCE = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/world"), new FogSensitiveProgram.SpecLoader<>(BasicProgram::new));
-	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), new FogSensitiveProgram.SpecLoader<>(CrumblingProgram::new));
+	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/world"), new WorldMultiProgram.SpecLoader<>(WorldProgram::new));
+	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), new WorldMultiProgram.SpecLoader<>(CrumblingProgram::new));
 
 	protected ProgramTemplate template;
 	protected final ResourceLocation name;

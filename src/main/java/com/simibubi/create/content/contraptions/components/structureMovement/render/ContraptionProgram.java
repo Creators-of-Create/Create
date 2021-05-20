@@ -1,22 +1,24 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.core.BasicProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
+import com.jozufozu.flywheel.backend.core.shader.ProgramExtender;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.loading.Program;
 
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class ContraptionProgram extends BasicProgram {
+public class ContraptionProgram extends WorldProgram {
 	protected final int uLightBoxSize;
 	protected final int uLightBoxMin;
 	protected final int uModel;
 
 	protected int uLightVolume;
 
-	public ContraptionProgram(Program program, ProgramFogMode.Factory fogFactory) {
+	public ContraptionProgram(Program program, List<ProgramExtender> fogFactory) {
 		super(program, fogFactory);
 		uLightBoxSize = getUniformLocation("uLightBoxSize");
 		uLightBoxMin = getUniformLocation("uLightBoxMin");

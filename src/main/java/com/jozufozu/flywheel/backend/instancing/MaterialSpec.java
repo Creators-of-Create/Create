@@ -1,7 +1,7 @@
 package com.jozufozu.flywheel.backend.instancing;
 
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 
 import net.minecraft.util.ResourceLocation;
 

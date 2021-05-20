@@ -1,7 +1,10 @@
-package com.jozufozu.flywheel.backend.gl.shader;
+package com.jozufozu.flywheel.backend.core.shader;
 
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
+import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
+import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.loading.Program;
 
 public class SingleProgram<P extends GlProgram> implements IMultiProgram<P> {

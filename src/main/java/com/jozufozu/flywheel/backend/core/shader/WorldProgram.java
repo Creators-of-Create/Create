@@ -1,32 +1,28 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.shader;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 
-import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramFogMode;
+import java.util.List;
+
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class BasicProgram extends GlProgram {
+public class WorldProgram extends ExtensibleGlProgram {
 	protected final int uTime;
 	protected final int uViewProjection;
 	protected final int uCameraPos;
 
-	protected final ProgramFogMode fogMode;
-
 	protected int uBlockAtlas;
 	protected int uLightMap;
 
-	public BasicProgram(Program program, ProgramFogMode.Factory fogFactory) {
-		super(program);
+	public WorldProgram(Program program, List<ProgramExtender> fogFactory) {
+		super(program, fogFactory);
 		uTime = getUniformLocation("uTime");
 		uViewProjection = getUniformLocation("uViewProjection");
 		uCameraPos = getUniformLocation("uCameraPos");
-
-		fogMode = fogFactory.create(this);
 
 		bind();
 		registerSamplers();
@@ -55,7 +51,5 @@ public class BasicProgram extends GlProgram {
 		super.bind();
 
 		uploadTime(AnimationTickHolder.getRenderTime());
-
-		fogMode.bind();
 	}
 }

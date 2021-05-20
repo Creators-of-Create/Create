@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.core.materials.OrientedData;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
@@ -25,7 +25,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public abstract class InstancedTileRenderer<P extends BasicProgram> {
+public abstract class InstancedTileRenderer<P extends WorldProgram> {
 
 	public final WorldContext<P> context;
 

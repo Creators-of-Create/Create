@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Program;

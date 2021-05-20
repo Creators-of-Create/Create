@@ -12,8 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
@@ -34,7 +34,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class RenderMaterial<P extends BasicProgram, D extends InstanceData> {
+public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 	protected final InstancedTileRenderer<P> renderer;
 	protected final Cache<Object, InstancedModel<D>> models;

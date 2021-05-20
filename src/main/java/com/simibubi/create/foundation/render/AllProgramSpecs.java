@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.render;
 import static com.jozufozu.flywheel.backend.Backend.register;
 
 import com.jozufozu.flywheel.Flywheel;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
 import com.simibubi.create.Create;
 
 import net.minecraft.util.ResourceLocation;

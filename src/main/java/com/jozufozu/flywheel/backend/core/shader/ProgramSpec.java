@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.gl.shader;
+package com.jozufozu.flywheel.backend.core.shader;
 
 import java.util.ArrayList;
 import java.util.List;

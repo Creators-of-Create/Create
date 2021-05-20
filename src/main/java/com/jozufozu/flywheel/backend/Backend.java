@@ -20,12 +20,12 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
-import com.jozufozu.flywheel.backend.core.BasicProgram;
 import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
@@ -64,7 +64,7 @@ public class Backend {
 	public static GLCapabilities capabilities;
 	public static GlCompat compat;
 
-	public static WorldAttached<WorldTileRenderer<BasicProgram>> tileRenderer = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.INSTANCE));
+	public static WorldAttached<WorldTileRenderer<WorldProgram>> tileRenderer = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.INSTANCE));
 	public static LazyValue<Vector<CrumblingRenderer>> blockBreaking = new LazyValue<>(() -> {
 		Vector<CrumblingRenderer> renderers = new Vector<>(10);
 		for (int i = 0; i < 10; i++) {
@@ -87,7 +87,7 @@ public class Backend {
 
 		listeners.refreshListener(world -> {
 			if (canUseInstancing() && world != null) {
-				WorldTileRenderer<BasicProgram> tileRenderer = Backend.tileRenderer.get(world);
+				WorldTileRenderer<WorldProgram> tileRenderer = Backend.tileRenderer.get(world);
 				tileRenderer.invalidate();
 				world.loadedTileEntityList.forEach(tileRenderer::add);
 			}
@@ -190,7 +190,7 @@ public class Backend {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 
-		WorldTileRenderer<BasicProgram> instancer = tileRenderer.get(world);
+		WorldTileRenderer<WorldProgram> instancer = tileRenderer.get(world);
 
 		Entity renderViewEntity = mc.renderViewEntity;
 		instancer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
@@ -198,7 +198,7 @@ public class Backend {
 
 	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
 		if (!canUseInstancing(world)) return;
-		WorldTileRenderer<BasicProgram> renderer = tileRenderer.get(world);
+		WorldTileRenderer<WorldProgram> renderer = tileRenderer.get(world);
 
 		layer.startDrawing();
 

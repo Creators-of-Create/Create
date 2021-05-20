@@ -2,6 +2,7 @@ package com.jozufozu.flywheel.backend.core;
 
 import java.util.ArrayList;
 
+import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 
@@ -12,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class WorldTileRenderer<P extends BasicProgram> extends InstancedTileRenderer<P> {
+public class WorldTileRenderer<P extends WorldProgram> extends InstancedTileRenderer<P> {
 	public static int MAX_ORIGIN_DISTANCE = 100;
 
 	public BlockPos originCoordinate = BlockPos.ZERO;

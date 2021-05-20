@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.gl.shader;
+package com.jozufozu.flywheel.backend.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,16 +8,21 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
-import com.jozufozu.flywheel.backend.gl.GlFog;
-import com.jozufozu.flywheel.backend.gl.GlFogMode;
+import com.jozufozu.flywheel.backend.core.shader.ExtensibleGlProgram;
+import com.jozufozu.flywheel.backend.core.shader.GlFog;
+import com.jozufozu.flywheel.backend.core.shader.GlFogMode;
+import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
+import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
+import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
+import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.loading.Program;
 
-public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P> {
+public class WorldMultiProgram<P extends GlProgram> implements IMultiProgram<P> {
 
 	private final Map<GlFogMode, P> programs;
 	private final List<P> debugPrograms;
 
-	public FogSensitiveProgram(Map<GlFogMode, P> programs, List<P> debugPrograms) {
+	public WorldMultiProgram(Map<GlFogMode, P> programs, List<P> debugPrograms) {
 		this.programs = programs;
 		this.debugPrograms = debugPrograms;
 	}
@@ -34,10 +39,10 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 
 	public static class SpecLoader<P extends GlProgram> implements ShaderSpecLoader<P> {
 
-		private final FogProgramLoader<P> fogProgramLoader;
+		private final ExtensibleGlProgram.Factory<P> factory;
 
-		public SpecLoader(FogProgramLoader<P> fogProgramLoader) {
-			this.fogProgramLoader = fogProgramLoader;
+		public SpecLoader(ExtensibleGlProgram.Factory<P> factory) {
+			this.factory = factory;
 		}
 
 		@Override
@@ -49,7 +54,7 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 			for (String mode : modes) {
 				Program builder = ctx.loadProgram(loader, spec, Collections.singletonList(mode));
 
-				debugModes.add(fogProgramLoader.create(builder, GlFogMode.NONE.getFogFactory()));
+				debugModes.add(factory.create(builder, null));
 			}
 
 			Map<GlFogMode, P> programs = new EnumMap<>(GlFogMode.class);
@@ -57,16 +62,12 @@ public class FogSensitiveProgram<P extends GlProgram> implements IMultiProgram<P
 			for (GlFogMode fogMode : GlFogMode.values()) {
 				Program builder = ctx.loadProgram(loader, spec, fogMode.getDefines());
 
-				programs.put(fogMode, fogProgramLoader.create(builder, fogMode.getFogFactory()));
+				programs.put(fogMode, factory.create(builder, Collections.singletonList(fogMode)));
 			}
 
-			return new FogSensitiveProgram<>(programs, debugModes);
+			return new WorldMultiProgram<>(programs, debugModes);
 		}
 
 	}
 
-	public interface FogProgramLoader<P extends GlProgram> {
-
-		P create(Program program, ProgramFogMode.Factory fogFactory);
-	}
 }

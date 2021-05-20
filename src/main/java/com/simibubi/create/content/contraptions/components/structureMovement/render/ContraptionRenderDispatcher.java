@@ -16,7 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.WorldContext;
-import com.jozufozu.flywheel.backend.gl.shader.FogSensitiveProgram;
+import com.jozufozu.flywheel.backend.core.WorldMultiProgram;
 import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -71,8 +71,8 @@ public class ContraptionRenderDispatcher {
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 
 	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
-	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new), () -> Stream.of(AllProgramSpecs.STRUCTURE), ModelTemplate::new);
-	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, new FogSensitiveProgram.SpecLoader<>(ContraptionProgram::new));
+	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, new WorldMultiProgram.SpecLoader<>(ContraptionProgram::new), () -> Stream.of(AllProgramSpecs.STRUCTURE), ModelTemplate::new);
+	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, new WorldMultiProgram.SpecLoader<>(ContraptionProgram::new));
 
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;
