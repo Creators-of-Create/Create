@@ -56,29 +56,27 @@ public class TreeCutter {
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
 	 *
-	 * @param world
+	 * @param reader
 	 * @param pos
 	 * @return null if not found or not fully cut
 	 */
 	@Nonnull
-	public static AbstractBlockBreakQueue findTree(@Nullable IBlockReader world, BlockPos pos) {
-		if (world == null)
+	public static Tree findTree(@Nullable IBlockReader reader, BlockPos pos) {
+		if (reader == null)
 			return NO_TREE;
 
 		List<BlockPos> logs = new ArrayList<>();
-		logs.add(pos);
-
 		List<BlockPos> leaves = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 
 		// Bamboo, Sugar Cane, Cactus
-		BlockState stateAbove = world.getBlockState(pos.up());
+		BlockState stateAbove = reader.getBlockState(pos.up());
 		if (isVerticalPlant(stateAbove)) {
 			logs.add(pos.up());
 			for (int i = 1; i < 256; i++) {
 				BlockPos current = pos.up(i);
-				if (!isVerticalPlant(world.getBlockState(current)))
+				if (!isVerticalPlant(reader.getBlockState(current)))
 					break;
 				logs.add(current);
 			}
@@ -97,7 +95,7 @@ public class TreeCutter {
 					BlockPos offset = current.offset(direction);
 					if (visited.contains(offset))
 						continue;
-					if (!isChorus(world.getBlockState(offset)))
+					if (!isChorus(reader.getBlockState(offset)))
 						continue;
 					frontier.add(offset);
 				}
@@ -107,7 +105,7 @@ public class TreeCutter {
 		}
 
 		// Regular Tree
-		if (!validateCut(world, pos))
+		if (!validateCut(reader, pos))
 			return NO_TREE;
 
 		visited.add(pos);
@@ -121,7 +119,7 @@ public class TreeCutter {
 				continue;
 			visited.add(currentPos);
 
-			if (!isLog(world.getBlockState(currentPos)))
+			if (!isLog(reader.getBlockState(currentPos)))
 				continue;
 			logs.add(currentPos);
 			addNeighbours(currentPos, frontier, visited);
@@ -137,7 +135,7 @@ public class TreeCutter {
 				continue;
 			visited.add(currentPos);
 
-			BlockState blockState = world.getBlockState(currentPos);
+			BlockState blockState = reader.getBlockState(currentPos);
 			boolean isLog = isLog(blockState);
 			boolean isLeaf = isLeaf(blockState);
 			boolean isGenericLeaf = isLeaf || isNonDecayingLeaf(blockState);
@@ -152,7 +150,7 @@ public class TreeCutter {
 				BlockPos offset = currentPos.offset(direction);
 				if (visited.contains(offset))
 					continue;
-				BlockState state = world.getBlockState(offset);
+				BlockState state = reader.getBlockState(offset);
 				BlockPos subtract = offset.subtract(pos);
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
 				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance
