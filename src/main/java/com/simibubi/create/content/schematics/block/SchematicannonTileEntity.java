@@ -28,6 +28,8 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTProcessors;
@@ -471,13 +473,21 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				launchBlock(target, icon, blockState, null);
 		} else {
 			CompoundNBT data = null;
-			if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-				TileEntity tile = blockReader.getTileEntity(target);
-				if (tile != null) {
+			TileEntity tile = blockReader.getTileEntity(target);
+			if (tile != null) {
+				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 					data = tile.write(new CompoundNBT());
 					data = NBTProcessors.process(tile, data, true);
+				} else if (tile instanceof SmartTileEntity) {
+					FilteringBehaviour filtering = ((SmartTileEntity)tile).getBehaviour(FilteringBehaviour.TYPE);
+					if (filtering != null) {
+						data = new CompoundNBT();
+						filtering.write(data, false);
+						data = NBTProcessors.process(tile, data, true);
+					}
 				}
 			}
+
 			launchBlock(target, icon, blockState, data);
 		}
 
