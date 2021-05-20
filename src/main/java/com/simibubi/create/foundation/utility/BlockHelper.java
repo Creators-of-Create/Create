@@ -1,8 +1,17 @@
 package com.simibubi.create.foundation.utility;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.RailBlock;
+
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
+import net.minecraftforge.common.util.BlockSnapshot;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
@@ -234,6 +243,23 @@ public class BlockHelper {
 			.isEmpty();
 	}
 
+	private static void placeRailWithoutUpdate(World world, BlockState state, BlockPos target) {
+		int i = target.getX() & 15;
+		int j = target.getY();
+		int k = target.getZ() & 15;
+		Chunk chunk = world.getChunkAt(target);
+		ChunkSection chunksection = chunk.getSections()[j >> 4];
+		if (chunksection == Chunk.EMPTY_SECTION) {
+			chunksection = new ChunkSection(j >> 4 << 4);
+			chunk.getSections()[j >> 4] = chunksection;
+		}
+		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
+		chunk.markDirty();
+		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
+
+		world.setBlockState(target, state, 82);
+	}
+
 	public static void placeSchematicBlock(World world, BlockState state, BlockPos target, ItemStack stack,
 		@Nullable CompoundNBT data) {
 		// Piston
@@ -268,7 +294,13 @@ public class BlockHelper {
 			Block.spawnDrops(state, world, target);
 			return;
 		}
-		world.setBlockState(target, state, 18);
+
+		if (BlockTags.RAILS.contains(state.getBlock())) {
+			placeRailWithoutUpdate(world, state, target);
+		} else {
+			world.setBlockState(target, state, 18);
+		}
+
 		if (data != null) {
 			TileEntity tile = world.getTileEntity(target);
 			if (tile != null) {
