@@ -296,7 +296,7 @@ public class BlockHelper {
 			return;
 		}
 
-		if (BlockTags.RAILS.contains(state.getBlock())) {
+		if (state.getBlock() instanceof AbstractRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
 		} else {
 			world.setBlockState(target, state, 18);

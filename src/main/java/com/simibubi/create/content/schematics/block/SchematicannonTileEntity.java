@@ -34,6 +34,8 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.minecraft.block.AbstractRailBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PistonHeadBlock;
@@ -81,6 +83,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		STOPPED, PAUSED, RUNNING;
 	}
 
+	public enum PrintStage {
+		BLOCKS, DEFERRED_BLOCKS, ENTITIES
+	}
+
 	// Inventory
 	public SchematicannonInventory inventory;
 
@@ -101,12 +107,14 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	private int skipsLeft;
 	private boolean blockSkipped;
 	private int printingEntityIndex;
+	private PrintStage printStage;
 
 	public BlockPos target;
 	public BlockPos previousTarget;
 	public LinkedHashSet<LazyOptional<IItemHandler>> attachedInventories;
 	public List<LaunchedItem> flyingBlocks;
 	public MaterialChecklist checklist;
+	public List<BlockPos> deferredBlocks;
 
 	// Gui information
 	public float fuelLevel;
@@ -144,7 +152,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
 		state = State.STOPPED;
-		printingEntityIndex = -1;
+		printingEntityIndex = 0;
+		printStage = PrintStage.BLOCKS;
+		deferredBlocks = new LinkedList<>();
 		replaceMode = 2;
 		checklist = new MaterialChecklist();
 	}
@@ -200,8 +210,14 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		replaceTileEntities = options.getBoolean("ReplaceTileEntities");
 
 		// Printer & Flying Blocks
+		if (compound.contains("PrintStage"))
+			printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		if (compound.contains("Target"))
 			target = NBTUtil.readBlockPos(compound.getCompound("Target"));
+		if (compound.contains("DeferredBlocks"))
+			compound.getList("DeferredBlocks", 10).stream()
+					.map(p -> NBTUtil.readBlockPos((CompoundNBT) p))
+					.collect(Collectors.toCollection(() -> deferredBlocks));
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
@@ -275,12 +291,20 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		compound.put("Options", options);
 
 		// Printer & Flying Blocks
+		compound.putString("PrintStage", printStage.name());
+
 		if (target != null)
 			compound.put("Target", NBTUtil.writeBlockPos(target));
-		ListNBT tagBlocks = new ListNBT();
+
+		ListNBT tagDeferredBlocks = new ListNBT();
+		for (BlockPos p : deferredBlocks)
+			tagDeferredBlocks.add(NBTUtil.writeBlockPos(p));
+		compound.put("DeferredBlocks", tagDeferredBlocks);
+
+		ListNBT tagFlyingBlocks = new ListNBT();
 		for (LaunchedItem b : flyingBlocks)
-			tagBlocks.add(b.serializeNBT());
-		compound.put("FlyingBlocks", tagBlocks);
+			tagFlyingBlocks.add(b.serializeNBT());
+		compound.put("FlyingBlocks", tagFlyingBlocks);
 
 		super.write(compound, clientPacket);
 	}
@@ -390,7 +414,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			target = schematicAnchor.add(currentPos);
 		}
 
-		boolean entityMode = printingEntityIndex >= 0;
+		boolean entityMode = printStage == PrintStage.ENTITIES;
 
 		// Check block
 		if (!getWorld().isAreaLoaded(target, 0)) {
@@ -573,7 +597,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "ready";
-		printingEntityIndex = -1;
+		printingEntityIndex = 0;
+		printStage = PrintStage.BLOCKS;
+		deferredBlocks.clear();
 		updateChecklist();
 		sendUpdate = true;
 		blocksToPlace += blocksPlaced;
@@ -659,22 +685,33 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	protected void advanceCurrentPos() {
 		List<Entity> entities = blockReader.getEntities()
 			.collect(Collectors.toList());
-		if (printingEntityIndex != -1) {
-			printingEntityIndex++;
 
-			// End of entities reached
-			if (printingEntityIndex >= entities.size()) {
-				finishedPrinting();
-				return;
+		if (printStage == PrintStage.BLOCKS) {
+			MutableBoundingBox bounds = blockReader.getBounds();
+			while (tryAdvanceCurrentPos(bounds, entities)) {
+				deferredBlocks.add(currentPos);
 			}
-
-			currentPos = entities.get(printingEntityIndex)
-				.getBlockPos()
-				.subtract(schematicAnchor);
-			return;
 		}
 
-		MutableBoundingBox bounds = blockReader.getBounds();
+		if (printStage == PrintStage.DEFERRED_BLOCKS) {
+			if (deferredBlocks.isEmpty()) {
+				printStage = PrintStage.ENTITIES;
+			} else {
+				currentPos = deferredBlocks.remove(0);
+			}
+		}
+
+		if (printStage == PrintStage.ENTITIES) {
+			if (printingEntityIndex < entities.size()) {
+				currentPos = entities.get(printingEntityIndex).getBlockPos().subtract(schematicAnchor);
+				printingEntityIndex++;
+			} else {
+				finishedPrinting();
+			}
+		}
+	}
+
+	protected boolean tryAdvanceCurrentPos(MutableBoundingBox bounds, List<Entity> entities) {
 		currentPos = currentPos.offset(Direction.EAST);
 		BlockPos posInBounds = currentPos.add(-bounds.minX, -bounds.minY, -bounds.minZ);
 
@@ -685,15 +722,16 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		// End of blocks reached
 		if (currentPos.getY() > bounds.getYSize()) {
-			printingEntityIndex = 0;
-			if (entities.isEmpty()) {
-				finishedPrinting();
-				return;
-			}
-			currentPos = entities.get(0)
-				.getBlockPos()
-				.subtract(schematicAnchor);
+			printStage = PrintStage.DEFERRED_BLOCKS;
+			return false;
 		}
+
+		return shouldDeferBlock(blockReader.getBlockState(schematicAnchor.add(currentPos)));
+	}
+
+	public static boolean shouldDeferBlock(BlockState state) {
+		Block block = state.getBlock();
+		return block instanceof AbstractRailBlock || block.is(AllBlocks.GANTRY_CARRIAGE.get());
 	}
 
 	public void finishedPrinting() {
@@ -715,10 +753,12 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		blockReader = null;
 		missingItem = null;
 		sendUpdate = true;
-		printingEntityIndex = -1;
+		printingEntityIndex = 0;
+		printStage = PrintStage.BLOCKS;
 		schematicProgress = 0;
 		blocksPlaced = 0;
 		blocksToPlace = 0;
+		deferredBlocks.clear();
 	}
 
 	protected boolean shouldPlace(BlockPos pos, BlockState state) {
