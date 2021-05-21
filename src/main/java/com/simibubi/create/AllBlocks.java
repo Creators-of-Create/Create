@@ -215,6 +215,16 @@ public class AllBlocks {
 		REGISTRATE.block("schematicannon", SchematicannonBlock::new)
 			.initialProperties(() -> Blocks.DISPENSER)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
+			.loot((lt, block) -> {
+				Builder builder = LootTable.builder();
+				IBuilder survivesExplosion = SurvivesExplosion.builder();
+				lt.registerLootTable(block, builder.addLootPool(LootPool.builder()
+						.acceptCondition(survivesExplosion)
+						.rolls(ConstantRange.of(1))
+						.addEntry(ItemLootEntry.builder(AllBlocks.SCHEMATICANNON.get().asItem())
+								.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
+										.func_216056_a("Options", "BlockEntityTag.Options")))));
+			})
 			.item()
 			.transform(customItemModel())
 			.register();
