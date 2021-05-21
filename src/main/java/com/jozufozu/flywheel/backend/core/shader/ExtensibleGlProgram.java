@@ -57,6 +57,10 @@ public class ExtensibleGlProgram extends GlProgram {
 	public interface Factory<P extends GlProgram> {
 
 		@Nonnull
-		P create(Program program, @Nullable List<ProgramExtender> fogFactory);
+		P create(Program program, @Nullable List<ProgramExtender> extensions);
+
+		default P create(Program program) {
+			return create(program, null);
+		}
 	}
 }

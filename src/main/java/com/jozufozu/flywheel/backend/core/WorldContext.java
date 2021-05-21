@@ -32,8 +32,8 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	private static final String declaration = "#flwbuiltins";
 	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
-	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/world"), new WorldMultiProgram.SpecLoader<>(WorldProgram::new));
-	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), new WorldMultiProgram.SpecLoader<>(CrumblingProgram::new));
+	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/world"), new FogMultiProgram.SpecLoader<>(WorldProgram::new));
+	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), new FogMultiProgram.SpecLoader<>(CrumblingProgram::new));
 
 	protected ProgramTemplate template;
 	protected final ResourceLocation name;
