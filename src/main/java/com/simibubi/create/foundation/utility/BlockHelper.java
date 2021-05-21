@@ -258,6 +258,7 @@ public class BlockHelper {
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
 		world.setBlockState(target, state, 82);
+		world.neighborChanged(target, world.getBlockState(target.down()).getBlock(), target.down());
 	}
 
 	public static void placeSchematicBlock(World world, BlockState state, BlockPos target, ItemStack stack,
