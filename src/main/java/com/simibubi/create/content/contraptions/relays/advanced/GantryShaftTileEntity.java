@@ -19,15 +19,12 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		super(typeIn);
 	}
 
-	@Override
-	public void onSpeedChanged(float previousSpeed) {
-		super.onSpeedChanged(previousSpeed);
-
-		if (!canAssembleOn())
+	public void checkAttachedCarriageBlocks(boolean willBeMiddle) {
+		if (!canAssembleOn(willBeMiddle))
 			return;
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == getBlockState().get(GantryShaftBlock.FACING)
-				.getAxis())
+					.getAxis())
 				continue;
 			BlockPos offset = pos.offset(d);
 			BlockState pinionState = world.getBlockState(offset);
@@ -39,7 +36,12 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			if (tileEntity instanceof GantryCarriageTileEntity)
 				((GantryCarriageTileEntity) tileEntity).queueAssembly();
 		}
+	}
 
+	@Override
+	public void onSpeedChanged(float previousSpeed) {
+		super.onSpeedChanged(previousSpeed);
+		checkAttachedCarriageBlocks(false);
 	}
 
 	@Override
@@ -73,12 +75,19 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 	}
 
 	public boolean canAssembleOn() {
+		return canAssembleOn(false);
+	}
+
+	public boolean canAssembleOn(boolean willBeMiddle) {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.GANTRY_SHAFT.has(blockState))
 			return false;
 		if (blockState.get(GantryShaftBlock.POWERED))
 			return false;
 		float speed = getPinionMovementSpeed();
+
+		if (willBeMiddle)
+			return speed != 0;
 
 		switch (blockState.get(GantryShaftBlock.PART)) {
 		case END:
@@ -99,7 +108,7 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			return 0;
 		return MathHelper.clamp(-getSpeed() / 512f, -.49f, .49f);
 	}
-	
+
 	@Override
 	protected boolean isNoisy() {
 		return false;
