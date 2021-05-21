@@ -98,7 +98,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 			return state;
 		boolean connect = AllBlocks.GANTRY_SHAFT.has(neighbour) && neighbour.get(FACING) == facing;
 
-		Part part = state.get(PART), prevPart = part;
+		Part part = state.get(PART);
 		if (direction.getAxisDirection() == facing.getAxisDirection()) {
 			if (connect) {
 				if (part == Part.END)
