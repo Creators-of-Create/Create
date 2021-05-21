@@ -125,13 +125,6 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 			}
 		}
 
-		if (!world.isRemote() && part == Part.MIDDLE && prevPart != Part.MIDDLE) {
-			TileEntity te = world.getTileEntity(pos);
-			if (te instanceof GantryShaftTileEntity) {
-				((GantryShaftTileEntity)te).checkAttachedCarriageBlocks(true);
-			}
-		}
-
 		return state.with(PART, part);
 	}
 
@@ -174,6 +167,20 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 			neighborChanged(world.getBlockState(pos), world, pos, state.getBlock(), pos, false);
 		}
 		return onWrenched;
+	}
+
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+
+		if (!worldIn.isRemote() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
+			Part oldPart = oldState.get(PART), part = state.get(PART);
+			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
+				TileEntity te = worldIn.getTileEntity(pos);
+				if (te instanceof GantryShaftTileEntity)
+					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
+			}
+		}
 	}
 
 	@Override

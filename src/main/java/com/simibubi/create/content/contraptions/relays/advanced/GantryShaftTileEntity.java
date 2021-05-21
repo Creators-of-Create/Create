@@ -19,8 +19,8 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		super(typeIn);
 	}
 
-	public void checkAttachedCarriageBlocks(boolean willBeMiddle) {
-		if (!canAssembleOn(willBeMiddle))
+	public void checkAttachedCarriageBlocks() {
+		if (!canAssembleOn())
 			return;
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == getBlockState().get(GantryShaftBlock.FACING)
@@ -41,7 +41,7 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
-		checkAttachedCarriageBlocks(false);
+		checkAttachedCarriageBlocks();
 	}
 
 	@Override
@@ -75,19 +75,12 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 	}
 
 	public boolean canAssembleOn() {
-		return canAssembleOn(false);
-	}
-
-	public boolean canAssembleOn(boolean willBeMiddle) {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.GANTRY_SHAFT.has(blockState))
 			return false;
 		if (blockState.get(GantryShaftBlock.POWERED))
 			return false;
 		float speed = getPinionMovementSpeed();
-
-		if (willBeMiddle)
-			return speed != 0;
 
 		switch (blockState.get(GantryShaftBlock.PART)) {
 		case END:
