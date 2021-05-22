@@ -116,7 +116,7 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    def registrate = "com.tterrag.registrate:Registrate:MC1.16.2-${registrate_version}"
+    def registrate = "com.tterrag.registrate:Registrate:MC1.16.5-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
 
