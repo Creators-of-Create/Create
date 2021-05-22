@@ -31,6 +31,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
@@ -502,13 +503,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
 					data = tile.write(new CompoundNBT());
 					data = NBTProcessors.process(tile, data, true);
-				} else if (tile instanceof SmartTileEntity) {
-					FilteringBehaviour filtering = ((SmartTileEntity)tile).getBehaviour(FilteringBehaviour.TYPE);
-					if (filtering != null) {
-						data = new CompoundNBT();
-						filtering.write(data, false);
-						data = NBTProcessors.process(tile, data, true);
-					}
+				} else if (tile instanceof IPartialSafeNBT) {
+					data = new CompoundNBT();
+					((IPartialSafeNBT) tile).writeSafe(data, false);
+					data = NBTProcessors.process(tile, data, true);
 				}
 			}
 
