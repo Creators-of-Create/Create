@@ -212,7 +212,7 @@ public class BuilderTransformers {
 					});
 			})
 			.item()
-			.properties(p -> type.equals("creative") ? p : p.rarity(Rarity.EPIC))
+			.properties(p -> type.equals("creative") ? p.rarity(Rarity.EPIC) : p)
 			.transform(ModelGen.customItemModel("crate", type, "single"));
 	}
 
