@@ -739,6 +739,7 @@ public class AllBlocks {
 	public static final BlockEntry<GantryCarriageBlock> GANTRY_CARRIAGE =
 		REGISTRATE.block("gantry_carriage", GantryCarriageBlock::new)
 			.initialProperties(SharedProperties::stone)
+			.tag(AllBlockTags.BRITTLE.tag)
 			.properties(Block.Properties::nonOpaque)
 			.blockstate(BlockStateGen.directionalAxisBlockProvider())
 			.item()

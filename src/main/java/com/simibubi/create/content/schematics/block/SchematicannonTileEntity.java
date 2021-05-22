@@ -11,6 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -728,8 +729,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
-		Block block = state.getBlock();
-		return block instanceof AbstractRailBlock || block.is(AllBlocks.GANTRY_CARRIAGE.get());
+		return BlockMovementTraits.isBrittle(state);
 	}
 
 	public void finishedPrinting() {
