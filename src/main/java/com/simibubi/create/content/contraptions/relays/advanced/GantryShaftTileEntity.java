@@ -19,15 +19,12 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		super(typeIn);
 	}
 
-	@Override
-	public void onSpeedChanged(float previousSpeed) {
-		super.onSpeedChanged(previousSpeed);
-
+	public void checkAttachedCarriageBlocks() {
 		if (!canAssembleOn())
 			return;
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == getBlockState().get(GantryShaftBlock.FACING)
-				.getAxis())
+					.getAxis())
 				continue;
 			BlockPos offset = pos.offset(d);
 			BlockState pinionState = world.getBlockState(offset);
@@ -39,7 +36,12 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			if (tileEntity instanceof GantryCarriageTileEntity)
 				((GantryCarriageTileEntity) tileEntity).queueAssembly();
 		}
+	}
 
+	@Override
+	public void onSpeedChanged(float previousSpeed) {
+		super.onSpeedChanged(previousSpeed);
+		checkAttachedCarriageBlocks();
 	}
 
 	@Override
@@ -99,7 +101,7 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 			return 0;
 		return MathHelper.clamp(-getSpeed() / 512f, -.49f, .49f);
 	}
-	
+
 	@Override
 	protected boolean isNoisy() {
 		return false;

@@ -55,6 +55,9 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.putInt("ScrollValue", value);
 		if (clientPacket && forceClientState) {
@@ -95,7 +98,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		clientCallback = valueCallback;
 		return this;
 	}
-	
+
 	public ScrollValueBehaviour withCallback(Consumer<Integer> valueCallback) {
 		callback = valueCallback;
 		return this;
@@ -126,7 +129,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.unit = unit;
 		return this;
 	}
-	
+
 	public ScrollValueBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
 		return this;
@@ -168,7 +171,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public BehaviourType<?> getType() {
 		return TYPE;
 	}
-	
+
 	public boolean isActive() {
 		return isActive.get();
 	}
@@ -182,7 +185,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public void setLabel(ITextComponent label) {
 		this.label = label;
 	}
-	
+
 	public static class StepContext {
 		public int currentValue;
 		public boolean forward;

@@ -6,6 +6,19 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "Options",
+                  "target": "BlockEntityTag.Options",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
           "name": "create:schematicannon"
         }
       ],

@@ -116,6 +116,9 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		super.write(nbt, clientPacket);
 		nbt.put("FrequencyFirst", frequencyFirst.getStack()
