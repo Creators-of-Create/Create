@@ -126,7 +126,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			}
 			if (success)
 				worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-					1f + Create.random.nextFloat());
+					1f + Create.RANDOM.nextFloat());
 			te.onEmptied();
 		} catch (TileEntityException e) {
 		}

@@ -329,7 +329,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	protected void renderStructure(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, RenderType type,
 		float fade) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		int code = hashCode() ^ world.hashCode();
 
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.getBlockLayers()

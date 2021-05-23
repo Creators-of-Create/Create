@@ -313,12 +313,12 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return;
 		AirParticleData airParticleData = new AirParticleData(drag, motion);
 		Vector3d origin = Vector3d.of(pos);
-		float xOff = Create.random.nextFloat() * .5f + .25f;
-		float zOff = Create.random.nextFloat() * .5f + .25f;
+		float xOff = Create.RANDOM.nextFloat() * .5f + .25f;
+		float zOff = Create.RANDOM.nextFloat() * .5f + .25f;
 		Vector3d v = origin.add(xOff, verticalStart, zOff);
 		Vector3d d = origin.add(xOff, verticalEnd, zOff)
 			.subtract(v);
-		if (Create.random.nextFloat() < 2 * motion)
+		if (Create.RANDOM.nextFloat() < 2 * motion)
 			world.addOptionalParticle(airParticleData, v.x, v.y, v.z, d.x, d.y, d.z);
 	}
 

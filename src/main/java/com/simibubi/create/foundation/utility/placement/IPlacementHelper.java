@@ -96,15 +96,15 @@ public interface IPlacementHelper {
 		Vector3d offsetB = facing.crossProduct(direction).normalize().scale(.25);
 		Vector3d endA = center.add(direction.scale(.75)).add(offsetA);
 		Vector3d endB = center.add(direction.scale(.75)).add(offsetB);
-		CreateClient.outliner.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1/16f);
-		CreateClient.outliner.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1/16f);
+		CreateClient.OUTLINER.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1/16f);
+		CreateClient.OUTLINER.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1/16f);
 	}
 
 	default void displayGhost(PlacementOffset offset) {
 		if (!offset.hasGhostState())
 			return;
 
-		CreateClient.ghostBlocks.showGhostState(this, offset.getTransform().apply(offset.getGhostState()))
+		CreateClient.GHOST_BLOCKS.showGhostState(this, offset.getTransform().apply(offset.getGhostState()))
 				.at(offset.getBlockPos())
 				.breathingAlpha();
 	}

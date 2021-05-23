@@ -80,7 +80,7 @@ public class FilteringRenderer {
 			.scrollTooltip(showCount && !isFilterSlotted ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
 			.passive(!hit);
 
-		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
+		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
 			.lineWidth(1 / 64f)
 			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 			.highlightFace(result.getFace());

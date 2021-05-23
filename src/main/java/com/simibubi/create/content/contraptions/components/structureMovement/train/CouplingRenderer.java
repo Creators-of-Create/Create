@@ -228,13 +228,13 @@ public class CouplingRenderer {
 		int color = ColorHelper.mixColors(0xabf0e9, 0xee8572, (float) MathHelper
 			.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
 
-		CreateClient.outliner.showLine(mainCart.getEntityId() + "", mainCenter, connectedCenter)
+		CreateClient.OUTLINER.showLine(mainCart.getEntityId() + "", mainCenter, connectedCenter)
 			.colored(color)
 			.lineWidth(1 / 8f);
 
 		Vector3d point = mainCart.getPositionVec()
 			.add(0, yOffset, 0);
-		CreateClient.outliner.showLine(mainCart.getEntityId() + "_dot", point, point.add(0, 1 / 128f, 0))
+		CreateClient.OUTLINER.showLine(mainCart.getEntityId() + "_dot", point, point.add(0, 1 / 128f, 0))
 			.colored(0xffffff)
 			.lineWidth(1 / 4f);
 	}

@@ -36,7 +36,7 @@ import net.minecraftforge.common.Tags;
 public class AllPaletteBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.palettesCreativeTab)
+		.itemGroup(() -> Create.PALETTES_CREATIVE_TAB)
 		.startSection(AllSections.PALETTES);
 
 	// Windows and Glass

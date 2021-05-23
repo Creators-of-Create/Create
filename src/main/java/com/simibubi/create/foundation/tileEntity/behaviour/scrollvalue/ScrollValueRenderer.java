@@ -75,7 +75,7 @@ public class ScrollValueRenderer {
 			.withColors(0x5A5D5A, 0xB5B7B6)
 			.passive(!highlight);
 
-		CreateClient.outliner.showValueBox(pos, box.transform(behaviour.slotPositioning))
+		CreateClient.OUTLINER.showValueBox(pos, box.transform(behaviour.slotPositioning))
 			.lineWidth(1 / 64f)
 			.highlightFace(face);
 	}

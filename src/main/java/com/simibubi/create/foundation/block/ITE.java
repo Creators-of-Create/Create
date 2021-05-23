@@ -97,7 +97,7 @@ public interface ITE<T extends TileEntity> {
 
 	static void report(TileEntityException e) {
 		if (AllConfigs.COMMON.logTeErrors.get())
-			Create.logger.debug("TileEntityException thrown!", e);
+			Create.LOGGER.debug("TileEntityException thrown!", e);
 	}
 
 }

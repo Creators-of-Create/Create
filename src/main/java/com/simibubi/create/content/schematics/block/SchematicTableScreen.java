@@ -68,8 +68,8 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 		int mainLeft = guiLeft - 56;
 		int mainTop = guiTop - 16;
 
-		CreateClient.schematicSender.refresh();
-		List<ITextComponent> availableSchematics = CreateClient.schematicSender.getAvailableSchematics();
+		CreateClient.SCHEMATIC_SENDER.refresh();
+		List<ITextComponent> availableSchematics = CreateClient.SCHEMATIC_SENDER.getAvailableSchematics();
 
 		schematicsLabel = new Label(mainLeft + 49, mainTop + 26, StringTextComponent.EMPTY).withShadow();
 		schematicsLabel.text = StringTextComponent.EMPTY;
@@ -176,7 +176,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 	@Override
 	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-		ClientSchematicLoader schematicSender = CreateClient.schematicSender;
+		ClientSchematicLoader schematicSender = CreateClient.SCHEMATIC_SENDER;
 
 		if (confirmButton.active && confirmButton.isHovered() && ((SchematicTableContainer) container).canWrite()
 			&& schematicsArea != null) {

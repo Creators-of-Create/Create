@@ -91,7 +91,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	public void notifySignalChange() {
-		Create.redstoneLinkNetworkHandler.updateNetworkOf(this);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.updateNetworkOf(this);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	private RedstoneLinkNetworkHandler getHandler() {
-		return Create.redstoneLinkNetworkHandler;
+		return Create.REDSTONE_LINK_NETWORK_HANDLER;
 	}
 
 	public static class SlotPositioning {

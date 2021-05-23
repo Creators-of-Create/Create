@@ -90,7 +90,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 			return true;
 		}
 		if (abort.isHovered()) {
-			CreateClient.schematicAndQuillHandler.discard();
+			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.discard();
 			Minecraft.getInstance().player.closeScreen();
 			return true;
 		}
@@ -102,7 +102,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm(boolean convertImmediately) {
-		CreateClient.schematicAndQuillHandler.saveSchematic(nameField.getText(), convertImmediately);
+		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getText(), convertImmediately);
 		Minecraft.getInstance().player.closeScreen();
 	}
 

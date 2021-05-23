@@ -195,7 +195,7 @@ public class ArmInteractionPointHandler {
 				continue;
 
 			int color = point.mode == Mode.DEPOSIT ? 0xffcb74 : 0x4f8a8b;
-			CreateClient.outliner.showAABB(point, shape.getBoundingBox()
+			CreateClient.OUTLINER.showAABB(point, shape.getBoundingBox()
 				.offset(pos))
 				.colored(color)
 				.lineWidth(1 / 16f);

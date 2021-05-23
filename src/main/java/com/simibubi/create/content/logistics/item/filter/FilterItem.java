@@ -157,9 +157,9 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		ItemStack heldItem = player.getHeldItemMainhand();
 		if (type == FilterType.REGULAR)
-			return new FilterContainer(id, inv, heldItem);
+			return FilterContainer.create(id, inv, heldItem);
 		if (type == FilterType.ATTRIBUTE)
-			return new AttributeFilterContainer(id, inv, heldItem);
+			return AttributeFilterContainer.create(id, inv, heldItem);
 		return null;
 	}
 

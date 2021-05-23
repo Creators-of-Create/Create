@@ -104,7 +104,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 				}
 				return tileEntity;
 			} catch (Exception e) {
-				Create.logger.debug("Could not create TE of block " + blockState + ": " + e);
+				Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
 			}
 		}
 		return null;

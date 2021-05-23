@@ -7,6 +7,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -18,8 +19,8 @@ public class SchematicannonContainer extends Container {
 	private SchematicannonTileEntity te;
 	private PlayerEntity player;
 
-	public SchematicannonContainer(int id, PlayerInventory inv, PacketBuffer buffer) {
-		super(AllContainerTypes.SCHEMATICANNON.type, id);
+	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer buffer) {
+		super(type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
 		TileEntity tileEntity = world.getTileEntity(buffer.readBlockPos());
@@ -30,11 +31,15 @@ public class SchematicannonContainer extends Container {
 		}
 	}
 
-	public SchematicannonContainer(int id, PlayerInventory inv, SchematicannonTileEntity te) {
-		super(AllContainerTypes.SCHEMATICANNON.type, id);
+	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, SchematicannonTileEntity te) {
+		super(type, id);
 		player = inv.player;
 		this.te = te;
 		init();
+	}
+
+	public static SchematicannonContainer create(int id, PlayerInventory inv, SchematicannonTileEntity te) {
+		return new SchematicannonContainer(AllContainerTypes.SCHEMATICANNON.get(), id, inv, te);
 	}
 
 	protected void init() {

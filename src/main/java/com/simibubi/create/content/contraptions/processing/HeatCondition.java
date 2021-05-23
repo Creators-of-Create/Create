@@ -46,7 +46,7 @@ public enum HeatCondition {
 			if (heatCondition.serialize()
 				.equals(name))
 				return heatCondition;
-		Create.logger.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
+		Create.LOGGER.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
 		return NONE;
 	}
 

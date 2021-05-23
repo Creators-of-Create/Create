@@ -203,7 +203,7 @@ import net.minecraftforge.common.ToolType;
 public class AllBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.baseCreativeTab);
+		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 

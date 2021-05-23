@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "description": "create resources",
-        "pack_format": 6
-    }
+  "pack": {
+    "description": "Create resources",
+    "pack_format": 6
+  }
 }

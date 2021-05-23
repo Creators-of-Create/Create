@@ -143,7 +143,7 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		ParrotEntity create(PonderWorld world) {
 			ParrotEntity entity = new ParrotEntity(EntityType.PARROT, world);
-			int nextInt = Create.random.nextInt(5);
+			int nextInt = Create.RANDOM.nextInt(5);
 			entity.setVariant(nextInt == 1 ? 0 : nextInt); // blue parrots are kinda hard to see
 			return entity;
 		}

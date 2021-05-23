@@ -61,7 +61,7 @@ import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
 import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Coordinate;
+import com.simibubi.create.foundation.utility.ICoordinate;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
@@ -974,10 +974,7 @@ public abstract class Contraption {
 //				continue;
 			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
 			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
-			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), flags, 512);
 			block.state.updateDiagonalNeighbors(world, add, flags & -2);
-//			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
-//				BlockFlags.IS_MOVING | BlockFlags.DEFAULT); this method did strange logspamming with POI-related blocks
 		}
 	}
 
@@ -1235,7 +1232,7 @@ public abstract class Contraption {
 		throw new IllegalStateException("Impossible axis");
 	}
 
-	public static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+	public static float getMaxDistSqr(Set<BlockPos> blocks, ICoordinate one, ICoordinate other) {
 		float maxDistSq = -1;
 		for (BlockPos pos : blocks) {
 			float a = one.get(pos);

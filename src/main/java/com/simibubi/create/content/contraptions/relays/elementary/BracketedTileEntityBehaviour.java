@@ -73,7 +73,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 			tileEntity.notifyUpdate();
 	}
 
-	public boolean isBacketPresent() {
+	public boolean isBracketPresent() {
 		return getBracket() != Blocks.AIR.getDefaultState();
 	}
 

@@ -27,7 +27,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		SuperByteBuffer cogs =
-			CreateClient.bufferCache.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, te.getBlockState());
+			CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, te.getBlockState());
 		cogs.matrixStacker()
 			.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()

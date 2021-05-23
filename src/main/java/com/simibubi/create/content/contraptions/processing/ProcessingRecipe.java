@@ -85,7 +85,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	private void validate(String recipeTypeName) {
 		String messageHeader = "Your custom " + recipeTypeName + " recipe (" + id.toString() + ")";
-		Logger logger = Create.logger;
+		Logger logger = Create.LOGGER;
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
 

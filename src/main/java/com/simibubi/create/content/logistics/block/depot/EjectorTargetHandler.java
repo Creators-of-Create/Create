@@ -210,7 +210,7 @@ public class EjectorTargetHandler {
 		ClientWorld world = mc.world;
 
 		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 0, 1).offset(currentSelection.add(-validX, -yDiff, -validZ));
-		CreateClient.outliner.chaseAABB("valid", bb)
+		CreateClient.OUTLINER.chaseAABB("valid", bb)
 			.colored(intColor)
 			.lineWidth(1 / 16f);
 
@@ -260,7 +260,7 @@ public class EjectorTargetHandler {
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
 		AxisAlignedBB boundingBox = shape.isEmpty() ? new AxisAlignedBB(BlockPos.ZERO) : shape.getBoundingBox();
-		CreateClient.outliner.showAABB("target", boundingBox.offset(pos))
+		CreateClient.OUTLINER.showAABB("target", boundingBox.offset(pos))
 			.colored(0xffcb74)
 			.lineWidth(1 / 16f);
 	}

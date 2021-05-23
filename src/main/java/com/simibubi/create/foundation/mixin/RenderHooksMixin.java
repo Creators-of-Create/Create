@@ -67,14 +67,14 @@ public class RenderHooksMixin {
 		double camY = cameraPos.getY();
 		double camZ = cameraPos.getZ();
 
-		CreateClient.kineticRenderer.get(world)
+		CreateClient.KINETIC_RENDERER.get(world)
 			.beginFrame(info, camX, camY, camZ);
 		ContraptionRenderDispatcher.beginFrame(info, camX, camY, camZ);
 	}
 
 	@Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
 	private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
-		CreateClient.kineticRenderer.get(world)
+		CreateClient.KINETIC_RENDERER.get(world)
 			.update(world.getTileEntity(pos));
 	}
 
@@ -85,7 +85,7 @@ public class RenderHooksMixin {
 		Backend.refresh();
 
 		if (Backend.canUseInstancing() && world != null) {
-			KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+			KineticRenderer kineticRenderer = CreateClient.KINETIC_RENDERER.get(world);
 			kineticRenderer.invalidate();
 			world.loadedTileEntityList.forEach(kineticRenderer::add);
 		}

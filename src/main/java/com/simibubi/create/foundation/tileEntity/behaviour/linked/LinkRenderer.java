@@ -51,7 +51,7 @@ public class LinkRenderer {
 			ValueBox box = new ValueBox(label, bb, pos).withColors(0x601F18, 0xB73C2D)
 				.offsetLabel(behaviour.textShift)
 				.passive(!hit);
-			CreateClient.outliner.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
+			CreateClient.OUTLINER.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
 				.lineWidth(1 / 64f)
 				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 				.highlightFace(result.getFace());
