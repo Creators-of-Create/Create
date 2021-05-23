@@ -4,25 +4,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
+import com.jozufozu.flywheel.backend.core.shader.IMultiProgram;
+import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
-import com.jozufozu.flywheel.backend.gl.shader.IMultiProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderSpecLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 
+import net.minecraft.util.ResourceLocation;
+
 public abstract class ShaderContext<P extends GlProgram> {
 
-	public final Map<ProgramSpec, IMultiProgram<P>> programs = new HashMap<>();
+	protected final Map<ResourceLocation, IMultiProgram<P>> programs = new HashMap<>();
 
-	protected final ShaderSpecLoader<P> specLoader;
 	protected ShaderTransformer transformer = new ShaderTransformer();
 
-	public ShaderContext(ShaderSpecLoader<P> specLoader) {
-		this.specLoader = specLoader;
-	}
+	public ShaderContext() { }
 
 	// TODO: Untangle the loading functions
 
@@ -31,14 +29,16 @@ public abstract class ShaderContext<P extends GlProgram> {
 	 */
 	public abstract void load(ShaderLoader loader);
 
+	protected abstract IMultiProgram<P> loadSpecInternal(ShaderLoader loader, ProgramSpec spec);
+
 	public void loadProgramFromSpec(ShaderLoader loader, ProgramSpec programSpec) {
 
 		try {
-			programs.put(programSpec, specLoader.create(loader, this, programSpec));
+			programs.put(programSpec.name, loadSpecInternal(loader, programSpec));
 
 			Backend.log.debug("Loaded program {}", programSpec.name);
 		} catch (Exception e) {
-			Backend.log.error("program '{}': {}", programSpec.name, e.getMessage());
+			Backend.log.error("Program '{}': {}", programSpec.name, e);
 			loader.notifyError();
 		}
 	}
@@ -66,7 +66,7 @@ public abstract class ShaderContext<P extends GlProgram> {
 
 	}
 
-	public P getProgram(ProgramSpec spec) {
+	public P getProgram(ResourceLocation spec) {
 		return programs.get(spec).get();
 	}
 

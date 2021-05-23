@@ -23,8 +23,8 @@ import org.lwjgl.opengl.GLCapabilities;
 import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
-import com.jozufozu.flywheel.backend.core.shader.ProgramSpec;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
@@ -135,6 +135,10 @@ public class Backend {
 		}
 		materialRegistry.put(name, spec);
 		return spec;
+	}
+
+	public static ProgramSpec getSpec(ResourceLocation name) {
+		return programSpecRegistry.get(name);
 	}
 
 	public static boolean isFlywheelWorld(World world) {

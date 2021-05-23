@@ -3,32 +3,14 @@ package com.jozufozu.flywheel.backend.core.shader;
 import org.lwjgl.opengl.GL20;
 
 import com.jozufozu.flywheel.Flywheel;
+import com.jozufozu.flywheel.backend.core.shader.extension.IExtensionInstance;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 import net.minecraft.util.ResourceLocation;
 
 public abstract class FogMode {
 
-	public static class None implements IProgramExtension {
-
-		public static final ResourceLocation NAME = new ResourceLocation(Flywheel.ID, "fog_none");
-
-		public None(GlProgram program) {
-
-		}
-
-		@Override
-		public void bind() {
-
-		}
-
-		@Override
-		public ResourceLocation name() {
-			return NAME;
-		}
-	}
-
-	public static class Linear implements IProgramExtension {
+	public static class Linear implements IExtensionInstance {
 
 		public static final ResourceLocation NAME = new ResourceLocation(Flywheel.ID, "fog_linear");
 
@@ -52,7 +34,7 @@ public abstract class FogMode {
 		}
 	}
 
-	public static class Exp2 implements IProgramExtension {
+	public static class Exp2 implements IExtensionInstance {
 
 		public static final ResourceLocation NAME = new ResourceLocation(Flywheel.ID, "fog_exp2");
 
@@ -74,8 +56,5 @@ public abstract class FogMode {
 		public ResourceLocation name() {
 			return NAME;
 		}
-	}
-
-	public interface Factory extends IProgramExtension {
 	}
 }

@@ -1,0 +1,33 @@
+{
+  "vert": "create:rotating.vert",
+  "frag": "flywheel:block.frag",
+  "states": [
+    {
+      "when": "create:rainbow_debug",
+      "define": "DEBUG_RAINBOW"
+    },
+    {
+      "when": {
+        "provider": "flywheel:normal_debug",
+        "value": "true"
+      },
+      "define": "DEBUG_NORMAL"
+    },
+    {
+      "when": {
+        "provider": "flywheel:fog_mode",
+        "value": "linear"
+      },
+      "define": ["USE_FOG", "USE_FOG_LINEAR"],
+      "extend": "flywheel:fog_linear"
+    },
+    {
+      "when": {
+        "provider": "flywheel:fog_mode",
+        "value": "exp2"
+      },
+      "define": ["USE_FOG", "USE_FOG_EXP2"],
+      "extend": "flywheel:fog_exp2"
+    }
+  ]
+}

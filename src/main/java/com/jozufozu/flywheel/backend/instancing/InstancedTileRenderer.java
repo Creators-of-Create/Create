@@ -11,8 +11,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.core.materials.OrientedData;
+import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.client.Minecraft;

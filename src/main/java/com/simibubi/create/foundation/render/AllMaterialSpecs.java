@@ -24,10 +24,10 @@ public class AllMaterialSpecs {
 			.addAttributes(CommonAttributes.VEC3, CommonAttributes.NORMAL, CommonAttributes.UV)
 			.build();
 
+	public static final MaterialSpec<RotatingData> ROTATING = register(new MaterialSpec<>(Locations.ROTATING, AllProgramSpecs.ROTATING, UNLIT_MODEL, AllInstanceFormats.ROTATING, RotatingData::new));
 	public static final MaterialSpec<ModelData> TRANSFORMED = register(new MaterialSpec<>(Locations.MODEL, AllProgramSpecs.MODEL, UNLIT_MODEL, AllInstanceFormats.MODEL, ModelData::new));
 	public static final MaterialSpec<OrientedData> ORIENTED = register(new MaterialSpec<>(Locations.ORIENTED, AllProgramSpecs.ORIENTED, UNLIT_MODEL, AllInstanceFormats.ORIENTED, OrientedData::new));
 
-	public static final MaterialSpec<RotatingData> ROTATING = register(new MaterialSpec<>(Locations.ROTATING, AllProgramSpecs.ROTATING, UNLIT_MODEL, AllInstanceFormats.ROTATING, RotatingData::new));
 	public static final MaterialSpec<BeltData> BELTS = register(new MaterialSpec<>(Locations.BELTS, AllProgramSpecs.BELT, UNLIT_MODEL, AllInstanceFormats.BELT, BeltData::new));
 	public static final MaterialSpec<ActorData> ACTORS = register(new MaterialSpec<>(Locations.ACTORS, AllProgramSpecs.ACTOR, UNLIT_MODEL, AllInstanceFormats.ACTOR, ActorData::new));
 	public static final MaterialSpec<FlapData> FLAPS = register(new MaterialSpec<>(Locations.FLAPS, AllProgramSpecs.FLAPS, UNLIT_MODEL, AllInstanceFormats.FLAP, FlapData::new));

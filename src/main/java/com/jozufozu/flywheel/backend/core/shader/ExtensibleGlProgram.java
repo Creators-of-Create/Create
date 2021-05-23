@@ -1,18 +1,20 @@
 package com.jozufozu.flywheel.backend.core.shader;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.core.shader.extension.IExtensionInstance;
+import com.jozufozu.flywheel.backend.core.shader.extension.IProgramExtension;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.loading.Program;
 
 /**
  * A shader program that be arbitrarily "extended". This class can take in any number of program extensions, and
- * will initialize them and then call their {@link IProgramExtension#bind() bind} function every subsequent time this
+ * will initialize them and then call their {@link IExtensionInstance#bind() bind} function every subsequent time this
  * program is bound. An "extension" is something that interacts with the shader program in a way that is invisible to
  * the caller using the program. This is used by some programs to implement the different fog modes. Other uses might
  * include binding extra textures to allow for blocks to have normal maps, for example. As the extensions are
@@ -21,15 +23,18 @@ import com.jozufozu.flywheel.backend.loading.Program;
  */
 public class ExtensibleGlProgram extends GlProgram {
 
-	protected final List<IProgramExtension> extensions;
+	protected final List<IExtensionInstance> extensions;
 
-	public ExtensibleGlProgram(Program program, @Nullable List<ProgramExtender> extensions) {
+	public ExtensibleGlProgram(Program program, @Nullable List<IProgramExtension> extensions) {
 		super(program);
 
 		if (extensions != null) {
-			this.extensions = extensions.stream()
-					.map(e -> e.create(this))
-					.collect(Collectors.toList());
+			List<IExtensionInstance> list = new ArrayList<>();
+			for (IProgramExtension e : extensions) {
+				IExtensionInstance extension = e.create(this);
+				list.add(extension);
+			}
+			this.extensions = list;
 		} else {
 			this.extensions = Collections.emptyList();
 		}
@@ -39,7 +44,7 @@ public class ExtensibleGlProgram extends GlProgram {
 	public void bind() {
 		super.bind();
 
-		extensions.forEach(IProgramExtension::bind);
+		extensions.forEach(IExtensionInstance::bind);
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public class ExtensibleGlProgram extends GlProgram {
 	public interface Factory<P extends GlProgram> {
 
 		@Nonnull
-		P create(Program program, @Nullable List<ProgramExtender> extensions);
+		P create(Program program, @Nullable List<IProgramExtension> extensions);
 
 		default P create(Program program) {
 			return create(program, null);

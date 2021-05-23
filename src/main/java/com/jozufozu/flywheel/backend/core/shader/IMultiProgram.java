@@ -1,4 +1,6 @@
-package com.jozufozu.flywheel.backend.gl.shader;
+package com.jozufozu.flywheel.backend.core.shader;
+
+import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 /**
  * Encapsulates any number of shader programs for use in similar contexts.

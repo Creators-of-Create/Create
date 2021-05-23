@@ -1,4 +1,6 @@
-package com.jozufozu.flywheel.backend.gl.shader;
+package com.jozufozu.flywheel.backend.core.shader;
+
+import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 /**
  * A Callback for when a shader is called. Used to define shader uniforms.

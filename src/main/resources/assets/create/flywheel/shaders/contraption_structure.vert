@@ -27,7 +27,7 @@ BlockFrag FLWMain(Vertex v) {
     b.texCoords = v.texCoords;
     b.light = v.modelLight;
 
-    #if defined(NORMAL_DEBUG)
+    #if defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
     b.color = v.color / diffuse(v.normal);

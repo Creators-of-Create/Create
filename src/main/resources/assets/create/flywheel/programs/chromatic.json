@@ -1,0 +1,4 @@
+{
+  "vert": "create:area_effect.vert",
+  "frag": "create:area_effect.frag"
+}

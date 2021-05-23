@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.glUniform3f;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.backend.core.shader.extension.IProgramExtension;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -18,8 +19,8 @@ public class WorldProgram extends ExtensibleGlProgram {
 	protected int uBlockAtlas;
 	protected int uLightMap;
 
-	public WorldProgram(Program program, List<ProgramExtender> fogFactory) {
-		super(program, fogFactory);
+	public WorldProgram(Program program, List<IProgramExtension> extensions) {
+		super(program, extensions);
 		uTime = getUniformLocation("uTime");
 		uViewProjection = getUniformLocation("uViewProjection");
 		uCameraPos = getUniformLocation("uCameraPos");

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL31;
 
+import com.jozufozu.flywheel.backend.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
@@ -14,7 +15,7 @@ import com.jozufozu.flywheel.backend.loading.Program;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 
-public class SphereFilterProgram extends GlProgram {
+public class SphereFilterProgram extends GlProgram implements IMultiProgram<SphereFilterProgram> {
 
 	protected static final int UBO_BINDING = 4;
 
@@ -80,7 +81,7 @@ public class SphereFilterProgram extends GlProgram {
 	}
 
 	public void uploadFilters(ArrayList<FilterSphere> filters) {
-		effectsUBO.bind(GlBufferType.ARRAY_BUFFER);
+		effectsUBO.bind();
 		MappedBuffer buffer = effectsUBO.getBuffer(0, BUFFER_SIZE)
 				.putInt(filters.size())
 				.position(16);
@@ -89,7 +90,7 @@ public class SphereFilterProgram extends GlProgram {
 
 		buffer.flush();
 
-		effectsUBO.unbind(GlBufferType.ARRAY_BUFFER);
+		effectsUBO.unbind();
 	}
 
 	public void bindInverseProjection(Matrix4f mat) {
@@ -110,4 +111,8 @@ public class SphereFilterProgram extends GlProgram {
 		GL20.glBindTexture(GL20.GL_TEXTURE_2D, textureObject);
 	}
 
+	@Override
+	public SphereFilterProgram get() {
+		return this;
+	}
 }

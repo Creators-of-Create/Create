@@ -40,9 +40,9 @@ BlockFrag FLWMain(Vertex v, Rotating instance) {
     b.texCoords = v.texCoords;
     b.light = instance.light;
 
-    #if defined(RAINBOW_DEBUG)
+    #if defined(DEBUG_RAINBOW)
     b.color = instance.color;
-    #elif defined(NORMAL_DEBUG)
+    #elif defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
     b.color = vec4(1.);

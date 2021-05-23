@@ -2,8 +2,8 @@ package com.jozufozu.flywheel.backend.core;
 
 import java.util.ArrayList;
 
+import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;

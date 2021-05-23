@@ -39,9 +39,9 @@ BlockFrag FLWMain(Vertex v, Belt instance) {
     b.texCoords = v.texCoords - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
     b.light = instance.light;
 
-    #if defined(RAINBOW_DEBUG)
+    #if defined(DEBUG_RAINBOW)
     b.color = instance.color;
-    #elif defined(NORMAL_DEBUG)
+    #elif defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
     b.color = vec4(1.);

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.core.shader.ProgramExtender;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.backend.core.shader.extension.IProgramExtension;
 import com.jozufozu.flywheel.backend.loading.Program;
 
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,8 +18,8 @@ public class ContraptionProgram extends WorldProgram {
 
 	protected int uLightVolume;
 
-	public ContraptionProgram(Program program, List<ProgramExtender> fogFactory) {
-		super(program, fogFactory);
+	public ContraptionProgram(Program program, List<IProgramExtension> extensions) {
+		super(program, extensions);
 		uLightBoxSize = getUniformLocation("uLightBoxSize");
 		uLightBoxMin = getUniformLocation("uLightBoxMin");
 		uModel = getUniformLocation("uModel");

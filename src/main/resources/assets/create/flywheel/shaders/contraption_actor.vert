@@ -37,7 +37,7 @@ BlockFrag FLWMain(Vertex v, Actor instance) {
     b.texCoords = v.texCoords;
     b.light = instance.light;
 
-    #if defined(NORMAL_DEBUG)
+    #if defined(DEBUG_NORMAL)
     b.color = vec4(norm, 1.);
     #else
     b.color = vec4(1.);

@@ -27,6 +27,11 @@ import javax.annotation.Nonnull;
 import org.lwjgl.system.MemoryUtil;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
+import com.jozufozu.flywheel.backend.core.shader.spec.SpecMetaRegistry;
 import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.shader.GlShader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
@@ -34,6 +39,9 @@ import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderLoadingException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
@@ -43,6 +51,7 @@ import net.minecraftforge.resource.VanillaResourceType;
 
 public class ShaderLoader {
 	public static final String SHADER_DIR = "flywheel/shaders/";
+	public static final String PROGRAM_DIR = "flywheel/programs/";
 	public static final ArrayList<String> EXTENSIONS = Lists.newArrayList(".vert", ".vsh", ".frag", ".fsh", ".glsl");
 
 	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
@@ -52,6 +61,7 @@ public class ShaderLoader {
 	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
 	private boolean shouldCrash;
+	private final Gson gson = new GsonBuilder().create();
 
 	void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
@@ -63,6 +73,10 @@ public class ShaderLoader {
 
 				shouldCrash = false;
 
+				SpecMetaRegistry.init();
+
+				loadProgramSpecs(manager);
+
 				loadShaderSources(manager);
 
 				for (ShaderContext<?> context : Backend.contexts) {
@@ -70,13 +84,37 @@ public class ShaderLoader {
 				}
 
 				if (shouldCrash) {
-					throw new ShaderLoadingException("could not load all shaders, see log for details");
+					throw new ShaderLoadingException("Could not load all shaders, see log for details");
 				}
 
 				Backend.log.info("Loaded all shader programs.");
 
 				// no need to hog all that memory
 				shaderSource.clear();
+			}
+		}
+	}
+
+	private void loadProgramSpecs(IResourceManager manager) {
+		Collection<ResourceLocation> programSpecs = manager.getAllResourceLocations(PROGRAM_DIR, s -> s.endsWith(".json"));
+
+		for (ResourceLocation location : programSpecs) {
+			try {
+				IResource file = manager.getResource(location);
+
+				String s = readToString(file.getInputStream());
+
+				ResourceLocation specName = ResourceUtil.trim(location, PROGRAM_DIR, ".json");
+
+				DataResult<Pair<ProgramSpec, JsonElement>> result = ProgramSpec.CODEC.decode(JsonOps.INSTANCE, gson.fromJson(s, JsonElement.class));
+
+				ProgramSpec spec = result.get().orThrow().getFirst();
+
+				spec.setName(specName);
+
+				Backend.register(spec);
+			} catch (Exception e) {
+				Backend.log.error(e);
 			}
 		}
 	}
@@ -110,8 +148,7 @@ public class ShaderLoader {
 
 				String file = readToString(resource.getInputStream());
 
-				ResourceLocation name = new ResourceLocation(location.getNamespace(),
-						location.getPath().substring(SHADER_DIR.length()));
+				ResourceLocation name = ResourceUtil.removePrefixUnchecked(location, SHADER_DIR);
 
 				shaderSource.put(name, file);
 			} catch (IOException e) {

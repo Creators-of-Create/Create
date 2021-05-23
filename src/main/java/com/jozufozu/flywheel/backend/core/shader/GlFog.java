@@ -27,9 +27,9 @@ public class GlFog {
 		return GlStateManager.FOG.field_179045_d;
 	}
 
-	public static GlFogMode getFogMode() {
+	public static WorldFog getFogMode() {
 		if (!fogEnabled()) {
-			return GlFogMode.NONE;
+			return WorldFog.NONE;
 		}
 
 		int mode = getFogModeGlEnum();
@@ -37,9 +37,9 @@ public class GlFog {
 		switch (mode) {
 			case GL11.GL_EXP2:
 			case GL11.GL_EXP:
-				return GlFogMode.EXP2;
+				return WorldFog.EXP2;
 			case GL11.GL_LINEAR:
-				return GlFogMode.LINEAR;
+				return WorldFog.LINEAR;
 			default:
 				throw new UnsupportedOperationException("Unknown fog mode: " + mode);
 		}
