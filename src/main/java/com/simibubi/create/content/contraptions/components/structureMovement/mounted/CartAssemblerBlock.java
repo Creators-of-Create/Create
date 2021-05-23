@@ -433,7 +433,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
 		ArrayList<ItemStack> reuiredItems = new ArrayList<>();
 		reuiredItems.add(new ItemStack(getRailItem(state)));
 		reuiredItems.add(new ItemStack(asItem()));

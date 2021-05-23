@@ -126,7 +126,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	/*
 	 * FIXME
-	 * 
+	 *
 	 * @Override
 	 * public Material getMaterial(BlockState state) {
 	 * return state.get(CASING) ? Material.WOOD : Material.WOOL;
@@ -587,7 +587,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
 		List<ItemStack> required = new ArrayList<>();
 		if (state.get(PART) != BeltPart.MIDDLE)
 			required.add(AllBlocks.SHAFT.asStack());
