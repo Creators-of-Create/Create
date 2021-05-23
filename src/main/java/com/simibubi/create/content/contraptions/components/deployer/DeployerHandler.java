@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
+
 import net.minecraft.block.DoublePlantBlock;
 
 import net.minecraft.state.properties.DoubleBlockHalf;
@@ -281,7 +283,9 @@ public class DeployerHandler {
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
+		if (item instanceof BlockItem
+			&& !(item instanceof CartAssemblerBlockItem)
+			&& !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
 
 		// Reposition fire placement for convenience
