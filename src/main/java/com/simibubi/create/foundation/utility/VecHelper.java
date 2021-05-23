@@ -21,6 +21,7 @@ import net.minecraft.util.math.vector.Vector3i;
 
 public class VecHelper {
 
+	public static final Vector3f ZERO_3F = new Vector3f(0, 0, 0);
 	public static final Vector3d CENTER_OF_ORIGIN = new Vector3d(.5, .5, .5);
 
 	public static Vector3d rotate(Vector3d vec, Vector3d rotationVec) {

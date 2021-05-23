@@ -64,7 +64,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		tryGrabbingItem(context);
 		DeployerFakePlayer player = getPlayer(context);
 		Mode mode = getMode(context);
-		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getHeldItemMainhand(), context.world, pos))
+		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getHeldItemMainhand(), context.world, pos, null))
 			return;
 
 		activate(context, pos, player, mode);

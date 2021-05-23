@@ -1,25 +1,32 @@
 {
-    "required": true,
-    "priority": 1100,
-    "package": "com.simibubi.create.foundation.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "refmap": "create.refmap.json",
-    "client": [
-      "BreakProgressMixin",
-      "ChromaticProjectorHooksMixin",
-      "EntityContraptionInteractionMixin",
-      "flywheel.CancelTileEntityRenderMixin",
-      "flywheel.FogColorTrackerMixin",
-      "flywheel.RenderHooksMixin",
-      "flywheel.ShaderCloseMixin",
-      "flywheel.StoreProjectionMatrixMixin",
-      "flywheel.TileRemoveMixin",
-      "flywheel.TileWorldHookMixin",
-      "flywheel.light.LightUpdateMixin",
-      "flywheel.light.NetworkLightUpdateMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "minVersion": "0.8"
+  "required": true,
+  "priority": 1100,
+  "package": "com.simibubi.create.foundation.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "create.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "EntityContraptionInteractionMixin",
+    "FixNormalScalingMixin",
+    "HeavyBootsOnPlayerMixin",
+    "WindowResizeMixin",
+    "ModelDataRefreshMixin",
+    "BreakProgressMixin",
+    "ChromaticProjectorHooksMixin",
+    "EntityContraptionInteractionMixin",
+    "flywheel.CancelTileEntityRenderMixin",
+    "flywheel.FogColorTrackerMixin",
+    "flywheel.RenderHooksMixin",
+    "flywheel.ShaderCloseMixin",
+    "flywheel.StoreProjectionMatrixMixin",
+    "flywheel.TileRemoveMixin",
+    "flywheel.TileWorldHookMixin",
+    "flywheel.light.LightUpdateMixin",
+    "flywheel.light.NetworkLightUpdateMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
 }

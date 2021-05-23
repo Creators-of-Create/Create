@@ -152,7 +152,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			x + 93 - textRenderer.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 3, 0xffffff);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
-				.at(guiLeft + 200, guiTop + 82, 0)
+				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 200, guiTop + 82, 0)
 				.scale(3)
 				.render(matrixStack);
 	}

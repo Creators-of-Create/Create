@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
+import com.simibubi.create.foundation.utility.IPartialSafeNBT;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -16,7 +18,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity, IPartialSafeNBT {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 	// Internally maintained to be identical to behaviorMap.values() in order to improve iteration performance.
@@ -116,6 +118,14 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound);
 		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
+	}
+
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound);
+		behaviourList.forEach(tb -> {
+			if (tb.isSafeNBT())
+				tb.write(compound, clientPacket);
+		});
 	}
 
 	@Override

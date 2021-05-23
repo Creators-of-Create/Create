@@ -29,6 +29,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.AbstractSignBlock;
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -49,6 +50,7 @@ import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BellAttachment;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -163,6 +165,13 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock)
 			return direction == Direction.DOWN;
+		if (block instanceof BedBlock) {
+			Direction facing = state.get(BedBlock.HORIZONTAL_FACING);
+			if (state.get(BedBlock.PART) == BedPart.HEAD) {
+				facing = facing.getOpposite();
+			}
+			return direction == facing;
+		}
 		if (block instanceof RedstoneLinkBlock)
 			return direction.getOpposite() == state.get(RedstoneLinkBlock.FACING);
 		if (block instanceof FlowerPotBlock)

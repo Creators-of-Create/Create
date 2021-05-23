@@ -115,6 +115,7 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.projector.ChromaticProjectorBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -181,6 +182,15 @@ import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
+import net.minecraft.loot.ConstantRange;
+import net.minecraft.loot.ItemLootEntry;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTable.Builder;
+import net.minecraft.loot.conditions.ILootCondition.IBuilder;
+import net.minecraft.loot.conditions.SurvivesExplosion;
+import net.minecraft.loot.functions.CopyName;
+import net.minecraft.loot.functions.CopyNbt;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -206,6 +216,16 @@ public class AllBlocks {
 		REGISTRATE.block("schematicannon", SchematicannonBlock::new)
 			.initialProperties(() -> Blocks.DISPENSER)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
+			.loot((lt, block) -> {
+				Builder builder = LootTable.builder();
+				IBuilder survivesExplosion = SurvivesExplosion.builder();
+				lt.registerLootTable(block, builder.addLootPool(LootPool.builder()
+						.acceptCondition(survivesExplosion)
+						.rolls(ConstantRange.of(1))
+						.addEntry(ItemLootEntry.builder(AllBlocks.SCHEMATICANNON.get().asItem())
+								.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
+										.func_216056_a("Options", "BlockEntityTag.Options")))));
+			})
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -466,7 +486,7 @@ public class AllBlocks {
 			.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.item(BlazeBurnerBlockItem::withBlaze)
-			.model(AssetLookup.<BlazeBurnerBlockItem>customItemModel("blaze_burner", "block_with_blaze"))
+			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()
 			.register();
 
@@ -634,7 +654,7 @@ public class AllBlocks {
 		.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.item(FluidTankItem::new)
-		.model(AssetLookup.<FluidTankItem>customItemModel("_", "block_single_window"))
+		.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
 		.build()
 		.register();
 
@@ -1273,6 +1293,38 @@ public class AllBlocks {
 			.transform(customItemModel("diodes", "latch_off"))
 			.register();
 
+	// Curiosities
+
+	static {
+		REGISTRATE.startSection(AllSections.CURIOSITIES);
+	}
+
+	public static final BlockEntry<CopperBacktankBlock> COPPER_BACKTANK =
+		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.transform(StressConfigDefaults.setImpact(4.0))
+			.loot((lt, block) -> {
+				Builder builder = LootTable.builder();
+				IBuilder survivesExplosion = SurvivesExplosion.builder();
+				lt.registerLootTable(block, builder.addLootPool(LootPool.builder()
+					.acceptCondition(survivesExplosion)
+					.rolls(ConstantRange.of(1))
+					.addEntry(ItemLootEntry.builder(AllItems.COPPER_BACKTANK.get())
+						.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
+						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
+							.func_216056_a("Air", "Air")))));
+			})
+			.register();
+
+	public static final BlockEntry<ChromaticProjectorBlock> CHROMATIC_PROJECTOR =
+			REGISTRATE.block("chromatic_projector", ChromaticProjectorBlock::new)
+					.initialProperties(() -> Blocks.IRON_BLOCK)
+					.item()
+					.build()
+					.register();
+
 	// Materials
 
 	static {
@@ -1349,17 +1401,6 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Brass")
 		.register();
-
-	static {
-		REGISTRATE.startSection(AllSections.CURIOSITIES);
-	}
-
-	public static final BlockEntry<ChromaticProjectorBlock> CHROMATIC_PROJECTOR =
-			REGISTRATE.block("chromatic_projector", ChromaticProjectorBlock::new)
-					.initialProperties(() -> Blocks.IRON_BLOCK)
-					.item()
-					.build()
-					.register();
 
 	// Load this class
 

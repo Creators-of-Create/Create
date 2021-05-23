@@ -10,6 +10,7 @@ import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -26,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
@@ -33,6 +35,8 @@ import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperR
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -53,6 +57,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.Fluid;
@@ -78,7 +83,11 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -190,18 +199,24 @@ public class ClientEvents {
 		ms.pop();
 
 		RenderWork.runAll();
-
-		//Backend.effects.render();
 	}
 
 	@SubscribeEvent
 	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
+		MatrixStack ms = event.getMatrixStack();
+		Impl buffers = Minecraft.getInstance()
+			.getBufferBuilders()
+			.getEntityVertexConsumers();
+		int light = 0xF000F0;
+		int overlay = OverlayTexture.DEFAULT_UV;
+		float pt = event.getPartialTicks();
+
+		if (event.getType() == ElementType.AIR)
+			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
 		if (event.getType() != ElementType.HOTBAR)
 			return;
 
-		onRenderHotbar(event.getMatrixStack(), Minecraft.getInstance()
-			.getBufferBuilders()
-			.getEntityVertexConsumers(), 0xF000F0, OverlayTexture.DEFAULT_UV, event.getPartialTicks());
+		onRenderHotbar(ms, buffers, light, overlay, pt);
 	}
 
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
@@ -274,11 +289,20 @@ public class ClientEvents {
 		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
 			event.setCanceled(true);
+			return;
 		}
 
 		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
+			return;
+		}
+
+		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
+			.isWornBy(Minecraft.getInstance().renderViewEntity)) {
+			event.setDensity(0.010f);
+			event.setCanceled(true);
+			return;
 		}
 	}
 
@@ -309,6 +333,11 @@ public class ClientEvents {
 		if (stack.getItem() instanceof ZapperItem) {
 			AllPackets.channel.sendToServer(new LeftClickPacket());
 		}
+	}
+
+	public static void loadCompleted(FMLLoadCompleteEvent event) {
+		ModContainer createContainer = ModList.get().getModContainerById("create").orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen));
 	}
 
 }

@@ -126,7 +126,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 
 		matrixStack.push();
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + STOCKSWITCH.width + 15, guiTop + 40, -250)
+				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + STOCKSWITCH.width + 15, guiTop + 40, -250)
 				.scale(5)
 				.render(matrixStack);
 		matrixStack.pop();

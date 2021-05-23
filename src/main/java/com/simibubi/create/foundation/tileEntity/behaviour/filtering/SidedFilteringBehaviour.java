@@ -59,6 +59,9 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.put("Filters", NBTHelper.writeCompoundList(sidedFilters.entrySet(), entry -> {
 			CompoundNBT compound = new CompoundNBT();

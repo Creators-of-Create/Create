@@ -63,7 +63,7 @@ public class BuilderTransformers {
 			.transform(StressConfigDefaults.setNoImpact())
 			.loot((p, b) -> p.registerDropping(b, AllBlocks.SHAFT.get()))
 			.item()
-			.model(AssetLookup.customItemModel("encased_shaft", "item_" + casing))
+			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
 	}
 
@@ -212,7 +212,7 @@ public class BuilderTransformers {
 					});
 			})
 			.item()
-			.properties(p -> type.equals("creative") ? p : p.rarity(Rarity.EPIC))
+			.properties(p -> type.equals("creative") ? p.rarity(Rarity.EPIC) : p)
 			.transform(ModelGen.customItemModel("crate", type, "single"));
 	}
 

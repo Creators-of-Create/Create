@@ -229,8 +229,8 @@ public class ChromaticProjectorScreen extends AbstractSimiScreen {
 				0xffffff);
 
 		GuiGameElement.of(renderedItem)
-				.at(guiLeft + background.width + 10, guiTop + 140, -150)
 				.scale(5)
+				.at(guiLeft + background.width + 10, guiTop + 140, -150)
 				.render(matrixStack);
 	}
 

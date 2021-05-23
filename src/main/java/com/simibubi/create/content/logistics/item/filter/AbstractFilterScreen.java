@@ -69,7 +69,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
 		GuiGameElement.of(container.filterItem)
-				.at(x + background.width, guiTop + background.height - 60)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, guiTop + background.height - 60, -200)
 				.scale(5)
 				.render(ms);
 

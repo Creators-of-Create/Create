@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui;
 
+import java.awt.Color;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 
@@ -86,8 +88,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
 
-	SPEECH_TOOLTIP("widgets.png", 0, 24, 8, 8),
-	SPEECH_TOOLTIP_HIGHLIGHT("widgets.png", 8, 24, 8, 8),
+	SPEECH_TOOLTIP_BACKGROUND("widgets.png", 0, 24, 8, 8),
+	SPEECH_TOOLTIP_COLOR("widgets.png", 8, 24, 8, 8),
 
 	// PlacementIndicator
 	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
@@ -128,5 +130,10 @@ public enum AllGuiTextures implements IScreenRenderable {
 	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
 		bind();
 		screen.drawTexture(ms, x, y, startX, startY, width, height);
+	}
+
+	public void draw(MatrixStack ms, int x, int y, Color c) {
+		bind();
+		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
 	}
 }

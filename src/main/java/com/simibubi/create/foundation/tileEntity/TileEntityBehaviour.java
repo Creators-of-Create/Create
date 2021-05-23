@@ -42,6 +42,8 @@ public abstract class TileEntityBehaviour {
 
 	}
 
+	public boolean isSafeNBT() { return false; }
+
 	public void onBlockChanged(BlockState oldState) {
 
 	}
@@ -94,5 +96,4 @@ public abstract class TileEntityBehaviour {
 		SmartTileEntity ste = (SmartTileEntity) te;
 		return ste.getBehaviour(type);
 	}
-
 }

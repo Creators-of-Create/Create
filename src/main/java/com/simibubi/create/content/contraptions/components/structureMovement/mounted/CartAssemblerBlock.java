@@ -54,6 +54,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -492,29 +493,55 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
-	
+
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		World world = context.getWorld();
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
 		BlockPos pos = context.getPos();
-		BlockState newState = state.with(RAIL_SHAPE,
-			state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH);
-		if (state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL
-			|| state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS) {
-			newState = newState.with(RAIL_TYPE, AllBlocks.CONTROLLER_RAIL.get()
-				.rotate(AllBlocks.CONTROLLER_RAIL.getDefaultState()
-					.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
-					.with(ControllerRailBlock.BACKWARDS,
-						state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS),
-					Rotation.CLOCKWISE_90)
-				.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS
-					: CartAssembleRailType.CONTROLLER_RAIL);
-		}
-		context.getWorld()
-			.setBlockState(pos, newState, 3);
+		world.setBlockState(pos, rotate(state, Rotation.CLOCKWISE_90), 3);
 		world.notifyNeighborsOfStateChange(pos.down(), this);
 		return ActionResultType.SUCCESS;
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		if (rotation == Rotation.NONE)
+			return state;
+
+		boolean is_controller_rail_backwards = state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS;
+		boolean is_controller_rail = state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL || is_controller_rail_backwards;
+		BlockState base = AllBlocks.CONTROLLER_RAIL.getDefaultState()
+				.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
+				.with(ControllerRailBlock.BACKWARDS, is_controller_rail_backwards)
+				.rotate(rotation);
+		if (is_controller_rail) {
+			state = state.with(RAIL_TYPE,
+					base.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS :
+							CartAssembleRailType.CONTROLLER_RAIL
+			);
+		}
+		return state.with(RAIL_SHAPE, base.get(ControllerRailBlock.SHAPE));
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirror) {
+		if (mirror == Mirror.NONE)
+			return state;
+
+		boolean is_controller_rail_backwards = state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS;
+		boolean is_controller_rail = state.get(RAIL_TYPE) == CartAssembleRailType.CONTROLLER_RAIL || is_controller_rail_backwards;
+		BlockState base = AllBlocks.CONTROLLER_RAIL.getDefaultState()
+				.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
+				.with(ControllerRailBlock.BACKWARDS, is_controller_rail_backwards)
+				.mirror(mirror);
+		if (is_controller_rail) {
+			state = state.with(RAIL_TYPE,
+					base.get(ControllerRailBlock.BACKWARDS) ? CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS :
+							CartAssembleRailType.CONTROLLER_RAIL
+			);
+		}
+		return state.with(RAIL_SHAPE, base.get(ControllerRailBlock.SHAPE));
 	}
 }
