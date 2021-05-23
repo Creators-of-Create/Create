@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.DoublePlantBlock;
+
+import net.minecraft.state.properties.DoubleBlockHalf;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
@@ -349,8 +353,22 @@ public class DeployerHandler {
 		prevHeldItem.onBlockDestroyed(world, blockstate, pos, player);
 		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
 			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, Hand.MAIN_HAND);
-		if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
-			return true;
+
+
+		BlockPos posUp = pos.up();
+		BlockState stateUp = world.getBlockState(posUp);
+		if (blockstate.getBlock() instanceof DoublePlantBlock
+			&& blockstate.get(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER
+			&& stateUp.getBlock() == blockstate.getBlock()
+			&& stateUp.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER
+		) {
+			// hack to prevent DoublePlantBlock from dropping a duplicate item
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 35);
+			world.setBlockState(posUp, Blocks.AIR.getDefaultState(), 35);
+		} else {
+			if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
+				return true;
+		}
 
 		blockstate.getBlock()
 			.onPlayerDestroy(world, pos, blockstate);
