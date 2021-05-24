@@ -731,7 +731,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
-		return BlockMovementTraits.isBrittle(state);
+		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementTraits.isBrittle(state);
 	}
 
 	public void finishedPrinting() {
