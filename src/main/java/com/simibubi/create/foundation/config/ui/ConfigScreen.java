@@ -8,18 +8,26 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.StencilElement;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.animation.Force;
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.client.shader.FramebufferConstants;
 import net.minecraft.util.Direction;
 
 public abstract class ConfigScreen extends AbstractSimiScreen {
@@ -83,7 +91,35 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
+	protected void prepareFrame() {
+		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
+		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.framebufferObject);
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.framebufferObject);
+		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+
+		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, thisBuffer.framebufferObject);
+		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+
+	}
+
+	@Override
+	protected void endFrame() {
+
+		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
+		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.framebufferObject);
+		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
+		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+
+		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+	}
+
+	@Override
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {

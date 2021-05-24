@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.WorldContext;
+import com.jozufozu.flywheel.backend.core.context.WorldContext;
 import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.core.materials.OrientedData;
 import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;

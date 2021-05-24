@@ -22,8 +22,7 @@ public class WindowResizeMixin {
 
 	@Inject(at = @At("TAIL"), method = "updateWindowSize")
 	private void updateWindowSize(CallbackInfo ci) {
-		if (UIRenderHelper.framebuffer != null)
-			UIRenderHelper.framebuffer.func_216491_a(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), Minecraft.IS_RUNNING_ON_MAC);
+		UIRenderHelper.updateWindowSize(mainWindow);
 	}
 
 }

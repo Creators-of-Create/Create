@@ -112,7 +112,6 @@ public class CreateClient {
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
-		UIRenderHelper.enableStencil();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
@@ -120,7 +119,7 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 
 		AllBlockPartials.clientInit();
-		
+
 		event.enqueueWork(() -> {
 			CopperBacktankArmorLayer.register();
 		});

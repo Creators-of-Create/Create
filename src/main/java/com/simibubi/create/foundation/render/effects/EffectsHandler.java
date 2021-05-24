@@ -9,10 +9,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
-import com.jozufozu.flywheel.backend.gl.GlVertexArray;
-import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
+import com.jozufozu.flywheel.backend.core.FullscreenQuad;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -52,23 +49,8 @@ public class EffectsHandler {
 		return Minecraft.getInstance().gameRenderer.getFarPlaneDistance() * 4;
 	}
 
-	public static final float[] vertices = {
-			// pos        // tex
-			-1.0f, -1.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,
-			-1.0f, 1.0f, 0.0f, 1.0f,
-
-			-1.0f, -1.0f, 0.0f, 0.0f,
-			1.0f, -1.0f, 1.0f, 0.0f,
-			1.0f, 1.0f, 1.0f, 1.0f
-	};
-
-	private static final int bufferSize = vertices.length * 4;
 
 	private final Framebuffer framebuffer;
-	private final GlVertexArray vao;
-
-	private final GlBuffer vbo;
 
 	private final ArrayList<FilterSphere> spheres;
 
@@ -77,23 +59,6 @@ public class EffectsHandler {
 
 		Framebuffer render = Minecraft.getInstance().getFramebuffer();
 		framebuffer = new Framebuffer(render.framebufferWidth, render.framebufferHeight, false, Minecraft.IS_RUNNING_ON_MAC);
-
-		vbo = new GlBuffer(GlBufferType.ARRAY_BUFFER);
-		vbo.bind();
-		vbo.alloc(bufferSize);
-		vbo.getBuffer(0, bufferSize)
-				.putFloatArray(vertices)
-				.flush();
-
-		vao = new GlVertexArray();
-		vao.bind();
-
-		GL20.glEnableVertexAttribArray(0);
-
-		GL20.glVertexAttribPointer(0, 4, GlPrimitiveType.FLOAT.getGlConstant(), false, 4 * 4, 0);
-
-		vao.unbind();
-		vbo.unbind();
 
 	}
 
@@ -155,9 +120,7 @@ public class EffectsHandler {
 		program.setFarPlane(getFarPlane());
 		program.setNearPlane(getNearPlane());
 
-		vao.bind();
-		GL20.glDrawArrays(GL20.GL_TRIANGLES, 0, 6);
-		vao.unbind();
+		FullscreenQuad.INSTANCE.get().draw();
 
 		program.bindColorTexture(0);
 		program.bindDepthTexture(0);
@@ -174,9 +137,6 @@ public class EffectsHandler {
 
 	public void delete() {
 		framebuffer.deleteFramebuffer();
-
-		vao.delete();
-		vbo.delete();
 	}
 
 	private void prepFramebufferSize() {

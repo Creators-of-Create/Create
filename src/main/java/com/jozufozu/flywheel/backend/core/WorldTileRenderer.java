@@ -2,6 +2,7 @@ package com.jozufozu.flywheel.backend.core;
 
 import java.util.ArrayList;
 
+import com.jozufozu.flywheel.backend.core.context.WorldContext;
 import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;

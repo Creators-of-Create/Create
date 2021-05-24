@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.WorldContext;
+import com.jozufozu.flywheel.backend.core.context.WorldContext;
 import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;

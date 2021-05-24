@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.backend.core;
+package com.jozufozu.flywheel.backend.core.context;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.core.CrumblingProgram;
 import com.jozufozu.flywheel.backend.core.shader.ExtensibleGlProgram;
 import com.jozufozu.flywheel.backend.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.backend.core.shader.StateSensitiveMultiProgram;

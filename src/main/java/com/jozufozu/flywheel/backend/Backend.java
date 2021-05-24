@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
-import com.jozufozu.flywheel.backend.core.WorldContext;
 import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
+import com.jozufozu.flywheel.backend.core.context.WorldContext;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
 import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
