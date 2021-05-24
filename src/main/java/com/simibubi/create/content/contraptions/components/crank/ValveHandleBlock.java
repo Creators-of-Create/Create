@@ -48,7 +48,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 			if (worldIn.isRemote)
 				return ActionResultType.SUCCESS;
 
-			BlockState newState = AllBlocks.DYED_VALVE_HANDLES.get(color.ordinal())
+			BlockState newState = AllBlocks.DYED_VALVE_HANDLES[color.ordinal()]
 				.getDefaultState()
 				.with(FACING, state.get(FACING));
 			if (newState != state)
