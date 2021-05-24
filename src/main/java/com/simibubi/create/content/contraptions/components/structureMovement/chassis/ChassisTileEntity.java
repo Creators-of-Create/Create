@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -165,14 +165,14 @@ public class ChassisTileEntity extends SmartTileEntity {
 					break;
 
 				// Ignore replaceable Blocks and Air-like
-				if (!BlockMovementTraits.movementNecessary(currentState, world, current))
+				if (!BlockMovementChecks.isMovementNecessary(currentState, world, current))
 					break;
-				if (BlockMovementTraits.isBrittle(currentState))
+				if (BlockMovementChecks.isBrittle(currentState))
 					break;
 
 				positions.add(current);
 
-				if (BlockMovementTraits.notSupportive(currentState, facing))
+				if (BlockMovementChecks.isNotSupportive(currentState, facing))
 					break;
 			}
 		}
@@ -206,9 +206,9 @@ public class ChassisTileEntity extends SmartTileEntity {
 					continue;
 				if (!searchPos.withinDistance(pos, chassisRange + .5f))
 					continue;
-				if (!BlockMovementTraits.movementNecessary(searchedState, world, searchPos))
+				if (!BlockMovementChecks.isMovementNecessary(searchedState, world, searchPos))
 					continue;
-				if (BlockMovementTraits.isBrittle(searchedState))
+				if (BlockMovementChecks.isBrittle(searchedState))
 					continue;
 
 				localVisited.add(searchPos);
@@ -220,7 +220,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 						continue;
 					if (searchPos.equals(pos) && offset != facing)
 						continue;
-					if (BlockMovementTraits.notSupportive(searchedState, offset))
+					if (BlockMovementChecks.isNotSupportive(searchedState, offset))
 						continue;
 
 					localFrontier.add(searchPos.offset(offset));

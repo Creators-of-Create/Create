@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorTileEntity;
@@ -186,9 +186,9 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
 		BlockState state = world.getBlockState(posBelow);
-		if (!BlockMovementTraits.movementNecessary(state, world, posBelow))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, posBelow))
 			return;
-		if (BlockMovementTraits.isBrittle(state))
+		if (BlockMovementChecks.isBrittle(state))
 			return;
 
 		disassemble();

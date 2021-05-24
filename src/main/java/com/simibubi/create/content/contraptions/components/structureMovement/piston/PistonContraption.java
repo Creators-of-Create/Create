@@ -15,7 +15,7 @@ import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
@@ -169,13 +169,13 @@ public class PistonContraption extends TranslatingContraption {
 			if (!world.isBlockPresent(currentPos))
 				throw AssemblyException.unloadedChunk(currentPos);
 			BlockState state = world.getBlockState(currentPos);
-			if (!BlockMovementTraits.movementNecessary(state, world, currentPos))
+			if (!BlockMovementChecks.isMovementNecessary(state, world, currentPos))
 				return true;
-			if (BlockMovementTraits.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
+			if (BlockMovementChecks.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
 				return true;
 			if (isPistonHead(state) && state.get(FACING) == direction.getOpposite())
 				return true;
-			if (!BlockMovementTraits.movementAllowed(state, world, currentPos))
+			if (!BlockMovementChecks.isMovementAllowed(state, world, currentPos))
 				if (retracting)
 					return true;
 				else
@@ -183,7 +183,7 @@ public class PistonContraption extends TranslatingContraption {
 			if (retracting && state.getPushReaction() == PushReaction.PUSH_ONLY)
 				return true;
 			frontier.add(currentPos);
-			if (BlockMovementTraits.notSupportive(state, orientation))
+			if (BlockMovementChecks.isNotSupportive(state, orientation))
 				return true;
 		}
 		return true;
