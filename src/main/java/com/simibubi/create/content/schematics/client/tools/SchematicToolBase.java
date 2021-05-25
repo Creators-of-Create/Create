@@ -45,7 +45,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 
 	@Override
 	public void init() {
-		schematicHandler = CreateClient.schematicHandler;
+		schematicHandler = CreateClient.SCHEMATIC_HANDLER;
 		selectedPos = null;
 		selectedFace = null;
 		schematicSelected = false;

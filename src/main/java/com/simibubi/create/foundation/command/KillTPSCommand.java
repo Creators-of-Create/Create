@@ -17,8 +17,8 @@ public class KillTPSCommand {
 				// killtps no arguments
 				ctx.getSource()
 					.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.0",
-						Create.lagger.isLagging() ? Create.lagger.getTickTime() : 0), true);
-				if (Create.lagger.isLagging())
+						Create.LAGGER.isLagging() ? Create.LAGGER.getTickTime() : 0), true);
+				if (Create.LAGGER.isLagging())
 					ctx.getSource()
 						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
 							true);
@@ -32,9 +32,9 @@ public class KillTPSCommand {
 			.then(Commands.literal("start")
 				.executes(ctx -> {
 					// killtps start no time
-					int tickTime = Create.lagger.getTickTime();
+					int tickTime = Create.LAGGER.getTickTime();
 					if (tickTime > 0) {
-						Create.lagger.setLagging(true);
+						Create.LAGGER.setLagging(true);
 						ctx.getSource()
 							.sendFeedback((Lang
 								.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
@@ -57,8 +57,8 @@ public class KillTPSCommand {
 						int tickTime = IntegerArgumentType.getInteger(ctx,
 							Lang.translate("command.killTPSCommand.argument.tickTime")
 								.getUnformattedComponentText());
-						Create.lagger.setTickTime(tickTime);
-						Create.lagger.setLagging(true);
+						Create.LAGGER.setTickTime(tickTime);
+						Create.LAGGER.setLagging(true);
 						ctx.getSource()
 							.sendFeedback((Lang
 								.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
@@ -72,7 +72,7 @@ public class KillTPSCommand {
 			.then(Commands.literal("stop")
 				.executes(ctx -> {
 					// killtps stop
-					Create.lagger.setLagging(false);
+					Create.LAGGER.setLagging(false);
 					ctx.getSource()
 						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.2"),
 							false);

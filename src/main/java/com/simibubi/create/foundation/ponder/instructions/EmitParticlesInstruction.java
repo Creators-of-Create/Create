@@ -23,8 +23,8 @@ public class EmitParticlesInstruction extends TickingInstruction {
 		}
 
 		public static <T extends IParticleData> Emitter withinBlockSpace(T data, Vector3d motion) {
-			return (w, x, y, z) -> w.addParticle(data, Math.floor(x) + Create.random.nextFloat(),
-				Math.floor(y) + Create.random.nextFloat(), Math.floor(z) + Create.random.nextFloat(), motion.x,
+			return (w, x, y, z) -> w.addParticle(data, Math.floor(x) + Create.RANDOM.nextFloat(),
+				Math.floor(y) + Create.RANDOM.nextFloat(), Math.floor(z) + Create.RANDOM.nextFloat(), motion.x,
 				motion.y, motion.z);
 		}
 
@@ -47,7 +47,7 @@ public class EmitParticlesInstruction extends TickingInstruction {
 	public void tick(PonderScene scene) {
 		super.tick(scene);
 		int runs = (int) runsPerTick;
-		if (Create.random.nextFloat() < (runsPerTick - runs))
+		if (Create.RANDOM.nextFloat() < (runsPerTick - runs))
 			runs++;
 		for (int i = 0; i < runs; i++)
 			emitter.create(scene.getWorld(), anchor.x, anchor.y, anchor.z);

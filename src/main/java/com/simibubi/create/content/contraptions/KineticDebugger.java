@@ -28,7 +28,7 @@ public class KineticDebugger {
 		if (!isActive()) {
 			if (KineticTileEntityRenderer.rainbowMode) {
 				KineticTileEntityRenderer.rainbowMode = false;
-				CreateClient.bufferCache.invalidate();
+				CreateClient.BUFFER_CACHE.invalidate();
 			}			
 			return;
 		}
@@ -44,7 +44,7 @@ public class KineticDebugger {
 			.getRenderShape(world, toOutline);
 
 		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
-			CreateClient.outliner.chaseAABB("kineticSource", shape.getBoundingBox()
+			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.getBoundingBox()
 				.offset(toOutline))
 				.lineWidth(1 / 16f)
 				.colored(te.hasSource() ? ColorHelper.colorFromLong(te.network) : 0xffcc00);
@@ -54,7 +54,7 @@ public class KineticDebugger {
 			Vector3d vec = Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
 				.getDirectionVec());
 			Vector3d center = VecHelper.getCenterOf(te.getPos());
-			CreateClient.outliner.showLine("rotationAxis", center.add(vec), center.subtract(vec))
+			CreateClient.OUTLINER.showLine("rotationAxis", center.add(vec), center.subtract(vec))
 				.lineWidth(1 / 16f);
 		}
 

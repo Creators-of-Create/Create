@@ -48,7 +48,7 @@ public class HighlightPacket extends SimplePacketBase {
 		if (Minecraft.getInstance().world == null || !Minecraft.getInstance().world.isBlockPresent(pos))
 			return;
 
-		CreateClient.outliner.showAABB("highlightCommand", VoxelShapes.fullCube()
+		CreateClient.OUTLINER.showAABB("highlightCommand", VoxelShapes.fullCube()
 			.getBoundingBox()
 			.offset(pos), 200)
 			.lineWidth(1 / 32f)

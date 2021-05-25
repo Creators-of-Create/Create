@@ -29,8 +29,6 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -936,7 +934,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		return new SchematicannonContainer(id, inv, this);
+		return SchematicannonContainer.create(id, inv, this);
 	}
 
 	@Override

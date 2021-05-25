@@ -42,7 +42,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
 
-	private static final Map<Object, OutlineEntry> outlines = CreateClient.outliner.getOutlines();
+	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
 
 	@SubscribeEvent
 	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {

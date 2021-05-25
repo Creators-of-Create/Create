@@ -90,7 +90,7 @@ public class ZapperRenderHandler {
 			return;
 
 		cachedBeams.forEach(beam -> {
-			CreateClient.outliner.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
+			CreateClient.OUTLINER.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
 				.disableNormals()
 				.colored(0xffffff)
 				.lineWidth(beam.itensity * 1 / 8f);

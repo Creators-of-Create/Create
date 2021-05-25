@@ -27,7 +27,7 @@ public class FastRenderDispatcher {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 
-		KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+		KineticRenderer kineticRenderer = CreateClient.KINETIC_RENDERER.get(world);
 
 		Entity renderViewEntity = mc.renderViewEntity;
 		kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
@@ -61,7 +61,7 @@ public class FastRenderDispatcher {
 		if (!Backend.canUseInstancing()) return;
 
 		ClientWorld world = Minecraft.getInstance().world;
-		KineticRenderer kineticRenderer = CreateClient.kineticRenderer.get(world);
+		KineticRenderer kineticRenderer = CreateClient.KINETIC_RENDERER.get(world);
 
 		layer.startDrawing();
 

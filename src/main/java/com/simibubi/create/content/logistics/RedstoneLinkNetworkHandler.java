@@ -67,12 +67,12 @@ public class RedstoneLinkNetworkHandler {
 
 	public void onLoadWorld(IWorld world) {
 		connections.put(world, new HashMap<>());
-		Create.logger.debug("Prepared Redstone Network Space for " + WorldHelper.getDimensionID(world));
+		Create.LOGGER.debug("Prepared Redstone Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
 	public void onUnloadWorld(IWorld world) {
 		connections.remove(world);
-		Create.logger.debug("Removed Redstone Network Space for " + WorldHelper.getDimensionID(world));
+		Create.LOGGER.debug("Removed Redstone Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
 	public Set<LinkBehaviour> getNetworkOf(LinkBehaviour actor) {
@@ -144,7 +144,7 @@ public class RedstoneLinkNetworkHandler {
 
 	public Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksIn(IWorld world) {
 		if (!connections.containsKey(world)) {
-			Create.logger.warn(
+			Create.LOGGER.warn(
 					"Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
 			return new HashMap<>();
 		}

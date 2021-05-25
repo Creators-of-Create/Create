@@ -274,7 +274,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				});
 			if (success.isTrue())
 				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-					1f + Create.random.nextFloat());
+					1f + Create.RANDOM.nextFloat());
 		}
 
 		if (isShaft) {

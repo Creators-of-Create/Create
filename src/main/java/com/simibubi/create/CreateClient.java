@@ -63,13 +63,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateClient {
 
-	public static ClientSchematicLoader schematicSender;
-	public static SchematicHandler schematicHandler;
-	public static SchematicAndQuillHandler schematicAndQuillHandler;
-	public static SuperByteBufferCache bufferCache;
-	public static WorldAttached<KineticRenderer> kineticRenderer;
-	public static final Outliner outliner = new Outliner();
-	public static GhostBlocks ghostBlocks;
+	public static final ClientSchematicLoader SCHEMATIC_SENDER = new ClientSchematicLoader();
+	public static final SchematicHandler SCHEMATIC_HANDLER = new SchematicHandler();
+	public static final SchematicAndQuillHandler SCHEMATIC_AND_QUILL_HANDLER = new SchematicAndQuillHandler();
+	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
+	public static final WorldAttached<KineticRenderer> KINETIC_RENDERER = new WorldAttached<>(KineticRenderer::new);
+	public static final Outliner OUTLINER = new Outliner();
+	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
@@ -79,9 +79,10 @@ public class CreateClient {
 
 	public static void addClientListeners(IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(CreateClient::onModelBake);
-		modEventBus.addListener(CreateClient::onModelRegistry);
+		modEventBus.register(getColorHandler());
 		modEventBus.addListener(CreateClient::onTextureStitch);
+		modEventBus.addListener(CreateClient::onModelRegistry);
+		modEventBus.addListener(CreateClient::onModelBake);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
 
@@ -91,25 +92,15 @@ public class CreateClient {
 
 	public static void clientInit(FMLClientSetupEvent event) {
 		AllProgramSpecs.init();
-		kineticRenderer = new WorldAttached<>(KineticRenderer::new);
 
-		schematicSender = new ClientSchematicLoader();
-		schematicHandler = new SchematicHandler();
-		schematicAndQuillHandler = new SchematicAndQuillHandler();
-
-		bufferCache = new SuperByteBufferCache();
-		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		bufferCache.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
-		bufferCache.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
-
-		ghostBlocks = new GhostBlocks();
+		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		AllContainerTypes.registerScreenFactories();
-		// AllTileEntities.registerRenderers();
-		AllEntityTypes.registerRenderers();
-		getColorHandler().init();
-		AllFluids.assignRenderLayers();
+		// AllFluids.assignRenderLayers();
+		AllBlockPartials.clientInit();
+
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
@@ -121,8 +112,6 @@ public class CreateClient {
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 
-		AllBlockPartials.clientInit();
-		
 		event.enqueueWork(() -> {
 			CopperBacktankArmorLayer.register();
 		});
@@ -137,6 +126,14 @@ public class CreateClient {
 			.forEach(event::addSprite);
 	}
 
+	public static void onModelRegistry(ModelRegistryEvent event) {
+		PartialModel.onModelRegistry(event);
+
+		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
+			.getModelLocations()
+			.forEach(ModelLoader::addSpecialModel));
+	}
+
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 		PartialModel.onModelBake(event);
@@ -149,14 +146,6 @@ public class CreateClient {
 			swapModels(modelRegistry, getItemModelLocation(item), m -> modelFunc.apply(m)
 				.loadPartials(event));
 		});
-	}
-
-	public static void onModelRegistry(ModelRegistryEvent event) {
-		PartialModel.onModelRegistry(event);
-
-		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
-			.getModelLocations()
-			.forEach(ModelLoader::addSpecialModel));
 	}
 
 	protected static ModelResourceLocation getItemModelLocation(Item item) {
@@ -224,13 +213,13 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers(@Nullable IWorld world) {
-		bufferCache.invalidate();
+		BUFFER_CACHE.invalidate();
 
 		if (world != null) {
-			kineticRenderer.get(world)
+			KINETIC_RENDERER.get(world)
 				.invalidate();
 		} else {
-			kineticRenderer.forEach(InstancedTileRenderer::invalidate);
+			KINETIC_RENDERER.forEach(InstancedTileRenderer::invalidate);
 		}
 
 		ContraptionRenderDispatcher.invalidateAll();

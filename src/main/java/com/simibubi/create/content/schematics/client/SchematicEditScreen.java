@@ -50,7 +50,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		setWindowSize(background.width + 50, background.height);
 		int x = guiLeft;
 		int y = guiTop;
-		handler = CreateClient.schematicHandler;
+		handler = CreateClient.SCHEMATIC_HANDLER;
 
 		xInput = new TextFieldWidget(textRenderer, x + 50, y + 26, 34, 10, StringTextComponent.EMPTY);
 		yInput = new TextFieldWidget(textRenderer, x + 90, y + 26, 34, 10, StringTextComponent.EMPTY);

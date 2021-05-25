@@ -260,7 +260,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 					ItemEntity created =
 						new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
 					created.setDefaultPickupDelay();
-					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.random, .05f));
+					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .05f));
 					world.addEntity(created);
 				}
 				item.shrink(1);

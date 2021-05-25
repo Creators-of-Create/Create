@@ -7,6 +7,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -19,8 +20,8 @@ public class AdjustableCrateContainer extends Container {
 	public PlayerInventory playerInventory;
 	public boolean doubleCrate;
 
-	public AdjustableCrateContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainerTypes.FLEXCRATE.type, id);
+	public AdjustableCrateContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(type, id);
 		ClientWorld world = Minecraft.getInstance().world;
 		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
 		this.playerInventory = inv;
@@ -31,11 +32,15 @@ public class AdjustableCrateContainer extends Container {
 		}
 	}
 
-	public AdjustableCrateContainer(int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
-		super(AllContainerTypes.FLEXCRATE.type, id);
+	public AdjustableCrateContainer(ContainerType<?> type, int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
+		super(type, id);
 		this.te = te;
 		this.playerInventory = inv;
 		init();
+	}
+
+	public static AdjustableCrateContainer create(int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
+		return new AdjustableCrateContainer(AllContainerTypes.FLEXCRATE.get(), id, inv, te);
 	}
 
 	private void init() {

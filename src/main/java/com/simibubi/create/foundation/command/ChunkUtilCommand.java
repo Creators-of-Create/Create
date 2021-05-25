@@ -26,7 +26,7 @@ public class ChunkUtilCommand {
 							.getWorld()
 							.getChunkProvider();
 
-						boolean success = Create.chunkUtil.reloadChunk(chunkProvider, chunkPos);
+						boolean success = Create.CHUNK_UTIL.reloadChunk(chunkProvider, chunkPos);
 
 						if (success) {
 							ctx.getSource()
@@ -52,7 +52,7 @@ public class ChunkUtilCommand {
 							.getWorld()
 							.getChunkProvider();
 
-						boolean success = Create.chunkUtil.unloadChunk(chunkProvider, chunkPos);
+						boolean success = Create.CHUNK_UTIL.unloadChunk(chunkProvider, chunkPos);
 						ctx.getSource()
 							.sendFeedback(
 								new StringTextComponent("added chunk " + chunkPos.toString() + " to unload list"),
@@ -75,7 +75,7 @@ public class ChunkUtilCommand {
 			.then(Commands.literal("clear")
 				.executes(ctx -> {
 					// chunk clear
-					int count = Create.chunkUtil.clear(ctx.getSource()
+					int count = Create.CHUNK_UTIL.clear(ctx.getSource()
 						.getWorld()
 						.getChunkProvider());
 					ctx.getSource()

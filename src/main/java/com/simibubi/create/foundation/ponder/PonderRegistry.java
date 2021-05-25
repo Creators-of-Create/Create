@@ -113,7 +113,7 @@ public class PonderRegistry {
 		InputStream resourceAsStream = Create.class.getClassLoader()
 			.getResourceAsStream(filepath);
 		if (resourceAsStream == null) {
-			Create.logger.error("Ponder schematic missing: " + path);
+			Create.LOGGER.error("Ponder schematic missing: " + path);
 			return t;
 		}
 		try (DataInputStream stream =
@@ -121,7 +121,7 @@ public class PonderRegistry {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 			t.read(nbt);
 		} catch (IOException e) {
-			Create.logger.warn("Failed to read ponder schematic", e);
+			Create.LOGGER.warn("Failed to read ponder schematic", e);
 		}
 		return t;
 	}

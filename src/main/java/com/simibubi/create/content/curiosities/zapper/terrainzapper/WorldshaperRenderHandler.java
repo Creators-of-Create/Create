@@ -31,7 +31,7 @@ public class WorldshaperRenderHandler {
 		if (renderedPositions == null)
 			return;
 
-		CreateClient.outliner.showCluster("terrainZapper", renderedPositions.get())
+		CreateClient.OUTLINER.showCluster("terrainZapper", renderedPositions.get())
 			.colored(0xbfbfbf)
 			.disableNormals()
 			.lineWidth(1 / 32f)

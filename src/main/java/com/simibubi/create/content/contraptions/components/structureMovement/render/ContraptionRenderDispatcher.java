@@ -124,7 +124,7 @@ public class ContraptionRenderDispatcher {
 
 	public static void renderStructure(World world, Contraption c, MatrixStack ms, MatrixStack msLocal,
 									   IRenderTypeBuffer buffer) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		List<RenderType> blockLayers = RenderType.getBlockLayers();
 
 		buffer.getBuffer(RenderType.getSolid());

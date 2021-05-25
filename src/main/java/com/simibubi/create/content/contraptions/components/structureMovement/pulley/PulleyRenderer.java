@@ -31,12 +31,12 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected SuperByteBuffer renderRope(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderBlock(AllBlocks.ROPE.getDefaultState());
+		return CreateClient.BUFFER_CACHE.renderBlock(AllBlocks.ROPE.getDefaultState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderBlock(AllBlocks.PULLEY_MAGNET.getDefaultState());
+		return CreateClient.BUFFER_CACHE.renderBlock(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
 	@Override

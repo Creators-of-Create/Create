@@ -119,7 +119,7 @@ public class LangMerger implements IDataProvider {
 
 	private void collectExistingEntries(Path path) throws IOException {
 		if (!Files.exists(path)) {
-			Create.logger.warn("Nothing to merge! It appears no lang was generated before me.");
+			Create.LOGGER.warn("Nothing to merge! It appears no lang was generated before me.");
 			return;
 		}
 
@@ -237,7 +237,7 @@ public class LangMerger implements IDataProvider {
 			Files.createDirectories(target.getParent());
 
 			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
-				Create.logger.info(message);
+				Create.LOGGER.info(message);
 				bufferedwriter.write(data);
 				bufferedwriter.close();
 			}

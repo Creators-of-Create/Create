@@ -200,10 +200,10 @@ public class RemapHelper {
 		for (RegistryEvent.MissingMappings.Mapping<Block> mapping : mappings) {
 			if (reMap.containsKey(mapping.key.getPath())) {
 				try {
-					Create.logger.warn("Remapping block '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
+					Create.LOGGER.warn("Remapping block '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.BLOCKS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping block '{}' to '{}' failed: {}", mapping.key,
+					Create.LOGGER.warn("Remapping block '{}' to '{}' failed: {}", mapping.key,
 						reMap.get(mapping.key.getPath()), t);
 				}
 			}
@@ -223,10 +223,10 @@ public class RemapHelper {
 		for (RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings) {
 			if (reMap.containsKey(mapping.key.getPath())) {
 				try {
-					Create.logger.warn("Remapping item '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
+					Create.LOGGER.warn("Remapping item '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.ITEMS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
+					Create.LOGGER.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
 						reMap.get(mapping.key.getPath()), t);
 				}
 			}

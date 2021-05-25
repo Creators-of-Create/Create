@@ -71,11 +71,11 @@ public interface IWrenchable {
 	}
 
 	default void playRemoveSound(World world, BlockPos pos) {
-		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.random.nextFloat() * .5f + .5f);
+		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() * .5f + .5f);
 	}
 
 	default void playRotateSound(World world, BlockPos pos) {
-		AllSoundEvents.WRENCH_ROTATE.playOnServer(world, pos, 1, Create.random.nextFloat() + .5f);
+		AllSoundEvents.WRENCH_ROTATE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() + .5f);
 	}
 
 	default BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {

@@ -110,9 +110,9 @@ public class ClientEvents {
 		FastRenderDispatcher.tick();
 		ScrollValueHandler.tick();
 
-		CreateClient.schematicSender.tick();
-		CreateClient.schematicAndQuillHandler.tick();
-		CreateClient.schematicHandler.tick();
+		CreateClient.SCHEMATIC_SENDER.tick();
+		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
+		CreateClient.SCHEMATIC_HANDLER.tick();
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -137,8 +137,8 @@ public class ClientEvents {
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
-		CreateClient.outliner.tickOutlines();
-		CreateClient.ghostBlocks.tickGhosts();
+		CreateClient.OUTLINER.tickOutlines();
+		CreateClient.GHOST_BLOCKS.tickGhosts();
 		ContraptionRenderDispatcher.tick();
 	}
 
@@ -153,7 +153,7 @@ public class ClientEvents {
 		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers(world);
 			AnimationTickHolder.reset();
-			KineticRenderer renderer = CreateClient.kineticRenderer.get(world);
+			KineticRenderer renderer = CreateClient.KINETIC_RENDERER.get(world);
 			renderer.invalidate();
 			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
@@ -187,10 +187,10 @@ public class ClientEvents {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
 		CouplingRenderer.renderAll(ms, buffer);
-		CreateClient.schematicHandler.render(ms, buffer);
-		CreateClient.ghostBlocks.renderAll(ms, buffer);
+		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
+		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
-		CreateClient.outliner.renderOutlines(ms, buffer, pt);
+		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		// LightVolumeDebugger.render(ms, buffer);
 		buffer.draw();
 		RenderSystem.enableCull();
@@ -220,7 +220,7 @@ public class ClientEvents {
 
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
 		float partialTicks) {
-		CreateClient.schematicHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
+		CreateClient.SCHEMATIC_HANDLER.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent
