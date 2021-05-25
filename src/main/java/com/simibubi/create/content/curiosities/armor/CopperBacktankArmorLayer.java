@@ -59,18 +59,18 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		ms.push();
 		BipedModel<?> model = (BipedModel<?>) entityModel;
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
-			.with(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
+				.with(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		RenderType renderType = RenderType.getCutout();
 
-		SuperByteBuffer backtank = CreateClient.bufferCache.renderBlock(renderedState);
+		SuperByteBuffer backtank = CreateClient.BUFFER_CACHE.renderBlock(renderedState);
 		SuperByteBuffer cogs =
-			CreateClient.bufferCache.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
+				CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
 
 		model.bipedBody.rotate(ms);
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 		backtank.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+				.renderInto(ms, buffer.getBuffer(renderType));
 
 		cogs.matrixStacker()
 			.centre()

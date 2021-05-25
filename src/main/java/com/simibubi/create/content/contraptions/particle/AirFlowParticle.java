@@ -35,7 +35,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.maxAge = 40;
 		canCollide = false;
 		selectSprite(7);
-		Vector3d offset = VecHelper.offsetRandomly(Vector3d.ZERO, Create.random, .25f);
+		Vector3d offset = VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .25f);
 		this.setPosition(posX + offset.x, posY + offset.y, posZ + offset.z);
 		this.prevPosX = posX;
 		this.prevPosY = posY;

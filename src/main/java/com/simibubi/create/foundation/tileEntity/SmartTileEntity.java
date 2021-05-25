@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
 import net.minecraft.block.BlockState;
@@ -120,12 +120,21 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
 	}
 
+	@Override
 	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound);
 		behaviourList.forEach(tb -> {
 			if (tb.isSafeNBT())
 				tb.write(compound, clientPacket);
 		});
+	}
+
+	public ItemRequirement getRequiredItems() {
+		return behaviourList.stream().reduce(
+				ItemRequirement.NONE,
+				(a, b) -> a.with(b.getRequiredItems()),
+				(a, b) -> a.with(b)
+		);
 	}
 
 	@Override

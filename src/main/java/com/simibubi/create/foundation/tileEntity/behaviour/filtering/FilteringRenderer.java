@@ -73,17 +73,17 @@ public class FilteringRenderer {
 		AxisAlignedBB bb = isFilterSlotted ? emptyBB.grow(.45f, .31f, .2f) : emptyBB.grow(.25f);
 
 		ValueBox box = showCount ? new ItemValueBox(label, bb, pos, filter, behaviour.scrollableValue)
-			: new ValueBox(label, bb, pos);
+				: new ValueBox(label, bb, pos);
 
 		box.offsetLabel(behaviour.textShift)
-			.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-			.scrollTooltip(showCount && !isFilterSlotted ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
-			.passive(!hit);
+				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
+				.scrollTooltip(showCount && !isFilterSlotted ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
+				.passive(!hit);
 
-		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
-			.lineWidth(1 / 64f)
-			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-			.highlightFace(result.getFace());
+		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
+				.lineWidth(1 / 64f)
+				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+				.highlightFace(result.getFace());
 	}
 
 	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,

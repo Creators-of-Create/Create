@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.item.filter;
 import com.simibubi.create.AllContainerTypes;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -14,12 +15,16 @@ public class FilterContainer extends AbstractFilterContainer {
 	boolean respectNBT;
 	boolean blacklist;
 
-	public FilterContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainerTypes.FILTER.type, id, inv, extraData);
+	public FilterContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(type, id, inv, extraData);
 	}
 
-	public FilterContainer(int id, PlayerInventory inv, ItemStack stack) {
-		super(AllContainerTypes.FILTER.type, id, inv, stack);
+	public FilterContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack stack) {
+		super(type, id, inv, stack);
+	}
+
+	public static FilterContainer create(int id, PlayerInventory inv, ItemStack stack) {
+		return new FilterContainer(AllContainerTypes.FILTER.get(), id, inv, stack);
 	}
 
 	@Override

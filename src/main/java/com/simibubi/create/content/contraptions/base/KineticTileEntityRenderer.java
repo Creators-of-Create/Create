@@ -48,7 +48,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, MatrixStack ms,
 		IVertexBuilder buffer, int light) {
-		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
+		SuperByteBuffer superByteBuffer = CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
 	}
 
@@ -120,7 +120,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
+		return CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

@@ -629,15 +629,15 @@ public class KineticsScenes {
 		scene.idle(20);
 		Vector3d centerOf = util.vector.centerOf(2, 2, 2);
 		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.BLUE_DYE)), 40);
+				.withItem(new ItemStack(Items.BLUE_DYE)), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES.get(11).getDefaultState()
-			.with(ValveHandleBlock.FACING, Direction.UP), true);
+		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES[11].getDefaultState()
+				.with(ValveHandleBlock.FACING, Direction.UP), true);
 		scene.idle(10);
 		scene.overlay.showText(70)
-			.text("Valve handles can be dyed for aesthetic purposes")
-			.placeNearTarget()
-			.pointAt(centerOf);
+				.text("Valve handles can be dyed for aesthetic purposes")
+				.placeNearTarget()
+				.pointAt(centerOf);
 	}
 
 	private static void manualSource(SceneBuilder scene, SceneBuildingUtil util, boolean handCrank) {

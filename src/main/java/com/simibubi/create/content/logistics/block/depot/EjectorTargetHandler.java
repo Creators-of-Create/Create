@@ -210,14 +210,14 @@ public class EjectorTargetHandler {
 		ClientWorld world = mc.world;
 
 		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 0, 1).offset(currentSelection.add(-validX, -yDiff, -validZ));
-		CreateClient.outliner.chaseAABB("valid", bb)
-			.colored(intColor)
-			.lineWidth(1 / 16f);
+		CreateClient.OUTLINER.chaseAABB("valid", bb)
+				.colored(intColor)
+				.lineWidth(1 / 16f);
 
 		for (int i = 0; i < segments; i++) {
 			double ticks = ((AnimationTickHolder.getRenderTime() / 3) % tickOffset) + i * tickOffset;
 			Vector3d vec = launcher.getGlobalPos(ticks, d, pos)
-				.add(xDiff - validX, 0, zDiff - validZ);
+					.add(xDiff - validX, 0, zDiff - validZ);
 			world.addParticle(data, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 	}
@@ -260,9 +260,9 @@ public class EjectorTargetHandler {
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
 		AxisAlignedBB boundingBox = shape.isEmpty() ? new AxisAlignedBB(BlockPos.ZERO) : shape.getBoundingBox();
-		CreateClient.outliner.showAABB("target", boundingBox.offset(pos))
-			.colored(0xffcb74)
-			.lineWidth(1 / 16f);
+		CreateClient.OUTLINER.showAABB("target", boundingBox.offset(pos))
+				.colored(0xffcb74)
+				.lineWidth(1 / 16f);
 	}
 
 }

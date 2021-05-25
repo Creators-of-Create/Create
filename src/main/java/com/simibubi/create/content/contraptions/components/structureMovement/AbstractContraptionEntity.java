@@ -1,30 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.io.IOException;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.MutablePair;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
-import com.simibubi.create.foundation.collision.Matrix3d;
-import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -54,10 +29,31 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionSeatMappingPacket;
+import com.simibubi.create.foundation.collision.Matrix3d;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
+			EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -391,8 +387,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			byte[] byteArray = dataOutput.toByteArray();
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
-				Create.logger.warn("Could not send Contraption Spawn Data (Packet too big): "
-					+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
+				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
+						+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
 				buffer.writeCompoundTag(new CompoundNBT());
 				return;
 			}
@@ -431,7 +427,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
 		if (compound.isEmpty())
 			return;
-		
+
 		initialized = compound.getBoolean("Initialized");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
 		contraption.entity = this;

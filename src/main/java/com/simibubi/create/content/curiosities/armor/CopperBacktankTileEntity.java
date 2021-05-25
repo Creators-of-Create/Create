@@ -42,7 +42,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 		int max = getMaxAir();
 		if (world.isRemote) {
 			Vector3d centerOf = VecHelper.getCenterOf(pos);
-			Vector3d v = VecHelper.offsetRandomly(centerOf, Create.random, .65f);
+			Vector3d v = VecHelper.offsetRandomly(centerOf, Create.RANDOM, .65f);
 			Vector3d m = centerOf.subtract(v);
 			if (airLevel != max)
 				world.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);

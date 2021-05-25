@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivit
 import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.block.render.ColoredVertexModel;
 import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -213,20 +214,26 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, model -> new CTModel(model, behavior));
+				.register(entry.delegate, model -> new CTModel(model, behavior));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static <T extends Block> void registerCasingConnectivity(T entry,
-		BiConsumer<T, CasingConnectivity> consumer) {
+																	 BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.getCasingConnectivity());
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockModel(Block entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, func.get());
+				.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerBlockModel(Block entry,
+										   Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		CreateClient.getCustomBlockModels()
+				.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -248,12 +255,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		CreateClient.getColorHandler()
 			.register(entry, colorFunc.get()
 				.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc);
 	}
 
 	@OnlyIn(Dist.CLIENT)

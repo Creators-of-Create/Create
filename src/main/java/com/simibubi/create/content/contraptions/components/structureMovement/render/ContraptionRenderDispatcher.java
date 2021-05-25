@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
+import static org.lwjgl.opengl.GL13.GL_QUADS;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.glDisable;
+import static org.lwjgl.opengl.GL13.glEnable;
 
 import java.util.List;
 import java.util.Random;
@@ -231,7 +231,7 @@ public class ContraptionRenderDispatcher {
 
 	public static void renderStructure(World world, PlacementSimulationWorld renderWorld, Contraption c,
 									   ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		List<RenderType> blockLayers = RenderType.getBlockLayers();
 
 		buffer.getBuffer(RenderType.getSolid());

@@ -143,7 +143,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				SuperByteBuffer superBuffer = CreateClient.BUFFER_CACHE.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 			}
 		}

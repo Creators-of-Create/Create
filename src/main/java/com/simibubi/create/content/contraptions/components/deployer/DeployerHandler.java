@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -24,6 +25,7 @@ import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -44,6 +46,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -267,17 +270,19 @@ public class DeployerHandler {
 		boolean holdingSomething = !player.getHeldItemMainhand()
 			.isEmpty();
 		boolean flag1 =
-			!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
+				!(player.isSneaking() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
 
 		// Use on block
 		if (useBlock != DENY && flag1
-			&& safeOnUse(clickedState, world, clickedPos, player, hand, result) == ActionResultType.SUCCESS)
+				&& safeOnUse(clickedState, world, clickedPos, player, hand, result) == ActionResultType.SUCCESS)
 			return;
 		if (stack.isEmpty())
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
+		if (item instanceof BlockItem
+				&& !(item instanceof CartAssemblerBlockItem)
+				&& !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
 
 		// Reposition fire placement for convenience
@@ -349,16 +354,30 @@ public class DeployerHandler {
 		prevHeldItem.onBlockDestroyed(world, blockstate, pos, player);
 		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
 			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, Hand.MAIN_HAND);
-		if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
-			return true;
+
+
+		BlockPos posUp = pos.up();
+		BlockState stateUp = world.getBlockState(posUp);
+		if (blockstate.getBlock() instanceof DoublePlantBlock
+				&& blockstate.get(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER
+				&& stateUp.getBlock() == blockstate.getBlock()
+				&& stateUp.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER
+		) {
+			// hack to prevent DoublePlantBlock from dropping a duplicate item
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 35);
+			world.setBlockState(posUp, Blocks.AIR.getDefaultState(), 35);
+		} else {
+			if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
+				return true;
+		}
 
 		blockstate.getBlock()
-			.onPlayerDestroy(world, pos, blockstate);
+				.onPlayerDestroy(world, pos, blockstate);
 		if (!canHarvest)
 			return true;
 
 		Block.getDrops(blockstate, world, pos, tileentity, player, prevHeldItem)
-			.forEach(item -> player.inventory.placeItemBackInInventory(world, item));
+				.forEach(item -> player.inventory.placeItemBackInInventory(world, item));
 		blockstate.spawnAdditionalDrops(world, pos, prevHeldItem);
 		return true;
 	}

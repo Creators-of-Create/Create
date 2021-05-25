@@ -22,11 +22,11 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpe
 	public static EncasedShaftBlock andesite(Properties properties) {
 		return new EncasedShaftBlock(properties, AllBlocks.ANDESITE_CASING);
 	}
-	
+
 	public static EncasedShaftBlock brass(Properties properties) {
 		return new EncasedShaftBlock(properties, AllBlocks.BRASS_CASING);
 	}
-	
+
 	protected EncasedShaftBlock(Properties properties, BlockEntry<CasingBlock> casing) {
 		super(properties);
 		this.casing = casing;
@@ -36,7 +36,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpe
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return AllTileEntities.ENCASED_SHAFT.create();
 	}
-	
+
 	public BlockEntry<CasingBlock> getCasing() {
 		return casing;
 	}
@@ -49,10 +49,10 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpe
 		KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), AllBlocks.SHAFT.getDefaultState().with(AXIS, state.get(AXIS)));
 		return ActionResultType.SUCCESS;
 	}
-	
+
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
-		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState());
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te);
 	}
 
 }

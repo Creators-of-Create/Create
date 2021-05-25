@@ -85,17 +85,17 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	private void validate(String recipeTypeName) {
 		String messageHeader = "Your custom " + recipeTypeName + " recipe (" + id.toString() + ")";
-		Logger logger = Create.logger;
+		Logger logger = Create.LOGGER;
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
 
 		if (ingredientCount > getMaxInputCount())
 			logger.warn(messageHeader + " has more item inputs (" + ingredientCount + ") than supported ("
-				+ getMaxInputCount() + ").");
+					+ getMaxInputCount() + ").");
 
 		if (outputCount > getMaxOutputCount())
 			logger.warn(messageHeader + " has more item outputs (" + outputCount + ") than supported ("
-				+ getMaxOutputCount() + ").");
+					+ getMaxOutputCount() + ").");
 
 		if (processingDuration > 0 && !canSpecifyDuration())
 			logger.warn(messageHeader + " specified a duration. Durations have no impact on this type of recipe.");
@@ -120,15 +120,15 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public NonNullList<Ingredient> getIngredients() {
 		return ingredients;
 	}
-	
+
 	public NonNullList<FluidIngredient> getFluidIngredients() {
 		return fluidIngredients;
 	}
-	
+
 	public NonNullList<ProcessingOutput> getRollableResults() {
 		return results;
 	}
-	
+
 	public NonNullList<FluidStack> getFluidResults() {
 		return fluidResults;
 	}
@@ -156,9 +156,9 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public HeatCondition getRequiredHeat() {
 		return requiredHeat;
 	}
-	
+
 	// IRecipe<> paperwork
-	
+
 	@Override
 	public ItemStack getCraftingResult(T inv) {
 		return getRecipeOutput();
@@ -180,7 +180,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public ResourceLocation getId() {
 		return id;
 	}
-	
+
 	@Override
 	public boolean isDynamic() {
 		return true;

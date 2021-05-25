@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.actors.AttachedActorBlock;
@@ -53,29 +56,132 @@ import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BellAttachment;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class BlockMovementTraits {
+public class BlockMovementChecks {
 
-	public static boolean movementNecessary(BlockState state, World world, BlockPos pos) {
+	private static final List<MovementNecessaryCheck> MOVEMENT_NECESSARY_CHECKS = new ArrayList<>();
+	private static final List<MovementAllowedCheck> MOVEMENT_ALLOWED_CHECKS = new ArrayList<>();
+	private static final List<BrittleCheck> BRITTLE_CHECKS = new ArrayList<>();
+	private static final List<AttachedCheck> ATTACHED_CHECKS = new ArrayList<>();
+	private static final List<NotSupportiveCheck> NOT_SUPPORTIVE_CHECKS = new ArrayList<>();
+
+	// Registration
+	// Add new checks to the front instead of the end
+
+	public static void registerMovementNecessaryCheck(MovementNecessaryCheck check) {
+		MOVEMENT_NECESSARY_CHECKS.add(0, check);
+	}
+
+	public static void registerMovementAllowedCheck(MovementAllowedCheck check) {
+		MOVEMENT_ALLOWED_CHECKS.add(0, check);
+	}
+
+	public static void registerBrittleCheck(BrittleCheck check) {
+		BRITTLE_CHECKS.add(0, check);
+	}
+
+	public static void registerAttachedCheck(AttachedCheck check) {
+		ATTACHED_CHECKS.add(0, check);
+	}
+
+	public static void registerNotSupportiveCheck(NotSupportiveCheck check) {
+		NOT_SUPPORTIVE_CHECKS.add(0, check);
+	}
+
+	public static void registerAllChecks(AllChecks checks) {
+		registerMovementNecessaryCheck(checks);
+		registerMovementAllowedCheck(checks);
+		registerBrittleCheck(checks);
+		registerAttachedCheck(checks);
+		registerNotSupportiveCheck(checks);
+	}
+
+	// Actual check methods
+
+	public static boolean isMovementNecessary(BlockState state, World world, BlockPos pos) {
+		for (MovementNecessaryCheck check : MOVEMENT_NECESSARY_CHECKS) {
+			CheckResult result = check.isMovementNecessary(state, world, pos);
+			if (result != CheckResult.PASS) {
+				return result.toBoolean();
+			}
+		}
+		return isMovementNecessaryFallback(state, world, pos);
+	}
+
+	public static boolean isMovementAllowed(BlockState state, World world, BlockPos pos) {
+		for (MovementAllowedCheck check : MOVEMENT_ALLOWED_CHECKS) {
+			CheckResult result = check.isMovementAllowed(state, world, pos);
+			if (result != CheckResult.PASS) {
+				return result.toBoolean();
+			}
+		}
+		return isMovementAllowedFallback(state, world, pos);
+	}
+
+	/**
+	 * Brittle blocks will be collected first, as they may break when other blocks
+	 * are removed before them
+	 */
+	public static boolean isBrittle(BlockState state) {
+		for (BrittleCheck check : BRITTLE_CHECKS) {
+			CheckResult result = check.isBrittle(state);
+			if (result != CheckResult.PASS) {
+				return result.toBoolean();
+			}
+		}
+		return isBrittleFallback(state);
+	}
+
+	/**
+	 * Attached blocks will move if blocks they are attached to are moved
+	 */
+	public static boolean isBlockAttachedTowards(BlockState state, World world, BlockPos pos,
+												 Direction direction) {
+		for (AttachedCheck check : ATTACHED_CHECKS) {
+			CheckResult result = check.isBlockAttachedTowards(state, world, pos, direction);
+			if (result != CheckResult.PASS) {
+				return result.toBoolean();
+			}
+		}
+		return isBlockAttachedTowardsFallback(state, world, pos, direction);
+	}
+
+	/**
+	 * Non-Supportive blocks will not continue a chain of blocks picked up by e.g. a
+	 * piston
+	 */
+	public static boolean isNotSupportive(BlockState state, Direction facing) {
+		for (NotSupportiveCheck check : NOT_SUPPORTIVE_CHECKS) {
+			CheckResult result = check.isNotSupportive(state, facing);
+			if (result != CheckResult.PASS) {
+				return result.toBoolean();
+			}
+		}
+		return isNotSupportiveFallback(state, facing);
+	}
+
+	// Fallback checks
+
+	private static boolean isMovementNecessaryFallback(BlockState state, World world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
 		if (state.getBlock() instanceof FenceGateBlock)
 			return true;
 		if (state.getMaterial()
-			.isReplaceable())
+				.isReplaceable())
 			return false;
 		if (state.getCollisionShape(world, pos)
-			.isEmpty())
+				.isEmpty())
 			return false;
 		return true;
 	}
 
-	public static boolean movementAllowed(BlockState state, World world, BlockPos pos) {
+	private static boolean isMovementAllowedFallback(BlockState state, World world, BlockPos pos) {
 		Block block = state.getBlock();
 		if (block instanceof AbstractChassisBlock)
 			return true;
@@ -115,11 +221,7 @@ public class BlockMovementTraits {
 		return state.getPushReaction() != PushReaction.BLOCK;
 	}
 
-	/**
-	 * Brittle blocks will be collected first, as they may break when other blocks
-	 * are removed before them
-	 */
-	public static boolean isBrittle(BlockState state) {
+	private static boolean isBrittleFallback(BlockState state) {
 		Block block = state.getBlock();
 		if (state.contains(BlockStateProperties.HANGING))
 			return true;
@@ -147,11 +249,8 @@ public class BlockMovementTraits {
 		return AllBlockTags.BRITTLE.tag.contains(block);
 	}
 
-	/**
-	 * Attached blocks will move if blocks they are attached to are moved
-	 */
-	public static boolean isBlockAttachedTowards(IBlockReader world, BlockPos pos, BlockState state,
-		Direction direction) {
+	private static boolean isBlockAttachedTowardsFallback(BlockState state, World world, BlockPos pos,
+														  Direction direction) {
 		Block block = state.getBlock();
 		if (block instanceof LadderBlock)
 			return state.get(LadderBlock.FACING) == direction.getOpposite();
@@ -163,13 +262,15 @@ public class BlockMovementTraits {
 			return direction == Direction.DOWN;
 		if (block instanceof AbstractPressurePlateBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof DoorBlock)
+		if (block instanceof DoorBlock) {
+			if (state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER && direction == Direction.UP)
+				return true;
 			return direction == Direction.DOWN;
+		}
 		if (block instanceof BedBlock) {
 			Direction facing = state.get(BedBlock.HORIZONTAL_FACING);
-			if (state.get(BedBlock.PART) == BedPart.HEAD) {
+			if (state.get(BedBlock.PART) == BedPart.HEAD)
 				facing = facing.getOpposite();
-			}
 			return direction == facing;
 		}
 		if (block instanceof RedstoneLinkBlock)
@@ -221,21 +322,17 @@ public class BlockMovementTraits {
 		}
 		if (state.getBlock() instanceof SailBlock)
 			return direction.getAxis() != state.get(SailBlock.FACING)
-				.getAxis();
+					.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(direction));
 		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
 			return direction == state.get(StickerBlock.FACING)
-				&& !notSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
+					&& !isNotSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
 		}
 		return false;
 	}
 
-	/**
-	 * Non-Supportive blocks will not continue a chain of blocks picked up by e.g. a
-	 * piston
-	 */
-	public static boolean notSupportive(BlockState state, Direction facing) {
+	private static boolean isNotSupportiveFallback(BlockState state, Direction facing) {
 		if (AllBlocks.MECHANICAL_DRILL.has(state))
 			return state.get(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
@@ -257,13 +354,67 @@ public class BlockMovementTraits {
 				.getAxis();
 		if (AllBlocks.PISTON_EXTENSION_POLE.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
-				.getAxis();
+					.getAxis();
 		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
-				.getAxis();
+					.getAxis();
 		if (AllBlocks.STICKER.has(state) && !state.get(StickerBlock.EXTENDED))
 			return facing == state.get(StickerBlock.FACING);
 		return isBrittle(state);
+	}
+
+	// Check classes
+
+	public static interface MovementNecessaryCheck {
+		public CheckResult isMovementNecessary(BlockState state, World world, BlockPos pos);
+	}
+
+	public static interface MovementAllowedCheck {
+		public CheckResult isMovementAllowed(BlockState state, World world, BlockPos pos);
+	}
+
+	public static interface BrittleCheck {
+		/**
+		 * Brittle blocks will be collected first, as they may break when other blocks
+		 * are removed before them
+		 */
+		public CheckResult isBrittle(BlockState state);
+	}
+
+	public static interface AttachedCheck {
+		/**
+		 * Attached blocks will move if blocks they are attached to are moved
+		 */
+		public CheckResult isBlockAttachedTowards(BlockState state, World world, BlockPos pos, Direction direction);
+	}
+
+	public static interface NotSupportiveCheck {
+		/**
+		 * Non-Supportive blocks will not continue a chain of blocks picked up by e.g. a
+		 * piston
+		 */
+		public CheckResult isNotSupportive(BlockState state, Direction direction);
+	}
+
+	public static interface AllChecks extends MovementNecessaryCheck, MovementAllowedCheck, BrittleCheck, AttachedCheck, NotSupportiveCheck {
+	}
+
+	public static enum CheckResult {
+		SUCCESS,
+		FAIL,
+		PASS;
+
+		public Boolean toBoolean() {
+			return this == PASS ? null : (this == SUCCESS ? true : false);
+		}
+
+		public static CheckResult of(boolean b) {
+			return b ? SUCCESS : FAIL;
+		}
+
+		public static CheckResult of(Boolean b) {
+			return b == null ? PASS : (b ? SUCCESS : FAIL);
+		}
 	}
 
 }

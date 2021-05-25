@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -30,12 +31,16 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	WhitelistMode whitelistMode;
 	List<Pair<ItemAttribute, Boolean>> selectedAttributes;
 
-	public AttributeFilterContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainerTypes.ATTRIBUTE_FILTER.type, id, inv, extraData);
+	public AttributeFilterContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(type, id, inv, extraData);
 	}
 
-	public AttributeFilterContainer(int id, PlayerInventory inv, ItemStack stack) {
-		super(AllContainerTypes.ATTRIBUTE_FILTER.type, id, inv, stack);
+	public AttributeFilterContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack stack) {
+		super(type, id, inv, stack);
+	}
+
+	public static AttributeFilterContainer create(int id, PlayerInventory inv, ItemStack stack) {
+		return new AttributeFilterContainer(AllContainerTypes.ATTRIBUTE_FILTER.get(), id, inv, stack);
 	}
 
 	public void appendSelectedAttribute(ItemAttribute itemAttribute, boolean inverted) {

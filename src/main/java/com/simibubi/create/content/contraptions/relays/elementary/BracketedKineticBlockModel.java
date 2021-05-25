@@ -21,7 +21,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
 
-	private static ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
+	private static final ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
 
 	public BracketedKineticBlockModel(IBakedModel template) {
 		super(template);

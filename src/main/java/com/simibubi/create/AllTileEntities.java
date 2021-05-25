@@ -159,7 +159,6 @@ import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
 
 public class AllTileEntities {
@@ -248,10 +247,10 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
-		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.instance(() -> HandCrankInstance::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray(new BlockEntry<?>[AllBlocks.DYED_VALVE_HANDLES.size()]))
+			.tileEntity("hand_crank", HandCrankTileEntity::new)
+			.instance(() -> HandCrankInstance::new)
+			.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+			.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 

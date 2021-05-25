@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.block.BlockState;
@@ -42,7 +43,13 @@ public abstract class TileEntityBehaviour {
 
 	}
 
-	public boolean isSafeNBT() { return false; }
+	public boolean isSafeNBT() {
+		return false;
+	}
+
+	public ItemRequirement getRequiredItems() {
+		return ItemRequirement.NONE;
+	}
 
 	public void onBlockChanged(BlockState oldState) {
 
