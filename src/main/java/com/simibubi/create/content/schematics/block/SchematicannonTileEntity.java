@@ -11,7 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -34,8 +34,6 @@ import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PistonHeadBlock;
@@ -729,7 +727,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
-		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementTraits.isBrittle(state);
+		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementChecks.isBrittle(state);
 	}
 
 	public void finishedPrinting() {
