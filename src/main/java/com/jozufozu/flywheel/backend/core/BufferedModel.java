@@ -22,7 +22,7 @@ public class BufferedModel {
 	protected final VertexFormat format;
 	protected final int vertexCount;
 	protected GlBuffer vbo;
-	private boolean removed;
+	protected boolean deleted;
 
 	public BufferedModel(VertexFormat format, ByteBuffer data, int vertices) {
 		this.data = data;
@@ -62,7 +62,7 @@ public class BufferedModel {
 	 * Renders this model, checking first if there is anything to render.
 	 */
 	public void render() {
-		if (vertexCount <= 0 || removed) return;
+		if (vertexCount <= 0 || deleted) return;
 
 		// TODO: minecraft sometimes leaves its state dirty on launch. this is a hack
 		glDisableClientState(GL_VERTEX_ARRAY);
@@ -84,9 +84,9 @@ public class BufferedModel {
 	}
 
 	public void delete() {
-		if (removed) return;
+		if (deleted) return;
 
-		removed = true;
+		deleted = true;
 		vbo.delete();
 	}
 

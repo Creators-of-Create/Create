@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.core.BufferedArrayModel;
 import com.jozufozu.flywheel.backend.core.BufferedModel;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
@@ -192,6 +193,9 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		to.rewind();
 
-		return new BufferedModel(format, to, vertexCount);
+		if (Backend.compat.vertexArrayObjectsSupported())
+			return new BufferedArrayModel(format, to, vertexCount);
+		else
+			return new BufferedModel(format, to, vertexCount);
 	}
 }
