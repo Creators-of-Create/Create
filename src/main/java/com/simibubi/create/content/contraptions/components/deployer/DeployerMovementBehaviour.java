@@ -107,28 +107,28 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			.isVecInside(pos.subtract(schematicWorld.anchor)))
 			return;
 		BlockState blockState = schematicWorld.getBlockState(pos);
-		ItemRequirement requirement = ItemRequirement.of(blockState);
+		ItemRequirement requirement = ItemRequirement.of(blockState, schematicWorld.getTileEntity(pos));
 		if (requirement.isInvalid() || requirement.isEmpty())
 			return;
 		if (AllBlocks.BELT.has(blockState))
 			return;
 
-		List<ItemStack> requiredItems = requirement.getRequiredItems();
-		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0);
+		List<ItemRequirement.StackRequirement> requiredItems = requirement.getRequiredItems();
+		ItemStack firstRequired = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).item;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
 			IItemHandler iItemHandler = context.contraption.inventory;
-			for (ItemStack required : requiredItems) {
+			for (ItemRequirement.StackRequirement required : requiredItems) {
 				int amountFound = ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-						required.getCount(), true)
+					.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
+						required.item.getCount(), true)
 					.getCount();
-				if (amountFound < required.getCount())
+				if (amountFound < required.item.getCount())
 					return;
 			}
-			for (ItemStack required : requiredItems)
-				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required, s), ExtractionCountMode.UPTO,
-					required.getCount(), false);
+			for (ItemRequirement.StackRequirement required : requiredItems)
+				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
+					required.item.getCount(), false);
 		}
 
 		CompoundNBT data = null;

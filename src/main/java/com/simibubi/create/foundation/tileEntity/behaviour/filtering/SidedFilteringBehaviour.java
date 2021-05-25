@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
@@ -57,9 +58,6 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 			} else if (sidedFilters.containsKey(d))
 				removeFilter(d);
 	}
-
-	@Override
-	public boolean isSafeNBT() { return true; }
 
 	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
@@ -120,6 +118,15 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		sidedFilters.values()
 			.forEach(FilteringBehaviour::destroy);
 		super.destroy();
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return sidedFilters.values().stream().reduce(
+				ItemRequirement.NONE,
+				(a,b) -> a.with(b.getRequiredItems()),
+				(a,b) -> a.with(b)
+		);
 	}
 
 	public void removeFilter(Direction side) {

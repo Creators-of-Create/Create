@@ -43,11 +43,11 @@ public class MaterialChecklist {
 		if (requirement.isInvalid())
 			return;
 
-		for (ItemStack stack : requirement.requiredItems) {
-			if (requirement.getUsage() == ItemUseType.DAMAGE)
-				putOrIncrement(damageRequired, stack);
-			if (requirement.getUsage() == ItemUseType.CONSUME)
-				putOrIncrement(required, stack);
+		for (ItemRequirement.StackRequirement stack : requirement.requiredItems) {
+			if (stack.usage == ItemUseType.DAMAGE)
+				putOrIncrement(damageRequired, stack.item);
+			if (stack.usage == ItemUseType.CONSUME)
+				putOrIncrement(required, stack.item);
 		}
 	}
 

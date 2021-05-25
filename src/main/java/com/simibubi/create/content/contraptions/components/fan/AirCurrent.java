@@ -89,8 +89,7 @@ public class AirCurrent {
 	protected void tickAffectedEntities(World world, Direction facing) {
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.isAlive() || !entity.getBoundingBox()
-				.intersects(bounds)) {
+			if (!entity.isAlive() || !entity.getBoundingBox().intersects(bounds) || isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -387,6 +386,14 @@ public class AirCurrent {
 			else
 				flyingSound.fadeOut();
 		isClientPlayerInAirCurrent = false;
+	}
+
+	public static boolean isPlayerCreativeFlying(Entity entity) {
+		if (entity instanceof PlayerEntity) {
+			PlayerEntity player = (PlayerEntity) entity;
+			return player.isCreative() && player.abilities.isFlying;
+		}
+		return false;
 	}
 
 }

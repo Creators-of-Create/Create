@@ -288,6 +288,11 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		}
 	}
 
+	public void onLengthBroken() {
+		offset = 0;
+		sendData();
+	}
+
 	@Override
 	public boolean isValid() {
 		return !isRemoved();

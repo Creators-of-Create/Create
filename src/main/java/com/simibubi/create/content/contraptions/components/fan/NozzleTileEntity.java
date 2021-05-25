@@ -49,7 +49,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 		compound.putFloat("Range", range);
 		compound.putBoolean("Pushing", pushing);
 	}
-	
+
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
@@ -95,8 +95,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 				continue;
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking()
-				|| (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())) {
+			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -153,10 +152,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 				.subtract(center);
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking()
-				|| (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())) {
+			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity))
 				continue;
-			}
 
 			boolean canSee = canSee(entity);
 			if (!canSee) {
