@@ -8,62 +8,49 @@ import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
-import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.util.AttribUtil;
 
 public class IndexedModel extends BufferedModel {
 
 	protected GlPrimitiveType eboIndexType;
 	protected GlBuffer ebo;
 
-	public IndexedModel(VertexFormat modelFormat, ByteBuffer buf, int vertices) {
+	public IndexedModel(VertexFormat modelFormat, ByteBuffer buf, int vertices, ByteBuffer indices, GlPrimitiveType indexType) {
 		super(modelFormat, buf, vertices);
-	}
 
-	@Override
-	protected void init() {
-		super.init();
-
-		createEBO();
-	}
-
-	@Override
-    protected void doRender() {
-        modelVBO.bind();
-        ebo.bind();
-
-        setupAttributes();
-        GL20.glDrawElements(GL20.GL_QUADS, vertexCount, eboIndexType.getGlConstant(), 0);
-
-        int numAttributes = getTotalShaderAttributeCount();
-        for (int i = 0; i <= numAttributes; i++) {
-            GL20.glDisableVertexAttribArray(i);
-        }
-
-        ebo.unbind();
-        modelVBO.unbind();
-    }
-
-    protected final void createEBO() {
 		ebo = new GlBuffer(GlBufferType.ELEMENT_ARRAY_BUFFER);
-		eboIndexType = GlPrimitiveType.UINT; // TODO: choose this based on the number of vertices
+		this.eboIndexType = indexType;
 
-		int indicesSize = vertexCount * eboIndexType.getSize();
+		int indicesSize = vertexCount * indexType.getSize();
 
 		ebo.bind();
 
 		ebo.alloc(indicesSize);
-		MappedBuffer indices = ebo.getBuffer(0, indicesSize);
-		for (int i = 0; i < vertexCount; i++) {
-			indices.putInt(i);
-		}
-		indices.flush();
+		ebo.getBuffer(0, indicesSize)
+				.put(indices)
+				.flush();
 
 		ebo.unbind();
 	}
 
-    @Override
-    protected void deleteInternal() {
-        super.deleteInternal();
-        ebo.delete();
-    }
+	public void render() {
+		vbo.bind();
+		ebo.bind();
+
+		AttribUtil.enableArrays(getAttributeCount());
+		format.vertexAttribPointers(0);
+
+		GL20.glDrawElements(GL20.GL_QUADS, vertexCount, eboIndexType.getGlConstant(), 0);
+
+		AttribUtil.disableArrays(getAttributeCount());
+
+		ebo.unbind();
+		vbo.unbind();
+	}
+
+	@Override
+	public void delete() {
+		super.delete();
+		ebo.delete();
+	}
 }

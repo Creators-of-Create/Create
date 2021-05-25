@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.IndexedModel;
+import com.jozufozu.flywheel.backend.core.BufferedModel;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -45,7 +45,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	private final ContraptionLighter<?> lighter;
 	public final ContraptionKineticRenderer kinetics;
 
-	private final Map<RenderType, IndexedModel> renderLayers = new HashMap<>();
+	private final Map<RenderType, BufferedModel> renderLayers = new HashMap<>();
 
 	private Matrix4f model;
 	private AxisAlignedBB lightBox;
@@ -67,7 +67,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
-		IndexedModel structure = renderLayers.get(layer);
+		BufferedModel structure = renderLayers.get(layer);
 		if (structure != null) {
 			setup(shader);
 			structure.render();
@@ -108,7 +108,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	void invalidate() {
-		for (IndexedModel buffer : renderLayers.values()) {
+		for (BufferedModel buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 		renderLayers.clear();
@@ -119,7 +119,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	private void buildLayers() {
-		for (IndexedModel buffer : renderLayers.values()) {
+		for (BufferedModel buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 
@@ -128,7 +128,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		List<RenderType> blockLayers = RenderType.getBlockLayers();
 
 		for (RenderType layer : blockLayers) {
-			IndexedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
+			BufferedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
 			if (layerModel != null) renderLayers.put(layer, layerModel);
 		}
 	}
@@ -153,7 +153,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	@Nullable
-	private static IndexedModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
+	private static BufferedModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
 		BufferBuilderReader reader = new BufferBuilderReader(ContraptionRenderDispatcher.buildStructure(renderWorld, c, layer));
 
 		int vertexCount = reader.getVertexCount();
@@ -192,6 +192,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		to.rewind();
 
-		return new IndexedModel(format, to, vertexCount);
+		return new BufferedModel(format, to, vertexCount);
 	}
 }

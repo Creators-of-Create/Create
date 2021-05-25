@@ -1,7 +1,6 @@
 package com.jozufozu.flywheel.backend.instancing;
 
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 
@@ -14,10 +13,13 @@ import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.util.AttribUtil;
 
-public class InstancedModel<D extends InstanceData> extends BufferedModel {
+public class InstancedModel<D extends InstanceData> {
 
 	public final InstancedTileRenderer<?> renderer;
+
+	protected final BufferedModel model;
 
 	protected final VertexFormat instanceFormat;
 	protected final InstanceFactory<D> factory;
@@ -25,20 +27,50 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 	protected GlBuffer instanceVBO;
 	protected int glBufferSize = -1;
 	protected int glInstanceCount = 0;
+	private boolean deleted;
 
 	protected final ArrayList<D> data = new ArrayList<>();
 
 	boolean anyToRemove;
 	boolean anyToUpdate;
 
-	public InstancedModel(VertexFormat modelFormat, ByteBuffer buf, int vertices, InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, InstanceFactory<D> factory) {
-		super(modelFormat, buf, vertices);
+	public InstancedModel(BufferedModel model, InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, InstanceFactory<D> factory) {
+		this.model = model;
 		this.factory = factory;
 		this.instanceFormat = instanceFormat;
 		this.renderer = renderer;
+
+		if (model.getVertexCount() <= 0)
+			throw new IllegalArgumentException("Refusing to instance a model with no vertices.");
+
+		vao = new GlVertexArray();
+		instanceVBO = new GlBuffer(GlBufferType.ARRAY_BUFFER);
+
+		vao.bind();
+
+		// bind the model's vbo to our vao
+		model.bindBuffer();
+		model.getFormat().vertexAttribPointers(0);
+		model.unbindBuffer();
+
+		// enable all the attribute arrays in our vao. we only need to do this once
+		AttribUtil.enableArrays(model.getAttributeCount() + this.instanceFormat.getAttributeCount());
+		vao.unbind();
 	}
 
-	public synchronized D createInstance() {
+	public void render() {
+		if (deleted) return;
+
+		vao.bind();
+		renderSetup();
+
+		if (glInstanceCount > 0)
+			Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, model.getVertexCount(), glInstanceCount);
+
+		vao.unbind();
+	}
+
+	public D createInstance() {
 		D instanceData = factory.create(this);
 		instanceData.dirty = true;
 		anyToUpdate = true;
@@ -47,37 +79,15 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 		return instanceData;
 	}
 
-	@Override
-	protected void init() {
-		vao = new GlVertexArray();
-		instanceVBO = new GlBuffer(GlBufferType.ARRAY_BUFFER);
+	public void delete() {
+		if (deleted) return;
 
-		vao.bind();
-		super.init();
-		vao.unbind();
-	}
+		deleted = true;
 
-	@Override
-	protected void initModel() {
-		super.initModel();
-		setupAttributes();
-	}
-
-	protected void deleteInternal() {
-		super.deleteInternal();
+		model.delete();
 
 		instanceVBO.delete();
 		vao.delete();
-	}
-
-	protected void doRender() {
-		vao.bind();
-		renderSetup();
-
-		if (glInstanceCount > 0)
-			Backend.compat.drawInstanced.drawArraysInstanced(GL11.GL_QUADS, 0, vertexCount, glInstanceCount);
-
-		vao.unbind();
 	}
 
 	protected void renderSetup() {
@@ -96,23 +106,12 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 				updateBuffer();
 			}
 
+			glInstanceCount = data.size();
 		}
 
-		glInstanceCount = data.size();
-		informAttribDivisors();
 		instanceVBO.unbind();
 
-		this.anyToRemove = false;
-		this.anyToUpdate = false;
-	}
-
-	private void informAttribDivisors() {
-		int staticAttributes = modelFormat.getShaderAttributeCount();
-		instanceFormat.vertexAttribPointers(staticAttributes);
-
-		for (int i = 0; i < instanceFormat.getShaderAttributeCount(); i++) {
-			Backend.compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
-		}
+		anyToRemove = anyToUpdate = false;
 	}
 
 	private void clearBufferTail() {
@@ -185,6 +184,9 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 			buffer.flush();
 
 			glInstanceCount = size;
+
+			informAttribDivisors();
+
 			return true;
 		}
 		return false;
@@ -222,7 +224,13 @@ public class InstancedModel<D extends InstanceData> extends BufferedModel {
 
 	}
 
-	protected int getTotalShaderAttributeCount() {
-		return instanceFormat.getShaderAttributeCount() + super.getTotalShaderAttributeCount();
+	private void informAttribDivisors() {
+		int staticAttributes = model.getAttributeCount();
+		instanceFormat.vertexAttribPointers(staticAttributes);
+
+		for (int i = 0; i < instanceFormat.getAttributeCount(); i++) {
+			Backend.compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
+		}
 	}
+
 }

@@ -22,7 +22,7 @@ public class VertexFormat {
 		this.stride = stride;
 	}
 
-	public int getShaderAttributeCount() {
+	public int getAttributeCount() {
 		return numAttributes;
 	}
 

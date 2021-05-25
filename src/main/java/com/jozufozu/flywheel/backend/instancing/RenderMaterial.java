@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.jozufozu.flywheel.backend.RenderWork;
+import com.jozufozu.flywheel.backend.core.BufferedModel;
 import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
 import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
@@ -45,7 +47,10 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 		this.spec = spec;
 
 		this.models = CacheBuilder.newBuilder()
-				.removalListener(notification -> ((InstancedModel<?>) notification.getValue()).delete())
+				.removalListener(notification -> {
+					InstancedModel<?> model = (InstancedModel<?>) notification.getValue();
+					RenderWork.enqueue(model::delete);
+				})
 				.build();
 	}
 
@@ -140,7 +145,9 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 		to.rewind();
 
-		return new InstancedModel<>(format, to, vertexCount, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
+		BufferedModel bufferedModel = new BufferedModel(format, to, vertexCount);
+
+		return new InstancedModel<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
 	}
 
 	private static final Direction[] dirs;
