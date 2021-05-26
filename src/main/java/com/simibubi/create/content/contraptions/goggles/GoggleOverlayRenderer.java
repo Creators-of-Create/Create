@@ -172,8 +172,8 @@ public class GoggleOverlayRenderer {
 		ms.pop();
 	}
 
-	private static final class TooltipScreen extends Screen {
-		private TooltipScreen(ITextComponent p_i51108_1_) {
+	public static final class TooltipScreen extends Screen {
+		public TooltipScreen(ITextComponent p_i51108_1_) {
 			super(p_i51108_1_);
 		}
 

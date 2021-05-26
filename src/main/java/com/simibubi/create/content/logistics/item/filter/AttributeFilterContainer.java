@@ -48,7 +48,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	protected void clearContents() {
+	public void clearContents() {
 		selectedAttributes.clear();
 	}
 

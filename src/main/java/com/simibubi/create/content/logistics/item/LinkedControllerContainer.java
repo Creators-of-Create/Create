@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.item.filter;
+package com.simibubi.create.content.logistics.item;
 
 import com.simibubi.create.foundation.gui.IClearableContainer;
 
@@ -10,33 +10,33 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public abstract class AbstractFilterContainer extends Container implements IClearableContainer {
+public class LinkedControllerContainer extends Container implements IClearableContainer {
 
 	public PlayerEntity player;
 	protected PlayerInventory playerInventory;
-	public ItemStack filterItem;
+	public ItemStack mainItem;
 	public ItemStackHandler filterInventory;
 
-	protected AbstractFilterContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	public LinkedControllerContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
 		this(type, id, inv, extraData.readItemStack());
 	}
 
-	protected AbstractFilterContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack filterItem) {
+	public LinkedControllerContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack filterItem) {
 		super(type, id);
 		player = inv.player;
 		playerInventory = inv;
-		this.filterItem = filterItem;
+		this.mainItem = filterItem;
 		init();
 	}
 
 	protected void init() {
 		this.filterInventory = createFilterInventory();
-		readData(filterItem);
+//		readData(mainItem);
 		addPlayerSlots();
-		addFilterSlots();
+		addLinkSlots();
 		detectAndSendChanges();
 	}
 
@@ -46,25 +46,29 @@ public abstract class AbstractFilterContainer extends Container implements IClea
 			filterInventory.setStackInSlot(i, ItemStack.EMPTY);
 	}
 
-	protected abstract int getInventoryOffset();
-
-	protected abstract void addFilterSlots();
-
-	protected abstract ItemStackHandler createFilterInventory();
-
-	protected abstract void readData(ItemStack filterItem);
-
-	protected abstract void saveData(ItemStack filterItem);
-
 	protected void addPlayerSlots() {
-		int x = 8;
-		int y = 28 + getInventoryOffset();
+		int x = 22;
+		int y = 142;
 
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
 			this.addSlot(new Slot(playerInventory, hotbarSlot, x + hotbarSlot * 18, y + 58));
 		for (int row = 0; row < 3; ++row)
 			for (int col = 0; col < 9; ++col)
 				this.addSlot(new Slot(playerInventory, col + row * 9 + 9, x + col * 18, y + row * 18));
+	}
+
+	protected void addLinkSlots() {
+		int slot = 0;
+		int x = 12;
+		int y = 44;
+		
+		for (int column = 0; column < 6; column++) {
+			for (int row = 0; row < 2; ++row)
+				addSlot(new SlotItemHandler(filterInventory, slot++, x, y + row * 18));
+			x += 24;
+			if (column == 3)
+				x += 11;
+		}
 	}
 
 	@Override
@@ -96,7 +100,8 @@ public abstract class AbstractFilterContainer extends Container implements IClea
 		int slot = slotId - 36;
 		if (clickTypeIn == ClickType.CLONE) {
 			if (player.isCreative() && held.isEmpty()) {
-				ItemStack stackInSlot = filterInventory.getStackInSlot(slot).copy();
+				ItemStack stackInSlot = filterInventory.getStackInSlot(slot)
+					.copy();
 				stackInSlot.setCount(64);
 				playerInventory.setItemStack(stackInSlot);
 				return ItemStack.EMPTY;
@@ -115,14 +120,16 @@ public abstract class AbstractFilterContainer extends Container implements IClea
 		return held;
 	}
 
+	protected ItemStackHandler createFilterInventory() {
+		return LinkedControllerItem.getFrequencyItems(mainItem);
+	}
+
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
 		if (index < 36) {
 			ItemStack stackToInsert = playerInventory.getStackInSlot(index);
 			for (int i = 0; i < filterInventory.getSlots(); i++) {
 				ItemStack stack = filterInventory.getStackInSlot(i);
-				if (ItemHandlerHelper.canItemStacksStack(stack, stackToInsert))
-					break;
 				if (stack.isEmpty()) {
 					ItemStack copy = stackToInsert.copy();
 					copy.setCount(1);
@@ -138,8 +145,8 @@ public abstract class AbstractFilterContainer extends Container implements IClea
 	@Override
 	public void onContainerClosed(PlayerEntity playerIn) {
 		super.onContainerClosed(playerIn);
-		filterItem.getOrCreateTag().put("Items", filterInventory.serializeNBT());
-		saveData(filterItem);
+		mainItem.getOrCreateTag()
+			.put("Items", filterInventory.serializeNBT());
+//		saveData(filterItem);
 	}
-
 }

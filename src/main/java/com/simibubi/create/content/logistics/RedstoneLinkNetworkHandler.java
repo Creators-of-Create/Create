@@ -18,11 +18,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 
 public class RedstoneLinkNetworkHandler {
 
-	static final Map<IWorld, Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>>> connections = new IdentityHashMap<>();
+	static final Map<IWorld, Map<Pair<Frequency, Frequency>, Set<IRedstoneLinkable>>> connections =
+		new IdentityHashMap<>();
 
 	public static class Frequency {
 		public static final Frequency EMPTY = new Frequency(ItemStack.EMPTY);
@@ -60,7 +60,7 @@ public class RedstoneLinkNetworkHandler {
 			if (this == obj)
 				return true;
 			return obj instanceof Frequency ? ((Frequency) obj).item == item && ((Frequency) obj).color == color
-					: false;
+				: false;
 		}
 
 	}
@@ -75,45 +75,40 @@ public class RedstoneLinkNetworkHandler {
 		Create.LOGGER.debug("Removed Redstone Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
-	public Set<LinkBehaviour> getNetworkOf(LinkBehaviour actor) {
-		Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksInWorld = networksIn(actor.getWorld());
+	public Set<IRedstoneLinkable> getNetworkOf(IWorld world, IRedstoneLinkable actor) {
+		Map<Pair<Frequency, Frequency>, Set<IRedstoneLinkable>> networksInWorld = networksIn(world);
 		Pair<Frequency, Frequency> key = actor.getNetworkKey();
 		if (!networksInWorld.containsKey(key))
 			networksInWorld.put(key, new LinkedHashSet<>());
 		return networksInWorld.get(key);
 	}
 
-	public void addToNetwork(LinkBehaviour actor) {
-		getNetworkOf(actor).add(actor);
-		updateNetworkOf(actor);
+	public void addToNetwork(IWorld world, IRedstoneLinkable actor) {
+		getNetworkOf(world, actor).add(actor);
+		updateNetworkOf(world, actor);
 	}
 
-	public void removeFromNetwork(LinkBehaviour actor) {
-		Set<LinkBehaviour> network = getNetworkOf(actor);
+	public void removeFromNetwork(IWorld world, IRedstoneLinkable actor) {
+		Set<IRedstoneLinkable> network = getNetworkOf(world, actor);
 		network.remove(actor);
 		if (network.isEmpty()) {
-			networksIn(actor.getWorld()).remove(actor.getNetworkKey());
+			networksIn(world).remove(actor.getNetworkKey());
 			return;
 		}
-		updateNetworkOf(actor);
+		updateNetworkOf(world, actor);
 	}
 
-	public void updateNetworkOf(LinkBehaviour actor) {
-		Set<LinkBehaviour> network = getNetworkOf(actor);
+	public void updateNetworkOf(IWorld world, IRedstoneLinkable actor) {
+		Set<IRedstoneLinkable> network = getNetworkOf(world, actor);
 		int power = 0;
 
-		for (Iterator<LinkBehaviour> iterator = network.iterator(); iterator.hasNext();) {
-			LinkBehaviour other = iterator.next();
-			if (other.tileEntity.isRemoved()) {
+		for (Iterator<IRedstoneLinkable> iterator = network.iterator(); iterator.hasNext();) {
+			IRedstoneLinkable other = iterator.next();
+			if (!other.isAlive()) {
 				iterator.remove();
 				continue;
 			}
-			World world = actor.getWorld();
-			if (!world.isBlockPresent(other.tileEntity.getPos())) {
-				iterator.remove();
-				continue;
-			}
-			if (world.getTileEntity(other.tileEntity.getPos()) != other.tileEntity) {
+			if (!world.isAreaLoaded(other.getLocation(), 0)) {
 				iterator.remove();
 				continue;
 			}
@@ -124,28 +119,31 @@ public class RedstoneLinkNetworkHandler {
 				power = Math.max(other.getTransmittedStrength(), power);
 		}
 
-		// fix one-to-one loading order problem
-		if (actor.isListening()) {
-			actor.newPosition = true;
-			actor.updateReceiver(power);
+		if (actor instanceof LinkBehaviour) {
+			LinkBehaviour linkBehaviour = (LinkBehaviour) actor;
+			// fix one-to-one loading order problem
+			if (linkBehaviour.isListening()) {
+				linkBehaviour.newPosition = true;
+				linkBehaviour.setReceivedStrength(power);
+			}
 		}
 
-		for (LinkBehaviour other : network) {
+		for (IRedstoneLinkable other : network) {
 			if (other != actor && other.isListening() && withinRange(actor, other))
-				other.updateReceiver(power);
+				other.setReceivedStrength(power);
 		}
 	}
 
-	public static boolean withinRange(LinkBehaviour from, LinkBehaviour to) {
+	public static boolean withinRange(IRedstoneLinkable from, IRedstoneLinkable to) {
 		if (from == to)
 			return true;
-		return from.getPos().withinDistance(to.getPos(), AllConfigs.SERVER.logistics.linkRange.get());
+		return from.getLocation()
+			.withinDistance(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
 	}
 
-	public Map<Pair<Frequency, Frequency>, Set<LinkBehaviour>> networksIn(IWorld world) {
+	public Map<Pair<Frequency, Frequency>, Set<IRedstoneLinkable>> networksIn(IWorld world) {
 		if (!connections.containsKey(world)) {
-			Create.LOGGER.warn(
-					"Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
+			Create.LOGGER.warn("Tried to Access unprepared network space of " + WorldHelper.getDimensionID(world));
 			return new HashMap<>();
 		}
 		return connections.get(world);

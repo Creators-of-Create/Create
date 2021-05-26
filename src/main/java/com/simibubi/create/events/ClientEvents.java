@@ -30,6 +30,7 @@ import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
+import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -101,9 +102,11 @@ public class ClientEvents {
 			return;
 
 		if (event.phase == Phase.START) {
+			LinkedControllerClientHandler.tick();
 			AirCurrent.tickClientPlayerSounds();
 			return;
 		}
+		
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
@@ -221,6 +224,7 @@ public class ClientEvents {
 	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
 		float partialTicks) {
 		CreateClient.SCHEMATIC_HANDLER.renderOverlay(ms, buffer, light, overlay, partialTicks);
+		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 643",
+	"_": "Missing Localizations: 649",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -475,6 +475,7 @@
 	"item.create.integrated_circuit": "Chip de circuito integrado",
 	"item.create.iron_sheet": "Lámina de hierro",
 	"item.create.lapis_sheet": "Lámina de lapislázuli",
+	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Artilugio de vagoneta",
 	"item.create.minecart_coupling": "Acoplamiento de vagoneta",
 	"item.create.polished_rose_quartz": "Cuarzo rosado pulido",
@@ -1104,6 +1105,12 @@
 	"create.tooltip.chute.fans_pull_up": "Los ventiladores tiran desde arriba",
 	"create.tooltip.chute.fans_pull_down": "Los ventiladores tiran desde abajo",
 	"create.tooltip.chute.contains": "Contiene: %1$s x%2$s",
+
+	"create.linked_controller.bind_mode": "UNLOCALIZED: Bind mode active",
+	"create.linked_controller.press_keybind": "UNLOCALIZED: Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "UNLOCALIZED: Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "UNLOCALIZED: Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "UNLOCALIZED: Keybind: %1$s, Freq. #2",
 
 	"create.hint.hose_pulley.title": "Suministro sin fondo",
 	"create.hint.hose_pulley": "La masa de fluido objetivo se considera infinita",

@@ -41,6 +41,8 @@ import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperModel;
+import com.simibubi.create.content.logistics.item.LinkedControllerItem;
+import com.simibubi.create.content.logistics.item.LinkedControllerModel;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
@@ -227,6 +229,12 @@ public class AllItems {
 			.lang("Creative Worldshaper")
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
+	
+	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
+		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+		.model(AssetLookup.itemModelWithPartials())
+		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
 		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)

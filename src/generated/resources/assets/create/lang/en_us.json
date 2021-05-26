@@ -474,6 +474,7 @@
 	"item.create.integrated_circuit": "Integrated Circuit",
 	"item.create.iron_sheet": "Iron Sheet",
 	"item.create.lapis_sheet": "Lapis Sheet",
+	"item.create.linked_controller": "Linked Controller",
 	"item.create.minecart_contraption": "Minecart Contraption",
 	"item.create.minecart_coupling": "Minecart Coupling",
 	"item.create.polished_rose_quartz": "Polished Rose Quartz",
@@ -1103,6 +1104,12 @@
 	"create.tooltip.chute.fans_pull_up": "Fans pull from Above",
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
+
+	"create.linked_controller.bind_mode": "Bind mode active",
+	"create.linked_controller.press_keybind": "Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "Keybind: %1$s, Freq. #2",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",

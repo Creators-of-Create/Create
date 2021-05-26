@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 713",
+	"_": "Missing Localizations: 719",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -475,6 +475,7 @@
 	"item.create.integrated_circuit": "집적 회로",
 	"item.create.iron_sheet": "철 판",
 	"item.create.lapis_sheet": "청금석 판",
+	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "광산 수레 장치",
 	"item.create.minecart_coupling": "광산 수레 커플링",
 	"item.create.polished_rose_quartz": "윤나는 장밋빛 석영",
@@ -1104,6 +1105,12 @@
 	"create.tooltip.chute.fans_pull_up": "선풍기가 위에서 당김",
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
 	"create.tooltip.chute.contains": "UNLOCALIZED: Contains: %1$s x%2$s",
+
+	"create.linked_controller.bind_mode": "UNLOCALIZED: Bind mode active",
+	"create.linked_controller.press_keybind": "UNLOCALIZED: Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "UNLOCALIZED: Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "UNLOCALIZED: Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "UNLOCALIZED: Keybind: %1$s, Freq. #2",
 
 	"create.hint.hose_pulley.title": "UNLOCALIZED: Bottomless Supply",
 	"create.hint.hose_pulley": "UNLOCALIZED: The targeted body of fluid is considered infinite.",

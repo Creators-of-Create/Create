@@ -57,6 +57,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_END("sequencer.png", 0, 80, 162, 22),
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
+	
+	LINKED_CONTROLLER("curiosities2.png", 180, 109),
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),

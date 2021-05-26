@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateContainer;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.logistics.item.LinkedControllerContainer;
+import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterContainer;
@@ -35,6 +37,9 @@ public class AllContainerTypes {
 
 	public static final ContainerEntry<AttributeFilterContainer> ATTRIBUTE_FILTER =
 		register("attribute_filter", AttributeFilterContainer::new, () -> AttributeFilterScreen::new);
+	
+	public static final ContainerEntry<LinkedControllerContainer> LINKED_CONTROLLER =
+		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
 
 	private static <C extends Container, S extends Screen & IHasContainer<C>> ContainerEntry<C> register(String name, ForgeContainerFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
 		return Create.registrate().container(name, factory, screenFactory).register();
