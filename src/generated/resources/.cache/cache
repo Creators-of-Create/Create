@@ -417,11 +417,11 @@ fc1a5dc58cb00012cd311f909de3cd6085664994 assets/create/lang/unfinished/es_es.jso
 dd04db4e469ece034e9edde1d182d40ece3c917f assets/create/lang/unfinished/ja_jp.json
 a46af574991af844c58a7fe75b4c2b0ac888b4e0 assets/create/lang/unfinished/ko_kr.json
 1ee72b0c9ac509ffcd17b19d17ab1f4b3506c9ce assets/create/lang/unfinished/nl_nl.json
-b23f249ef0b28b2e2312e63f2fccf4401b282ac4 assets/create/lang/unfinished/pl_pl.json
+c80b1e4310942e34b46f3cfed724e104782f1c65 assets/create/lang/unfinished/pl_pl.json
 73030bf3d5aace5c3e991c6bf265322bba42286f assets/create/lang/unfinished/pt_br.json
 73b1927e1d32e4229caa96e8d1bc25d39fb51377 assets/create/lang/unfinished/ru_ru.json
 aa3f0b918d948795e10878c3d42dbd4c39f71795 assets/create/lang/unfinished/zh_cn.json
-1f15238d524e7b94b0ce5bcd09703b4742b9f960 assets/create/lang/unfinished/zh_tw.json
+f6aef786fdc291201f388c661fb9ff2d0b936ba2 assets/create/lang/unfinished/zh_tw.json
 487a511a01b2a4531fb672f917922312db78f958 assets/create/models/block/acacia_window.json
 b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_window_pane_noside.json
 3066db1bf03cffa1a9c7fbacf47ae586632f4eb3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -3708,6 +3708,7 @@ f6c8f34ceb475546dba5cc6ff288863ea795d20b data/forge/tags/items/storage_blocks/co
 0d188ad2c33d10ee8f0d455c4e63a4460a8302fb data/minecraft/tags/blocks/stairs.json
 92584f914c53e00c111f9ff5e3894e2e3594946b data/minecraft/tags/blocks/walls.json
 09d26bcd0f94459f945219997277c4fbf14adeb7 data/minecraft/tags/fluids/water.json
+49cadea86f6b63d5065b859a0d0e7ad772cf51d6 data/minecraft/tags/items/piglin_loved.json
 29e6f7e3d4be9a9b0af1fca5d32fa55e29905ce2 data/minecraft/tags/items/slabs.json
 0d188ad2c33d10ee8f0d455c4e63a4460a8302fb data/minecraft/tags/items/stairs.json
 92584f914c53e00c111f9ff5e3894e2e3594946b data/minecraft/tags/items/walls.json
