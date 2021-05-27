@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
