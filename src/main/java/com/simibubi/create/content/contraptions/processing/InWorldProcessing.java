@@ -94,8 +94,23 @@ public class InWorldProcessing {
 	}
 
 	private static boolean canProcess(ItemStack stack, Type type, World world) {
-		if (type == Type.BLASTING)
+		if (type == Type.BLASTING) {
+			WRAPPER.setInventorySlotContents(0, stack);
+			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
+				.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
+
+			if (smeltingRecipe.isPresent())
+				return true;
+
+			WRAPPER.setInventorySlotContents(0, stack);
+			Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
+				.getRecipe(IRecipeType.BLASTING, WRAPPER, world);
+
+			if (blastingRecipe.isPresent())
+				return true;
+
 			return !stack.getItem().isFireproof();
+		}
 
 		if (type == Type.SMOKING) {
 			WRAPPER.setInventorySlotContents(0, stack);
@@ -178,11 +193,11 @@ public class InWorldProcessing {
 			.getRecipe(IRecipeType.SMOKING, WRAPPER, world);
 
 		if (type == Type.BLASTING) {
-			WRAPPER.setInventorySlotContents(0, stack);
-			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
-
 			if (!smokingRecipe.isPresent()) {
+				WRAPPER.setInventorySlotContents(0, stack);
+				Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
+					.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
+
 				if (smeltingRecipe.isPresent())
 					return applyRecipeOn(stack, smeltingRecipe.get());
 
