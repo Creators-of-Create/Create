@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics;
+package com.simibubi.create.content.contraptions.processing;
 
 import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
 
@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -37,9 +36,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.BlastFurnaceTileEntity;
-import net.minecraft.tileentity.FurnaceTileEntity;
-import net.minecraft.tileentity.SmokerTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
@@ -50,13 +46,8 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class InWorldProcessing {
 
-	public static class SplashingInv extends RecipeWrapper {
-		public SplashingInv() {
-			super(new ItemStackHandler(1));
-		}
-	}
-
-	public static SplashingInv splashingInv = new SplashingInv();
+	private static final RecipeWrapper WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
+	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 
 	public enum Type {
 		SMOKING, BLASTING, SPLASHING, NONE
@@ -103,17 +94,13 @@ public class InWorldProcessing {
 	}
 
 	private static boolean canProcess(ItemStack stack, Type type, World world) {
-		if (type == Type.BLASTING) {
-			return true;
-		}
+		if (type == Type.BLASTING)
+			return !stack.getItem().isFireproof();
 
 		if (type == Type.SMOKING) {
-			// FIXME this does not need to be a TE
-			SmokerTileEntity smoker = new SmokerTileEntity();
-			smoker.setLocation(world, BlockPos.ZERO);
-			smoker.setInventorySlotContents(0, stack);
+			WRAPPER.setInventorySlotContents(0, stack);
 			Optional<SmokingRecipe> recipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.SMOKING, smoker, world);
+				.getRecipe(IRecipeType.SMOKING, WRAPPER, world);
 			return recipe.isPresent();
 		}
 
@@ -124,8 +111,8 @@ public class InWorldProcessing {
 	}
 
 	public static boolean isWashable(ItemStack stack, World world) {
-		splashingInv.setInventorySlotContents(0, stack);
-		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(splashingInv, world);
+		SPLASHING_WRAPPER.setInventorySlotContents(0, stack);
+		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 		return recipe.isPresent();
 	}
 
@@ -179,38 +166,29 @@ public class InWorldProcessing {
 
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
-			splashingInv.setInventorySlotContents(0, stack);
-			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(splashingInv, world);
+			SPLASHING_WRAPPER.setInventorySlotContents(0, stack);
+			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
 			return null;
 		}
 
-		// FIXME this does not need to be a TE
-		SmokerTileEntity smoker = new SmokerTileEntity();
-		smoker.setLocation(world, BlockPos.ZERO);
-		smoker.setInventorySlotContents(0, stack);
+		WRAPPER.setInventorySlotContents(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
-			.getRecipe(IRecipeType.SMOKING, smoker, world);
+			.getRecipe(IRecipeType.SMOKING, WRAPPER, world);
 
 		if (type == Type.BLASTING) {
-			// FIXME this does not need to be a TE
-			FurnaceTileEntity furnace = new FurnaceTileEntity();
-			furnace.setLocation(world, BlockPos.ZERO);
-			furnace.setInventorySlotContents(0, stack);
+			WRAPPER.setInventorySlotContents(0, stack);
 			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.SMELTING, furnace, world);
+				.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
 
 			if (!smokingRecipe.isPresent()) {
 				if (smeltingRecipe.isPresent())
 					return applyRecipeOn(stack, smeltingRecipe.get());
 
-				// FIXME this does not need to be a TE
-				BlastFurnaceTileEntity blastFurnace = new BlastFurnaceTileEntity();
-				blastFurnace.setLocation(world, BlockPos.ZERO);
-				blastFurnace.setInventorySlotContents(0, stack);
+				WRAPPER.setInventorySlotContents(0, stack);
 				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-					.getRecipe(IRecipeType.BLASTING, blastFurnace, world);
+					.getRecipe(IRecipeType.BLASTING, WRAPPER, world);
 
 				if (blastingRecipe.isPresent())
 					return applyRecipeOn(stack, blastingRecipe.get());
@@ -299,6 +277,7 @@ public class InWorldProcessing {
 
 		return stacks;
 	}
+
 	public static void spawnParticlesForProcessing(@Nullable World world, Vector3d vec, Type type) {
 		if (world == null || !world.isRemote)
 			return;
@@ -322,6 +301,12 @@ public class InWorldProcessing {
 			break;
 		default:
 			break;
+		}
+	}
+
+	public static class SplashingWrapper extends RecipeWrapper {
+		public SplashingWrapper() {
+			super(new ItemStackHandler(1));
 		}
 	}
 
