@@ -4,6 +4,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 
+import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -77,6 +79,11 @@ public class MinecartCouplingItem extends Item {
 			return false;
 		if (event.getWorld().isRemote)
 			return true;
+
+		for (boolean forward : Iterate.trueAndFalse) {
+			if (controller.hasContraptionCoupling(forward))
+				couplings--;
+		}
 
 		CouplingHandler.status(player, "removed");
 		controller.decouple();
