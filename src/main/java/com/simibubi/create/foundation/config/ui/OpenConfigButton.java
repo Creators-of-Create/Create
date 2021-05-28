@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.config.ui;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import com.simibubi.create.AllItems;
-
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
@@ -18,10 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class OpenConfigButton extends Button {
 
@@ -38,7 +36,7 @@ public class OpenConfigButton extends Button {
 	}
 
 	public static void click(Button b) {
-		Minecraft.getInstance().displayGuiScreen(new BaseConfigScreen(Minecraft.getInstance().currentScreen));
+		Minecraft.getInstance().displayGuiScreen(BaseConfigScreen.forCreate(Minecraft.getInstance().currentScreen));
 	}
 
 	public static class SingleMenuRow {

@@ -106,7 +106,7 @@ public class ClientEvents {
 			AirCurrent.tickClientPlayerSounds();
 			return;
 		}
-		
+
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
@@ -339,8 +339,8 @@ public class ClientEvents {
 	}
 
 	public static void loadCompleted(FMLLoadCompleteEvent event) {
-		ModContainer createContainer = ModList.get().getModContainerById("create").orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> new BaseConfigScreen(previousScreen));
+		ModContainer createContainer = ModList.get().getModContainerById(Create.ID).orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
 	}
 
 }

@@ -41,6 +41,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	public static final PhysicalFloat cogSpin = PhysicalFloat.create().withDrag(0.3).addForce(new Force.Static(.2f));
 	public static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
 	public static final Map<String, Object> changes = new HashMap<>();
+	public static String modID = null;
 	protected final Screen parent;
 
 	public ConfigScreen(Screen parent) {

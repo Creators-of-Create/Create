@@ -99,17 +99,20 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		textHeight = text.size() * (client.fontRenderer.FONT_HEIGHT + 1) + 4;
 		textWidth = 300;
 
+		if (centered) {
+			x = width/2 - textWidth/2 - 2;
+			y = height/2 - textHeight/2 - 16;
+		} else {
+			x = Math.max(0, x - textWidth / 2);
+			y = Math.max(0, y -= textHeight);
+		}
+
 		if (x + textWidth > width) {
 			x = width - textWidth;
 		}
 
 		if (y + textHeight + 30 > height) {
 			y = height - textHeight - 30;
-		}
-
-		if (centered) {
-			x = width/2 - textWidth/2 - 2;
-			y = height/2 - textHeight/2 - 16;
 		}
 
 		TextStencilElement confirmText = new TextStencilElement(client.fontRenderer, "Confirm").centered(true, true);
