@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:limestone_pillar"
+      "create:gabbro"
     ]
   },
   "criteria": {
-    "has_limestone": {
+    "has_gabbro_cobblestone": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "create:limestone"
+            "item": "create:gabbro_cobblestone"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:limestone_pillar"
+        "recipe": "create:gabbro"
       }
     }
   },
   "requirements": [
     [
-      "has_limestone",
+      "has_gabbro_cobblestone",
       "has_the_recipe"
     ]
   ]

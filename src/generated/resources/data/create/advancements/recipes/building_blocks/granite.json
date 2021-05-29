@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:limestone_pillar"
+      "create:granite"
     ]
   },
   "criteria": {
-    "has_limestone": {
+    "has_granite_cobblestone": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "create:limestone"
+            "item": "create:granite_cobblestone"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:limestone_pillar"
+        "recipe": "create:granite"
       }
     }
   },
   "requirements": [
     [
-      "has_limestone",
+      "has_granite_cobblestone",
       "has_the_recipe"
     ]
   ]

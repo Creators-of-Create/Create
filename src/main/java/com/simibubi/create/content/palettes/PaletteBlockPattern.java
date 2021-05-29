@@ -1,10 +1,10 @@
 package com.simibubi.create.content.palettes;
 
-import static com.simibubi.create.content.palettes.PaletteBlockPartial.AllPartials;
-import static com.simibubi.create.content.palettes.PaletteBlockPartial.ForPolished;
-import static com.simibubi.create.content.palettes.PatternNameType.Prefix;
-import static com.simibubi.create.content.palettes.PatternNameType.Suffix;
-import static com.simibubi.create.content.palettes.PatternNameType.Wrap;
+import static com.simibubi.create.content.palettes.PaletteBlockPartial.ALL_PARTIALS;
+import static com.simibubi.create.content.palettes.PaletteBlockPartial.FOR_POLISHED;
+import static com.simibubi.create.content.palettes.PaletteBlockPattern.PatternNameType.PREFIX;
+import static com.simibubi.create.content.palettes.PaletteBlockPattern.PatternNameType.SUFFIX;
+import static com.simibubi.create.content.palettes.PaletteBlockPattern.PatternNameType.WRAP;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,73 +28,83 @@ import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.generators.ModelFile;
 
-public class PaletteBlockPatterns {
+public class PaletteBlockPattern {
 
-	public static final PaletteBlockPatterns
+	public static final PaletteBlockPattern
 
-	COBBLESTONE = create("cobblestone", Suffix, AllPartials),
+		COBBLESTONE = create("cobblestone", SUFFIX, ALL_PARTIALS)
+			.addRecipes(v -> (c, p) -> {
+				DataIngredient ingredient = DataIngredient.items(c.get());
+				Block result = v.getBaseBlock().get();
+				CookingRecipeBuilder.smeltingRecipe(ingredient, result, 0.1f, 200)
+					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.build(p, p.safeId(result));
+			}),
 
-		POLISHED = create("polished", Prefix, ForPolished)
-			.addRecipes(v -> (c,
-			p) -> {
+		POLISHED = create("polished", PREFIX, FOR_POLISHED)
+			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
-				ShapedRecipeBuilder.shapedRecipe(c.get(), 4).key('X', ingredient)
-						.patternLine("XX").patternLine("XX")
-						.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p)).build(p, p.safeId(c.get()));
-				}
-			),
+				ShapedRecipeBuilder.shapedRecipe(c.get(), 4)
+					.key('#', ingredient)
+					.patternLine("##")
+					.patternLine("##")
+					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.build(p, p.safeId(c.get()));
+			}),
 
-		BRICKS = create("bricks", Suffix, AllPartials), FANCY_BRICKS = create("fancy_bricks", Wrap, AllPartials),
+		BRICKS = create("bricks", SUFFIX, ALL_PARTIALS), FANCY_BRICKS = create("fancy_bricks", WRAP, ALL_PARTIALS),
 
-		PAVED = create("paved", Prefix, AllPartials).blockStateFactory(p -> p::paved)
+		PAVED = create("paved", PREFIX, ALL_PARTIALS).blockStateFactory(p -> p::paved)
 			.block(PavedBlock::new)
 			.textures("paved", "paved_borderless", "paved_top"),
 
-		LAYERED = create("layered", Prefix).blockStateFactory(p -> p::cubeColumn)
+		LAYERED = create("layered", PREFIX).blockStateFactory(p -> p::cubeColumn)
 			.textures("layered", "polished")
 			.connectedTextures(v -> new HorizontalCTBehaviour(ct(v, CTs.LAYERED), ct(v, CTs.POLISHED))),
 
-		CHISELED = create("chiseled", Prefix).blockStateFactory(p -> p::cubeColumn)
+		CHISELED = create("chiseled", PREFIX).blockStateFactory(p -> p::cubeColumn)
 			.textures("chiseled", "chiseled_top"),
 
-		PILLAR = create("pillar", Suffix).blockStateFactory(p -> p::pillar)
+		PILLAR = create("pillar", SUFFIX).blockStateFactory(p -> p::pillar)
 			.block(RotatedPillarBlock::new)
 			.textures("pillar", "pillar_end")
-			.addRecipes(v -> (c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get(), 2)
-				.key('#', v.getBaseBlock()
-					.get())
-				.patternLine("#")
-				.patternLine("#")
-				.addCriterion("has_ingredient", p.hasItem(v.getBaseBlock()
-					.get()))
-				.build(p::accept)),
+			.addRecipes(v -> (c, p) -> {
+				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
+				ShapedRecipeBuilder.shapedRecipe(c.get(), 2)
+					.key('#', ingredient)
+					.patternLine("#")
+					.patternLine("#")
+					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.build(p, p.safeId(c.get()));
+			}),
 
-		MOSSY = create("mossy", Prefix).blockStateFactory(p -> p::cubeAllButMossy)
+		MOSSY = create("mossy", PREFIX).blockStateFactory(p -> p::cubeAllButMossy)
 			.textures("bricks", "mossy")
 			.useTranslucentLayer()
 			.withFoliage(),
 
-		OVERGROWN = create("overgrown", Prefix).blockStateFactory(p -> p::cubeAllButMossy)
+		OVERGROWN = create("overgrown", PREFIX).blockStateFactory(p -> p::cubeAllButMossy)
 			.textures("bricks", "overgrown")
 			.useTranslucentLayer()
 			.withFoliage()
 
 	;
 
-	public static final PaletteBlockPatterns[] vanillaRange =
+	public static final PaletteBlockPattern[] VANILLA_RANGE =
 		{ COBBLESTONE, BRICKS, FANCY_BRICKS, PILLAR, PAVED, LAYERED, MOSSY, OVERGROWN };
 
-	public static final PaletteBlockPatterns[] standardRange =
+	public static final PaletteBlockPattern[] STANDARD_RANGE =
 		{ COBBLESTONE, POLISHED, BRICKS, FANCY_BRICKS, PILLAR, PAVED, LAYERED, CHISELED, MOSSY, OVERGROWN };
 
-	static final String textureLocation = "block/palettes/%s/%s";
-	static final String overlayLocation = "block/palettes/%s";
+	static final String TEXTURE_LOCATION = "block/palettes/%s/%s";
+	static final String OVERLAY_LOCATION = "block/palettes/%s";
 
 	private PatternNameType nameType;
 	private String[] textures;
@@ -111,9 +121,9 @@ public class PaletteBlockPatterns {
 	@OnlyIn(Dist.CLIENT)
 	private RenderType renderType;
 
-	private static PaletteBlockPatterns create(String name, PatternNameType nameType,
+	private static PaletteBlockPattern create(String name, PatternNameType nameType,
 		PaletteBlockPartial<?>... partials) {
-		PaletteBlockPatterns pattern = new PaletteBlockPatterns();
+		PaletteBlockPattern pattern = new PaletteBlockPattern();
 		pattern.id = name;
 		pattern.ctBehaviour = Optional.empty();
 		pattern.nameType = nameType;
@@ -163,37 +173,37 @@ public class PaletteBlockPatterns {
 
 	// Builder
 
-	private PaletteBlockPatterns blockStateFactory(IPatternBlockStateGenerator factory) {
+	private PaletteBlockPattern blockStateFactory(IPatternBlockStateGenerator factory) {
 		blockStateGenerator = factory;
 		return this;
 	}
 
-	private PaletteBlockPatterns textures(String... textures) {
+	private PaletteBlockPattern textures(String... textures) {
 		this.textures = textures;
 		return this;
 	}
 
-	private PaletteBlockPatterns block(NonNullFunction<Properties, ? extends Block> blockFactory) {
+	private PaletteBlockPattern block(NonNullFunction<Properties, ? extends Block> blockFactory) {
 		this.blockFactory = blockFactory;
 		return this;
 	}
 
-	private PaletteBlockPatterns useTranslucentLayer() {
+	private PaletteBlockPattern useTranslucentLayer() {
 		isTranslucent = true;
 		return this;
 	}
 
-	private PaletteBlockPatterns withFoliage() {
+	private PaletteBlockPattern withFoliage() {
 		hasFoliage = true;
 		return this;
 	}
 
-	private PaletteBlockPatterns connectedTextures(Function<PaletteStoneVariants, ConnectedTextureBehaviour> factory) {
+	private PaletteBlockPattern connectedTextures(Function<PaletteStoneVariants, ConnectedTextureBehaviour> factory) {
 		this.ctBehaviour = Optional.of(factory);
 		return this;
 	}
 
-	private PaletteBlockPatterns addRecipes(
+	private PaletteBlockPattern addRecipes(
 		NonNullFunction<PaletteStoneVariants, NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateRecipeProvider>> func) {
 		this.additionalRecipes = func;
 		return this;
@@ -251,7 +261,7 @@ public class PaletteBlockPatterns {
 	// Utility
 
 	protected String createName(String variant) {
-		if (nameType == Wrap) {
+		if (nameType == WRAP) {
 			String[] split = id.split("_");
 			if (split.length == 2) {
 				String formatString = "%s_%s_%s";
@@ -259,15 +269,15 @@ public class PaletteBlockPatterns {
 			}
 		}
 		String formatString = "%s_%s";
-		return nameType == Suffix ? String.format(formatString, variant, id) : String.format(formatString, id, variant);
+		return nameType == SUFFIX ? String.format(formatString, variant, id) : String.format(formatString, id, variant);
 	}
 
 	protected ResourceLocation toLocation(String variant, String texture) {
-		return Create.asResource(String.format(textureLocation, variant, texture));
+		return Create.asResource(String.format(TEXTURE_LOCATION, variant, texture));
 	}
 
 	protected ResourceLocation toOverlayLocation(String texture) {
-		return Create.asResource(String.format(overlayLocation, texture));
+		return Create.asResource(String.format(OVERLAY_LOCATION, texture));
 	}
 
 	protected static CTSpriteShiftEntry ct(PaletteStoneVariants variant, CTs texture) {
@@ -276,12 +286,16 @@ public class PaletteBlockPatterns {
 
 	@FunctionalInterface
 	static interface IPatternBlockStateGenerator
-		extends Function<PaletteBlockPatterns, Function<String, IBlockStateProvider>> {
+		extends Function<PaletteBlockPattern, Function<String, IBlockStateProvider>> {
 	}
 
 	@FunctionalInterface
 	static interface IBlockStateProvider
 		extends NonNullBiConsumer<DataGenContext<Block, ? extends Block>, RegistrateBlockstateProvider> {
+	}
+
+	enum PatternNameType {
+		PREFIX, SUFFIX, WRAP
 	}
 
 	// Textures with connectability, used by Spriteshifter

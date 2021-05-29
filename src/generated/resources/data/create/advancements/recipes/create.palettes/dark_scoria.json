@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:limestone_pillar"
+      "create:dark_scoria"
     ]
   },
   "criteria": {
-    "has_limestone": {
+    "has_dark_scoria_cobblestone": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "create:limestone"
+            "item": "create:dark_scoria_cobblestone"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:limestone_pillar"
+        "recipe": "create:dark_scoria"
       }
     }
   },
   "requirements": [
     [
-      "has_limestone",
+      "has_dark_scoria_cobblestone",
       "has_the_recipe"
     ]
   ]
