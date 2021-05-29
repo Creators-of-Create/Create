@@ -34,6 +34,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	protected Axis rotationAxis;
 	protected float prevAngle;
 	protected float angle;
+	protected float angleDelta;
 
 	public ControlledContraptionEntity(EntityType<?> type, World world) {
 		super(type, world);
@@ -130,9 +131,10 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	public void setPositionAndRotationDirect(double x, double y, double z, float yw, float pt, int inc, boolean t) {}
 
 	protected void tickContraption() {
+		angleDelta = angle - prevAngle;
 		prevAngle = angle;
 		tickActors();
-		
+
 		if (controllerPos == null)
 			return;
 		if (!world.isBlockPresent(controllerPos))
@@ -171,7 +173,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		if (!VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis()))
 			return false;
-		context.motion = Vector3d.of(facing.getDirectionVec()).scale(angle - prevAngle);
+		context.motion = Vector3d.of(facing.getDirectionVec()).scale(angleDelta / 360.0);
 		context.relativeMotion = context.motion;
 		int timer = context.data.getInt("StationaryTimer");
 		if (timer > 0) {
