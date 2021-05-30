@@ -1,20 +1,40 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.worldWrappers.chunk.EmptierChunk;
 import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeContainer;
+import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraft.world.server.ChunkHolder;
 
 public class WrappedChunkProvider extends AbstractChunkProvider {
     private PlacementSimulationWorld world;
@@ -52,11 +72,11 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
         return getChunk(x, z);
     }
 
-    public WrappedChunk getChunk(int x, int z) {
+    public IChunk getChunk(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
-        
+
         if (chunks == null)
-        	return null;
+        	return new EmptierChunk();
 
         return chunks.computeIfAbsent(pos, $ -> new WrappedChunk(world, x, z));
     }
