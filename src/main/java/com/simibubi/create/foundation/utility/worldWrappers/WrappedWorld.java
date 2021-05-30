@@ -21,11 +21,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.AbstractChunkProvider;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.ISpawnWorldInfo;
 import net.minecraft.world.storage.MapData;
@@ -51,12 +54,12 @@ public class WrappedWorld extends World {
 	public World getWorld() {
 		return world;
 	}
-	
+
 	@Override
 	public WorldLightManager getLightingProvider() {
 		return world.getLightingProvider();
 	}
-	
+
 	@Override
 	public BlockState getBlockState(@Nullable BlockPos pos) {
 		return world.getBlockState(pos);
@@ -84,7 +87,12 @@ public class WrappedWorld extends World {
 
 	@Override
 	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-		world.notifyBlockUpdate(pos, oldState, newState, flags);
+		Chunk chunk = world.getChunkProvider().getWorldChunk(pos.getX() >> 4, pos.getZ() >> 4);
+		if (chunk != null) {
+			ChunkSection chunksection = chunk.getSections()[SectionPos.toChunk(pos.getY())];
+			if (chunksection != null)
+				world.notifyBlockUpdate(pos, oldState, newState, flags);
+		}
 	}
 
 	@Override
