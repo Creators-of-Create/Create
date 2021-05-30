@@ -87,12 +87,7 @@ public class WrappedWorld extends World {
 
 	@Override
 	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
-		Chunk chunk = world.getChunkProvider().getWorldChunk(pos.getX() >> 4, pos.getZ() >> 4);
-		if (chunk != null) {
-			ChunkSection chunksection = chunk.getSections()[SectionPos.toChunk(pos.getY())];
-			if (chunksection != null)
-				world.notifyBlockUpdate(pos, oldState, newState, flags);
-		}
+		world.notifyBlockUpdate(pos, oldState, newState, flags);
 	}
 
 	@Override
