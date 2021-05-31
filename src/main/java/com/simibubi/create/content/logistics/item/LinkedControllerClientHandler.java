@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer.TooltipScreen;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -137,13 +138,16 @@ public class LinkedControllerClientHandler {
 
 		if (MODE == Mode.ACTIVE) {
 			// Released Keys
-			if (!releasedKeys.isEmpty())
+			if (!releasedKeys.isEmpty()) {
 				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(releasedKeys, false));
+				AllSoundEvents.CONTROLLER_CLICK.playAt(player.world, player.getBlockPos(), 1f, .5f, true);
+			}
 
 			// Newly Pressed Keys
 			if (!newKeys.isEmpty()) {
 				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(newKeys, true));
 				packetCooldown = PACKET_RATE;
+				AllSoundEvents.CONTROLLER_CLICK.playAt(player.world, player.getBlockPos(), 1f, .75f, true);
 			}
 
 			// Keepalive Pressed Keys

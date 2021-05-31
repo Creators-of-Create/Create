@@ -217,6 +217,12 @@ public class AllItems {
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
+	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
+		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
+			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
+	
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
 			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandModel::new))
@@ -230,12 +236,6 @@ public class AllItems {
 			.lang("Creative Worldshaper")
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
-	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
-		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
-		.model(AssetLookup.itemModelWithPartials())
-		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
 		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)

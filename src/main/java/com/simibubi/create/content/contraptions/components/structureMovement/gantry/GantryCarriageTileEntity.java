@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
@@ -107,6 +108,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 			GantryContraptionEntity.create(world, contraption, shaftOrientation);
 		BlockPos anchor = pos;
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
+		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 		world.addEntity(movedContraption);
 	}
 

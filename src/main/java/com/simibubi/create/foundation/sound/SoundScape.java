@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -80,9 +81,16 @@ class SoundScape {
 	}
 
 	public float getVolume() {
+		Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
+		float distanceMultiplier = 0;
+		if (renderViewEntity != null) {
+			double distanceTo = renderViewEntity.getPositionVec()
+				.distanceTo(getMeanPos());
+			distanceMultiplier = (float) MathHelper.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
+		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
-		return MathHelper.clamp(soundCount / (argMax * 10f), 0.075f, .15f);
+		return MathHelper.clamp(soundCount / (argMax * 10f), 0.025f, .15f) * distanceMultiplier;
 	}
 
 }
