@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.core.model;
+package com.jozufozu.flywheel.backend.model;
 
 public class ModelRenderer {
 

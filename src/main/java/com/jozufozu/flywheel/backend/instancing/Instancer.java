@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
-import com.jozufozu.flywheel.core.model.BufferedModel;
+import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.util.AttribUtil;
 
 public class Instancer<D extends InstanceData> {

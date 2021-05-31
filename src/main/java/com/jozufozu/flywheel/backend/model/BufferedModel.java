@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.core.model;
+package com.jozufozu.flywheel.backend.model;
 
 import static org.lwjgl.opengl.GL20.glDrawArrays;
 
