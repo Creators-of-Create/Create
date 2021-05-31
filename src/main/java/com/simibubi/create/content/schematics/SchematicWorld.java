@@ -203,6 +203,9 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
+	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) { }
+
+	@Override
 	public ITickList<Block> getPendingBlockTicks() {
 		return EmptyTickList.get();
 	}
@@ -233,4 +236,5 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		}
 		throw new IllegalStateException("Cannot use IServerWorld#getWorld in a client environment");
 	}
+
 }

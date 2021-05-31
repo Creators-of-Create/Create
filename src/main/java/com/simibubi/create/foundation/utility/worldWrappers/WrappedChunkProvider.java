@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.worldWrappers.chunk.EmptierChunk;
 import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
 import net.minecraft.util.math.BlockPos;
@@ -52,11 +53,11 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
         return getChunk(x, z);
     }
 
-    public WrappedChunk getChunk(int x, int z) {
+    public IChunk getChunk(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
-        
+
         if (chunks == null)
-        	return null;
+        	return new EmptierChunk();
 
         return chunks.computeIfAbsent(pos, $ -> new WrappedChunk(world, x, z));
     }
