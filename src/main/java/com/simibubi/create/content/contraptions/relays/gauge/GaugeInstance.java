@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.ArrayList;
 
-import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -32,8 +32,8 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        InstancedModel<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
-        InstancedModel<ModelData> headModel = getHeadModel();
+        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        Instancer<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
@@ -53,7 +53,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         }
     }
 
-    private DialFace makeFace(Direction face, InstancedModel<ModelData> dialModel, InstancedModel<ModelData> headModel) {
+    private DialFace makeFace(Direction face, Instancer<ModelData> dialModel, Instancer<ModelData> headModel) {
         return new DialFace(face, dialModel.createInstance(), headModel.createInstance());
     }
 
@@ -88,7 +88,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         faces.forEach(DialFace::delete);
     }
 
-    protected abstract InstancedModel<ModelData> getHeadModel();
+    protected abstract Instancer<ModelData> getHeadModel();
 
     private class DialFace extends Couple<ModelData> {
 
@@ -149,7 +149,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         }
 
         @Override
-        protected InstancedModel<ModelData> getHeadModel() {
+        protected Instancer<ModelData> getHeadModel() {
             return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
         }
     }
@@ -160,7 +160,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         }
 
         @Override
-        protected InstancedModel<ModelData> getHeadModel() {
+        protected Instancer<ModelData> getHeadModel() {
             return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
         }
     }

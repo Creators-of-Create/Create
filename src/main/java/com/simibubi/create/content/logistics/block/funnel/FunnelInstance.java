@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.ArrayList;
 
-import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
@@ -29,7 +29,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
 		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
-		InstancedModel<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
+		Instancer<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
 				.getModel(flapPartial, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);

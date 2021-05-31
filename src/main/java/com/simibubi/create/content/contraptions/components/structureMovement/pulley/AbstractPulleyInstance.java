@@ -1,5 +1,20 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import java.util.Arrays;
+
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
+import com.jozufozu.flywheel.core.instancing.GroupInstance;
+import com.jozufozu.flywheel.core.instancing.SelectInstance;
+import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -7,26 +22,11 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-import java.util.Arrays;
-
-import com.jozufozu.flywheel.backend.core.materials.OrientedData;
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
-import com.jozufozu.flywheel.backend.instancing.util.ConditionalInstance;
-import com.jozufozu.flywheel.backend.instancing.util.InstanceGroup;
-import com.jozufozu.flywheel.backend.instancing.util.SelectInstance;
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
-import com.jozufozu.flywheel.backend.light.LightUpdateListener;
-import com.jozufozu.flywheel.backend.light.LightUpdater;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
-	final InstanceGroup<OrientedData> rope;
+	final GroupInstance<OrientedData> rope;
 	final ConditionalInstance<OrientedData> halfRope;
 
 	protected float offset;
@@ -51,7 +51,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		magnet.addModel(getMagnetModel())
 				.addModel(getHalfMagnetModel());
 
-		rope = new InstanceGroup<>(getRopeModel());
+		rope = new GroupInstance<>(getRopeModel());
 		halfRope = new ConditionalInstance<>(getHalfRopeModel(), this::shouldRenderHalfRope);
 	}
 
@@ -115,15 +115,15 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		halfRope.delete();
 	}
 
-	protected abstract InstancedModel<OrientedData> getRopeModel();
+	protected abstract Instancer<OrientedData> getRopeModel();
 
-	protected abstract InstancedModel<OrientedData> getMagnetModel();
+	protected abstract Instancer<OrientedData> getMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfMagnetModel();
+	protected abstract Instancer<OrientedData> getHalfMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getCoilModel();
+	protected abstract Instancer<OrientedData> getCoilModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfRopeModel();
+	protected abstract Instancer<OrientedData> getHalfRopeModel();
 
 	protected abstract float getOffset();
 

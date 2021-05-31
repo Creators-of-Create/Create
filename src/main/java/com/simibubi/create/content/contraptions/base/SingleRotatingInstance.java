@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 
 import net.minecraft.block.BlockState;
 
@@ -34,7 +34,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
         return blockState;
     }
 
-    protected InstancedModel<RotatingData> getModel() {
+    protected Instancer<RotatingData> getModel() {
         return getRotatingMaterial().getModel(getRenderedBlockState());
     }
 }

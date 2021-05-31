@@ -103,7 +103,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		BlockPos backPos = pos.offset(getFront().getOpposite());
 		FluidPropagator.propagateChangedPipe(world, frontPos, world.getBlockState(frontPos));
 		FluidPropagator.propagateChangedPipe(world, backPos, world.getBlockState(backPos));
-		
+
 		FluidTransportBehaviour behaviour = getBehaviour(FluidTransportBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.wipePressure();
@@ -380,7 +380,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

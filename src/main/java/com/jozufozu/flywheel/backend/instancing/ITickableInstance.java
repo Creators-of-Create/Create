@@ -8,7 +8,7 @@ package com.jozufozu.flywheel.backend.instancing;
  * <ul>
  *     <li>
  *         You'd like to change something about the instance every now and then.
- *         eg. adding or removing parts, snapping to a different rotation.
+ *         eg. adding or removing parts, snapping to a different rotation, etc.
  *     </li>
  *     <li>
  *         Your TileEntity does animate, but the animation doesn't have

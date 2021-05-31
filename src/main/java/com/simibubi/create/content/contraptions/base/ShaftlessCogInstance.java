@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
@@ -12,7 +12,7 @@ public class ShaftlessCogInstance extends SingleRotatingInstance {
     }
 
     @Override
-    protected InstancedModel<RotatingData> getModel() {
+    protected Instancer<RotatingData> getModel() {
 		return renderer.getMaterial(AllMaterialSpecs.ROTATING).getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, tile.getBlockState());
 	}
 }

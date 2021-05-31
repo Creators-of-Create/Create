@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.simibubi.create.AllBlockPartials;
 
 import net.minecraft.state.properties.BlockStateProperties;
@@ -13,7 +13,7 @@ public class HalfShaftInstance extends SingleRotatingInstance {
     }
 
     @Override
-    protected InstancedModel<RotatingData> getModel() {
+    protected Instancer<RotatingData> getModel() {
 		Direction dir = getShaftDirection();
 		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, dir);
 	}

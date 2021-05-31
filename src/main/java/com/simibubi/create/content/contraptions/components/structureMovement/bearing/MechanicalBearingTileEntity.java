@@ -80,7 +80,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			super.fromTag(state, compound, clientPacket);
 			return;
 		}
-		
+
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
@@ -108,7 +108,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
-		
+
 		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
 			movedContraption.getContraption()
 				.stop(world);
@@ -169,7 +169,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		movedContraption.setRotationAxis(direction.getAxis());
 		world.addEntity(movedContraption);
-		
+
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 
 		running = true;
@@ -323,7 +323,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

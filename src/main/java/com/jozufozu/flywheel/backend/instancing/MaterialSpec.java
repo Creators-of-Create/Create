@@ -11,9 +11,9 @@ public class MaterialSpec<D extends InstanceData> {
 	private final ResourceLocation programSpec;
 	private final VertexFormat modelFormat;
 	private final VertexFormat instanceFormat;
-	private final InstanceFactory<D> instanceFactory;
+	private final IInstanceFactory<D> instanceFactory;
 
-	public MaterialSpec(ResourceLocation name, ResourceLocation programSpec, VertexFormat modelFormat, VertexFormat instanceFormat, InstanceFactory<D> instanceFactory) {
+	public MaterialSpec(ResourceLocation name, ResourceLocation programSpec, VertexFormat modelFormat, VertexFormat instanceFormat, IInstanceFactory<D> instanceFactory) {
 		this.name = name;
 		this.programSpec = programSpec;
 		this.modelFormat = modelFormat;
@@ -33,7 +33,7 @@ public class MaterialSpec<D extends InstanceData> {
 		return instanceFormat;
 	}
 
-	public InstanceFactory<D> getInstanceFactory() {
+	public IInstanceFactory<D> getInstanceFactory() {
 		return instanceFactory;
 	}
 

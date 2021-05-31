@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
-import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;

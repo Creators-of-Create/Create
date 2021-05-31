@@ -8,14 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.context.WorldContext;
-import com.jozufozu.flywheel.backend.core.materials.ModelData;
-import com.jozufozu.flywheel.backend.core.materials.OrientedData;
-import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.WorldContext;
+import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.shader.IProgramCallback;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
@@ -130,7 +129,7 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 	 * @param viewProjection How do we get from camera space to clip space?
 	 * @param callback       Provide additional uniforms or state here.
 	 */
-	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> callback) {
+	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<P> callback) {
 		for (RenderMaterial<P, ?> material : materials.values()) {
 			material.render(layer, viewProjection, camX, camY, camZ, callback);
 		}
@@ -268,7 +267,7 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 	}
 
 	private <T extends TileEntity> TileEntityInstance<? super T> createInternal(T tile) {
-		TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.instance.create(this, tile);
+		TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.getInstance().create(this, tile);
 
 		if (renderer != null) {
 			renderer.updateLight();
@@ -302,7 +301,7 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 
 		if (world.isAirBlock(tile.getPos())) return false;
 
-		if (world == Minecraft.getInstance().world) {
+		if (Backend.isFlywheelWorld(world)) {
 			BlockPos pos = tile.getPos();
 
 			IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
@@ -310,6 +309,6 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 			return existingChunk != null;
 		}
 
-		return world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel();
+		return false;
 	}
 }

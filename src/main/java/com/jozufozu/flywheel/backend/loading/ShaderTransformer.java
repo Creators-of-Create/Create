@@ -4,12 +4,12 @@ import java.util.LinkedList;
 
 public class ShaderTransformer {
 
-	private final LinkedList<ProcessingStage> stages = new LinkedList<>();
+	private final LinkedList<IProcessingStage> stages = new LinkedList<>();
 
 	public ShaderTransformer() {
 	}
 
-	public ShaderTransformer pushStage(ProcessingStage stage) {
+	public ShaderTransformer pushStage(IProcessingStage stage) {
 		if (stage != null) {
 			stages.addLast(stage);
 		}
@@ -21,7 +21,7 @@ public class ShaderTransformer {
 		return this;
 	}
 
-	public ShaderTransformer prependStage(ProcessingStage stage) {
+	public ShaderTransformer prependStage(IProcessingStage stage) {
 		if (stage != null) {
 			stages.addFirst(stage);
 		}
@@ -30,7 +30,7 @@ public class ShaderTransformer {
 
 	public void transformSource(Shader shader) {
 
-		for (ProcessingStage stage : this.stages) {
+		for (IProcessingStage stage : this.stages) {
 			stage.process(shader);
 		}
 	}

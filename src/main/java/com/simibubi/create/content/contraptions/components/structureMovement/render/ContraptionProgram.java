@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
-import com.jozufozu.flywheel.backend.core.shader.extension.IProgramExtension;
 import com.jozufozu.flywheel.backend.loading.Program;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
 
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;

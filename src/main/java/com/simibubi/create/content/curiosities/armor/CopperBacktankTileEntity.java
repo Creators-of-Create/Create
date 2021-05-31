@@ -121,9 +121,9 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 			: new TranslationTextComponent(AllItems.COPPER_BACKTANK.get()
 				.getTranslationKey());
 	}
-	
+
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

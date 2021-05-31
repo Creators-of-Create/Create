@@ -5,9 +5,9 @@ import java.util.Collections;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
-import com.jozufozu.flywheel.backend.core.shader.IMultiProgram;
-import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
+import com.jozufozu.flywheel.core.shader.IMultiProgram;
+import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 
 public class EffectsContext extends ShaderContext<SphereFilterProgram> {

@@ -119,11 +119,11 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	protected void applyRotations() {
 		BlockState blockState = getBlockState();
 		Axis axis = Axis.X;
-		
+
 		if (blockState.contains(BlockStateProperties.FACING))
 			axis = blockState.get(BlockStateProperties.FACING)
 				.getAxis();
-		
+
 		if (hourHand != null) {
 			hourHand.setAngle(hourAngle);
 			hourHand.setRotationAxis(axis);
@@ -417,7 +417,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

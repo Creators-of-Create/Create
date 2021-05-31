@@ -4,8 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -40,7 +40,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 			if (boxAxis == axis)
 				continue;
 
-			InstancedModel<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
+			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
 
 			RotatingData key = shaft.createInstance();
 

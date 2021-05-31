@@ -13,11 +13,12 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.RenderWork;
-import com.jozufozu.flywheel.backend.core.BufferedModel;
-import com.jozufozu.flywheel.backend.core.PartialModel;
-import com.jozufozu.flywheel.backend.core.shader.ShaderCallback;
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.core.BufferedModel;
+import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.shader.IProgramCallback;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
@@ -39,7 +40,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 	protected final InstancedTileRenderer<P> renderer;
-	protected final Cache<Object, InstancedModel<D>> models;
+	protected final Cache<Object, Instancer<D>> models;
 	protected final MaterialSpec<D> spec;
 
 	public RenderMaterial(InstancedTileRenderer<P> renderer, MaterialSpec<D> spec) {
@@ -48,7 +49,7 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 		this.models = CacheBuilder.newBuilder()
 				.removalListener(notification -> {
-					InstancedModel<?> model = (InstancedModel<?>) notification.getValue();
+					Instancer<?> model = (Instancer<?>) notification.getValue();
 					RenderWork.enqueue(model::delete);
 				})
 				.build();
@@ -58,7 +59,7 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 		render(layer, projection, camX, camY, camZ, null);
 	}
 
-	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, ShaderCallback<P> setup) {
+	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<P> setup) {
 		if (!(layer == RenderType.getCutoutMipped())) return;
 
 		P program = renderer.context.getProgram(this.spec.getProgramSpec());
@@ -77,33 +78,33 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 	}
 
 	protected void makeRenderCalls() {
-		runOnAll(InstancedModel::render);
+		runOnAll(Instancer::render);
 	}
 
-	public void runOnAll(Consumer<InstancedModel<D>> f) {
-		for (InstancedModel<D> model : models.asMap().values()) {
+	public void runOnAll(Consumer<Instancer<D>> f) {
+		for (Instancer<D> model : models.asMap().values()) {
 			f.accept(model);
 		}
 	}
 
-	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState) {
+	public Instancer<D> getModel(PartialModel partial, BlockState referenceState) {
 		return get(partial, () -> buildModel(partial.get(), referenceState));
 	}
 
-	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState, Direction dir) {
+	public Instancer<D> getModel(PartialModel partial, BlockState referenceState, Direction dir) {
 		return getModel(partial, referenceState, dir, RenderUtil.rotateToFace(dir));
 	}
 
-	public InstancedModel<D> getModel(PartialModel partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
+	public Instancer<D> getModel(PartialModel partial, BlockState referenceState, Direction dir, Supplier<MatrixStack> modelTransform) {
 		return get(Pair.of(dir, partial),
 				() -> buildModel(partial.get(), referenceState, modelTransform.get()));
 	}
 
-	public InstancedModel<D> getModel(BlockState toRender) {
+	public Instancer<D> getModel(BlockState toRender) {
 		return get(toRender, () -> buildModel(toRender));
 	}
 
-	public InstancedModel<D> get(Object key, Supplier<InstancedModel<D>> supplier) {
+	public Instancer<D> get(Object key, Supplier<Instancer<D>> supplier) {
 		try {
 			return models.get(key, supplier::get);
 		} catch (ExecutionException e) {
@@ -112,16 +113,16 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 		}
 	}
 
-	private InstancedModel<D> buildModel(BlockState renderedState) {
+	private Instancer<D> buildModel(BlockState renderedState) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		return buildModel(dispatcher.getModelForState(renderedState), renderedState);
 	}
 
-	private InstancedModel<D> buildModel(IBakedModel model, BlockState renderedState) {
+	private Instancer<D> buildModel(IBakedModel model, BlockState renderedState) {
 		return buildModel(model, renderedState, new MatrixStack());
 	}
 
-	private InstancedModel<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+	private Instancer<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		BufferBuilderReader reader = new BufferBuilderReader(getBufferBuilder(model, referenceState, ms));
 
 		VertexFormat format = spec.getModelFormat();
@@ -145,9 +146,9 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 		to.rewind();
 
-		BufferedModel bufferedModel = new BufferedModel(format, to, vertexCount);
+		BufferedModel bufferedModel = new BufferedModel(GlPrimitive.QUADS, format, to, vertexCount);
 
-		return new InstancedModel<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
+		return new Instancer<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
 	}
 
 	private static final Direction[] dirs;

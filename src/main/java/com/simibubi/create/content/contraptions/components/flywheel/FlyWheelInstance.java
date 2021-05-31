@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -158,7 +158,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         connectors.clear();
     }
 
-    protected InstancedModel<RotatingData> shaftModel() {
+    protected Instancer<RotatingData> shaftModel() {
 		Direction opposite = facing.getOpposite();
 		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite);
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
@@ -28,7 +28,7 @@ public class ActorData extends InstanceData {
 
     private float speed;
 
-    public ActorData(InstancedModel<?> owner) {
+    public ActorData(Instancer<?> owner) {
 		super(owner);
 	}
 

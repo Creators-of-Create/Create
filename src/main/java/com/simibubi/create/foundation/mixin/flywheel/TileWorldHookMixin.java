@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.WorldTileRenderer;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

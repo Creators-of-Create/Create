@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import java.util.ArrayList;
 
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

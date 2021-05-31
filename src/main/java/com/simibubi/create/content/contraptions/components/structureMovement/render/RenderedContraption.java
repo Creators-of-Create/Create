@@ -10,12 +10,13 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.core.BufferedArrayModel;
-import com.jozufozu.flywheel.backend.core.BufferedModel;
+import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.core.BufferedArrayModel;
+import com.jozufozu.flywheel.core.BufferedModel;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -71,7 +72,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		BufferedModel structure = renderLayers.get(layer);
 		if (structure != null) {
 			setup(shader);
-			structure.render();
+			structure.draw();
 			teardown();
 		}
 	}
@@ -194,8 +195,8 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		to.rewind();
 
 		if (Backend.compat.vertexArrayObjectsSupported())
-			return new BufferedArrayModel(format, to, vertexCount);
+			return new BufferedArrayModel(GlPrimitive.QUADS, format, to, vertexCount);
 		else
-			return new BufferedModel(format, to, vertexCount);
+			return new BufferedModel(GlPrimitive.QUADS, format, to, vertexCount);
 	}
 }

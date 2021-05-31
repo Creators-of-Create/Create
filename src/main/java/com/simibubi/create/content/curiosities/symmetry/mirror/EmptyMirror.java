@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.core.PartialModel;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;

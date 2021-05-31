@@ -10,7 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
 public class InstancedTileRenderRegistry {
-	public static final InstancedTileRenderRegistry instance = new InstancedTileRenderRegistry();
+	private static final InstancedTileRenderRegistry INSTANCE = new InstancedTileRenderRegistry();
+
+	public static InstancedTileRenderRegistry getInstance() {
+		return INSTANCE;
+	}
 
 	private final Map<TileEntityType<?>, IRendererFactory<?>> renderers = Maps.newHashMap();
 

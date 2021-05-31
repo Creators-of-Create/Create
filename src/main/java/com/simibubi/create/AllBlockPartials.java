@@ -3,7 +3,7 @@ package com.simibubi.create;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -98,7 +98,7 @@ public class AllBlockPartials {
 		GOGGLES = get("goggles"),
 
 		EJECTOR_TOP = get("weighted_ejector/top"),
-		
+
 		COPPER_BACKTANK_SHAFT = get("copper_backtank/block_shaft_input"),
 		COPPER_BACKTANK_COGS = get("copper_backtank/block_cogs"),
 

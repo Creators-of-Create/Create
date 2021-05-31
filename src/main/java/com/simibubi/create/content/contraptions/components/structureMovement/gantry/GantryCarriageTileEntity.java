@@ -36,7 +36,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		if (shouldAssemble())
 			queueAssembly();
 	}
-	
+
 	@Override
 	public void initialize() {
 		super.initialize();
@@ -173,7 +173,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

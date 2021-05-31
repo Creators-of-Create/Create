@@ -3,12 +3,12 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.backend.core.materials.ModelData;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -55,7 +55,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		head = mat.getModel(AllBlockPartials.ARM_HEAD, blockState).createInstance();
 		claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, blockState).createInstance();
 
-		InstancedModel<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
+		Instancer<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 		ModelData clawGrip1 = clawHalfModel.createInstance();
 		ModelData clawGrip2 = clawHalfModel.createInstance();
 
@@ -173,7 +173,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	}
 
 	@Override
-	protected InstancedModel<RotatingData> getModel() {
+	protected Instancer<RotatingData> getModel() {
 		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, tile.getBlockState());
 	}
 

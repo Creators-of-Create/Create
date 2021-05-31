@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -20,7 +20,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
     }
 
     @Override
-    protected InstancedModel<RotatingData> getModel() {
+    protected Instancer<RotatingData> getModel() {
         Direction facing = blockState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
         Supplier<MatrixStack> ms = () -> {

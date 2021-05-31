@@ -20,16 +20,15 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
-import com.jozufozu.flywheel.backend.core.CrumblingRenderer;
-import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
-import com.jozufozu.flywheel.backend.core.context.WorldContext;
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
-import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
-import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
+import com.jozufozu.flywheel.core.CrumblingRenderer;
+import com.jozufozu.flywheel.core.WorldContext;
+import com.jozufozu.flywheel.core.WorldTileRenderer;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.util.WorldAttached;
 import com.simibubi.create.foundation.config.AllConfigs;
 
@@ -141,8 +140,11 @@ public class Backend {
 		return programSpecRegistry.get(name);
 	}
 
+	/**
+	 * Used to avoid calling Flywheel functions on (fake) worlds that don't specifically support it.
+	 */
 	public static boolean isFlywheelWorld(World world) {
-		return world == Minecraft.getInstance().world || (world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel());
+		return (world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel()) || world == Minecraft.getInstance().world;
 	}
 
 	public static boolean available() {

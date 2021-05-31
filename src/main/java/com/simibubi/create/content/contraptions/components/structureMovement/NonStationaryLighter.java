@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 
 public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {

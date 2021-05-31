@@ -4,12 +4,12 @@ import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 
 public abstract class InstanceData {
 
-	protected final InstancedModel<?> owner;
+	protected final Instancer<?> owner;
 
 	boolean dirty;
 	boolean removed;
 
-	protected InstanceData(InstancedModel<?> owner) {
+	protected InstanceData(Instancer<?> owner) {
 		this.owner = owner;
 	}
 

@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.core.shader.IMultiProgram;
-import com.jozufozu.flywheel.backend.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
+import com.jozufozu.flywheel.core.shader.IMultiProgram;
+import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 
 import net.minecraft.util.ResourceLocation;
 

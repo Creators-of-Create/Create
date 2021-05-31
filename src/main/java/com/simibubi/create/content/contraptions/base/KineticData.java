@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.core.materials.BasicData;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.materials.BasicData;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +15,7 @@ public class KineticData extends BasicData {
     private float rotationalSpeed;
     private float rotationOffset;
 
-    protected KineticData(InstancedModel<?> owner) {
+    protected KineticData(Instancer<?> owner) {
         super(owner);
     }
 

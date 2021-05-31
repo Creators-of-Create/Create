@@ -6,7 +6,7 @@ import java.util.Map;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
-public abstract class ProgramTemplate implements ProcessingStage {
+public abstract class ProgramTemplate implements IProcessingStage {
 
 	protected final ShaderLoader loader;
 	protected Map<ShaderType, ShaderTemplate> templates = new EnumMap<>(ShaderType.class);

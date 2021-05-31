@@ -8,8 +8,8 @@ public class AttribUtil {
 		enableArrays(0, count);
 	}
 
-	public static void enableArrays(int start, int end) {
-		for (int i = start; i <= end; i++) {
+	public static void enableArrays(int fromInclusive, int toExclusive) {
+		for (int i = fromInclusive; i < toExclusive; i++) {
 			GL20.glEnableVertexAttribArray(i);
 		}
 	}
@@ -18,8 +18,8 @@ public class AttribUtil {
 		disableArrays(0, count);
 	}
 
-	public static void disableArrays(int start, int end) {
-		for (int i = start; i <= end; i++) {
+	public static void disableArrays(int fromInclusive, int toExclusive) {
+		for (int i = fromInclusive; i < toExclusive; i++) {
 			GL20.glDisableVertexAttribArray(i);
 		}
 	}

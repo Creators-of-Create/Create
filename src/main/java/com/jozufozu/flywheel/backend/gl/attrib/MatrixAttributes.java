@@ -2,7 +2,7 @@ package com.jozufozu.flywheel.backend.gl.attrib;
 
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
+import com.jozufozu.flywheel.backend.gl.GlNumericType;
 
 public enum MatrixAttributes implements IAttribSpec {
 	MAT3(3, 3),
@@ -20,14 +20,14 @@ public enum MatrixAttributes implements IAttribSpec {
 	@Override
 	public void vertexAttribPointer(int stride, int index, int pointer) {
 		for (int i = 0; i < rows; i++) {
-			long attribPointer = pointer + (long) i * cols * GlPrimitiveType.FLOAT.getSize();
-			GL20.glVertexAttribPointer(index + i, cols, GlPrimitiveType.FLOAT.getGlConstant(), false, stride, attribPointer);
+			long attribPointer = pointer + (long) i * cols * GlNumericType.FLOAT.getSize();
+			GL20.glVertexAttribPointer(index + i, cols, GlNumericType.FLOAT.getGlEnum(), false, stride, attribPointer);
 		}
 	}
 
 	@Override
 	public int getSize() {
-		return GlPrimitiveType.FLOAT.getSize() * rows * cols;
+		return GlNumericType.FLOAT.getSize() * rows * cols;
 	}
 
 	@Override

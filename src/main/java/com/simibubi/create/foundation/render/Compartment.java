@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.core.PartialModel;
+import com.jozufozu.flywheel.core.PartialModel;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;

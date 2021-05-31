@@ -25,8 +25,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;

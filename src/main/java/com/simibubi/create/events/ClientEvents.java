@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderWork;
-import com.jozufozu.flywheel.backend.core.WorldTileRenderer;
-import com.jozufozu.flywheel.backend.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.WorldTileRenderer;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;

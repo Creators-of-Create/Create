@@ -1,21 +1,21 @@
 package com.jozufozu.flywheel.backend.gl.attrib;
 
-import com.jozufozu.flywheel.backend.gl.GlPrimitiveType;
+import com.jozufozu.flywheel.backend.gl.GlNumericType;
 
 public class CommonAttributes {
 
-	public static final VertexAttribSpec VEC4 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 4);
-	public static final VertexAttribSpec VEC3 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 3);
-	public static final VertexAttribSpec VEC2 = new VertexAttribSpec(GlPrimitiveType.FLOAT, 2);
-	public static final VertexAttribSpec FLOAT = new VertexAttribSpec(GlPrimitiveType.FLOAT, 1);
+	public static final VertexAttribSpec VEC4 = new VertexAttribSpec(GlNumericType.FLOAT, 4);
+	public static final VertexAttribSpec VEC3 = new VertexAttribSpec(GlNumericType.FLOAT, 3);
+	public static final VertexAttribSpec VEC2 = new VertexAttribSpec(GlNumericType.FLOAT, 2);
+	public static final VertexAttribSpec FLOAT = new VertexAttribSpec(GlNumericType.FLOAT, 1);
 
-	public static final VertexAttribSpec QUATERNION = new VertexAttribSpec(GlPrimitiveType.FLOAT, 4);
-	public static final VertexAttribSpec NORMAL = new VertexAttribSpec(GlPrimitiveType.BYTE, 3, true);
-	public static final VertexAttribSpec UV = new VertexAttribSpec(GlPrimitiveType.FLOAT, 2);
+	public static final VertexAttribSpec QUATERNION = new VertexAttribSpec(GlNumericType.FLOAT, 4);
+	public static final VertexAttribSpec NORMAL = new VertexAttribSpec(GlNumericType.BYTE, 3, true);
+	public static final VertexAttribSpec UV = new VertexAttribSpec(GlNumericType.FLOAT, 2);
 
-	public static final VertexAttribSpec RGBA = new VertexAttribSpec(GlPrimitiveType.UBYTE, 4, true);
-	public static final VertexAttribSpec RGB = new VertexAttribSpec(GlPrimitiveType.UBYTE, 3, true);
-	public static final VertexAttribSpec LIGHT = new VertexAttribSpec(GlPrimitiveType.UBYTE, 2, true);
+	public static final VertexAttribSpec RGBA = new VertexAttribSpec(GlNumericType.UBYTE, 4, true);
+	public static final VertexAttribSpec RGB = new VertexAttribSpec(GlNumericType.UBYTE, 3, true);
+	public static final VertexAttribSpec LIGHT = new VertexAttribSpec(GlNumericType.UBYTE, 2, true);
 
-	public static final VertexAttribSpec NORMALIZED_BYTE = new VertexAttribSpec(GlPrimitiveType.BYTE, 1, true);
+	public static final VertexAttribSpec NORMALIZED_BYTE = new VertexAttribSpec(GlNumericType.BYTE, 1, true);
 }

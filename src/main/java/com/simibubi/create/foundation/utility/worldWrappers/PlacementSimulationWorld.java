@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.jozufozu.flywheel.backend.instancing.IFlywheelWorld;
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

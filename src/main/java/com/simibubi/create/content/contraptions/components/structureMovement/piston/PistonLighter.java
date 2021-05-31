@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
-import com.jozufozu.flywheel.backend.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 
 import net.minecraft.util.math.vector.Vector3i;

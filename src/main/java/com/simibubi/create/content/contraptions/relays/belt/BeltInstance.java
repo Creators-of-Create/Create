@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.core.PartialModel;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedModel;
 import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -61,7 +61,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-			InstancedModel<BeltData> beltModel = modelManager.getMaterial(AllMaterialSpecs.BELTS).getModel(beltPartial, blockState);
+			Instancer<BeltData> beltModel = modelManager.getMaterial(AllMaterialSpecs.BELTS).getModel(beltPartial, blockState);
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -69,7 +69,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         }
 
         if (tile.hasPulley()) {
-            InstancedModel<RotatingData> pulleyModel = getPulleyModel();
+            Instancer<RotatingData> pulleyModel = getPulleyModel();
 
             pulleyKey = setup(pulleyModel.createInstance());
         }
@@ -121,7 +121,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         return speed;
     }
 
-    private InstancedModel<RotatingData> getPulleyModel() {
+    private Instancer<RotatingData> getPulleyModel() {
         Direction dir = getOrientation();
 
         Direction.Axis axis = dir.getAxis();

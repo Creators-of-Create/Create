@@ -30,7 +30,7 @@ public class CancelTileEntityRenderMixin {
 		if (Backend.canUseInstancing()) {
 			List<TileEntity> tiles = cir.getReturnValue();
 
-			tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderAsTE());
+			tiles.removeIf(tile -> tile instanceof IInstanceRendered && !((IInstanceRendered) tile).shouldRenderNormally());
 		}
 	}
 }

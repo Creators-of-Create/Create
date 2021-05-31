@@ -5,6 +5,8 @@ import org.lwjgl.opengl.EXTDrawInstanced;
 import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GLCapabilities;
 
+import com.jozufozu.flywheel.backend.gl.GlNumericType;
+import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.versioned.GlVersioned;
 
 public enum DrawInstanced implements GlVersioned {
@@ -15,8 +17,13 @@ public enum DrawInstanced implements GlVersioned {
 		}
 
 		@Override
-		public void drawArraysInstanced(int mode, int first, int count, int primcount) {
-			GL31.glDrawArraysInstanced(mode, first, count, primcount);
+		public void drawArraysInstanced(GlPrimitive mode, int first, int count, int primcount) {
+			GL31.glDrawArraysInstanced(mode.glEnum, first, count, primcount);
+		}
+
+		@Override
+		public void drawElementsInstanced(GlPrimitive mode, int elementCount, GlNumericType type, long indices, int primcount) {
+			GL31.glDrawElementsInstanced(mode.glEnum, elementCount, type.getGlEnum(), indices, primcount);
 		}
 	},
 	ARB_DRAW_INSTANCED {
@@ -26,8 +33,13 @@ public enum DrawInstanced implements GlVersioned {
 		}
 
 		@Override
-		public void drawArraysInstanced(int mode, int first, int count, int primcount) {
-			ARBDrawInstanced.glDrawArraysInstancedARB(mode, first, count, primcount);
+		public void drawArraysInstanced(GlPrimitive mode, int first, int count, int primcount) {
+			ARBDrawInstanced.glDrawArraysInstancedARB(mode.glEnum, first, count, primcount);
+		}
+
+		@Override
+		public void drawElementsInstanced(GlPrimitive mode, int elementCount, GlNumericType type, long indices, int primcount) {
+			ARBDrawInstanced.glDrawElementsInstancedARB(mode.glEnum, elementCount, type.getGlEnum(), indices, primcount);
 		}
 	},
 	EXT_DRAW_INSTANCED {
@@ -37,8 +49,13 @@ public enum DrawInstanced implements GlVersioned {
 		}
 
 		@Override
-		public void drawArraysInstanced(int mode, int first, int count, int primcount) {
-			EXTDrawInstanced.glDrawArraysInstancedEXT(mode, first, count, primcount);
+		public void drawArraysInstanced(GlPrimitive mode, int first, int count, int primcount) {
+			EXTDrawInstanced.glDrawArraysInstancedEXT(mode.glEnum, first, count, primcount);
+		}
+
+		@Override
+		public void drawElementsInstanced(GlPrimitive mode, int elementCount, GlNumericType type, long indices, int primcount) {
+			EXTDrawInstanced.glDrawElementsInstancedEXT(mode.glEnum, elementCount, type.getGlEnum(), indices, primcount);
 		}
 	},
 	UNSUPPORTED {
@@ -46,12 +63,14 @@ public enum DrawInstanced implements GlVersioned {
 		public boolean supported(GLCapabilities caps) {
 			return true;
 		}
-
-		@Override
-		public void drawArraysInstanced(int mode, int first, int count, int primcount) {
-			throw new UnsupportedOperationException();
-		}
 	};
 
-	public abstract void drawArraysInstanced(int mode, int first, int count, int primcount);
+
+	public void drawArraysInstanced(GlPrimitive mode, int first, int count, int primcount) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void drawElementsInstanced(GlPrimitive mode, int elementCount, GlNumericType type, long indices, int primcount) {
+		throw new UnsupportedOperationException();
+	}
 }
