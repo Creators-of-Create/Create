@@ -10,15 +10,17 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.GlNumericType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
-import com.jozufozu.flywheel.core.BufferedModel;
-import com.jozufozu.flywheel.core.IndexedModel;
+import com.jozufozu.flywheel.core.model.ArrayModelRenderer;
+import com.jozufozu.flywheel.core.model.BufferedModel;
+import com.jozufozu.flywheel.core.model.IndexedModel;
+import com.jozufozu.flywheel.core.model.ModelRenderer;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.util.QuadConverter;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -48,7 +50,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	private final ContraptionLighter<?> lighter;
 	public final ContraptionKineticRenderer kinetics;
 
-	private final Map<RenderType, BufferedModel> renderLayers = new HashMap<>();
+	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
 	private Matrix4f model;
 	private AxisAlignedBB lightBox;
@@ -70,7 +72,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	public void doRenderLayer(RenderType layer, ContraptionProgram shader) {
-		BufferedModel structure = renderLayers.get(layer);
+		ModelRenderer structure = renderLayers.get(layer);
 		if (structure != null) {
 			setup(shader);
 			structure.draw();
@@ -111,7 +113,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	void invalidate() {
-		for (BufferedModel buffer : renderLayers.values()) {
+		for (ModelRenderer buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 		renderLayers.clear();
@@ -122,7 +124,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	}
 
 	private void buildLayers() {
-		for (BufferedModel buffer : renderLayers.values()) {
+		for (ModelRenderer buffer : renderLayers.values()) {
 			buffer.delete();
 		}
 
@@ -132,7 +134,13 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		for (RenderType layer : blockLayers) {
 			BufferedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
-			if (layerModel != null) renderLayers.put(layer, layerModel);
+
+			if (layerModel != null) {
+				if (Backend.compat.vertexArrayObjectsSupported())
+					renderLayers.put(layer, new ArrayModelRenderer(layerModel));
+				else
+					renderLayers.put(layer, new ModelRenderer(layerModel));
+			}
 		}
 	}
 
@@ -195,43 +203,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		vertices.rewind();
 
-////		if (Backend.compat.vertexArrayObjectsSupported())
-////			return new BufferedArrayModel(GlPrimitive.QUADS, format, vertices, vertexCount);
-////		else
-//			return new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
-
-		int quadCount = vertexCount / 4;
-		int triangleCount = vertexCount / 2;
-		int indexCount = triangleCount * 3;
-
-		GlNumericType type;
-
-		int bitWidth = MathHelper.log2(indexCount);
-		if (bitWidth <= 8) {
-			type = GlNumericType.UBYTE;
-		} else if (bitWidth <= 16) {
-			type = GlNumericType.USHORT;
-		} else {
-			type = GlNumericType.UINT;
-		}
-
-		ByteBuffer indices = ByteBuffer.allocate(indexCount * type.getByteWidth());
-		indices.order(ByteOrder.nativeOrder());
-
-		for (int i = 0; i < quadCount; i++) {
-			int qStart = 4 * i;
-			// triangle 1
-			type.castAndBuffer(indices, qStart);
-			type.castAndBuffer(indices, qStart + 1);
-			type.castAndBuffer(indices, qStart + 2);
-			// triangle 2
-			type.castAndBuffer(indices, qStart);
-			type.castAndBuffer(indices, qStart + 2);
-			type.castAndBuffer(indices, qStart + 3);
-		}
-
-		indices.flip();
-
-		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, indices, indexCount, type);
+		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().getEboForNQuads(vertexCount / 4));
 	}
 }

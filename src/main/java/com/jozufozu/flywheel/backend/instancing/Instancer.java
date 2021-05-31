@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
-import com.jozufozu.flywheel.core.BufferedModel;
+import com.jozufozu.flywheel.core.model.BufferedModel;
 import com.jozufozu.flywheel.util.AttribUtil;
 
 public class Instancer<D extends InstanceData> {
@@ -47,13 +47,13 @@ public class Instancer<D extends InstanceData> {
 		vao.bind();
 
 		// bind the model's vbo to our vao
-		model.bindBuffer();
-		model.getFormat().vertexAttribPointers(0);
-		model.unbindBuffer();
+		model.setupState();
 
-		// enable all the attribute arrays in our vao. we only need to do this once
-		AttribUtil.enableArrays(model.getAttributeCount() + this.instanceFormat.getAttributeCount());
+		AttribUtil.enableArrays(model.getAttributeCount() + instanceFormat.getAttributeCount());
+
 		vao.unbind();
+
+		model.clearState();
 	}
 
 	public void render() {

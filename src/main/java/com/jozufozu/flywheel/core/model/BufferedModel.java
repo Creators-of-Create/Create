@@ -1,4 +1,4 @@
-package com.jozufozu.flywheel.core;
+package com.jozufozu.flywheel.core.model;
 
 import static org.lwjgl.opengl.GL20.glDrawArrays;
 
@@ -55,29 +55,33 @@ public class BufferedModel {
 		vbo.unbind();
 	}
 
+	public boolean valid() {
+		return vertexCount > 0 && !deleted;
+	}
+
 	/**
-	 * Renders this model, checking first if there is anything to render.
+	 * The VBO/VAO should be bound externally.
 	 */
-	public void draw() {
-		if (vertexCount <= 0 || deleted) return;
-
+	public void setupState() {
 		vbo.bind();
-
 		AttribUtil.enableArrays(getAttributeCount());
 		format.vertexAttribPointers(0);
+	}
 
-		glDrawArrays(primitiveMode.glEnum, 0, vertexCount);
-
+	public void clearState() {
 		AttribUtil.disableArrays(getAttributeCount());
-
 		vbo.unbind();
+	}
+
+	public void drawCall() {
+		glDrawArrays(primitiveMode.glEnum, 0, vertexCount);
 	}
 
 	/**
 	 * Draws many instances of this model, assuming the appropriate state is already bound.
 	 */
 	public void drawInstances(int instanceCount) {
-		if (vertexCount <= 0 || deleted) return;
+		if (!valid()) return;
 
 		Backend.compat.drawInstanced.drawArraysInstanced(primitiveMode, 0, vertexCount, instanceCount);
 	}

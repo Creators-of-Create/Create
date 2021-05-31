@@ -15,11 +15,13 @@ import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.RenderWork;
 import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.core.BufferedModel;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.model.BufferedModel;
+import com.jozufozu.flywheel.core.model.IndexedModel;
 import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.util.QuadConverter;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -128,25 +130,26 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 		VertexFormat format = spec.getModelFormat();
 		int vertexCount = reader.getVertexCount();
 
-		ByteBuffer to = ByteBuffer.allocate(vertexCount * format.getStride());
-		to.order(ByteOrder.nativeOrder());
+		ByteBuffer vertices = ByteBuffer.allocate(vertexCount * format.getStride());
+		vertices.order(ByteOrder.nativeOrder());
 
 		for (int i = 0; i < vertexCount; i++) {
-			to.putFloat(reader.getX(i));
-			to.putFloat(reader.getY(i));
-			to.putFloat(reader.getZ(i));
+			vertices.putFloat(reader.getX(i));
+			vertices.putFloat(reader.getY(i));
+			vertices.putFloat(reader.getZ(i));
 
-			to.put(reader.getNX(i));
-			to.put(reader.getNY(i));
-			to.put(reader.getNZ(i));
+			vertices.put(reader.getNX(i));
+			vertices.put(reader.getNY(i));
+			vertices.put(reader.getNZ(i));
 
-			to.putFloat(reader.getU(i));
-			to.putFloat(reader.getV(i));
+			vertices.putFloat(reader.getU(i));
+			vertices.putFloat(reader.getV(i));
 		}
 
-		to.rewind();
+		vertices.rewind();
 
-		BufferedModel bufferedModel = new BufferedModel(GlPrimitive.QUADS, format, to, vertexCount);
+		BufferedModel bufferedModel = new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().getEboForNQuads(vertexCount / 4));
+		//BufferedModel bufferedModel = new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
 
 		return new Instancer<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
 	}

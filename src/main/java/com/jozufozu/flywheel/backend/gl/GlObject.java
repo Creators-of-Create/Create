@@ -30,7 +30,7 @@ public abstract class GlObject {
 		this.handle = INVALID_HANDLE;
 	}
 
-	public final void delete() {
+	public void delete() {
 		if (!isHandleValid()) {
 			throw new IllegalStateException("Handle already deleted.");
 		}
