@@ -10,12 +10,13 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.GlNumericType;
 import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
-import com.jozufozu.flywheel.core.BufferedArrayModel;
 import com.jozufozu.flywheel.core.BufferedModel;
+import com.jozufozu.flywheel.core.IndexedModel;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -163,40 +164,74 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		VertexFormat format = FORMAT;
 
-		ByteBuffer to = ByteBuffer.allocate(format.getStride() * vertexCount);
-		to.order(ByteOrder.nativeOrder());
+		ByteBuffer vertices = ByteBuffer.allocate(format.getStride() * vertexCount);
+		vertices.order(ByteOrder.nativeOrder());
 
 		for (int i = 0; i < vertexCount; i++) {
-			to.putFloat(reader.getX(i));
-			to.putFloat(reader.getY(i));
-			to.putFloat(reader.getZ(i));
+			vertices.putFloat(reader.getX(i));
+			vertices.putFloat(reader.getY(i));
+			vertices.putFloat(reader.getZ(i));
 
-			to.put(reader.getNX(i));
-			to.put(reader.getNY(i));
-			to.put(reader.getNZ(i));
+			vertices.put(reader.getNX(i));
+			vertices.put(reader.getNY(i));
+			vertices.put(reader.getNZ(i));
 
-			to.putFloat(reader.getU(i));
-			to.putFloat(reader.getV(i));
+			vertices.putFloat(reader.getU(i));
+			vertices.putFloat(reader.getV(i));
 
-			to.put(reader.getR(i));
-			to.put(reader.getG(i));
-			to.put(reader.getB(i));
-			to.put(reader.getA(i));
+			vertices.put(reader.getR(i));
+			vertices.put(reader.getG(i));
+			vertices.put(reader.getB(i));
+			vertices.put(reader.getA(i));
 
 			int light = reader.getLight(i);
 
 			byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
 			byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
 
-			to.put(block);
-			to.put(sky);
+			vertices.put(block);
+			vertices.put(sky);
 		}
 
-		to.rewind();
+		vertices.rewind();
 
-		if (Backend.compat.vertexArrayObjectsSupported())
-			return new BufferedArrayModel(GlPrimitive.QUADS, format, to, vertexCount);
-		else
-			return new BufferedModel(GlPrimitive.QUADS, format, to, vertexCount);
+////		if (Backend.compat.vertexArrayObjectsSupported())
+////			return new BufferedArrayModel(GlPrimitive.QUADS, format, vertices, vertexCount);
+////		else
+//			return new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
+
+		int quadCount = vertexCount / 4;
+		int triangleCount = vertexCount / 2;
+		int indexCount = triangleCount * 3;
+
+		GlNumericType type;
+
+		int bitWidth = MathHelper.log2(indexCount);
+		if (bitWidth <= 8) {
+			type = GlNumericType.UBYTE;
+		} else if (bitWidth <= 16) {
+			type = GlNumericType.USHORT;
+		} else {
+			type = GlNumericType.UINT;
+		}
+
+		ByteBuffer indices = ByteBuffer.allocate(indexCount * type.getByteWidth());
+		indices.order(ByteOrder.nativeOrder());
+
+		for (int i = 0; i < quadCount; i++) {
+			int qStart = 4 * i;
+			// triangle 1
+			type.castAndBuffer(indices, qStart);
+			type.castAndBuffer(indices, qStart + 1);
+			type.castAndBuffer(indices, qStart + 2);
+			// triangle 2
+			type.castAndBuffer(indices, qStart);
+			type.castAndBuffer(indices, qStart + 2);
+			type.castAndBuffer(indices, qStart + 3);
+		}
+
+		indices.flip();
+
+		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, indices, indexCount, type);
 	}
 }

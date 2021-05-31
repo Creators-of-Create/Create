@@ -1,5 +1,6 @@
 package com.jozufozu.flywheel.backend.gl;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
@@ -27,18 +28,18 @@ public enum GlNumericType {
 	private static final Map<String, GlNumericType> NAME_LOOKUP = Arrays.stream(VALUES)
 			.collect(Collectors.toMap(GlNumericType::getDisplayName, type -> type));
 
-	private final int size;
+	private final int byteWidth;
 	private final String displayName;
 	private final int glEnum;
 
 	GlNumericType(int bytes, String name, int glEnum) {
-		this.size = bytes;
+		this.byteWidth = bytes;
 		this.displayName = name;
 		this.glEnum = glEnum;
 	}
 
-	public int getSize() {
-		return this.size;
+	public int getByteWidth() {
+		return this.byteWidth;
 	}
 
 	public String getDisplayName() {
@@ -47,6 +48,16 @@ public enum GlNumericType {
 
 	public int getGlEnum() {
 		return this.glEnum;
+	}
+
+	public void castAndBuffer(ByteBuffer buf, int val) {
+		if (this == UBYTE || this == BYTE) {
+			buf.put((byte) val);
+		} else if (this == USHORT || this == SHORT) {
+			buf.putShort((short) val);
+		} else if (this == UINT || this == INT) {
+			buf.putInt(val);
+		}
 	}
 
 	@Nullable

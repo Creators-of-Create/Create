@@ -19,7 +19,7 @@ public class VertexAttribSpec implements IAttribSpec {
 	public VertexAttribSpec(GlNumericType type, int count, boolean normalized) {
 		this.type = type;
 		this.count = count;
-		this.size = type.getSize() * count;
+		this.size = type.getByteWidth() * count;
 		this.attributeCount = (this.size + 15) / 16; // ceiling division. GLSL vertex attributes can only be 16 bytes wide
 		this.normalized = normalized;
 	}

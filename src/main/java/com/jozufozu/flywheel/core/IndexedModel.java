@@ -25,7 +25,7 @@ public class IndexedModel extends BufferedModel {
 		this.eboIndexType = indexType;
 		this.elementCount = elementCount;
 
-		int indicesSize = elementCount * indexType.getSize();
+		int indicesSize = elementCount * indexType.getByteWidth();
 
 		ebo.bind();
 
@@ -38,13 +38,13 @@ public class IndexedModel extends BufferedModel {
 	}
 
 	public void draw() {
-		vbo.bind();
 		ebo.bind();
+		vbo.bind();
 
 		AttribUtil.enableArrays(getAttributeCount());
 		format.vertexAttribPointers(0);
 
-		GL20.glDrawElements(primitiveMode.glEnum, vertexCount, eboIndexType.getGlEnum(), 0);
+		GL20.glDrawElements(primitiveMode.glEnum, elementCount, eboIndexType.getGlEnum(), 0);
 
 		AttribUtil.disableArrays(getAttributeCount());
 
