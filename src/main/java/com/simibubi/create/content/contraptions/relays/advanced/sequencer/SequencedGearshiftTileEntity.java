@@ -122,7 +122,6 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 		detachKinetics();
 		currentInstructionDuration = instruction.getDuration(0, getTheoreticalSpeed());
-		System.out.println("Dur.: " + currentInstructionDuration);
 		currentInstruction = instructionIndex;
 		currentInstructionProgress = 0;
 		timer = 0;
