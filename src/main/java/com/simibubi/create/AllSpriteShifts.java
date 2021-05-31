@@ -8,8 +8,8 @@ import static com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTT
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.simibubi.create.content.palettes.PaletteBlockPatterns;
-import com.simibubi.create.content.palettes.PaletteBlockPatterns.CTs;
+import com.simibubi.create.content.palettes.PaletteBlockPattern;
+import com.simibubi.create.content.palettes.PaletteBlockPattern.CTs;
 import com.simibubi.create.content.palettes.PaletteStoneVariants;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
@@ -23,7 +23,7 @@ import net.minecraft.item.DyeColor;
 public class AllSpriteShifts {
 
 	static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
-	static final Map<PaletteStoneVariants, Map<PaletteBlockPatterns.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
+	static final Map<PaletteStoneVariants, Map<PaletteBlockPattern.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
 		new IdentityHashMap<>();
 
 	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
@@ -69,7 +69,7 @@ public class AllSpriteShifts {
 		return WOODEN_WINDOWS.get(woodType);
 	}
 
-	public static CTSpriteShiftEntry getVariantPattern(PaletteStoneVariants variant, PaletteBlockPatterns.CTs texture) {
+	public static CTSpriteShiftEntry getVariantPattern(PaletteStoneVariants variant, PaletteBlockPattern.CTs texture) {
 		return PALETTE_VARIANT_PATTERNS.get(variant)
 			.get(texture);
 	}
@@ -85,7 +85,7 @@ public class AllSpriteShifts {
 			IdentityHashMap<CTs, CTSpriteShiftEntry> map = new IdentityHashMap<>();
 			PALETTE_VARIANT_PATTERNS.put(paletteStoneVariants, map);
 
-			for (PaletteBlockPatterns.CTs texture : PaletteBlockPatterns.CTs.values()) {
+			for (PaletteBlockPattern.CTs texture : PaletteBlockPattern.CTs.values()) {
 				String textureName = Lang.asId(texture.name());
 				String target = "palettes/" + variantName + "/" + textureName;
 				map.put(texture, getCT(texture.type, target));
