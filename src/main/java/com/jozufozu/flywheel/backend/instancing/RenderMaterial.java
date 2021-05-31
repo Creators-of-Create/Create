@@ -148,7 +148,7 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 		vertices.rewind();
 
-		BufferedModel bufferedModel = new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().getEboForNQuads(vertexCount / 4));
+		BufferedModel bufferedModel = new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
 		//BufferedModel bufferedModel = new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
 
 		return new Instancer<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());

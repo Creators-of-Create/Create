@@ -1,30 +1,25 @@
 package com.jozufozu.flywheel.backend.model;
 
-import java.nio.ByteBuffer;
-
 import com.jozufozu.flywheel.backend.gl.GlNumericType;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
-import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 
-public class ElementBuffer extends GlBuffer {
+public class ElementBuffer {
 
+	private final GlBuffer buffer;
 	public final int elementCount;
 	public final GlNumericType eboIndexType;
 
-	public ElementBuffer(ByteBuffer indices, int elementCount, GlNumericType indexType) {
-		super(GlBufferType.ELEMENT_ARRAY_BUFFER);
+	public ElementBuffer(GlBuffer backing, int elementCount, GlNumericType indexType) {
+		this.buffer = backing;
 		this.eboIndexType = indexType;
 		this.elementCount = elementCount;
+	}
 
-		int indicesSize = elementCount * indexType.getByteWidth();
+	public void bind() {
+		buffer.bind();
+	}
 
-		bind();
-
-		alloc(indicesSize);
-		getBuffer(0, indicesSize)
-				.put(indices)
-				.flush();
-
-		unbind();
+	public void unbind() {
+		buffer.unbind();
 	}
 }

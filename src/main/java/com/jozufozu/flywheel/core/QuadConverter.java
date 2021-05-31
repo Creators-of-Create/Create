@@ -2,87 +2,160 @@ package com.jozufozu.flywheel.core;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.EnumMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import com.jozufozu.flywheel.backend.gl.GlNumericType;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.model.ElementBuffer;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.util.math.MathHelper;
-
+/**
+ * A class to manage EBOs that index quads as triangles.
+ */
 public class QuadConverter {
 
-	private static QuadConverter INSTANCE = new QuadConverter();
+	public static final int STARTING_CAPACITY = 42;
 
+	private static QuadConverter INSTANCE;
+
+	@Nonnull
 	public static QuadConverter getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new QuadConverter(STARTING_CAPACITY); // 255 / 6 = 42
+		}
+
 		return INSTANCE;
 	}
 
-	private final Int2ObjectMap<CachedEbo> quads2Tris;
-
-	public QuadConverter() {
-		quads2Tris = new Int2ObjectOpenHashMap<>();
+	@Nullable
+	public static QuadConverter getNullable() {
+		return INSTANCE;
 	}
 
-	public ElementBuffer getEboForNQuads(int quads) {
-		quads2Tris.values().removeIf(CachedEbo::noReferences);
+	Map<GlNumericType, GlBuffer> ebos;
+	int[] capacities;
 
-		CachedEbo ebo = quads2Tris.computeIfAbsent(quads, quadCount -> {
-			int triangleCount = quadCount * 2;
-			int indexCount = triangleCount * 3;
+	public QuadConverter(int initialCapacity) {
+		this.ebos = new EnumMap<>(GlNumericType.class);
+		initCapacities();
 
-			GlNumericType type;
-
-			int bitWidth = MathHelper.log2(indexCount);
-			if (bitWidth <= 8) {
-				type = GlNumericType.UBYTE;
-			} else if (bitWidth <= 16) {
-				type = GlNumericType.USHORT;
-			} else {
-				type = GlNumericType.UINT;
-			}
-			ByteBuffer indices = ByteBuffer.allocate(indexCount * type.getByteWidth());
-			indices.order(ByteOrder.nativeOrder());
-
-			for (int i = 0; i < quadCount; i++) {
-				int qStart = 4 * i;
-				// triangle 1
-				type.castAndBuffer(indices, qStart);
-				type.castAndBuffer(indices, qStart + 1);
-				type.castAndBuffer(indices, qStart + 2);
-				// triangle 2
-				type.castAndBuffer(indices, qStart);
-				type.castAndBuffer(indices, qStart + 2);
-				type.castAndBuffer(indices, qStart + 3);
-			}
-
-			indices.flip();
-
-			return new CachedEbo(indices, indexCount, type);
-		});
-
-		ebo.refCount++;
-
-		return ebo;
+		fillBuffer(initialCapacity);
 	}
 
-	private class CachedEbo extends ElementBuffer {
-		int refCount = 1;
+	public ElementBuffer quads2Tris(int quads) {
+		int indexCount = quads * 6;
+		GlNumericType type = getSmallestIndexType(indexCount);
 
-		public CachedEbo(ByteBuffer indices, int elementCount, GlNumericType indexType) {
-			super(indices, elementCount, indexType);
+		if (quads > getCapacity(type)) {
+			fillBuffer(quads, indexCount, type);
 		}
 
-		@Override
-		public void delete() {
-			refCount--;
+		return new ElementBuffer(getBuffer(type), indexCount, type);
+	}
 
-			if (refCount == 0)
-				super.delete();
+	private void initCapacities() {
+		this.capacities = new int[GlNumericType.values().length];
+	}
+
+	private int getCapacity(GlNumericType type) {
+		return capacities[type.ordinal()];
+	}
+
+	private void updateCapacity(GlNumericType type, int capacity) {
+		if (getCapacity(type) < capacity) {
+			capacities[type.ordinal()] = capacity;
+		}
+	}
+
+	public void free() {
+		ebos.values().forEach(GlBuffer::delete);
+		ebos.clear();
+		initCapacities();
+	}
+
+	private void fillBuffer(int quads) {
+		int indexCount = quads * 6;
+
+		fillBuffer(quads, indexCount, getSmallestIndexType(indexCount));
+	}
+
+	private void fillBuffer(int quads, int indexCount, GlNumericType type) {
+		MemoryStack stack = MemoryStack.stackPush();
+		int bytes = indexCount * type.getByteWidth();
+
+		ByteBuffer indices;
+		if (bytes > stack.getSize()) {
+			indices = MemoryUtil.memAlloc(bytes); // not enough space on the preallocated stack
+		} else {
+			stack.push();
+			indices = stack.malloc(bytes);
 		}
 
-		public boolean noReferences() {
-			return refCount == 0;
+		indices.order(ByteOrder.nativeOrder());
+
+		fillBuffer(indices, type, quads);
+
+		GlBuffer buffer = getBuffer(type);
+
+		buffer.bind();
+		buffer.upload(indices);
+		buffer.unbind();
+
+		if (bytes > stack.getSize()) {
+			MemoryUtil.memFree(indices);
+		} else {
+			stack.pop();
 		}
+
+		updateCapacity(type, quads);
+	}
+
+	private void fillBuffer(ByteBuffer indices, GlNumericType type, int quads) {
+		for (int i = 0, max = 4 * quads; i < max; i += 4) {
+			// triangle a
+			type.castAndBuffer(indices, i);
+			type.castAndBuffer(indices, i + 1);
+			type.castAndBuffer(indices, i + 2);
+			// triangle b
+			type.castAndBuffer(indices, i);
+			type.castAndBuffer(indices, i + 2);
+			type.castAndBuffer(indices, i + 3);
+		}
+		indices.flip();
+	}
+
+	private GlBuffer getBuffer(GlNumericType type) {
+		return ebos.computeIfAbsent(type, $ -> new GlBuffer(GlBufferType.ELEMENT_ARRAY_BUFFER));
+	}
+
+	/**
+	 * Given the needed number of indices, what is the smallest bit width type that can index everything? <br>
+	 *
+	 * <pre>
+	 * | indexCount   | type  |
+	 * |--------------|-------|
+	 * | [0, 255)     | byte  |
+	 * | [256, 65536)	| short	|
+	 * | [65537, )	| int	|
+	 * </pre>
+	 */
+	private static GlNumericType getSmallestIndexType(int indexCount) {
+		indexCount = indexCount >>> 8;
+		if (indexCount == 0) {
+			return GlNumericType.UBYTE;
+		}
+		indexCount = indexCount >>> 8;
+		if (indexCount == 0) {
+			return GlNumericType.USHORT;
+		}
+
+		return GlNumericType.UINT;
 	}
 }

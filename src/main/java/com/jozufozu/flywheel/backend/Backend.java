@@ -25,6 +25,7 @@ import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.core.CrumblingRenderer;
+import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.core.WorldTileRenderer;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
@@ -90,6 +91,9 @@ public class Backend {
 				tileRenderer.invalidate();
 				world.loadedTileEntityList.forEach(tileRenderer::add);
 			}
+
+			QuadConverter quadConverter = QuadConverter.getNullable();
+			if (quadConverter != null) quadConverter.free();
 		});
 
 		listeners.setupFrameListener((world, stack, info, gameRenderer, lightTexture) -> {

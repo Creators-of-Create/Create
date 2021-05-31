@@ -45,6 +45,5 @@ public class IndexedModel extends BufferedModel {
 	@Override
 	public void delete() {
 		super.delete();
-		ebo.delete();
 	}
 }

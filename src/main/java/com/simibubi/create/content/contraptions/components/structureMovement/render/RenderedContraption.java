@@ -203,6 +203,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		vertices.rewind();
 
-		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().getEboForNQuads(vertexCount / 4));
+		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
 	}
 }
