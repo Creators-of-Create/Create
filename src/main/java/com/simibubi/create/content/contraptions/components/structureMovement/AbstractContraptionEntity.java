@@ -15,6 +15,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -467,6 +468,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		removePassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
+		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(world, getBlockPos());
 	}
 
 	private void moveCollidedEntitiesOnDisassembly(StructureTransform transform) {

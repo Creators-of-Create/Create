@@ -152,9 +152,34 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 1f, 1f)
 			.category(SoundCategory.PLAYERS)
 			.build(),
-			
+
 		AUTO_POLISH = create("deployer_polish").subtitle("Deployer applies polish")
 			.playExisting(SoundEvents.UI_STONECUTTER_TAKE_RESULT, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CONTROLLER_CLICK = create("controller_click").subtitle("Controller clicks")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, .35f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		SAW_ACTIVATE_WOOD = create("saw_activate_wood").subtitle("Mechanical Saw activates")
+			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND, .75f, 1.5f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		SAW_ACTIVATE_STONE = create("saw_activate_stone").subtitle("Mechanical Saw activates")
+			.playExisting(SoundEvents.UI_STONECUTTER_TAKE_RESULT, .125f, 1.25f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		SAW_PROCESS = create("saw_process").subtitle("Mechanical Saw processes")
+			.playExisting(SoundEvents.BLOCK_SAND_PLACE, .075f, .75f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+			
+		SAW_IDLE = create("saw_idle").subtitle("Mechanical Saw turns")
+			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND)
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
@@ -172,7 +197,7 @@ public class AllSoundEvents {
 		for (SoundEntry entry : entries.values())
 			entry.register(registry);
 	}
-	
+
 	public static void prepare() {
 		for (SoundEntry entry : entries.values())
 			entry.prepare();
@@ -363,7 +388,7 @@ public class AllSoundEvents {
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
 		}
-		
+
 		@Override
 		public void prepare() {
 			for (int i = 0; i < wrappedEvents.size(); i++) {
@@ -376,7 +401,7 @@ public class AllSoundEvents {
 
 		@Override
 		public void register(IForgeRegistry<SoundEvent> registry) {
-			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) 
+			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents)
 				registry.register(pair.getFirst());
 		}
 
@@ -435,7 +460,7 @@ public class AllSoundEvents {
 		public CustomSoundEntry(String id, String subtitle, SoundCategory category) {
 			super(id, subtitle, category);
 		}
-		
+
 		@Override
 		public void prepare() {
 			ResourceLocation location = getLocation();
