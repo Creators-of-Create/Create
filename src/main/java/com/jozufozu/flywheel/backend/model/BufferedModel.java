@@ -47,14 +47,6 @@ public class BufferedModel {
 		return vertexCount;
 	}
 
-	public void bindBuffer() {
-		vbo.bind();
-	}
-
-	public void unbindBuffer() {
-		vbo.unbind();
-	}
-
 	public boolean valid() {
 		return vertexCount > 0 && !deleted;
 	}

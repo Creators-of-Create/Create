@@ -74,7 +74,7 @@ public class Backend {
 	});
 
 	private static Matrix4f projectionMatrix = new Matrix4f();
-	private static boolean instancingAvailable;
+	private static boolean instancedArrays;
 	private static boolean enabled;
 
 	static final Map<ResourceLocation, MaterialSpec<?>> materialRegistry = new HashMap<>();
@@ -106,6 +106,18 @@ public class Backend {
 
 	public Backend() {
 		throw new IllegalStateException();
+	}
+
+	public static String getBackendDescriptor() {
+		if (canUseInstancing()) {
+			return "GL33 Instanced Arrays";
+		}
+
+		if (canUseVBOs()) {
+			return "VBOs";
+		}
+
+		return "Disabled";
 	}
 
 	/**
@@ -156,7 +168,7 @@ public class Backend {
 	}
 
 	public static boolean canUseInstancing() {
-		return enabled && instancingAvailable;
+		return enabled && instancedArrays;
 	}
 
 	public static boolean canUseVBOs() {
@@ -189,7 +201,7 @@ public class Backend {
 
 		compat = new GlCompat(capabilities);
 
-		instancingAvailable = compat.vertexArrayObjectsSupported() &&
+		instancedArrays = compat.vertexArrayObjectsSupported() &&
 				compat.drawInstancedSupported() &&
 				compat.instancedArraysSupported();
 
