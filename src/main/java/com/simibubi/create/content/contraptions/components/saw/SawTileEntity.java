@@ -10,14 +10,18 @@ import java.util.stream.Collectors;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
@@ -31,10 +35,12 @@ import net.minecraft.block.CactusBlock;
 import net.minecraft.block.ChorusPlantBlock;
 import net.minecraft.block.KelpBlock;
 import net.minecraft.block.KelpTopBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.StemGrownBlock;
 import net.minecraft.block.SugarCaneBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -53,6 +59,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -70,6 +78,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private int recipeIndex;
 	private final LazyOptional<IItemHandler> invProvider;
 	private FilteringBehaviour filtering;
+	private boolean processingStarted;
 
 	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
 		super(type);
@@ -77,6 +86,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
 		invProvider = LazyOptional.of(() -> inventory);
+		processingStarted = false;
 	}
 
 	@Override
@@ -92,6 +102,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		compound.put("Inventory", inventory.serializeNBT());
 		compound.putInt("RecipeIndex", recipeIndex);
 		super.write(compound, clientPacket);
+
+		if (!clientPacket || !processingStarted)
+			return;
+		processingStarted = false;
+		NBTHelper.putMarker(compound, "ProcessingStarted");
 	}
 
 	@Override
@@ -99,6 +114,40 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.fromTag(state, compound, clientPacket);
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
+		if (compound.contains("ProcessingStarted"))
+			processingStarted = true;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		super.tickAudio();
+		if (getSpeed() == 0)
+			return;
+
+		SoundScapes.play(AmbienceGroup.SAW, pos, 1);
+
+		ItemStack stackInSlot = inventory.getStackInSlot(0);
+		if (stackInSlot.isEmpty())
+			return;
+
+		boolean isWood = false;
+		Item item = stackInSlot.getItem();
+		if (item instanceof BlockItem) {
+			Block block = ((BlockItem) item).getBlock();
+			isWood = block.getSoundType(block.getDefaultState(), world, pos, null) == SoundType.WOOD;
+		}
+
+		if (processingStarted) {
+			processingStarted = false;
+			if (!isWood)
+				AllSoundEvents.SAW_ACTIVATE_STONE.playAt(world, pos, 1, 1, true);
+			else
+				AllSoundEvents.SAW_ACTIVATE_WOOD.playAt(world, pos, 1, 1, true);
+			return;
+		}
+
+		AllSoundEvents.SAW_PROCESS.playAt(world, pos, 1, 1, true);
 	}
 
 	@Override
@@ -122,9 +171,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		if (inventory.remainingTime > 0)
 			spawnParticles(inventory.getStackInSlot(0));
-
-		if (world.isRemote && !isVirtual())
-			return;
 
 		if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
 			applyRecipe();
@@ -320,7 +366,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		List<? extends IRecipe<?>> recipes = getRecipes();
 		boolean valid = !recipes.isEmpty();
-		int time = 100;
+		processingStarted = true;
+		int time = 50;
 
 		if (recipes.isEmpty()) {
 			inventory.remainingTime = inventory.recipeDuration = 10;
@@ -367,14 +414,16 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	@Override
 	public void onBlockBroken(BlockState stateToBreak) {
 		super.onBlockBroken(stateToBreak);
-		TreeCutter.findTree(world, breakingPos).destroyBlocks(world, null, this::dropItemFromCutTree);
+		TreeCutter.findTree(world, breakingPos)
+			.destroyBlocks(world, null, this::dropItemFromCutTree);
 	}
 
 	public void dropItemFromCutTree(BlockPos pos, ItemStack stack) {
 		float distance = (float) Math.sqrt(pos.distanceSq(breakingPos));
 		Vector3d dropPos = VecHelper.getCenterOf(pos);
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
-		entity.setMotion(Vector3d.of(breakingPos.subtract(this.pos)).scale(distance / 20f));
+		entity.setMotion(Vector3d.of(breakingPos.subtract(this.pos))
+			.scale(distance / 20f));
 		world.addEntity(entity);
 	}
 
@@ -385,7 +434,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	public static boolean isSawable(BlockState stateToBreak) {
-		if (stateToBreak.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(stateToBreak) || stateToBreak.isIn(BlockTags.LEAVES))
+		if (stateToBreak.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(stateToBreak)
+			|| stateToBreak.isIn(BlockTags.LEAVES))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)

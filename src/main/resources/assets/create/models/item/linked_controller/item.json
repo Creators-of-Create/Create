@@ -1,0 +1,166 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"redstone_antenna": "create:block/redstone_antenna",
+		"particle": "create:item/linked_controller",
+		"redstone_bridge": "create:item/linked_controller"
+	},
+	"elements": [
+		{
+			"name": "Controller",
+			"from": [4, 0, 1.5],
+			"to": [12, 2, 14.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [13, 0, 15, 8], "rotation": 90, "texture": "#redstone_bridge"},
+				"east": {"uv": [0, 8, 13, 10], "texture": "#redstone_bridge"},
+				"south": {"uv": [13, 0, 15, 8], "rotation": 90, "texture": "#redstone_bridge"},
+				"west": {"uv": [0, 8, 13, 10], "texture": "#redstone_bridge"},
+				"up": {"uv": [0, 0, 13, 8], "rotation": 270, "texture": "#redstone_bridge"},
+				"down": {"uv": [0, 0, 13, 8], "rotation": 90, "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"name": "AntennaTop",
+			"from": [3, 6, 4.5],
+			"to": [4, 7, 5.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [4, 2, 14.5]},
+			"faces": {
+				"up": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaZ",
+			"from": [3, 0, 3.5],
+			"to": [4, 8, 6.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [4, 2, 14.5]},
+			"faces": {
+				"east": {"uv": [0, 0, 3, 8], "texture": "#redstone_antenna"},
+				"west": {"uv": [0, 0, 3, 8], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"name": "AntennaX",
+			"from": [2, 0, 4.5],
+			"to": [5, 8, 5.5],
+			"rotation": {"angle": 0, "axis": "z", "origin": [4, 2, 14.5]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 8], "texture": "#redstone_antenna"},
+				"south": {"uv": [0, 0, 3, 8], "texture": "#redstone_antenna"},
+				"down": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"}
+			}
+		},
+		{
+			"from": [9, 1, 8.5],
+			"to": [11, 3, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [5, 1, 8.5],
+			"to": [7, 3, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [7, 1, 10.5],
+			"to": [9, 3, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [7, 1, 6.5],
+			"to": [9, 3, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [8, 1, 3.5],
+			"to": [10, 3, 5.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [6, 1, 3.5],
+			"to": [8, 3, 5.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.5]},
+			"faces": {
+				"north": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"east": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"south": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"west": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"},
+				"up": {"uv": [2, 11, 4, 13], "texture": "#redstone_bridge"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -90, -74],
+			"translation": [-3, 3.25, 4.5],
+			"scale": [0.7, 0.7, 0.7]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, 90, 74],
+			"translation": [-3, 3.5, 5],
+			"scale": [0.7, 0.7, 0.7]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -90, -13],
+			"translation": [1.13, 3, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 71, 17],
+			"translation": [1.13, 3, 1.13],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.65, 0.65, 0.65]
+		},
+		"gui": {
+			"rotation": [30, -44, 0],
+			"translation": [0, 3.5, 0],
+			"scale": [0.76, 0.76, 0.76]
+		},
+		"head": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 13, 0]
+		},
+		"fixed": {
+			"rotation": [0, 90, -90],
+			"translation": [0, 0, -8]
+		}
+	}
+}

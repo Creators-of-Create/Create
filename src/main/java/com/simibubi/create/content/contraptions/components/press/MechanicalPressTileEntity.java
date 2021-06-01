@@ -10,7 +10,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;

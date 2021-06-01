@@ -175,7 +175,7 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = getSpeed() / 512f;
+		float movementSpeed = convertToLinear(getSpeed());
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		return movementSpeed;

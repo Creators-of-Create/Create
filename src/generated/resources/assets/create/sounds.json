@@ -49,6 +49,15 @@
     ],
     "subtitle": "create.subtitle.contraption_disassemble"
   },
+  "controller_click": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.add_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_click"
+  },
   "copper_armor_equip": {
     "sounds": [
       {
@@ -204,6 +213,42 @@
         "type": "event"
       }
     ]
+  },
+  "saw_activate_stone": {
+    "sounds": [
+      {
+        "name": "minecraft:ui.stonecutter.take_result",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_activate_stone"
+  },
+  "saw_activate_wood": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.boat.paddle_land",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_activate_wood"
+  },
+  "saw_idle": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.boat.paddle_land",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_idle"
+  },
+  "saw_process": {
+    "sounds": [
+      {
+        "name": "minecraft:block.sand.place",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_process"
   },
   "schematicannon_finish": {
     "sounds": [

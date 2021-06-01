@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
-import com.simibubi.create.content.logistics.InWorldProcessing;
-import com.simibubi.create.content.logistics.InWorldProcessing.Type;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Type;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;

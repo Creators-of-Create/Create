@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.item.filter;
 
+import com.simibubi.create.foundation.gui.IClearableContainer;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
@@ -11,7 +13,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class AbstractFilterContainer extends Container {
+public abstract class AbstractFilterContainer extends Container implements IClearableContainer {
 
 	public PlayerEntity player;
 	protected PlayerInventory playerInventory;
@@ -38,7 +40,8 @@ public abstract class AbstractFilterContainer extends Container {
 		detectAndSendChanges();
 	}
 
-	protected void clearContents() {
+	@Override
+	public void clearContents() {
 		for (int i = 0; i < filterInventory.getSlots(); i++)
 			filterInventory.setStackInSlot(i, ItemStack.EMPTY);
 	}

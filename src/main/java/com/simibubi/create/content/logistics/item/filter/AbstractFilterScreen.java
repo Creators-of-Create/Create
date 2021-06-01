@@ -30,7 +30,7 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
-    private List<Rectangle2d> extraAreas = Collections.EMPTY_LIST;
+    private List<Rectangle2d> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
@@ -146,7 +146,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 			if (resetButton.isHovered()) {
 				container.clearContents();
 				contentsCleared();
-				sendOptionUpdate(Option.CLEAR);
+				container.sendClearPacket();
 				return true;
 			}
 		}

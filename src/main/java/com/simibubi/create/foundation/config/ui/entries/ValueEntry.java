@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -115,20 +116,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 
 	public void setValue(@Nonnull T value) {
-		if (value.equals(this.value.get())) {
-			ConfigScreen.changes.remove(path);
-			onValueChange(value);
-			return;
-		}
-
-		ConfigScreen.changes.put(path, value);
+		ConfigHelper.setValue(path, this.value, value);
 		onValueChange(value);
 	}
 
 	@Nonnull
 	public T getValue() {
-		//noinspection unchecked
-		return (T) ConfigScreen.changes.getOrDefault(path, this.value.get());
+		return ConfigHelper.getValue(path, this.value);
 	}
 
 	protected boolean isCurrentValueChanged() {

@@ -99,7 +99,7 @@ public class GantryShaftTileEntity extends KineticTileEntity {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.GANTRY_SHAFT.has(blockState))
 			return 0;
-		return MathHelper.clamp(-getSpeed() / 512f, -.49f, .49f);
+		return MathHelper.clamp(convertToLinear(-getSpeed()), -.49f, .49f);
 	}
 
 	@Override

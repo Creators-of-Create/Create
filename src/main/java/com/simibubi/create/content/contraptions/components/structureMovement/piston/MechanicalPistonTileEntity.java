@@ -84,7 +84,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		applyContraptionPosition();
 		forceMove = true;
 		world.addEntity(movedContraption);
-		
+
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 	}
 
@@ -118,7 +118,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
-		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f);
+		float movementSpeed = MathHelper.clamp(convertToLinear(getSpeed()), -.49f, .49f);
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);

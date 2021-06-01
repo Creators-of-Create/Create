@@ -15,6 +15,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	Vector<Instruction> instructions;
 	int currentInstruction;
 	int currentInstructionDuration;
+	float currentInstructionProgress;
 	int timer;
 	boolean poweredPreviously;
 
@@ -23,6 +24,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		instructions = Instruction.createDefault();
 		currentInstruction = -1;
 		currentInstructionDuration = -1;
+		currentInstructionProgress = 0;
 		timer = 0;
 		poweredPreviously = false;
 	}
@@ -39,6 +41,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			return;
 		if (timer < currentInstructionDuration) {
 			timer++;
+			currentInstructionProgress += getInstruction(currentInstruction).getTickProgress(speed);
 			return;
 		}
 		run(currentInstruction + 1);
@@ -59,8 +62,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			run(-1);
 
 		// Update instruction time with regards to new speed
-		float initialProgress = timer / (float) currentInstructionDuration;
-		currentInstructionDuration = instruction.getDuration(initialProgress, getTheoreticalSpeed());
+		currentInstructionDuration = instruction.getDuration(currentInstructionProgress, getTheoreticalSpeed());
 		timer = 0;
 	}
 
@@ -109,6 +111,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 				detachKinetics();
 			currentInstruction = -1;
 			currentInstructionDuration = -1;
+			currentInstructionProgress = 0;
 			timer = 0;
 			if (!world.isBlockPowered(pos))
 				world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
@@ -120,6 +123,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		detachKinetics();
 		currentInstructionDuration = instruction.getDuration(0, getTheoreticalSpeed());
 		currentInstruction = instructionIndex;
+		currentInstructionProgress = 0;
 		timer = 0;
 		world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, instructionIndex + 1), 3);
 	}
@@ -133,6 +137,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InstructionIndex", currentInstruction);
 		compound.putInt("InstructionDuration", currentInstructionDuration);
+		compound.putFloat("InstructionProgress", currentInstructionProgress);
 		compound.putInt("Timer", timer);
 		compound.putBoolean("PrevPowered", poweredPreviously);
 		compound.put("Instructions", Instruction.serializeAll(instructions));
@@ -143,6 +148,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		currentInstruction = compound.getInt("InstructionIndex");
 		currentInstructionDuration = compound.getInt("InstructionDuration");
+		currentInstructionProgress = compound.getFloat("InstructionProgress");
 		poweredPreviously = compound.getBoolean("PrevPowered");
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));

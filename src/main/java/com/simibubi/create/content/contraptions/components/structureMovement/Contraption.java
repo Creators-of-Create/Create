@@ -119,7 +119,7 @@ public abstract class Contraption {
 
 	public Optional<List<AxisAlignedBB>> simplifiedEntityColliders;
 	public AbstractContraptionEntity entity;
-	public CombinedInvWrapper inventory;
+	public ContraptionInvWrapper inventory;
 	public CombinedTankWrapper fluidInventory;
 	public AxisAlignedBB bounds;
 	public BlockPos anchor;
@@ -252,7 +252,7 @@ public abstract class Contraption {
 			.stream()
 			.map(MountedStorage::getItemHandler)
 			.collect(Collectors.toList());
-		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+		inventory = new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 
 		List<IFluidHandler> fluidHandlers = fluidStorage.values()
 			.stream()
@@ -739,7 +739,7 @@ public abstract class Contraption {
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
 
-		inventory = new CombinedInvWrapper(handlers);
+		inventory = new ContraptionInvWrapper(handlers);
 		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 
 		if (nbt.contains("BoundsFront"))
@@ -1053,8 +1053,10 @@ public abstract class Contraption {
 				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
-		for (int i = 0; i < inventory.getSlots(); i++)
-			inventory.setStackInSlot(i, ItemStack.EMPTY);
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			if (!inventory.isSlotExternal(i))
+				inventory.setStackInSlot(i, ItemStack.EMPTY);
+		}
 		for (int i = 0; i < fluidInventory.getTanks(); i++)
 			fluidInventory.drain(fluidInventory.getFluidInTank(i), FluidAction.EXECUTE);
 
@@ -1259,6 +1261,26 @@ public abstract class Contraption {
 		@Override
 		public boolean isBlockPresent(BlockPos pos) {
 			return pos.equals(te.getPos());
+		}
+	}
+
+	public static class ContraptionInvWrapper extends CombinedInvWrapper {
+		protected final boolean isExternal;
+
+		public ContraptionInvWrapper(boolean isExternal, IItemHandlerModifiable... itemHandler) {
+			super(itemHandler);
+			this.isExternal = isExternal;
+		}
+
+		public ContraptionInvWrapper(IItemHandlerModifiable... itemHandler) {
+			this(false, itemHandler);
+		}
+
+		public boolean isSlotExternal(int slot) {
+			if (isExternal)
+				return true;
+			IItemHandlerModifiable handler = getHandlerFromIndex(getIndexForSlot(slot));
+			return handler instanceof ContraptionInvWrapper && ((ContraptionInvWrapper) handler).isSlotExternal(slot);
 		}
 	}
 }

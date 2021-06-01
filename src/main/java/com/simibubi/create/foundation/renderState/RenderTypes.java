@@ -83,7 +83,7 @@ public class RenderTypes extends RenderState {
 			.transparency(TRANSLUCENT_TRANSPARENCY)
 			.diffuseLighting(ENABLE_DIFFUSE_LIGHTING)
 			.alpha(ONE_TENTH_ALPHA)
-			.cull(DISABLE_CULLING)
+			.cull(ENABLE_CULLING)
 			.lightmap(ENABLE_LIGHTMAP)
 			.overlay(ENABLE_OVERLAY_COLOR)
 			.build(true));

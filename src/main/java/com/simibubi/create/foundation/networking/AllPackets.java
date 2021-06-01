@@ -29,6 +29,8 @@ import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorTriggerPacket;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmPlacementPacket;
+import com.simibubi.create.content.logistics.item.LinkedControllerBindPacket;
+import com.simibubi.create.content.logistics.item.LinkedControllerInputPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -39,9 +41,10 @@ import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
-import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
+import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
+import com.simibubi.create.foundation.gui.ClearContainerPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -69,6 +72,7 @@ public enum AllPackets {
 	CONFIGURE_PROJECTOR(ConfigureProjectorPacket.class, ConfigureProjectorPacket::new, PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
+	CLEAR_CONTAINER(ClearContainerPacket.class, ClearContainerPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new, PLAY_TO_SERVER),
@@ -83,6 +87,8 @@ public enum AllPackets {
 	PLACE_EJECTOR(EjectorPlacementPacket.class, EjectorPlacementPacket::new, PLAY_TO_SERVER),
 	TRIGGER_EJECTOR(EjectorTriggerPacket.class, EjectorTriggerPacket::new, PLAY_TO_SERVER),
 	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket::new, PLAY_TO_SERVER),
+	LINKED_CONTROLLER_INPUT(LinkedControllerInputPacket.class, LinkedControllerInputPacket::new, PLAY_TO_SERVER),
+	LINKED_CONTROLLER_BIND(LinkedControllerBindPacket.class, LinkedControllerBindPacket::new, PLAY_TO_SERVER),
 	C_CONFIGURE_CONFIG(CConfigureConfigPacket.class, CConfigureConfigPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client

@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.awt.Color;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
 import com.simibubi.create.foundation.config.ui.entries.EnumEntry;
@@ -50,6 +54,37 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected int listWidth;
 	protected String title;
 
+	public static SubMenuConfigScreen find(ConfigHelper.ConfigPath path) {
+		ForgeConfigSpec spec = ConfigHelper.findConfigSpecFor(path.getType(), path.getModID());
+		UnmodifiableConfig values = spec.getValues();
+		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID()).searchForSpecsInModContainer();
+		SubMenuConfigScreen screen = new SubMenuConfigScreen(base, "root", path.getType(), spec, values);
+		List<String> remainingPath = Lists.newArrayList(path.getPath());
+
+		path: while (!remainingPath.isEmpty()) {
+			String next = remainingPath.remove(0);
+			for (Map.Entry<String, Object> entry : values.valueMap().entrySet()) {
+				String key = entry.getKey();
+				Object obj = entry.getValue();
+				if (!key.equalsIgnoreCase(next))
+					continue;
+
+				if (!(obj instanceof AbstractConfig)) {
+					//highlight entry
+					continue;
+				}
+
+				values = (UnmodifiableConfig) obj;
+				screen = new SubMenuConfigScreen(screen, toHumanReadable(key), path.getType(), spec, values);
+				continue path;
+			}
+
+			break;
+		}
+
+		ConfigScreen.modID = path.getModID();
+		return screen;
+	}
 
 	public SubMenuConfigScreen(Screen parent, String title, ModConfig.Type type, ForgeConfigSpec configSpec, UnmodifiableConfig configGroup) {
 		super(parent);
@@ -81,7 +116,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			ForgeConfigSpec.ConfigValue configValue = values.get(path);
 			configValue.set(value);
 			if (type == ModConfig.Type.SERVER) {
-				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(path, value));
+				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, value));
 			}
 		});
 		clearChanges();
@@ -92,11 +127,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			if (obj instanceof AbstractConfig) {
 				resetConfig((UnmodifiableConfig) obj);
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
-				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
-				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
+				ForgeConfigSpec.ConfigValue configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
+				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
 
-				if (!configValue.get().equals(valueSpec.getDefault()))
-					changes.put(String.join(".", configValue.getPath()), valueSpec.getDefault());
+				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault());
 			}
 		});
 
@@ -265,7 +299,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 		int x = width/2;
-		drawCenteredString(ms, client.fontRenderer, "Editing config: " + type.toString() + "@" + title, x, 15, Theme.i(Theme.Key.TEXT));
+		drawCenteredString(ms, client.fontRenderer, "Editing config: " + ConfigScreen.modID + ":" + type.toString().toLowerCase(Locale.ROOT) + "@" + title, x, 15, Theme.i(Theme.Key.TEXT));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 	}
