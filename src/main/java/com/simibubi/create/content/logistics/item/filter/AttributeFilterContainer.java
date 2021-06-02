@@ -53,22 +53,22 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	protected void init() {
-		super.init();
+	protected void init(PlayerInventory inv, ItemStack contentHolder) {
+		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.setDisplayName(
 			new StringTextComponent("Selected Tags").formatted(TextFormatting.RESET, TextFormatting.BLUE));
-		filterInventory.setStackInSlot(1, stack);
+		ghostInventory.setStackInSlot(1, stack);
 	}
 
 	@Override
-	protected ItemStackHandler createFilterInventory() {
+	protected ItemStackHandler createGhostInventory() {
 		return new ItemStackHandler(2);
 	}
 
 	protected void addFilterSlots() {
-		this.addSlot(new SlotItemHandler(filterInventory, 0, -34, 22));
-		this.addSlot(new SlotItemHandler(filterInventory, 1, -28, 57) {
+		this.addSlot(new SlotItemHandler(ghostInventory, 0, -34, 22));
+		this.addSlot(new SlotItemHandler(ghostInventory, 1, -28, 57) {
 			@Override
 			public boolean canTakeStack(PlayerEntity playerIn) {
 				return false;
@@ -102,20 +102,20 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		if (index == 37)
 			return ItemStack.EMPTY;
 		if (index == 36) {
-			filterInventory.setStackInSlot(37, ItemStack.EMPTY);
+			ghostInventory.setStackInSlot(37, ItemStack.EMPTY);
 			return ItemStack.EMPTY;
 		}
 		if (index < 36) {
 			ItemStack stackToInsert = playerInventory.getStackInSlot(index);
 			ItemStack copy = stackToInsert.copy();
 			copy.setCount(1);
-			filterInventory.setStackInSlot(0, copy);
+			ghostInventory.setStackInSlot(0, copy);
 		}
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	protected int getInventoryOffset() {
+	protected int getPlayerInventoryXOffset() {
 		return 83;
 	}
 
@@ -134,6 +134,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
+		super.saveData(filterItem);
 		filterItem.getOrCreateTag()
 			.putInt("WhitelistMode", whitelistMode.ordinal());
 		ListNBT attributes = new ListNBT();
@@ -141,7 +142,8 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 			if (at == null)
 				return;
 			CompoundNBT compoundNBT = new CompoundNBT();
-			at.getFirst().serializeNBT(compoundNBT);
+			at.getFirst()
+				.serializeNBT(compoundNBT);
 			compoundNBT.putBoolean("Inverted", at.getSecond());
 			attributes.add(compoundNBT);
 		});

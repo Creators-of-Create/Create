@@ -38,7 +38,8 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	@Override
 	protected void drawMouseoverTooltip(MatrixStack ms, int x, int y) {
 		if (!this.client.player.inventory.getItemStack()
-			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.getHasStack()) {
+			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.getHasStack()
+			|| hoveredSlot.inventory == container.playerInventory) {
 			super.drawMouseoverTooltip(ms, x, y);
 			return;
 		}
@@ -48,6 +49,8 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	@Override
 	public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
 		List<ITextComponent> list = super.getTooltipFromItem(stack);
+		if (hoveredSlot.inventory == container.playerInventory)
+			return list;
 		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex()) : list;
 	}
 

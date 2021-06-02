@@ -35,6 +35,7 @@ import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
+import com.simibubi.create.content.curiosities.tools.BlueprintItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
@@ -197,6 +198,10 @@ public class AllItems {
 		REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
 			.register();
 
+	public static final ItemEntry<BlueprintItem> CRAFTING_BLUEPRINT =
+		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
+			.register();
+
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
 		.register();
@@ -222,7 +227,7 @@ public class AllItems {
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
+
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
 			.transform(CreateRegistrate.customRenderedItem(() -> SymmetryWandModel::new))

@@ -59,6 +59,7 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 	
 	LINKED_CONTROLLER("curiosities2.png", 180, 109),
+	BLUEPRINT("curiosities2.png", 0, 109, 179, 109),
 
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
@@ -83,6 +84,11 @@ public enum AllGuiTextures implements IScreenRenderable {
 	INDICATOR_GREEN("widgets.png", 36, 18, 18, 6),
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
+	
+	HOTSLOT_ARROW("widgets.png", 24, 51, 20, 12),
+	HOTSLOT("widgets.png", 0, 68, 22, 22),
+	HOTSLOT_ACTIVE("widgets.png", 0, 46, 22, 22),
+	HOTSLOT_SUPER_ACTIVE("widgets.png", 27, 67, 24, 24),
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets.png", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets.png", 8, 24, 8, 8),

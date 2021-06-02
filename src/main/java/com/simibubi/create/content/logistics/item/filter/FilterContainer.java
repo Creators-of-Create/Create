@@ -31,19 +31,18 @@ public class FilterContainer extends AbstractFilterContainer {
 	protected void addFilterSlots() {
 		int x = -27;
 		int y = 20;
-
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
-				this.addSlot(new SlotItemHandler(filterInventory, col + row * 9, x + col * 18, y + row * 18));
+				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
 	}
 	
 	@Override
-	protected ItemStackHandler createFilterInventory() {
-		return FilterItem.getFilterItems(filterItem);
+	protected ItemStackHandler createGhostInventory() {
+		return FilterItem.getFilterItems(contentHolder);
 	}
 
 	@Override
-	protected int getInventoryOffset() {
+	protected int getPlayerInventoryXOffset() {
 		return 97;
 	}
 	
@@ -56,6 +55,7 @@ public class FilterContainer extends AbstractFilterContainer {
 	
 	@Override
 	protected void saveData(ItemStack filterItem) {
+		super.saveData(filterItem);
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		tag.putBoolean("RespectNBT", respectNBT);
 		tag.putBoolean("Blacklist", blacklist);

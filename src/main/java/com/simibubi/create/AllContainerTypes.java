@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateContainer;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerContainer;
@@ -37,6 +39,9 @@ public class AllContainerTypes {
 
 	public static final ContainerEntry<AttributeFilterContainer> ATTRIBUTE_FILTER =
 		register("attribute_filter", AttributeFilterContainer::new, () -> AttributeFilterScreen::new);
+	
+	public static final ContainerEntry<BlueprintContainer> CRAFTING_BLUEPRINT =
+		register("crafting_blueprint", BlueprintContainer::new, () -> BlueprintScreen::new);
 	
 	public static final ContainerEntry<LinkedControllerContainer> LINKED_CONTROLLER =
 		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);

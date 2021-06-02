@@ -66,9 +66,9 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		int invY = y + background.height + 10;
 		PLAYER_INVENTORY.draw(ms, this, invX, invY);
 		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
-		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
+		textRenderer.draw(ms, I18n.format(container.contentHolder.getTranslationKey()), x + 15, y + 3, 0xdedede);
 
-		GuiGameElement.of(container.filterItem)
+		GuiGameElement.of(container.contentHolder)
 				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, guiTop + background.height - 60, -200)
 				.scale(5)
 				.render(ms);
@@ -82,7 +82,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		handleIndicators();
 
 		if (!container.player.getHeldItemMainhand()
-			.equals(container.filterItem, false))
+			.equals(container.contentHolder, false))
 			client.player.closeScreen();
 	}
 

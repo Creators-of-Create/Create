@@ -39,6 +39,7 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
@@ -51,10 +52,12 @@ import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -84,9 +87,9 @@ public class CreateJEI implements IModPlugin {
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private final CreateRecipeCategory<?>
 
-		milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
-			.catalyst(AllBlocks.MILLSTONE::get)
-			.build(),
+	milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
+		.catalyst(AllBlocks.MILLSTONE::get)
+		.build(),
 
 		crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
 			.recipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
@@ -167,9 +170,10 @@ public class CreateJEI implements IModPlugin {
 			.catalyst(AllItems.SAND_PAPER::get)
 			.catalyst(AllItems.RED_SAND_PAPER::get)
 			.build(),
-			
+
 		deploying = register("deploying", DeployingCategory::new)
-			.recipeList(() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
+			.recipeList(
+				() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
 			.recipes(AllRecipeTypes.DEPLOYING)
 			.catalyst(AllBlocks.DEPLOYER::get)
 			.catalyst(AllBlocks.DEPOT::get)
@@ -214,6 +218,11 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	@Override
+	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
+	}
+
+	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		allCategories.forEach(registration::addRecipeCategories);
 	}
@@ -238,7 +247,8 @@ public class CreateJEI implements IModPlugin {
 		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
 		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
 		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
-		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
+		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
+		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
 	}
 
 	private class CategoryBuilder<T extends IRecipe<?>> {
@@ -278,12 +288,12 @@ public class CreateJEI implements IModPlugin {
 			return recipeList(list, null);
 		}
 
-		public CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list, Function<IRecipe<?>, T> converter) {
+		public CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list,
+			Function<IRecipe<?>, T> converter) {
 			recipeListConsumers.add(recipes -> {
 				List<? extends IRecipe<?>> toAdd = list.get();
 				if (converter != null)
-					toAdd = toAdd
-						.stream()
+					toAdd = toAdd.stream()
 						.map(converter)
 						.collect(Collectors.toList());
 				recipes.addAll(toAdd);

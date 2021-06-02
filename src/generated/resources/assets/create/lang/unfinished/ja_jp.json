@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 35",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -414,6 +414,7 @@
 	"block.create.zinc_ore": "亜鉛鉱石",
 
 	"entity.create.contraption": "からくり",
+	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "ガントリーからくり",
 	"entity.create.seat": "シート",
 	"entity.create.stationary_contraption": "付設からくり",
@@ -444,6 +445,7 @@
 	"item.create.copper_nugget": "銅塊",
 	"item.create.copper_sheet": "銅板",
 	"item.create.crafter_slot_cover": "クラフタースロットカバー",
+	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.crushed_aluminum_ore": "砕いたアルミニウム鉱石",
 	"item.create.crushed_brass": "砕いた真鍮",
 	"item.create.crushed_copper_ore": "砕いた銅鉱石",
@@ -1111,6 +1113,14 @@
 	"create.linked_controller.key_bound": "UNLOCALIZED: Frequency bound to %1$s",
 	"create.linked_controller.frequency_slot_1": "UNLOCALIZED: Keybind: %1$s, Freq. #1",
 	"create.linked_controller.frequency_slot_2": "UNLOCALIZED: Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "UNLOCALIZED: Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "UNLOCALIZED: Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "UNLOCALIZED: Display Slot",
+	"create.crafting_blueprint.inferred": "UNLOCALIZED: Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "UNLOCALIZED: Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "UNLOCALIZED: Secondary Display Slot",
+	"create.crafting_blueprint.optional": "UNLOCALIZED: Optional",
 
 	"create.hint.hose_pulley.title": "底なし搬出",
 	"create.hint.hose_pulley": "対象となる液体は無限とみなされています。",

@@ -413,6 +413,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
+	"entity.create.crafting_blueprint": "Crafting Blueprint",
 	"entity.create.gantry_contraption": "Gantry Contraption",
 	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
@@ -443,6 +444,7 @@
 	"item.create.copper_nugget": "Copper Nugget",
 	"item.create.copper_sheet": "Copper Sheet",
 	"item.create.crafter_slot_cover": "Crafter Slot Cover",
+	"item.create.crafting_blueprint": "Crafting Blueprint",
 	"item.create.crushed_aluminum_ore": "Crushed Aluminum Ore",
 	"item.create.crushed_brass": "Crushed Brass",
 	"item.create.crushed_copper_ore": "Crushed Copper Ore",
@@ -1110,6 +1112,14 @@
 	"create.linked_controller.key_bound": "Frequency bound to %1$s",
 	"create.linked_controller.frequency_slot_1": "Keybind: %1$s, Freq. #1",
 	"create.linked_controller.frequency_slot_2": "Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "Display Slot",
+	"create.crafting_blueprint.inferred": "Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "Secondary Display Slot",
+	"create.crafting_blueprint.optional": "Optional",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",

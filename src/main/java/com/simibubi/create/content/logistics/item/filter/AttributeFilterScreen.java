@@ -91,7 +91,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
 		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
 		attributeSelector.removeCallback();
-		referenceItemChanged(container.filterInventory.getStackInSlot(0));
+		referenceItemChanged(container.ghostInventory.getStackInSlot(0));
 
 		widgets.add(attributeSelector);
 		widgets.add(attributeSelectorLabel);
@@ -160,7 +160,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	public void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		ItemStack stack = container.filterInventory.getStackInSlot(1);
+		ItemStack stack = container.ghostInventory.getStackInSlot(1);
 		matrixStack.push();
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
 		this.setZOffset(200);
@@ -177,7 +177,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	public void tick() {
 		super.tick();
-		ItemStack stackInSlot = container.filterInventory.getStackInSlot(0);
+		ItemStack stackInSlot = container.ghostInventory.getStackInSlot(0);
 		if (!stackInSlot.equals(lastItemScanned, false))
 			referenceItemChanged(stackInSlot);
 	}
