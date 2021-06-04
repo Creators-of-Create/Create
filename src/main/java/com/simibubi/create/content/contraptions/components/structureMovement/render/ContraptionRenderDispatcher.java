@@ -18,6 +18,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.jozufozu.flywheel.core.WorldContext;
+import com.jozufozu.flywheel.event.BeginFrameEvent;
+import com.jozufozu.flywheel.event.ReloadRenderersEvent;
+import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -42,7 +45,6 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
@@ -50,17 +52,18 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber
 public class ContraptionRenderDispatcher {
 	private static final Lazy<BlockModelRenderer> MODEL_RENDERER = Lazy.of(() -> new BlockModelRenderer(Minecraft.getInstance().getBlockColors()));
 	private static final Lazy<BlockModelShapes> BLOCK_MODELS = Lazy.of(() -> Minecraft.getInstance().getModelManager().getBlockModelShapes());
@@ -92,7 +95,9 @@ public class ContraptionRenderDispatcher {
 		}
 	}
 
-	public static void beginFrame(ClientWorld world, MatrixStack stack, ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture) {
+	@SubscribeEvent
+	public static void beginFrame(BeginFrameEvent event) {
+		ActiveRenderInfo info = event.getInfo();
 		double camX = info.getProjectedView().x;
 		double camY = info.getProjectedView().y;
 		double camZ = info.getProjectedView().z;
@@ -101,10 +106,12 @@ public class ContraptionRenderDispatcher {
 		}
 	}
 
-	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
+	@SubscribeEvent
+	public static void renderLayer(RenderLayerEvent event) {
 		removeDeadContraptions();
 
 		if (RENDERERS.isEmpty()) return;
+		RenderType layer = event.getType();
 
 		layer.startDrawing();
 		glEnable(GL_TEXTURE_3D);
@@ -114,8 +121,8 @@ public class ContraptionRenderDispatcher {
 			ContraptionProgram structureShader = STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
 
 			structureShader.bind();
-			structureShader.uploadViewProjection(viewProjection);
-			structureShader.uploadCameraPos(camX, camY, camZ);
+			structureShader.uploadViewProjection(event.viewProjection);
+			structureShader.uploadCameraPos(event.camX, event.camY, event.camZ);
 
 			for (RenderedContraption renderer : RENDERERS.values()) {
 				renderer.doRenderLayer(layer, structureShader);
@@ -124,7 +131,7 @@ public class ContraptionRenderDispatcher {
 
 		if (Backend.canUseInstancing()) {
 			for (RenderedContraption renderer : RENDERERS.values()) {
-				renderer.materialManager.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
+				renderer.materialManager.render(layer, event.viewProjection, event.camX, event.camY, event.camZ, renderer::setup);
 			}
 		}
 
@@ -132,6 +139,11 @@ public class ContraptionRenderDispatcher {
 		layer.endDrawing();
 		glDisable(GL_TEXTURE_3D);
 		glActiveTexture(GL_TEXTURE0);
+	}
+
+	@SubscribeEvent
+	public static void onRendererReload(ReloadRenderersEvent event) {
+		invalidateAll();
 	}
 
 	public static void render(AbstractContraptionEntity entity, Contraption contraption,
@@ -157,7 +169,7 @@ public class ContraptionRenderDispatcher {
 
 		if (contraption == null) {
 			PlacementSimulationWorld renderWorld = setupRenderWorld(world, c);
-			contraption = new RenderedContraption(world, renderWorld, c);
+			contraption = new RenderedContraption(renderWorld, c);
 			RENDERERS.put(entityId, contraption);
 		}
 
@@ -183,7 +195,7 @@ public class ContraptionRenderDispatcher {
 		renderWorld.setTileEntities(c.presentTileEntities.values());
 
 		for (Template.BlockInfo info : c.getBlocks()
-										.values())
+				.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
 			renderWorld.setBlockState(info.pos, info.state, 128);
 
@@ -220,7 +232,7 @@ public class ContraptionRenderDispatcher {
 			MatrixStack m = matrices.contraptionStack;
 			m.push();
 			MatrixStacker.of(m)
-				.translate(blockInfo.pos);
+					.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);
 			if (movementBehaviour != null)
@@ -264,7 +276,7 @@ public class ContraptionRenderDispatcher {
 		ForgeHooksClient.setRenderLayer(layer);
 		BlockModelRenderer.enableCache();
 		for (Template.BlockInfo info : c.getBlocks()
-										.values()) {
+				.values()) {
 			BlockState state = info.state;
 
 			if (state.getRenderType() != BlockRenderType.MODEL)

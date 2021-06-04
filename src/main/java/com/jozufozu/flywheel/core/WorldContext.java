@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
-import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.ShaderSources;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
@@ -43,7 +43,7 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	protected Supplier<Stream<ResourceLocation>> specStream;
 	protected TemplateFactory templateFactory;
 
-	public final WorldAttached<MaterialManager<P>> materialManager = new WorldAttached<>($ -> new MaterialManager<>(this));
+	private final WorldAttached<MaterialManager<P>> materialManager = new WorldAttached<>($ -> new MaterialManager<>(this));
 
 	private final Map<ShaderType, ResourceLocation> builtins = new EnumMap<>(ShaderType.class);
 	private final Map<ShaderType, String> builtinSources = new EnumMap<>(ShaderType.class);
@@ -78,13 +78,14 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	}
 
 	@Override
-	protected IMultiProgram<P> loadSpecInternal(ShaderLoader loader, ProgramSpec spec) {
+	protected IMultiProgram<P> loadSpecInternal(ShaderSources loader, ProgramSpec spec) {
 		return new StateSensitiveMultiProgram<>(loader, factory, this, spec);
 	}
 
 	protected ProgramTemplate template;
+
 	@Override
-	public void load(ShaderLoader loader) {
+	public void load(ShaderSources loader) {
 		programs.values().forEach(IMultiProgram::delete);
 		programs.clear();
 
@@ -103,10 +104,10 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 		template = templateFactory.create(loader);
 		transformer = new ShaderTransformer()
 				.pushStage(this::injectBuiltins)
-				.pushStage(loader::processIncludes)
+				.pushStage(Shader::processIncludes)
 				.pushStage(Shader::parseStructs)
 				.pushStage(template)
-				.pushStage(loader::processIncludes);
+				.pushStage(Shader::processIncludes);
 
 		specStream.get()
 				.map(Backend::getSpec)
@@ -131,6 +132,6 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	}
 
 	public interface TemplateFactory {
-		ProgramTemplate create(ShaderLoader loader);
+		ProgramTemplate create(ShaderSources loader);
 	}
 }

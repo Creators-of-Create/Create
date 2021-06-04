@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.RenderWork;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightUpdater;
 
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class NetworkLightUpdateMixin {
 				chunk.getTileEntityMap()
 					.values()
 					.forEach(tile -> {
-						Backend.tileInstanceManager.get(world)
+						InstancedRenderDispatcher.get(world)
 								.onLightUpdate(tile);
 					});
 			}

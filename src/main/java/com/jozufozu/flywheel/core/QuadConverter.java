@@ -15,10 +15,16 @@ import com.jozufozu.flywheel.backend.gl.GlNumericType;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBuffer;
 import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.model.ElementBuffer;
+import com.jozufozu.flywheel.event.ReloadRenderersEvent;
+
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 /**
  * A class to manage EBOs that index quads as triangles.
  */
+@Mod.EventBusSubscriber
 public class QuadConverter {
 
 	public static final int STARTING_CAPACITY = 42;
@@ -157,5 +163,11 @@ public class QuadConverter {
 		}
 
 		return GlNumericType.UINT;
+	}
+
+	// make sure this gets reset first so it has a chance to repopulate
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public static void onRendererReload(ReloadRenderersEvent event) {
+		if (INSTANCE != null) INSTANCE.free();
 	}
 }

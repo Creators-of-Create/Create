@@ -49,8 +49,8 @@ public class InstanceMaterial<D extends InstanceData> {
 
 		this.models = CacheBuilder.newBuilder()
 				.removalListener(notification -> {
-					Instancer<?> model = (Instancer<?>) notification.getValue();
-					RenderWork.enqueue(model::delete);
+					Instancer<?> instancer = (Instancer<?>) notification.getValue();
+					RenderWork.enqueue(instancer::delete);
 				})
 				.build();
 		modelFormat = this.spec.getModelFormat();

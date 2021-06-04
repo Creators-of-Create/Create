@@ -20,18 +20,19 @@ public abstract class ShaderContext<P extends GlProgram> {
 
 	protected ShaderTransformer transformer = new ShaderTransformer();
 
-	public ShaderContext() { }
+	public ShaderContext() {
+	}
 
 	// TODO: Untangle the loading functions
 
 	/**
 	 * Load all programs associated with this context. This might be just one, if the context is very specialized.
 	 */
-	public abstract void load(ShaderLoader loader);
+	public abstract void load(ShaderSources loader);
 
-	protected abstract IMultiProgram<P> loadSpecInternal(ShaderLoader loader, ProgramSpec spec);
+	protected abstract IMultiProgram<P> loadSpecInternal(ShaderSources loader, ProgramSpec spec);
 
-	public void loadProgramFromSpec(ShaderLoader loader, ProgramSpec programSpec) {
+	public void loadProgramFromSpec(ShaderSources loader, ProgramSpec programSpec) {
 
 		try {
 			programs.put(programSpec.name, loadSpecInternal(loader, programSpec));
@@ -43,7 +44,7 @@ public abstract class ShaderContext<P extends GlProgram> {
 		}
 	}
 
-	public Program loadProgram(ShaderLoader loader, ProgramSpec spec, Collection<String> defines) {
+	public Program loadProgram(ShaderSources loader, ProgramSpec spec, Collection<String> defines) {
 		Shader vertexFile = loader.source(spec.vert, ShaderType.VERTEX);
 		Shader fragmentFile = loader.source(spec.frag, ShaderType.FRAGMENT);
 

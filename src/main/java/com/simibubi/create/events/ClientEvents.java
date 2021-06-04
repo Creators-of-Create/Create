@@ -3,9 +3,7 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.RenderWork;
-import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -110,7 +108,7 @@ public class ClientEvents {
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
-		Backend.tick();
+		InstancedRenderDispatcher.tick();
 		ScrollValueHandler.tick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();
@@ -154,11 +152,8 @@ public class ClientEvents {
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
 		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
-			CreateClient.invalidateRenderers(world);
+			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
-			TileInstanceManager renderer = Backend.tileInstanceManager.get(world);
-			renderer.invalidate();
-			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
 
 		/*
@@ -173,7 +168,7 @@ public class ClientEvents {
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		if (event.getWorld()
 			.isRemote()) {
-			CreateClient.invalidateRenderers(event.getWorld());
+			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
 		}
 	}
@@ -199,8 +194,6 @@ public class ClientEvents {
 		RenderSystem.enableCull();
 
 		ms.pop();
-
-		RenderWork.runAll();
 	}
 
 	@SubscribeEvent

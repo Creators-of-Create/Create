@@ -40,9 +40,9 @@ public class ContraptionInstanceManager extends TileInstanceManager {
 	}
 
     @Override
-    protected boolean shouldTick(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
-        return true;
-    }
+	protected boolean shouldFrameUpdate(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
+		return true;
+	}
 
     @Nullable
     public ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {

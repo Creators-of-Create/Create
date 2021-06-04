@@ -3,9 +3,14 @@ package com.jozufozu.flywheel.event;
 import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -27,6 +32,17 @@ public class ForgeEvents {
 				right.add(9, "");
 				right.add(10, text);
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLoadWorld(WorldEvent.Load event) {
+		IWorld world = event.getWorld();
+
+		if (Backend.isFlywheelWorld(world)) {
+			TileInstanceManager renderer = InstancedRenderDispatcher.get(world);
+			renderer.invalidate();
+			((ClientWorld) world).loadedTileEntityList.forEach(renderer::add);
 		}
 	}
 }

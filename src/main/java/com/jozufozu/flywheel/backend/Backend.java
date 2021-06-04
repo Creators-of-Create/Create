@@ -1,19 +1,10 @@
 package com.jozufozu.flywheel.backend;
 
-import static org.lwjgl.opengl.GL20.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL20.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL20.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL20.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glBindTexture;
-
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.Vector;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,55 +14,26 @@ import org.lwjgl.opengl.GLCapabilities;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
-import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
-import com.jozufozu.flywheel.core.CrumblingInstanceManager;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.WorldContext;
-import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
-import com.jozufozu.flywheel.util.WorldAttached;
 import com.simibubi.create.foundation.config.AllConfigs;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.DestroyBlockProgress;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.texture.Texture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
 
-	public static final ShaderLoader shaderLoader = new ShaderLoader();
-	public static final FlywheelListeners listeners = new FlywheelListeners();
+	public static final ShaderSources SHADER_SOURCES = new ShaderSources();
 
 	public static GLCapabilities capabilities;
 	public static GlCompat compat;
-
-	public static WorldAttached<TileInstanceManager> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(WorldContext.INSTANCE.getMaterialManager(world)));
-	public static LazyValue<Vector<CrumblingInstanceManager>> blockBreaking = new LazyValue<>(() -> {
-		Vector<CrumblingInstanceManager> renderers = new Vector<>(10);
-		for (int i = 0; i < 10; i++) {
-			renderers.add(new CrumblingInstanceManager());
-		}
-		return renderers;
-	});
 
 	private static Matrix4f projectionMatrix = new Matrix4f();
 	private static boolean instancedArrays;
@@ -84,26 +46,6 @@ public class Backend {
 	static {
 		register(WorldContext.INSTANCE);
 		register(WorldContext.CRUMBLING);
-
-		listeners.refreshListener(world -> {
-			if (canUseInstancing() && world != null) {
-				TileInstanceManager tileRenderer = Backend.tileInstanceManager.get(world);
-				tileRenderer.invalidate();
-				world.loadedTileEntityList.forEach(tileRenderer::add);
-			}
-
-			QuadConverter quadConverter = QuadConverter.getNullable();
-			if (quadConverter != null) quadConverter.free();
-		});
-
-		listeners.setupFrameListener((world, stack, info, gameRenderer, lightTexture) -> {
-			WorldContext.INSTANCE.materialManager.get(world)
-					.checkAndShiftOrigin(info);
-			Backend.tileInstanceManager.get(world)
-					.beginFrame(info);
-		});
-
-		listeners.renderLayerListener(Backend::renderLayer);
 	}
 
 	public Backend() {
@@ -165,7 +107,7 @@ public class Backend {
 	/**
 	 * Used to avoid calling Flywheel functions on (fake) worlds that don't specifically support it.
 	 */
-	public static boolean isFlywheelWorld(World world) {
+	public static boolean isFlywheelWorld(IWorld world) {
 		return (world instanceof IFlywheelWorld && ((IFlywheelWorld) world).supportsFlywheel()) || world == Minecraft.getInstance().world;
 	}
 
@@ -197,8 +139,10 @@ public class Backend {
 		IResourceManager manager = mc.getResourceManager();
 
 		if (manager instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager) manager).addReloadListener(shaderLoader);
+			((IReloadableResourceManager) manager).addReloadListener(SHADER_SOURCES);
 		}
+
+		OptifineHandler.init();
 	}
 
 	public static void refresh() {
@@ -211,84 +155,6 @@ public class Backend {
 				compat.instancedArraysSupported();
 
 		enabled = AllConfigs.CLIENT.experimentalRendering.get() && !OptifineHandler.usingShaders();
-	}
-
-	public static void tick() {
-		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.world;
-
-		TileInstanceManager instancer = tileInstanceManager.get(world);
-
-		Entity renderViewEntity = mc.renderViewEntity;
-		instancer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
-	}
-
-	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
-		if (!canUseInstancing(world)) return;
-		MaterialManager<WorldProgram> materialManager = WorldContext.INSTANCE.getMaterialManager(world);
-
-		layer.startDrawing();
-
-		materialManager.render(layer, viewProjection, cameraX, cameraY, cameraZ);
-
-		layer.endDrawing();
-	}
-
-	private static final RenderType CRUMBLING = ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(0);
-
-	public static void renderBreaking(ClientWorld world, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
-		if (!canUseInstancing(world)) return;
-
-		WorldRenderer worldRenderer = Minecraft.getInstance().worldRenderer;
-		Long2ObjectMap<SortedSet<DestroyBlockProgress>> breakingProgressions = worldRenderer.blockBreakingProgressions;
-
-		if (breakingProgressions.isEmpty()) return;
-		Vector<CrumblingInstanceManager> renderers = blockBreaking.getValue();
-
-		BitSet bitSet = new BitSet(10);
-
-		for (Long2ObjectMap.Entry<SortedSet<DestroyBlockProgress>> entry : breakingProgressions.long2ObjectEntrySet()) {
-			BlockPos breakingPos = BlockPos.fromLong(entry.getLongKey());
-
-			SortedSet<DestroyBlockProgress> progresses = entry.getValue();
-			if (progresses != null && !progresses.isEmpty()) {
-				int blockDamage = progresses.last().getPartialBlockDamage();
-				bitSet.set(blockDamage);
-				renderers.get(blockDamage).add(world.getTileEntity(breakingPos));
-			}
-		}
-
-		TextureManager textureManager = Minecraft.getInstance().textureManager;
-		ActiveRenderInfo info = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureManager.getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE).getGlTextureId());
-
-		glActiveTexture(GL_TEXTURE4);
-
-		CRUMBLING.startDrawing();
-		bitSet.stream().forEach(i -> {
-			Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(i));
-			CrumblingInstanceManager renderer = renderers.get(i);
-			renderer.beginFrame(info);
-
-			if (breaking != null) {
-				glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
-				renderer.materialManager.render(RenderType.getCutoutMipped(), viewProjection, cameraX, cameraY, cameraZ);
-			}
-
-			renderer.invalidate();
-		});
-		CRUMBLING.endDrawing();
-
-		glActiveTexture(GL_TEXTURE0);
-		Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(0));
-		if (breaking != null)
-			glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
-	}
-
-	public static void enqueueUpdate(TileEntity te) {
-		tileInstanceManager.get(te.getWorld()).queueUpdate(te);
 	}
 
 	public static void reloadWorldRenderers() {

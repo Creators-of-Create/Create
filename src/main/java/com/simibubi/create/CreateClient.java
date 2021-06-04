@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.OptifineHandler;
-import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -52,7 +48,6 @@ import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -86,7 +81,6 @@ public class CreateClient {
 
 		Backend.init();
 		CreateFlywheelHandler.init();
-		OptifineHandler.init();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
@@ -207,18 +201,7 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers() {
-		invalidateRenderers(null);
-	}
-
-	public static void invalidateRenderers(@Nullable IWorld world) {
 		BUFFER_CACHE.invalidate();
-
-		if (world != null) {
-			Backend.tileInstanceManager.get(world)
-					.invalidate();
-		} else {
-			Backend.tileInstanceManager.forEach(TileInstanceManager::invalidate);
-		}
 
 		ContraptionRenderDispatcher.invalidateAll();
 	}

@@ -12,14 +12,9 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
@@ -52,13 +47,10 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 
 @ParametersAreNonnullByDefault
-public class ShaderLoader implements ISelectiveResourceReloadListener {
+public class ShaderSources implements ISelectiveResourceReloadListener {
 	public static final String SHADER_DIR = "flywheel/shaders/";
 	public static final String PROGRAM_DIR = "flywheel/programs/";
 	public static final ArrayList<String> EXTENSIONS = Lists.newArrayList(".vert", ".vsh", ".frag", ".fsh", ".glsl");
-
-	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
-	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
 
 	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
@@ -161,7 +153,7 @@ public class ShaderLoader implements ISelectiveResourceReloadListener {
 	}
 
 	public Shader source(ResourceLocation name, ShaderType type) {
-		return new Shader(type, name, getShaderSource(name));
+		return new Shader(this, type, name, getShaderSource(name));
 	}
 
 	public Program loadProgram(ResourceLocation name, Shader... shaders) {
@@ -199,38 +191,6 @@ public class ShaderLoader implements ISelectiveResourceReloadListener {
 		for (String s : source.split("\n")) {
 			Backend.log.debug(String.format("%1$4s: ", i++) + s);
 		}
-	}
-
-	public void processIncludes(Shader shader) {
-		HashSet<ResourceLocation> seen = new HashSet<>();
-		seen.add(shader.name);
-
-		String includesInjected = includeRecursive(shader.getSource(), seen).collect(Collectors.joining("\n"));
-		shader.setSource(includesInjected);
-	}
-
-	private Stream<String> includeRecursive(String source, Set<ResourceLocation> seen) {
-		return lines(source).flatMap(line -> {
-
-			Matcher matcher = includePattern.matcher(line);
-
-			if (matcher.find()) {
-				String includeName = matcher.group(1);
-
-				ResourceLocation include = new ResourceLocation(includeName);
-
-				if (seen.add(include)) {
-					try {
-						return includeRecursive(getShaderSource(include), seen);
-					} catch (ShaderLoadingException e) {
-						throw new ShaderLoadingException("could not resolve import: " + e.getMessage());
-					}
-				}
-
-			}
-
-			return Stream.of(line);
-		});
 	}
 
 	public static Stream<String> lines(String s) {

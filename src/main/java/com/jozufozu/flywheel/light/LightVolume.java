@@ -1,15 +1,33 @@
 package com.jozufozu.flywheel.light;
 
+import static org.lwjgl.opengl.GL20.GL_LINEAR;
+import static org.lwjgl.opengl.GL20.GL_MIRRORED_REPEAT;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_3D;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL20.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_ALIGNMENT;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_IMAGE_HEIGHT;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_ROW_LENGTH;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_SKIP_IMAGES;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_SKIP_PIXELS;
+import static org.lwjgl.opengl.GL20.GL_UNPACK_SKIP_ROWS;
+import static org.lwjgl.opengl.GL20.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL20.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glPixelStorei;
+import static org.lwjgl.opengl.GL20.glTexImage3D;
+import static org.lwjgl.opengl.GL20.glTexParameteri;
+import static org.lwjgl.opengl.GL20.glTexSubImage3D;
+
 import java.nio.ByteBuffer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.RenderWork;
 import com.jozufozu.flywheel.backend.gl.GlTexture;
 import com.jozufozu.flywheel.backend.gl.versioned.RGPixelFormat;
 
@@ -35,20 +53,20 @@ public class LightVolume {
 
 		pixelFormat = Backend.compat.pixelFormat;
 
-		this.glTexture = new GlTexture(GL20.GL_TEXTURE_3D);
+		this.glTexture = new GlTexture(GL_TEXTURE_3D);
 		this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * pixelFormat.byteCount());
 
 		// allocate space for the texture
-		GL20.glActiveTexture(GL20.GL_TEXTURE4);
+		glActiveTexture(GL_TEXTURE4);
 		glTexture.bind();
 
 		int sizeX = textureVolume.sizeX();
 		int sizeY = textureVolume.sizeY();
 		int sizeZ = textureVolume.sizeZ();
-		GL12.glTexImage3D(GL12.GL_TEXTURE_3D, 0, pixelFormat.internalFormat(), sizeX, sizeY, sizeZ, 0, pixelFormat.format(), GL20.GL_UNSIGNED_BYTE, 0);
+		glTexImage3D(GL_TEXTURE_3D, 0, pixelFormat.internalFormat(), sizeX, sizeY, sizeZ, 0, pixelFormat.format(), GL_UNSIGNED_BYTE, 0);
 
 		glTexture.unbind();
-		GL20.glActiveTexture(GL20.GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
 	}
 
 	private void setSampleVolume(GridAlignedBB sampleVolume) {
@@ -242,32 +260,32 @@ public class LightVolume {
 		// just in case something goes wrong or we accidentally call this before this volume is properly disposed of.
 		if (lightData == null || removed) return;
 
-		GL13.glActiveTexture(GL20.GL_TEXTURE4);
+		glActiveTexture(GL_TEXTURE4);
 		glTexture.bind();
-		GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MIN_FILTER, GL13.GL_LINEAR);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_MAG_FILTER, GL13.GL_LINEAR);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_S, GL20.GL_MIRRORED_REPEAT);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_R, GL20.GL_MIRRORED_REPEAT);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_3D, GL13.GL_TEXTURE_WRAP_T, GL20.GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
 		uploadTexture();
 	}
 
 	private void uploadTexture() {
 		if (bufferDirty) {
-			GL20.glPixelStorei(GL20.GL_UNPACK_ROW_LENGTH, 0);
-			GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_PIXELS, 0);
-			GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_ROWS, 0);
-			GL20.glPixelStorei(GL20.GL_UNPACK_SKIP_IMAGES, 0);
-			GL20.glPixelStorei(GL20.GL_UNPACK_IMAGE_HEIGHT, 0);
-			GL20.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 2);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+			glPixelStorei(GL_UNPACK_SKIP_IMAGES, 0);
+			glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
 			int sizeX = textureVolume.sizeX();
 			int sizeY = textureVolume.sizeY();
 			int sizeZ = textureVolume.sizeZ();
 
-			GL12.glTexSubImage3D(GL12.GL_TEXTURE_3D, 0, 0, 0, 0, sizeX, sizeY, sizeZ, pixelFormat.format(), GL20.GL_UNSIGNED_BYTE, lightData);
+			glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, sizeX, sizeY, sizeZ, pixelFormat.format(), GL_UNSIGNED_BYTE, lightData);
 
-			GL20.glPixelStorei(GL20.GL_UNPACK_ALIGNMENT, 4); // 4 is the default
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // 4 is the default
 			bufferDirty = false;
 		}
 	}
@@ -278,11 +296,9 @@ public class LightVolume {
 
 	public void delete() {
 		removed = true;
-		RenderWork.enqueue(() -> {
-			glTexture.delete();
-			MemoryUtil.memFree(lightData);
-			lightData = null;
-		});
+		glTexture.delete();
+		MemoryUtil.memFree(lightData);
+		lightData = null;
 	}
 
 	private void writeLight(int x, int y, int z, int block, int sky) {

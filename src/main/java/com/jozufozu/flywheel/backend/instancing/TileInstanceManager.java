@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +25,8 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	protected final ConcurrentHashMap.KeySetView<TileEntity, Boolean> queuedUpdates;
 
 	protected final Map<TileEntity, TileEntityInstance<?>> instances;
-	protected final Map<TileEntity, ITickableInstance> tickableInstances;
-	protected final Map<TileEntity, IDynamicInstance> dynamicInstances;
+	protected final Object2ObjectOpenHashMap<TileEntity, ITickableInstance> tickableInstances;
+	protected final Object2ObjectOpenHashMap<TileEntity, IDynamicInstance> dynamicInstances;
 
 	protected int frame;
 	protected int tick;
@@ -34,9 +35,10 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 		this.materialManager = materialManager;
 		this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
 		this.queuedAdditions = new ArrayList<>(64);
-		this.dynamicInstances = new HashMap<>();
-		this.tickableInstances = new HashMap<>();
 		this.instances = new HashMap<>();
+
+		this.dynamicInstances = new Object2ObjectOpenHashMap<>();
+		this.tickableInstances = new Object2ObjectOpenHashMap<>();
 
 		materialManager.onOriginShift(this);
 	}
@@ -89,10 +91,11 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 		int cZ = (int) info.getProjectedView().z;
 
 		if (dynamicInstances.size() > 0) {
-			for (IDynamicInstance dyn : dynamicInstances.values()) {
-				if (!dyn.decreaseFramerateWithDistance() || shouldTick(dyn.getWorldPosition(), lookX, lookY, lookZ, cX, cY, cZ))
+			dynamicInstances.object2ObjectEntrySet().fastForEach(e -> {
+				IDynamicInstance dyn = e.getValue();
+				if (!dyn.decreaseFramerateWithDistance() || shouldFrameUpdate(dyn.getWorldPosition(), lookX, lookY, lookZ, cX, cY, cZ))
 					dyn.beginFrame();
-			}
+			});
 		}
 	}
 
@@ -184,14 +187,15 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 		}
 	}
 
-	protected boolean shouldTick(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
+	protected boolean shouldFrameUpdate(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
 		int dX = worldPos.getX() - cX;
 		int dY = worldPos.getY() - cY;
 		int dZ = worldPos.getZ() - cZ;
 
-		float dot = (dX + lookX * 2) * lookX + (dY + lookY * 2) * lookY + (dZ + lookZ * 2) * lookZ;
-
-		if (dot < 0) return false; // is it more than 2 blocks behind the camera?
+		// is it more than 2 blocks behind the camera?
+		int dist = 2;
+		float dot = (dX + lookX * dist) * lookX + (dY + lookY * dist) * lookY + (dZ + lookZ * dist) * lookZ;
+		if (dot < 0) return false;
 
 		return (frame % getUpdateDivisor(dX, dY, dZ)) == 0;
 	}

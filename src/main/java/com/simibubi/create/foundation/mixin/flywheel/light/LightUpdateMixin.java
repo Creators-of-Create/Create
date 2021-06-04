@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightUpdater;
 
 import net.minecraft.client.multiplayer.ClientChunkProvider;
@@ -46,7 +46,7 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
 					.getY()) == sectionY)
 				.map(Map.Entry::getValue)
 				.forEach(tile -> {
-					Backend.tileInstanceManager.get(world)
+					InstancedRenderDispatcher.get(world)
 							.onLightUpdate(tile);
 				});
 		}

@@ -11,7 +11,7 @@ public class CrumblingInstanceManager extends TileInstanceManager {
 	}
 
 	@Override
-	protected boolean shouldTick(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
+	protected boolean shouldFrameUpdate(BlockPos worldPos, float lookX, float lookY, float lookZ, int cX, int cY, int cZ) {
 		return true;
 	}
 }

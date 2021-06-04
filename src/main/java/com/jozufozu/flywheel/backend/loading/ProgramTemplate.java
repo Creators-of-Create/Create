@@ -3,15 +3,15 @@ package com.jozufozu.flywheel.backend.loading;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.ShaderSources;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
 public abstract class ProgramTemplate implements IProcessingStage {
 
-	protected final ShaderLoader loader;
+	protected final ShaderSources loader;
 	protected Map<ShaderType, ShaderTemplate> templates = new EnumMap<>(ShaderType.class);
 
-	public ProgramTemplate(ShaderLoader loader) {
+	public ProgramTemplate(ShaderSources loader) {
 		this.loader = loader;
 	}
 

@@ -1,7 +1,7 @@
 package com.jozufozu.flywheel.backend.loading;
 
 import com.jozufozu.flywheel.Flywheel;
-import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.ShaderSources;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +19,7 @@ public class ModelTemplate extends ProgramTemplate {
 	public static final ResourceLocation vert = new ResourceLocation(Flywheel.ID, "template/model/model.vert");
 	public static final ResourceLocation frag = new ResourceLocation(Flywheel.ID, "template/model/model.frag");
 
-	public ModelTemplate(ShaderLoader loader) {
+	public ModelTemplate(ShaderSources loader) {
 		super(loader);
 
 		templates.put(ShaderType.VERTEX, new ShaderTemplate(requiredVert, loader.getShaderSource(vert)));

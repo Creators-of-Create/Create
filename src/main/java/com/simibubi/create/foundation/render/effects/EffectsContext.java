@@ -4,7 +4,8 @@ import java.util.Collections;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ShaderContext;
-import com.jozufozu.flywheel.backend.ShaderLoader;
+import com.jozufozu.flywheel.backend.ShaderSources;
+import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
 import com.jozufozu.flywheel.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
@@ -19,14 +20,14 @@ public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 	}
 
 	@Override
-	protected IMultiProgram<SphereFilterProgram> loadSpecInternal(ShaderLoader loader, ProgramSpec spec) {
+	protected IMultiProgram<SphereFilterProgram> loadSpecInternal(ShaderSources loader, ProgramSpec spec) {
 		return new SphereFilterProgram(loadProgram(loader, spec, Collections.emptyList()));
 	}
 
 	@Override
-	public void load(ShaderLoader loader) {
+	public void load(ShaderSources loader) {
 		transformer = new ShaderTransformer()
-				.pushStage(loader::processIncludes);
+				.pushStage(Shader::processIncludes);
 		loadProgramFromSpec(loader, Backend.getSpec(AllProgramSpecs.CHROMATIC));
 	}
 }

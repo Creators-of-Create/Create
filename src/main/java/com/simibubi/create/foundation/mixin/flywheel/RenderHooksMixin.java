@@ -9,6 +9,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.event.BeginFrameEvent;
+import com.jozufozu.flywheel.event.ReloadRenderersEvent;
+import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.block.BlockState;
@@ -23,6 +27,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(WorldRenderer.class)
@@ -35,7 +40,7 @@ public class RenderHooksMixin {
 	private void setupFrame(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
 							ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f p_228426_9_,
 							CallbackInfo ci) {
-		Backend.listeners.setupFrame(world, stack, info, gameRenderer, lightTexture);
+		MinecraftForge.EVENT_BUS.post(new BeginFrameEvent(world, stack, info, gameRenderer, lightTexture));
 	}
 
 	/**
@@ -54,7 +59,7 @@ public class RenderHooksMixin {
 		Matrix4f viewProjection = view.copy();
 		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
 
-		Backend.listeners.renderLayer(world, type, viewProjection, camX, camY, camZ);
+		MinecraftForge.EVENT_BUS.post(new RenderLayerEvent(world, type, viewProjection, camX, camY, camZ));
 		GL20.glUseProgram(0);
 	}
 
@@ -63,7 +68,7 @@ public class RenderHooksMixin {
 		OptifineHandler.refresh();
 		Backend.refresh();
 
-		Backend.listeners.refresh(world);
+		MinecraftForge.EVENT_BUS.post(new ReloadRenderersEvent(world));
 	}
 
 
@@ -86,7 +91,7 @@ public class RenderHooksMixin {
 		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
 
 		Vector3d cameraPos = info.getProjectedView();
-		Backend.renderBreaking(world, viewProjection, cameraPos.x, cameraPos.y, cameraPos.z);
+		InstancedRenderDispatcher.renderBreaking(world, viewProjection, cameraPos.x, cameraPos.y, cameraPos.z);
 		GL20.glUseProgram(0);
 	}
 
@@ -94,7 +99,7 @@ public class RenderHooksMixin {
 
 	@Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
 	private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
-		Backend.tileInstanceManager.get(world)
+		InstancedRenderDispatcher.get(world)
 				.update(world.getTileEntity(pos));
 	}
 }
