@@ -21,7 +21,7 @@ public class MaterialSpec<D extends InstanceData> {
 		this.instanceFactory = instanceFactory;
 	}
 
-	public ResourceLocation getProgramSpec() {
+	public ResourceLocation getProgramName() {
 		return programSpec;
 	}
 

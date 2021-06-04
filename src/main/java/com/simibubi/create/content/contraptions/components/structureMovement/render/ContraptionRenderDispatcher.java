@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_QUADS;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
@@ -123,11 +124,11 @@ public class ContraptionRenderDispatcher {
 
 		if (Backend.canUseInstancing()) {
 			for (RenderedContraption renderer : RENDERERS.values()) {
-				renderer.kinetics.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
-				renderer.teardown();
+				renderer.materialManager.render(layer, viewProjection, camX, camY, camZ, renderer::setup);
 			}
 		}
 
+		glBindTexture(GL_TEXTURE_3D, 0);
 		layer.endDrawing();
 		glDisable(GL_TEXTURE_3D);
 		glActiveTexture(GL_TEXTURE0);

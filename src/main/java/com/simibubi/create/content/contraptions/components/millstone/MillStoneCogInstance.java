@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.millstone;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 
 public class MillStoneCogInstance extends SingleRotatingInstance {
 
-    public MillStoneCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public MillStoneCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

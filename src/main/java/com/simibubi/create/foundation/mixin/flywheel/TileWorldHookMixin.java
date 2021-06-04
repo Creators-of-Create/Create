@@ -11,8 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.WorldTileRenderer;
-import com.jozufozu.flywheel.core.shader.WorldProgram;
+import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -36,7 +35,7 @@ public class TileWorldHookMixin {
 	@Inject(at = @At("TAIL"), method = "addTileEntity")
 	private void onAddTile(TileEntity te, CallbackInfoReturnable<Boolean> cir) {
 		if (isRemote) {
-			Backend.tileRenderer.get(self)
+			Backend.tileInstanceManager.get(self)
 					.queueAdd(te);
 		}
 	}
@@ -47,7 +46,7 @@ public class TileWorldHookMixin {
 	@Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;clear()V", ordinal = 0), method = "tickBlockEntities")
 	private void onChunkUnload(CallbackInfo ci) {
 		if (isRemote) {
-			WorldTileRenderer<WorldProgram> kineticRenderer = Backend.tileRenderer.get(self);
+			TileInstanceManager kineticRenderer = Backend.tileInstanceManager.get(self);
 			for (TileEntity tile : tileEntitiesToBeRemoved) {
 				kineticRenderer.remove(tile);
 			}

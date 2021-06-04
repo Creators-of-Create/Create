@@ -21,11 +21,9 @@ public class OrientedData extends BasicData {
 	private float qZ;
 	private float qW;
 
-
 	public OrientedData(Instancer<?> owner) {
 		super(owner);
 	}
-
 
 	public OrientedData setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());

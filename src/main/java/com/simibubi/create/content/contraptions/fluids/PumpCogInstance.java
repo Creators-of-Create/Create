@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 
 public class PumpCogInstance extends SingleRotatingInstance {
 
-    public PumpCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public PumpCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

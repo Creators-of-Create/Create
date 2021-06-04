@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.OptifineHandler;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -214,10 +214,10 @@ public class CreateClient {
 		BUFFER_CACHE.invalidate();
 
 		if (world != null) {
-			Backend.tileRenderer.get(world)
+			Backend.tileInstanceManager.get(world)
 					.invalidate();
 		} else {
-			Backend.tileRenderer.forEach(InstancedTileRenderer::invalidate);
+			Backend.tileInstanceManager.forEach(TileInstanceManager::invalidate);
 		}
 
 		ContraptionRenderDispatcher.invalidateAll();

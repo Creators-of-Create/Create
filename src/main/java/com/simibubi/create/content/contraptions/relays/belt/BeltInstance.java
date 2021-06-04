@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -35,8 +35,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     protected ArrayList<BeltData> keys;
     protected RotatingData pulleyKey;
 
-    public BeltInstance(InstancedTileRenderer<?> modelManager, BeltTileEntity tile) {
-        super(modelManager, tile);
+    public BeltInstance(MaterialManager<?> materialManager, BeltTileEntity tile) {
+        super(materialManager, tile);
 
         if (!AllBlocks.BELT.has(blockState))
             return;
@@ -61,7 +61,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-			Instancer<BeltData> beltModel = modelManager.getMaterial(AllMaterialSpecs.BELTS).getModel(beltPartial, blockState);
+			Instancer<BeltData> beltModel = materialManager.getMaterial(AllMaterialSpecs.BELTS).getModel(beltPartial, blockState);
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 

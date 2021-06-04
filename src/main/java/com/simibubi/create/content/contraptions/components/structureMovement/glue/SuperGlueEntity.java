@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
@@ -64,7 +65,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
+public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -479,5 +480,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public boolean doesEntityNotTriggerPressurePlate() {
 		return true;
+	}
+
+	@Override
+	public World getWorld() {
+		return world;
 	}
 }

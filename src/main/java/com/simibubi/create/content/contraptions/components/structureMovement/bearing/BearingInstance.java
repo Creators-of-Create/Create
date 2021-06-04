@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
@@ -23,7 +23,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public BearingInstance(InstancedTileRenderer<?> modelManager, B tile) {
+	public BearingInstance(MaterialManager<?> modelManager, B tile) {
 		super(modelManager, tile);
 		this.bearing = tile;
 

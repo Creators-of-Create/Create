@@ -13,6 +13,7 @@ import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
 import com.jozufozu.flywheel.backend.ShaderLoader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.backend.loading.InstancedArraysTemplate;
 import com.jozufozu.flywheel.backend.loading.Program;
@@ -25,8 +26,10 @@ import com.jozufozu.flywheel.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.core.shader.StateSensitiveMultiProgram;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
+import com.jozufozu.flywheel.util.WorldAttached;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorld;
 
 public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 
@@ -37,12 +40,15 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), CrumblingProgram::new);
 
 	protected final ResourceLocation name;
-	private final ExtensibleGlProgram.Factory<P> factory;
 	protected Supplier<Stream<ResourceLocation>> specStream;
 	protected TemplateFactory templateFactory;
 
+	public final WorldAttached<MaterialManager<P>> materialManager = new WorldAttached<>($ -> new MaterialManager<>(this));
+
 	private final Map<ShaderType, ResourceLocation> builtins = new EnumMap<>(ShaderType.class);
 	private final Map<ShaderType, String> builtinSources = new EnumMap<>(ShaderType.class);
+
+	private final ExtensibleGlProgram.Factory<P> factory;
 
 	public WorldContext(ResourceLocation root, ExtensibleGlProgram.Factory<P> factory) {
 		this.factory = factory;
@@ -52,9 +58,13 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 
 		specStream = () -> Backend.allMaterials()
 				.stream()
-				.map(MaterialSpec::getProgramSpec);
+				.map(MaterialSpec::getProgramName);
 
 		templateFactory = InstancedArraysTemplate::new;
+	}
+
+	public MaterialManager<P> getMaterialManager(IWorld world) {
+		return materialManager.get(world);
 	}
 
 	public WorldContext<P> setSpecStream(Supplier<Stream<ResourceLocation>> specStream) {

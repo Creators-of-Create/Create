@@ -46,7 +46,7 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
 					.getY()) == sectionY)
 				.map(Map.Entry::getValue)
 				.forEach(tile -> {
-					Backend.tileRenderer.get(world)
+					Backend.tileInstanceManager.get(world)
 							.onLightUpdate(tile);
 				});
 		}

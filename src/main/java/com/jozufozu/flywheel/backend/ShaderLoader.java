@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.lwjgl.system.MemoryUtil;
 
@@ -47,23 +48,25 @@ import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.resource.IResourceType;
+import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 
-public class ShaderLoader {
+@ParametersAreNonnullByDefault
+public class ShaderLoader implements ISelectiveResourceReloadListener {
 	public static final String SHADER_DIR = "flywheel/shaders/";
 	public static final String PROGRAM_DIR = "flywheel/programs/";
 	public static final ArrayList<String> EXTENSIONS = Lists.newArrayList(".vert", ".vsh", ".frag", ".fsh", ".glsl");
 
 	// #flwinclude <"valid_namespace:valid/path_to_file.glsl">
 	private static final Pattern includePattern = Pattern.compile("#flwinclude <\"([\\w\\d_]+:[\\w\\d_./]+)\">");
-	private static boolean debugDumpFile = true;
 
 	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
 	private boolean shouldCrash;
 	private final Gson gson = new GsonBuilder().create();
 
-	void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
+	@Override
+	public void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
 			OptifineHandler.refresh();
 			Backend.refresh();

@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -66,7 +66,7 @@ public abstract class MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return null;
 	}
 

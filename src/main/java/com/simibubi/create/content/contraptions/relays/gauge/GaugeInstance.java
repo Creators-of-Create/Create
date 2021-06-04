@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -24,7 +24,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     protected MatrixStack ms;
 
-    protected GaugeInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+    protected GaugeInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         faces = new ArrayList<>(2);
@@ -144,7 +144,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     }
 
     public static class Speed extends GaugeInstance {
-        public Speed(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+        public Speed(MaterialManager<?> dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 
@@ -155,7 +155,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     }
 
     public static class Stress extends GaugeInstance {
-        public Stress(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+        public Stress(MaterialManager<?> dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 

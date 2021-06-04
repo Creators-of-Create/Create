@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -15,7 +15,7 @@ import net.minecraft.util.Rotation;
 
 public class SawInstance extends SingleRotatingInstance {
 
-    public SawInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public SawInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

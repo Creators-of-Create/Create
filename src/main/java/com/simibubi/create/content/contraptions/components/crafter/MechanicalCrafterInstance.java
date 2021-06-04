@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.crafter;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -15,7 +15,7 @@ import net.minecraft.util.Direction;
 
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
-    public MechanicalCrafterInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public MechanicalCrafterInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

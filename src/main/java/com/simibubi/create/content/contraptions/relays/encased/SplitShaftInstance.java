@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -19,14 +19,14 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
     protected final ArrayList<RotatingData> keys;
 
-    public SplitShaftInstance(InstancedTileRenderer<?> modelManager, SplitShaftTileEntity tile) {
+    public SplitShaftInstance(MaterialManager<?> modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
 
         keys = new ArrayList<>(2);
 
         float speed = tile.getSpeed();
 
-        RenderMaterial<?, RotatingData> rotatingMaterial = getRotatingMaterial();
+        InstanceMaterial<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 

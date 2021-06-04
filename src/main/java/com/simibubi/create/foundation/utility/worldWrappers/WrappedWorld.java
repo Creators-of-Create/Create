@@ -21,14 +21,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.AbstractChunkProvider;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.storage.ISpawnWorldInfo;
 import net.minecraft.world.storage.MapData;
@@ -38,7 +35,7 @@ import net.minecraft.world.storage.MapData;
 public class WrappedWorld extends World {
 
 	protected World world;
-	private AbstractChunkProvider provider;
+	protected AbstractChunkProvider provider;
 
 	public WrappedWorld(World world, AbstractChunkProvider provider) {
 		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,

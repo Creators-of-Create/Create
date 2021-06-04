@@ -19,8 +19,6 @@ import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.QuadConverter;
-import com.jozufozu.flywheel.core.shader.IProgramCallback;
-import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
@@ -31,22 +29,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3i;
 
-public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
+public class InstanceMaterial<D extends InstanceData> {
 
-	protected final InstancedTileRenderer<P> renderer;
+	protected final Supplier<Vector3i> originCoordinate;
 	protected final Cache<Object, Instancer<D>> models;
 	protected final MaterialSpec<D> spec;
+	private final VertexFormat modelFormat;
 
-	public RenderMaterial(InstancedTileRenderer<P> renderer, MaterialSpec<D> spec) {
-		this.renderer = renderer;
+	public InstanceMaterial(Supplier<Vector3i> renderer, MaterialSpec<D> spec) {
+		this.originCoordinate = renderer;
 		this.spec = spec;
 
 		this.models = CacheBuilder.newBuilder()
@@ -55,35 +53,21 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 					RenderWork.enqueue(model::delete);
 				})
 				.build();
-	}
-
-	public void render(RenderType layer, Matrix4f projection, double camX, double camY, double camZ) {
-		render(layer, projection, camX, camY, camZ, null);
-	}
-
-	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<P> setup) {
-		if (!(layer == RenderType.getCutoutMipped())) return;
-
-		P program = renderer.context.getProgram(this.spec.getProgramSpec());
-		program.bind();
-		program.uploadViewProjection(viewProjection);
-		program.uploadCameraPos(camX, camY, camZ);
-
-		if (setup != null) setup.call(program);
-
-		makeRenderCalls();
+		modelFormat = this.spec.getModelFormat();
 	}
 
 	public void delete() {
-		//runOnAll(InstancedModel::delete);
 		models.invalidateAll();
 	}
 
-	protected void makeRenderCalls() {
-		runOnAll(Instancer::render);
+	/**
+	 * Clear all instance data without freeing resources.
+	 */
+	public void clear() {
+		models.asMap().values().forEach(Instancer::clear);
 	}
 
-	public void runOnAll(Consumer<Instancer<D>> f) {
+	public void forEachInstancer(Consumer<Instancer<D>> f) {
 		for (Instancer<D> model : models.asMap().values()) {
 			f.accept(model);
 		}
@@ -106,31 +90,30 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 		return get(toRender, () -> buildModel(toRender));
 	}
 
-	public Instancer<D> get(Object key, Supplier<Instancer<D>> supplier) {
+	public Instancer<D> get(Object key, Supplier<BufferedModel> supplier) {
 		try {
-			return models.get(key, supplier::get);
+			return models.get(key, () -> new Instancer<>(supplier.get(), originCoordinate, spec));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	private Instancer<D> buildModel(BlockState renderedState) {
+	private BufferedModel buildModel(BlockState renderedState) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 		return buildModel(dispatcher.getModelForState(renderedState), renderedState);
 	}
 
-	private Instancer<D> buildModel(IBakedModel model, BlockState renderedState) {
+	private BufferedModel buildModel(IBakedModel model, BlockState renderedState) {
 		return buildModel(model, renderedState, new MatrixStack());
 	}
 
-	private Instancer<D> buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
+	private BufferedModel buildModel(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		BufferBuilderReader reader = new BufferBuilderReader(getBufferBuilder(model, referenceState, ms));
 
-		VertexFormat format = spec.getModelFormat();
 		int vertexCount = reader.getVertexCount();
 
-		ByteBuffer vertices = ByteBuffer.allocate(vertexCount * format.getStride());
+		ByteBuffer vertices = ByteBuffer.allocate(vertexCount * modelFormat.getStride());
 		vertices.order(ByteOrder.nativeOrder());
 
 		for (int i = 0; i < vertexCount; i++) {
@@ -148,10 +131,9 @@ public class RenderMaterial<P extends WorldProgram, D extends InstanceData> {
 
 		vertices.rewind();
 
-		BufferedModel bufferedModel = new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
-		//BufferedModel bufferedModel = new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
+		// return new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
 
-		return new Instancer<>(bufferedModel, renderer, spec.getInstanceFormat(), spec.getInstanceFactory());
+		return new IndexedModel(GlPrimitive.TRIANGLES, modelFormat, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
 	}
 
 	private static final Direction[] dirs;

@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 
 public class HorizontalHalfShaftInstance extends HalfShaftInstance {
 
-    public HorizontalHalfShaftInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public HorizontalHalfShaftInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

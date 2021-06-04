@@ -8,27 +8,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.WorldContext;
-import com.jozufozu.flywheel.core.materials.ModelData;
-import com.jozufozu.flywheel.core.materials.OrientedData;
-import com.jozufozu.flywheel.core.shader.IProgramCallback;
-import com.jozufozu.flywheel.core.shader.WorldProgram;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public abstract class InstancedTileRenderer<P extends WorldProgram> {
+public class TileInstanceManager implements MaterialManager.OriginShiftListener {
 
-	public final WorldContext<P> context;
-
-	protected final Map<MaterialSpec<?>, RenderMaterial<P, ?>> materials;
+	public final MaterialManager<?> materialManager;
 
 	protected final ArrayList<TileEntity> queuedAdditions;
 	protected final ConcurrentHashMap.KeySetView<TileEntity, Boolean> queuedUpdates;
@@ -40,22 +30,16 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 	protected int frame;
 	protected int tick;
 
-	protected InstancedTileRenderer(WorldContext<P> context) {
-		this.context = context;
+	public TileInstanceManager(MaterialManager<?> materialManager) {
+		this.materialManager = materialManager;
+		this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
+		this.queuedAdditions = new ArrayList<>(64);
+		this.dynamicInstances = new HashMap<>();
+		this.tickableInstances = new HashMap<>();
+		this.instances = new HashMap<>();
 
-		materials = new HashMap<>();
-		for (MaterialSpec<?> spec : Backend.allMaterials()) {
-			materials.put(spec, new RenderMaterial<>(this, spec));
-		}
-
-		queuedUpdates = ConcurrentHashMap.newKeySet(64);
-		queuedAdditions = new ArrayList<>(64);
-		dynamicInstances = new HashMap<>();
-		tickableInstances = new HashMap<>();
-		instances = new HashMap<>();
+		materialManager.onOriginShift(this);
 	}
-
-	public abstract BlockPos getOriginCoordinate();
 
 	public void tick(double cameraX, double cameraY, double cameraZ) {
 		tick++;
@@ -112,40 +96,11 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 		}
 	}
 
-	/**
-	 * Render every model for every material.
-	 *
-	 * @param layer          Which vanilla {@link RenderType} is being drawn?
-	 * @param viewProjection How do we get from camera space to clip space?
-	 */
-	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ) {
-		render(layer, viewProjection, camX, camY, camZ, null);
-	}
-
-	/**
-	 * Render every model for every material.
-	 *
-	 * @param layer          Which vanilla {@link RenderType} is being drawn?
-	 * @param viewProjection How do we get from camera space to clip space?
-	 * @param callback       Provide additional uniforms or state here.
-	 */
-	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<P> callback) {
-		for (RenderMaterial<P, ?> material : materials.values()) {
-			material.render(layer, viewProjection, camX, camY, camZ, callback);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public <D extends InstanceData> RenderMaterial<P, D> getMaterial(MaterialSpec<D> materialType) {
-		return (RenderMaterial<P, D>) materials.get(materialType);
-	}
-
-	public RenderMaterial<P, ModelData> getTransformMaterial() {
-		return getMaterial(AllMaterialSpecs.TRANSFORMED);
-	}
-
-	public RenderMaterial<P, OrientedData> getOrientedMaterial() {
-		return getMaterial(AllMaterialSpecs.ORIENTED);
+	@Override
+	public void onOriginShift() {
+		ArrayList<TileEntity> instancedTiles = new ArrayList<>(instances.keySet());
+		invalidate();
+		instancedTiles.forEach(this::add);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -267,7 +222,7 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 	}
 
 	private <T extends TileEntity> TileEntityInstance<? super T> createInternal(T tile) {
-		TileEntityInstance<? super T> renderer = InstancedTileRenderRegistry.getInstance().create(this, tile);
+		TileEntityInstance<? super T> renderer = InstancedRenderRegistry.getInstance().create(materialManager, tile);
 
 		if (renderer != null) {
 			renderer.updateLight();
@@ -284,9 +239,6 @@ public abstract class InstancedTileRenderer<P extends WorldProgram> {
 	}
 
 	public void invalidate() {
-		for (RenderMaterial<?, ?> material : materials.values()) {
-			material.delete();
-		}
 		instances.clear();
 		dynamicInstances.clear();
 		tickableInstances.clear();

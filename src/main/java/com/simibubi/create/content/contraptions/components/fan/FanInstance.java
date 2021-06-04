@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -18,7 +18,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     final Direction direction;
     private final Direction opposite;
 
-    public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
+    public FanInstance(MaterialManager<?> modelManager, EncasedFanTileEntity tile) {
 		super(modelManager, tile);
 
 		direction = blockState.get(FACING);
@@ -41,7 +41,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     }
 
     @Override
-    protected void update() {
+    public void update() {
         updateRotation(shaft);
         updateRotation(fan, getFanSpeed());
     }

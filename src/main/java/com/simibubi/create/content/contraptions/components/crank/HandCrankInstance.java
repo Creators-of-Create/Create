@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -20,7 +20,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
     private ModelData crank;
     private Direction facing;
 
-    public HandCrankInstance(InstancedTileRenderer<?> modelManager, HandCrankTileEntity tile) {
+    public HandCrankInstance(MaterialManager<?> modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
 		this.tile = tile;
 

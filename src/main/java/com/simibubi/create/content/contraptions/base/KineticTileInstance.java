@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
-import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
@@ -15,7 +15,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     protected final Direction.Axis axis;
 
-    public KineticTileInstance(InstancedTileRenderer<?> modelManager, T tile) {
+    public KineticTileInstance(MaterialManager<?> modelManager, T tile) {
         super(modelManager, tile);
 
         axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
@@ -84,8 +84,8 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return shaft(getRotationAxis());
     }
 
-    protected final RenderMaterial<?, RotatingData> getRotatingMaterial() {
-		return renderer.getMaterial(AllMaterialSpecs.ROTATING);
+    protected final InstanceMaterial<RotatingData> getRotatingMaterial() {
+		return materialManager.getMaterial(AllMaterialSpecs.ROTATING);
 	}
 
     public static BlockState shaft(Direction.Axis axis) {

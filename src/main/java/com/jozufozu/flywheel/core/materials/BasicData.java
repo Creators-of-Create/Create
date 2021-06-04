@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 
-public class BasicData extends InstanceData implements IFlatLight<BasicData> {
+public abstract class BasicData extends InstanceData implements IFlatLight<BasicData> {
 
 	protected byte blockLight;
 	protected byte skyLight;

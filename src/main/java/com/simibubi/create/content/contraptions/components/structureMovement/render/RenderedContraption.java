@@ -14,6 +14,7 @@ import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
@@ -48,7 +49,9 @@ public class RenderedContraption extends ContraptionWorldHolder {
 			.build();
 
 	private final ContraptionLighter<?> lighter;
-	public final ContraptionKineticRenderer kinetics;
+
+	public final MaterialManager<ContraptionProgram> materialManager;
+	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
@@ -58,7 +61,8 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	public RenderedContraption(World world, PlacementSimulationWorld renderWorld, Contraption contraption) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.kinetics = new ContraptionKineticRenderer(this);
+		this.materialManager = new ContraptionMaterialManager(ContraptionRenderDispatcher.TILES);
+		this.kinetics = new ContraptionInstanceManager(this, materialManager);
 
 		buildLayers();
 		if (Backend.canUseInstancing()) {
@@ -76,7 +80,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		if (structure != null) {
 			setup(shader);
 			structure.draw();
-			teardown();
 		}
 	}
 
@@ -106,10 +109,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		if (model == null || lightBox == null) return;
 		shader.bind(model, lightBox);
 		lighter.lightVolume.bind();
-	}
-
-	void teardown() {
-		lighter.lightVolume.unbind();
 	}
 
 	void invalidate() {

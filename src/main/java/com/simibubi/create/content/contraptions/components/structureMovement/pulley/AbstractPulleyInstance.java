@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 import java.util.Arrays;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
@@ -37,7 +37,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public AbstractPulleyInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
@@ -52,7 +52,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 				.addModel(getHalfMagnetModel());
 
 		rope = new GroupInstance<>(getRopeModel());
-		halfRope = new ConditionalInstance<>(getHalfRopeModel(), this::shouldRenderHalfRope);
+		halfRope = new ConditionalInstance<>(getHalfRopeModel())
+				.withCondition(this::shouldRenderHalfRope);
 	}
 
 	@Override

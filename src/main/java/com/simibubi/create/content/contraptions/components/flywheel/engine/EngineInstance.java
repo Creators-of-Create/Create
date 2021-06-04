@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.ModelData;
@@ -16,7 +16,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     protected ModelData frame;
 
-    public EngineInstance(InstancedTileRenderer<?> modelManager, EngineTileEntity tile) {
+    public EngineInstance(MaterialManager<?> modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
 
         Block block = blockState

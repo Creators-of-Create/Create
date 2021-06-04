@@ -4,9 +4,9 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -22,7 +22,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected final EnumMap<Direction, RotatingData> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
+    public GearboxInstance(MaterialManager<?> modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
 
         keys = new EnumMap<>(Direction.class);
@@ -33,7 +33,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
         int skyLight = world.getLightLevel(LightType.SKY, pos);
         updateSourceFacing();
 
-        RenderMaterial<?, RotatingData> rotatingMaterial = getRotatingMaterial();
+        InstanceMaterial<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction direction : Iterate.directions) {
 			final Direction.Axis axis = direction.getAxis();

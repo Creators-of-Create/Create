@@ -3,6 +3,7 @@ package com.jozufozu.flywheel.backend.instancing;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlVertexArray;
@@ -13,9 +14,11 @@ import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.util.AttribUtil;
 
+import net.minecraft.util.math.vector.Vector3i;
+
 public class Instancer<D extends InstanceData> {
 
-	public final InstancedTileRenderer<?> renderer;
+	public final Supplier<Vector3i> originCoordinate;
 
 	protected final BufferedModel model;
 
@@ -32,11 +35,11 @@ public class Instancer<D extends InstanceData> {
 	boolean anyToRemove;
 	boolean anyToUpdate;
 
-	public Instancer(BufferedModel model, InstancedTileRenderer<?> renderer, VertexFormat instanceFormat, IInstanceFactory<D> factory) {
+	public Instancer(BufferedModel model, Supplier<Vector3i> originCoordinate, MaterialSpec<D> spec) {
 		this.model = model;
-		this.factory = factory;
-		this.instanceFormat = instanceFormat;
-		this.renderer = renderer;
+		this.factory = spec.getInstanceFactory();
+		this.instanceFormat = spec.getInstanceFormat();
+		this.originCoordinate = originCoordinate;
 
 		if (model.getVertexCount() <= 0)
 			throw new IllegalArgumentException("Refusing to instance a model with no vertices.");
@@ -77,6 +80,17 @@ public class Instancer<D extends InstanceData> {
 		return instanceData;
 	}
 
+	/**
+	 * Clear all instance data without freeing resources.
+	 */
+	public void clear() {
+		data.clear();
+		anyToRemove = true;
+	}
+
+	/**
+	 * Free acquired resources. Attempting to use this after calling delete is undefined behavior.
+	 */
 	public void delete() {
 		if (deleted) return;
 

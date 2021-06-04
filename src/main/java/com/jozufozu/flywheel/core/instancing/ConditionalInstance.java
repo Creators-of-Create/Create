@@ -1,6 +1,7 @@
 package com.jozufozu.flywheel.core.instancing;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -10,19 +11,26 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 public class ConditionalInstance<D extends InstanceData> {
 
 	final Instancer<D> model;
-	Condition condition;
+	ICondition condition;
+
+	Consumer<D> setupFunc;
 
 	@Nullable
 	private D instance;
 
-	public ConditionalInstance(Instancer<D> model, Condition condition) {
+	public ConditionalInstance(Instancer<D> model) {
 		this.model = model;
-		this.condition = condition;
+		this.condition = () -> true;
 
 		update();
 	}
 
-	public ConditionalInstance<D> setCondition(Condition condition) {
+	public ConditionalInstance<D> withSetupFunc(Consumer<D> setupFunc) {
+		this.setupFunc = setupFunc;
+		return this;
+	}
+
+	public ConditionalInstance<D> withCondition(ICondition condition) {
 		this.condition = condition;
 		return this;
 	}
@@ -31,6 +39,7 @@ public class ConditionalInstance<D extends InstanceData> {
 		boolean shouldShow = condition.shouldShow();
 		if (shouldShow && instance == null) {
 			instance = model.createInstance();
+			if (setupFunc != null) setupFunc.accept(instance);
 		} else if (!shouldShow && instance != null) {
 			instance.delete();
 			instance = null;
@@ -48,7 +57,7 @@ public class ConditionalInstance<D extends InstanceData> {
 	}
 
 	@FunctionalInterface
-	public interface Condition {
+	public interface ICondition {
 		boolean shouldShow();
 	}
 }

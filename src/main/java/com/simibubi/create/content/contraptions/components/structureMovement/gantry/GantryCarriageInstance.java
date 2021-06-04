@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -29,7 +29,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
     private float lastAngle = Float.NaN;
 
-    public GantryCarriageInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+    public GantryCarriageInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         gantryCogs = getTransformMaterial()

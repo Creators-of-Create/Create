@@ -1,8 +1,8 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
-import com.jozufozu.flywheel.backend.instancing.RenderMaterial;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -17,10 +17,10 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
+    public SchematicannonInstance(MaterialManager<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, ModelData> mat = getTransformMaterial();
+        InstanceMaterial<ModelData> mat = getTransformMaterial();
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();

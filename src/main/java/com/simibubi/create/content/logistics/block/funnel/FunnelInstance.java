@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstancedTileRenderer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
@@ -20,7 +20,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
     private final ArrayList<FlapData> flaps;
 
-    public FunnelInstance(InstancedTileRenderer<?> modelManager, FunnelTileEntity tile) {
+    public FunnelInstance(MaterialManager<?> modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
 
         flaps = new ArrayList<>(4);

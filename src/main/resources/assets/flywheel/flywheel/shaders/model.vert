@@ -1,6 +1,9 @@
 #flwbuiltins
 #flwinclude <"flywheel:core/diffuse.glsl">
 
+#flwinclude <"flywheel:data/modelvertex.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
+
 #[InstanceData]
 struct Instance {
     vec2 light;
@@ -8,9 +11,6 @@ struct Instance {
     mat4 transform;
     mat3 normalMat;
 };
-
-#flwinclude <"flywheel:data/modelvertex.glsl">
-#flwinclude <"flywheel:data/blockfragment.glsl">
 
 BlockFrag FLWMain(Vertex v, Instance i) {
     vec4 worldPos = i.transform * vec4(v.pos, 1.);

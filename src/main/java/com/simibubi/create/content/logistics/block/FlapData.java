@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.core.materials.IFlatLight;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
@@ -43,7 +44,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	}
 
 	public FlapData setPosition(int x, int y, int z) {
-		BlockPos origin = owner.renderer.getOriginCoordinate();
+		Vector3i origin = owner.originCoordinate.get();
 
 		return setPosition((float) (x - origin.getX()),
 				(float) (y - origin.getY()),

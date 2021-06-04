@@ -23,11 +23,12 @@ import org.lwjgl.opengl.GLCapabilities;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
-import com.jozufozu.flywheel.core.CrumblingRenderer;
+import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
+import com.jozufozu.flywheel.core.CrumblingInstanceManager;
 import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.WorldContext;
-import com.jozufozu.flywheel.core.WorldTileRenderer;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.util.WorldAttached;
@@ -53,7 +54,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.World;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 
 public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
@@ -64,11 +64,11 @@ public class Backend {
 	public static GLCapabilities capabilities;
 	public static GlCompat compat;
 
-	public static WorldAttached<WorldTileRenderer<WorldProgram>> tileRenderer = new WorldAttached<>(() -> new WorldTileRenderer<>(WorldContext.INSTANCE));
-	public static LazyValue<Vector<CrumblingRenderer>> blockBreaking = new LazyValue<>(() -> {
-		Vector<CrumblingRenderer> renderers = new Vector<>(10);
+	public static WorldAttached<TileInstanceManager> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(WorldContext.INSTANCE.getMaterialManager(world)));
+	public static LazyValue<Vector<CrumblingInstanceManager>> blockBreaking = new LazyValue<>(() -> {
+		Vector<CrumblingInstanceManager> renderers = new Vector<>(10);
 		for (int i = 0; i < 10; i++) {
-			renderers.add(new CrumblingRenderer());
+			renderers.add(new CrumblingInstanceManager());
 		}
 		return renderers;
 	});
@@ -87,7 +87,7 @@ public class Backend {
 
 		listeners.refreshListener(world -> {
 			if (canUseInstancing() && world != null) {
-				WorldTileRenderer<WorldProgram> tileRenderer = Backend.tileRenderer.get(world);
+				TileInstanceManager tileRenderer = Backend.tileInstanceManager.get(world);
 				tileRenderer.invalidate();
 				world.loadedTileEntityList.forEach(tileRenderer::add);
 			}
@@ -97,7 +97,9 @@ public class Backend {
 		});
 
 		listeners.setupFrameListener((world, stack, info, gameRenderer, lightTexture) -> {
-			Backend.tileRenderer.get(world)
+			WorldContext.INSTANCE.materialManager.get(world)
+					.checkAndShiftOrigin(info);
+			Backend.tileInstanceManager.get(world)
 					.beginFrame(info);
 		});
 
@@ -108,6 +110,10 @@ public class Backend {
 		throw new IllegalStateException();
 	}
 
+	/**
+	 * Get a string describing the Flywheel backend. When there are eventually multiple backends
+	 * (Meshlet, MDI, GL31 Draw Instanced are planned), this will name which one is in use.
+	 */
 	public static String getBackendDescriptor() {
 		if (canUseInstancing()) {
 			return "GL33 Instanced Arrays";
@@ -191,8 +197,7 @@ public class Backend {
 		IResourceManager manager = mc.getResourceManager();
 
 		if (manager instanceof IReloadableResourceManager) {
-			ISelectiveResourceReloadListener listener = shaderLoader::onResourceManagerReload;
-			((IReloadableResourceManager) manager).addReloadListener(listener);
+			((IReloadableResourceManager) manager).addReloadListener(shaderLoader);
 		}
 	}
 
@@ -212,7 +217,7 @@ public class Backend {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 
-		WorldTileRenderer<WorldProgram> instancer = tileRenderer.get(world);
+		TileInstanceManager instancer = tileInstanceManager.get(world);
 
 		Entity renderViewEntity = mc.renderViewEntity;
 		instancer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
@@ -220,11 +225,11 @@ public class Backend {
 
 	public static void renderLayer(ClientWorld world, RenderType layer, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
 		if (!canUseInstancing(world)) return;
-		WorldTileRenderer<WorldProgram> renderer = tileRenderer.get(world);
+		MaterialManager<WorldProgram> materialManager = WorldContext.INSTANCE.getMaterialManager(world);
 
 		layer.startDrawing();
 
-		renderer.render(layer, viewProjection, cameraX, cameraY, cameraZ);
+		materialManager.render(layer, viewProjection, cameraX, cameraY, cameraZ);
 
 		layer.endDrawing();
 	}
@@ -238,7 +243,7 @@ public class Backend {
 		Long2ObjectMap<SortedSet<DestroyBlockProgress>> breakingProgressions = worldRenderer.blockBreakingProgressions;
 
 		if (breakingProgressions.isEmpty()) return;
-		Vector<CrumblingRenderer> renderers = blockBreaking.getValue();
+		Vector<CrumblingInstanceManager> renderers = blockBreaking.getValue();
 
 		BitSet bitSet = new BitSet(10);
 
@@ -264,12 +269,12 @@ public class Backend {
 		CRUMBLING.startDrawing();
 		bitSet.stream().forEach(i -> {
 			Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(i));
-			CrumblingRenderer renderer = renderers.get(i);
+			CrumblingInstanceManager renderer = renderers.get(i);
 			renderer.beginFrame(info);
 
 			if (breaking != null) {
 				glBindTexture(GL_TEXTURE_2D, breaking.getGlTextureId());
-				renderer.render(RenderType.getCutoutMipped(), viewProjection, cameraX, cameraY, cameraZ, program -> program.setTextureScale(64, 64));
+				renderer.materialManager.render(RenderType.getCutoutMipped(), viewProjection, cameraX, cameraY, cameraZ);
 			}
 
 			renderer.invalidate();
@@ -283,7 +288,7 @@ public class Backend {
 	}
 
 	public static void enqueueUpdate(TileEntity te) {
-		tileRenderer.get(te.getWorld()).queueUpdate(te);
+		tileInstanceManager.get(te.getWorld()).queueUpdate(te);
 	}
 
 	public static void reloadWorldRenderers() {

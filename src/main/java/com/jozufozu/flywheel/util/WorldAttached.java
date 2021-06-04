@@ -3,18 +3,18 @@ package com.jozufozu.flywheel.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.world.IWorld;
-import net.minecraftforge.common.util.NonNullSupplier;
 
 public class WorldAttached<T> {
 
 	Map<IWorld, T> attached;
-	private final NonNullSupplier<T> factory;
+	private final WorldAttacher<T> factory;
 
-	public WorldAttached(NonNullSupplier<T> factory) {
+	public WorldAttached(WorldAttacher<T> factory) {
 		this.factory = factory;
 		attached = new HashMap<>();
 	}
@@ -24,7 +24,7 @@ public class WorldAttached<T> {
 		T t = attached.get(world);
 		if (t != null)
 			return t;
-		T entry = factory.get();
+		T entry = factory.attach(world);
 		put(world, entry);
 		return entry;
 	}
@@ -36,6 +36,17 @@ public class WorldAttached<T> {
 	public void forEach(Consumer<T> consumer) {
 		attached.values()
 				.forEach(consumer);
+	}
+
+	@FunctionalInterface
+	public interface WorldAttacher<T> extends Function<IWorld, T> {
+		@Nonnull
+		T attach(IWorld world);
+
+		@Override
+		default T apply(IWorld world) {
+			return attach(world);
+		}
 	}
 
 }

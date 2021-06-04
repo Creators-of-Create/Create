@@ -81,7 +81,6 @@ public class KineticData extends BasicData {
 		return this;
 	}
 
-
 	@Override
 	public void write(MappedBuffer buf) {
 		super.write(buf);
