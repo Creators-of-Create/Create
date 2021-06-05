@@ -29,7 +29,7 @@ public class FastRenderDispatcher {
 
 		KineticRenderer kineticRenderer = CreateClient.KINETIC_RENDERER.get(world);
 
-		Entity renderViewEntity = mc.renderViewEntity;
+		Entity renderViewEntity = mc.renderViewEntity != null ? mc.renderViewEntity : mc.player;
 		kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 
 		ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
