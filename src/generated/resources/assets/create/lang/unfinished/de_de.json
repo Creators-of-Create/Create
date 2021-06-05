@@ -1616,7 +1616,7 @@
 	"create.ponder.chain_drive.text_3": "UNLOCALIZED: Any part of the row can be rotated by 90 degrees",
 
 	"create.ponder.chain_gearshift.header": "UNLOCALIZED: Controlling rotational speed with Chain Gearshifts",
-	"create.ponder.chain_gearshift.text_1": "UNLOCALIZED: Unpowered Chain Gearshifts behave exacly like Chain Drives",
+	"create.ponder.chain_gearshift.text_1": "UNLOCALIZED: Unpowered Chain Gearshifts behave exactly like Chain Drives",
 	"create.ponder.chain_gearshift.text_2": "UNLOCALIZED: When Powered, the speed transmitted to other Chain Drives in the row is doubled",
 	"create.ponder.chain_gearshift.text_3": "UNLOCALIZED: Whenever the Powered Gearshift is not at the source, its speed will be halved instead",
 	"create.ponder.chain_gearshift.text_4": "UNLOCALIZED: In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift",
