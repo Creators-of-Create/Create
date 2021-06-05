@@ -468,7 +468,7 @@
 	"item.create.extendo_grip": "Agarre extendido",
 	"item.create.filter": "Filtro",
 	"item.create.furnace_minecart_contraption": "Artilugio de vagoneta de horno",
-	"item.create.goggles": "Gafas del Constructor",
+	"item.create.goggles": "Gafas del constructor",
 	"item.create.golden_sheet": "Lámina de oro",
 	"item.create.handheld_worldshaper": "Worldshaper",
 	"item.create.honey_bucket": "Cubo de miel",
@@ -538,7 +538,7 @@
 	"advancement.create.wrench": "Configurar convenientemente",
 	"advancement.create.wrench.desc": "Crea una llave inglesa para ayudarte a construir tus artilugios.",
 	"advancement.create.goggles": "Stress-O-Vision",
-	"advancement.create.goggles.desc": "Crea unas gafas de ingeniero para ayudarte a obtener más información cinética de los componentes.",
+	"advancement.create.goggles.desc": "Crea unas gafas del constructor para ayudarte a obtener más información cinética de los componentes.",
 	"advancement.create.speedometer": "Pero, ¿con qué rapidez exactamente??",
 	"advancement.create.speedometer.desc": "Coloca y alimenta un Velocímetro. Míralo a través de las gafas para leer su valor exacto.",
 	"advancement.create.stressometer": "Pero, ¿cuán estresado exactamente??",
@@ -1629,7 +1629,7 @@
 
 	"create.ponder.chute_upward.header": "Transportando objetos hacia arriba mediante ductos",
 	"create.ponder.chute_upward.text_1": "Usando ventiladores revestidos en la parte superior o inferior, un ducto puede transportar objetos hacia arriba",
-	"create.ponder.chute_upward.text_2": "Inspeccionando los ductos con las gafas del ingeniero revela información sobre la dirección del movimiento",
+	"create.ponder.chute_upward.text_2": "Inspeccionando los ductos con las gafas del constructor revela información sobre la dirección del movimiento",
 	"create.ponder.chute_upward.text_3": "En el extremo 'bloqueado', los objetos tendrán que ser insertados/tomados de los lados",
 
 	"create.ponder.clockwork_bearing.header": "Animación de estructuras con cojinetes de relojería",
@@ -2051,7 +2051,7 @@
 
 	"create.ponder.speedometer.header": "Controlando la información cinética mediante el velocímetro",
 	"create.ponder.speedometer.text_1": "El velocímetro muestra la velocidad actual de los componentes conectados",
-	"create.ponder.speedometer.text_2": "Cuando se usan las Gafas del Constructor, el jugador puede obtener información más detallada del Medidor",
+	"create.ponder.speedometer.text_2": "Cuando se usan las gafas del constructor, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.speedometer.text_3": "Los comparadores pueden emitir señales analógicas de Restone en relación con las mediciones del velocímetro",
 
 	"create.ponder.stabilized_bearings.header": "Artilugios estabilizados",
@@ -2068,7 +2068,7 @@
 
 	"create.ponder.stressometer.header": "Supervisando la información cinética con el estresómetro",
 	"create.ponder.stressometer.text_1": "El estresómetro muestra la capacidad de estrés actual de la red cinética conectada",
-	"create.ponder.stressometer.text_2": "Cuando se usan las Gafas del Constructor, el jugador puede obtener información más detallada del Medidor",
+	"create.ponder.stressometer.text_2": "Cuando se usan las gafas del constructor, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.stressometer.text_3": "Los comparadores pueden emitir señales analógicas de Redstone en relación con las mediciones del estresómetro",
 
 	"create.ponder.super_glue.header": "Fijando bloques con super pegamento",
