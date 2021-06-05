@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.item;
+package com.simibubi.create.foundation.item.render;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 

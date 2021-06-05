@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.block.render;
+package com.simibubi.create.foundation.item.render;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
-@SuppressWarnings("deprecation")
 public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedModel> {
 
 	protected String basePath;
@@ -67,6 +66,7 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedMo
 		return this;
 	}
 
+	@SuppressWarnings("deprecation")
 	private IBakedModel loadModel(ModelBakeEvent event, String name) {
 		return event.getModelLoader().func_217845_a(getPartialModelLocation(name), ModelRotation.X0_Y0);
 	}

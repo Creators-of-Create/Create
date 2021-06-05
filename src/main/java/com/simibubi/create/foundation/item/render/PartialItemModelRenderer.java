@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.item;
+package com.simibubi.create.foundation.item.render;
 
 import java.util.Random;
 

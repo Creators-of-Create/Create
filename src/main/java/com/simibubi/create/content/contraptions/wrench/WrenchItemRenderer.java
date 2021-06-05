@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.wrench;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 

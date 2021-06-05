@@ -129,7 +129,7 @@ public class AllItems {
 		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
 			.properties(p -> p.rarity(Rarity.UNCOMMON))
 			.model(AssetLookup.existingItemModel())
-			.onRegister(CreateRegistrate.itemColors(() -> ChromaticCompoundColor::new))
+			.color(() -> ChromaticCompoundColor::new)
 			.register();
 
 	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)

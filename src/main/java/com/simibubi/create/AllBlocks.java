@@ -164,6 +164,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
@@ -841,7 +842,7 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.POWERED_RAIL)
 			.blockstate(new ControllerRailGenerator()::generate)
 			.addLayer(() -> RenderType::getCutoutMipped)
-			.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getRedstonePower))
+			.color(() -> ColorHandlers::getRedstonePower)
 			.tag(BlockTags.RAILS)
 			.item()
 			.model((c, p) -> p.generated(c, Create.asResource("block/" + c.getName())))
