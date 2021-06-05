@@ -155,6 +155,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerato
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
+import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.simibubi.create.foundation.data.AssetLookup;
@@ -626,23 +627,19 @@ public class AllBlocks {
 			.transform(BuilderTransformers.valveHandle(null))
 			.register();
 
-	public static final BlockEntry<?>[] DYED_VALVE_HANDLES = new BlockEntry<?>[DyeColor.values().length];
-
-	static {
-		for (DyeColor colour : DyeColor.values()) {
-			String colourName = colour.getString();
-			DYED_VALVE_HANDLES[colour.ordinal()] = REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
-				.transform(BuilderTransformers.valveHandle(colour))
-				.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
-					.patternLine("#")
-					.patternLine("-")
-					.key('#', DyeHelper.getTagOfDye(colour))
-					.key('-', AllItemTags.VALVE_HANDLES.tag)
-					.addCriterion("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
-					.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
-				.register();
-		}
-	}
+	public static final DyedBlockList<ValveHandleBlock> DYED_VALVE_HANDLES = new DyedBlockList<>(colour -> {
+		String colourName = colour.getString();
+		return REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
+			.transform(BuilderTransformers.valveHandle(colour))
+			.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
+				.patternLine("#")
+				.patternLine("-")
+				.key('#', DyeHelper.getTagOfDye(colour))
+				.key('-', AllItemTags.VALVE_HANDLES.tag)
+				.addCriterion("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
+				.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
+			.register();
+	});
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 		.initialProperties(SharedProperties::softMetal)
@@ -961,47 +958,41 @@ public class AllBlocks {
 			.simpleItem()
 			.register();
 
-	public static final BlockEntry<?>[] SEATS = new BlockEntry<?>[DyeColor.values().length];
-
-	static {
-		// SEATS
-		for (DyeColor colour : DyeColor.values()) {
-			String colourName = colour.getString();
-			SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
-			SEATS[colour.ordinal()] =
-				REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
-					.initialProperties(SharedProperties::wooden)
-					.onRegister(addMovementBehaviour(movementBehaviour))
-					.blockstate((c, p) -> {
-						p.simpleBlock(c.get(), p.models()
-							.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
-							.texture("1", p.modLoc("block/seat/top_" + colourName))
-							.texture("2", p.modLoc("block/seat/side_" + colourName)));
-					})
-					.recipe((c, p) -> {
-						ShapedRecipeBuilder.shapedRecipe(c.get())
-							.patternLine("#")
-							.patternLine("-")
-							.key('#', DyeHelper.getWoolOfDye(colour))
-							.key('-', ItemTags.WOODEN_SLABS)
-							.addCriterion("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
-							.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
-						ShapedRecipeBuilder.shapedRecipe(c.get())
-							.patternLine("#")
-							.patternLine("-")
-							.key('#', DyeHelper.getTagOfDye(colour))
-							.key('-', AllItemTags.SEATS.tag)
-							.addCriterion("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
-							.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
-					})
-					.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
-					.tag(AllBlockTags.SEATS.tag)
-					.item()
-					.tag(AllItemTags.SEATS.tag)
-					.build()
-					.register();
-		}
-	}
+	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
+		String colourName = colour.getString();
+		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
+		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
+			.initialProperties(SharedProperties::wooden)
+			.onRegister(addMovementBehaviour(movementBehaviour))
+			.blockstate((c, p) -> {
+				p.simpleBlock(c.get(), p.models()
+					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
+					.texture("1", p.modLoc("block/seat/top_" + colourName))
+					.texture("2", p.modLoc("block/seat/side_" + colourName)));
+			})
+			.recipe((c, p) -> {
+				ShapedRecipeBuilder.shapedRecipe(c.get())
+					.patternLine("#")
+					.patternLine("-")
+					.key('#', DyeHelper.getWoolOfDye(colour))
+					.key('-', ItemTags.WOODEN_SLABS)
+					.addCriterion("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
+					.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
+				ShapedRecipeBuilder.shapedRecipe(c.get())
+					.patternLine("#")
+					.patternLine("-")
+					.key('#', DyeHelper.getTagOfDye(colour))
+					.key('-', AllItemTags.SEATS.tag)
+					.addCriterion("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
+					.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+			})
+			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
+			.tag(AllBlockTags.SEATS.tag)
+			.item()
+			.tag(AllItemTags.SEATS.tag)
+			.build()
+			.register();
+	});
 
 	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
 		.initialProperties(SharedProperties::wooden)
@@ -1012,8 +1003,6 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<?>[] DYED_SAILS = new BlockEntry<?>[DyeColor.values().length];
-
 	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p))
 		.initialProperties(SharedProperties::wooden)
 		.properties(Block.Properties::nonOpaque)
@@ -1022,26 +1011,22 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	static {
-		// DYED SAILS
-		for (DyeColor colour : DyeColor.values()) {
-			if (colour == DyeColor.WHITE) {
-				DYED_SAILS[colour.ordinal()] = SAIL;
-				continue;
-			}
-			String colourName = colour.getString();
-			DYED_SAILS[colour.ordinal()] = REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
-				.properties(Block.Properties::nonOpaque)
-				.initialProperties(SharedProperties::wooden)
-				.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
-					.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
-					.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
-				.tag(AllBlockTags.WINDMILL_SAILS.tag)
-				.tag(AllBlockTags.SAILS.tag)
-				.loot((p, b) -> p.registerDropping(b, SAIL.get()))
-				.register();
+	public static final DyedBlockList<SailBlock> DYED_SAILS = new DyedBlockList<>(colour -> {
+		if (colour == DyeColor.WHITE) {
+			return SAIL;
 		}
-	}
+		String colourName = colour.getString();
+		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
+			.properties(Block.Properties::nonOpaque)
+			.initialProperties(SharedProperties::wooden)
+			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
+				.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
+				.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
+			.tag(AllBlockTags.WINDMILL_SAILS.tag)
+			.tag(AllBlockTags.SAILS.tag)
+			.loot((p, b) -> p.registerDropping(b, SAIL.get()))
+			.register();
+	});
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
 		.transform(BuilderTransformers.casing(AllSpriteShifts.ANDESITE_CASING))

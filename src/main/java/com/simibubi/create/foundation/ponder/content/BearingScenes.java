@@ -632,7 +632,7 @@ public class BearingScenes {
 					.withItem(new ItemStack(Items.BLUE_DYE));
 			scene.overlay.showControls(input, 30);
 			scene.idle(7);
-			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
+			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS.get(DyeColor.BLUE).getDefaultState()
 				.with(SailBlock.FACING, Direction.WEST), false);
 			scene.idle(10);
 			scene.overlay.showText(40)
@@ -645,7 +645,7 @@ public class BearingScenes {
 			scene.overlay.showControls(input, 30);
 			scene.idle(7);
 			scene.world.replaceBlocks(util.select.fromTo(2, 2, 1, 2, 4, 1),
-				AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
+				AllBlocks.DYED_SAILS.get(DyeColor.BLUE).getDefaultState()
 					.with(SailBlock.FACING, Direction.WEST),
 				false);
 

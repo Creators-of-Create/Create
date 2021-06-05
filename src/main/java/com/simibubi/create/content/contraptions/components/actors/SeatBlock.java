@@ -101,7 +101,7 @@ public class SeatBlock extends Block {
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 
-			BlockState newState = AllBlocks.SEATS[color.ordinal()].getDefaultState();
+			BlockState newState = AllBlocks.SEATS.get(color).getDefaultState();
 			if (newState != state)
 				world.setBlockState(pos, newState);
 			return ActionResultType.SUCCESS;

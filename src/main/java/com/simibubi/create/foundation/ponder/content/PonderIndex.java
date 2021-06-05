@@ -5,6 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.item.DyeColor;
 
 public class PonderIndex {
 
@@ -62,7 +63,7 @@ public class PonderIndex {
 
 		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
 			PonderTag.KINETIC_SOURCES);
-		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES)
+		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
 			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
 		PonderRegistry.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
@@ -408,7 +409,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_BEARING)
 			.add(AllBlocks.ANDESITE_FUNNEL)
 			.add(AllBlocks.BRASS_FUNNEL)
-			.add(AllBlocks.SEATS[0])
+			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)

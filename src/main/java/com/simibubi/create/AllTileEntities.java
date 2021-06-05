@@ -248,7 +248,7 @@ public class AllTileEntities {
 		.tileEntity("hand_crank", HandCrankTileEntity::new)
 		.instance(() -> HandCrankInstance::new)
 		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
+		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
