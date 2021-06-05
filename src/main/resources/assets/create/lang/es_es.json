@@ -1352,7 +1352,7 @@
 	"block.create.schematic_table.tooltip.condition1": "Cuando se da un esquema vacío",
 	"block.create.schematic_table.tooltip.behaviour1": "Carga un archivo elegido de la carpeta de esquemas",
 
-	"item.create.goggles.tooltip": "GAFAS DEL INGENIERO",
+	"item.create.goggles.tooltip": "GAFAS DEL CONSTRUCTOR",
 	"item.create.goggles.tooltip.summary": "Un par de gafas para aumentar tu visión con útil información _cinética_",
 	"item.create.goggles.tooltip.condition1": "Cuando se llevan puestas",
 	"item.create.goggles.tooltip.behaviour1": "Muestra _indicadores de color_ correspondientes al _nivel de velocidad_ de un componente cinético colocado, así como el _impacto de estrés_ y la _capacidad_ de los componentes individuales.",
@@ -2051,7 +2051,7 @@
 
 	"create.ponder.speedometer.header": "Controlando la información cinética mediante el velocímetro",
 	"create.ponder.speedometer.text_1": "El velocímetro muestra la velocidad actual de los componentes conectados",
-	"create.ponder.speedometer.text_2": "Cuando se usan las Gafas de Ingeniero, el jugador puede obtener información más detallada del Medidor",
+	"create.ponder.speedometer.text_2": "Cuando se usan las Gafas del Constructor, el jugador puede obtener información más detallada del Medidor",
 	"create.ponder.speedometer.text_3": "Los comparadores pueden emitir señales analógicas de Restone en relación con las mediciones del velocímetro",
 
 	"create.ponder.stabilized_bearings.header": "Artilugios estabilizados",
@@ -2068,7 +2068,7 @@
 
 	"create.ponder.stressometer.header": "Supervisando la información cinética con el estresómetro",
 	"create.ponder.stressometer.text_1": "El estresómetro muestra la capacidad de estrés actual de la red cinética conectada",
-	"create.ponder.stressometer.text_2": "Cuando se usan las Gafas de Ingeniero, el jugador puede obtener información más detallada del Medidor",
+	"create.ponder.stressometer.text_2": "Cuando se usan las Gafas del Constructor, el jugador puede obtener información más detallada del Medidor",
 	"create.ponder.stressometer.text_3": "Los comparadores pueden emitir señales analógicas de Redstone en relación con las mediciones del estresómetro",
 
 	"create.ponder.super_glue.header": "Fijando bloques con super pegamento",
