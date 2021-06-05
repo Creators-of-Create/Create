@@ -7,15 +7,25 @@ import org.lwjgl.opengl.GL20;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.core.QuadConverter;
 
+/**
+ * An indexed triangle model. Just what the driver ordered.
+ *
+ * <br><em>This should be favored over a normal BufferedModel.</em>
+ */
 public class IndexedModel extends BufferedModel {
 
 	protected ElementBuffer ebo;
 
-	public IndexedModel(GlPrimitive primitiveMode, VertexFormat modelFormat, ByteBuffer buf, int vertices, ElementBuffer ebo) {
-		super(primitiveMode, modelFormat, buf, vertices);
+	public IndexedModel(VertexFormat modelFormat, ByteBuffer buf, int vertices, ElementBuffer ebo) {
+		super(GlPrimitive.TRIANGLES, modelFormat, buf, vertices);
 
 		this.ebo = ebo;
+	}
+
+	public static IndexedModel fromSequentialQuads(VertexFormat modelFormat, ByteBuffer quads, int vertices) {
+		return new IndexedModel(modelFormat, quads, vertices, QuadConverter.getInstance().quads2Tris(vertices / 4));
 	}
 
 	@Override

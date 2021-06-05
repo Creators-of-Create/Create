@@ -12,8 +12,11 @@ import java.util.Vector;
 
 import javax.annotation.Nonnull;
 
+import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.core.CrumblingInstanceManager;
+import com.jozufozu.flywheel.core.CrumblingProgram;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
@@ -35,6 +38,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.LazyValue;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.IWorld;
@@ -44,10 +48,16 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class InstancedRenderDispatcher {
 
-	private static final RenderType CRUMBLING = ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(0);
+	public static final ResourceLocation CRUMBLING_CONTEXT = new ResourceLocation(Flywheel.ID, "context/crumbling");
+	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(CrumblingProgram::new)
+			.withName(CRUMBLING_CONTEXT)
+			.withBuiltin(ShaderType.FRAGMENT, CRUMBLING_CONTEXT, "/builtin.frag")
+			.withBuiltin(ShaderType.VERTEX, CRUMBLING_CONTEXT, "/builtin.vert");
+
+	private static final RenderType crumblingLayer = ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(0);
 
 	private static final WorldAttached<TileInstanceManager> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(WorldContext.INSTANCE.getMaterialManager(world)));
-	public static LazyValue<Vector<CrumblingInstanceManager>> blockBreaking = new LazyValue<>(() -> {
+	private static final LazyValue<Vector<CrumblingInstanceManager>> blockBreaking = new LazyValue<>(() -> {
 		Vector<CrumblingInstanceManager> renderers = new Vector<>(10);
 		for (int i = 0; i < 10; i++) {
 			renderers.add(new CrumblingInstanceManager());
@@ -137,7 +147,7 @@ public class InstancedRenderDispatcher {
 
 		glActiveTexture(GL_TEXTURE4);
 
-		CRUMBLING.startDrawing();
+		crumblingLayer.startDrawing();
 		bitSet.stream().forEach(i -> {
 			Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(i));
 			CrumblingInstanceManager renderer = renderers.get(i);
@@ -150,7 +160,7 @@ public class InstancedRenderDispatcher {
 
 			renderer.invalidate();
 		});
-		CRUMBLING.endDrawing();
+		crumblingLayer.endDrawing();
 
 		glActiveTexture(GL_TEXTURE0);
 		Texture breaking = textureManager.getTexture(ModelBakery.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(0));

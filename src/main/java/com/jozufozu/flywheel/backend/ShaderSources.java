@@ -12,7 +12,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -26,10 +25,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.jozufozu.flywheel.backend.gl.GlObject;
-import com.jozufozu.flywheel.backend.gl.shader.GlShader;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
-import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderLoadingException;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
@@ -154,43 +150,6 @@ public class ShaderSources implements ISelectiveResourceReloadListener {
 
 	public Shader source(ResourceLocation name, ShaderType type) {
 		return new Shader(this, type, name, getShaderSource(name));
-	}
-
-	public Program loadProgram(ResourceLocation name, Shader... shaders) {
-		return loadProgram(name, Lists.newArrayList(shaders));
-	}
-
-	/**
-	 * Ingests the given shaders, compiling them and linking them together after applying the transformer to the source.
-	 *
-	 * @param name    What should we call this program if something goes wrong?
-	 * @param shaders What are the different shader stages that should be linked together?
-	 * @return A program with all provided shaders attached
-	 */
-	public Program loadProgram(ResourceLocation name, Collection<Shader> shaders) {
-		List<GlShader> compiled = new ArrayList<>(shaders.size());
-		try {
-			Program builder = new Program(name);
-
-			for (Shader shader : shaders) {
-				GlShader sh = new GlShader(shader);
-				compiled.add(sh);
-
-				builder.attachShader(shader, sh);
-			}
-
-			return builder;
-		} finally {
-			compiled.forEach(GlObject::delete);
-		}
-	}
-
-	private void printSource(ResourceLocation name, String source) {
-		Backend.log.debug("Finished processing '" + name + "':");
-		int i = 1;
-		for (String s : source.split("\n")) {
-			Backend.log.debug(String.format("%1$4s: ", i++) + s);
-		}
 	}
 
 	public static Stream<String> lines(String s) {

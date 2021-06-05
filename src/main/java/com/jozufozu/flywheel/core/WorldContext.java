@@ -25,7 +25,6 @@ import com.jozufozu.flywheel.core.shader.ExtensibleGlProgram;
 import com.jozufozu.flywheel.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.core.shader.StateSensitiveMultiProgram;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
-import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.util.WorldAttached;
 
 import net.minecraft.util.ResourceLocation;
@@ -36,10 +35,14 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	private static final String declaration = "#flwbuiltins";
 	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
-	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/world"), WorldProgram::new);
-	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(new ResourceLocation(Flywheel.ID, "context/crumbling"), CrumblingProgram::new);
+	public static final ResourceLocation WORLD_CONTEXT = new ResourceLocation(Flywheel.ID, "context/world");
 
-	protected final ResourceLocation name;
+	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(WorldProgram::new)
+			.withName(WORLD_CONTEXT)
+			.withBuiltin(ShaderType.FRAGMENT, WORLD_CONTEXT, "/builtin.frag")
+			.withBuiltin(ShaderType.VERTEX, WORLD_CONTEXT, "/builtin.vert");
+
+	protected ResourceLocation name;
 	protected Supplier<Stream<ResourceLocation>> specStream;
 	protected TemplateFactory templateFactory;
 
@@ -50,11 +53,8 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 
 	private final ExtensibleGlProgram.Factory<P> factory;
 
-	public WorldContext(ResourceLocation root, ExtensibleGlProgram.Factory<P> factory) {
+	public WorldContext(ExtensibleGlProgram.Factory<P> factory) {
 		this.factory = factory;
-		this.name = root;
-		builtins.put(ShaderType.FRAGMENT, ResourceUtil.subPath(root, "/builtin.frag"));
-		builtins.put(ShaderType.VERTEX, ResourceUtil.subPath(root, "/builtin.vert"));
 
 		specStream = () -> Backend.allMaterials()
 				.stream()
@@ -63,60 +63,88 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 		templateFactory = InstancedArraysTemplate::new;
 	}
 
+	public WorldContext<P> withName(ResourceLocation name) {
+		this.name = name;
+		return this;
+	}
+
+	public WorldContext<P> withBuiltin(ShaderType shaderType, ResourceLocation folder, String file) {
+		return withBuiltin(shaderType, ResourceUtil.subPath(folder, file));
+	}
+
+	public WorldContext<P> withBuiltin(ShaderType shaderType, ResourceLocation file) {
+		builtins.put(shaderType, file);
+		return this;
+	}
+
 	public MaterialManager<P> getMaterialManager(IWorld world) {
 		return materialManager.get(world);
 	}
 
-	public WorldContext<P> setSpecStream(Supplier<Stream<ResourceLocation>> specStream) {
+	public WorldContext<P> withSpecStream(Supplier<Stream<ResourceLocation>> specStream) {
 		this.specStream = specStream;
 		return this;
 	}
 
-	public WorldContext<P> setTemplateFactory(TemplateFactory templateFactory) {
+	public WorldContext<P> withTemplateFactory(TemplateFactory templateFactory) {
 		this.templateFactory = templateFactory;
 		return this;
 	}
 
-	@Override
-	protected IMultiProgram<P> loadSpecInternal(ShaderSources loader, ProgramSpec spec) {
-		return new StateSensitiveMultiProgram<>(loader, factory, this, spec);
-	}
-
+	protected ShaderTransformer transformer;
 	protected ProgramTemplate template;
 
 	@Override
-	public void load(ShaderSources loader) {
+	public void load() {
 		programs.values().forEach(IMultiProgram::delete);
 		programs.clear();
 
 		Backend.log.info("Loading context '{}'", name);
 
 		try {
-			builtins.forEach((type, resourceLocation) -> builtinSources.put(type, loader.getShaderSource(resourceLocation)));
+			builtins.forEach((type, resourceLocation) -> builtinSources.put(type, sourceRepo.getShaderSource(resourceLocation)));
 		} catch (ShaderLoadingException e) {
-			loader.notifyError();
+			sourceRepo.notifyError();
 
 			Backend.log.error(String.format("Could not find builtin: %s", e.getMessage()));
 
 			return;
 		}
 
-		template = templateFactory.create(loader);
+		template = templateFactory.create(sourceRepo);
 		transformer = new ShaderTransformer()
 				.pushStage(this::injectBuiltins)
 				.pushStage(Shader::processIncludes)
-				.pushStage(Shader::parseStructs)
 				.pushStage(template)
 				.pushStage(Shader::processIncludes);
 
 		specStream.get()
 				.map(Backend::getSpec)
-				.forEach(spec -> loadProgramFromSpec(loader, spec));
+				.forEach(spec -> {
+
+					try {
+						programs.put(spec.name, new StateSensitiveMultiProgram<>(factory, this, spec));
+
+						Backend.log.debug("Loaded program {}", spec.name);
+					} catch (Exception e) {
+						Backend.log.error("Program '{}': {}", spec.name, e);
+						sourceRepo.notifyError();
+					}
+				});
 	}
 
 	@Override
-	protected void preLink(Program program) {
+	protected Shader getSource(ShaderType type, ResourceLocation name) {
+		Shader source = super.getSource(type, name);
+		transformer.transformSource(source);
+		return source;
+	}
+
+	@Override
+	protected Program link(Program program) {
 		template.attachAttributes(program);
+
+		return super.link(program);
 	}
 
 	/**

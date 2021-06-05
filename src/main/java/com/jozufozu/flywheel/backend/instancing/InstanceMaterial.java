@@ -13,12 +13,10 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.jozufozu.flywheel.backend.RenderWork;
-import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
@@ -133,9 +131,10 @@ public class InstanceMaterial<D extends InstanceData> {
 
 		// return new BufferedModel(GlPrimitive.QUADS, format, vertices, vertexCount);
 
-		return new IndexedModel(GlPrimitive.TRIANGLES, modelFormat, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
+		return IndexedModel.fromSequentialQuads(modelFormat, vertices, vertexCount);
 	}
 
+	// DOWN, UP, NORTH, SOUTH, WEST, EAST, null
 	private static final Direction[] dirs;
 
 	static {

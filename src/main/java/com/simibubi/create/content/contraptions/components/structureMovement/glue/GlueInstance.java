@@ -2,14 +2,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import java.nio.ByteBuffer;
 
-import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllItems;
@@ -102,15 +100,15 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				(float) a3.x, (float) a3.y, (float) a3.z, 0, -1, 0, 0, 1,
 				(float) a4.x, (float) a4.y, (float) a4.z, 0, -1, 0, 0, 0,
 				// outside quad
-				(float) b4.x, (float) b4.y, (float) b4.z, 0,  1, 0, 0, 0,
-				(float) b3.x, (float) b3.y, (float) b3.z, 0,  1, 0, 0, 1,
-				(float) b2.x, (float) b2.y, (float) b2.z, 0,  1, 0, 1, 1,
-				(float) b1.x, (float) b1.y, (float) b1.z, 0,  1, 0, 1, 0,
+				(float) b4.x, (float) b4.y, (float) b4.z, 0, 1, 0, 0, 0,
+				(float) b3.x, (float) b3.y, (float) b3.z, 0, 1, 0, 0, 1,
+				(float) b2.x, (float) b2.y, (float) b2.z, 0, 1, 0, 1, 1,
+				(float) b1.x, (float) b1.y, (float) b1.z, 0, 1, 0, 1, 0,
 		};
 
 		ByteBuffer buffer = ByteBuffer.allocate(quads.length * 4);
 		buffer.asFloatBuffer().put(quads);
 
-		return new IndexedModel(GlPrimitive.TRIANGLES, AllMaterialSpecs.UNLIT_MODEL, buffer, 8, QuadConverter.getInstance().quads2Tris(2));
+		return IndexedModel.fromSequentialQuads(AllMaterialSpecs.UNLIT_MODEL, buffer, 8);
 	}
 }

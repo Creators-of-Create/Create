@@ -1,11 +1,9 @@
 package com.jozufozu.flywheel.core.shader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.jozufozu.flywheel.backend.ShaderContext;
-import com.jozufozu.flywheel.backend.ShaderSources;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.core.shader.spec.IContextCondition;
@@ -18,19 +16,19 @@ public class StateSensitiveMultiProgram<P extends GlProgram> implements IMultiPr
 	List<Pair<IContextCondition, P>> variants;
 	P fallback;
 
-	public StateSensitiveMultiProgram(ShaderSources loader, ExtensibleGlProgram.Factory<P> factory, ShaderContext<P> context, ProgramSpec p) {
+	public StateSensitiveMultiProgram(ExtensibleGlProgram.Factory<P> factory, ShaderContext<P> context, ProgramSpec p) {
 		variants = new ArrayList<>(p.states.size());
 
 		for (ProgramState state : p.states) {
 
-			Program variant = context.loadProgram(loader, p, state.getDefines());
+			Program variant = context.loadAndLink(p, state);
 
 			Pair<IContextCondition, P> pair = Pair.of(state.getContext(), factory.create(variant, state.getExtensions()));
 
 			variants.add(pair);
 		}
 
-		fallback = factory.create(context.loadProgram(loader, p, Collections.emptyList()));
+		fallback = factory.create(context.loadAndLink(p, null));
 	}
 
 	@Override

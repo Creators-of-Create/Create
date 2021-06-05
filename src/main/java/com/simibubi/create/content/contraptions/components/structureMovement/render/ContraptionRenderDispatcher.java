@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
@@ -74,10 +75,10 @@ public class ContraptionRenderDispatcher {
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
 
 	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
-	public static final WorldContext<ContraptionProgram> STRUCTURE = new WorldContext<>(ctxRoot, ContraptionProgram::new)
-			.setSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
-			.setTemplateFactory(ModelTemplate::new);
-	public static final WorldContext<ContraptionProgram> TILES = new WorldContext<>(ctxRoot, ContraptionProgram::new);
+	public static final WorldContext<ContraptionProgram> TILES = contraptionContext();
+	public static final WorldContext<ContraptionProgram> STRUCTURE = contraptionContext()
+			.withSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
+			.withTemplateFactory(ModelTemplate::new);
 
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;
@@ -340,5 +341,12 @@ public class ContraptionRenderDispatcher {
 
 	public static void removeDeadHolders() {
 		WORLD_HOLDERS.values().removeIf(ContraptionWorldHolder::isDead);
+	}
+
+	private static WorldContext<ContraptionProgram> contraptionContext() {
+		return new WorldContext<>(ContraptionProgram::new)
+				.withName(ctxRoot)
+				.withBuiltin(ShaderType.FRAGMENT, ctxRoot, "/builtin.frag")
+				.withBuiltin(ShaderType.VERTEX, ctxRoot, "/builtin.vert");
 	}
 }

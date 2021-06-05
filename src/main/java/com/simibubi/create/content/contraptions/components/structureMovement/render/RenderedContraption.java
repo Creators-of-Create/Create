@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.GlPrimitive;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -19,7 +18,6 @@ import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -203,6 +201,6 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		vertices.rewind();
 
-		return new IndexedModel(GlPrimitive.TRIANGLES, format, vertices, vertexCount, QuadConverter.getInstance().quads2Tris(vertexCount / 4));
+		return IndexedModel.fromSequentialQuads(format, vertices, vertexCount);
 	}
 }

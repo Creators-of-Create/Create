@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ShaderSources;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
@@ -132,6 +133,14 @@ public class Shader {
 
 			return Stream.of(line);
 		});
+	}
+
+	public void printSource() {
+		Backend.log.debug("Source for shader '" + name + "':");
+		int i = 1;
+		for (String s : source.split("\n")) {
+			Backend.log.debug(String.format("%1$4s: ", i++) + s);
+		}
 	}
 
 	public static Stream<String> lines(String s) {

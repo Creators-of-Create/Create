@@ -1,5 +1,6 @@
 package com.jozufozu.flywheel.core;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 
@@ -7,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class CrumblingInstanceManager extends TileInstanceManager {
 	public CrumblingInstanceManager() {
-		super(new MaterialManager<>(WorldContext.CRUMBLING));
+		super(new MaterialManager<>(InstancedRenderDispatcher.CRUMBLING));
 	}
 
 	@Override

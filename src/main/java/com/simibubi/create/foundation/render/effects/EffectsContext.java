@@ -1,15 +1,13 @@
 package com.simibubi.create.foundation.render.effects;
 
-import java.util.Collections;
-
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ShaderContext;
-import com.jozufozu.flywheel.backend.ShaderSources;
+import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Shader;
-import com.jozufozu.flywheel.backend.loading.ShaderTransformer;
-import com.jozufozu.flywheel.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
+
+import net.minecraft.util.ResourceLocation;
 
 public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 
@@ -20,14 +18,23 @@ public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 	}
 
 	@Override
-	protected IMultiProgram<SphereFilterProgram> loadSpecInternal(ShaderSources loader, ProgramSpec spec) {
-		return new SphereFilterProgram(loadProgram(loader, spec, Collections.emptyList()));
+	public void load() {
+		ProgramSpec programSpec = Backend.getSpec(AllProgramSpecs.CHROMATIC);
+
+		try {
+			programs.put(programSpec.name, new SphereFilterProgram(loadAndLink(programSpec, null)));
+
+			Backend.log.debug("Loaded program {}", programSpec.name);
+		} catch (Exception e) {
+			Backend.log.error("Program '{}': {}", programSpec.name, e);
+			sourceRepo.notifyError();
+		}
 	}
 
 	@Override
-	public void load(ShaderSources loader) {
-		transformer = new ShaderTransformer()
-				.pushStage(Shader::processIncludes);
-		loadProgramFromSpec(loader, Backend.getSpec(AllProgramSpecs.CHROMATIC));
+	protected Shader getSource(ShaderType type, ResourceLocation name) {
+		Shader source = super.getSource(type, name);
+		source.processIncludes();
+		return source;
 	}
 }

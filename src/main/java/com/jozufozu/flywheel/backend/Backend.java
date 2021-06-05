@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GLCapabilities;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
@@ -45,7 +46,7 @@ public class Backend {
 
 	static {
 		register(WorldContext.INSTANCE);
-		register(WorldContext.CRUMBLING);
+		register(InstancedRenderDispatcher.CRUMBLING);
 	}
 
 	public Backend() {
