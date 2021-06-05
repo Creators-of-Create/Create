@@ -132,8 +132,8 @@ dependencies {
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     //runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.103")
     //runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.0.3.168")
-    runtimeOnly fg.deobf("curse.maven:agricraft-225635:3338391")
-    runtimeOnly fg.deobf("curse.maven:infinitlib-251396:3338377")
+    //runtimeOnly fg.deobf("curse.maven:agricraft-225635:3338391")
+    //runtimeOnly fg.deobf("curse.maven:infinitlib-251396:3338377")
 
     annotationProcessor 'org.spongepowered:mixin:0.8:processor'
 }
