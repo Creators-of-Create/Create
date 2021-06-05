@@ -29,16 +29,18 @@ public class FastRenderDispatcher {
 
 		KineticRenderer kineticRenderer = CreateClient.KINETIC_RENDERER.get(world);
 
-		Entity renderViewEntity = mc.renderViewEntity;
-		kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
+		Entity renderViewEntity = mc.getRenderViewEntity();
+		if(renderViewEntity != null && kineticRenderer != null) {
+			kineticRenderer.tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 
-		ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
-		map
-				.forEach(te -> {
-					map.remove(te);
+			ConcurrentHashMap.KeySetView<TileEntity, Boolean> map = queuedUpdates.get(world);
+			map
+					.forEach(te -> {
+						map.remove(te);
 
-					kineticRenderer.update(te);
-				});
+						kineticRenderer.update(te);
+					});
+		}
 	}
 
 	public static boolean available() {

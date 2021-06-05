@@ -248,7 +248,7 @@ public class AllTileEntities {
 		.tileEntity("hand_crank", HandCrankTileEntity::new)
 		.instance(() -> HandCrankInstance::new)
 		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
+	//	.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -656,7 +656,7 @@ public class AllTileEntities {
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
-	
+
 	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
 		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
 		.instance(() -> CopperBacktankInstance::new)
