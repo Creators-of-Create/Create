@@ -107,12 +107,19 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 			return ItemStack.EMPTY;
 
 		Predicate<ItemStack> test = getFilterTest(filter);
-		ItemStack extract = ItemStack.EMPTY;
-		if (amount != -1)
-			extract = ItemHelper.extract(inventory, test, amount, shouldSimulate);
-		else
-			extract = ItemHelper.extract(inventory, test, amountThreshold, shouldSimulate);
-		return extract;
+
+		ItemStack simulatedItems = extractAmountOrThresh(inventory, test, amount, amountThreshold, true);
+		if (shouldSimulate || simulatedItems.isEmpty())
+			return simulatedItems;
+
+		return extractAmountOrThresh(inventory, test, amount, amountThreshold, false);
+	}
+
+	private static ItemStack extractAmountOrThresh(IItemHandler inventory, Predicate<ItemStack> test, int amount,
+	   Function<ItemStack, Integer> amountThreshold, boolean shouldSimulate) {
+		if (amount == -1)
+			return ItemHelper.extract(inventory, test, amountThreshold, shouldSimulate);
+		return ItemHelper.extract(inventory, test, amount, shouldSimulate);
 	}
 
 	public ItemStack insert(ItemStack stack) {
@@ -156,7 +163,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		if (!targetCapability.isPresent())
 			findNewCapability();
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();

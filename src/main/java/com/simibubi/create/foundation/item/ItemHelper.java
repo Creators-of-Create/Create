@@ -7,6 +7,8 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.item.Item;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -161,7 +163,7 @@ public class ItemHelper {
 					continue;
 				if (!test.test(stack))
 					continue;
-				if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting)) {
+				if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting)) {
 					potentialOtherMatch = true;
 					continue;
 				}
@@ -174,8 +176,7 @@ public class ItemHelper {
 				if (!simulate && hasEnoughItems)
 					inv.extractItem(slot, stack.getCount(), false);
 
-				if (extracting.getCount() >= maxExtractionCount
-					|| extracting.getCount() >= extracting.getMaxStackSize()) {
+				if (extracting.getCount() >= maxExtractionCount) {
 					if (checkHasEnoughItems) {
 						hasEnoughItems = true;
 						checkHasEnoughItems = false;
@@ -225,7 +226,7 @@ public class ItemHelper {
 
 			if (!test.test(stack))
 				continue;
-			if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting))
+			if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting))
 				continue;
 
 			if (extracting.isEmpty())
@@ -235,11 +236,15 @@ public class ItemHelper {
 
 			if (!simulate)
 				inv.extractItem(slot, stack.getCount(), false);
-			if (extracting.getCount() >= maxExtractionCount || extracting.getCount() >= extracting.getMaxStackSize())
+			if (extracting.getCount() >= maxExtractionCount)
 				break;
 		}
 
 		return extracting;
+	}
+
+	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
+		return ItemHandlerHelper.canItemStacksStack(a,b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {
