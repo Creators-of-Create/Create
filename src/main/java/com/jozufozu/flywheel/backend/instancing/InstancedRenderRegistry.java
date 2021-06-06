@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
+import com.jozufozu.flywheel.backend.instancing.tile.ITileInstanceFactory;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;

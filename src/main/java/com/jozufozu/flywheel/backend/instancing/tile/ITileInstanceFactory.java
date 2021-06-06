@@ -1,4 +1,6 @@
-package com.jozufozu.flywheel.backend.instancing;
+package com.jozufozu.flywheel.backend.instancing.tile;
+
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 
 import net.minecraft.tileentity.TileEntity;
 

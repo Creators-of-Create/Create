@@ -1,6 +1,6 @@
 package com.jozufozu.flywheel.core.shader.gamestate;
 
-import com.jozufozu.flywheel.core.shader.spec.SpecMetaRegistry;
+import com.jozufozu.flywheel.backend.SpecMetaRegistry;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.util.ResourceLocation;

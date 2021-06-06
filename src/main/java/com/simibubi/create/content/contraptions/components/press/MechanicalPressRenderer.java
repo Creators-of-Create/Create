@@ -33,7 +33,7 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 			int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		BlockPos pos = te.getPos();
 		BlockState blockState = te.getBlockState();

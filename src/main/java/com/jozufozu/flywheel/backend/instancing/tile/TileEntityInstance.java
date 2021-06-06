@@ -1,8 +1,14 @@
-package com.jozufozu.flywheel.backend.instancing;
+package com.jozufozu.flywheel.backend.instancing.tile;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.IInstance;
+import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.instancing.TileInstanceManager;
 import com.jozufozu.flywheel.core.materials.IFlatLight;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.materials.OrientedData;

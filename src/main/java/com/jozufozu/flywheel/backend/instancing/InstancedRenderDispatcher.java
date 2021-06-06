@@ -12,12 +12,9 @@ import java.util.Vector;
 
 import javax.annotation.Nonnull;
 
-import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
+import com.jozufozu.flywheel.core.Contexts;
 import com.jozufozu.flywheel.core.CrumblingInstanceManager;
-import com.jozufozu.flywheel.core.CrumblingProgram;
-import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
@@ -38,7 +35,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.LazyValue;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.IWorld;
@@ -48,15 +44,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class InstancedRenderDispatcher {
 
-	public static final ResourceLocation CRUMBLING_CONTEXT = new ResourceLocation(Flywheel.ID, "context/crumbling");
-	public static final WorldContext<CrumblingProgram> CRUMBLING = new WorldContext<>(CrumblingProgram::new)
-			.withName(CRUMBLING_CONTEXT)
-			.withBuiltin(ShaderType.FRAGMENT, CRUMBLING_CONTEXT, "/builtin.frag")
-			.withBuiltin(ShaderType.VERTEX, CRUMBLING_CONTEXT, "/builtin.vert");
-
 	private static final RenderType crumblingLayer = ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(0);
 
-	private static final WorldAttached<TileInstanceManager> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(WorldContext.INSTANCE.getMaterialManager(world)));
+	private static final WorldAttached<TileInstanceManager> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(Contexts.WORLD.getMaterialManager(world)));
 	private static final LazyValue<Vector<CrumblingInstanceManager>> blockBreaking = new LazyValue<>(() -> {
 		Vector<CrumblingInstanceManager> renderers = new Vector<>(10);
 		for (int i = 0; i < 10; i++) {
@@ -86,7 +76,7 @@ public class InstancedRenderDispatcher {
 
 	@SubscribeEvent
 	public static void onBeginFrame(BeginFrameEvent event) {
-		WorldContext.INSTANCE.getMaterialManager(event.getWorld())
+		Contexts.WORLD.getMaterialManager(event.getWorld())
 				.checkAndShiftOrigin(event.getInfo());
 		get(event.getWorld())
 				.beginFrame(event.getInfo());
@@ -95,8 +85,8 @@ public class InstancedRenderDispatcher {
 	@SubscribeEvent
 	public static void renderLayer(RenderLayerEvent event) {
 		ClientWorld world = event.getWorld();
-		if (!Backend.canUseInstancing(world)) return;
-		MaterialManager<WorldProgram> materialManager = WorldContext.INSTANCE.getMaterialManager(world);
+		if (!Backend.getInstance().canUseInstancing(world)) return;
+		MaterialManager<WorldProgram> materialManager = Contexts.WORLD.getMaterialManager(world);
 
 		event.type.startDrawing();
 
@@ -108,8 +98,8 @@ public class InstancedRenderDispatcher {
 	@SubscribeEvent
 	public static void onReloadRenderers(ReloadRenderersEvent event) {
 		ClientWorld world = event.getWorld();
-		if (Backend.canUseInstancing() && world != null) {
-			WorldContext.INSTANCE.getMaterialManager(world).delete();
+		if (Backend.getInstance().canUseInstancing() && world != null) {
+			Contexts.WORLD.getMaterialManager(world).delete();
 
 			TileInstanceManager tileRenderer = get(world);
 			tileRenderer.invalidate();
@@ -118,7 +108,7 @@ public class InstancedRenderDispatcher {
 	}
 
 	public static void renderBreaking(ClientWorld world, Matrix4f viewProjection, double cameraX, double cameraY, double cameraZ) {
-		if (!Backend.canUseInstancing(world)) return;
+		if (!Backend.getInstance().canUseInstancing(world)) return;
 
 		WorldRenderer worldRenderer = Minecraft.getInstance().worldRenderer;
 		Long2ObjectMap<SortedSet<DestroyBlockProgress>> breakingProgressions = worldRenderer.blockBreakingProgressions;

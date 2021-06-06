@@ -39,7 +39,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		for (RenderType type : RenderType.getBlockLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))

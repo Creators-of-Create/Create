@@ -49,7 +49,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		renderShaft(te, ms, buffer, light, overlay);
 	}

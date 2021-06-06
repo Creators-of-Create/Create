@@ -51,7 +51,7 @@ public class LightVolume {
 	public LightVolume(GridAlignedBB sampleVolume) {
 		setSampleVolume(sampleVolume);
 
-		pixelFormat = Backend.compat.pixelFormat;
+		pixelFormat = Backend.getInstance().compat.pixelFormat;
 
 		this.glTexture = new GlTexture(GL_TEXTURE_3D);
 		this.lightData = MemoryUtil.memAlloc(this.textureVolume.volume() * pixelFormat.byteCount());

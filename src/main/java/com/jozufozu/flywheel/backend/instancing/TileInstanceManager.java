@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -109,7 +110,7 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
-		if (!Backend.canUseInstancing()) return null;
+		if (!Backend.getInstance().canUseInstancing()) return null;
 
 		TileEntityInstance<?> instance = instances.get(tile);
 
@@ -123,7 +124,7 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	}
 
 	public <T extends TileEntity> void onLightUpdate(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		if (tile instanceof IInstanceRendered) {
 			TileEntityInstance<? super T> instance = getInstance(tile, false);
@@ -134,7 +135,7 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	}
 
 	public <T extends TileEntity> void add(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		if (tile instanceof IInstanceRendered) {
 			addInternal(tile);
@@ -142,7 +143,7 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	}
 
 	public <T extends TileEntity> void update(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		if (tile instanceof IInstanceRendered) {
 			TileEntityInstance<? super T> instance = getInstance(tile, false);
@@ -161,7 +162,7 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	}
 
 	public <T extends TileEntity> void remove(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		if (tile instanceof IInstanceRendered) {
 			removeInternal(tile);
@@ -169,13 +170,13 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 	}
 
 	public synchronized <T extends TileEntity> void queueAdd(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		queuedAdditions.add(tile);
 	}
 
 	public synchronized <T extends TileEntity> void queueUpdate(T tile) {
-		if (!Backend.canUseInstancing()) return;
+		if (!Backend.getInstance().canUseInstancing()) return;
 
 		queuedUpdates.add(tile);
 	}

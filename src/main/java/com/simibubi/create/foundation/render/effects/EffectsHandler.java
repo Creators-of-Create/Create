@@ -12,6 +12,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.FullscreenQuad;
 import com.jozufozu.flywheel.util.RenderUtil;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
+import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.MainWindow;
@@ -29,11 +30,11 @@ public class EffectsHandler {
 
 	@Nullable
 	public static EffectsHandler getInstance() {
-		if (Backend.available() && instance == null) {
-			instance = new EffectsHandler();
+		if (Backend.getInstance().available() && instance == null) {
+			instance = new EffectsHandler(Backend.getInstance());
 		}
 
-		if (!Backend.available() && instance != null) {
+		if (!Backend.getInstance().available() && instance != null) {
 			instance.delete();
 			instance = null;
 		}
@@ -49,12 +50,12 @@ public class EffectsHandler {
 		return Minecraft.getInstance().gameRenderer.getFarPlaneDistance() * 4;
 	}
 
-
+	private final Backend backend;
 	private final Framebuffer framebuffer;
-
 	private final ArrayList<FilterSphere> spheres;
 
-	public EffectsHandler() {
+	public EffectsHandler(Backend backend) {
+		this.backend = backend;
 		spheres = new ArrayList<>();
 
 		Framebuffer render = Minecraft.getInstance().getFramebuffer();
@@ -79,10 +80,10 @@ public class EffectsHandler {
 
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 
-		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
+		backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, framebuffer.framebufferObject);
 		GL11.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
-		SphereFilterProgram program = EffectsContext.INSTANCE.getProgram(AllProgramSpecs.CHROMATIC);
+		SphereFilterProgram program = CreateContexts.EFFECTS.getProgram(AllProgramSpecs.CHROMATIC);
 		program.bind();
 
 		program.bindColorTexture(mainBuffer.getColorAttachment());
@@ -129,10 +130,10 @@ public class EffectsHandler {
 		program.unbind();
 		spheres.clear();
 
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
-		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+		backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.framebufferObject);
+		backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
+		backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
 	}
 
 	public void delete() {

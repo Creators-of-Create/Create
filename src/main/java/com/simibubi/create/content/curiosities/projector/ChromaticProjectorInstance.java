@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.projector;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.simibubi.create.foundation.render.effects.EffectsHandler;
 
 public class ChromaticProjectorInstance extends TileEntityInstance<ChromaticProjectorTileEntity> implements IDynamicInstance {

@@ -30,7 +30,7 @@ public abstract class StoreProjectionMatrixMixin {
 	@Inject(method = "loadProjectionMatrix", at = @At("TAIL"))
 	private void onProjectionMatrixLoad(Matrix4f projection, CallbackInfo ci) {
 		if (shouldCopy) {
-			Backend.setProjectionMatrix(projection.copy());
+			Backend.getInstance().setProjectionMatrix(projection.copy());
 			shouldCopy = false;
 		}
 	}

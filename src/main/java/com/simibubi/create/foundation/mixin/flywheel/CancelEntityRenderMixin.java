@@ -19,7 +19,7 @@ public class CancelEntityRenderMixin {
 
 	@Inject(at = @At("RETURN"), method = "getAllEntities", cancellable = true)
 	private void filterEntities(CallbackInfoReturnable<Iterable<Entity>> cir) {
-		if (Backend.canUseInstancing()) {
+		if (Backend.getInstance().canUseInstancing()) {
 			Iterable<Entity> entities = cir.getReturnValue();
 
 			ArrayList<Entity> list = Lists.newArrayList(entities);

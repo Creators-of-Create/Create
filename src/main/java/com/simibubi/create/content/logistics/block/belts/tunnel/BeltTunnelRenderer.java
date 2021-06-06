@@ -31,7 +31,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		SuperByteBuffer flapBuffer = PartialBufferer.get(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());

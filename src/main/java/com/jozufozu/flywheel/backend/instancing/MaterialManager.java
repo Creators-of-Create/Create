@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.WeakHashSet;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.RenderType;
@@ -34,10 +34,10 @@ public class MaterialManager<P extends WorldProgram> {
 
 	public MaterialManager(WorldContext<P> context) {
 		this.materials = new HashMap<>();
-		this.renderers = new ArrayList<>(Backend.allMaterials().size());
+		this.renderers = new ArrayList<>(Backend.getInstance().allMaterials().size());
 		this.listeners = new WeakHashSet<>();
 
-		for (MaterialSpec<?> spec : Backend.allMaterials()) {
+		for (MaterialSpec<?> spec : Backend.getInstance().allMaterials()) {
 			InstanceMaterial<?> material = new InstanceMaterial<>(this::getOriginCoordinate, spec);
 			materials.put(spec.name, material);
 			MaterialRenderer<P> renderer = new MaterialRenderer<>(context.getProgram(spec.getProgramName()), material);
@@ -89,11 +89,11 @@ public class MaterialManager<P extends WorldProgram> {
 	}
 
 	public InstanceMaterial<ModelData> getTransformMaterial() {
-		return getMaterial(AllMaterialSpecs.TRANSFORMED);
+		return getMaterial(Materials.TRANSFORMED);
 	}
 
 	public InstanceMaterial<OrientedData> getOrientedMaterial() {
-		return getMaterial(AllMaterialSpecs.ORIENTED);
+		return getMaterial(Materials.ORIENTED);
 	}
 
 	public Vector3i getOriginCoordinate() {

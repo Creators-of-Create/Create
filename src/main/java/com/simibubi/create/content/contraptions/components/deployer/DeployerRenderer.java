@@ -53,7 +53,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
@@ -112,7 +112,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		if (!Backend.canUseInstancing(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
 			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 		}
 

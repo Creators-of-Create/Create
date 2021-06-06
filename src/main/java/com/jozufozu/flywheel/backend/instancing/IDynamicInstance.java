@@ -1,5 +1,7 @@
 package com.jozufozu.flywheel.backend.instancing;
 
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+
 /**
  * An interface giving {@link TileEntityInstance}s a hook to have a function called at
  * the start of a frame. By implementing {@link IDynamicInstance}, a {@link TileEntityInstance}

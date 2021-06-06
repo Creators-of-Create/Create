@@ -2,6 +2,7 @@
 #flwinclude <"flywheel:core/lightutil.glsl">
 
 varying vec3 BoxCoord;
+varying vec2 BoxLight;
 uniform sampler3D uLightVolume;
 
 uniform sampler2D uBlockAtlas;

@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.ShaderContext;
@@ -35,13 +34,6 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 	private static final String declaration = "#flwbuiltins";
 	private static final Pattern builtinPattern = Pattern.compile(declaration);
 
-	public static final ResourceLocation WORLD_CONTEXT = new ResourceLocation(Flywheel.ID, "context/world");
-
-	public static final WorldContext<WorldProgram> INSTANCE = new WorldContext<>(WorldProgram::new)
-			.withName(WORLD_CONTEXT)
-			.withBuiltin(ShaderType.FRAGMENT, WORLD_CONTEXT, "/builtin.frag")
-			.withBuiltin(ShaderType.VERTEX, WORLD_CONTEXT, "/builtin.vert");
-
 	protected ResourceLocation name;
 	protected Supplier<Stream<ResourceLocation>> specStream;
 	protected TemplateFactory templateFactory;
@@ -53,10 +45,11 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 
 	private final ExtensibleGlProgram.Factory<P> factory;
 
-	public WorldContext(ExtensibleGlProgram.Factory<P> factory) {
+	public WorldContext(Backend backend, ExtensibleGlProgram.Factory<P> factory) {
+		super(backend);
 		this.factory = factory;
 
-		specStream = () -> Backend.allMaterials()
+		specStream = () -> backend.allMaterials()
 				.stream()
 				.map(MaterialSpec::getProgramName);
 
@@ -102,16 +95,16 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 		Backend.log.info("Loading context '{}'", name);
 
 		try {
-			builtins.forEach((type, resourceLocation) -> builtinSources.put(type, sourceRepo.getShaderSource(resourceLocation)));
+			builtins.forEach((type, resourceLocation) -> builtinSources.put(type, backend.sources.getShaderSource(resourceLocation)));
 		} catch (ShaderLoadingException e) {
-			sourceRepo.notifyError();
+			backend.sources.notifyError();
 
 			Backend.log.error(String.format("Could not find builtin: %s", e.getMessage()));
 
 			return;
 		}
 
-		template = templateFactory.create(sourceRepo);
+		template = templateFactory.create(backend.sources);
 		transformer = new ShaderTransformer()
 				.pushStage(this::injectBuiltins)
 				.pushStage(Shader::processIncludes)
@@ -119,7 +112,7 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 				.pushStage(Shader::processIncludes);
 
 		specStream.get()
-				.map(Backend::getSpec)
+				.map(backend::getSpec)
 				.forEach(spec -> {
 
 					try {
@@ -128,9 +121,16 @@ public class WorldContext<P extends WorldProgram> extends ShaderContext<P> {
 						Backend.log.debug("Loaded program {}", spec.name);
 					} catch (Exception e) {
 						Backend.log.error("Program '{}': {}", spec.name, e);
-						sourceRepo.notifyError();
+						backend.sources.notifyError();
 					}
 				});
+	}
+
+	@Override
+	public void delete() {
+		super.delete();
+
+		materialManager.forEach(MaterialManager::delete);
 	}
 
 	@Override

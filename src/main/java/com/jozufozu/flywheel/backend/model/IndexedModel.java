@@ -49,7 +49,7 @@ public class IndexedModel extends BufferedModel {
 	public void drawInstances(int instanceCount) {
 		if (vertexCount <= 0 || deleted) return;
 
-		Backend.compat.drawInstanced.drawElementsInstanced(primitiveMode, ebo.elementCount, ebo.eboIndexType, 0, instanceCount);
+		Backend.getInstance().compat.drawInstanced.drawElementsInstanced(primitiveMode, ebo.elementCount, ebo.eboIndexType, 0, instanceCount);
 	}
 
 	@Override

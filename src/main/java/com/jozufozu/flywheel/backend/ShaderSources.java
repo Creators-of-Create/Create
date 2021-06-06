@@ -29,15 +29,17 @@ import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.Shader;
 import com.jozufozu.flywheel.backend.loading.ShaderLoadingException;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
-import com.jozufozu.flywheel.core.shader.spec.SpecMetaRegistry;
+import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResource;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.resource.IResourceType;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
@@ -47,31 +49,39 @@ public class ShaderSources implements ISelectiveResourceReloadListener {
 	public static final String SHADER_DIR = "flywheel/shaders/";
 	public static final String PROGRAM_DIR = "flywheel/programs/";
 	public static final ArrayList<String> EXTENSIONS = Lists.newArrayList(".vert", ".vsh", ".frag", ".fsh", ".glsl");
+	private static final Gson GSON = new GsonBuilder().create();
 
 	private final Map<ResourceLocation, String> shaderSource = new HashMap<>();
 
 	private boolean shouldCrash;
-	private final Gson gson = new GsonBuilder().create();
+	private final Backend backend;
+
+	public ShaderSources(Backend backend) {
+		this.backend = backend;
+		IResourceManager manager = backend.minecraft.getResourceManager();
+		if (manager instanceof IReloadableResourceManager) {
+			((IReloadableResourceManager) manager).addReloadListener(this);
+		}
+	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager manager, Predicate<IResourceType> predicate) {
 		if (predicate.test(VanillaResourceType.SHADERS)) {
-			OptifineHandler.refresh();
-			Backend.refresh();
+			backend.refresh();
 
-			if (Backend.gl20()) {
+			if (backend.gl20()) {
 				shaderSource.clear();
 
 				shouldCrash = false;
 
-				SpecMetaRegistry.init();
+				backend.clearContexts();
+				ModLoader.get().postEvent(new GatherContextEvent(backend));
 
 				loadProgramSpecs(manager);
-
 				loadShaderSources(manager);
 
-				for (ShaderContext<?> context : Backend.contexts) {
-					context.load(this);
+				for (IShaderContext<?> context : backend.allContexts()) {
+					context.load();
 				}
 
 				if (shouldCrash) {
@@ -97,13 +107,13 @@ public class ShaderSources implements ISelectiveResourceReloadListener {
 
 				ResourceLocation specName = ResourceUtil.trim(location, PROGRAM_DIR, ".json");
 
-				DataResult<Pair<ProgramSpec, JsonElement>> result = ProgramSpec.CODEC.decode(JsonOps.INSTANCE, gson.fromJson(s, JsonElement.class));
+				DataResult<Pair<ProgramSpec, JsonElement>> result = ProgramSpec.CODEC.decode(JsonOps.INSTANCE, GSON.fromJson(s, JsonElement.class));
 
 				ProgramSpec spec = result.get().orThrow().getFirst();
 
 				spec.setName(specName);
 
-				Backend.register(spec);
+				backend.register(spec);
 			} catch (Exception e) {
 				Backend.log.error(e);
 			}

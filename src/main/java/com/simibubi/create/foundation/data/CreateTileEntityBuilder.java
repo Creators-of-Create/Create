@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.data;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.ITileInstanceFactory;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import com.jozufozu.flywheel.backend.instancing.tile.ITileInstanceFactory;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.TileEntityBuilder;

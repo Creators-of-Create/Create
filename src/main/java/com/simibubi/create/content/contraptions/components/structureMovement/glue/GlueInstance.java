@@ -8,10 +8,11 @@ import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
+import com.jozufozu.flywheel.core.Formats;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -29,7 +30,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	public GlueInstance(MaterialManager<?> renderer, SuperGlueEntity entity) {
 		super(renderer, entity);
 
-		Instancer<OrientedData> instancer = renderer.getMaterial(AllMaterialSpecs.ORIENTED)
+		Instancer<OrientedData> instancer = renderer.getMaterial(Materials.ORIENTED)
 				.get(entity.getType(), GlueInstance::supplyModel);
 		model = new ConditionalInstance<>(instancer)
 				.withCondition(this::shouldShow)
@@ -109,6 +110,6 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		ByteBuffer buffer = ByteBuffer.allocate(quads.length * 4);
 		buffer.asFloatBuffer().put(quads);
 
-		return IndexedModel.fromSequentialQuads(AllMaterialSpecs.UNLIT_MODEL, buffer, 8);
+		return IndexedModel.fromSequentialQuads(Formats.UNLIT_MODEL, buffer, 8);
 	}
 }

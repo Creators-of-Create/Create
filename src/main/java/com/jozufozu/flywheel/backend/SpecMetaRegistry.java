@@ -1,14 +1,10 @@
-package com.jozufozu.flywheel.core.shader.spec;
+package com.jozufozu.flywheel.backend;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.core.shader.WorldFog;
 import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
-import com.jozufozu.flywheel.core.shader.gamestate.FogStateProvider;
 import com.jozufozu.flywheel.core.shader.gamestate.IGameStateProvider;
-import com.jozufozu.flywheel.core.shader.gamestate.NormalDebugStateProvider;
-import com.jozufozu.flywheel.core.shader.gamestate.RainbowDebugStateProvider;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -17,18 +13,9 @@ public class SpecMetaRegistry {
 	private static final Map<ResourceLocation, IProgramExtension> registeredExtensions = new HashMap<>();
 	private static final Map<ResourceLocation, IGameStateProvider> registeredStateProviders = new HashMap<>();
 
-	// TODO: proper registration, don't call this from ShaderLoader
-	private static boolean initialized = false;
-	public static void init() {
-		if (initialized) return;
-		initialized = true;
-
-		register(FogStateProvider.INSTANCE);
-		register(RainbowDebugStateProvider.INSTANCE);
-		register(NormalDebugStateProvider.INSTANCE);
-
-		register(WorldFog.LINEAR);
-		register(WorldFog.EXP2);
+	static void clear() {
+		registeredExtensions.clear();
+		registeredStateProviders.clear();
 	}
 
 	public static IGameStateProvider getStateProvider(ResourceLocation location) {

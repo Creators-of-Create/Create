@@ -75,7 +75,7 @@ public class BufferedModel {
 	public void drawInstances(int instanceCount) {
 		if (!valid()) return;
 
-		Backend.compat.drawInstanced.drawArraysInstanced(primitiveMode, 0, vertexCount, instanceCount);
+		Backend.getInstance().compat.drawInstanced.drawArraysInstanced(primitiveMode, 0, vertexCount, instanceCount);
 	}
 
 	public void delete() {

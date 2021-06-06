@@ -11,14 +11,10 @@ import static org.lwjgl.opengl.GL13.glEnable;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
-import com.jozufozu.flywheel.backend.loading.ModelTemplate;
-import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
@@ -31,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
 import com.simibubi.create.foundation.render.Compartment;
+import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
@@ -53,7 +50,6 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -73,12 +69,6 @@ public class ContraptionRenderDispatcher {
 	public static final Int2ObjectMap<RenderedContraption> RENDERERS = new Int2ObjectOpenHashMap<>();
 	public static final Int2ObjectMap<ContraptionWorldHolder> WORLD_HOLDERS = new Int2ObjectOpenHashMap<>();
 	public static final Compartment<Pair<Contraption, Integer>> CONTRAPTION = new Compartment<>();
-
-	private static final ResourceLocation ctxRoot = new ResourceLocation("create", "context/contraption");
-	public static final WorldContext<ContraptionProgram> TILES = contraptionContext();
-	public static final WorldContext<ContraptionProgram> STRUCTURE = contraptionContext()
-			.withSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
-			.withTemplateFactory(ModelTemplate::new);
 
 	public static void tick() {
 		if (Minecraft.getInstance().isGamePaused()) return;
@@ -118,8 +108,8 @@ public class ContraptionRenderDispatcher {
 		glEnable(GL_TEXTURE_3D);
 		glActiveTexture(GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
 
-		if (Backend.canUseVBOs()) {
-			ContraptionProgram structureShader = STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
+		if (Backend.getInstance().canUseVBOs()) {
+			ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
 
 			structureShader.bind();
 			structureShader.uploadViewProjection(event.viewProjection);
@@ -130,7 +120,7 @@ public class ContraptionRenderDispatcher {
 			}
 		}
 
-		if (Backend.canUseInstancing()) {
+		if (Backend.getInstance().canUseInstancing()) {
 			for (RenderedContraption renderer : RENDERERS.values()) {
 				renderer.materialManager.render(layer, event.viewProjection, event.camX, event.camY, event.camZ, renderer::setup);
 			}
@@ -150,7 +140,7 @@ public class ContraptionRenderDispatcher {
 	public static void render(AbstractContraptionEntity entity, Contraption contraption,
 							  ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		World world = entity.world;
-		if (Backend.canUseVBOs() && Backend.isFlywheelWorld(world)) {
+		if (Backend.getInstance().canUseVBOs() && Backend.isFlywheelWorld(world)) {
 			RenderedContraption renderer = getRenderer(world, contraption);
 			PlacementSimulationWorld renderWorld = renderer.renderWorld;
 
@@ -343,10 +333,4 @@ public class ContraptionRenderDispatcher {
 		WORLD_HOLDERS.values().removeIf(ContraptionWorldHolder::isDead);
 	}
 
-	private static WorldContext<ContraptionProgram> contraptionContext() {
-		return new WorldContext<>(ContraptionProgram::new)
-				.withName(ctxRoot)
-				.withBuiltin(ShaderType.FRAGMENT, ctxRoot, "/builtin.frag")
-				.withBuiltin(ShaderType.VERTEX, ctxRoot, "/builtin.vert");
-	}
 }

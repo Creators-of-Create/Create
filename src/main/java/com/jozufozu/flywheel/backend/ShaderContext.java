@@ -1,14 +1,12 @@
 package com.jozufozu.flywheel.backend;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 import com.jozufozu.flywheel.backend.gl.shader.GlShader;
@@ -21,21 +19,20 @@ import com.jozufozu.flywheel.core.shader.spec.ProgramState;
 
 import net.minecraft.util.ResourceLocation;
 
-public abstract class ShaderContext<P extends GlProgram> {
+public abstract class ShaderContext<P extends GlProgram> implements IShaderContext<P> {
 
 	protected final Map<ResourceLocation, IMultiProgram<P>> programs = new HashMap<>();
 
-	protected ShaderSources sourceRepo;
+	public final Backend backend;
 
-	/**
-	 * Load all programs associated with this context. This might be just one, if the context is very specialized.
-	 */
-	public final void load(ShaderSources loader) {
-		this.sourceRepo = loader;
-		load();
+	public ShaderContext(Backend backend) {
+		this.backend = backend;
 	}
 
-	protected abstract void load();
+	@Override
+	public P getProgram(ResourceLocation spec) {
+		return programs.get(spec).get();
+	}
 
 	public Program loadAndLink(ProgramSpec spec, @Nullable ProgramState state) {
 		Shader vertexFile = getSource(ShaderType.VERTEX, spec.vert);
@@ -46,23 +43,20 @@ public abstract class ShaderContext<P extends GlProgram> {
 			fragmentFile.defineAll(state.getDefines());
 		}
 
-		return link(loadProgram(spec.name, vertexFile, fragmentFile));
+		return link(buildProgram(spec.name, vertexFile, fragmentFile));
 	}
 
 	protected Shader getSource(ShaderType type, ResourceLocation name) {
-		return sourceRepo.source(name, type);
+		return backend.sources.source(name, type);
 	}
 
 	protected Program link(Program program) {
 		return program.link();
 	}
 
-	public P getProgram(ResourceLocation spec) {
-		return programs.get(spec).get();
-	}
-
-	protected Program loadProgram(ResourceLocation name, Shader... shaders) {
-		return loadProgram(name, Lists.newArrayList(shaders));
+	@Override
+	public void delete() {
+		programs.values().forEach(IMultiProgram::delete);
 	}
 
 	/**
@@ -72,8 +66,8 @@ public abstract class ShaderContext<P extends GlProgram> {
 	 * @param shaders What are the different shader stages that should be linked together?
 	 * @return A program with all provided shaders attached
 	 */
-	protected Program loadProgram(ResourceLocation name, Collection<Shader> shaders) {
-		List<GlShader> compiled = new ArrayList<>(shaders.size());
+	protected static Program buildProgram(ResourceLocation name, Shader... shaders) {
+		List<GlShader> compiled = new ArrayList<>(shaders.length);
 		try {
 			Program builder = new Program(name);
 

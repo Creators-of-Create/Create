@@ -24,6 +24,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -59,11 +60,11 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	public RenderedContraption(PlacementSimulationWorld renderWorld, Contraption contraption) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = new ContraptionMaterialManager(ContraptionRenderDispatcher.TILES);
+		this.materialManager = new ContraptionMaterialManager(CreateContexts.CWORLD);
 		this.kinetics = new ContraptionInstanceManager(this, materialManager);
 
 		buildLayers();
-		if (Backend.canUseInstancing()) {
+		if (Backend.getInstance().canUseInstancing()) {
 			buildInstancedTiles();
 			buildActors();
 		}
@@ -134,7 +135,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 			BufferedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
 
 			if (layerModel != null) {
-				if (Backend.compat.vertexArrayObjectsSupported())
+				if (Backend.getInstance().compat.vertexArrayObjectsSupported())
 					renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 				else
 					renderLayers.put(layer, new ModelRenderer(layerModel));

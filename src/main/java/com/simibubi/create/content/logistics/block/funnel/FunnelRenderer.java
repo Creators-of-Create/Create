@@ -30,7 +30,7 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (!te.hasFlap() || Backend.canUseInstancing(te.getWorld()))
+		if (!te.hasFlap() || Backend.getInstance().canUseInstancing(te.getWorld()))
 			return;
 
 		BlockState blockState = te.getBlockState();

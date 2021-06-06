@@ -11,15 +11,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 
-	public static final EffectsContext INSTANCE = new EffectsContext();
-
-	public EffectsContext() {
-		super();
+	public EffectsContext(Backend backend) {
+		super(backend);
 	}
 
 	@Override
 	public void load() {
-		ProgramSpec programSpec = Backend.getSpec(AllProgramSpecs.CHROMATIC);
+		ProgramSpec programSpec = Backend.getInstance().getSpec(AllProgramSpecs.CHROMATIC);
 
 		try {
 			programs.put(programSpec.name, new SphereFilterProgram(loadAndLink(programSpec, null)));
@@ -27,7 +25,7 @@ public class EffectsContext extends ShaderContext<SphereFilterProgram> {
 			Backend.log.debug("Loaded program {}", programSpec.name);
 		} catch (Exception e) {
 			Backend.log.error("Program '{}': {}", programSpec.name, e);
-			sourceRepo.notifyError();
+			backend.sources.notifyError();
 		}
 	}
 

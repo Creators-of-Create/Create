@@ -44,7 +44,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		float offset = getOffset(te, partialTicks);

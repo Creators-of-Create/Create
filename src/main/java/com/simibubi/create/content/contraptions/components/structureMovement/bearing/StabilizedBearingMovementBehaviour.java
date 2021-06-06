@@ -34,7 +34,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
-		if (Backend.canUseInstancing()) return;
+		if (Backend.getInstance().canUseInstancing()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
 		PartialModel top = AllBlockPartials.BEARING_TOP;

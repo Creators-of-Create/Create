@@ -54,7 +54,7 @@ public class GlBuffer extends GlObject {
 	}
 
 	public MappedBuffer getBuffer(int offset, int length) {
-		if (Backend.compat.mapBufferRange != MapBufferRange.UNSUPPORTED) {
+		if (Backend.getInstance().compat.mapBufferRange != MapBufferRange.UNSUPPORTED) {
 			return new MappedBufferRange(this, offset, length, GL30.GL_MAP_WRITE_BIT);
 		} else {
 			MappedFullBuffer fullBuffer = new MappedFullBuffer(this, MappedBufferUsage.WRITE_ONLY);

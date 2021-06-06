@@ -1,7 +1,7 @@
 package com.jozufozu.flywheel.core.shader.extension;
 
+import com.jozufozu.flywheel.backend.SpecMetaRegistry;
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
-import com.jozufozu.flywheel.core.shader.spec.SpecMetaRegistry;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.util.ResourceLocation;

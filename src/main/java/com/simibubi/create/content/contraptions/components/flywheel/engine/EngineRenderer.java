@@ -24,7 +24,7 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		Block block = te.getBlockState()
 				.getBlock();

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.TileEntityInstance;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;

@@ -16,11 +16,10 @@ import com.jozufozu.flywheel.backend.gl.versioned.instancing.InstancedArrays;
 import com.jozufozu.flywheel.backend.gl.versioned.instancing.VertexArrayObject;
 
 /**
- * An instance of this class stores information
- * about what OpenGL features are available.
- * <p>
- * Each field stores an enum variant that provides access to the
- * most appropriate version of a feature for the current system.
+ * An instance of this class stores information about what OpenGL features are available.
+ * <br>
+ * Each field stores an enum variant that provides access to the most appropriate version of a feature for the current
+ * system.
  */
 public class GlCompat {
 	public final MapBufferRange mapBufferRange;

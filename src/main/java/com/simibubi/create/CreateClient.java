@@ -24,8 +24,6 @@ import com.simibubi.create.foundation.item.CustomItemModels;
 import com.simibubi.create.foundation.item.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.render.CreateFlywheelHandler;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
@@ -79,13 +77,10 @@ public class CreateClient {
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
 
-		Backend.init();
-		CreateFlywheelHandler.init();
+		Backend.getInstance();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
-		AllMaterialSpecs.init();
-
 		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);

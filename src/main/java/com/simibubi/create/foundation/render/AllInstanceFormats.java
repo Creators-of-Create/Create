@@ -1,19 +1,10 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
-import com.jozufozu.flywheel.backend.gl.attrib.MatrixAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
+import com.jozufozu.flywheel.core.Formats;
 
 public class AllInstanceFormats {
-
-	public static final VertexFormat MODEL = litInstance()
-			.addAttributes(MatrixAttributes.MAT4,
-					MatrixAttributes.MAT3)
-			.build();
-
-	public static final VertexFormat ORIENTED = litInstance()
-			.addAttributes(CommonAttributes.VEC3, CommonAttributes.VEC3, CommonAttributes.QUATERNION)
-			.build();
 
 	public static VertexFormat ROTATING = kineticInstance()
 			.addAttributes(CommonAttributes.NORMAL)
@@ -35,13 +26,8 @@ public class AllInstanceFormats {
 					CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT, CommonAttributes.FLOAT)
 			.build();
 
-	private static VertexFormat.Builder litInstance() {
-		return VertexFormat.builder()
-				.addAttributes(CommonAttributes.LIGHT, CommonAttributes.RGBA);
-	}
-
 	private static VertexFormat.Builder kineticInstance() {
-		return litInstance()
+		return Formats.litInstance()
 				.addAttributes(CommonAttributes.VEC3, CommonAttributes.FLOAT, CommonAttributes.FLOAT);
 	}
 }

@@ -241,7 +241,7 @@ public class Instancer<D extends InstanceData> {
 		instanceFormat.vertexAttribPointers(staticAttributes);
 
 		for (int i = 0; i < instanceFormat.getAttributeCount(); i++) {
-			Backend.compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
+			Backend.getInstance().compat.instancedArrays.vertexAttribDivisor(i + staticAttributes, 1);
 		}
 	}
 

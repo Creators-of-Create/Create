@@ -26,7 +26,7 @@ public class MappedBufferRange extends MappedBuffer {
 	@Override
 	protected void checkAndMap() {
 		if (!mapped) {
-			setInternal(Backend.compat.mapBufferRange.mapBuffer(owner.type, offset, length, access));
+			setInternal(Backend.getInstance().compat.mapBufferRange.mapBuffer(owner.type, offset, length, access));
 			mapped = true;
 		}
 	}

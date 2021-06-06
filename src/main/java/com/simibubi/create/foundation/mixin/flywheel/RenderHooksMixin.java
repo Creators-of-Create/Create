@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
@@ -51,13 +50,13 @@ public class RenderHooksMixin {
 	@Inject(at = @At("TAIL"), method = "renderLayer")
 	private void renderLayer(RenderType type, MatrixStack stack, double camX, double camY, double camZ,
 							 CallbackInfo ci) {
-		if (!Backend.available())
+		if (!Backend.getInstance().available())
 			return;
 
 		Matrix4f view = stack.peek()
 				.getModel();
 		Matrix4f viewProjection = view.copy();
-		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
+		viewProjection.multiplyBackward(Backend.getInstance().getProjectionMatrix());
 
 		MinecraftForge.EVENT_BUS.post(new RenderLayerEvent(world, type, viewProjection, camX, camY, camZ));
 		GL20.glUseProgram(0);
@@ -65,8 +64,7 @@ public class RenderHooksMixin {
 
 	@Inject(at = @At("TAIL"), method = "loadRenderers")
 	private void refresh(CallbackInfo ci) {
-		OptifineHandler.refresh();
-		Backend.refresh();
+		Backend.getInstance().refresh();
 
 		MinecraftForge.EVENT_BUS.post(new ReloadRenderersEvent(world));
 	}
@@ -82,13 +80,13 @@ public class RenderHooksMixin {
 	private void renderBlockBreaking(MatrixStack stack, float p_228426_2_, long p_228426_3_, boolean p_228426_5_,
 									 ActiveRenderInfo info, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f p_228426_9_,
 									 CallbackInfo ci) {
-		if (!Backend.available())
+		if (!Backend.getInstance().available())
 			return;
 
 		Matrix4f view = stack.peek()
 				.getModel();
 		Matrix4f viewProjection = view.copy();
-		viewProjection.multiplyBackward(Backend.getProjectionMatrix());
+		viewProjection.multiplyBackward(Backend.getInstance().getProjectionMatrix());
 
 		Vector3d cameraPos = info.getProjectedView();
 		InstancedRenderDispatcher.renderBreaking(world, viewProjection, cameraPos.x, cameraPos.y, cameraPos.z);

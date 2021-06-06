@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
@@ -96,11 +97,12 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.framebufferObject);
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.framebufferObject);
-		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		GlCompat functions = Backend.getInstance().compat;
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.framebufferObject);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, thisBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, thisBuffer.framebufferObject);
 		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
 	}
@@ -111,11 +113,12 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.framebufferObject);
-		Backend.compat.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		Backend.compat.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		GlCompat functions = Backend.getInstance().compat;
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		Backend.compat.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
 	}
 
 	@Override

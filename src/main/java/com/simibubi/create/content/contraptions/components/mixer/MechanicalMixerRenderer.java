@@ -33,7 +33,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		BlockState blockState = te.getBlockState();
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
