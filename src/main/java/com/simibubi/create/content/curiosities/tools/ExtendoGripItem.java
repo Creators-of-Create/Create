@@ -37,6 +37,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -65,14 +66,15 @@ public class ExtendoGripItem extends Item {
 			.rarity(Rarity.UNCOMMON));
 	}
 
+	public static final String EXTENDO_MARKER = "createExtendo";
+	public static final String DUAL_EXTENDO_MARKER = "createDualExtendo";
+
 	@SubscribeEvent
 	public static void holdingExtendoGripIncreasesRange(LivingUpdateEvent event) {
 		if (!(event.getEntity() instanceof PlayerEntity))
 			return;
 
 		PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-		String marker = "createExtendo";
-		String dualMarker = "createDualExtendo";
 
 		CompoundNBT persistentData = player.getPersistentData();
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
@@ -80,19 +82,19 @@ public class ExtendoGripItem extends Item {
 		boolean holdingDualExtendo = inOff && inMain;
 		boolean holdingExtendo = inOff ^ inMain;
 		holdingExtendo &= !holdingDualExtendo;
-		boolean wasHoldingExtendo = persistentData.contains(marker);
-		boolean wasHoldingDualExtendo = persistentData.contains(dualMarker);
+		boolean wasHoldingExtendo = persistentData.contains(EXTENDO_MARKER);
+		boolean wasHoldingDualExtendo = persistentData.contains(DUAL_EXTENDO_MARKER);
 
 		if (holdingExtendo != wasHoldingExtendo) {
 			if (!holdingExtendo) {
 				player.getAttributes().removeModifiers(rangeModifier.getValue());
-				persistentData.remove(marker);
+				persistentData.remove(EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
 					.addTemporaryModifiers(rangeModifier.getValue());
-				persistentData.putBoolean(marker, true);
+				persistentData.putBoolean(EXTENDO_MARKER, true);
 			}
 		}
 
@@ -100,16 +102,27 @@ public class ExtendoGripItem extends Item {
 			if (!holdingDualExtendo) {
 				player.getAttributes()
 					.removeModifiers(doubleRangeModifier.getValue());
-				persistentData.remove(dualMarker);
+				persistentData.remove(DUAL_EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
 					.addTemporaryModifiers(doubleRangeModifier.getValue());
-				persistentData.putBoolean(dualMarker, true);
+				persistentData.putBoolean(DUAL_EXTENDO_MARKER, true);
 			}
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void addReachToJoiningPlayersHoldingExtendo(PlayerEvent.PlayerLoggedInEvent event) {
+		PlayerEntity player = event.getPlayer();
+		CompoundNBT persistentData = player.getPersistentData();
+
+		if (persistentData.contains(DUAL_EXTENDO_MARKER))
+			player.getAttributes().addTemporaryModifiers(doubleRangeModifier.getValue());
+		else if (persistentData.contains(EXTENDO_MARKER))
+			player.getAttributes().addTemporaryModifiers(rangeModifier.getValue());
 	}
 
 	@SubscribeEvent

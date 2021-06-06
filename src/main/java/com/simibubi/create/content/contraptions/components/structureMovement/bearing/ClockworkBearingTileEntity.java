@@ -119,11 +119,11 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	protected void applyRotations() {
 		BlockState blockState = getBlockState();
 		Axis axis = Axis.X;
-		
+
 		if (blockState.contains(BlockStateProperties.FACING))
 			axis = blockState.get(BlockStateProperties.FACING)
 				.getAxis();
-		
+
 		if (hourHand != null) {
 			hourHand.setAngle(hourAngle);
 			hourHand.setRotationAxis(axis);
@@ -177,7 +177,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	protected float getHourTarget(boolean cycle24) {
-		int dayTime = (int) (world.getDayTime() % 24000);
+		boolean isNatural = world.getDimension().isNatural();
+		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
 			.getAxisDirection()
@@ -187,7 +188,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	protected float getMinuteTarget() {
-		int dayTime = (int) (world.getDayTime() % 24000);
+		boolean isNatural = world.getDimension().isNatural();
+		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int minutes = (dayTime % 1000) * 60 / 1000;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
 			.getAxisDirection()

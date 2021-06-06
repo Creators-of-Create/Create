@@ -181,6 +181,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
+		if (pos2.getY() >= 256)
+			return false;
 		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
 			return true;
 		if (!isValidFace(world, pos2, getFacingDirection())
