@@ -160,7 +160,7 @@ public class ContraptionRenderDispatcher {
 
 		if (contraption == null) {
 			PlacementSimulationWorld renderWorld = setupRenderWorld(world, c);
-			contraption = new RenderedContraption(renderWorld, c);
+			contraption = new RenderedContraption(c, renderWorld);
 			RENDERERS.put(entityId, contraption);
 		}
 

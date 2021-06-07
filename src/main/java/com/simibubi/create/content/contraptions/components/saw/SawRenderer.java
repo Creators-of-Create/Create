@@ -56,11 +56,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light) {
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer superBuffer;
 		PartialModel partial;
 		float speed = te.getSpeed();
-
-		ms.push();
+		boolean rotate = false;
 
 		if (SawBlock.isHorizontal(blockState)) {
 			if (speed > 0) {
@@ -80,16 +78,17 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			}
 
 			if (!blockState.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
-				MatrixStacker.of(ms)
-						.centre()
-						.rotateY(90)
-						.unCentre();
+				rotate = true;
 		}
-		superBuffer = PartialBufferer.getFacing(partial, blockState);
-		superBuffer.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 
-		ms.pop();
+		SuperByteBuffer superBuffer = PartialBufferer.getFacing(partial, blockState);
+		if (rotate) {
+			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
+		}
+		superBuffer
+				.color(0xFFFFFF)
+				.light(light)
+				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 
 	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -198,7 +197,6 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 		superBuffer
 			.transform(m)
-			.disableDiffuseTransform()
 			.light(matrices.entityMatrix,
 				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getCutoutMipped()));

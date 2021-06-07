@@ -57,7 +57,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	private Matrix4f model;
 	private AxisAlignedBB lightBox;
 
-	public RenderedContraption(PlacementSimulationWorld renderWorld, Contraption contraption) {
+	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
 		this.materialManager = new ContraptionMaterialManager(CreateContexts.CWORLD);
