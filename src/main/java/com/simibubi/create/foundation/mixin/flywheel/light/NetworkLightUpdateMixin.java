@@ -36,7 +36,7 @@ public class NetworkLightUpdateMixin {
 				chunk.getTileEntityMap()
 					.values()
 					.forEach(tile -> {
-						InstancedRenderDispatcher.get(world)
+						InstancedRenderDispatcher.getTiles(world)
 								.onLightUpdate(tile);
 					});
 			}

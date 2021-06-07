@@ -17,6 +17,7 @@ import com.jozufozu.flywheel.backend.gl.buffer.GlBufferType;
 import com.jozufozu.flywheel.backend.model.ElementBuffer;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * A class to manage EBOs that index quads as triangles.
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class QuadConverter {
 
 	public static final int STARTING_CAPACITY = 42;

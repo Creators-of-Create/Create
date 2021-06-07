@@ -21,8 +21,6 @@ public class ConditionalInstance<D extends InstanceData> {
 	public ConditionalInstance(Instancer<D> model) {
 		this.model = model;
 		this.condition = () -> true;
-
-		update();
 	}
 
 	public ConditionalInstance<D> withSetupFunc(Consumer<D> setupFunc) {

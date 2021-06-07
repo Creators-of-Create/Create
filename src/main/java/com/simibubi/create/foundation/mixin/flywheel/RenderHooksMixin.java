@@ -97,7 +97,7 @@ public class RenderHooksMixin {
 
 	@Inject(at = @At("TAIL"), method = "scheduleBlockRerenderIfNeeded")
 	private void checkUpdate(BlockPos pos, BlockState lastState, BlockState newState, CallbackInfo ci) {
-		InstancedRenderDispatcher.get(world)
+		InstancedRenderDispatcher.getTiles(world)
 				.update(world.getTileEntity(pos));
 	}
 }

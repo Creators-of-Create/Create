@@ -11,10 +11,11 @@ import com.jozufozu.flywheel.core.shader.gamestate.NormalDebugStateProvider;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Contexts {
 
 	public static WorldContext<WorldProgram> WORLD;

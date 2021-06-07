@@ -9,10 +9,11 @@ import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Materials {
 	public static final MaterialSpec<OrientedData> ORIENTED = AllMaterialSpecs.register(new MaterialSpec<>(Locations.ORIENTED, Programs.ORIENTED, Formats.UNLIT_MODEL, Formats.ORIENTED, OrientedData::new));
 	public static final MaterialSpec<ModelData> TRANSFORMED = AllMaterialSpecs.register(new MaterialSpec<>(Locations.MODEL, Programs.TRANSFORMED, Formats.UNLIT_MODEL, Formats.TRANSFORMED, ModelData::new));

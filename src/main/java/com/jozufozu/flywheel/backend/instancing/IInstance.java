@@ -1,5 +1,7 @@
 package com.jozufozu.flywheel.backend.instancing;
 
+import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
+
 import net.minecraft.util.math.BlockPos;
 
 /**

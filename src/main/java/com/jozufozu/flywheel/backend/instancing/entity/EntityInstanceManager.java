@@ -1,40 +1,43 @@
-package com.jozufozu.flywheel.backend.instancing;
+package com.jozufozu.flywheel.backend.instancing.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class TileInstanceManager implements MaterialManager.OriginShiftListener {
+public class EntityInstanceManager implements MaterialManager.OriginShiftListener {
 
 	public final MaterialManager<?> materialManager;
 
-	protected final ArrayList<TileEntity> queuedAdditions;
-	protected final ConcurrentHashMap.KeySetView<TileEntity, Boolean> queuedUpdates;
+	protected final ArrayList<Entity> queuedAdditions;
+	//protected final ConcurrentHashMap.KeySetView<Entity, Boolean> queuedUpdates;
 
-	protected final Map<TileEntity, TileEntityInstance<?>> instances;
-	protected final Object2ObjectOpenHashMap<TileEntity, ITickableInstance> tickableInstances;
-	protected final Object2ObjectOpenHashMap<TileEntity, IDynamicInstance> dynamicInstances;
+	protected final Map<Entity, EntityInstance<?>> instances;
+	protected final Object2ObjectOpenHashMap<Entity, ITickableInstance> tickableInstances;
+	protected final Object2ObjectOpenHashMap<Entity, IDynamicInstance> dynamicInstances;
 
 	protected int frame;
 	protected int tick;
 
-	public TileInstanceManager(MaterialManager<?> materialManager) {
+	public EntityInstanceManager(MaterialManager<?> materialManager) {
 		this.materialManager = materialManager;
-		this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
+		//this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
 		this.queuedAdditions = new ArrayList<>(64);
 		this.instances = new HashMap<>();
 
@@ -69,12 +72,12 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 					instance.tick();
 			}
 		}
-
-		queuedUpdates.forEach(te -> {
-			queuedUpdates.remove(te);
-
-			update(te);
-		});
+//
+//		queuedUpdates.forEach(te -> {
+//			queuedUpdates.remove(te);
+//
+//			update(te);
+//		});
 	}
 
 	public void beginFrame(ActiveRenderInfo info) {
@@ -102,84 +105,84 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 
 	@Override
 	public void onOriginShift() {
-		ArrayList<TileEntity> instancedTiles = new ArrayList<>(instances.keySet());
+		ArrayList<Entity> instancedTiles = new ArrayList<>(instances.keySet());
 		invalidate();
 		instancedTiles.forEach(this::add);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public <T extends TileEntity> TileEntityInstance<? super T> getInstance(T tile, boolean create) {
+	public <T extends Entity> EntityInstance<? super T> getInstance(T entity, boolean create) {
 		if (!Backend.getInstance().canUseInstancing()) return null;
 
-		TileEntityInstance<?> instance = instances.get(tile);
+		EntityInstance<?> instance = instances.get(entity);
 
 		if (instance != null) {
-			return (TileEntityInstance<? super T>) instance;
-		} else if (create && canCreateInstance(tile)) {
-			return createInternal(tile);
+			return (EntityInstance<? super T>) instance;
+		} else if (create && canCreateInstance(entity)) {
+			return createInternal(entity);
 		} else {
 			return null;
 		}
 	}
 
-	public <T extends TileEntity> void onLightUpdate(T tile) {
+//	public <T extends Entity> void onLightUpdate(T tile) {
+//		if (!Backend.getInstance().canUseInstancing()) return;
+//
+//		if (tile instanceof IInstanceRendered) {
+//			EntityInstance<? super T> instance = getInstance(tile, false);
+//
+//			if (instance != null)
+//				instance.updateLight();
+//		}
+//	}
+
+	public <T extends Entity> void add(T entity) {
 		if (!Backend.getInstance().canUseInstancing()) return;
 
-		if (tile instanceof IInstanceRendered) {
-			TileEntityInstance<? super T> instance = getInstance(tile, false);
-
-			if (instance != null)
-				instance.updateLight();
+		if (entity instanceof IInstanceRendered) {
+			addInternal(entity);
 		}
 	}
 
-	public <T extends TileEntity> void add(T tile) {
+//	public <T extends Entity> void update(T tile) {
+//		if (!Backend.getInstance().canUseInstancing()) return;
+//
+//		if (tile instanceof IInstanceRendered) {
+//			EntityInstance<? super T> instance = getInstance(tile, false);
+//
+//			if (instance != null) {
+//
+//				if (instance.shouldReset()) {
+//					removeInternal(tile, instance);
+//
+//					createInternal(tile);
+//				} else {
+//					instance.update();
+//				}
+//			}
+//		}
+//	}
+
+	public <T extends Entity> void remove(T entity) {
 		if (!Backend.getInstance().canUseInstancing()) return;
 
-		if (tile instanceof IInstanceRendered) {
-			addInternal(tile);
+		if (entity instanceof IInstanceRendered) {
+			removeInternal(entity);
 		}
 	}
 
-	public <T extends TileEntity> void update(T tile) {
-		if (!Backend.getInstance().canUseInstancing()) return;
-
-		if (tile instanceof IInstanceRendered) {
-			TileEntityInstance<? super T> instance = getInstance(tile, false);
-
-			if (instance != null) {
-
-				if (instance.shouldReset()) {
-					removeInternal(tile, instance);
-
-					createInternal(tile);
-				} else {
-					instance.update();
-				}
-			}
-		}
-	}
-
-	public <T extends TileEntity> void remove(T tile) {
-		if (!Backend.getInstance().canUseInstancing()) return;
-
-		if (tile instanceof IInstanceRendered) {
-			removeInternal(tile);
-		}
-	}
-
-	public synchronized <T extends TileEntity> void queueAdd(T tile) {
+	public synchronized <T extends Entity> void queueAdd(T tile) {
 		if (!Backend.getInstance().canUseInstancing()) return;
 
 		queuedAdditions.add(tile);
 	}
 
-	public synchronized <T extends TileEntity> void queueUpdate(T tile) {
-		if (!Backend.getInstance().canUseInstancing()) return;
-
-		queuedUpdates.add(tile);
-	}
+//	public synchronized <T extends Entity> void queueUpdate(T tile) {
+//		if (!Backend.getInstance().canUseInstancing()) return;
+//
+//		queuedUpdates.add(tile);
+//	}
 
 	protected synchronized void processQueuedAdditions() {
 		if (queuedAdditions.size() > 0) {
@@ -207,30 +210,30 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 		return (dSq / 1024) + 1;
 	}
 
-	private void addInternal(TileEntity tile) {
+	private void addInternal(Entity tile) {
 		getInstance(tile, true);
 	}
 
-	private <T extends TileEntity> void removeInternal(T tile) {
-		TileEntityInstance<? super T> instance = getInstance(tile, false);
+	private <T extends Entity> void removeInternal(T tile) {
+		EntityInstance<? super T> instance = getInstance(tile, false);
 
 		if (instance != null) {
 			removeInternal(tile, instance);
 		}
 	}
 
-	private void removeInternal(TileEntity tile, TileEntityInstance<?> instance) {
+	private void removeInternal(Entity tile, EntityInstance<?> instance) {
 		instance.remove();
 		instances.remove(tile);
 		dynamicInstances.remove(tile);
 		tickableInstances.remove(tile);
 	}
 
-	private <T extends TileEntity> TileEntityInstance<? super T> createInternal(T tile) {
-		TileEntityInstance<? super T> renderer = InstancedRenderRegistry.getInstance().create(materialManager, tile);
+	private <T extends Entity> EntityInstance<? super T> createInternal(T tile) {
+		EntityInstance<? super T> renderer = InstancedRenderRegistry.getInstance().create(materialManager, tile);
 
 		if (renderer != null) {
-			renderer.updateLight();
+			//renderer.updateLight();
 			instances.put(tile, renderer);
 
 			if (renderer instanceof IDynamicInstance)
@@ -249,17 +252,15 @@ public class TileInstanceManager implements MaterialManager.OriginShiftListener 
 		tickableInstances.clear();
 	}
 
-	public boolean canCreateInstance(TileEntity tile) {
-		if (tile.isRemoved()) return false;
+	public boolean canCreateInstance(Entity entity) {
+		if (!entity.isAlive()) return false;
 
-		World world = tile.getWorld();
+		World world = entity.world;
 
 		if (world == null) return false;
 
-		if (world.isAirBlock(tile.getPos())) return false;
-
 		if (Backend.isFlywheelWorld(world)) {
-			BlockPos pos = tile.getPos();
+			BlockPos pos = entity.getBlockPos();
 
 			IBlockReader existingChunk = world.getExistingChunk(pos.getX() >> 4, pos.getZ() >> 4);
 

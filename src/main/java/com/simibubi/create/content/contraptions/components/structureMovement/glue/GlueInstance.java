@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
@@ -29,17 +30,16 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 
 	public GlueInstance(MaterialManager<?> renderer, SuperGlueEntity entity) {
 		super(renderer, entity);
-
 		Instancer<OrientedData> instancer = renderer.getMaterial(Materials.ORIENTED)
 				.get(entity.getType(), GlueInstance::supplyModel);
+
+		Direction face = entity.getFacingDirection();
+		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngleNew(face), 0, true);
+
 		model = new ConditionalInstance<>(instancer)
 				.withCondition(this::shouldShow)
 				.withSetupFunc(this::positionModel)
 				.update();
-
-		Direction face = entity.getFacingDirection();
-
-		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngleNew(face), 0, true);
 	}
 
 	@Override
@@ -93,22 +93,23 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		Vector3d a4 = plane.add(start);
 		Vector3d b4 = plane.add(end);
 
-		float[] quads = new float[] {
-				//         x,            y,            z,nx, ny,nz, u, v
-				// inside quad
-				(float) a1.x, (float) a1.y, (float) a1.z, 0, -1, 0, 1, 0,
-				(float) a2.x, (float) a2.y, (float) a2.z, 0, -1, 0, 1, 1,
-				(float) a3.x, (float) a3.y, (float) a3.z, 0, -1, 0, 0, 1,
-				(float) a4.x, (float) a4.y, (float) a4.z, 0, -1, 0, 0, 0,
-				// outside quad
-				(float) b4.x, (float) b4.y, (float) b4.z, 0, 1, 0, 0, 0,
-				(float) b3.x, (float) b3.y, (float) b3.z, 0, 1, 0, 0, 1,
-				(float) b2.x, (float) b2.y, (float) b2.z, 0, 1, 0, 1, 1,
-				(float) b1.x, (float) b1.y, (float) b1.z, 0, 1, 0, 1, 0,
-		};
+		ByteBuffer buffer = ByteBuffer.allocate(Formats.UNLIT_MODEL.getStride() * 8);
+		buffer.order(ByteOrder.nativeOrder());
 
-		ByteBuffer buffer = ByteBuffer.allocate(quads.length * 4);
-		buffer.asFloatBuffer().put(quads);
+		//         x,            y,            z,nx, ny,nz, u, v
+		// inside quad
+		buffer.putFloat((float) a1.x).putFloat((float) a1.y).putFloat((float) a1.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(1f).putFloat(0f);
+		buffer.putFloat((float) a2.x).putFloat((float) a2.y).putFloat((float) a2.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(1f).putFloat(1f);
+		buffer.putFloat((float) a3.x).putFloat((float) a3.y).putFloat((float) a3.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(0f).putFloat(1f);
+		buffer.putFloat((float) a4.x).putFloat((float) a4.y).putFloat((float) a4.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(0f).putFloat(0f);
+		// outside quad
+		buffer.putFloat((float) b4.x).putFloat((float) b4.y).putFloat((float) b4.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(0f).putFloat(0f);
+		buffer.putFloat((float) b3.x).putFloat((float) b3.y).putFloat((float) b3.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(0f).putFloat(1f);
+		buffer.putFloat((float) b2.x).putFloat((float) b2.y).putFloat((float) b2.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(1f).putFloat(1f);
+		buffer.putFloat((float) b1.x).putFloat((float) b1.y).putFloat((float) b1.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(1f).putFloat(0f);
+
+		buffer.rewind();
+
 
 		return IndexedModel.fromSequentialQuads(Formats.UNLIT_MODEL, buffer, 8);
 	}

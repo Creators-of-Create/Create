@@ -24,7 +24,7 @@ public class TileRemoveMixin {
 	@Inject(at = @At("TAIL"), method = "remove")
 	private void onRemove(CallbackInfo ci) {
 		if (world instanceof ClientWorld)
-			InstancedRenderDispatcher.get(this.world)
+			InstancedRenderDispatcher.getTiles(this.world)
 					.remove((TileEntity) (Object) this);
 	}
 }
