@@ -37,7 +37,6 @@ public class SuperByteBuffer {
 	// Vertex Coloring
 	private boolean shouldColor;
 	private int r, g, b, a;
-	private boolean disableDiffuseTransform;
 
 	// Vertex Lighting
 	private boolean useWorldLight;
@@ -120,12 +119,7 @@ public class SuperByteBuffer {
 				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
 				builder.color(colorR, colorG, colorB, this.a);
 			} else {
-				float diffuseMult;
-				if (disableDiffuseTransform) {
-					diffuseMult = 1.0f;
-				} else {
-					diffuseMult = instanceDiffuse / staticDiffuse;
-				}
+				float diffuseMult = instanceDiffuse / staticDiffuse;
 				int colorR = Math.min(255, (int) (((float) Byte.toUnsignedInt(r)) * diffuseMult));
 				int colorG = Math.min(255, (int) (((float) Byte.toUnsignedInt(g)) * diffuseMult));
 				int colorB = Math.min(255, (int) (((float) Byte.toUnsignedInt(b)) * diffuseMult));
@@ -179,7 +173,6 @@ public class SuperByteBuffer {
 		g = 0;
 		b = 0;
 		a = 0;
-		disableDiffuseTransform = false;
 		useWorldLight = false;
 		hybridLight = false;
 		packedLightCoords = 0;
@@ -245,11 +238,6 @@ public class SuperByteBuffer {
 		g = ((color >> 8) & 0xFF);
 		b = (color & 0xFF);
 		a = 255;
-		return this;
-	}
-
-	public SuperByteBuffer disableDiffuseTransform() {
-		disableDiffuseTransform = true;
 		return this;
 	}
 

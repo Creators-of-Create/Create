@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
@@ -39,8 +38,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		render(blockState, progress, te.isConnected(), sbb -> sbb.light(light)
-			.renderInto(ms, vb), ms);
+		render(blockState, te.isConnected(), progress, null, sbb -> sbb.light(light)
+			.renderInto(ms, vb));
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
@@ -57,39 +56,36 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			lit = te.isConnected();
 		}
 
-		render(blockState, progress, lit, sbb -> sbb.transform(matrices.contraptionStack)
-			.disableDiffuseTransform()
-			.light(matrices.entityMatrix,
+		render(blockState, lit, progress, matrices.contraptionStack, sbb -> sbb.light(matrices.entityMatrix,
 				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, vb), matrices.contraptionStack);
+			.renderInto(matrices.entityStack, vb));
 	}
 
-	private static void render(BlockState blockState, float progress, boolean lit,
-		Consumer<SuperByteBuffer> drawCallback, MatrixStack ms) {
-		ms.push();
-
+	private static void render(BlockState blockState, boolean lit, float progress,
+		MatrixStack local, Consumer<SuperByteBuffer> drawCallback) {
 		SuperByteBuffer middle = PartialBufferer.get(getMiddleForState(blockState, lit), blockState);
 		SuperByteBuffer top = PartialBufferer.get(getTopForState(blockState), blockState);
 
+		if (local != null) {
+			middle.transform(local);
+			top.transform(local);
+		}
 		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
-		MatrixStacker.of(ms)
-				.centre()
-				.rotateY(AngleHelper.horizontalAngle(facing))
-				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-				.unCentre();
-
-		ms.translate(0, progress / 2f, 0);
-		ms.push();
-		ms.translate(0, 6 / 16f, 0);
+		rotateToFacing(middle, facing);
+		rotateToFacing(top, facing);
+		middle.translate(0, progress * 0.5f + 0.375f, 0);
+		top.translate(0, progress, 0);
 
 		drawCallback.accept(middle);
-
-		ms.pop();
-		ms.translate(0, progress / 2f, 0);
-
 		drawCallback.accept(top);
+	}
 
-		ms.pop();
+	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
+		buffer.matrixStacker()
+			.centre()
+			.rotateY(AngleHelper.horizontalAngle(facing))
+			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.unCentre();
 	}
 
 	protected static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {
