@@ -53,7 +53,6 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	List<BlockPosEntry> frontier;
 	Set<BlockPos> visited;
 
-	static final int validationTimer = 160;
 	int revalidateIn;
 
 	public FluidManipulationBehaviour(SmartTileEntity te) {
@@ -68,12 +67,20 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		counterpartActed = true;
 	}
 
+	private int validationTimer() {
+		int maxBlocks = maxBlocks();
+		return infinite || maxBlocks < 0
+			? 160
+			// Allow enough time for the server's infinite block threshold to be reached
+			: maxBlocks / searchedPerTick;
+	}
+
 	protected int setValidationTimer() {
-		return revalidateIn = validationTimer;
+		return revalidateIn = validationTimer();
 	}
 
 	protected int setLongValidationTimer() {
-		return revalidateIn = validationTimer * 2;
+		return revalidateIn = validationTimer() * 2;
 	}
 
 	protected int maxRange() {
