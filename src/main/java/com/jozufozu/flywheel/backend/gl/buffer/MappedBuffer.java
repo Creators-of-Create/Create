@@ -4,18 +4,13 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL15;
 
-public abstract class MappedBuffer implements AutoCloseable {
+public abstract class MappedBuffer extends VecBuffer implements AutoCloseable {
 
 	protected boolean mapped;
 	protected final GlBuffer owner;
-	protected ByteBuffer internal;
 
 	public MappedBuffer(GlBuffer owner) {
 		this.owner = owner;
-	}
-
-	public void setInternal(ByteBuffer internal) {
-		this.internal = internal;
 	}
 
 	protected abstract void checkAndMap();
@@ -38,20 +33,13 @@ public abstract class MappedBuffer implements AutoCloseable {
 
 	public MappedBuffer putFloatArray(float[] floats) {
 		checkAndMap();
-
-		for (float f : floats) {
-			internal.putFloat(f);
-		}
-//		internal.asFloatBuffer().put(floats);
-//		internal.position(internal.position() + floats.length * 4);
-
+		super.putFloatArray(floats);
 		return this;
 	}
 
 	public MappedBuffer putByteArray(byte[] bytes) {
 		checkAndMap();
-		internal.put(bytes);
-
+		super.putByteArray(bytes);
 		return this;
 	}
 
@@ -62,75 +50,61 @@ public abstract class MappedBuffer implements AutoCloseable {
 	 */
 	public MappedBuffer position(int p) {
 		checkAndMap();
-		internal.position(p);
+		super.position(p);
 		return this;
 	}
 
 	public MappedBuffer putFloat(float f) {
 		checkAndMap();
-		internal.putFloat(f);
+		super.putFloat(f);
 		return this;
 	}
 
 	public MappedBuffer putInt(int i) {
 		checkAndMap();
-		internal.putInt(i);
+		super.putInt(i);
 		return this;
 	}
 
 	public MappedBuffer put(byte b) {
 		checkAndMap();
-		internal.put(b);
+		super.put(b);
 		return this;
 	}
 
 	public MappedBuffer put(ByteBuffer b) {
 		checkAndMap();
-		internal.put(b);
+		super.put(b);
 		return this;
 	}
 
 	public MappedBuffer putVec4(float x, float y, float z, float w) {
 		checkAndMap();
-		internal.putFloat(x);
-		internal.putFloat(y);
-		internal.putFloat(z);
-		internal.putFloat(w);
-
+		super.putVec4(x, y, z, w);
 		return this;
 	}
 
 	public MappedBuffer putVec3(float x, float y, float z) {
 		checkAndMap();
-		internal.putFloat(x);
-		internal.putFloat(y);
-		internal.putFloat(z);
-
+		super.putVec3(x, y, z);
 		return this;
 	}
 
 	public MappedBuffer putVec2(float x, float y) {
 		checkAndMap();
-		internal.putFloat(x);
-		internal.putFloat(y);
-
+		super.putVec2(x, y);
 		return this;
 	}
 
 	public MappedBuffer putVec3(byte x, byte y, byte z) {
 		checkAndMap();
-		internal.put(x);
-		internal.put(y);
-		internal.put(z);
-
+		super.putVec3(x, y, z);
 		return this;
 	}
 
 	public MappedBuffer putVec2(byte x, byte y) {
 		checkAndMap();
-		internal.put(x);
-		internal.put(y);
-
+		super.putVec2(x, y);
 		return this;
 	}
 }

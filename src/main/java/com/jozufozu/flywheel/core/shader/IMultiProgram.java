@@ -1,5 +1,7 @@
 package com.jozufozu.flywheel.core.shader;
 
+import java.util.function.Supplier;
+
 import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
 
 /**
@@ -8,7 +10,7 @@ import com.jozufozu.flywheel.backend.gl.shader.GlProgram;
  *
  * @param <P>
  */
-public interface IMultiProgram<P extends GlProgram> {
+public interface IMultiProgram<P extends GlProgram> extends Supplier<P> {
 
 	/**
 	 * Get the shader program most suited for the current game state.

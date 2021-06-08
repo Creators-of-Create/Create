@@ -13,6 +13,7 @@ import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.WeakHashSet;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
@@ -25,25 +26,28 @@ public class MaterialManager<P extends WorldProgram> {
 
 	public static int MAX_ORIGIN_DISTANCE = 100;
 
-	protected final ArrayList<MaterialRenderer<P>> renderers;
-	protected final Map<ResourceLocation, InstanceMaterial<?>> materials;
+	protected final WorldContext<P> context;
+
+	protected final Map<MaterialSpec<?>, InstanceMaterial<?>> atlasMaterials;
+	protected final ArrayList<MaterialRenderer<P>> atlasRenderers;
+
+	protected final Map<ResourceLocation, ArrayList<MaterialRenderer<P>>> renderers;
+	protected final Map<ResourceLocation, Map<MaterialSpec<?>, InstanceMaterial<?>>> materials;
 
 	private BlockPos originCoordinate = BlockPos.ZERO;
 
 	private final WeakHashSet<OriginShiftListener> listeners;
 
 	public MaterialManager(WorldContext<P> context) {
+		this.context = context;
+
+		this.atlasMaterials = new HashMap<>();
+		this.atlasRenderers = new ArrayList<>(Backend.getInstance().allMaterials().size());
+
 		this.materials = new HashMap<>();
-		this.renderers = new ArrayList<>(Backend.getInstance().allMaterials().size());
+		this.renderers = new HashMap<>();
+
 		this.listeners = new WeakHashSet<>();
-
-		for (MaterialSpec<?> spec : Backend.getInstance().allMaterials()) {
-			InstanceMaterial<?> material = new InstanceMaterial<>(this::getOriginCoordinate, spec);
-			materials.put(spec.name, material);
-			MaterialRenderer<P> renderer = new MaterialRenderer<>(context.getProgram(spec.getProgramName()), material);
-			renderers.add(renderer);
-		}
-
 	}
 
 	/**
@@ -72,20 +76,47 @@ public class MaterialManager<P extends WorldProgram> {
 
 		translate.multiplyBackward(viewProjection);
 
-		for (MaterialRenderer<P> material : renderers) {
+		for (MaterialRenderer<P> material : atlasRenderers) {
 			material.render(layer, translate, camX, camY, camZ, callback);
+		}
+
+		for (Map.Entry<ResourceLocation, ArrayList<MaterialRenderer<P>>> entry : renderers.entrySet()) {
+			Minecraft.getInstance().textureManager.bindTexture(entry.getKey());
+
+			for (MaterialRenderer<P> materialRenderer : entry.getValue()) {
+				materialRenderer.render(layer, translate, camX, camY, camZ, callback);
+			}
 		}
 	}
 
 	public void delete() {
-		for (InstanceMaterial<?> material : materials.values()) {
-			material.delete();
-		}
+		atlasMaterials.values().forEach(InstanceMaterial::delete);
+
+		materials.values().stream().flatMap(m -> m.values().stream()).forEach(InstanceMaterial::delete);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <D extends InstanceData> InstanceMaterial<D> getMaterial(MaterialSpec<D> materialType) {
-		return (InstanceMaterial<D>) materials.get(materialType.name);
+		return (InstanceMaterial<D>) this.atlasMaterials.computeIfAbsent(materialType, type -> {
+			InstanceMaterial<?> material = new InstanceMaterial<>(this::getOriginCoordinate, type);
+
+			this.atlasRenderers.add(new MaterialRenderer<>(context.getProgramSupplier(type.getProgramName()), material));
+
+			return material;
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public <D extends InstanceData> InstanceMaterial<D> getMaterial(MaterialSpec<D> materialType, ResourceLocation texture) {
+		return (InstanceMaterial<D>) materials.computeIfAbsent(texture, $ -> new HashMap<>())
+				.computeIfAbsent(materialType, type -> {
+					InstanceMaterial<?> material = new InstanceMaterial<>(this::getOriginCoordinate, type);
+
+					this.renderers.computeIfAbsent(texture, $ -> new ArrayList<>())
+							.add(new MaterialRenderer<>(context.getProgramSupplier(type.getProgramName()), material));
+
+					return material;
+				});
 	}
 
 	public InstanceMaterial<ModelData> getTransformMaterial() {
@@ -117,7 +148,8 @@ public class MaterialManager<P extends WorldProgram> {
 
 			originCoordinate = new BlockPos(cX, cY, cZ);
 
-			materials.values().forEach(InstanceMaterial::clear);
+			materials.values().stream().flatMap(m -> m.values().stream()).forEach(InstanceMaterial::clear);
+			atlasMaterials.values().forEach(InstanceMaterial::clear);
 			listeners.forEach(OriginShiftListener::onOriginShift);
 		}
 	}

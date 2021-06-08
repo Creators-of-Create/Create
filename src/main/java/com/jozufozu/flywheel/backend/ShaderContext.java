@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -30,8 +31,8 @@ public abstract class ShaderContext<P extends GlProgram> implements IShaderConte
 	}
 
 	@Override
-	public P getProgram(ResourceLocation spec) {
-		return programs.get(spec).get();
+	public Supplier<P> getProgramSupplier(ResourceLocation spec) {
+		return programs.get(spec);
 	}
 
 	public Program loadAndLink(ProgramSpec spec, @Nullable ProgramState state) {

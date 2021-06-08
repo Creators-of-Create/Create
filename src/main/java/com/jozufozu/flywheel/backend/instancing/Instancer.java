@@ -80,6 +80,10 @@ public class Instancer<D extends InstanceData> {
 		return instanceData;
 	}
 
+	public boolean empty() {
+		return !anyToUpdate && !anyToRemove && glInstanceCount == 0;
+	}
+
 	/**
 	 * Clear all instance data without freeing resources.
 	 */

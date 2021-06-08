@@ -1,8 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
+import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
@@ -14,23 +12,28 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
 
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
+
 	private final Quaternion rotation;
 	protected ConditionalInstance<OrientedData> model;
 
-	public GlueInstance(MaterialManager<?> renderer, SuperGlueEntity entity) {
-		super(renderer, entity);
-		Instancer<OrientedData> instancer = renderer.getMaterial(Materials.ORIENTED)
+	public GlueInstance(MaterialManager<?> materialManager, SuperGlueEntity entity) {
+		super(materialManager, entity);
+
+		Instancer<OrientedData> instancer = materialManager.getMaterial(Materials.ORIENTED, TEXTURE)
 				.get(entity.getType(), GlueInstance::supplyModel);
 
 		Direction face = entity.getFacingDirection();
@@ -55,6 +58,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	private void positionModel(OrientedData model) {
 
 		model.setPosition(getInstancePosition())
+				.setPivot(0, 0, 0)
 				.setRotation(rotation)
 				.setSkyLight(15)
 				.setBlockLight(15);
@@ -93,24 +97,23 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		Vector3d a4 = plane.add(start);
 		Vector3d b4 = plane.add(end);
 
-		ByteBuffer buffer = ByteBuffer.allocate(Formats.UNLIT_MODEL.getStride() * 8);
-		buffer.order(ByteOrder.nativeOrder());
+		VecBuffer buffer = VecBuffer.allocate(Formats.UNLIT_MODEL.getStride() * 8);
 
-		//         x,            y,            z,nx, ny,nz, u, v
+		//             pos                                               normal                                   uv
 		// inside quad
-		buffer.putFloat((float) a1.x).putFloat((float) a1.y).putFloat((float) a1.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(1f).putFloat(0f);
-		buffer.putFloat((float) a2.x).putFloat((float) a2.y).putFloat((float) a2.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(1f).putFloat(1f);
-		buffer.putFloat((float) a3.x).putFloat((float) a3.y).putFloat((float) a3.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(0f).putFloat(1f);
-		buffer.putFloat((float) a4.x).putFloat((float) a4.y).putFloat((float) a4.z).put((byte) 0).put((byte) 127).put((byte) 0).putFloat(0f).putFloat(0f);
+		buffer.putVec3((float) a1.x, (float) a1.y, (float) a1.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(1f, 0f);
+		buffer.putVec3((float) a2.x, (float) a2.y, (float) a2.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(1f, 1f);
+		buffer.putVec3((float) a3.x, (float) a3.y, (float) a3.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(0f, 1f);
+		buffer.putVec3((float) a4.x, (float) a4.y, (float) a4.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(0f, 0f);
 		// outside quad
-		buffer.putFloat((float) b4.x).putFloat((float) b4.y).putFloat((float) b4.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(0f).putFloat(0f);
-		buffer.putFloat((float) b3.x).putFloat((float) b3.y).putFloat((float) b3.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(0f).putFloat(1f);
-		buffer.putFloat((float) b2.x).putFloat((float) b2.y).putFloat((float) b2.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(1f).putFloat(1f);
-		buffer.putFloat((float) b1.x).putFloat((float) b1.y).putFloat((float) b1.z).put((byte) 0).put((byte) -127).put((byte) 0).putFloat(1f).putFloat(0f);
+		buffer.putVec3((float) b4.x, (float) b4.y, (float) b4.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(0f, 0f);
+		buffer.putVec3((float) b3.x, (float) b3.y, (float) b3.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(0f, 1f);
+		buffer.putVec3((float) b2.x, (float) b2.y, (float) b2.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(1f, 1f);
+		buffer.putVec3((float) b1.x, (float) b1.y, (float) b1.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(1f, 0f);
 
 		buffer.rewind();
 
 
-		return IndexedModel.fromSequentialQuads(Formats.UNLIT_MODEL, buffer, 8);
+		return IndexedModel.fromSequentialQuads(Formats.UNLIT_MODEL, buffer.unwrap(), 8);
 	}
 }

@@ -15,7 +15,7 @@ public class ContraptionMaterialManager extends MaterialManager<ContraptionProgr
 
 	@Override
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<ContraptionProgram> callback) {
-		for (MaterialRenderer<ContraptionProgram> material : renderers) {
+		for (MaterialRenderer<ContraptionProgram> material : atlasRenderers) {
 			material.render(layer, viewProjection, camX, camY, camZ, callback);
 		}
 	}

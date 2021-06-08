@@ -54,6 +54,10 @@ public class InstanceMaterial<D extends InstanceData> {
 		modelFormat = this.spec.getModelFormat();
 	}
 
+	public boolean nothingToRender() {
+		return models.size() > 0 && models.asMap().values().stream().allMatch(Instancer::empty);
+	}
+
 	public void delete() {
 		models.invalidateAll();
 	}

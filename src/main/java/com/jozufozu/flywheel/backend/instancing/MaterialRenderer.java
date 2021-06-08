@@ -1,5 +1,7 @@
 package com.jozufozu.flywheel.backend.instancing;
 
+import java.util.function.Supplier;
+
 import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 
@@ -8,16 +10,20 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 public class MaterialRenderer<P extends WorldProgram> {
 
-	private final P program;
+	private final Supplier<P> program;
 	private final InstanceMaterial<?> material;
 
-	public MaterialRenderer(P program, InstanceMaterial<?> material) {
-		this.program = program;
+	public MaterialRenderer(Supplier<P> programSupplier, InstanceMaterial<?> material) {
+		this.program = programSupplier;
 		this.material = material;
 	}
 
 	public void render(RenderType layer, Matrix4f viewProjection, double camX, double camY, double camZ, IProgramCallback<P> setup) {
 		if (!(layer == RenderType.getCutoutMipped())) return;
+
+		if (material.nothingToRender()) return;
+
+		P program = this.program.get();
 
 		program.bind();
 		program.uploadViewProjection(viewProjection);
