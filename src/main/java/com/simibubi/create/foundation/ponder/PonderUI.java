@@ -693,7 +693,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				chase.tickChaser();
 
-				if (highlightAll || sceneTags.contains(this.tags.get(i)))
+				if (highlightAll)
 					button.flash();
 				else
 					button.dim();

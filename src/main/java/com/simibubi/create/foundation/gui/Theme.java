@@ -17,6 +17,12 @@ public class Theme {
 	public static void setTheme(@Nullable Theme theme) {
 		custom = theme;
 	}
+	
+	public static void reload() {
+		 base.init();
+		 if (custom != null)
+			 custom.init();
+	}
 
 	private static ColorHolder resolve(String key) {
 		ColorHolder h = null;
@@ -58,25 +64,29 @@ public class Theme {
 	}
 
 	protected void init() {
-		put(Key.BUTTON_IDLE, new Color(0x60_c0c0ff, true), new Color(0x30_c0c0ff, true));
-		put(Key.BUTTON_HOVER, new Color(0xa0_c0c0ff, true), new Color(0x50_c0c0ff, true));
-		put(Key.BUTTON_CLICK, new Color(0xff_4b4bff), new Color(0xff_3b3bdd));
-		put(Key.BUTTON_DISABLE, new Color(0x80_909090, true), new Color(0x20_909090, true));
+		put(Key.BUTTON_IDLE, new Color(0xdd_8ab6d6, true), new Color(0x90_8ab6d6, true));
+		put(Key.BUTTON_HOVER, new Color(0xff_9ABBD3, true), new Color(0xd0_9ABBD3, true));
+		put(Key.BUTTON_CLICK, new Color(0xff_ffffff), new Color(0xee_ffffff));
+		put(Key.BUTTON_DISABLE, new Color(0x80_909090, true), new Color(0x60_909090, true));
 		put(Key.BUTTON_SUCCESS, new Color(0xcc_88f788, true), new Color(0xcc_20cc20, true));
 		put(Key.BUTTON_FAIL, new Color(0xcc_f78888, true), new Color(0xcc_cc2020, true));
 		put(Key.TEXT, new Color(0xff_eeeeee), new Color(0xff_a3a3a3));
 		put(Key.TEXT_DARKER, new Color(0xff_a3a3a3), new Color(0xff_808080));
-		put(Key.TEXT_ACCENT_STRONG, new Color(0xff_7b7ba3), new Color(0xff_7b7ba3));
+		put(Key.TEXT_ACCENT_STRONG, new Color(0xff_8ab6d6), new Color(0xff_8ab6d6));
 		put(Key.TEXT_ACCENT_SLIGHT, new Color(0xff_ddeeff), new Color(0xff_a0b0c0));
 		put(Key.STREAK, new Color(0x101010, false));
 
+		put(Key.PONDER_BUTTON_IDLE, new Color(0x60_c0c0ff, true), new Color(0x30_c0c0ff, true));
+		put(Key.PONDER_BUTTON_HOVER, new Color(0xf0_c0c0ff, true), new Color(0xa0_c0c0ff, true));
+		put(Key.PONDER_BUTTON_CLICK, new Color(0xff_ffffff), new Color(0xdd_ffffff));
+		put(Key.PONDER_BUTTON_DISABLE, new Color(0x80_909090, true), new Color(0x20_909090, true));
 		put(Key.PONDER_BACKGROUND_TRANSPARENT, new Color(0xdd_000000, true));
 		put(Key.PONDER_BACKGROUND_FLAT, new Color(0xff_000000, false));
 		put(Key.PONDER_IDLE, new Color(0x40ffeedd, true), new Color(0x20ffeedd, true));
 		put(Key.PONDER_HOVER, new Color(0x70ffffff, true), new Color(0x30ffffff, true));
 		put(Key.PONDER_HIGHLIGHT, new Color(0xf0ffeedd, true), new Color(0x60ffeedd, true));
 		put(Key.TEXT_WINDOW_BORDER, new Color(0x607a6000, true), new Color(0x207a6000, true));
-		put(Key.PONDER_BACK_ARROW, new Color(0x70aa9999, true), new Color(0x30aa9999, true));
+		put(Key.PONDER_BACK_ARROW, new Color(0xf0aa9999, true), new Color(0x30aa9999, true));
 		put(Key.PONDER_PROGRESSBAR, new Color(0x80ffeedd, true), new Color(0x50ffeedd, true));
 		put(Key.PONDER_MISSING_CREATE, new Color(0x70_984500, true), new Color(0x70_692400, true));
 		put(Key.PONDER_MISSING_VANILLA, new Color(0x50_5000ff, true), new Color(0x50_300077, true));
@@ -129,6 +139,11 @@ public class Theme {
 		public static Key PONDER_PROGRESSBAR = new Key();
 		public static Key PONDER_MISSING_CREATE = new Key();
 		public static Key PONDER_MISSING_VANILLA = new Key();
+		
+		public static Key PONDER_BUTTON_IDLE = new Key();
+		public static Key PONDER_BUTTON_HOVER = new Key();
+		public static Key PONDER_BUTTON_CLICK = new Key();
+		public static Key PONDER_BUTTON_DISABLE = new Key();
 
 		private static int index = 0;
 

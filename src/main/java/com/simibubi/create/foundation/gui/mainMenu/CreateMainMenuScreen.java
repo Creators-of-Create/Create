@@ -95,13 +95,13 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		gettingStarted.active = false;
 		addButton(gettingStarted);
 
-		String feedbackLink = "https://discord.gg/hmaD7Se";
+		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
 		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
 		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
-		addButton(new Button(center - 100, yStart + 72 + -16, bShortWidth, bHeight,
-			Lang.translate("menu.send_feedback"), $ -> linkTo(feedbackLink)));
-		addButton(new Button(center + 2, yStart + 72 + -16, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
+		addButton(new Button(center - 100, yStart + 68, bShortWidth, bHeight,
+			Lang.translate("menu.project_page"), $ -> linkTo(projectLink)));
+		addButton(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(issueTrackerLink)));
 		addButton(new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.support"),
 			$ -> linkTo(supportLink)));

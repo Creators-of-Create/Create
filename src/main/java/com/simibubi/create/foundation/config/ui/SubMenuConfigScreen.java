@@ -264,6 +264,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
 			return;
+		if (client.isSingleplayer()) 
+			return;
 
 		list.isForServer = true;
 		boolean canEdit = client != null && client.player != null && client.player.hasPermissionLevel(2);
@@ -277,6 +279,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				.withPadding(2, 2)
 				.showingElement(stencil);
 
+			
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
@@ -301,7 +304,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 		int x = width/2;
-		drawCenteredString(ms, client.fontRenderer, "Editing config: " + ConfigScreen.modID + ":" + type.toString().toLowerCase(Locale.ROOT) + "@" + title, x, 15, Theme.i(Theme.Key.TEXT));
+		drawCenteredString(ms, client.fontRenderer, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 	}

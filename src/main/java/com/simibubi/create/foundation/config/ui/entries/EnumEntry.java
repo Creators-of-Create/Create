@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
+import java.util.Locale;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.BoxElement;
@@ -22,7 +24,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 
 	public EnumEntry(String label, ForgeConfigSpec.ConfigValue<Enum<?>> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-
+		
 		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
 		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
 			height, width, Theme.p(Theme.Key.TEXT)));
@@ -78,7 +80,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleLeft.y = y + 10;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
-		valueText.at(cycleLeft.x + cycleWidth - 8, y + 11, 200)
+		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
 			.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
 			.render(ms);
 
@@ -97,6 +99,10 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	@Override
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
-		valueText.withText(newValue.name());
+		valueText.withText(newValue.name()
+			.substring(0, 1)
+			+ newValue.name()
+				.substring(1)
+				.toLowerCase(Locale.ROOT));
 	}
 }
