@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.mixin.flywheel.light;
 
+import java.util.Arrays;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.play.server.SUpdateLightPacket;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.world.chunk.Chunk;
 
 @Mixin(ClientPlayNetHandler.class)
@@ -34,11 +37,12 @@ public class NetworkLightUpdateMixin {
 
 			if (chunk != null) {
 				chunk.getTileEntityMap()
-					.values()
-					.forEach(tile -> {
-						InstancedRenderDispatcher.getTiles(world)
-								.onLightUpdate(tile);
-					});
+						.values()
+						.forEach(InstancedRenderDispatcher.getTiles(world)::onLightUpdate);
+
+				Arrays.stream(chunk.getEntityLists())
+						.flatMap(ClassInheritanceMultiMap::stream)
+						.forEach(InstancedRenderDispatcher.getEntities(world)::onLightUpdate);
 			}
 
 			LightUpdater.getInstance()

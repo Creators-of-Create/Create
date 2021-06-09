@@ -3,6 +3,7 @@ package com.jozufozu.flywheel.backend.instancing.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +27,7 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 	public final MaterialManager<?> materialManager;
 
 	protected final ArrayList<Entity> queuedAdditions;
-	//protected final ConcurrentHashMap.KeySetView<Entity, Boolean> queuedUpdates;
+	protected final ConcurrentHashMap.KeySetView<Entity, Boolean> queuedUpdates;
 
 	protected final Map<Entity, EntityInstance<?>> instances;
 	protected final Object2ObjectOpenHashMap<Entity, ITickableInstance> tickableInstances;
@@ -37,7 +38,7 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 
 	public EntityInstanceManager(MaterialManager<?> materialManager) {
 		this.materialManager = materialManager;
-		//this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
+		this.queuedUpdates = ConcurrentHashMap.newKeySet(64);
 		this.queuedAdditions = new ArrayList<>(64);
 		this.instances = new HashMap<>();
 
@@ -72,12 +73,12 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 					instance.tick();
 			}
 		}
-//
-//		queuedUpdates.forEach(te -> {
-//			queuedUpdates.remove(te);
-//
-//			update(te);
-//		});
+
+		queuedUpdates.forEach(te -> {
+			queuedUpdates.remove(te);
+
+			update(te);
+		});
 	}
 
 	public void beginFrame(ActiveRenderInfo info) {
@@ -126,16 +127,16 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 		}
 	}
 
-//	public <T extends Entity> void onLightUpdate(T tile) {
-//		if (!Backend.getInstance().canUseInstancing()) return;
-//
-//		if (tile instanceof IInstanceRendered) {
-//			EntityInstance<? super T> instance = getInstance(tile, false);
-//
-//			if (instance != null)
-//				instance.updateLight();
-//		}
-//	}
+	public <T extends Entity> void onLightUpdate(T tile) {
+		if (!Backend.getInstance().canUseInstancing()) return;
+
+		if (tile instanceof IInstanceRendered) {
+			EntityInstance<? super T> instance = getInstance(tile, false);
+
+			if (instance != null)
+				instance.updateLight();
+		}
+	}
 
 	public <T extends Entity> void add(T entity) {
 		if (!Backend.getInstance().canUseInstancing()) return;
@@ -145,24 +146,24 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 		}
 	}
 
-//	public <T extends Entity> void update(T tile) {
-//		if (!Backend.getInstance().canUseInstancing()) return;
-//
-//		if (tile instanceof IInstanceRendered) {
-//			EntityInstance<? super T> instance = getInstance(tile, false);
-//
-//			if (instance != null) {
-//
-//				if (instance.shouldReset()) {
-//					removeInternal(tile, instance);
-//
-//					createInternal(tile);
-//				} else {
-//					instance.update();
-//				}
-//			}
-//		}
-//	}
+	public <T extends Entity> void update(T tile) {
+		if (!Backend.getInstance().canUseInstancing()) return;
+
+		if (tile instanceof IInstanceRendered) {
+			EntityInstance<? super T> instance = getInstance(tile, false);
+
+			if (instance != null) {
+
+				if (instance.shouldReset()) {
+					removeInternal(tile, instance);
+
+					createInternal(tile);
+				} else {
+					instance.update();
+				}
+			}
+		}
+	}
 
 	public <T extends Entity> void remove(T entity) {
 		if (!Backend.getInstance().canUseInstancing()) return;
@@ -178,11 +179,11 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 		queuedAdditions.add(tile);
 	}
 
-//	public synchronized <T extends Entity> void queueUpdate(T tile) {
-//		if (!Backend.getInstance().canUseInstancing()) return;
-//
-//		queuedUpdates.add(tile);
-//	}
+	public synchronized <T extends Entity> void queueUpdate(T tile) {
+		if (!Backend.getInstance().canUseInstancing()) return;
+
+		queuedUpdates.add(tile);
+	}
 
 	protected synchronized void processQueuedAdditions() {
 		if (queuedAdditions.size() > 0) {
@@ -233,7 +234,7 @@ public class EntityInstanceManager implements MaterialManager.OriginShiftListene
 		EntityInstance<? super T> renderer = InstancedRenderRegistry.getInstance().create(materialManager, tile);
 
 		if (renderer != null) {
-			//renderer.updateLight();
+			renderer.updateLight();
 			instances.put(tile, renderer);
 
 			if (renderer instanceof IDynamicInstance)

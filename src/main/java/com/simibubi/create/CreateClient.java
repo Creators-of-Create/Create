@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.AtlasStitcher;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -77,7 +78,8 @@ public class CreateClient {
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
 
-		Backend.getInstance();
+		Backend.INSTANCE = new Backend();
+		AtlasStitcher.INSTANCE = new AtlasStitcher(modEventBus);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
@@ -88,6 +90,7 @@ public class CreateClient {
 		AllKeys.register();
 		// AllFluids.assignRenderLayers();
 		AllBlockPartials.clientInit();
+		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();

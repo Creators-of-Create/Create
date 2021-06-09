@@ -40,15 +40,16 @@ public abstract class LightUpdateMixin extends AbstractChunkProvider {
 
 		if (chunk != null) {
 			chunk.getTileEntityMap()
-				.entrySet()
-				.stream()
-				.filter(entry -> SectionPos.toChunk(entry.getKey()
-					.getY()) == sectionY)
-				.map(Map.Entry::getValue)
-				.forEach(tile -> {
-					InstancedRenderDispatcher.getTiles(world)
-							.onLightUpdate(tile);
-				});
+					.entrySet()
+					.stream()
+					.filter(entry -> SectionPos.toChunk(entry.getKey()
+							.getY()) == sectionY)
+					.map(Map.Entry::getValue)
+					.forEach(InstancedRenderDispatcher.getTiles(world)::onLightUpdate);
+
+			if (sectionY >= 0) // TODO: 1.17
+				chunk.getEntityLists()[sectionY]
+						.forEach(InstancedRenderDispatcher.getEntities(world)::onLightUpdate);
 		}
 
 		LightUpdater.getInstance()

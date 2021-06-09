@@ -83,6 +83,10 @@ public class InstancedRenderDispatcher {
 		getTiles(te.getWorld()).queueUpdate(te);
 	}
 
+	public static void enqueueUpdate(Entity entity) {
+		getEntities(entity.world).queueUpdate(entity);
+	}
+
 	@SubscribeEvent
 	public static void onBeginFrame(BeginFrameEvent event) {
 		Contexts.WORLD.getMaterialManager(event.getWorld())

@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
 
-	private static final Backend INSTANCE = new Backend();
+	public static Backend INSTANCE;
 
 	public static Backend getInstance() {
 		return INSTANCE;

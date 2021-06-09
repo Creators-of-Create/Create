@@ -55,6 +55,35 @@ public abstract class EntityInstance<E extends Entity> implements IInstance {
 	public abstract void remove();
 
 	/**
+	 * Update instance data here. Good for when data doesn't change very often and when animations are GPU based.
+	 * Don't query lighting data here, that's handled separately in {@link #updateLight()}.
+	 *
+	 * <br><br> If your animations are complex or more CPU driven, see {@link IDynamicInstance} or {@link ITickableInstance}.
+	 */
+	public void update() {
+	}
+
+	/**
+	 * Called after construction and when a light update occurs in the world.
+	 *
+	 * <br> If your model needs it, update light here.
+	 */
+	public void updateLight() {
+	}
+
+	/**
+	 * Just before {@link #update()} would be called, <code>shouldReset()</code> is checked.
+	 * If this function returns <code>true</code>, then this instance will be {@link #remove removed},
+	 * and another instance will be constructed to replace it. This allows for more sane resource
+	 * acquisition compared to trying to update everything within the lifetime of an instance.
+	 *
+	 * @return <code>true</code> if this instance should be discarded and refreshed.
+	 */
+	public boolean shouldReset() {
+		return false;
+	}
+
+	/**
 	 * In order to accommodate for floating point precision errors at high coordinates,
 	 * {@link TileInstanceManager}s are allowed to arbitrarily adjust the origin, and
 	 * shift the world matrix provided as a shader uniform accordingly.
