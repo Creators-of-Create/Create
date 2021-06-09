@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
@@ -79,6 +81,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		}
 		// add comment to tooltip
 		labelTooltip.addAll(Arrays.stream(commentLines)
+			.filter(Predicates.not(s -> s.startsWith("Range")))
 			.map(StringTextComponent::new)
 			.flatMap(stc -> TooltipHelper.cutTextComponent(stc, TextFormatting.GRAY, TextFormatting.GRAY)
 				.stream())

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -13,8 +14,11 @@ import org.lwjgl.glfw.GLFW;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.electronwill.nightconfig.core.UnmodifiableConfig.Entry;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigScreenList.LabeledEntry;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
 import com.simibubi.create.foundation.config.ui.entries.EnumEntry;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
@@ -236,6 +240,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			if (obj instanceof AbstractConfig) {
 				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) obj);
 				list.children().add(entry);
+					if (configGroup.valueMap()
+						.size() == 1)
+							ScreenOpener.open(
+								new SubMenuConfigScreen(parent, humanKey, type, spec, (UnmodifiableConfig) obj));
 
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
@@ -260,6 +268,20 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				}
 			}
 		});
+		
+		Collections.sort(list.children(),
+			(e, e2) -> {
+				int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
+					if (group == 0 && e instanceof LabeledEntry && e2 instanceof LabeledEntry) {
+						LabeledEntry le = (LabeledEntry) e;
+						LabeledEntry le2 = (LabeledEntry) e2;
+						return le.label.getComponent()
+							.getString()
+							.compareTo(le2.label.getComponent()
+								.getString());
+					}
+					return group;
+				});
 
 		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
