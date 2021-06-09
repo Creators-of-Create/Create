@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 63",
+	"_": "Missing Localizations: 69",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -674,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "二五仔机械手",
 	"create.block.cart_assembler.invalid": "请将矿车装配器放置在铁轨上",
+
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.send_feedback": "UNLOCALIZED: Feedback & Help",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
 
 	"create.recipe.crushing": "粉碎",
 	"create.recipe.milling": "研磨",

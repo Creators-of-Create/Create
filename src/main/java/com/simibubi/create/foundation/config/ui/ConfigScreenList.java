@@ -135,7 +135,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-			UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 6, width, 0xdd_000000);
+			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
+			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			IFormattableTextComponent component = label.getComponent();
 			FontRenderer font = Minecraft.getInstance().fontRenderer;
 			if (font.getWidth(component) > getLabelWidth(width) - 10) {

@@ -360,6 +360,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	public void onClose() {
 		if (changes.isEmpty()) {
 			super.onClose();
+			ScreenOpener.open(parent);
 			return;
 		}
 

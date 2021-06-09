@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -108,7 +107,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		widgets.clear();
 		super.init();
 
-		TextStencilElement clientText = new TextStencilElement(client.fontRenderer, new StringTextComponent(clientTile).formatted(TextFormatting.BOLD)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(client.fontRenderer, new StringTextComponent(clientTile)).centered(true, true);
 		widgets.add(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
@@ -120,7 +119,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(client.fontRenderer, new StringTextComponent(commonTile).formatted(TextFormatting.BOLD)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(client.fontRenderer, new StringTextComponent(commonTile)).centered(true, true);
 		widgets.add(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
@@ -132,7 +131,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			commonText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement serverText = new TextStencilElement(client.fontRenderer, new StringTextComponent(serverTile).formatted(TextFormatting.BOLD)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(client.fontRenderer, new StringTextComponent(serverTile)).centered(true, true);
 		widgets.add(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec != null && Minecraft.getInstance().world != null) {

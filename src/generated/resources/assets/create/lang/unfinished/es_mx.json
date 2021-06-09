@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1286",
+	"_": "Missing Localizations: 1292",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -674,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "UNLOCALIZED: a rogue Deployer",
 	"create.block.cart_assembler.invalid": "UNLOCALIZED: Place your Cart Assembler on a rail block",
+
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.send_feedback": "UNLOCALIZED: Feedback & Help",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
 
 	"create.recipe.crushing": "UNLOCALIZED: Crushing",
 	"create.recipe.milling": "UNLOCALIZED: Milling",

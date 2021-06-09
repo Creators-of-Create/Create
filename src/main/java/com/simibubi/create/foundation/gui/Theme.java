@@ -66,7 +66,7 @@ public class Theme {
 		put(Key.BUTTON_FAIL, new Color(0xcc_f78888, true), new Color(0xcc_cc2020, true));
 		put(Key.TEXT, new Color(0xff_eeeeee), new Color(0xff_a3a3a3));
 		put(Key.TEXT_DARKER, new Color(0xff_a3a3a3), new Color(0xff_808080));
-		put(Key.TEXT_ACCENT_STRONG, new Color(0xff_7b7ba3), new Color(0xff_616192));
+		put(Key.TEXT_ACCENT_STRONG, new Color(0xff_7b7ba3), new Color(0xff_7b7ba3));
 		put(Key.TEXT_ACCENT_SLIGHT, new Color(0xff_ddeeff), new Color(0xff_a0b0c0));
 		put(Key.STREAK, new Color(0x101010, false));
 

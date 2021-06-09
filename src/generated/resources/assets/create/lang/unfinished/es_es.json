@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 663",
+	"_": "Missing Localizations: 669",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -674,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "un Desplegador rebelde",
 	"create.block.cart_assembler.invalid": "Coloque su Ensamblador de vagonetas en un bloque de Raíles",
+
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.send_feedback": "UNLOCALIZED: Feedback & Help",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
 
 	"create.recipe.crushing": "Trituración",
 	"create.recipe.milling": "Fresado",

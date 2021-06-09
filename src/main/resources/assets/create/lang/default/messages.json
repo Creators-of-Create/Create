@@ -12,6 +12,13 @@
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",
 
+	"create.menu.return": "Return to Menu",
+	"create.menu.configure": "Configure...",
+	"create.menu.getting_started": "Getting Started",
+	"create.menu.send_feedback": "Feedback & Help",
+	"create.menu.report_bugs": "Report Issues",
+	"create.menu.support": "Support Us",
+
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.milling": "Milling",
 	"create.recipe.fan_washing": "Bulk Washing",

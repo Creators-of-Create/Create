@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -674,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "悪いデプロイヤー",
 	"create.block.cart_assembler.invalid": "トロッコアセンブラはレールの上にのみ設置できます",
+
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.send_feedback": "UNLOCALIZED: Feedback & Help",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
 
 	"create.recipe.crushing": "粉砕",
 	"create.recipe.milling": "製粉",
