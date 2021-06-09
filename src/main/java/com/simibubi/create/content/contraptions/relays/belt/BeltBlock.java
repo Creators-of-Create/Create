@@ -102,11 +102,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-		try {
-			return getTileEntity(world, pos).hasPulley();
-		} catch (TileEntityException e) {
-		}
-		return false;
+		return getTileEntityOptional(world, pos).map(BeltTileEntity::hasPulley)
+			.orElse(false);
 	}
 
 	@Override
@@ -365,24 +362,20 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		ISelectionContext context) {
 		if (state.getBlock() != this)
 			return VoxelShapes.empty();
-
+		
 		VoxelShape shape = getShape(state, worldIn, pos, context);
-		try {
+		return getTileEntityOptional(worldIn, pos).map(te -> {
 			if (context.getEntity() == null)
 				return shape;
 
-			BeltTileEntity belt = getTileEntity(worldIn, pos);
-			BeltTileEntity controller = belt.getControllerTE();
-
+			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
+			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) 
 				return BeltShapes.getCollisionShape(state);
-			}
-
-		} catch (TileEntityException e) {
-		}
-		return shape;
+			return shape;
+			
+		}).orElse(shape);
 	}
 
 	@Override

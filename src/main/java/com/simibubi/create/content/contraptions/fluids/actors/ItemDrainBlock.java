@@ -36,8 +36,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		BlockRayTraceResult hit) {
 		ItemStack heldItem = player.getHeldItem(handIn);
 
-		try {
-			ItemDrainTileEntity te = getTileEntity(worldIn, pos);
+		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				te.internalTank.allowInsertion();
 				ActionResultType tryExchange = tryExchange(worldIn, player, handIn, heldItem, te);
@@ -53,10 +52,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 				te.notifyUpdate();
 			}
 			return ActionResultType.SUCCESS;
-		} catch (TileEntityException e) {
-		}
-
-		return ActionResultType.PASS;
+		});
 	}
 
 	protected ActionResultType tryExchange(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,

@@ -47,30 +47,25 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+		BlockRayTraceResult hit) {
 		if (worldIn.isRemote) {
 			addParticles(state, worldIn, pos, 1.0F);
 			return ActionResultType.SUCCESS;
 		}
 
-		try {
+		return onTileEntityUse(worldIn, pos, te -> {
 			boolean sneak = player.isSneaking();
-			AnalogLeverTileEntity te = getTileEntity(worldIn, pos);
 			te.changeState(sneak);
 			float f = .25f + ((te.state + 5) / 15f) * .5f;
 			worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
-		} catch (TileEntityException e) {}
-
-		return ActionResultType.SUCCESS;
+			return ActionResultType.SUCCESS;
+		});
 	}
 
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		try {
-			return getTileEntity(blockAccess, pos).state;
-		} catch (TileEntityException e) {
-			return 0;
-		}
+		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
+			.orElse(0);
 	}
 
 	@Override
@@ -86,34 +81,33 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		try {
-			AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
-			if (tileEntity.state != 0 && rand.nextFloat() < 0.25F)
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.state != 0 && rand.nextFloat() < 0.25F)
 				addParticles(stateIn, worldIn, pos, 0.5F);
-		} catch (TileEntityException e) {}
+		});
 	}
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		try {
-			AnalogLeverTileEntity tileEntity = getTileEntity(worldIn, pos);
-			if (!isMoving && state.getBlock() != newState.getBlock()) {
-				if (tileEntity.state != 0)
-					updateNeighbors(state, worldIn, pos);
-				worldIn.removeTileEntity(pos);
-			}
-		} catch (TileEntityException e) {}
+		if (isMoving || state.getBlock() == newState.getBlock())
+			return;
+		withTileEntityDo(worldIn, pos, te -> {
+			if (te.state != 0)
+				updateNeighbors(state, worldIn, pos);
+			worldIn.removeTileEntity(pos);
+		});
 	}
 
 	private static void addParticles(BlockState state, IWorld worldIn, BlockPos pos, float alpha) {
-		Direction direction = state.get(HORIZONTAL_FACING).getOpposite();
+		Direction direction = state.get(HORIZONTAL_FACING)
+			.getOpposite();
 		Direction direction1 = getFacing(state).getOpposite();
 		double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset()
-				+ 0.2D * (double) direction1.getXOffset();
+			+ 0.2D * (double) direction1.getXOffset();
 		double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset()
-				+ 0.2D * (double) direction1.getYOffset();
+			+ 0.2D * (double) direction1.getYOffset();
 		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset()
-				+ 0.2D * (double) direction1.getZOffset();
+			+ 0.2D * (double) direction1.getZOffset();
 		worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	}
 
@@ -137,7 +131,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	public Class<AnalogLeverTileEntity> getTileEntityClass() {
 		return AnalogLeverTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;

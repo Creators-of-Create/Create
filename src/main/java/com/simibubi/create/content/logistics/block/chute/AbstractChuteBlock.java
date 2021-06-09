@@ -204,20 +204,14 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 			return ActionResultType.PASS;
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
-		try {
-			ChuteTileEntity te = getTileEntity(world, pos);
-			if (te == null)
-				return ActionResultType.PASS;
+
+		return onTileEntityUse(world, pos, te -> {
 			if (te.item.isEmpty())
 				return ActionResultType.PASS;
 			player.inventory.placeItemBackInInventory(world, te.item);
 			te.setItem(ItemStack.EMPTY);
 			return ActionResultType.SUCCESS;
-
-		} catch (TileEntityException e) {
-			e.printStackTrace();
-		}
-		return ActionResultType.PASS;
+		});
 	}
 
 }

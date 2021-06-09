@@ -92,34 +92,29 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		if (AllBlocks.CRUSHING_WHEEL.has(otherState)) {
 			controllerShouldExist = true;
 
-			try {
-				CrushingWheelTileEntity te = getTileEntity(world, pos);
-				CrushingWheelTileEntity otherTe = getTileEntity(world, otherWheelPos);
+			CrushingWheelTileEntity te = getTileEntity(world, pos);
+			CrushingWheelTileEntity otherTe = getTileEntity(world, otherWheelPos);
 
-				if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
-						&& te.getSpeed() != 0) {
-					Axis wheelAxis = state.get(AXIS);
-					Axis sideAxis = side.getAxis();
-					int controllerADO = Math.round(Math.signum(te.getSpeed())) * side.getAxisDirection().getOffset();
-					Vector3d controllerDirVec = new Vector3d(wheelAxis == Axis.X ? 1 : 0
-							, wheelAxis == Axis.Y ? 1 : 0
-							, wheelAxis == Axis.Z ? 1 : 0)
-							.crossProduct(new Vector3d(sideAxis == Axis.X ? 1 : 0
-									, sideAxis == Axis.Y ? 1 : 0
-									, sideAxis == Axis.Z ? 1 : 0));
+			if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
+					&& te.getSpeed() != 0) {
+				Axis wheelAxis = state.get(AXIS);
+				Axis sideAxis = side.getAxis();
+				int controllerADO = Math.round(Math.signum(te.getSpeed())) * side.getAxisDirection().getOffset();
+				Vector3d controllerDirVec = new Vector3d(wheelAxis == Axis.X ? 1 : 0
+						, wheelAxis == Axis.Y ? 1 : 0
+						, wheelAxis == Axis.Z ? 1 : 0)
+						.crossProduct(new Vector3d(sideAxis == Axis.X ? 1 : 0
+								, sideAxis == Axis.Y ? 1 : 0
+								, sideAxis == Axis.Z ? 1 : 0));
 
-					controllerNewDirection = Direction.getFacingFromVector(controllerDirVec.x * controllerADO
-							, controllerDirVec.y * controllerADO
-							, controllerDirVec.z * controllerADO);
+				controllerNewDirection = Direction.getFacingFromVector(controllerDirVec.x * controllerADO
+						, controllerDirVec.y * controllerADO
+						, controllerDirVec.z * controllerADO);
 
-					controllerShouldBeValid = true;
-				}
-				if (otherState.get(AXIS) != state.get(AXIS))
-					controllerShouldExist = false;
-
-			} catch (TileEntityException e) {
-				controllerShouldExist = false;
+				controllerShouldBeValid = true;
 			}
+			if (otherState.get(AXIS) != state.get(AXIS))
+				controllerShouldExist = false;
 		}
 
 		if (!controllerShouldExist) {
@@ -149,27 +144,25 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		try {
-			CrushingWheelTileEntity te = getTileEntity(worldIn, pos);
-			if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
-				return;
+		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
+			return;
+		
+		float speed = getTileEntityOptional(worldIn, pos).map(CrushingWheelTileEntity::getSpeed)
+			.orElse(0f);
 
-			double x = 0;
-			double z = 0;
+		double x = 0;
+		double z = 0;
 
-			if (state.get(AXIS) == Axis.X) {
-				z = te.getSpeed() / 20f;
-				x += (pos.getX() + .5f - entityIn.getX()) * .1f;
-			}
-			if (state.get(AXIS) == Axis.Z) {
-				x = te.getSpeed() / -20f;
-				z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
-			}
-			entityIn.setMotion(entityIn.getMotion()
-				.add(x, 0, z));
-
-		} catch (TileEntityException e) {
+		if (state.get(AXIS) == Axis.X) {
+			z = speed / 20f;
+			x += (pos.getX() + .5f - entityIn.getX()) * .1f;
 		}
+		if (state.get(AXIS) == Axis.Z) {
+			x = speed / -20f;
+			z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
+		}
+		entityIn.setMotion(entityIn.getMotion()
+			.add(x, 0, z));
 	}
 
 	@Override

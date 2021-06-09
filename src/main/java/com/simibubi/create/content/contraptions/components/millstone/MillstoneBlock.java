@@ -99,13 +99,10 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return;
 
 		MillstoneTileEntity millstone = null;
-		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getBlockPos())) {
-			try {
+		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getBlockPos())) 
+			if (millstone == null)
 				millstone = getTileEntity(worldIn, pos);
-			} catch (TileEntityException e) {
-				continue;
-			}
-		}
+		
 		if (millstone == null)
 			return;
 
