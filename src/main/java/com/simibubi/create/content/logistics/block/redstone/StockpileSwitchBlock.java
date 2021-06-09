@@ -27,10 +27,13 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
+
+import java.util.Random;
 
 public class StockpileSwitchBlock extends HorizontalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
 
@@ -87,6 +90,14 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 		} catch (TileEntityException e) {
 		}
 		return 0;
+	}
+
+	@Override
+	public void scheduledTick(BlockState blockState, ServerWorld world, BlockPos pos, Random random) {
+		try {
+			getTileEntity(world, pos).updatePowerAfterDelay();
+		} catch (TileEntityException e) {
+		}
 	}
 
 	@Override
