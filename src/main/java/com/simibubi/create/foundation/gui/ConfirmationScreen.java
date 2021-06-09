@@ -12,6 +12,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.text.ITextProperties;
@@ -20,17 +21,23 @@ import net.minecraft.util.text.Style;
 public class ConfirmationScreen extends AbstractSimiScreen {
 
 	private Screen source;
-	private Consumer<Boolean> action = _success -> {};
+	private Consumer<Response> action = _success -> {};
 	private List<ITextProperties> text = new ArrayList<>();
 	private boolean centered = false;
 	private int x;
 	private int y;
 	private int textWidth;
 	private int textHeight;
+	private boolean tristate;
 
 	private BoxWidget confirm;
+	private BoxWidget confirmDontSave;
 	private BoxWidget cancel;
 	private BoxElement textBackground;
+	
+	public enum Response {
+		Confirm, ConfirmDontSave, Cancel
+	}
 
 	/*
 	* Removes text lines from the back of the list
@@ -70,7 +77,13 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	public ConfirmationScreen withAction(Consumer<Boolean> action) {
+		this.action = r -> action.accept(r == Response.Confirm);
+		return this;
+	}
+	
+	public ConfirmationScreen withThreeActions(Consumer<Response> action) {
 		this.action = action;
+		this.tristate = true;
 		return this;
 	}
 
@@ -115,32 +128,46 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 			y = height - textHeight - 30;
 		}
 
-		TextStencilElement confirmText = new TextStencilElement(client.fontRenderer, "Confirm").centered(true, true);
-		confirm = new BoxWidget(x + 4, y + textHeight + 2 , textWidth/2 - 10, 20)
-				.withCallback(() -> accept(true));
+		int buttonX = x + textWidth / 2 - 6 - (int) (70 * (tristate ? 1.5f : 1));
+		
+		TextStencilElement confirmText =
+			new TextStencilElement(client.fontRenderer, tristate ? "Save" : "Confirm").centered(true, true);
+		confirm = new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.Confirm));
 		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
+		widgets.add(confirm);
+		
+		buttonX += 12 + 70;
+
+		if (tristate) {
+			TextStencilElement confirmDontSaveText =
+				new TextStencilElement(client.fontRenderer, "Don't Save").centered(true, true);
+			confirmDontSave =
+				new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
+			confirmDontSave.showingElement(
+				confirmDontSaveText.withElementRenderer(BoxWidget.gradientFactory.apply(confirmDontSave)));
+			widgets.add(confirmDontSave);
+			buttonX += 12 + 70;
+		}
 
 		TextStencilElement cancelText = new TextStencilElement(client.fontRenderer, "Cancel").centered(true, true);
-		cancel = new BoxWidget(x + textWidth/2 + 6, y + textHeight + 2, textWidth/2 - 10, 20)
-				.withCallback(() -> accept(false));
+		cancel = new BoxWidget(buttonX, y + textHeight + 6, 70, 16)
+			.withCallback(() -> accept(Response.Cancel));
 		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
-
-		widgets.add(confirm);
 		widgets.add(cancel);
 
 		textBackground = new BoxElement()
 				.gradientBorder(Theme.p(Theme.Key.BUTTON_DISABLE))
-				.withBounds(textWidth, textHeight)
-				.at(x, y);
+				.withBounds(width + 10, textHeight + 35)
+				.at(-5, y - 5);
 
 	}
 
 	@Override
 	public void onClose() {
-		accept(false);
+		accept(Response.Cancel);
 	}
 
-	private void accept(boolean success) {
+	private void accept(Response success) {
 		client.currentScreen = source;
 		action.accept(success);
 	}
@@ -157,11 +184,12 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		for (ITextProperties line : text) {
 			lineY = lineY + offset;
-
 			if (line == null)
 				continue;
-
-			client.fontRenderer.draw(ms, line.getString(), x, lineY, 0xeaeaea);
+			int textX = x;
+			if (text.size() == 1)
+				x = (width - client.fontRenderer.getWidth(line)) / 2;
+			client.fontRenderer.draw(ms, line.getString(), textX, lineY, 0xeaeaea);
 		}
 
 		ms.pop();
@@ -175,7 +203,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		ms.push();
 		UIRenderHelper.framebuffer.bindFramebuffer(true);
-		source.render(ms, mouseX, mouseY, 10);
+		source.render(ms, 0, 0, 10); // zero mouse coords to prevent further tooltips
 		UIRenderHelper.framebuffer.unbindFramebuffer();
 		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
 		ms.pop();
