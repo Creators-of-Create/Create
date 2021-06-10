@@ -1,0 +1,14 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:honey_block"
+    }
+  ],
+  "results": [
+    {
+      "fluid": "forge:honey",
+      "amount": 1000
+    }
+  ]
+}
