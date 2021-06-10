@@ -20,6 +20,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	TERRAINZAPPER("curiosities.png", 234, 103),
 	TERRAINZAPPER_INACTIVE_PARAM("curiosities.png", 238, 0, 18, 18),
 
+	LOGO("logo.png", 256, 256),
+	
 	SCHEMATIC("schematics.png", 192, 121),
 	SCHEMATIC_SLOT("widgets.png", 54, 0, 16, 16),
 	SCHEMATIC_PROMPT("schematics_2.png", 213, 77),
