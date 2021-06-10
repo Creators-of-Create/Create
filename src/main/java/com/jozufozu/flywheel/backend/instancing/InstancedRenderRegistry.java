@@ -35,7 +35,6 @@ public class InstancedRenderRegistry {
 		this.entities.put(type, rendererFactory);
 	}
 
-
 	static {
 		INSTANCE.register(AllEntityTypes.SUPER_GLUE.get(), GlueInstance::new);
 	}

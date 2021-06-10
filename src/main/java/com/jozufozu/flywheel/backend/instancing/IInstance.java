@@ -11,4 +11,12 @@ import net.minecraft.util.math.BlockPos;
 public interface IInstance {
 
 	BlockPos getWorldPosition();
+
+	void updateLight();
+
+	void remove();
+
+	boolean shouldReset();
+
+	void update();
 }

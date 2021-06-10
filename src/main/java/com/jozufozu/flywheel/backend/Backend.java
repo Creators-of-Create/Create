@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 public class Backend {
 	public static final Logger log = LogManager.getLogger(Backend.class);
 
-	public static Backend INSTANCE;
+	protected static final Backend INSTANCE = new Backend();
 
 	public static Backend getInstance() {
 		return INSTANCE;
@@ -46,7 +46,7 @@ public class Backend {
 	private final Map<ResourceLocation, MaterialSpec<?>> materialRegistry = new HashMap<>();
 	private final Map<ResourceLocation, ProgramSpec> programSpecRegistry = new HashMap<>();
 
-	public Backend() {
+	protected Backend() {
 		// Can be null when running datagenerators due to the unfortunate time we call this
 		minecraft = Minecraft.getInstance();
 		if (minecraft == null) return;
