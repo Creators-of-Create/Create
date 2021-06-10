@@ -674,6 +674,13 @@
 	"create.block.deployer.damage_source_name": "un Desplegador rebelde",
 	"create.block.cart_assembler.invalid": "Coloque su Ensamblador de vagonetas en un bloque de Raíles",
 
+    "create.menu.return": "Regresar al menú",
+	"create.menu.configure": "Configurar...",
+	"create.menu.getting_started": "Comenzando",
+	"create.menu.project_page": "Página del proyecto",
+	"create.menu.report_bugs": "Informar de problemas",
+	"create.menu.support": "Apóyenos",
+
 	"create.recipe.crushing": "Trituración",
 	"create.recipe.milling": "Fresado",
 	"create.recipe.fan_washing": "Lavado a granel",
