@@ -182,16 +182,18 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
+		if (pos2.getY() >= 256)
+			return false;
 		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
 			return true;
 		if (!isValidFace(world, pos2, getFacingDirection())
-			&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
+				&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		if (isSideSticky(world, pos2, getFacingDirection())
-			|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
+				|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
-			.isEmpty();
+				.isEmpty();
 	}
 
 	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {

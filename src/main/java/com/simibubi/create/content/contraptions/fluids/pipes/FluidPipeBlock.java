@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 
@@ -231,6 +232,12 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		if (bracket != null && bracket.isBracketPresent())
 			return state;
 
+		BlockState prevState = state;
+		int prevStateSides = (int) Arrays.stream(Iterate.directions)
+				.map(FACING_TO_PROPERTY_MAP::get)
+				.filter(prevState::get)
+				.count();
+
 		// Update sides that are not ignored
 		for (Direction d : Iterate.directions)
 			if (d != ignore) {
@@ -252,9 +259,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		if (connectedDirection != null)
 			return state.with(FACING_TO_PROPERTY_MAP.get(connectedDirection.getOpposite()), true);
 
+		// If we can't connect to anything and weren't connected before, do nothing
+		if (prevStateSides == 2)
+			return prevState;
+
 		// Use preferred
 		return state.with(FACING_TO_PROPERTY_MAP.get(preferredDirection), true)
-			.with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
+				.with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
 	}
 
 	@Override

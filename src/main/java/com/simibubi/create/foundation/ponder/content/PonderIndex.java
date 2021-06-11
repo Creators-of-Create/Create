@@ -5,6 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.item.DyeColor;
 
 public class PonderIndex {
 
@@ -54,24 +55,24 @@ public class PonderIndex {
 			.addStoryBoard("fan/source", FanScenes::source, PonderTag.KINETIC_SOURCES);
 
 		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
-			PonderTag.KINETIC_SOURCES);
+				PonderTag.KINETIC_SOURCES);
 		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
-			PonderTag.KINETIC_SOURCES);
+				PonderTag.KINETIC_SOURCES);
 		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank,
-			PonderTag.KINETIC_SOURCES);
+				PonderTag.KINETIC_SOURCES);
 
 		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
-			PonderTag.KINETIC_SOURCES);
-		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES)
-			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
+				PonderTag.KINETIC_SOURCES);
+		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
+				.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
 		PonderRegistry.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
-			ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
+				ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
 		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
-			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
+				.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
 		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE)
-			.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
+				.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
 		PonderRegistry.forComponents(AllBlocks.FLYWHEEL)
 			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
 		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
@@ -398,17 +399,17 @@ public class PonderIndex {
 			.add(Blocks.HONEY_BLOCK);
 
 		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ACTOR)
-			.add(AllBlocks.MECHANICAL_HARVESTER)
-			.add(AllBlocks.MECHANICAL_PLOUGH)
-			.add(AllBlocks.MECHANICAL_DRILL)
-			.add(AllBlocks.MECHANICAL_SAW)
-			.add(AllBlocks.DEPLOYER)
-			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE)
-			.add(AllBlocks.PORTABLE_FLUID_INTERFACE)
-			.add(AllBlocks.MECHANICAL_BEARING)
-			.add(AllBlocks.ANDESITE_FUNNEL)
-			.add(AllBlocks.BRASS_FUNNEL)
-			.add(AllBlocks.SEATS[0])
+				.add(AllBlocks.MECHANICAL_HARVESTER)
+				.add(AllBlocks.MECHANICAL_PLOUGH)
+				.add(AllBlocks.MECHANICAL_DRILL)
+				.add(AllBlocks.MECHANICAL_SAW)
+				.add(AllBlocks.DEPLOYER)
+				.add(AllBlocks.PORTABLE_STORAGE_INTERFACE)
+				.add(AllBlocks.PORTABLE_FLUID_INTERFACE)
+				.add(AllBlocks.MECHANICAL_BEARING)
+				.add(AllBlocks.ANDESITE_FUNNEL)
+				.add(AllBlocks.BRASS_FUNNEL)
+				.add(AllBlocks.SEATS.get(DyeColor.WHITE))
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)

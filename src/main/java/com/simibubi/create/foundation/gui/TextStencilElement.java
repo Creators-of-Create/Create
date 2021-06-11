@@ -53,7 +53,7 @@ public class TextStencilElement extends DelegatedStencilElement {
 			x = width / 2f - font.getWidth(component) / 2f;
 
 		if (centerVertically)
-			y = height / 2f - font.FONT_HEIGHT / 2f;
+			y = height / 2f - (font.FONT_HEIGHT - 1) / 2f;
 
 		font.draw(ms, component, x, y, 0xff_000000);
 	}
@@ -65,7 +65,7 @@ public class TextStencilElement extends DelegatedStencilElement {
 			x = width / 2f - font.getWidth(component) / 2f;
 
 		if (centerVertically)
-			y = height / 2f - font.FONT_HEIGHT / 2f;
+			y = height / 2f - (font.FONT_HEIGHT - 1) / 2f;
 
 		ms.push();
 		ms.translate(x, y, 0);

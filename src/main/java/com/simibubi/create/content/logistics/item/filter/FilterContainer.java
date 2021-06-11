@@ -31,31 +31,31 @@ public class FilterContainer extends AbstractFilterContainer {
 	protected void addFilterSlots() {
 		int x = -27;
 		int y = 20;
-
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
-				this.addSlot(new SlotItemHandler(filterInventory, col + row * 9, x + col * 18, y + row * 18));
-	}
-	
-	@Override
-	protected ItemStackHandler createFilterInventory() {
-		return FilterItem.getFilterItems(filterItem);
+				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
 	}
 
 	@Override
-	protected int getInventoryOffset() {
+	protected ItemStackHandler createGhostInventory() {
+		return FilterItem.getFilterItems(contentHolder);
+	}
+
+	@Override
+	protected int getPlayerInventoryXOffset() {
 		return 97;
 	}
-	
+
 	@Override
 	protected void readData(ItemStack filterItem) {
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		respectNBT = tag.getBoolean("RespectNBT");
 		blacklist = tag.getBoolean("Blacklist");
 	}
-	
+
 	@Override
 	protected void saveData(ItemStack filterItem) {
+		super.saveData(filterItem);
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		tag.putBoolean("RespectNBT", respectNBT);
 		tag.putBoolean("Blacklist", blacklist);

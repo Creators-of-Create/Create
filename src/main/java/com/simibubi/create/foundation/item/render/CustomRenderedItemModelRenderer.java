@@ -1,7 +1,6 @@
-package com.simibubi.create.foundation.block.render;
+package com.simibubi.create.foundation.item.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

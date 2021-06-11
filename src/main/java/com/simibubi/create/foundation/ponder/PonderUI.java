@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder;
 
 import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREFIX;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -693,7 +693,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				chase.tickChaser();
 
-				if (highlightAll || sceneTags.contains(this.tags.get(i)))
+				if (highlightAll)
 					button.flash();
 				else
 					button.dim();

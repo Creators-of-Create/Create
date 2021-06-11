@@ -9,6 +9,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
+import com.simibubi.create.content.curiosities.tools.BlueprintEntity;
+import com.simibubi.create.content.curiosities.tools.BlueprintRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -35,6 +37,11 @@ public class AllEntityTypes {
 	public static final EntityEntry<SuperGlueEntity> SUPER_GLUE =
 			register("super_glue", SuperGlueEntity::new, () -> SuperGlueRenderer::new,
 					EntityClassification.MISC, 10, Integer.MAX_VALUE, false, true, SuperGlueEntity::build);
+
+	public static final EntityEntry<BlueprintEntity> CRAFTING_BLUEPRINT =
+			register("crafting_blueprint", BlueprintEntity::new, () -> BlueprintRenderer::new,
+					EntityClassification.MISC, 10, Integer.MAX_VALUE, false, true, BlueprintEntity::build);
+
 	public static final EntityEntry<SeatEntity> SEAT =
 			register("seat", SeatEntity::new, () -> SeatEntity.Render::new,
 					EntityClassification.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build);

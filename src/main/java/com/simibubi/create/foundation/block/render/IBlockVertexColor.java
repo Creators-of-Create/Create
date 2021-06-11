@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.block;
+package com.simibubi.create.foundation.block.render;
 
 @FunctionalInterface
 public interface IBlockVertexColor {

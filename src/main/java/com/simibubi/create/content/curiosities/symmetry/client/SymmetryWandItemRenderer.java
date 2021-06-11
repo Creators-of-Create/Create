@@ -1,8 +1,8 @@
 package com.simibubi.create.content.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;

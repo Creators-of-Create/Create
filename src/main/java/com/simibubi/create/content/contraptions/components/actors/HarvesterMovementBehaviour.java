@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
@@ -151,24 +152,28 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	private BlockState cutCrop(World world, BlockPos pos, BlockState state) {
-		if (state.getBlock() instanceof CropsBlock) {
-			CropsBlock crop = (CropsBlock) state.getBlock();
+		Block block = state.getBlock();
+		if (block instanceof CropsBlock) {
+			CropsBlock crop = (CropsBlock) block;
 			return crop.withAge(0);
 		}
-		if (state.getBlock() == Blocks.SUGAR_CANE || state.getBlock() == Blocks.KELP) {
+		if (block == Blocks.SWEET_BERRY_BUSH) {
+			return state.with(BlockStateProperties.AGE_0_3, Integer.valueOf(1));
+		}
+		if (block == Blocks.SUGAR_CANE || block == Blocks.KELP) {
 			if (state.getFluidState()
-				.isEmpty())
+					.isEmpty())
 				return Blocks.AIR.getDefaultState();
 			return state.getFluidState()
-				.getBlockState();
+					.getBlockState();
 		}
 		if (state.getCollisionShape(world, pos)
-			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
+				.isEmpty() || block instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
-					.equals(BlockStateProperties.AGE_0_1.getName()))
+						.equals(BlockStateProperties.AGE_0_1.getName()))
 					continue;
 				return state.with((IntegerProperty) property, Integer.valueOf(0));
 			}

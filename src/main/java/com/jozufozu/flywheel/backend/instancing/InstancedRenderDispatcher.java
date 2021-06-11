@@ -71,7 +71,7 @@ public class InstancedRenderDispatcher {
 		Minecraft mc = Minecraft.getInstance();
 		ClientWorld world = mc.world;
 
-		Entity renderViewEntity = mc.renderViewEntity;
+		Entity renderViewEntity = mc.renderViewEntity != null ? mc.renderViewEntity : mc.player;
 
 		if (renderViewEntity == null) return;
 

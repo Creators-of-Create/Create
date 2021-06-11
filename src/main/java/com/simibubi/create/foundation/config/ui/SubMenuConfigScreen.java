@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.config.ui;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +16,7 @@ import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigScreenList.LabeledEntry;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
 import com.simibubi.create.foundation.config.ui.entries.EnumEntry;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
@@ -21,6 +24,7 @@ import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.config.ui.entries.ValueEntry;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ConfirmationScreen;
+import com.simibubi.create.foundation.gui.ConfirmationScreen.Response;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
@@ -161,8 +165,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				.withPadding(2, 2)
 				.withCallback((x, y) ->
 						new ConfirmationScreen()
-								.at(x, y)
-								.withText(ITextProperties.plain("You are about to reset all settings for the " + type.toString() + " config. Are you sure?"))
+								.centered()
+								.withText(ITextProperties.plain("Resetting all settings of the " + type.toString() + " config. Are you sure?"))
 								.withAction(success -> {
 									if (success)
 										resetConfig(spec.getValues());
@@ -172,7 +176,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll)));
 		resetAll.getToolTip().add(new StringTextComponent("Reset All"));
-		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all configs to their default value.", TextFormatting.GRAY, TextFormatting.GRAY));
+		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all settings to their default value.", TextFormatting.GRAY, TextFormatting.GRAY));
 
 		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
 				.withPadding(2, 2)
@@ -181,8 +185,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 						return;
 
 					new ConfirmationScreen()
-							.at(x, y)
-							.withText(ITextProperties.plain("You are about to change " + changes.size() + " value" + (changes.size() != 1 ? "s" : "") + ". Are you sure?"))
+							.centered()
+							.withText(ITextProperties.plain("Saving " + changes.size() + " changed value" + (changes.size() != 1 ? "s" : "") + ""))
 							.withAction(success -> {
 								if (success)
 									saveChanges();
@@ -200,8 +204,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 						return;
 
 					new ConfirmationScreen()
-							.at(x, y)
-							.withText(ITextProperties.plain("You are about to discard " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + ". Are you sure?"))
+							.centered()
+							.withText(ITextProperties.plain("Discarding " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + ""))
 							.withAction(success -> {
 								if (success)
 									clearChanges();
@@ -234,6 +238,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			if (obj instanceof AbstractConfig) {
 				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) obj);
 				list.children().add(entry);
+				if (configGroup.valueMap()
+						.size() == 1)
+					ScreenOpener.open(
+							new SubMenuConfigScreen(parent, humanKey, type, spec, (UnmodifiableConfig) obj));
 
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
@@ -259,8 +267,24 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			}
 		});
 
+		Collections.sort(list.children(),
+				(e, e2) -> {
+					int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
+					if (group == 0 && e instanceof LabeledEntry && e2 instanceof LabeledEntry) {
+						LabeledEntry le = (LabeledEntry) e;
+						LabeledEntry le2 = (LabeledEntry) e2;
+						return le.label.getComponent()
+								.getString()
+								.compareTo(le2.label.getComponent()
+										.getString());
+					}
+					return group;
+				});
+
 		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
+			return;
+		if (client.isSingleplayer())
 			return;
 
 		list.isForServer = true;
@@ -275,6 +299,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				.withPadding(2, 2)
 				.showingElement(stencil);
 
+
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
@@ -282,7 +307,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, red));
 			serverLocked.withBorderColors(red);
 			serverLocked.getToolTip().add(new StringTextComponent("Locked").formatted(TextFormatting.BOLD));
-			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You don't have enough permissions to edit the server config. You can still look at the current values here though.", TextFormatting.GRAY, TextFormatting.GRAY));
+			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You do not have enough permissions to edit the server config. You can still look at the current values here though.", TextFormatting.GRAY, TextFormatting.GRAY));
 		} else {
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.draw(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
@@ -298,8 +323,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
-		int x = width/2;
-		drawCenteredString(ms, client.fontRenderer, "Editing config: " + ConfigScreen.modID + ":" + type.toString().toLowerCase(Locale.ROOT) + "@" + title, x, 15, Theme.i(Theme.Key.TEXT));
+		int x = width / 2;
+		drawCenteredString(ms, client.fontRenderer, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 	}
@@ -338,42 +363,49 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	private void attemptBackstep() {
-		if (!changes.isEmpty() && parent instanceof BaseConfigScreen) {
-			new ConfirmationScreen()
-					.centered()
-					.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + " for this config."))
-					.addText(ITextProperties.plain("Leaving this screen will discard them without saving. Are you sure?"))
-					.withAction(success -> {
-						if (!success)
-							return;
-
-						changes.clear();
-						ScreenOpener.open(parent);
-					})
-					.open(this);
-		} else {
+		if (changes.isEmpty() || !(parent instanceof BaseConfigScreen)) {
 			ScreenOpener.open(parent);
+			return;
 		}
+
+		Consumer<ConfirmationScreen.Response> action = success -> {
+			if (success == Response.Cancel)
+				return;
+			if (success == Response.Confirm)
+				saveChanges();
+			changes.clear();
+			ScreenOpener.open(parent);
+		};
+
+		showLeavingPrompt(action);
 	}
 
 	@Override
 	public void onClose() {
 		if (changes.isEmpty()) {
 			super.onClose();
+			ScreenOpener.open(parent);
 			return;
 		}
 
-		new ConfirmationScreen()
-				.centered()
-				.addText(ITextProperties.plain("You still have " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + " for this config."))
-				.addText(ITextProperties.plain("Leaving this screen will discard them without saving. Are you sure?"))
-				.withAction(success -> {
-					if (!success)
-						return;
+		Consumer<ConfirmationScreen.Response> action = success -> {
+			if (success == Response.Cancel)
+				return;
+			if (success == Response.Confirm)
+				saveChanges();
+			changes.clear();
+			super.onClose();
+		};
 
-					changes.clear();
-					super.onClose();
-				})
+		showLeavingPrompt(action);
+	}
+
+	public void showLeavingPrompt(Consumer<ConfirmationScreen.Response> action) {
+		new ConfirmationScreen().centered()
+				.addText(ITextProperties.plain("Leaving with " + changes.size() + " unsaved change"
+						+ (changes.size() != 1 ? "s" : "") + " for this config"))
+				.withThreeActions(action)
 				.open(this);
 	}
+
 }

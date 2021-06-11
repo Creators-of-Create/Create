@@ -618,7 +618,7 @@ public class BearingScenes {
 			.placeNearTarget();
 		scene.idle(40);
 		scene.world.configureCenterOfRotation(plank, util.vector.centerOf(bearingPos));
-		
+
 		if (!frame) {
 			scene.world.rotateBearing(bearingPos, 180, 75);
 			scene.world.rotateSection(plank, 0, 180, 0, 75);
@@ -628,26 +628,26 @@ public class BearingScenes {
 			scene.rotateCameraY(-30);
 			scene.idle(10);
 			InputWindowElement input =
-				new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.NORTH), Pointing.RIGHT)
-					.withItem(new ItemStack(Items.BLUE_DYE));
+					new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.NORTH), Pointing.RIGHT)
+							.withItem(new ItemStack(Items.BLUE_DYE));
 			scene.overlay.showControls(input, 30);
 			scene.idle(7);
-			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
-				.with(SailBlock.FACING, Direction.WEST), false);
+			scene.world.setBlock(util.grid.at(2, 3, 1), AllBlocks.DYED_SAILS.get(DyeColor.BLUE).getDefaultState()
+					.with(SailBlock.FACING, Direction.WEST), false);
 			scene.idle(10);
 			scene.overlay.showText(40)
-				.colored(PonderPalette.BLUE)
-				.text("Right-Click with Dye to paint them")
-				.attachKeyFrame()
-				.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
-				.placeNearTarget();
+					.colored(PonderPalette.BLUE)
+					.text("Right-Click with Dye to paint them")
+					.attachKeyFrame()
+					.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.WEST))
+					.placeNearTarget();
 			scene.idle(20);
 			scene.overlay.showControls(input, 30);
 			scene.idle(7);
 			scene.world.replaceBlocks(util.select.fromTo(2, 2, 1, 2, 4, 1),
-				AllBlocks.DYED_SAILS[DyeColor.BLUE.ordinal()].getDefaultState()
-					.with(SailBlock.FACING, Direction.WEST),
-				false);
+					AllBlocks.DYED_SAILS.get(DyeColor.BLUE).getDefaultState()
+							.with(SailBlock.FACING, Direction.WEST),
+					false);
 
 			scene.idle(20);
 			scene.world.rotateBearing(bearingPos, 90, 33);

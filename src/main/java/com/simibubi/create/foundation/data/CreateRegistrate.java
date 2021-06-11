@@ -14,11 +14,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.foundation.block.IBlockVertexColor;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
@@ -34,14 +34,11 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.IItemProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -114,7 +111,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
 		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
-		return this.tileEntity(this.self(), name, (NonNullFunction) factory);
+		return this.tileEntity(this.self(), name, factory);
 	}
 
 	@Override
@@ -173,30 +170,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
-		BiConsumer<T, CasingConnectivity> consumer) {
+			BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
-		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> blockColors(Supplier<Supplier<IBlockColor>> colorFunc) {
-		return entry -> onClient(() -> () -> registerBlockColor(entry, colorFunc));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
 		return entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc));
 	}
 
-	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
-		return entry -> onClient(() -> () -> registerItemModel(entry, func));
+	public static <T extends Block> NonNullConsumer<? super T> blockModel(
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
-	public static <T extends Item> NonNullConsumer<? super T> itemColors(Supplier<Supplier<IItemColor>> colorFunc) {
-		return entry -> onClient(() -> () -> registerItemColor(entry, colorFunc));
+	public static <T extends Item> NonNullConsumer<? super T> itemModel(
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
@@ -248,20 +237,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
 		CreateClient.getCustomRenderedItems()
 			.register(entry.delegate, func.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockColor(Block entry, Supplier<Supplier<IBlockColor>> colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc.get()
-				.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerItemColor(IItemProvider entry, Supplier<Supplier<IItemColor>> colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc.get()
-				.get());
 	}
 
 }

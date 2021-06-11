@@ -116,7 +116,7 @@ public class ChainDriveScenes {
 		scene.idle(10);
 
 		scene.overlay.showText(60)
-			.text("Unpowered Chain Gearshifts behave exacly like Chain Drives")
+				.text("Unpowered Chain Gearshifts behave exactly like Chain Drives")
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(eastDrive, Direction.NORTH));
 		scene.idle(60);

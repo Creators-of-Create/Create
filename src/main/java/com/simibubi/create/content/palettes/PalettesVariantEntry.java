@@ -3,10 +3,10 @@ package com.simibubi.create.content.palettes;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllColorHandlers;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.DataIngredient;
@@ -41,7 +41,7 @@ public class PalettesVariantEntry {
 			if (pattern == PaletteBlockPattern.COBBLESTONE)
 				builder.item().tag(AllTags.AllItemTags.COBBLESTONE.tag);
 			if (pattern.hasFoliage())
-				builder.onRegister(CreateRegistrate.blockColors(() -> AllColorHandlers::getGrassyBlock));
+				builder.color(() -> ColorHandlers::getGrassyBlock);
 			pattern.createCTBehaviour(variant)
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
@@ -53,7 +53,7 @@ public class PalettesVariantEntry {
 
 			if (pattern.hasFoliage())
 				builder.item()
-					.onRegister(CreateRegistrate.itemColors(() -> AllColorHandlers::getGrassyItem))
+						.color(() -> ColorHandlers::getGrassyItem)
 					.build();
 			else
 				builder.simpleItem();

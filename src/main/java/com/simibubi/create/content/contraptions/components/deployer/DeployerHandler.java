@@ -274,7 +274,7 @@ public class DeployerHandler {
 
 		// Use on block
 		if (useBlock != DENY && flag1
-				&& safeOnUse(clickedState, world, clickedPos, player, hand, result) == ActionResultType.SUCCESS)
+				&& safeOnUse(clickedState, world, clickedPos, player, hand, result).isAccepted())
 			return;
 		if (stack.isEmpty())
 			return;
@@ -299,7 +299,7 @@ public class DeployerHandler {
 
 		// 'Inert' item use behaviour & block placement
 		ActionResultType onItemUse = stack.onItemUse(itemusecontext);
-		if (onItemUse == ActionResultType.SUCCESS)
+		if (onItemUse.isAccepted())
 			return;
 		if (item == Items.ENDER_PEARL)
 			return;

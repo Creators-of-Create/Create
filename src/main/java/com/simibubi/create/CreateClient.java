@@ -21,8 +21,8 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.item.CustomItemModels;
-import com.simibubi.create.foundation.item.CustomRenderedItems;
+import com.simibubi.create.foundation.item.render.CustomItemModels;
+import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
@@ -66,12 +66,10 @@ public class CreateClient {
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
 	private static CustomRenderedItems customRenderedItems;
-	private static AllColorHandlers colorHandlers;
 	private static CasingConnectivity casingConnectivity;
 
 	public static void addClientListeners(IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.register(getColorHandler());
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onModelBake);
@@ -184,12 +182,6 @@ public class CreateClient {
 		if (customBlockModels == null)
 			customBlockModels = new CustomBlockModels();
 		return customBlockModels;
-	}
-
-	public static AllColorHandlers getColorHandler() {
-		if (colorHandlers == null)
-			colorHandlers = new AllColorHandlers();
-		return colorHandlers;
 	}
 
 	public static CasingConnectivity getCasingConnectivity() {

@@ -92,8 +92,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		BlockRayTraceResult hit) {
 		ItemStack heldItem = player.getHeldItem(handIn);
 
-		try {
-			BasinTileEntity te = getTileEntity(worldIn, pos);
+		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
@@ -101,7 +100,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return ActionResultType.SUCCESS;
 
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
-					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
+						|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return ActionResultType.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)
@@ -128,10 +127,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
 						1f + Create.RANDOM.nextFloat());
 			te.onEmptied();
-		} catch (TileEntityException e) {
-		}
-
-		return ActionResultType.SUCCESS;
+			return ActionResultType.SUCCESS;
+		});
 	}
 
 	@Override
