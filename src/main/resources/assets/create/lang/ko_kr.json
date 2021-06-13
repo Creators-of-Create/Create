@@ -435,7 +435,7 @@
 	"item.create.chest_minecart_contraption": "장치를 붙인 상자가 실린 광산 수레",
 	"item.create.chocolate_bucket": "초콜릿 양동이",
 	"item.create.chocolate_glazed_berries": "초콜릿 발린 열매",
-	"item.create.chromatic_compound": "수용적 화합물",
+	"item.create.chromatic_compound": "혼돈의 혼합물",
 	"item.create.cinder_flour": "붉은 잿가루",
 	"item.create.copper_ingot": "구리괴",
 	"item.create.copper_nugget": "구리 조각",
@@ -478,12 +478,12 @@
 	"item.create.powdered_obsidian": "흑요석 가루",
 	"item.create.propeller": "날개",
 	"item.create.red_sand_paper": "붉은 사포 ",
-	"item.create.refined_radiance": "정제된 빛",
+	"item.create.refined_radiance": "섬세한 섬광",
 	"item.create.rose_quartz": "붉은 석영",
 	"item.create.sand_paper": "사포",
 	"item.create.schematic": "설계도",
 	"item.create.schematic_and_quill": "설계도와 깃펜",
-	"item.create.shadow_steel": "그림자 강철",
+	"item.create.shadow_steel": "그림자 금속",
 	"item.create.super_glue": "강력 접착제",
 	"item.create.sweet_roll": "스위트롤",
 	"item.create.tree_fertilizer": "나무 비료",
@@ -637,11 +637,11 @@
 	"advancement.create.blaze_cake": "폭주",
 	"advancement.create.blaze_cake.desc": "블레이즈 가열기를 위한 특별한 케이크를 만드세요.",
 	"advancement.create.chromatic_compound": "양극성 자원",
-	"advancement.create.chromatic_compound.desc": "수용적 화합물을 만드세요.",
+	"advancement.create.chromatic_compound.desc": "혼돈의 혼합물을 만드세요.",
 	"advancement.create.shadow_steel": "공허에서의 복귀",
-	"advancement.create.shadow_steel.desc": "수용적 화합물에 세계 밖의 어둠을 노출하여 무의 금속, 어둠의 강철을 만드세요.",
+	"advancement.create.shadow_steel.desc": "혼돈의 혼합물에 세계 밖의 어둠을 노출하여 무의 금속, 어둠의 강철을 만드세요.",
 	"advancement.create.refined_radiance": "빛으로부터의 자극",
-	"advancement.create.refined_radiance.desc": "수용적 화합물에 신호기의 빛을 쐬어 강력한 색채를 지닌 물질, 정제된 빛을 만드세요.",
+	"advancement.create.refined_radiance.desc": "혼돈의 혼합물에 신호기의 빛을 쐬어 강렬한 색채를 지닌 물질, 섬세한 섬광을 만드세요.",
 	"advancement.create.chromatic_age": "극과 극",
 	"advancement.create.chromatic_age.desc": "빛과 어둠의 틀을 만드세요.",
 	"advancement.create.zapper": "새로운 건축 방식",
@@ -792,7 +792,7 @@
 	"create.blockzapper.component.scope": "스코프",
 	"create.blockzapper.componentTier.none": "없음",
 	"create.blockzapper.componentTier.brass": "황동",
-	"create.blockzapper.componentTier.chromatic": "화합물",
+	"create.blockzapper.componentTier.chromatic": "혼돈",
 	"create.blockzapper.leftClickToSet": "왼쪽 버튼으로 블록을 선택할 수 있습니다",
 	"create.blockzapper.empty": "블록이 인벤토리에 없습니다!",
 
@@ -883,7 +883,7 @@
 	"create.schematicAndQuill.abort": "위치 설정을 제거했습니다.",
 	"create.schematicAndQuill.title": "설계도 이름:",
 	"create.schematicAndQuill.convert": "저장하고 즉시 적용",
-	"create.schematicAndQuill.fallbackName": "My Schematic",	//설계도의 이름이 비어있을 경우 위의 이름이 적용됩니다. 설계도의 이름에는 한글이 적용되지 않습니다. (현시점기준)
+	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "%1$s으(로) 저장했습니다",
 
 	"create.schematic.invalid": "[!] 잘못된 아이템 - 설계도 탁자를 사용하세요",
@@ -929,7 +929,7 @@
 	"create.schematic.tool.flip.description.3": "",
 
 	"create.schematics.synchronizing": "동기화 중...",
-	"create.schematics.uploadTooLarge": "설계도가 서버에서 지정한 제한을 초과합니다..",
+	"create.schematics.uploadTooLarge": "설계도가 서버에서 지정한 제한을 초과합니다...",
 	"create.schematics.maxAllowedSize": "최대 설계도 크기:",
 
 	"create.gui.schematicTable.refresh": "파일 새로고침",
@@ -1411,11 +1411,11 @@
 	"item.create.builders_tea.tooltip": "건축가의 차",
 	"item.create.builders_tea.tooltip.summary": "하루를 시작하기 위한 완벽한 차입니다. -_동기_와 _포만감_을 줍니다.",
 
-	"item.create.refined_radiance.tooltip": "정제된 빛",
-	"item.create.refined_radiance.tooltip.summary": "_흡수의 빛_으로 제련된 수용적 화합물입니다.",
+	"item.create.refined_radiance.tooltip": "섬세한 섬광",
+	"item.create.refined_radiance.tooltip.summary": "_흡수의 빛_으로 제련된 혼돈의 혼합물입니다.",
 
-	"item.create.shadow_steel.tooltip": "그림자 강철",
-	"item.create.shadow_steel.tooltip.summary": "_공허_에서 제련된 수용적 화합물입니다.",
+	"item.create.shadow_steel.tooltip": "그림자 금속",
+	"item.create.shadow_steel.tooltip.summary": "_공허_에서 제련된 혼돈의 혼합물입니다.",
 
 	"item.create.minecart_coupling.tooltip": "광산 수레 이음쇠",
 	"item.create.minecart_coupling.tooltip.summary": "_광산 수레_를 _연결_하여 장엄한 기차를 만들 수 있습니다.",
@@ -1900,9 +1900,9 @@
 
 	"create.ponder.mechanical_plough.header": "장치에서의 기계식 경작기의 이용",
 	"create.ponder.mechanical_plough.text_1": "움직이는 장치에서 기계식 경작기가 이동하면...",
-	"create.ponder.mechanical_plough.text_2": "...충돌하지 않는 블록을 파괴합니다....",
+	"create.ponder.mechanical_plough.text_2": "...충돌하지 않는 블록을 파괴합니다",
 	"create.ponder.mechanical_plough.text_3": "게다가, 경작기는 땅을 경작할 수 있습니다",
-	"create.ponder.mechanical_plough.text_4": "...엔티티에게 피해를 주지 않으면서, 엔티티를 밀어낼 수 있습니다",
+	"create.ponder.mechanical_plough.text_4": "엔티티에게 피해를 주지 않으면서, 엔티티를 밀어낼 수 있습니다",
 
 	"create.ponder.mechanical_press.header": "기계식 압착기를 통한 아이템 처리",
 	"create.ponder.mechanical_press.text_1": "기계식 압착기는 아래에 놓인 아이템을 처리할 수 있습니다",
