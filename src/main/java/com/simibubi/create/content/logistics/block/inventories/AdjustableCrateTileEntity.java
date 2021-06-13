@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -159,8 +160,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getType().getRegistryName()
-			.toString());
+		return Lang.translate("gui.adjustable_crate.title");
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {

@@ -26,7 +26,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
@@ -56,10 +55,9 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	protected IconButton resetButton;
 	protected Indicator resetIndicator;
 
-	private List<Rectangle2d> extraAreas;
+	private List<Rectangle2d> extraAreas = Collections.emptyList();
 	protected List<Widget> placementSettingWidgets;
 
-	private final ITextComponent title = Lang.translate("gui.schematicannon.title");
 	private final ITextComponent listPrinter = Lang.translate("gui.schematicannon.listPrinter");
 	private final String _gunpowderLevel = "gui.schematicannon.gunpowderLevel";
 	private final String _shotsRemaining = "gui.schematicannon.shotsRemaining";
@@ -80,20 +78,20 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	private Indicator showSettingsIndicator;
 
 	public SchematicannonScreen(SchematicannonContainer container, PlayerInventory inventory,
-								ITextComponent p_i51105_3_) {
-		super(container, inventory, p_i51105_3_);
+								ITextComponent title) {
+		super(container, inventory, title);
 		placementSettingWidgets = new ArrayList<>();
 	}
 
 	@Override
 	protected void init() {
-		setWindowSize(BG_TOP.width + 50, BG_BOTTOM.height + BG_TOP.height + 80);
+		setWindowSize(BG_TOP.width, BG_TOP.height + BG_BOTTOM.height + 2 + AllGuiTextures.PLAYER_INVENTORY.height);
+		setWindowOffset(30 - (2 + 80) / 2, 0);
 		super.init();
-
-		int x = guiLeft + 20;
-		int y = guiTop;
-
 		widgets.clear();
+
+		int x = guiLeft;
+		int y = guiTop;
 
 		// Play Pause Stop
 		playButton = new IconButton(x + 75, y + 86, AllIcons.I_PLAY);
@@ -106,16 +104,17 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		Collections.addAll(widgets, playButton, playIndicator, pauseButton, pauseIndicator, resetButton,
 			resetIndicator);
 
-		extraAreas = new ArrayList<>();
-		extraAreas.add(new Rectangle2d(guiLeft + 240, guiTop + 88, 84, 113));
-
 		confirmButton = new IconButton(x + 180, guiTop + 117, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
-		showSettingsButton = new IconButton(guiLeft + 29, guiTop + 117, AllIcons.I_PLACEMENT_SETTINGS);
+		showSettingsButton = new IconButton(guiLeft + 9, guiTop + 117, AllIcons.I_PLACEMENT_SETTINGS);
 		showSettingsButton.setToolTip(Lang.translate(_showSettings));
 		widgets.add(showSettingsButton);
-		showSettingsIndicator = new Indicator(guiLeft + 29, guiTop + 111, StringTextComponent.EMPTY);
+		showSettingsIndicator = new Indicator(guiLeft + 9, guiTop + 111, StringTextComponent.EMPTY);
 		widgets.add(showSettingsIndicator);
+
+		extraAreas = ImmutableList.of(
+			new Rectangle2d(guiLeft + BG_TOP.width, guiTop + BG_TOP.height + BG_BOTTOM.height - 62, 84, 92)
+		);
 
 		tick();
 	}
@@ -127,7 +126,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (placementSettingsHidden())
 			return;
 
-		int x = guiLeft + 20;
+		int x = guiLeft;
 		int y = guiTop;
 
 		// Replace settings
@@ -247,49 +246,48 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.PLAYER_INVENTORY.draw(matrixStack, this, guiLeft - 10, guiTop + 145);
-		BG_TOP.draw(matrixStack, this, guiLeft + 20, guiTop);
-		BG_BOTTOM.draw(matrixStack, this, guiLeft + 20, guiTop + BG_TOP.height);
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int invLeft = guiLeft - windowXOffset + (xSize - AllGuiTextures.PLAYER_INVENTORY.width) / 2;
+		int invTop = guiTop + BG_TOP.height + BG_BOTTOM.height + 2;
+
+		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+
+		BG_TOP.draw(ms, this, guiLeft, guiTop);
+		BG_BOTTOM.draw(ms, this, guiLeft, guiTop + BG_TOP.height);
 
 		SchematicannonTileEntity te = container.getTileEntity();
-		renderPrintingProgress(matrixStack, te.schematicProgress);
-		renderFuelBar(matrixStack, te.fuelLevel);
-		renderChecklistPrinterProgress(matrixStack, te.bookPrintingProgress);
+		renderPrintingProgress(ms, te.schematicProgress);
+		renderFuelBar(ms, te.fuelLevel);
+		renderChecklistPrinterProgress(ms, te.bookPrintingProgress);
 
 		if (!te.inventory.getStackInSlot(0)
 			.isEmpty())
-			renderBlueprintHighlight(matrixStack);
+			renderBlueprintHighlight(ms);
 
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 230, guiTop + 110, -200)
+			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + BG_TOP.width, guiTop + BG_TOP.height + BG_BOTTOM.height - 48, -200)
 			.scale(5)
-			.render(matrixStack);
+			.render(ms);
 
-		textRenderer.drawWithShadow(matrixStack, title, guiLeft + 80, guiTop + 3, 0xfefefe);
+		drawCenteredText(ms, textRenderer, title, guiLeft + (BG_TOP.width - 8) / 2, guiTop + 3, 0xFFFFFF);
 
 		ITextComponent msg = Lang.translate("schematicannon.status." + te.statusMsg);
 		int stringWidth = textRenderer.getWidth(msg);
 
 		if (te.missingItem != null) {
-			stringWidth += 15;
+			stringWidth += 16;
 			GuiGameElement.of(te.missingItem)
-				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 150, guiTop + 46, 100)
+				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 128, guiTop + 49, 100)
 				.scale(1)
-				.render(matrixStack);
+				.render(ms);
 		}
 
-		textRenderer.drawWithShadow(matrixStack, msg, guiLeft + 20 + 102 - stringWidth / 2, guiTop + 50, 0xCCDDFF);
-		textRenderer.draw(matrixStack, playerInventory.getDisplayName(), guiLeft - 10 + 7, guiTop + 145 + 6, 0x666666);
-
-		// to see or debug the bounds of the extra area uncomment the following lines
-		// Rectangle2d r = extraAreas.get(0);
-		// fill(r.getX() + r.getWidth(), r.getY() + r.getHeight(), r.getX(), r.getY(),
-		// 0xd3d3d3d3);
+		textRenderer.drawWithShadow(ms, msg, guiLeft + 103 - stringWidth / 2, guiTop + 53, 0xCCDDFF);
 	}
 
 	protected void renderBlueprintHighlight(MatrixStack matrixStack) {
-		AllGuiTextures.SCHEMATICANNON_HIGHLIGHT.draw(matrixStack, this, guiLeft + 20 + 10, guiTop + 60);
+		AllGuiTextures.SCHEMATICANNON_HIGHLIGHT.draw(matrixStack, this, guiLeft + 10, guiTop + 60);
 	}
 
 	protected void renderPrintingProgress(MatrixStack matrixStack, float progress) {
@@ -297,7 +295,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_PROGRESS;
 		client.getTextureManager()
 			.bindTexture(sprite.location);
-		drawTexture(matrixStack, guiLeft + 20 + 44, guiTop + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress),
+		drawTexture(matrixStack, guiLeft + 44, guiTop + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 			sprite.height);
 	}
 
@@ -305,19 +303,19 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_CHECKLIST_PROGRESS;
 		client.getTextureManager()
 			.bindTexture(sprite.location);
-		drawTexture(matrixStack, guiLeft + 20 + 154, guiTop + 20, sprite.startX, sprite.startY, (int) (sprite.width * progress),
+		drawTexture(matrixStack, guiLeft + 154, guiTop + 20, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 			sprite.height);
 	}
 
 	protected void renderFuelBar(MatrixStack matrixStack, float amount) {
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_FUEL;
 		if (container.getTileEntity().hasCreativeCrate) {
-			AllGuiTextures.SCHEMATICANNON_FUEL_CREATIVE.draw(matrixStack, this, guiLeft + 20 + 36, guiTop + 19);
+			AllGuiTextures.SCHEMATICANNON_FUEL_CREATIVE.draw(matrixStack, this, guiLeft + 36, guiTop + 19);
 			return;
 		}
 		client.getTextureManager()
 			.bindTexture(sprite.location);
-		drawTexture(matrixStack, guiLeft + 20 + 36, guiTop + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount),
+		drawTexture(matrixStack, guiLeft + 36, guiTop + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount),
 			sprite.height);
 	}
 
@@ -325,7 +323,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		SchematicannonTileEntity te = container.getTileEntity();
 
-		int fuelX = guiLeft + 20 + 36, fuelY = guiTop + 19;
+		int fuelX = guiLeft + 36, fuelY = guiTop + 19;
 		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + AllGuiTextures.SCHEMATICANNON_FUEL.width
 			&& mouseY <= fuelY + AllGuiTextures.SCHEMATICANNON_FUEL.height) {
 			List<ITextComponent> tooltip = getFuelLevelTooltip(te);
@@ -348,14 +346,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		if (te.missingItem != null) {
-			int missingBlockX = guiLeft + 150, missingBlockY = guiTop + 46;
+			int missingBlockX = guiLeft + 128, missingBlockY = guiTop + 49;
 			if (mouseX >= missingBlockX && mouseY >= missingBlockY && mouseX <= missingBlockX + 16
 				&& mouseY <= missingBlockY + 16) {
 				renderTooltip(matrixStack, te.missingItem, mouseX, mouseY);
 			}
 		}
 
-		int paperX = guiLeft + 132, paperY = guiTop + 19;
+		int paperX = guiLeft + 112, paperY = guiTop + 19;
 		if (mouseX >= paperX && mouseY >= paperY && mouseX <= paperX + 16 && mouseY <= paperY + 16)
 			renderTooltip(matrixStack, listPrinter, mouseX, mouseY);
 
@@ -393,7 +391,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		if (confirmButton.isHovered()) {
-			Minecraft.getInstance().player.closeScreen();
+			client.player.closeScreen();
 			return true;
 		}
 

@@ -46,7 +46,7 @@ public class SchematicTableContainer extends Container {
 	}
 
 	protected void init() {
-		inputSlot = new SlotItemHandler(te.inventory, 0, -35, 41) {
+		inputSlot = new SlotItemHandler(te.inventory, 0, 21, 57) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return AllItems.EMPTY_SCHEMATIC.isIn(stack) || AllItems.SCHEMATIC_AND_QUILL.isIn(stack)
@@ -54,7 +54,7 @@ public class SchematicTableContainer extends Container {
 			}
 		};
 
-		outputSlot = new SlotItemHandler(te.inventory, 1, 110, 41) {
+		outputSlot = new SlotItemHandler(te.inventory, 1, 166, 57) {
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return false;
@@ -67,12 +67,12 @@ public class SchematicTableContainer extends Container {
 		// player Slots
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
-				this.addSlot(new Slot(player.inventory, col + row * 9 + 9, 12 + col * 18, 102 + row * 18));
+				this.addSlot(new Slot(player.inventory, col + row * 9 + 9, 38 + col * 18, 105 + row * 18));
 			}
 		}
 
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
-			this.addSlot(new Slot(player.inventory, hotbarSlot, 12 + hotbarSlot * 18, 160));
+			this.addSlot(new Slot(player.inventory, hotbarSlot, 38 + hotbarSlot * 18, 163));
 		}
 
 		detectAndSendChanges();

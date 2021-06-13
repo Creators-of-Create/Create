@@ -53,7 +53,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -514,7 +514,8 @@ public class BlueprintEntity extends HangingEntity
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return new StringTextComponent("");
+			return new TranslationTextComponent(AllItems.CRAFTING_BLUEPRINT.get()
+				.getTranslationKey());
 		}
 
 	}

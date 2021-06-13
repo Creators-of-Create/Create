@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.item;
 
+import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.foundation.gui.IClearableContainer;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,6 +33,10 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 		init();
 	}
 
+	public static LinkedControllerContainer create(int id, PlayerInventory inv, ItemStack filterItem) {
+		return new LinkedControllerContainer(AllContainerTypes.LINKED_CONTROLLER.get(), id, inv, filterItem);
+	}
+
 	protected void init() {
 		this.filterInventory = createFilterInventory();
 //		readData(mainItem);
@@ -40,15 +45,9 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 		detectAndSendChanges();
 	}
 
-	@Override
-	public void clearContents() {
-		for (int i = 0; i < filterInventory.getSlots(); i++)
-			filterInventory.setStackInSlot(i, ItemStack.EMPTY);
-	}
-
 	protected void addPlayerSlots() {
-		int x = 22;
-		int y = 142;
+		int x = 9;
+		int y = 131;
 
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
 			this.addSlot(new Slot(playerInventory, hotbarSlot, x + hotbarSlot * 18, y + 58));
@@ -58,9 +57,9 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	}
 
 	protected void addLinkSlots() {
-		int slot = 0;
 		int x = 12;
-		int y = 44;
+		int y = 34;
+		int slot = 0;
 		
 		for (int column = 0; column < 6; column++) {
 			for (int row = 0; row < 2; ++row)
@@ -69,6 +68,12 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 			if (column == 3)
 				x += 11;
 		}
+	}
+
+	@Override
+	public void clearContents() {
+		for (int i = 0; i < filterInventory.getSlots(); i++)
+			filterInventory.setStackInSlot(i, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -149,4 +154,5 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 			.put("Items", filterInventory.serializeNBT());
 //		saveData(filterItem);
 	}
+
 }

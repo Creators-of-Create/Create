@@ -46,7 +46,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> imp
 
 	@Override
 	protected void addSlots() {
-		addPlayerSlots(33, 137);
+		addPlayerSlots(9, 131);
 
 		int x = 29;
 		int y = 21;

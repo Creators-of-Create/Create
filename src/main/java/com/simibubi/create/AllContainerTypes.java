@@ -39,10 +39,10 @@ public class AllContainerTypes {
 
 	public static final ContainerEntry<AttributeFilterContainer> ATTRIBUTE_FILTER =
 		register("attribute_filter", AttributeFilterContainer::new, () -> AttributeFilterScreen::new);
-	
+
 	public static final ContainerEntry<BlueprintContainer> CRAFTING_BLUEPRINT =
 		register("crafting_blueprint", BlueprintContainer::new, () -> BlueprintScreen::new);
-	
+
 	public static final ContainerEntry<LinkedControllerContainer> LINKED_CONTROLLER =
 		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
 

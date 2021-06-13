@@ -43,7 +43,7 @@ public class SchematicannonContainer extends Container {
 	}
 
 	protected void init() {
-		int x = 20;
+		int x = 0;
 		int y = 0;
 
 		addSlot(new SlotItemHandler(te.inventory, 0, x + 15, y + 65));
@@ -55,9 +55,9 @@ public class SchematicannonContainer extends Container {
 		// player Slots
 		for (int row = 0; row < 3; ++row) 
 			for (int col = 0; col < 9; ++col) 
-				addSlot(new Slot(player.inventory, col + row * 9 + 9, -2 + col * 18, 163 + row * 18));
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) 
-			addSlot(new Slot(player.inventory, hotbarSlot, -2 + hotbarSlot * 18, 221));
+				addSlot(new Slot(player.inventory, col + row * 9 + 9, 37 + col * 18, 161 + row * 18));
+		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
+			addSlot(new Slot(player.inventory, hotbarSlot, 37 + hotbarSlot * 18, 219));
 
 		detectAndSendChanges();
 	}

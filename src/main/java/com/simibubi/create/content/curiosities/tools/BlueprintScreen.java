@@ -9,7 +9,6 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -21,7 +20,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -42,38 +40,40 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width + 50, background.height + PLAYER_INVENTORY.height + 20);
+		setWindowSize(background.width, background.height + 4 + PLAYER_INVENTORY.height);
 		super.init();
 		widgets.clear();
-		int x = guiLeft;
-		int offset = guiTop < 30 ? 30 - guiTop : 0;
-		extraAreas =
-			ImmutableList.of(new Rectangle2d(x, guiTop + offset, background.width + 70, background.height - offset));
 
-		resetButton = new IconButton(x + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
-		confirmButton = new IconButton(x + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		int x = guiLeft;
+		int y = guiTop;
+
+		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
+
+		extraAreas = ImmutableList.of(
+			new Rectangle2d(x + background.width, guiTop + background.height - 36, 56, 44)
+		);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int invLeft = guiLeft - windowXOffset + (xSize - PLAYER_INVENTORY.width) / 2;
+		int invTop = guiTop + background.height + 4;
+
+		PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+
 		int x = guiLeft;
 		int y = guiTop;
+
 		background.draw(ms, this, x, y);
+		textRenderer.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
-		int invX = guiLeft + 25;
-		int invY = y + background.height + 10;
-		PLAYER_INVENTORY.draw(ms, this, invX, invY);
-
-		String localizedName = I18n.format(AllItems.CRAFTING_BLUEPRINT.get()
-			.getTranslationKey());
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
-		textRenderer.draw(ms, localizedName, x + 15, y + 4, 0xFFFFFF);
-
-		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
-			.GuiRenderBuilder>at(x + background.width + 20, guiTop + background.height - 35, 0)
+		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1)
+			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 20, guiTop + background.height - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)
 			.render(ms);
@@ -189,4 +189,5 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	public List<Rectangle2d> getExtraAreas() {
 		return extraAreas;
 	}
+
 }

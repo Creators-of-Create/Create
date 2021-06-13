@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;
@@ -61,7 +62,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
@@ -908,7 +908,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundNBT data) {
-		if (state.getBlock()
+		if (!state.getBlock()
 			.isAir(state, world, target))
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getPos(), target, stack, state, data));
@@ -937,8 +937,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getType().getRegistryName()
-			.toString());
+		return Lang.translate("gui.schematicannon.title");
 	}
 
 	public void updateChecklist() {

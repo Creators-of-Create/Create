@@ -61,8 +61,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void init() {
+		setWindowOffset(-11, 7);
 		super.init();
-		int x = guiLeft - 50;
+
+		int x = guiLeft;
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
@@ -103,7 +105,6 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 			.append(at.getFirst()
 				.format(at.getSecond()))
 			.formatted(TextFormatting.GRAY)));
-
 	}
 
 	private void referenceItemChanged(ItemStack stack) {
@@ -163,9 +164,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		ItemStack stack = container.ghostInventory.getStackInSlot(1);
 		matrixStack.push();
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
-		this.setZOffset(200);
-		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft - 27, guiTop + 57,
+		this.setZOffset(150);
+		this.itemRenderer.zLevel = 150.0F;
+		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 22, guiTop + 57,
 			String.valueOf(selectedAttributes.size() - 1));
 		this.setZOffset(0);
 		this.itemRenderer.zLevel = 0.0F;

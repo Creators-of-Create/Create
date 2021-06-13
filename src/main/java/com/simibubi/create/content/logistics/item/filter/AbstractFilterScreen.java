@@ -22,7 +22,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -42,37 +41,42 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void init() {
-		setWindowSize(PLAYER_INVENTORY.width, background.height + PLAYER_INVENTORY.height + 20);
+		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
 		super.init();
 		widgets.clear();
-		int x = guiLeft - 50;
-		int offset = guiTop < 30 ? 30 - guiTop : 0;
-		extraAreas = ImmutableList.of(new Rectangle2d(x, guiTop + offset, background.width + 70, background.height - offset));
 
-		resetButton = new IconButton(x + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
-		confirmButton = new IconButton(x + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		int x = guiLeft;
+		int y = guiTop;
+
+		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
+
+		extraAreas = ImmutableList.of(
+			new Rectangle2d(x + background.width, y + background.height - 40, 80, 48)
+		);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int x = guiLeft - 50;
-		int y = guiTop;
-		background.draw(ms, this, x, y);
+		int invLeft = guiLeft - windowXOffset + (xSize - PLAYER_INVENTORY.width) / 2;
+		int invTop = guiTop + background.height + 4;
 
-		int invX = guiLeft;
-		int invY = y + background.height + 10;
-		PLAYER_INVENTORY.draw(ms, this, invX, invY);
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
-		textRenderer.draw(ms, I18n.format(container.contentHolder.getTranslationKey()), x + 15, y + 3, 0xdedede);
+		PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+
+		int x = guiLeft;
+		int y = guiTop;
+
+		background.draw(ms, this, x, y);
+		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(container.contentHolder)
-				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, guiTop + background.height - 60, -200)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, y + background.height - 56, -200)
 				.scale(5)
 				.render(ms);
-
 	}
 
 	@Override
@@ -164,4 +168,5 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	public List<Rectangle2d> getExtraAreas() {
 		return extraAreas;
 	}
+
 }

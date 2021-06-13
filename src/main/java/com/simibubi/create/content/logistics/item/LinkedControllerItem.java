@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.item;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
@@ -31,8 +30,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class LinkedControllerItem extends Item implements INamedContainerProvider {
 
-	public LinkedControllerItem(Properties p_i48487_1_) {
-		super(p_i48487_1_);
+	public LinkedControllerItem(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -105,7 +104,7 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
 		ItemStack heldItem = player.getHeldItemMainhand();
-		return new LinkedControllerContainer(AllContainerTypes.LINKED_CONTROLLER.get(), id, inv, heldItem);
+		return LinkedControllerContainer.create(id, inv, heldItem);
 	}
 
 	@Override
