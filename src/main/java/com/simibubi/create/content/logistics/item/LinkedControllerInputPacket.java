@@ -42,6 +42,9 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 		UUID uniqueID = player.getUniqueID();
 		BlockPos pos = player.getBlockPos();
 
+		if (player.isSpectator() && press)
+			return;
+
 		LinkedControllerServerHandler.receivePressed(world, pos, uniqueID, activatedButtons.stream()
 			.map(i -> LinkedControllerItem.toFrequency(heldItem, i))
 			.collect(Collectors.toList()), press);
