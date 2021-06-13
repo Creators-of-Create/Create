@@ -1068,8 +1068,8 @@
 	"create.gui.attribute_filter.deny_list.description": "목록에 나와 있는 특성이 있지 않은 아이템만 통과됩니다.",
 	"create.gui.attribute_filter.add_reference_item": "참조할 아이템을 넣어주세요",
 
-	"create.tooltip.holdForDescription": "[%1$s]을(를) 누르면 설명이 나옵니다",
-	"create.tooltip.holdForControls": "[%1$s]을(를) 누르면 조작법이 나옵니다",
+	"create.tooltip.holdForDescription": "[%1$s]을(를) 누르면 설명을 확인합니다",
+	"create.tooltip.holdForControls": "[%1$s]을(를) 누르면 조작법을 확인합니다",
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "요구 속도: %1$s",
