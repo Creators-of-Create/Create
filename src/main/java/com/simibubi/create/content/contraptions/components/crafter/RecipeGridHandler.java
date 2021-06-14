@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
+
+import net.minecraft.item.crafting.FireworkRocketRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -145,6 +149,7 @@ public class RecipeGridHandler {
 		if (AllConfigs.SERVER.recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
 				.getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
+				.filter(r -> isRecipeAllowed(r, craftinginventory))
 				.map(r -> r.getCraftingResult(craftinginventory))
 				.orElse(null);
 		if (result == null)
@@ -152,6 +157,17 @@ public class RecipeGridHandler {
 				.map(r -> r.getCraftingResult(craftinginventory))
 				.orElse(null);
 		return result;
+	}
+
+	public static boolean isRecipeAllowed(ICraftingRecipe recipe, CraftingInventory inventory) {
+		if (!AllConfigs.SERVER.recipes.allowBiggerFireworksInCrafter.get() && recipe instanceof FireworkRocketRecipe) {
+			int numItems = IntStream.range(0, inventory.getSizeInventory())
+				.map(i -> inventory.getStackInSlot(i).isEmpty() ? 0 : 1)
+				.sum();
+			if (numItems > 9)
+				return false;
+		}
+		return true;
 	}
 
 	public static class GroupedItems {

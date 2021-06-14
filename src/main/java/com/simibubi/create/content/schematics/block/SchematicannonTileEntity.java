@@ -150,7 +150,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
 		state = State.STOPPED;
-		printingEntityIndex = 0;
+		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks = new LinkedList<>();
 		replaceMode = 2;
@@ -594,7 +594,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		schematicLoaded = true;
 		state = State.PAUSED;
 		statusMsg = "ready";
-		printingEntityIndex = 0;
+		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks.clear();
 		updateChecklist();
@@ -699,9 +699,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		if (printStage == PrintStage.ENTITIES) {
-			if (printingEntityIndex < entities.size()) {
-				currentPos = entities.get(printingEntityIndex).getBlockPos().subtract(schematicAnchor);
+			if (printingEntityIndex + 1 < entities.size()) {
 				printingEntityIndex++;
+				currentPos = entities.get(printingEntityIndex).getBlockPos().subtract(schematicAnchor);
 			} else {
 				finishedPrinting();
 			}

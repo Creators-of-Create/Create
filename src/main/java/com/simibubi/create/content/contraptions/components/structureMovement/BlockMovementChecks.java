@@ -29,6 +29,8 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
+import com.simibubi.create.foundation.config.AllConfigs;
+
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.AbstractSignBlock;
@@ -47,6 +49,7 @@ import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.block.RedstoneWallTorchBlock;
 import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.StandingSignBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallSignBlock;
@@ -188,6 +191,8 @@ public class BlockMovementChecks {
 		if (state.getBlockHardness(world, pos) == -1)
 			return false;
 		if (AllBlockTags.NON_MOVABLE.matches(state))
+			return false;
+		if (!AllConfigs.SERVER.kinetics.movableSpawners.get() && block instanceof SpawnerBlock)
 			return false;
 
 		// Move controllers only when they aren't moving

@@ -50,6 +50,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	// Search
 	static final int searchedPerTick = 256;
+	static final int validationTimerMin = 160;
 	List<BlockPosEntry> frontier;
 	Set<BlockPos> visited;
 
@@ -67,12 +68,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		counterpartActed = true;
 	}
 
-	private int validationTimer() {
+	protected int validationTimer() {
 		int maxBlocks = maxBlocks();
-		return infinite || maxBlocks < 0
-			? 160
-			// Allow enough time for the server's infinite block threshold to be reached
-			: maxBlocks / searchedPerTick;
+		// Allow enough time for the server's infinite block threshold to be reached
+		return maxBlocks < 0 ? validationTimerMin : Math.max(validationTimerMin, maxBlocks / searchedPerTick + 1);
 	}
 
 	protected int setValidationTimer() {
@@ -184,7 +183,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				frontier.add(new BlockPosEntry(offsetPos, entry.distance + 1));
 			}
 		}
-		
+
 		return fluid;
 	}
 
@@ -204,7 +203,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		if (world instanceof ServerWorld)
 			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, new FluidStack(fluid, 1)));
 	}
-	
+
 	protected boolean canDrainInfinitely(Fluid fluid) {
 		return maxBlocks() != -1; //  && !AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
 	}
