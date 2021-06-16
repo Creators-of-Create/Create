@@ -133,9 +133,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addButton(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.return"),
+		addButton(new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"),
 			$ -> onClose()));
-		addButton(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.configure"),
+		addButton(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
 		Button gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
@@ -148,11 +148,11 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
 		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
-		addButton(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.project_page"),
+		addButton(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
 			$ -> linkTo(projectLink)));
 		addButton(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(issueTrackerLink)));
-		addButton(new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.support"),
+		addButton(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
 			$ -> linkTo(supportLink)));
 	}
 
