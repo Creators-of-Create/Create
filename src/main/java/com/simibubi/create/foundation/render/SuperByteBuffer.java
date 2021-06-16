@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +38,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 
 	// Vertex Texture Coords
 	private SpriteShiftFunc spriteShiftFunc;
+	private boolean isEntityModel;
 
 	// Vertex Lighting
 	private boolean shouldLight;
@@ -78,7 +80,6 @@ public class SuperByteBuffer extends TemplateBuffer {
 		Matrix3f normalMat = transforms.peek()
 			.getNormal()
 			.copy();
-		// normalMat.multiply(transforms.peek().getNormal());
 
 		Matrix4f modelMat = input.peek()
 			.getModel()
@@ -119,9 +120,9 @@ public class SuperByteBuffer extends TemplateBuffer {
 			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
-			// builder.color((byte) Math.max(0, nx * 255), (byte) Math.max(0, ny * 255), (byte) Math.max(0, nz * 255), a);
-			if (shouldColor) {
-				// float lum = (r < 0 ? 255 + r : r) / 256f;
+			if (isEntityModel) {
+				builder.color(255, 255, 255, 255);
+			} else if (shouldColor) {
 				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
 				int colorG = Math.min(255, (int) (((float) this.g) * instanceDiffuse));
 				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
@@ -141,7 +142,10 @@ public class SuperByteBuffer extends TemplateBuffer {
 				spriteShiftFunc.shift(builder, u, v);
 			} else
 				builder.texture(u, v);
-
+			
+			if (isEntityModel)
+				builder.overlay(OverlayTexture.DEFAULT_UV);
+			
 			if (shouldLight) {
 				int light = packedLightCoords;
 				if (lightTransform != null) {
@@ -158,14 +162,18 @@ public class SuperByteBuffer extends TemplateBuffer {
 			} else
 				builder.light(getLight(buffer, i));
 
-			builder.normal(nx, ny, nz)
-				.endVertex();
+			if (isEntityModel)
+				builder.normal(input.peek().getNormal(), nx, ny, nz);
+			else
+				builder.normal(nx, ny, nz);
+			builder.endVertex();
 		}
 
 		transforms = new MatrixStack();
 
 		spriteShiftFunc = null;
 		shouldColor = false;
+		isEntityModel = false;
 		shouldLight = false;
 		otherBlockLight = -1;
 	}
@@ -286,6 +294,11 @@ public class SuperByteBuffer extends TemplateBuffer {
 		a = 255;
 		return this;
 	}
+	
+	public SuperByteBuffer asEntityModel() {
+		isEntityModel = true;
+		return this;
+	}
 
 	private static int getLight(World world, Vector4f lightPos) {
 		BlockPos.Mutable pos = new BlockPos.Mutable();
@@ -295,7 +308,7 @@ public class SuperByteBuffer extends TemplateBuffer {
 		block += blockLightCache.computeIfAbsent(pos.toLong(), $ -> world.getLightLevel(LightType.BLOCK, pos));
 		return ((int) sky) << 20 | ((int) block) << 4;
 	}
-
+	
 	public boolean isEmpty() {
 		return ((Buffer) template).limit() == 0;
 	}

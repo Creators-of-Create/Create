@@ -59,6 +59,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
@@ -244,6 +245,36 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
+	public boolean hitByEntity(Entity source) {
+		if (!(source instanceof PlayerEntity) || world.isRemote)
+			return super.hitByEntity(source);
+
+		PlayerEntity player = (PlayerEntity) source;
+		double attrib = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+			.getValue() + (player.isCreative() ? 0 : -0.5F);
+
+		Vector3d eyePos = source.getEyePosition(1);
+		Vector3d look = source.getLook(1);
+		Vector3d target = eyePos.add(look.scale(attrib));
+		
+		Optional<Vector3d> rayTrace = getBoundingBox().rayTrace(eyePos, target);
+		if (!rayTrace.isPresent())
+			return super.hitByEntity(source);
+		
+		Vector3d hitVec = rayTrace.get();
+		BlueprintSection sectionAt = getSectionAt(hitVec.subtract(getPositionVec()));
+		ItemStackHandler items = sectionAt.getItems();
+
+		if (items.getStackInSlot(9)
+			.isEmpty())
+			return super.hitByEntity(source);
+		for (int i = 0; i < items.getSlots(); i++)
+			items.setStackInSlot(i, ItemStack.EMPTY);
+		sectionAt.save(items);
+		return true;
+	}
+
+	@Override
 	public void onBroken(@Nullable Entity p_110128_1_) {
 		if (!world.getGameRules()
 			.getBoolean(GameRules.DO_ENTITY_DROPS))
@@ -309,98 +340,88 @@ public class BlueprintEntity extends HangingEntity
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
 
+		boolean holdingWrench = AllItems.WRENCH.isIn(player.getHeldItem(hand));
 		BlueprintSection section = getSectionAt(vec);
+		ItemStackHandler items = section.getItems();
 
-		if (!AllItems.WRENCH.isIn(player.getHeldItem(hand)) && !world.isRemote) {
-			boolean empty = true;
-			ItemStackHandler items = section.getItems();
-			for (int i = 0; i < 9; i++) {
-				if (!items.getStackInSlot(i)
-					.isEmpty()) {
-					empty = false;
+		if (!holdingWrench && !world.isRemote && !items.getStackInSlot(9)
+			.isEmpty()) {
+
+			IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
+			boolean firstPass = true;
+			int amountCrafted = 0;
+			ForgeHooks.setCraftingPlayer(player);
+			Optional<ICraftingRecipe> recipe = Optional.empty();
+
+			do {
+				Map<Integer, ItemStack> stacksTaken = new HashMap<>();
+				Map<Integer, ItemStack> craftingGrid = new HashMap<>();
+				boolean success = true;
+
+				Search: for (int i = 0; i < 9; i++) {
+					ItemStack requestedItem = items.getStackInSlot(i);
+					if (requestedItem.isEmpty()) {
+						craftingGrid.put(i, ItemStack.EMPTY);
+						continue;
+					}
+
+					for (int slot = 0; slot < playerInv.getSlots(); slot++) {
+						if (!FilterItem.test(world, playerInv.getStackInSlot(slot), requestedItem))
+							continue;
+						ItemStack currentItem = playerInv.extractItem(slot, 1, false);
+						if (stacksTaken.containsKey(slot))
+							stacksTaken.get(slot)
+								.grow(1);
+						else
+							stacksTaken.put(slot, currentItem.copy());
+						craftingGrid.put(i, currentItem);
+						continue Search;
+					}
+
+					success = false;
 					break;
 				}
-			}
 
-			if (!empty) {
-				IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
-				boolean firstPass = true;
-				int amountCrafted = 0;
-				ForgeHooks.setCraftingPlayer(player);
-				Optional<ICraftingRecipe> recipe = Optional.empty();
+				if (success) {
+					CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 
-				do {
-					Map<Integer, ItemStack> stacksTaken = new HashMap<>();
-					Map<Integer, ItemStack> craftingGrid = new HashMap<>();
-					boolean success = true;
+					if (!recipe.isPresent())
+						recipe = world.getRecipeManager()
+							.getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
+					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, world))
+						.map(r -> r.getCraftingResult(craftingInventory))
+						.orElse(ItemStack.EMPTY);
 
-					Search: for (int i = 0; i < 9; i++) {
-						ItemStack requestedItem = items.getStackInSlot(i);
-						if (requestedItem.isEmpty()) {
-							craftingGrid.put(i, ItemStack.EMPTY);
-							continue;
-						}
-
-						for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-							if (!FilterItem.test(world, playerInv.getStackInSlot(slot), requestedItem))
-								continue;
-							ItemStack currentItem = playerInv.extractItem(slot, 1, false);
-							if (stacksTaken.containsKey(slot)) {
-								stacksTaken.get(slot)
-									.grow(1);
-							} else {
-								stacksTaken.put(slot, currentItem.copy());
-							}
-							craftingGrid.put(i, currentItem);
-							continue Search;
-						}
-
+					if (result.isEmpty()) {
 						success = false;
-						break;
+					} else if (result.getCount() + amountCrafted > 64) {
+						success = false;
+					} else {
+						amountCrafted += result.getCount();
+						result.onCrafting(player.world, player, 1);
+						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
+						NonNullList<ItemStack> nonnulllist = world.getRecipeManager()
+							.getRecipeNonNull(IRecipeType.CRAFTING, craftingInventory, world);
+
+						if (firstPass)
+							world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP,
+								SoundCategory.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
+						player.inventory.placeItemBackInInventory(world, result);
+						for (ItemStack itemStack : nonnulllist)
+							player.inventory.placeItemBackInInventory(world, itemStack);
+						firstPass = false;
 					}
+				}
 
-					if (success) {
-						CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
+				if (!success) {
+					for (Entry<Integer, ItemStack> entry : stacksTaken.entrySet())
+						playerInv.insertItem(entry.getKey(), entry.getValue(), false);
+					break;
+				}
 
-						if (!recipe.isPresent())
-							recipe = world.getRecipeManager()
-								.getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
-						ItemStack result = recipe.filter(r -> r.matches(craftingInventory, world))
-							.map(r -> r.getCraftingResult(craftingInventory))
-							.orElse(ItemStack.EMPTY);
-
-						if (result.isEmpty()) {
-							success = false;
-						} else if (result.getCount() + amountCrafted > 64) {
-							success = false;
-						} else {
-							amountCrafted += result.getCount();
-							result.onCrafting(player.world, player, 1);
-							BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
-							NonNullList<ItemStack> nonnulllist = world.getRecipeManager()
-								.getRecipeNonNull(IRecipeType.CRAFTING, craftingInventory, world);
-
-							if (firstPass)
-								world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP,
-									SoundCategory.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
-							player.inventory.placeItemBackInInventory(world, result);
-							for (ItemStack itemStack : nonnulllist)
-								player.inventory.placeItemBackInInventory(world, itemStack);
-							firstPass = false;
-						}
-					}
-
-					if (!success) {
-						for (Entry<Integer, ItemStack> entry : stacksTaken.entrySet())
-							playerInv.insertItem(entry.getKey(), entry.getValue(), false);
-						break;
-					}
-
-				} while (player.isSneaking());
-				ForgeHooks.setCraftingPlayer(null);
-
-				return ActionResultType.SUCCESS;
-			}
+			} while (player.isSneaking());
+			ForgeHooks.setCraftingPlayer(null);
+			return ActionResultType.SUCCESS;
 		}
 
 		int i = section.index;

@@ -17,8 +17,11 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 
 public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
@@ -40,15 +43,30 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 			.translate(-.5, -1 / 32f, -.5);
 		if (entity.size == 2)
 			sbb.translate(.5, 0, -.5);
-		sbb.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+
+		RenderType entitySolid = RenderType.getEntitySolid(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+		sbb.asEntityModel()
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(entitySolid));
 		super.render(entity, yaw, pt, ms, buffer, light);
 
 		ms.push();
 
+		float fakeNormalXRotation = -15;
+		int bl = light >> 4 & 0xf;
+		int sl = light >> 20 & 0xf;
+		boolean vertical = entity.rotationPitch != 0;
+		if (entity.rotationPitch == -90) 
+			fakeNormalXRotation = -45;
+		else if (entity.rotationPitch == 90 || yaw % 180 != 0) {
+			bl /= 1.35;
+			sl /= 1.35;
+		}
+		int itemLight = MathHelper.floor(sl + .5) << 20 | (MathHelper.floor(bl + .5) & 0xf) << 4;
+		
 		MatrixStacker.of(ms)
-			.rotateY(-yaw)
-			.rotateX(entity.rotationPitch == -90 ? -45 : entity.rotationPitch == 0 ? -15 : -5);
+			.rotateY(vertical ? 0 : -yaw)
+			.rotateX(fakeNormalXRotation);
 		Matrix3f copy = ms.peek()
 			.getNormal()
 			.copy();
@@ -60,28 +78,34 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 			.rotateY(-yaw)
 			.rotateX(entity.rotationPitch)
 			.translate(0, 0, 1 / 32f + .001);
-		
+
 		if (entity.size == 3)
 			ms.translate(-1, -1, 0);
 
+		MatrixStack squashedMS = new MatrixStack();
+		squashedMS.peek()
+			.getModel()
+			.multiply(ms.peek()
+				.getModel());
+
 		for (int x = 0; x < entity.size; x++) {
-			ms.push();
+			squashedMS.push();
 			for (int y = 0; y < entity.size; y++) {
 				BlueprintSection section = entity.getSection(x * entity.size + y);
 				Couple<ItemStack> displayItems = section.getDisplayItems();
-				ms.push();
-				ms.scale(.5f, .5f, 1 / 1024f);
+				squashedMS.push();
+				squashedMS.scale(.5f, .5f, 1 / 1024f);
 				displayItems.forEachWithContext((stack, primary) -> {
 					if (stack.isEmpty())
 						return;
 
-					ms.push();
+					squashedMS.push();
 					if (!primary) {
-						ms.translate(0.325f, -0.325f, 1);
-						ms.scale(.625f, .625f, 1);
+						squashedMS.translate(0.325f, -0.325f, 1);
+						squashedMS.scale(.625f, .625f, 1);
 					}
 
-					Matrix3f n = ms.peek()
+					Matrix3f n = squashedMS.peek()
 						.getNormal();
 					n.a00 = copy.a00;
 					n.a01 = copy.a01;
@@ -95,14 +119,14 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderItem(stack, TransformType.GUI, light, overlay, ms, buffer);
-					ms.pop();
+						.renderItem(stack, TransformType.GUI, itemLight, OverlayTexture.DEFAULT_UV, squashedMS, buffer);
+					squashedMS.pop();
 				});
-				ms.pop();
-				ms.translate(1, 0, 0);
+				squashedMS.pop();
+				squashedMS.translate(1, 0, 0);
 			}
-			ms.pop();
-			ms.translate(0, 1, 0);
+			squashedMS.pop();
+			squashedMS.translate(0, 1, 0);
 		}
 
 		ms.pop();

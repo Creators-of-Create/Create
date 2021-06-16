@@ -968,6 +968,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P P")
 				.patternLine("P P")
 				.patternLine("G G")),
+			
+		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
+			.viaShapeless(b -> b.addIngredient(Items.PAINTING)
+				.addIngredient(Items.CRAFTING_TABLE)),
 
 		SLIME_BALL = create(() -> Items.SLIME_BALL).unlockedBy(AllItems.DOUGH::get)
 			.viaShapeless(b -> b.addIngredient(AllItems.DOUGH.get())
