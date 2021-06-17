@@ -66,9 +66,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		if (context.getFace()
 			.getAxis() == axis)
 			return ActionResultType.PASS;
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockState(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
-				.with(GlassFluidPipeBlock.AXIS, axis).with(BlockStateProperties.WATERLOGGED, state.get(BlockStateProperties.WATERLOGGED)));
+				.with(GlassFluidPipeBlock.AXIS, axis)
+				.with(BlockStateProperties.WATERLOGGED, state.get(BlockStateProperties.WATERLOGGED)));
+			FluidTransportBehaviour.loadFlows(world, pos);
+		}
 		return ActionResultType.SUCCESS;
 	}
 
@@ -78,9 +82,12 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
 			return ActionResultType.PASS;
 		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
-		if (!world.isRemote)
+		if (!world.isRemote) {
+			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockState(pos,
 				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
+			FluidTransportBehaviour.loadFlows(world, pos);
+		}
 		return ActionResultType.SUCCESS;
 	}
 

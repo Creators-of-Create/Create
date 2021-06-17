@@ -37,7 +37,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	private final ArmTileEntity arm;
 	private final Boolean ceiling;
 
-	private boolean firstTick = true;
+	private boolean firstRender = true;
 
 	private float baseAngle = Float.NaN;
 	private float lowerArmAngle = Float.NaN;
@@ -69,8 +69,9 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 
 	@Override
 	public void beginFrame() {
-		if (arm.phase == ArmTileEntity.Phase.DANCING) {
+		if (arm.phase == ArmTileEntity.Phase.DANCING && tile.getSpeed() != 0) {
 			animateArm(true);
+			firstRender = true;
 			return;
 		}
 
@@ -91,20 +92,19 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		this.upperArmAngle = upperArmAngleNow;
 		this.headAngle = headAngleNow;
 
-		if (!settled || firstTick)
+		if (!settled || firstRender)
 			animateArm(false);
 
-		if (settled)
-			firstTick = false;
+		if (firstRender)
+			firstRender = false;
 	}
 
 	private void animateArm(boolean rave) {
-
-		int color;
 		float baseAngle;
 		float lowerArmAngle;
 		float upperArmAngle;
 		float headAngle;
+		int color;
 
 		if (rave) {
 			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
@@ -112,14 +112,12 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
-
 			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
 		} else {
 			baseAngle = this.baseAngle;
 			lowerArmAngle = this.lowerArmAngle - 135;
 			upperArmAngle = this.upperArmAngle - 90;
 			headAngle = this.headAngle;
-
 			color = 0xFFFFFF;
 		}
 
@@ -182,4 +180,5 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		super.remove();
 		models.forEach(InstanceData::delete);
 	}
+
 }

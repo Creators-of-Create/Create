@@ -222,7 +222,7 @@ public interface ItemAttribute {
 
 	public static class InTag implements ItemAttribute {
 
-		ResourceLocation tagName;
+		public ResourceLocation tagName;
 
 		public InTag(ResourceLocation tagName) {
 			this.tagName = tagName;
