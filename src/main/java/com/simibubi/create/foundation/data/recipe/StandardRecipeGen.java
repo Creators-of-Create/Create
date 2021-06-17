@@ -957,9 +957,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedByTag(I::copper)
 			.viaShaped(b -> b.key('G', I.shaft())
 				.key('A', I.andesite())
+				.key('B', I.copperBlock())
 				.key('P', I.copper())
 				.patternLine("AGA")
-				.patternLine("PPP")
+				.patternLine("PBP")
 				.patternLine(" P ")),
 
 		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedByTag(I::copper)
@@ -968,6 +969,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P P")
 				.patternLine("P P")
 				.patternLine("G G")),
+			
+		LINKED_CONTROLLER = create(AllItems.LINKED_CONTROLLER).unlockedBy(AllBlocks.REDSTONE_LINK::get)
+			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
+				.key('P', AllBlocks.REDSTONE_LINK.get())
+				.patternLine("SSS")
+				.patternLine(" P ")
+				.patternLine("SSS")),
 			
 		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
 			.viaShapeless(b -> b.addIngredient(Items.PAINTING)
