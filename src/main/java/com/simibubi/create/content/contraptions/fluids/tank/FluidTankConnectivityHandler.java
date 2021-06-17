@@ -199,7 +199,7 @@ public class FluidTankConnectivityHandler {
 
 		if (simulate)
 			return amount;
-		
+
 		boolean opaque = false;
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
@@ -234,7 +234,7 @@ public class FluidTankConnectivityHandler {
 				}
 			}
 		}
-		
+
 		te.setWindows(!opaque);
 
 		return amount;
@@ -281,7 +281,7 @@ public class FluidTankConnectivityHandler {
 					if (!toDistribute.isEmpty() && tankAt != te) {
 						FluidStack copy = toDistribute.copy();
 						FluidTank tankInventory = tankAt.tankInventory;
-						if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank) 
+						if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank)
 							((CreativeSmartFluidTank) tankInventory).setContainedFluid(toDistribute);
 						else {
 							int split = Math.min(maxCapacity, toDistribute.getAmount());
