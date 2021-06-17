@@ -3672,7 +3672,6 @@ d3fdb8ece6cb072a93ddb64a0baad5ac952117a4 data/create/recipes/weathered_limestone
 20c20a12b0baff2ba493b1405db7d2d8a15b81af data/create/tags/blocks/brittle.json
 330bfb3850ba3964b10b1bccbc3cbb9b012cae54 data/create/tags/blocks/fan_heaters.json
 3bc64e3a1e7980237435b1770a9ba2102d57fcd4 data/create/tags/blocks/fan_transparent.json
-74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/non_movable.json
 c81ea194e808985847159b201140d4aa4cbcca65 data/create/tags/blocks/safe_nbt.json
 c9ac7e3e5ec18554e7184168d65e9b8e44ef5610 data/create/tags/blocks/sails.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json

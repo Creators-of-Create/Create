@@ -146,7 +146,7 @@ public class AllTags {
 		WINDMILL_SAILS,
 		FAN_HEATERS,
 		WINDOWABLE,
-		NON_MOVABLE,
+		NON_MOVABLE(false),
 		BRITTLE,
 		SEATS,
 		SAILS,
@@ -168,15 +168,24 @@ public class AllTags {
 		}
 
 		private AllBlockTags(NameSpace namespace, String path) {
+			this(namespace, path, true);
+		}
+
+		private AllBlockTags(NameSpace namespace, String path, boolean generateData) {
 			ResourceLocation id =
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
 			if (ModList.get()
 				.isLoaded(namespace.id)) {
 				tag = BlockTags.makeWrapperTag(id.toString());
-				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
+				if (generateData)
+					REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
 			} else {
 				tag = new EmptyNamedTag<>(id);
 			}
+		}
+
+		AllBlockTags(boolean generateData) {
+			this(MOD, "", generateData);
 		}
 
 		public boolean matches(BlockState block) {
