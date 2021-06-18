@@ -231,6 +231,7 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.DEPLOYER)
 			.addStoryBoard("deployer/filter", DeployerScenes::filter, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("deployer/modes", DeployerScenes::modes)
+			.addStoryBoard("deployer/processing", DeployerScenes::processing)
 			.addStoryBoard("deployer/redstone", DeployerScenes::redstone)
 			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_HARVESTER)
@@ -247,21 +248,20 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.COPPER_CASING)
 			.addStoryBoard("debug/scene_1", PipeScenes::encasing);
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PUMP)
-			.addStoryBoard("debug/scene_1", PumpScenes::flow, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", PumpScenes::flow, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("debug/scene_1", PumpScenes::speed);
 		PonderRegistry.forComponents(AllBlocks.FLUID_VALVE)
-			.addStoryBoard("debug/scene_1", PipeScenes::valve, PonderTag.FLUIDS);
+			.addStoryBoard("debug/scene_1", PipeScenes::valve, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES);
 		PonderRegistry.forComponents(AllBlocks.SMART_FLUID_PIPE)
 			.addStoryBoard("debug/scene_1", PipeScenes::smart, PonderTag.FLUIDS);
 		PonderRegistry.forComponents(AllBlocks.FLUID_TANK)
 			.addStoryBoard("debug/scene_1", FluidTankScenes::storage, PonderTag.FLUIDS)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::access);
+			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes);
 		PonderRegistry.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
 			.addStoryBoard("debug/scene_1", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
 			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes);
 		PonderRegistry.forComponents(AllBlocks.HOSE_PULLEY)
-			.addStoryBoard("debug/scene_1", HosePulleyScenes::intro, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("debug/scene_1", HosePulleyScenes::level)
 			.addStoryBoard("debug/scene_1", HosePulleyScenes::infinite);
 		PonderRegistry.forComponents(AllBlocks.SPOUT)
@@ -270,7 +270,8 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.ITEM_DRAIN)
 			.addStoryBoard("debug/scene_1", DrainScenes::emptying, PonderTag.FLUIDS);
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
-			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::transfer, PonderTag.FLUIDS, PonderTag.CONTRAPTION_ACTOR)
+			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::transfer, PonderTag.FLUIDS,
+				PonderTag.CONTRAPTION_ACTOR)
 			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::redstone);
 
 		// Redstone

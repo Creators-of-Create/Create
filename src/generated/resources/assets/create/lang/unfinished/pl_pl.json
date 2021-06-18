@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 77",
+	"_": "Missing Localizations: 82",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1726,6 +1726,12 @@
 	"create.ponder.deployer_modes.text_1": "Domyślnie, aplikator imituje prawe kliknięcie",
 	"create.ponder.deployer_modes.text_2": "Może być przestawiony na lewe kliknięcie używając klucza",
 
+	"create.ponder.deployer_processing.header": "UNLOCALIZED: Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "UNLOCALIZED: With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "UNLOCALIZED: The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "UNLOCALIZED: The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "Kontrolowanie aplikatorów z użyciem Redstone'a",
 	"create.ponder.deployer_redstone.text_1": "Zasilone przez Redstone, aplikatory nie aktywują się",
 	"create.ponder.deployer_redstone.text_2": "Przed zatrzymaniem, aplikatory dokończą już zaczętą czynność",
@@ -1765,10 +1771,9 @@
 	"create.ponder.fan_source.text_2": "Po zasileniu, wiatraki zaczną przesyłać siłę do przylegających komponentów",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: ",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
-
-	"create.ponder.fluid_tank_access.header": "UNLOCALIZED: Accessing Fluid Tanks",
 
 	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
 

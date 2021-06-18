@@ -100,7 +100,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 				.render(ms);
 
 		ms.push();
-		ms.translate(x - 2, y - 2, 150);
+		ms.translate(x - 2, y - 2, 200);
 
 		ms.push();
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);

@@ -13,6 +13,19 @@ public class DrainScenes {
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
+		
+		/*
+		 * Item Drains can extract fluids from any fluid container items
+		 * 
+		 * Right-click it to pour fluids from your held item into it
+		 * 
+		 * When items are inserted from the side...
+		 * 
+		 * ...they tumble across the surface, emptying out their contained fluid if possible
+		 * 
+		 * Pipe Networks can now pull the fluid from the drains' internal buffer
+		 */
+		
 	}
 	
 }

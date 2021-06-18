@@ -289,6 +289,7 @@ public class GuiGameElement {
 				.setBlurMipmapDirect(false, false);
 			RenderSystem.enableRescaleNormal();
 			RenderSystem.enableAlphaTest();
+			RenderSystem.enableCull();
 			RenderSystem.defaultAlphaFunc();
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,

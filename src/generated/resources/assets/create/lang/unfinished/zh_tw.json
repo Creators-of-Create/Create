@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 113",
+	"_": "Missing Localizations: 118",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1726,6 +1726,12 @@
 	"create.ponder.deployer_modes.text_1": "在設設情況下，機械手模仿玩家的右鍵",
 	"create.ponder.deployer_modes.text_2": "使用扳手可以將模式調整為模仿玩家的左鍵",
 
+	"create.ponder.deployer_processing.header": "UNLOCALIZED: Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "UNLOCALIZED: With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "UNLOCALIZED: The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "UNLOCALIZED: The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "使用紅石控制機械手",
 	"create.ponder.deployer_redstone.text_1": "當機械手收到紅時訊號時會停止工作",
 	"create.ponder.deployer_redstone.text_2": "在停止工作前，機械手會完成目前手頭上的工作",
@@ -1765,10 +1771,9 @@
 	"create.ponder.fan_source.text_2": "當鼓風機接受紅石訊號後，它便會向外供給動能",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: ",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
-
-	"create.ponder.fluid_tank_access.header": "UNLOCALIZED: Accessing Fluid Tanks",
 
 	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
 

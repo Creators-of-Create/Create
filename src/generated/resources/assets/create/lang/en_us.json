@@ -1725,6 +1725,12 @@
 	"create.ponder.deployer_modes.text_1": "By default, a Deployer imitates a Right-click interaction",
 	"create.ponder.deployer_modes.text_2": "Using a Wrench, it can be set to imitate a Left-click instead",
 
+	"create.ponder.deployer_processing.header": "Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "Controlling Deployers with Redstone",
 	"create.ponder.deployer_redstone.text_1": "When powered by Redstone, Deployers will not activate",
 	"create.ponder.deployer_redstone.text_2": "Before stopping, the Deployer will finish any started cycles",
@@ -1764,10 +1770,9 @@
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
 
 	"create.ponder.fluid_pipe_flow.header": "Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "",
 
 	"create.ponder.fluid_pipe_interaction.header": "Draining and Filling fluid containers",
-
-	"create.ponder.fluid_tank_access.header": "Accessing Fluid Tanks",
 
 	"create.ponder.fluid_tank_sizes.header": "Dimensions of a Fluid tank",
 
