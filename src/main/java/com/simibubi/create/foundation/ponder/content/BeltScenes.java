@@ -87,6 +87,7 @@ public class BeltScenes {
 
 		scene.overlay.showText(80)
 			.text("Right-Clicking two shafts with a belt item will connect them together")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(2, 1, 2));
 		scene.idle(90);
@@ -100,6 +101,7 @@ public class BeltScenes {
 		scene.overlay.showText(80)
 			.colored(PonderPalette.RED)
 			.text("Accidental selections can be canceled with Right-Click while Sneaking")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.centerOf(backEnd.south(1)));
 		scene.idle(43);
@@ -118,6 +120,7 @@ public class BeltScenes {
 
 		scene.overlay.showText(43)
 			.text("Additional Shafts can be added throughout the Belt")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(shaftLocation, Direction.NORTH));
 		scene.idle(50);
@@ -146,6 +149,7 @@ public class BeltScenes {
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Added shafts can be removed using the wrench")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(shaftLocation, Direction.NORTH));
 		scene.idle(70);
@@ -212,6 +216,7 @@ public class BeltScenes {
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
 			.pointAt(to)
+			.attachKeyFrame()
 			.text("1. They can connect horizontally");
 
 		scene.idle(20);
@@ -236,6 +241,7 @@ public class BeltScenes {
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
 			.pointAt(to)
+			.attachKeyFrame()
 			.text("2. They can connect diagonally");
 
 		scene.idle(20);
@@ -258,6 +264,7 @@ public class BeltScenes {
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
 			.pointAt(to)
+			.attachKeyFrame()
 			.text("3. They can connect vertically");
 
 		scene.idle(20);
@@ -282,6 +289,7 @@ public class BeltScenes {
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
 			.pointAt(to)
+			.attachKeyFrame()
 			.text("4. And they can connect vertical shafts horizontally");
 
 		scene.idle(20);
@@ -375,6 +383,7 @@ public class BeltScenes {
 		scene.overlay.showText(60)
 			.placeNearTarget()
 			.pointAt(topOf.subtract(0, 0.1, 0))
+			.attachKeyFrame()
 			.text("Right-Click with an empty hand to take items off a belt");
 		scene.idle(20);
 		scene.world.removeItemsFromBelt(util.grid.at(3, 2, 2));
@@ -425,6 +434,7 @@ public class BeltScenes {
 
 		scene.overlay.showText(80)
 			.text("Brass or Andesite Casing can be used to decorate Mechanical Belts")
+			.attachKeyFrame()
 			.pointAt(util.vector.centerOf(beltPos2));
 
 		scene.idle(40);
@@ -455,6 +465,7 @@ public class BeltScenes {
 			scene.world.modifyBlock(pos, s -> s.with(BeltBlock.CASING, true), true);
 		}
 		scene.idle(30);
+		scene.addKeyframe();
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(beltPos.south()), Pointing.DOWN).rightClick()

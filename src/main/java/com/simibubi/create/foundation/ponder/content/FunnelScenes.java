@@ -130,6 +130,7 @@ public class FunnelScenes {
 		scene.world.showSection(topFunnelSelection, Direction.DOWN);
 		scene.overlay.showText(80)
 			.text("Placed normally, it pulls items from the inventory.")
+			.attachKeyFrame()
 			.pointAt(topCenter)
 			.placeNearTarget();
 		scene.idle(45);
@@ -150,6 +151,7 @@ public class FunnelScenes {
 		scene.overlay.showControls(controlsSneak, 35);
 		scene.overlay.showText(80)
 			.text("Placed while sneaking, it puts items into the inventory.")
+			.attachKeyFrame()
 			.pointAt(topCenter)
 			.placeNearTarget();
 		scene.idle(45);
@@ -169,6 +171,7 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.text("Using a wrench, the funnel can be flipped after placement.")
+			.attachKeyFrame()
 			.pointAt(topCenter)
 			.placeNearTarget();
 
@@ -216,6 +219,7 @@ public class FunnelScenes {
 		scene.world.showSection(beltFunnelSetup, Direction.DOWN);
 		scene.overlay.showText(140)
 			.text("Funnels on belts will extract/insert depending on its movement direction.")
+			.attachKeyFrame()
 			.pointAt(topOfBeltFunnel);
 
 		scene.idle(15);
@@ -263,6 +267,7 @@ public class FunnelScenes {
 		scene.idle(8);
 		scene.overlay.showText(360)
 			.text("Funnels should also interact nicely with a handful of other components.")
+			.attachKeyFrame()
 			.independent(0);
 		scene.idle(40);
 
@@ -368,6 +373,7 @@ public class FunnelScenes {
 
 		scene.overlay.showText(60)
 			.text("Andesite Funnels can only ever extract single items.")
+			.attachKeyFrame()
 			.pointAt(util.vector.topOf(andesiteFunnel))
 			.placeNearTarget();
 		scene.idle(10);
@@ -378,6 +384,7 @@ public class FunnelScenes {
 
 		scene.overlay.showText(60)
 			.text("Brass Funnels can extract up to a full stack.")
+			.attachKeyFrame()
 			.pointAt(util.vector.topOf(brassFunnel))
 			.placeNearTarget();
 		scene.idle(10);
@@ -393,6 +400,7 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.text("Scrolling on the filter slot allows for precise control over the extracted stack size.")
+			.attachKeyFrame()
 			.pointAt(filterSlot.getCenter())
 			.placeNearTarget();
 		scene.idle(90);
@@ -436,6 +444,7 @@ public class FunnelScenes {
 				scene.idle(10);
 				scene.overlay.showText(80)
 					.text("Using items on the filter slot will restrict the funnel to only transfer matching stacks.")
+					.attachKeyFrame()
 					.pointAt(filterSlot.getCenter())
 					.placeNearTarget();
 				scene.world.setFilterData(util.select.position(brassFunnel), FunnelTileEntity.class, emerald);
@@ -470,6 +479,7 @@ public class FunnelScenes {
 		scene.overlay.showSelectionWithText(funnelSelect, 40)
 			.colored(PonderPalette.RED)
 			.text("Funnels cannot ever transfer between closed inventories directly.")
+			.attachKeyFrame()
 			.placeNearTarget();
 		scene.idle(50);
 
@@ -483,6 +493,7 @@ public class FunnelScenes {
 		scene.overlay.showText(40)
 			.colored(PonderPalette.GREEN)
 			.text("Chutes or Smart chutes might be more suitable for such purposes.")
+			.attachKeyFrame()
 			.pointAt(util.vector.centerOf(funnelPos))
 			.placeNearTarget();
 		scene.idle(50);

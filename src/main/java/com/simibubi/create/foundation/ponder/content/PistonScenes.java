@@ -58,6 +58,7 @@ public class PistonScenes {
 		scene.overlay.showText(55)
 			.pointAt(util.vector.topOf(piston))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Mechanical Pistons can move blocks in front of them");
 		scene.idle(65);
 
@@ -93,6 +94,7 @@ public class PistonScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.topOf(piston))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Sticky Mechanical Pistons can pull the attached blocks back");
 		scene.idle(20);
 		scene.world.setBlock(util.grid.at(2, 1, 1), Blocks.OAK_PLANKS.getDefaultState(), false);
@@ -108,6 +110,7 @@ public class PistonScenes {
 		ElementLink<WorldSectionElement> chassis =
 			scene.world.showIndependentSection(util.select.fromTo(2, 2, 0, 2, 3, 2), Direction.DOWN);
 		scene.world.moveSection(chassis, util.vector.of(0, -1, 1), 0);
+		scene.addKeyframe();
 		scene.idle(5);
 		scene.world.showSectionAndMerge(util.select.position(1, 2, 0), Direction.EAST, chassis);
 		scene.idle(15);
@@ -154,6 +157,7 @@ public class PistonScenes {
 		scene.overlay.showSelectionWithText(util.select.position(piston), 50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Without attached Poles, a Mechanical Piston cannot move");
 		scene.idle(60);
 
@@ -172,6 +176,7 @@ public class PistonScenes {
 			100);
 		scene.overlay.showSelectionWithText(util.select.fromTo(piston.west(), piston.west(2)), 100)
 			.text("The Length of pole added at its back determines the Extension Range")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN);
 		scene.idle(110);
@@ -238,6 +243,7 @@ public class PistonScenes {
 		scene.idle(10);
 		scene.overlay.showSelectionWithText(rose, 70)
 			.text("Whenever Pistons stop moving, the moved structure reverts to blocks")
+			.attachKeyFrame()
 			.colored(PonderPalette.RED);
 		scene.idle(80);
 
@@ -259,6 +265,7 @@ public class PistonScenes {
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(piston))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("behaviour_modify_wrench");
 		scene.idle(80);
 
