@@ -3,20 +3,14 @@ package com.simibubi.create.content.schematics.packet;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.schematics.SchematicPrinter;
-import com.simibubi.create.content.schematics.SchematicProcessor;
-import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class SchematicPlacePacket extends SimplePacketBase {
@@ -45,7 +39,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			SchematicPrinter printer = new SchematicPrinter();
 			printer.loadSchematic(stack, world, !player.canUseCommandBlock());
 
-			while(printer.advanceCurrentPos()) {
+			while (printer.advanceCurrentPos()) {
 				if (!printer.shouldPlaceCurrent(world))
 					continue;
 

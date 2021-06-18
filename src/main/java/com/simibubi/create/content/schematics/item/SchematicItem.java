@@ -99,6 +99,10 @@ public class SchematicItem extends Item {
 		SchematicInstances.clearHash(blueprint);
 	}
 
+	public static PlacementSettings getSettings(ItemStack blueprint) {
+		return getSettings(blueprint, true);
+	}
+
 	public static PlacementSettings getSettings(ItemStack blueprint, boolean processNBT) {
 		CompoundNBT tag = blueprint.getTag();
 		PlacementSettings settings = new PlacementSettings();

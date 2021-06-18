@@ -1,21 +1,16 @@
 package com.simibubi.create.content.schematics;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
-
 import com.simibubi.create.content.schematics.item.SchematicItem;
-
 import com.simibubi.create.foundation.utility.BlockHelper;
-
-import com.simibubi.create.foundation.utility.IPartialSafeNBT;
-import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -32,11 +27,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class SchematicPrinter {
+
 	public enum PrintStage {
 		BLOCKS, DEFERRED_BLOCKS, ENTITIES
 	}
@@ -302,4 +294,5 @@ public class SchematicPrinter {
 	public static boolean shouldDeferBlock(BlockState state) {
 		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementChecks.isBrittle(state);
 	}
+
 }
