@@ -1156,6 +1156,7 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "このからくりトロッコは大きすぎて拾えません。",
+	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
@@ -1771,7 +1772,6 @@
 	"create.ponder.fan_source.text_2": "レッドストーン信号を受けると、回転力が生成されます",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
-	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: ",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
 

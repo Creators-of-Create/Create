@@ -1156,6 +1156,7 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "這個礦車結構太大了而無法撿取",
+	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
@@ -1771,7 +1772,6 @@
 	"create.ponder.fan_source.text_2": "當鼓風機接受紅石訊號後，它便會向外供給動能",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
-	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: ",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
 

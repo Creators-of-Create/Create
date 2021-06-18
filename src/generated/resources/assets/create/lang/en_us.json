@@ -1155,6 +1155,7 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
+	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
@@ -1770,7 +1771,6 @@
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
 
 	"create.ponder.fluid_pipe_flow.header": "Moving Fluids using Copper Pipes",
-	"create.ponder.fluid_pipe_flow.text_1": "",
 
 	"create.ponder.fluid_pipe_interaction.header": "Draining and Filling fluid containers",
 

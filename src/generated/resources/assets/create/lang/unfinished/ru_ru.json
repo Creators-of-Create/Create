@@ -1156,6 +1156,7 @@
 	"create.command.killTPSCommand.argument.tickTime": "Время тика",
 
 	"create.contraption.minecart_contraption_too_big": "UNLOCALIZED: This Cart Contraption seems too big to pick up",
+	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
@@ -1771,7 +1772,6 @@
 	"create.ponder.fan_source.text_2": "UNLOCALIZED: When given a Redstone Signal, the Fans will start providing power",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
-	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: ",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
 

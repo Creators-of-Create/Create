@@ -32,6 +32,8 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import com.simibubi.create.foundation.config.CKinetics;
+
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.AbstractSignBlock;
@@ -195,7 +197,8 @@ public class BlockMovementChecks {
 			return false;
 		if (state.getBlock().getTags().contains(NON_MOVABLE))
 			return false;
-		if (!AllConfigs.SERVER.kinetics.movableSpawners.get() && block instanceof SpawnerBlock)
+		if (AllConfigs.SERVER.kinetics.spawnerMovement.get() == CKinetics.SpawnerMovementSetting.UNMOVABLE
+			&& block instanceof SpawnerBlock)
 			return false;
 
 		// Move controllers only when they aren't moving
