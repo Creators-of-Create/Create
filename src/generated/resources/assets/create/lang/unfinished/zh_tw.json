@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 62",
+	"_": "Missing Localizations: 113",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1427,26 +1427,51 @@
 
 	"item.create.refined_radiance.tooltip": "光輝石",
 	"item.create.refined_radiance.tooltip.summary": "一種用_光輝_鍛造的化合物材料。",
+	"item.create.refined_radiance.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "暗影鋼",
 	"item.create.shadow_steel.tooltip.summary": "一種用_虛空_鍛造的化合物材料。",
+	"item.create.shadow_steel.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "UNLOCALIZED: LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "UNLOCALIZED: Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "UNLOCALIZED: R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "UNLOCALIZED: _Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "UNLOCALIZED: R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "UNLOCALIZED: Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "UNLOCALIZED: R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "UNLOCALIZED: COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "UNLOCALIZED: R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "UNLOCALIZED: Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "UNLOCALIZED: R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "UNLOCALIZED: _Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "礦車連軸器",
 	"item.create.minecart_coupling.tooltip.summary": "將多個_礦車_或運輸結構鏈接在一起，構成雄偉的火車。",
 	"item.create.minecart_coupling.tooltip.condition1": "作用與礦車時",
 	"item.create.minecart_coupling.tooltip.behaviour1": "將兩個礦車耦合在一起，在移動時將它們保持_恒定的距離_。",
-
-	"create.tooltip.wip": "半成品",
-	"create.tooltip.workInProgress": "尚在製作中！",
-	"create.tooltip.randomWipDescription0": "禁止將此物品給屁孩。",
-	"create.tooltip.randomWipDescription1": "每~一~次~你使用此物品時，就會使一隻小熊貓死亡。",
-	"create.tooltip.randomWipDescription2": "使用此物品請自負後果。",
-	"create.tooltip.randomWipDescription3": "快走開，這不是你要找的東西(搖手指",
-	"create.tooltip.randomWipDescription4": "啟動自爆模式，10、9、8...。",
-	"create.tooltip.randomWipDescription5": "你已經沒有退路了。",
-	"create.tooltip.randomWipDescription6": "作者我將不負任何你使用此物所造成的責任。",
-	"create.tooltip.randomWipDescription7": "這東西不是給你用的，再找找吧!",
-	"create.tooltip.randomWipDescription8": "用了就死定了。",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1663,6 +1688,8 @@
 	"create.ponder.cogwheel.text_1": "齒輪會將動力傳遞至臨近的齒輪",
 	"create.ponder.cogwheel.text_2": "以此方式連接的齒輪，旋轉方向相反",
 
+	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "使用創造馬達產生動能",
 	"create.ponder.creative_motor.text_1": "創造馬達不僅能夠手動設定輸出動能，而且體積相當小巧",
 	"create.ponder.creative_motor.text_2": "對其背後面板滾動滾輪，可以改變馬達的轉速",
@@ -1717,6 +1744,8 @@
 	"create.ponder.empty_blaze_burner.text_4": "如果是為了美觀，空的烈焰人燃燒室也可以被打火石點燃",
 	"create.ponder.empty_blaze_burner.text_5": "但是，這樣的熱源不足以給機器提加工供足夠的熱量",
 
+	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
+
 	"create.ponder.fan_direction.header": "鼓風機的氣流",
 	"create.ponder.fan_direction.text_1": "鼓風機使用動能來製造氣流",
 	"create.ponder.fan_direction.text_2": "流速以及方向由所接收動能的強弱以及方向而定",
@@ -1734,6 +1763,16 @@
 	"create.ponder.fan_source.header": "使用鼓風機來產生動能",
 	"create.ponder.fan_source.text_1": "如鼓風機的扇葉向下朝著熱源放置，鼓風機可以藉此產生動能",
 	"create.ponder.fan_source.text_2": "當鼓風機接受紅石訊號後，它便會向外供給動能",
+
+	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+
+	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
+
+	"create.ponder.fluid_tank_access.header": "UNLOCALIZED: Accessing Fluid Tanks",
+
+	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "使用飛輪來產生動能",
 	"create.ponder.flywheel.text_1": "飛輪和熔爐引擎必須配套使用，方可產生動能",
@@ -1807,6 +1846,14 @@
 	"create.ponder.hand_crank.text_2": "按住右鍵可以逆時針旋轉它",
 	"create.ponder.hand_crank.text_3": "它產生的轉速相對較高",
 	"create.ponder.hand_crank.text_4": "潛行長按右鍵可以順時針旋轉它",
+
+	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "使用大齒輪傳遞動能",
 	"create.ponder.large_cogwheel.text_1": "大齒輪可以以特定的角度相互連接",
@@ -1930,6 +1977,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "一些配方可能需要烈焰人燃燒室提供熱量",
 	"create.ponder.mechanical_press_compacting.text_4": "過濾槽可用於解決兩個配方相互衝突的情況",
 
+	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "使用動力鋸伐木",
 	"create.ponder.mechanical_saw_breaker.text_1": "向其通入動能後，動力鋸可以直接砍伐掉它面前的樹木",
 	"create.ponder.mechanical_saw_breaker.text_2": "想要一次性砍掉整棵樹，鋸子必須破壞掉樹與地面連接的最後一個方塊",
@@ -1959,6 +2010,10 @@
 	"create.ponder.piston_pole.header": "活塞延長杆",
 	"create.ponder.piston_pole.text_1": "若無相接的延長杆，動力活塞無法移動其他方塊",
 	"create.ponder.piston_pole.text_2": "在其背面安裝的延長杆長度，決定了活塞的推動範圍",
+
+	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "裝置存儲交換",
 	"create.ponder.portable_storage_interface.text_1": "玩家無法與運動裝置內的存儲空間進行互動",
@@ -2057,10 +2112,16 @@
 	"create.ponder.smart_chute.text_3": "使用滑鼠滾輪可以指定被過濾的物品數量",
 	"create.ponder.smart_chute.text_4": "通入紅石訊號，智慧溜槽將會完全暫停工作",
 
+	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "使用速度計來監測轉速",
 	"create.ponder.speedometer.text_1": "速度計能顯示相接組件的轉速",
 	"create.ponder.speedometer.text_2": "當佩戴MR護目鏡時，可以看到儀表所顯示的更詳細的數據",
 	"create.ponder.speedometer.text_3": "紅石比較器可以根據速度計的數值輸出不同強弱的紅石訊號",
+
+	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "裝置固定朝向",
 	"create.ponder.stabilized_bearings.text_1": "當動力軸承在結構被帶動時...",
@@ -2092,6 +2153,8 @@
 	"create.ponder.valve_handle.text_3": "它的轉速慢而精確",
 	"create.ponder.valve_handle.text_4": "潛行右擊可使它順時針旋轉",
 	"create.ponder.valve_handle.text_5": "可以透過染色來美化閥門手輪",
+
+	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "使用水車產生動能",
 	"create.ponder.water_wheel.text_1": "水車利用臨近的水流來進行應力發生",

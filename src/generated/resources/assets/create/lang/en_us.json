@@ -1426,26 +1426,51 @@
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed light_.",
+	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in the void_.",
+	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "_Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
-
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "Work in progress!",
-	"create.tooltip.randomWipDescription0": "Please keep this item away from children.",
-	"create.tooltip.randomWipDescription1": "A baby panda dies every time you use this item. Every. Time.",
-	"create.tooltip.randomWipDescription2": "Use at your own risk.",
-	"create.tooltip.randomWipDescription3": "This is not the item you are looking for, *finger-wiggles* please disperse.",
-	"create.tooltip.randomWipDescription4": "This item will self-destruct in 10 seconds. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Believe me, it's useless.",
-	"create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
-	"create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
-	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1662,6 +1687,8 @@
 	"create.ponder.cogwheel.text_1": "Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "Neighbouring shafts connected like this will rotate in opposite directions",
 
+	"create.ponder.creative_fluid_tank.header": "Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
@@ -1716,6 +1743,8 @@
 	"create.ponder.empty_blaze_burner.text_4": "For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
 	"create.ponder.empty_blaze_burner.text_5": "However, these are not suitable for industrial heating",
 
+	"create.ponder.encased_fluid_pipe.header": "Encasing Fluid Pipes",
+
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
 	"create.ponder.fan_direction.text_2": "Strength and Direction of Flow depends on the Rotational Input",
@@ -1733,6 +1762,16 @@
 	"create.ponder.fan_source.header": "Generating Rotational Force using Encased Fans",
 	"create.ponder.fan_source.text_1": "Fans facing down into a source of heat can provide Rotational Force",
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
+
+	"create.ponder.fluid_pipe_flow.header": "Moving Fluids using Copper Pipes",
+
+	"create.ponder.fluid_pipe_interaction.header": "Draining and Filling fluid containers",
+
+	"create.ponder.fluid_tank_access.header": "Accessing Fluid Tanks",
+
+	"create.ponder.fluid_tank_sizes.header": "Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "Generating Rotational Force using the Flywheel",
 	"create.ponder.flywheel.text_1": "Flywheels are required for generating rotational force with the Furnace Engine",
@@ -1806,6 +1845,14 @@
 	"create.ponder.hand_crank.text_2": "Hold Right-Click to rotate it Counter-Clockwise",
 	"create.ponder.hand_crank.text_3": "Its conveyed speed is relatively high",
 	"create.ponder.hand_crank.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
+
+	"create.ponder.hose_pulley.header": "Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "Large cogwheels can connect to each other at right angles",
@@ -1929,6 +1976,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "Some of those recipes may require the heat of a Blaze Burner",
 	"create.ponder.mechanical_press_compacting.text_4": "The filter slot can be used in case two recipes are conflicting.",
 
+	"create.ponder.mechanical_pump_flow.header": "Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
 	"create.ponder.mechanical_saw_breaker.text_2": "In order to cut the tree fully, the Saw has to break the last block connecting it to the ground",
@@ -1958,6 +2009,10 @@
 	"create.ponder.piston_pole.header": "Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "Without attached Poles, a Mechanical Piston cannot move",
 	"create.ponder.piston_pole.text_2": "The Length of pole added at its back determines the Extension Range",
+
+	"create.ponder.portable_fluid_interface.header": "Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "Contraption Storage Exchange",
 	"create.ponder.portable_storage_interface.text_1": "Inventories on moving contraptions cannot be accessed by players.",
@@ -2056,10 +2111,16 @@
 	"create.ponder.smart_chute.text_3": "Use the Mouse Wheel to specify the extracted stack size",
 	"create.ponder.smart_chute.text_4": "Redstone power will prevent Smart Chutes from acting.",
 
+	"create.ponder.smart_pipe.header": "Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "Monitoring Kinetic information using the Speedometer",
 	"create.ponder.speedometer.text_1": "The Speedometer displays the current Speed of the attached components",
 	"create.ponder.speedometer.text_2": "When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
 	"create.ponder.speedometer.text_3": "Comparators can emit analog Restone Signals relative to the Speedometer's measurements",
+
+	"create.ponder.spout_access.header": "Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "Stabilized Contraptions",
 	"create.ponder.stabilized_bearings.text_1": "Whenever Mechanical Bearings are themselves part of a moving Structure..",
@@ -2091,6 +2152,8 @@
 	"create.ponder.valve_handle.text_3": "Its conveyed speed is slow and precise",
 	"create.ponder.valve_handle.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
 	"create.ponder.valve_handle.text_5": "Valve handles can be dyed for aesthetic purposes",
+
+	"create.ponder.valve_pipe.header": "Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "Generating Rotational Force using Water Wheels",
 	"create.ponder.water_wheel.text_1": "Water Wheels draw force from adjacent Water Currents",

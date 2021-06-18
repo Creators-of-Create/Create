@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.renderState;
 
 import java.util.SortedMap;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -48,14 +47,12 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 	}
 
 	public void draw() {
-		RenderSystem.disableCull();
 		earlyBuffer.draw();
 		defaultBuffer.draw();
 		lateBuffer.draw();
 	}
 
 	public void draw(RenderType type) {
-		RenderSystem.disableCull();
 		earlyBuffer.draw(type);
 		defaultBuffer.draw(type);
 		lateBuffer.draw(type);

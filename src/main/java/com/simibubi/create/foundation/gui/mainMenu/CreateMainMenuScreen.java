@@ -80,7 +80,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		for (int side : Iterate.positiveAndNegative) {
 			ms.push();
-			ms.translate(width / 2, 60, -800);
+			ms.translate(width / 2, 60, 200);
 			ms.scale(24 * side, 24 * side, 32);
 			ms.translate(-1.75 * ((alpha * alpha) / 2f + .5f), .25f, 0);
 			MatrixStacker.of(ms)
@@ -179,6 +179,11 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 					.openURI(url);
 			this.client.displayGuiScreen(this);
 		}, url, true));
+	}
+	
+	@Override
+	public boolean isPauseScreen() {
+		return true;
 	}
 
 	@Override

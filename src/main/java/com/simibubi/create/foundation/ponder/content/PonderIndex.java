@@ -3,13 +3,20 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.simibubi.create.foundation.ponder.content.fluid.DrainScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.FluidMovementActorScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.FluidTankScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.HosePulleyScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.PipeScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.PumpScenes;
+import com.simibubi.create.foundation.ponder.content.fluid.SpoutScenes;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.DyeColor;
 
 public class PonderIndex {
 
-	public static final boolean EDITOR_MODE = false;
+	public static final boolean EDITOR_MODE = true;
 
 	public static void register() {
 		// Register storyboards here
@@ -230,6 +237,41 @@ public class PonderIndex {
 			.addStoryBoard("harvester", MovementActorScenes::harvester);
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PLOUGH)
 			.addStoryBoard("plough", MovementActorScenes::plough);
+
+		// Fluids
+
+		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
+			.addStoryBoard("debug/scene_1", PipeScenes::flow, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", PipeScenes::interaction)
+			.addStoryBoard("debug/scene_1", PipeScenes::encasing);
+		PonderRegistry.forComponents(AllBlocks.COPPER_CASING)
+			.addStoryBoard("debug/scene_1", PipeScenes::encasing);
+		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PUMP)
+			.addStoryBoard("debug/scene_1", PumpScenes::flow, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", PumpScenes::speed);
+		PonderRegistry.forComponents(AllBlocks.FLUID_VALVE)
+			.addStoryBoard("debug/scene_1", PipeScenes::valve, PonderTag.FLUIDS);
+		PonderRegistry.forComponents(AllBlocks.SMART_FLUID_PIPE)
+			.addStoryBoard("debug/scene_1", PipeScenes::smart, PonderTag.FLUIDS);
+		PonderRegistry.forComponents(AllBlocks.FLUID_TANK)
+			.addStoryBoard("debug/scene_1", FluidTankScenes::storage, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes)
+			.addStoryBoard("debug/scene_1", FluidTankScenes::access);
+		PonderRegistry.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
+			.addStoryBoard("debug/scene_1", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
+			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes);
+		PonderRegistry.forComponents(AllBlocks.HOSE_PULLEY)
+			.addStoryBoard("debug/scene_1", HosePulleyScenes::intro, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", HosePulleyScenes::level)
+			.addStoryBoard("debug/scene_1", HosePulleyScenes::infinite);
+		PonderRegistry.forComponents(AllBlocks.SPOUT)
+			.addStoryBoard("debug/scene_1", SpoutScenes::filling, PonderTag.FLUIDS)
+			.addStoryBoard("debug/scene_1", SpoutScenes::access);
+		PonderRegistry.forComponents(AllBlocks.ITEM_DRAIN)
+			.addStoryBoard("debug/scene_1", DrainScenes::emptying, PonderTag.FLUIDS);
+		PonderRegistry.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
+			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::transfer, PonderTag.FLUIDS, PonderTag.CONTRAPTION_ACTOR)
+			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::redstone);
 
 		// Redstone
 		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)

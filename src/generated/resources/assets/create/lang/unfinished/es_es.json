@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 669",
+	"_": "Missing Localizations: 720",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1427,26 +1427,51 @@
 
 	"item.create.refined_radiance.tooltip": "RESPLANDOR REFINADO",
 	"item.create.refined_radiance.tooltip.summary": "Material cromático forjado a partir de _luz absorbida_",
+	"item.create.refined_radiance.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "ACERO SOMBRÍO",
 	"item.create.shadow_steel.tooltip.summary": "Un material cromático forjado _en el vacío_",
+	"item.create.shadow_steel.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "UNLOCALIZED: LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "UNLOCALIZED: Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "UNLOCALIZED: R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "UNLOCALIZED: _Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "UNLOCALIZED: R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "UNLOCALIZED: Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "UNLOCALIZED: R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "UNLOCALIZED: COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "UNLOCALIZED: R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "UNLOCALIZED: Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "UNLOCALIZED: R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "UNLOCALIZED: _Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "ENSAMBLADOR DE VAGONETAS",
 	"item.create.minecart_coupling.tooltip.summary": "_Encadena_ todas tus _Vagonetas_ o _Artilugios de vagoneta_ para formar un majestuoso Tren",
 	"item.create.minecart_coupling.tooltip.condition1": "Cuando se utiliza en Vagonetas",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Acopla_ dos Vagonetas, intentando mantenerlas a una _distancia constante_ mientras se mueven",
-
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "¡Trabajo en curso!",
-	"create.tooltip.randomWipDescription0": "Por favor, mantenga este artículo fuera del alcance de los niños",
-	"create.tooltip.randomWipDescription1": "Un bebé panda muere cada vez que usas este objeto. Cada vez. Cada vez",
-	"create.tooltip.randomWipDescription2": "Úsalo bajo tu propio riesgo",
-	"create.tooltip.randomWipDescription3": "Este no es el objeto que buscas, *mueve los dedos* por favor, dispérsate",
-	"create.tooltip.randomWipDescription4": "Este objeto se autodestruirá en 10 segundos. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Créeme, es inútil",
-	"create.tooltip.randomWipDescription6": "Al utilizar este elemento, aceptas nuestra exención de responsabilidad y estás de acuerdo con sus términos",
-	"create.tooltip.randomWipDescription7": "Este quizás no es para ti. ¿Qué tal ese?",
-	"create.tooltip.randomWipDescription8": "Úsalo y arrepiéntete de tu decisión inmediatamente",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1663,6 +1688,8 @@
 	"create.ponder.cogwheel.text_1": "UNLOCALIZED: Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "UNLOCALIZED: Neighbouring shafts connected like this will rotate in opposite directions",
 
+	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "UNLOCALIZED: Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "UNLOCALIZED: Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "UNLOCALIZED: Scrolling on the back panel changes the RPM of the motors' rotational output",
@@ -1717,6 +1744,8 @@
 	"create.ponder.empty_blaze_burner.text_4": "UNLOCALIZED: For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
 	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: However, these are not suitable for industrial heating",
 
+	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
+
 	"create.ponder.fan_direction.header": "UNLOCALIZED: Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "UNLOCALIZED: Encased Fans use Rotational Force to create an Air Current",
 	"create.ponder.fan_direction.text_2": "UNLOCALIZED: Strength and Direction of Flow depends on the Rotational Input",
@@ -1734,6 +1763,16 @@
 	"create.ponder.fan_source.header": "UNLOCALIZED: Generating Rotational Force using Encased Fans",
 	"create.ponder.fan_source.text_1": "UNLOCALIZED: Fans facing down into a source of heat can provide Rotational Force",
 	"create.ponder.fan_source.text_2": "UNLOCALIZED: When given a Redstone Signal, the Fans will start providing power",
+
+	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+
+	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
+
+	"create.ponder.fluid_tank_access.header": "UNLOCALIZED: Accessing Fluid Tanks",
+
+	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "UNLOCALIZED: Generating Rotational Force using the Flywheel",
 	"create.ponder.flywheel.text_1": "UNLOCALIZED: Flywheels are required for generating rotational force with the Furnace Engine",
@@ -1807,6 +1846,14 @@
 	"create.ponder.hand_crank.text_2": "UNLOCALIZED: Hold Right-Click to rotate it Counter-Clockwise",
 	"create.ponder.hand_crank.text_3": "UNLOCALIZED: Its conveyed speed is relatively high",
 	"create.ponder.hand_crank.text_4": "UNLOCALIZED: Sneak and Hold Right-Click to rotate it Clockwise",
+
+	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "UNLOCALIZED: Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "UNLOCALIZED: Large cogwheels can connect to each other at right angles",
@@ -1930,6 +1977,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "UNLOCALIZED: Some of those recipes may require the heat of a Blaze Burner",
 	"create.ponder.mechanical_press_compacting.text_4": "UNLOCALIZED: The filter slot can be used in case two recipes are conflicting.",
 
+	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "UNLOCALIZED: Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "UNLOCALIZED: When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
 	"create.ponder.mechanical_saw_breaker.text_2": "UNLOCALIZED: In order to cut the tree fully, the Saw has to break the last block connecting it to the ground",
@@ -1959,6 +2010,10 @@
 	"create.ponder.piston_pole.header": "UNLOCALIZED: Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "UNLOCALIZED: Without attached Poles, a Mechanical Piston cannot move",
 	"create.ponder.piston_pole.text_2": "UNLOCALIZED: The Length of pole added at its back determines the Extension Range",
+
+	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "UNLOCALIZED: Contraption Storage Exchange",
 	"create.ponder.portable_storage_interface.text_1": "UNLOCALIZED: Inventories on moving contraptions cannot be accessed by players.",
@@ -2057,10 +2112,16 @@
 	"create.ponder.smart_chute.text_3": "UNLOCALIZED: Use the Mouse Wheel to specify the extracted stack size",
 	"create.ponder.smart_chute.text_4": "UNLOCALIZED: Redstone power will prevent Smart Chutes from acting.",
 
+	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "UNLOCALIZED: Monitoring Kinetic information using the Speedometer",
 	"create.ponder.speedometer.text_1": "UNLOCALIZED: The Speedometer displays the current Speed of the attached components",
 	"create.ponder.speedometer.text_2": "UNLOCALIZED: When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
 	"create.ponder.speedometer.text_3": "UNLOCALIZED: Comparators can emit analog Restone Signals relative to the Speedometer's measurements",
+
+	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "UNLOCALIZED: Stabilized Contraptions",
 	"create.ponder.stabilized_bearings.text_1": "UNLOCALIZED: Whenever Mechanical Bearings are themselves part of a moving Structure..",
@@ -2092,6 +2153,8 @@
 	"create.ponder.valve_handle.text_3": "UNLOCALIZED: Its conveyed speed is slow and precise",
 	"create.ponder.valve_handle.text_4": "UNLOCALIZED: Sneak and Hold Right-Click to rotate it Clockwise",
 	"create.ponder.valve_handle.text_5": "UNLOCALIZED: Valve handles can be dyed for aesthetic purposes",
+
+	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "UNLOCALIZED: Generating Rotational Force using Water Wheels",
 	"create.ponder.water_wheel.text_1": "UNLOCALIZED: Water Wheels draw force from adjacent Water Currents",

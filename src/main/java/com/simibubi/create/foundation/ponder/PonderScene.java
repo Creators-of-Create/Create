@@ -17,6 +17,7 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
@@ -233,6 +234,7 @@ public class PonderScene {
 
 		for (RenderType type : RenderType.getBlockLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
+		
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
 		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
 		world.renderEntities(ms, buffer, info, pt);

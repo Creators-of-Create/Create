@@ -234,26 +234,50 @@
 	
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed light_.",
+	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "Usages for this material will be available in a future release.",
 	
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in the void_.",
-	
+	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",	
+	"item.create.linked_controller.tooltip.condition2": "R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",	
+	"item.create.linked_controller.tooltip.condition3": "R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",	
+	"item.create.copper_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",	
+	"item.create.copper_backtank.tooltip.condition1": "When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "_Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
+
 	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "When Used on Minecart",
-	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
-	
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "Work in progress!",
-	
-	"create.tooltip.randomWipDescription0": "Please keep this item away from children.",
-	"create.tooltip.randomWipDescription1": "A baby panda dies every time you use this item. Every. Time.",
-	"create.tooltip.randomWipDescription2": "Use at your own risk.",
-	"create.tooltip.randomWipDescription3": "This is not the item you are looking for, *finger-wiggles* please disperse.",
-	"create.tooltip.randomWipDescription4": "This item will self-destruct in 10 seconds. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Believe me, it's useless.",
-	"create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
-	"create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
-	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately."
+	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving."
 	
 }
