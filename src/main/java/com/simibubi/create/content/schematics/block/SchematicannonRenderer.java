@@ -84,13 +84,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		double yaw = 0;
 		double pitch = 40;
 
-		if (tile.target != null) {
+		BlockPos target = tile.printer.getCurrentTarget();
+		if (target != null) {
 
 			// Calculate Angle of Cannon
-			Vector3d diff = Vector3d.of(tile.target.subtract(pos));
+			Vector3d diff = Vector3d.of(target.subtract(pos));
 			if (tile.previousTarget != null) {
 				diff = (Vector3d.of(tile.previousTarget)
-						.add(Vector3d.of(tile.target.subtract(tile.previousTarget)).scale(partialTicks)))
+						.add(Vector3d.of(target.subtract(tile.previousTarget)).scale(partialTicks)))
 						.subtract(Vector3d.of(pos));
 			}
 

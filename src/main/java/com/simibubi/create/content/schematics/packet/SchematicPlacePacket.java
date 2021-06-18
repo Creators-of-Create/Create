@@ -2,14 +2,19 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.schematics.SchematicPrinter;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.simibubi.create.foundation.utility.BlockHelper;
+
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -35,13 +40,22 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			ServerPlayerEntity player = context.get().getSender();
 			if (player == null)
 				return;
-			Template t = SchematicItem.loadSchematic(stack);
-			PlacementSettings settings = SchematicItem.getSettings(stack);
-			if (player.canUseCommandBlock())
-				settings.func_215220_b(SchematicProcessor.INSTANCE); // remove processor
-			settings.setIgnoreEntities(false);
-			t.place(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
-					settings, player.getRNG());
+
+			World world = player.getServerWorld();
+			SchematicPrinter printer = new SchematicPrinter();
+			printer.loadSchematic(stack, world, !player.canUseCommandBlock());
+
+			while(printer.advanceCurrentPos()) {
+				if (!printer.shouldPlaceCurrent(world))
+					continue;
+
+				printer.handleCurrentTarget((pos, state, tile) -> {
+					CompoundNBT tileData = tile != null ? tile.write(new CompoundNBT()) : null;
+					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
+				}, (pos, entity) -> {
+					world.addEntity(entity);
+				});
+			}
 		});
 		context.get().setPacketHandled(true);
 	}
