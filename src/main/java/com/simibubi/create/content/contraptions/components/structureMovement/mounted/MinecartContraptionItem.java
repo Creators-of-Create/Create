@@ -173,10 +173,7 @@ public class MinecartContraptionItem extends Item {
 		if (tag.contains("Contraption")) {
 			CompoundNBT contraptionTag = tag.getCompound("Contraption");
 
-			Optional<Direction> intialOrientation = Optional.empty();
-			if (contraptionTag.contains("InitialOrientation"))
-				intialOrientation =
-					Optional.of(NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class));
+			Direction intialOrientation = NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class);
 
 			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag, false);
 			OrientedContraptionEntity contraptionEntity =
@@ -287,8 +284,7 @@ public class MinecartContraptionItem extends Item {
 		tag.remove("Pos");
 		tag.remove("Motion");
 
-		if (entity.isInitialOrientationPresent())
-			NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
+		NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
 
 		stack.getOrCreateTag()
 			.put("Contraption", tag);

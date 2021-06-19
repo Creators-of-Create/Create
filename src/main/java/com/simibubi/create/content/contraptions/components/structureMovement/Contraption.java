@@ -239,8 +239,7 @@ public abstract class Contraption {
 				continue;
 			}
 			subContraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-			OrientedContraptionEntity movedContraption =
-				OrientedContraptionEntity.create(world, subContraption, Optional.of(face));
+			OrientedContraptionEntity movedContraption = OrientedContraptionEntity.create(world, subContraption, face);
 			BlockPos anchor = blockFace.getConnectedPos();
 			movedContraption.setPosition(anchor.getX() + .5f, anchor.getY(), anchor.getZ() + .5f);
 			world.addEntity(movedContraption);
