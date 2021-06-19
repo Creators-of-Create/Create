@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.simibubi.create.AllBlocks;
@@ -22,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Block;
@@ -31,7 +31,6 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.RailShape;
@@ -243,12 +242,14 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
+		NBTHelper.writeEnum(compound, "CartInitialOrientation", cartInitialOrientation);
 	}
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
 		super.fromTag(state, compound, clientPacket);
+		cartInitialOrientation = NBTHelper.readEnum(compound, "CartInitialOrientation", Direction.class);
 	}
 
 	@Override
