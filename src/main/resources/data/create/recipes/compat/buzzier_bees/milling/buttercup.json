@@ -8,12 +8,12 @@
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzier_bees:white_clover"
+      "item": "buzzier_bees:buttercup"
     }
   ],
   "results": [
     {
-      "item": "minecraft:white_dye",
+      "item": "minecraft:yellow_dye",
       "count": 2
     },
     {

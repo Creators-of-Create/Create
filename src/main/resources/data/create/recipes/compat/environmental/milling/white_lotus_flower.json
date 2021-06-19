@@ -2,13 +2,13 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "buzzier_bees"
+      "modid": "environmental"
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzier_bees:white_clover"
+      "item": "environmental:white_lotus_flower"
     }
   ],
   "results": [
