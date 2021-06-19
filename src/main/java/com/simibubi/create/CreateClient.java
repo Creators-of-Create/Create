@@ -75,9 +75,6 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::onModelBake);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
-
-		Backend.getInstance();
-		modEventBus.addListener(AtlasStitcher.getInstance()::onTextureStitch);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {

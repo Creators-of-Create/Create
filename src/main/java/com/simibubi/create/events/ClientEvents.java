@@ -109,7 +109,6 @@ public class ClientEvents {
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
-		InstancedRenderDispatcher.tick();
 		ScrollValueHandler.tick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();

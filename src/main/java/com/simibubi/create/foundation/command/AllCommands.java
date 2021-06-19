@@ -23,7 +23,6 @@ public class AllCommands {
 		LiteralCommandNode<CommandSource> createRoot = dispatcher.register(Commands.literal("create")
 				.requires(cs -> cs.hasPermissionLevel(0))
 				// general purpose
-				.then(new ToggleExperimentalRenderingCommand().register())
 				.then(new ToggleDebugCommand().register())
 				.then(FabulousWarningCommand.register())
 				.then(OverlayConfigCommand.register())

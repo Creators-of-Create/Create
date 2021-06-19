@@ -13,17 +13,7 @@
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
     "ModelDataRefreshMixin",
-    "WindowResizeMixin",
-    "flywheel.CancelEntityRenderMixin",
-    "flywheel.CancelTileEntityRenderMixin",
-    "flywheel.FogColorTrackerMixin",
-    "flywheel.RenderHooksMixin",
-    "flywheel.ShaderCloseMixin",
-    "flywheel.StoreProjectionMatrixMixin",
-    "flywheel.TileRemoveMixin",
-    "flywheel.TileWorldHookMixin",
-    "flywheel.light.LightUpdateMixin",
-    "flywheel.light.NetworkLightUpdateMixin"
+    "WindowResizeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -43,7 +43,7 @@ public class CreateTileEntityBuilder<T extends TileEntity, P> extends TileEntity
 	}
 
 	protected void registerInstance() {
-		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, ($) -> {
+		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
 			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				InstancedRenderRegistry.getInstance().register(getEntry(), instanceFactory.get());

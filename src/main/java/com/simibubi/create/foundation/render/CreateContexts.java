@@ -7,7 +7,6 @@ import com.jozufozu.flywheel.backend.SpecMetaRegistry;
 import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 import com.jozufozu.flywheel.backend.loading.ModelTemplate;
 import com.jozufozu.flywheel.core.WorldContext;
-import com.jozufozu.flywheel.core.shader.gamestate.RainbowDebugStateProvider;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
 import com.simibubi.create.foundation.render.effects.EffectsContext;

@@ -41,6 +41,7 @@ minecraft {
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
+            property 'mixin.env.disableRefMap', 'true'
             mods {
                 create {
                     source sourceSets.main
@@ -101,11 +102,14 @@ repositories {
     }
     maven {
         //location of the maven for mixed mappings and registrate
-        name = "tterrag maven"
-        url = "https://maven.tterrag.com/"
+        name "tterrag maven"
+        url "https://maven.tterrag.com/"
     }
     maven {
-        url = "https://www.cursemaven.com"
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -124,6 +128,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
+
+    compile fg.deobf("curse.maven:flywheel-486392:3357100") // cursemaven for now
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
 

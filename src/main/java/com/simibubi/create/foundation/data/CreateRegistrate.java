@@ -35,6 +35,9 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -119,6 +122,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
+		});
+	}
+
+	@Override
+	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return this.entity(self(), name, factory, classification);
+	}
+
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
+			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
 	}
 
