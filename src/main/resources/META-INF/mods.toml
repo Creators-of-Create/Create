@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[34,)"
-#issueTrackerURL=""
+issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
 license="MIT"
 
 [[mods]]
@@ -8,9 +8,13 @@ modId="create"
 version="${file.jarVersion}"
 displayName="Create"
 #updateJSONURL=""
+displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
+logoFile="logo.png"
+#credits=""
 authors="simibubi"
 description='''
-Technology that empowers the player.'''
+Technology that empowers the player.
+'''
 
 [[dependencies.create]]
     modId="forge"

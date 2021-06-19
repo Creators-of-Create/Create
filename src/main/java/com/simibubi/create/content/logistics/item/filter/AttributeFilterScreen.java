@@ -61,8 +61,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void init() {
+		setWindowOffset(-11, 7);
 		super.init();
-		int x = guiLeft - 50;
+
+		int x = guiLeft;
 		int y = guiTop;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
@@ -87,7 +89,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		handleIndicators();
 
 		attributeSelectorLabel = new Label(x + 43, y + 26, StringTextComponent.EMPTY).colored(0xF3EBDE)
-				.withShadow();
+			.withShadow();
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
 		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
 		attributeSelector.removeCallback();
@@ -98,12 +100,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		selectedAttributes.clear();
 		selectedAttributes.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy()
-				.formatted(TextFormatting.YELLOW));
+			.formatted(TextFormatting.YELLOW));
 		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ")
-				.append(at.getFirst()
-						.format(at.getSecond()))
+			.append(at.getFirst()
+				.format(at.getSecond()))
 			.formatted(TextFormatting.GRAY)));
-
 	}
 
 	private void referenceItemChanged(ItemStack stack) {
@@ -163,10 +164,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		ItemStack stack = container.ghostInventory.getStackInSlot(1);
 		matrixStack.push();
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
-		this.setZOffset(200);
-		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft - 27, guiTop + 57,
-				String.valueOf(selectedAttributes.size() - 1));
+		this.setZOffset(150);
+		this.itemRenderer.zLevel = 150.0F;
+		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft + 22, guiTop + 57,
+			String.valueOf(selectedAttributes.size() - 1));
 		this.setZOffset(0);
 		this.itemRenderer.zLevel = 0.0F;
 		matrixStack.pop();

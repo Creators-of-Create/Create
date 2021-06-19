@@ -108,8 +108,7 @@ public class LinkedControllerClientHandler {
 		ClientPlayerEntity player = mc.player;
 		ItemStack heldItem = player.getHeldItemMainhand();
 
-		if (mc.gameSettings.keyBindInventory.isPressed() || InputMappings.isKeyDown(mc.getWindow()
-			.getHandle(), GLFW.GLFW_KEY_ESCAPE)) {
+		if (player.isSpectator()) {
 			MODE = Mode.IDLE;
 			onReset();
 			return;
@@ -122,6 +121,18 @@ public class LinkedControllerClientHandler {
 				onReset();
 				return;
 			}
+		}
+
+		if (mc.currentScreen != null) {
+			MODE = Mode.IDLE;
+			onReset();
+			return;
+		}
+
+		if (InputMappings.isKeyDown(mc.getWindow().getHandle(), GLFW.GLFW_KEY_ESCAPE)) {
+			MODE = Mode.IDLE;
+			onReset();
+			return;
 		}
 
 		Vector<KeyBinding> controls = getControls();

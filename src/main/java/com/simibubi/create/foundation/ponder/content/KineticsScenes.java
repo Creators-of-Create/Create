@@ -231,6 +231,7 @@ public class KineticsScenes {
 		scene.overlay.showText(60)
 			.text("Shifting from large to small cogs, the conveyed speed will be doubled")
 			.colored(PonderPalette.GREEN)
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.NORTH));
 		scene.idle(10);
@@ -269,6 +270,7 @@ public class KineticsScenes {
 		scene.overlay.showText(80)
 			.text("Shifting the opposite way, the conveyed speed will be halved")
 			.colored(PonderPalette.RED)
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.NORTH));
 		scene.idle(10);
@@ -339,6 +341,7 @@ public class KineticsScenes {
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.topOf(3, 2, 3))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("A gearbox is the more compact equivalent of this setup");
 
 		scene.idle(90);
@@ -411,6 +414,7 @@ public class KineticsScenes {
 		scene.overlay.showText(50)
 			.colored(PonderPalette.RED)
 			.text("When powered by Redstone, it breaks the connection")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(clutch));
 
@@ -456,6 +460,7 @@ public class KineticsScenes {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("When powered by Redstone, it reverses the transmission")
+			.attachKeyFrame()
 			.pointAt(util.vector.topOf(gearshift));
 
 		for (int i = 0; i < 3; i++) {
@@ -503,6 +508,7 @@ public class KineticsScenes {
 
 		scene.overlay.showText(50)
 			.text("Scrolling on the back panel changes the RPM of the motors' rotational output")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(blockSurface);
 		scene.idle(10);
@@ -574,6 +580,7 @@ public class KineticsScenes {
 		scene.rotateCameraY(-30);
 		scene.overlay.showText(70)
 			.text("The Wheels' blades should be oriented against the flow")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(80);
@@ -599,6 +606,7 @@ public class KineticsScenes {
 		scene.overlay.showText(70)
 			.colored(PonderPalette.RED)
 			.text("Facing the opposite way, they will not be as effective")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(80);
@@ -674,6 +682,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Hold Right-Click to rotate it Counter-Clockwise")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(centerOf);
 		scene.idle(70);
@@ -697,6 +706,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.overlay.showText(90)
 			.text("Sneak and Hold Right-Click to rotate it Clockwise")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(centerOf);
 		scene.idle(90);

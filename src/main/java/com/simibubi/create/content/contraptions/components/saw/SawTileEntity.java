@@ -147,7 +147,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		}
 
-		AllSoundEvents.SAW_PROCESS.playAt(world, pos, 1, 1, true);
+//		AllSoundEvents.SAW_PROCESS.playAt(world, pos, 1, 1, true); TODO
 	}
 
 	@Override

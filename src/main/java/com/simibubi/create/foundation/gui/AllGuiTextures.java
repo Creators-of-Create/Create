@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.*;
+import java.awt.Color;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
@@ -60,7 +60,7 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
-	LINKED_CONTROLLER("curiosities2.png", 180, 109),
+	LINKED_CONTROLLER("curiosities2.png", 179, 109),
 	BLUEPRINT("curiosities2.png", 0, 109, 179, 109),
 
 	PROJECTOR("projector.png", 235, 185),
@@ -102,7 +102,9 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SPEECH_TOOLTIP_COLOR("widgets.png", 8, 24, 8, 8),
 
 	// PlacementIndicator
-	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);;
+	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
+
+	;
 
 	public static final int FONT_COLOR = 0x575F7A;
 

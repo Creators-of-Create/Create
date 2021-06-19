@@ -41,6 +41,7 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterScreen;
@@ -240,11 +241,14 @@ public class CreateJEI implements IModPlugin {
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		SlotMover slotMover = new SlotMover();
-		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
-		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
 		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
+		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
+		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
 		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
 		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
+		registration.addGuiContainerHandler(BlueprintScreen.class, slotMover);
+		registration.addGuiContainerHandler(LinkedControllerScreen.class, slotMover);
+
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
 	}

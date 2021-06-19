@@ -35,6 +35,9 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 
 	@Override
 	protected void handle(ServerPlayerEntity player, ItemStack heldItem) {
+		if (player.isSpectator())
+			return;
+
 		ItemStackHandler frequencyItems = LinkedControllerItem.getFrequencyItems(heldItem);
 		LinkBehaviour linkBehaviour = TileEntityBehaviour.get(player.world, linkLocation, LinkBehaviour.TYPE);
 		if (linkBehaviour == null)

@@ -41,11 +41,13 @@ public abstract class AbstractFilterContainer extends GhostItemContainer<ItemSta
 
 	protected abstract int getPlayerInventoryXOffset();
 
+	protected abstract int getPlayerInventoryYOffset();
+
 	protected abstract void addFilterSlots();
 
 	@Override
 	protected void addSlots() {
-		addPlayerSlots(8, 28 + getPlayerInventoryXOffset());
+		addPlayerSlots(getPlayerInventoryXOffset(), getPlayerInventoryYOffset());
 		addFilterSlots();
 	}
 

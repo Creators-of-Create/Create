@@ -73,13 +73,11 @@ public class PonderWorldParticles {
 		RenderSystem.pushMatrix();
 		RenderSystem.multMatrix(ms.peek()
 			.getModel());
-		// check ParticleManager#renderParticles for a replacement if RenderSystem#multMatrix gets removed
 
-		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) { // Forge: allow custom
-																				// IParticleRenderType's
+		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) {
 			if (iparticlerendertype == IParticleRenderType.NO_RENDER)
 				continue;
-			enable.run(); // Forge: MC-168672 Make sure all render types have the correct GL state.
+			enable.run(); 
 			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
 			if (iterable != null) {
 				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -96,6 +94,7 @@ public class PonderWorldParticles {
 
 		RenderSystem.popMatrix();
 		RenderSystem.depthMask(true);
+		RenderSystem.depthFunc(515);
 		RenderSystem.disableBlend();
 		RenderSystem.defaultAlphaFunc();
 		lightTexture.disableLightmap();

@@ -50,6 +50,11 @@ public class WrappedClientWorld extends ClientWorld {
 	public boolean isBlockLoaded(BlockPos pos) {
 		return world.isBlockLoaded(pos);
 	}
+	
+	@Override
+	public boolean isBlockPresent(BlockPos pos) {
+		return world.isBlockPresent(pos);
+	}
 
 	@Override
 	public Stream<VoxelShape> getBlockCollisions(@Nullable Entity entity, AxisAlignedBB axisAlignedBB) {

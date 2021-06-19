@@ -12,12 +12,15 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
@@ -170,10 +173,7 @@ public class MinecartContraptionItem extends Item {
 		if (tag.contains("Contraption")) {
 			CompoundNBT contraptionTag = tag.getCompound("Contraption");
 
-			Optional<Direction> intialOrientation = Optional.empty();
-			if (contraptionTag.contains("InitialOrientation"))
-				intialOrientation =
-					Optional.of(NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class));
+			Direction intialOrientation = NBTHelper.readEnum(contraptionTag, "InitialOrientation", Direction.class);
 
 			Contraption mountedContraption = Contraption.fromNBT(world, contraptionTag, false);
 			OrientedContraptionEntity contraptionEntity =
@@ -217,6 +217,16 @@ public class MinecartContraptionItem extends Item {
 		if (passengers.isEmpty() || !(passengers.get(0) instanceof OrientedContraptionEntity))
 			return;
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
+
+		if (AllConfigs.SERVER.kinetics.spawnerMovement.get() == CKinetics.SpawnerMovementSetting.NO_PICKUP) {
+			Contraption blocks = contraption.getContraption();
+			if (blocks != null && blocks.getBlocks().values().stream()
+					.anyMatch(i -> i.state.getBlock() instanceof SpawnerBlock)) {
+				player.sendStatusMessage(Lang.translate("contraption.minecart_contraption_illegal_pickup")
+						.formatted(TextFormatting.RED), true);
+				return;
+			}
+		}
 
 		if (event.getWorld().isRemote) {
 			event.setCancellationResult(ActionResultType.SUCCESS);
@@ -274,8 +284,7 @@ public class MinecartContraptionItem extends Item {
 		tag.remove("Pos");
 		tag.remove("Motion");
 
-		if (entity.isInitialOrientationPresent())
-			NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
+		NBTHelper.writeEnum(tag, "InitialOrientation", entity.getInitialOrientation());
 
 		stack.getOrCreateTag()
 			.put("Contraption", tag);

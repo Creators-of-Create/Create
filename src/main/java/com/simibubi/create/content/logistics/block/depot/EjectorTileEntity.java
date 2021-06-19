@@ -483,12 +483,19 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.writeSafe(compound, clientPacket);
+		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
+		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
+	}
+
+	@Override
 	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(blockState, compound, clientPacket);
 		int horizontalDistance = compound.getInt("HorizontalDistance");
 		int verticalDistance = compound.getInt("VerticalDistance");
 
-		if (launcher == null || launcher.getHorizontalDistance() != horizontalDistance
+		if (launcher.getHorizontalDistance() != horizontalDistance
 			|| launcher.getVerticalDistance() != verticalDistance) {
 			launcher.set(horizontalDistance, verticalDistance);
 			launcher.clamp(AllConfigs.SERVER.kinetics.maxEjectorDistance.get());

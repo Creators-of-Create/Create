@@ -146,7 +146,6 @@ public class AllTags {
 		WINDMILL_SAILS,
 		FAN_HEATERS,
 		WINDOWABLE,
-		NON_MOVABLE,
 		BRITTLE,
 		SEATS,
 		SAILS,
@@ -178,6 +177,7 @@ public class AllTags {
 				tag = new EmptyNamedTag<>(id);
 			}
 		}
+
 
 		public boolean matches(BlockState block) {
 			return tag.contains(block.getBlock());

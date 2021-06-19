@@ -32,25 +32,24 @@ public class AllContainerTypes {
 		register("schematicannon", SchematicannonContainer::new, () -> SchematicannonScreen::new);
 
 	public static final ContainerEntry<AdjustableCrateContainer> FLEXCRATE =
-			register("flexcrate", AdjustableCrateContainer::new, () -> AdjustableCrateScreen::new);
+		register("flexcrate", AdjustableCrateContainer::new, () -> AdjustableCrateScreen::new);
 
 	public static final ContainerEntry<FilterContainer> FILTER =
-			register("filter", FilterContainer::new, () -> FilterScreen::new);
+		register("filter", FilterContainer::new, () -> FilterScreen::new);
 
 	public static final ContainerEntry<AttributeFilterContainer> ATTRIBUTE_FILTER =
-			register("attribute_filter", AttributeFilterContainer::new, () -> AttributeFilterScreen::new);
+		register("attribute_filter", AttributeFilterContainer::new, () -> AttributeFilterScreen::new);
 
 	public static final ContainerEntry<BlueprintContainer> CRAFTING_BLUEPRINT =
-			register("crafting_blueprint", BlueprintContainer::new, () -> BlueprintScreen::new);
+		register("crafting_blueprint", BlueprintContainer::new, () -> BlueprintScreen::new);
 
 	public static final ContainerEntry<LinkedControllerContainer> LINKED_CONTROLLER =
-			register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
+		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
 
 	private static <C extends Container, S extends Screen & IHasContainer<C>> ContainerEntry<C> register(String name, ForgeContainerFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
 		return Create.registrate().container(name, factory, screenFactory).register();
 	}
 
-	public static void register() {
-	}
+	public static void register() {}
 
 }

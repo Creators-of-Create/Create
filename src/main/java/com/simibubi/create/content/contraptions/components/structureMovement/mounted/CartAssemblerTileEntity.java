@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.simibubi.create.AllBlocks;
@@ -22,12 +21,17 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tileentity.TileEntityType;
@@ -39,7 +43,11 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber
 public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplayAssemblyExceptions {
 	private static final int assemblyCooldown = 8;
 
@@ -48,6 +56,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	protected AssemblyException lastException;
 
 	protected AbstractMinecartEntity cartToAssemble;
+	protected Direction cartInitialOrientation = Direction.NORTH;
 
 	public CartAssemblerTileEntity(TileEntityType<? extends CartAssemblerTileEntity> type) {
 		super(type);
@@ -137,8 +146,8 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 		}
 
 		boolean couplingFound = contraption.connectedCart != null;
-		Optional<Direction> initialOrientation = cart.getMotion()
-				.length() < 1 / 512f ? Optional.empty() : Optional.of(cart.getAdjustedHorizontalFacing());
+		Direction initialOrientation = cart.getMotion()
+				.length() < 1 / 512f ? cartInitialOrientation : cart.getAdjustedHorizontalFacing();
 
 		if (couplingFound) {
 			cart.setPosition(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
@@ -152,9 +161,8 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 		contraption.expandBoundsAroundAxis(Axis.Y);
 
 		if (couplingFound) {
-			Vector3d diff = contraption.connectedCart.getPositionVec()
-					.subtract(cart.getPositionVec());
-			initialOrientation = Optional.of(Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI));
+			Vector3d diff = contraption.connectedCart.getPositionVec().subtract(cart.getPositionVec());
+			initialOrientation = Direction.fromAngle(MathHelper.atan2(diff.z, diff.x) * 180 / Math.PI);
 		}
 
 		OrientedContraptionEntity entity = OrientedContraptionEntity.create(world, contraption, initialOrientation);
@@ -225,7 +233,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementMode = new ScrollOptionBehaviour<>(CartMovementMode.class,
-				Lang.translate("contraptions.cart_movement_mode"), this, getMovementModeSlot());
+			Lang.translate("contraptions.cart_movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 	}
@@ -234,12 +242,14 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
+		NBTHelper.writeEnum(compound, "CartInitialOrientation", cartInitialOrientation);
 	}
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
 		super.fromTag(state, compound, clientPacket);
+		cartInitialOrientation = NBTHelper.readEnum(compound, "CartInitialOrientation", Direction.class);
 	}
 
 	@Override
@@ -310,5 +320,28 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 
 	public boolean isMinecartUpdateValid() {
 		return ticksSinceMinecartUpdate >= assemblyCooldown;
+	}
+
+	// TODO: Remove these methods once we give Cart Assemblers directionality
+	protected void setCartInitialOrientation(Direction direction) {
+		cartInitialOrientation = direction;
+	}
+	@SubscribeEvent
+	public static void getOrientationOfStationaryCart(PlayerInteractEvent.RightClickBlock event) {
+		PlayerEntity player = event.getPlayer();
+		if (player == null)
+			return;
+
+		Item item = event.getItemStack().getItem();
+		if (item != Items.MINECART && item != Items.CHEST_MINECART && item != Items.FURNACE_MINECART)
+			return;
+		Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
+		if (!(block instanceof CartAssemblerBlock))
+			return;
+		CartAssemblerTileEntity te = ((CartAssemblerBlock) block).getTileEntity(event.getWorld(), event.getPos());
+		if (te == null)
+			return;
+
+		te.setCartInitialOrientation(player.getHorizontalFacing());
 	}
 }

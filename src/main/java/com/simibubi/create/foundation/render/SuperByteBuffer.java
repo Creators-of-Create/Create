@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +34,7 @@ public class SuperByteBuffer {
 
 	// Vertex Texture Coords
 	private SpriteShiftFunc spriteShiftFunc;
+	private boolean isEntityModel;
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -69,8 +71,8 @@ public class SuperByteBuffer {
 			return;
 
 		Matrix3f normalMat = transforms.peek()
-				.getNormal()
-				.copy();
+			.getNormal()
+			.copy();
 
 		Matrix4f modelMat = input.peek()
 				.getModel()
@@ -111,9 +113,9 @@ public class SuperByteBuffer {
 			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
-			// builder.color((byte) Math.max(0, nx * 255), (byte) Math.max(0, ny * 255), (byte) Math.max(0, nz * 255), a);
-			if (shouldColor) {
-				// float lum = (r < 0 ? 255 + r : r) / 256f;
+			if (isEntityModel) {
+				builder.color(255, 255, 255, 255);
+			} else if (shouldColor) {
 				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
 				int colorG = Math.min(255, (int) (((float) this.g) * instanceDiffuse));
 				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
@@ -133,6 +135,9 @@ public class SuperByteBuffer {
 				spriteShiftFunc.shift(builder, u, v);
 			} else
 				builder.texture(u, v);
+
+			if (isEntityModel)
+				builder.overlay(OverlayTexture.DEFAULT_UV);
 
 			int light;
 			if (useWorldLight) {
@@ -158,8 +163,11 @@ public class SuperByteBuffer {
 				builder.light(light);
 			}
 
-			builder.normal(nx, ny, nz)
-				.endVertex();
+			if (isEntityModel)
+				builder.normal(input.peek().getNormal(), nx, ny, nz);
+			else
+				builder.normal(nx, ny, nz);
+			builder.endVertex();
 		}
 
 		reset();
@@ -169,6 +177,7 @@ public class SuperByteBuffer {
 		transforms = new MatrixStack();
 		spriteShiftFunc = null;
 		shouldColor = false;
+		isEntityModel = false;
 		r = 0;
 		g = 0;
 		b = 0;
@@ -302,6 +311,11 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer hybridLight() {
 		hybridLight = true;
+		return this;
+	}
+
+	public SuperByteBuffer asEntityModel() {
+		isEntityModel = true;
 		return this;
 	}
 

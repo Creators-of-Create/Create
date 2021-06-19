@@ -477,9 +477,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
 	}
 
-	public static float convertToLinear(float speed) { return speed / 512f; }
+	public static float convertToLinear(float speed) {
+		return speed / 512f;
+	}
 
-	public static float convertToAngular(float speed) { return speed * 3 / 10f; }
+	public static float convertToAngular(float speed) {
+		return speed * 3 / 10f;
+	}
 
 	public boolean isOverStressed() {
 		return overStressed;
@@ -556,9 +560,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
-		if (!this.removed) {
+		if (!this.removed)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
-		}
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;

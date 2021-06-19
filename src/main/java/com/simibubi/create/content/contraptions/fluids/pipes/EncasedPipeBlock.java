@@ -13,6 +13,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -126,8 +127,10 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 				break;
 			}
 
+		FluidTransportBehaviour.cacheFlows(world, pos);
 		world.setBlockState(pos, AllBlocks.FLUID_PIPE.get()
 			.updateBlockState(equivalentPipe, firstFound, null, world, pos));
+		FluidTransportBehaviour.loadFlows(world, pos);
 		return ActionResultType.SUCCESS;
 	}
 

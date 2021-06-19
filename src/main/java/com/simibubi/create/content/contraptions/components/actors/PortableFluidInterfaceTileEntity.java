@@ -51,7 +51,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		return super.getCapability(cap, side);
 	}
 
-	class InterfaceFluidHandler implements IFluidHandler {
+	public class InterfaceFluidHandler implements IFluidHandler {
 
 		private IFluidHandler wrapped;
 
@@ -85,7 +85,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 				return 0;
 			int fill = wrapped.fill(resource, action);
 			if (fill > 0 && action.execute())
-				onContentTransferred();
+				keepAlive();
 			return fill;
 		}
 
@@ -95,7 +95,7 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(resource, action);
 			if (!drain.isEmpty() && action.execute())
-				onContentTransferred();
+				keepAlive();
 			return drain;
 		}
 
@@ -104,9 +104,13 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 			if (!canTransfer())
 				return FluidStack.EMPTY;
 			FluidStack drain = wrapped.drain(maxDrain, action);
-			if (!drain.isEmpty() && (action.execute() || drain.getAmount() == 1))
-				onContentTransferred();
+			if (!drain.isEmpty() && action.execute())
+				keepAlive();
 			return drain;
+		}
+		
+		public void keepAlive() {
+			onContentTransferred();
 		}
 
 	}

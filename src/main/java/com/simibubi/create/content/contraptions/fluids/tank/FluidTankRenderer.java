@@ -25,7 +25,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		if (!te.window)
 			return;
 
-		InterpolatedChasingValue fluidLevel = te.fluidLevel;
+		InterpolatedChasingValue fluidLevel = te.getFluidLevel();
 		if (fluidLevel == null)
 			return;
 

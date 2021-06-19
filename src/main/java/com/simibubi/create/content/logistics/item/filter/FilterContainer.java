@@ -28,31 +28,36 @@ public class FilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
+	protected int getPlayerInventoryXOffset() {
+		return 38;
+	}
+
+	@Override
+	protected int getPlayerInventoryYOffset() {
+		return 119;
+	}
+
+	@Override
 	protected void addFilterSlots() {
-		int x = -27;
+		int x = 23;
 		int y = 20;
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
 				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
 	}
-
+	
 	@Override
 	protected ItemStackHandler createGhostInventory() {
 		return FilterItem.getFilterItems(contentHolder);
 	}
-
-	@Override
-	protected int getPlayerInventoryXOffset() {
-		return 97;
-	}
-
+	
 	@Override
 	protected void readData(ItemStack filterItem) {
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		respectNBT = tag.getBoolean("RespectNBT");
 		blacklist = tag.getBoolean("Blacklist");
 	}
-
+	
 	@Override
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);

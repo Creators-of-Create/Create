@@ -1,10 +1,13 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
+import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.elements.BeltItemElement;
 import com.simibubi.create.foundation.ponder.elements.EntityElement;
 import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
@@ -301,6 +304,122 @@ public class DeployerScenes {
 			if (i == 0)
 				scene.markAsFinished();
 		}
+	}
+
+	public static void processing(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("deployer_processing", "Processing Items using Deployers");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		ElementLink<WorldSectionElement> depot =
+			scene.world.showIndependentSection(util.select.position(2, 1, 1), Direction.DOWN);
+		scene.world.moveSection(depot, util.vector.of(0, 0, 1), 0);
+		scene.idle(10);
+
+		Selection pressS = util.select.position(2, 3, 2);
+		BlockPos pressPos = util.grid.at(2, 3, 2);
+		BlockPos depotPos = util.grid.at(2, 1, 1);
+		scene.world.setKineticSpeed(pressS, 0);
+		scene.world.showSection(pressS, Direction.DOWN);
+		scene.idle(10);
+
+		scene.world.showSection(util.select.fromTo(2, 1, 3, 2, 1, 5), Direction.NORTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(2, 2, 3), Direction.SOUTH);
+		scene.idle(3);
+		scene.world.showSection(util.select.position(2, 3, 3), Direction.NORTH);
+		scene.world.setKineticSpeed(pressS, -32);
+		scene.effects.indicateSuccess(pressPos);
+		scene.idle(10);
+
+		ItemStack tool = AllItems.SAND_PAPER.asStack();
+		scene.overlay.showControls(new InputWindowElement(util.vector.blockSurface(pressPos.down(), Direction.EAST)
+			.add(0, 0.15, 0), Pointing.RIGHT).withItem(tool), 30);
+		scene.idle(7);
+		scene.world.modifyTileNBT(pressS, DeployerTileEntity.class, nbt -> nbt.put("HeldItem", tool.serializeNBT()));
+		scene.idle(25);
+
+		Vector3d pressSide = util.vector.blockSurface(pressPos, Direction.WEST);
+		scene.overlay.showText(60)
+			.pointAt(pressSide)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("With a fitting held item, Deployers can process items provided beneath them");
+		scene.idle(80);
+
+		scene.overlay.showText(60)
+			.pointAt(pressSide.subtract(0, 2, 0))
+			.placeNearTarget()
+			.text("The Input items can be dropped or placed on a Depot under the Deployer");
+		scene.idle(50);
+		ItemStack quartz = AllItems.ROSE_QUARTZ.asStack();
+		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, quartz);
+		Vector3d depotCenter = util.vector.centerOf(depotPos.south());
+		scene.overlay.showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(quartz), 30);
+		scene.idle(10);
+
+		Vector3d targetV = util.vector.centerOf(pressPos)
+			.subtract(0, 1.65, 0);
+
+		scene.world.moveDeployer(pressPos, 1, 30);
+		scene.idle(30);
+		scene.world.moveDeployer(pressPos, -1, 30);
+		scene.debug.enqueueCallback(s -> SandPaperItem.spawnParticles(targetV, quartz, s.getWorld()));
+		// particle
+		scene.world.removeItemsFromBelt(depotPos);
+		ItemStack polished = AllItems.POLISHED_ROSE_QUARTZ.asStack();
+		scene.world.createItemOnBeltLike(depotPos, Direction.UP, polished);
+		scene.idle(10);
+		scene.overlay.showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(polished), 50);
+		scene.idle(60);
+
+		scene.world.hideIndependentSection(depot, Direction.NORTH);
+		scene.idle(5);
+		scene.world.showSection(util.select.fromTo(0, 1, 3, 0, 2, 3), Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.fromTo(4, 1, 2, 0, 2, 2), Direction.SOUTH);
+		scene.idle(20);
+		BlockPos beltPos = util.grid.at(0, 1, 2);
+		scene.overlay.showText(40)
+			.pointAt(util.vector.blockSurface(beltPos, Direction.WEST))
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("When items are provided on a belt...");
+		scene.idle(30);
+
+		ElementLink<BeltItemElement> ingot = scene.world.createItemOnBelt(beltPos, Direction.SOUTH, quartz);
+		scene.idle(15);
+		ElementLink<BeltItemElement> ingot2 = scene.world.createItemOnBelt(beltPos, Direction.SOUTH, quartz);
+		scene.idle(15);
+		scene.world.stallBeltItem(ingot, true);
+		scene.world.moveDeployer(pressPos, 1, 30);
+
+		scene.overlay.showText(50)
+			.pointAt(pressSide)
+			.placeNearTarget()
+			.attachKeyFrame()
+			.text("The Deployer will hold and process them automatically");
+
+		scene.idle(30);
+		scene.world.moveDeployer(pressPos, -1, 30);
+		scene.debug.enqueueCallback(s -> SandPaperItem.spawnParticles(targetV, quartz, s.getWorld()));
+		scene.world.removeItemsFromBelt(pressPos.down(2));
+		ingot = scene.world.createItemOnBelt(pressPos.down(2), Direction.UP, polished);
+		scene.world.stallBeltItem(ingot, true);
+		scene.idle(15);
+		scene.world.stallBeltItem(ingot, false);
+		scene.idle(15);
+		scene.world.stallBeltItem(ingot2, true);
+		scene.world.moveDeployer(pressPos, 1, 30);
+		scene.idle(30);
+		scene.world.moveDeployer(pressPos, -1, 30);
+		scene.debug.enqueueCallback(s -> SandPaperItem.spawnParticles(targetV, quartz, s.getWorld()));
+		scene.world.removeItemsFromBelt(pressPos.down(2));
+		ingot2 = scene.world.createItemOnBelt(pressPos.down(2), Direction.UP, polished);
+		scene.world.stallBeltItem(ingot2, true);
+		scene.idle(15);
+		scene.world.stallBeltItem(ingot2, false);
 	}
 
 	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {

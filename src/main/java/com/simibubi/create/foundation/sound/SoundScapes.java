@@ -105,11 +105,10 @@ public class SoundScapes {
 		});
 	}
 
-	public static void clean() {
-		BlockPos playerLocation = getCameraPos();
-		for (Map<PitchGroup, Set<BlockPos>> map : counter.values())
-			for (Set<BlockPos> set : map.values())
-				set.removeIf(p -> !playerLocation.withinDistance(p, MAX_AMBIENT_SOURCE_DISTANCE));
+	public static void invalidateAll() {
+		counter.clear();
+		activeSounds.forEach(($, sound) -> sound.remove());
+		activeSounds.clear();
 	}
 
 	protected static boolean outOfRange(BlockPos pos) {

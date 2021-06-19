@@ -48,11 +48,6 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	public void clearContents() {
-		selectedAttributes.clear();
-	}
-
-	@Override
 	protected void init(PlayerInventory inv, ItemStack contentHolder) {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
@@ -62,18 +57,34 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	protected ItemStackHandler createGhostInventory() {
-		return new ItemStackHandler(2);
+	protected int getPlayerInventoryXOffset() {
+		return 51;
 	}
 
+	@Override
+	protected int getPlayerInventoryYOffset() {
+		return 105;
+	}
+
+	@Override
 	protected void addFilterSlots() {
-		this.addSlot(new SlotItemHandler(ghostInventory, 0, -34, 22));
-		this.addSlot(new SlotItemHandler(ghostInventory, 1, -28, 57) {
+		this.addSlot(new SlotItemHandler(ghostInventory, 0, 16, 22));
+		this.addSlot(new SlotItemHandler(ghostInventory, 1, 22, 57) {
 			@Override
 			public boolean canTakeStack(PlayerEntity playerIn) {
 				return false;
 			}
 		});
+	}
+
+	@Override
+	protected ItemStackHandler createGhostInventory() {
+		return new ItemStackHandler(2);
+	}
+
+	@Override
+	public void clearContents() {
+		selectedAttributes.clear();
 	}
 
 	@Override
@@ -112,11 +123,6 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 			ghostInventory.setStackInSlot(0, copy);
 		}
 		return ItemStack.EMPTY;
-	}
-
-	@Override
-	protected int getPlayerInventoryXOffset() {
-		return 83;
 	}
 
 	@Override

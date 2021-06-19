@@ -40,17 +40,16 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float pt, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
+
 		ArmTileEntity arm = (ArmTileEntity) te;
-
-		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getWorld());
-
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
+		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getWorld());
 
 		if (usingFlywheel && !hasItem) return;
 
 		ItemRenderer itemRenderer = Minecraft.getInstance()
-				.getItemRenderer();
+											 .getItemRenderer();
 
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
 				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)
@@ -61,21 +60,27 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 		MatrixStack msLocal = new MatrixStack();
 		MatrixStacker msr = MatrixStacker.of(msLocal);
-		int color = 0xFFFFFF;
 
-		float baseAngle = arm.baseAngle.get(pt);
-		float lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
-		float upperArmAngle = arm.upperArmAngle.get(pt) - 90;
-		float headAngle = arm.headAngle.get(pt);
+		float baseAngle;
+		float lowerArmAngle;
+		float upperArmAngle;
+		float headAngle;
+		int color;
 
-		boolean rave = arm.phase == Phase.DANCING;
-		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 64);
+		boolean rave = arm.phase == Phase.DANCING && te.getSpeed() != 0;
 		if (rave) {
+			float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
 			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
+		} else {
+			baseAngle = arm.baseAngle.get(pt);
+			lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;
+			upperArmAngle = arm.upperArmAngle.get(pt) - 90;
+			headAngle = arm.headAngle.get(pt);
+			color = 0xFFFFFF;
 		}
 
 		msr.centre();

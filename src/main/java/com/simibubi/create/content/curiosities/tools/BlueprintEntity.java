@@ -53,12 +53,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
@@ -68,7 +69,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class BlueprintEntity extends HangingEntity
-		implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, ISyncPersistentData {
+	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, ISyncPersistentData {
 
 	protected int size;
 	protected Direction verticalOrientation;
@@ -123,14 +124,14 @@ public class BlueprintEntity extends HangingEntity
 		this.facingDirection = facing;
 		this.verticalOrientation = verticalOrientation;
 		if (facing.getAxis()
-				.isHorizontal()) {
+			.isHorizontal()) {
 			this.rotationPitch = 0.0F;
 			this.rotationYaw = (float) (this.facingDirection.getHorizontalIndex() * 90);
 		} else {
 			this.rotationPitch = (float) (-90 * facing.getAxisDirection()
-					.getOffset());
+				.getOffset());
 			this.rotationYaw = verticalOrientation.getAxis()
-					.isHorizontal() ? 180 + verticalOrientation.getHorizontalAngle() : 0;
+				.isHorizontal() ? 180 + verticalOrientation.getHorizontalAngle() : 0;
 		}
 
 		this.prevRotationPitch = this.rotationPitch;
@@ -151,9 +152,9 @@ public class BlueprintEntity extends HangingEntity
 			return;
 
 		Vector3d pos = Vector3d.of(hangingPosition)
-				.add(.5, .5, .5)
-				.subtract(Vector3d.of(facingDirection.getDirectionVec())
-						.scale(0.46875));
+			.add(.5, .5, .5)
+			.subtract(Vector3d.of(facingDirection.getDirectionVec())
+				.scale(0.46875));
 		double d1 = pos.x;
 		double d2 = pos.y;
 		double d3 = pos.z;
@@ -162,16 +163,16 @@ public class BlueprintEntity extends HangingEntity
 		Axis axis = facingDirection.getAxis();
 		if (size == 2)
 			pos = pos.add(Vector3d.of(axis.isHorizontal() ? facingDirection.rotateYCCW()
-					.getDirectionVec()
-					: verticalOrientation.rotateY()
+				.getDirectionVec()
+				: verticalOrientation.rotateY()
 					.getDirectionVec())
-					.scale(0.5))
-					.add(Vector3d
-							.of(axis.isHorizontal() ? Direction.UP.getDirectionVec()
-									: facingDirection == Direction.UP ? verticalOrientation.getDirectionVec()
-									: verticalOrientation.getOpposite()
-									.getDirectionVec())
-							.scale(0.5));
+				.scale(0.5))
+				.add(Vector3d
+					.of(axis.isHorizontal() ? Direction.UP.getDirectionVec()
+						: facingDirection == Direction.UP ? verticalOrientation.getDirectionVec()
+							: verticalOrientation.getOpposite()
+								.getDirectionVec())
+					.scale(0.5));
 
 		d1 = pos.x;
 		d2 = pos.y;
@@ -182,14 +183,14 @@ public class BlueprintEntity extends HangingEntity
 		double d6 = (double) this.getWidthPixels();
 		Direction.Axis direction$axis = this.facingDirection.getAxis();
 		switch (direction$axis) {
-			case X:
-				d4 = 1.0D;
-				break;
-			case Y:
-				d5 = 1.0D;
-				break;
-			case Z:
-				d6 = 1.0D;
+		case X:
+			d4 = 1.0D;
+			break;
+		case Y:
+			d5 = 1.0D;
+			break;
+		case Z:
+			d6 = 1.0D;
 		}
 
 		d4 = d4 / 32.0D;
@@ -206,10 +207,10 @@ public class BlueprintEntity extends HangingEntity
 		int j = Math.max(1, this.getHeightPixels() / 16);
 		BlockPos blockpos = this.hangingPosition.offset(this.facingDirection.getOpposite());
 		Direction upDirection = facingDirection.getAxis()
-				.isHorizontal() ? Direction.UP
+			.isHorizontal() ? Direction.UP
 				: facingDirection == Direction.UP ? verticalOrientation : verticalOrientation.getOpposite();
 		Direction direction = facingDirection.getAxis()
-				.isVertical() ? verticalOrientation.rotateY() : facingDirection.rotateYCCW();
+			.isVertical() ? verticalOrientation.rotateY() : facingDirection.rotateYCCW();
 		BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
 
 		for (int k = 0; k < i; ++k) {
@@ -217,20 +218,20 @@ public class BlueprintEntity extends HangingEntity
 				int i1 = (i - 1) / -2;
 				int j1 = (j - 1) / -2;
 				blockpos$mutable.setPos(blockpos)
-						.move(direction, k + i1)
-						.move(upDirection, l + j1);
+					.move(direction, k + i1)
+					.move(upDirection, l + j1);
 				BlockState blockstate = this.world.getBlockState(blockpos$mutable);
 				if (Block.hasEnoughSolidSide(this.world, blockpos$mutable, this.facingDirection))
 					continue;
 				if (!blockstate.getMaterial()
-						.isSolid() && !RedstoneDiodeBlock.isDiode(blockstate)) {
+					.isSolid() && !RedstoneDiodeBlock.isDiode(blockstate)) {
 					return false;
 				}
 			}
 		}
 
 		return this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox(), IS_HANGING_ENTITY)
-				.isEmpty();
+			.isEmpty();
 	}
 
 	@Override
@@ -244,9 +245,39 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
+	public boolean hitByEntity(Entity source) {
+		if (!(source instanceof PlayerEntity) || world.isRemote)
+			return super.hitByEntity(source);
+
+		PlayerEntity player = (PlayerEntity) source;
+		double attrib = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+			.getValue() + (player.isCreative() ? 0 : -0.5F);
+
+		Vector3d eyePos = source.getEyePosition(1);
+		Vector3d look = source.getLook(1);
+		Vector3d target = eyePos.add(look.scale(attrib));
+		
+		Optional<Vector3d> rayTrace = getBoundingBox().rayTrace(eyePos, target);
+		if (!rayTrace.isPresent())
+			return super.hitByEntity(source);
+		
+		Vector3d hitVec = rayTrace.get();
+		BlueprintSection sectionAt = getSectionAt(hitVec.subtract(getPositionVec()));
+		ItemStackHandler items = sectionAt.getItems();
+
+		if (items.getStackInSlot(9)
+			.isEmpty())
+			return super.hitByEntity(source);
+		for (int i = 0; i < items.getSlots(); i++)
+			items.setStackInSlot(i, ItemStack.EMPTY);
+		sectionAt.save(items);
+		return true;
+	}
+
+	@Override
 	public void onBroken(@Nullable Entity p_110128_1_) {
 		if (!world.getGameRules()
-				.getBoolean(GameRules.DO_ENTITY_DROPS))
+			.getBoolean(GameRules.DO_ENTITY_DROPS))
 			return;
 
 		playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0F, 1.0F);
@@ -277,16 +308,16 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public void setLocationAndAngles(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_,
-									 float p_70012_8_) {
+		float p_70012_8_) {
 		this.setPosition(p_70012_1_, p_70012_3_, p_70012_5_);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void setPositionAndRotationDirect(double p_180426_1_, double p_180426_3_, double p_180426_5_,
-											 float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_) {
+		float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_) {
 		BlockPos blockpos =
-				this.hangingPosition.add(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
+			this.hangingPosition.add(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
 		this.setPosition((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
 	}
 
@@ -309,99 +340,88 @@ public class BlueprintEntity extends HangingEntity
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
 
+		boolean holdingWrench = AllItems.WRENCH.isIn(player.getHeldItem(hand));
 		BlueprintSection section = getSectionAt(vec);
+		ItemStackHandler items = section.getItems();
 
-		if (!AllItems.WRENCH.isIn(player.getHeldItem(hand)) && !world.isRemote) {
-			boolean empty = true;
-			ItemStackHandler items = section.getItems();
-			for (int i = 0; i < 9; i++) {
-				if (!items.getStackInSlot(i)
-						.isEmpty()) {
-					empty = false;
+		if (!holdingWrench && !world.isRemote && !items.getStackInSlot(9)
+			.isEmpty()) {
+
+			IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
+			boolean firstPass = true;
+			int amountCrafted = 0;
+			ForgeHooks.setCraftingPlayer(player);
+			Optional<ICraftingRecipe> recipe = Optional.empty();
+
+			do {
+				Map<Integer, ItemStack> stacksTaken = new HashMap<>();
+				Map<Integer, ItemStack> craftingGrid = new HashMap<>();
+				boolean success = true;
+
+				Search: for (int i = 0; i < 9; i++) {
+					ItemStack requestedItem = items.getStackInSlot(i);
+					if (requestedItem.isEmpty()) {
+						craftingGrid.put(i, ItemStack.EMPTY);
+						continue;
+					}
+
+					for (int slot = 0; slot < playerInv.getSlots(); slot++) {
+						if (!FilterItem.test(world, playerInv.getStackInSlot(slot), requestedItem))
+							continue;
+						ItemStack currentItem = playerInv.extractItem(slot, 1, false);
+						if (stacksTaken.containsKey(slot))
+							stacksTaken.get(slot)
+								.grow(1);
+						else
+							stacksTaken.put(slot, currentItem.copy());
+						craftingGrid.put(i, currentItem);
+						continue Search;
+					}
+
+					success = false;
 					break;
 				}
-			}
 
-			if (!empty) {
-				IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
-				boolean firstPass = true;
-				int amountCrafted = 0;
-				ForgeHooks.setCraftingPlayer(player);
-				Optional<ICraftingRecipe> recipe = Optional.empty();
+				if (success) {
+					CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 
-				do {
-					Map<Integer, ItemStack> stacksTaken = new HashMap<>();
-					Map<Integer, ItemStack> craftingGrid = new HashMap<>();
-					boolean success = true;
+					if (!recipe.isPresent())
+						recipe = world.getRecipeManager()
+							.getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
+					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, world))
+						.map(r -> r.getCraftingResult(craftingInventory))
+						.orElse(ItemStack.EMPTY);
 
-					Search:
-					for (int i = 0; i < 9; i++) {
-						ItemStack requestedItem = items.getStackInSlot(i);
-						if (requestedItem.isEmpty()) {
-							craftingGrid.put(i, ItemStack.EMPTY);
-							continue;
-						}
-
-						for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-							if (!FilterItem.test(world, playerInv.getStackInSlot(slot), requestedItem))
-								continue;
-							ItemStack currentItem = playerInv.extractItem(slot, 1, false);
-							if (stacksTaken.containsKey(slot)) {
-								stacksTaken.get(slot)
-										.grow(1);
-							} else {
-								stacksTaken.put(slot, currentItem.copy());
-							}
-							craftingGrid.put(i, currentItem);
-							continue Search;
-						}
-
+					if (result.isEmpty()) {
 						success = false;
-						break;
+					} else if (result.getCount() + amountCrafted > 64) {
+						success = false;
+					} else {
+						amountCrafted += result.getCount();
+						result.onCrafting(player.world, player, 1);
+						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
+						NonNullList<ItemStack> nonnulllist = world.getRecipeManager()
+							.getRecipeNonNull(IRecipeType.CRAFTING, craftingInventory, world);
+
+						if (firstPass)
+							world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP,
+								SoundCategory.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
+						player.inventory.placeItemBackInInventory(world, result);
+						for (ItemStack itemStack : nonnulllist)
+							player.inventory.placeItemBackInInventory(world, itemStack);
+						firstPass = false;
 					}
+				}
 
-					if (success) {
-						CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
+				if (!success) {
+					for (Entry<Integer, ItemStack> entry : stacksTaken.entrySet())
+						playerInv.insertItem(entry.getKey(), entry.getValue(), false);
+					break;
+				}
 
-						if (!recipe.isPresent())
-							recipe = world.getRecipeManager()
-									.getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
-						ItemStack result = recipe.filter(r -> r.matches(craftingInventory, world))
-								.map(r -> r.getCraftingResult(craftingInventory))
-								.orElse(ItemStack.EMPTY);
-
-						if (result.isEmpty()) {
-							success = false;
-						} else if (result.getCount() + amountCrafted > 64) {
-							success = false;
-						} else {
-							amountCrafted += result.getCount();
-							result.onCrafting(player.world, player, 1);
-							BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
-							NonNullList<ItemStack> nonnulllist = world.getRecipeManager()
-									.getRecipeNonNull(IRecipeType.CRAFTING, craftingInventory, world);
-
-							if (firstPass)
-								world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP,
-										SoundCategory.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
-							player.inventory.placeItemBackInInventory(world, result);
-							for (ItemStack itemStack : nonnulllist)
-								player.inventory.placeItemBackInInventory(world, itemStack);
-							firstPass = false;
-						}
-					}
-
-					if (!success) {
-						for (Entry<Integer, ItemStack> entry : stacksTaken.entrySet())
-							playerInv.insertItem(entry.getKey(), entry.getValue(), false);
-						break;
-					}
-
-				} while (player.isSneaking());
-				ForgeHooks.setCraftingPlayer(null);
-
-				return ActionResultType.SUCCESS;
-			}
+			} while (player.isSneaking());
+			ForgeHooks.setCraftingPlayer(null);
+			return ActionResultType.SUCCESS;
 		}
 
 		int i = section.index;
@@ -515,7 +535,8 @@ public class BlueprintEntity extends HangingEntity
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return new StringTextComponent("");
+			return new TranslationTextComponent(AllItems.CRAFTING_BLUEPRINT.get()
+				.getTranslationKey());
 		}
 
 	}

@@ -31,6 +31,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -165,7 +166,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getTranslationKey());
+		return new TranslationTextComponent(getTranslationKey());
 	}
 
 	public static ItemStackHandler getFilterItems(ItemStack stack) {

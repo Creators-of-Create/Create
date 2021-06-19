@@ -536,6 +536,8 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	protected void renderWidgets(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		RenderSystem.disableDepthTest();
+		
 		float fade = fadeIn.getValue(partialTicks);
 		float lazyIndexValue = lazyIndex.getValue(partialTicks);
 		float indexDiff = Math.abs(lazyIndexValue - index);
@@ -549,7 +551,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		{
 			// Chapter title
 			ms.push();
-			ms.translate(0, 0, 100);
+			ms.translate(0, 0, 400);
 			int x = 31 + 20 + 8;
 			int y = 31;
 
@@ -735,6 +737,8 @@ public class PonderUI extends NavigatableSimiScreen {
 		if (PonderIndex.EDITOR_MODE && userMode.isHovered())
 			drawCenteredString(ms, textRenderer, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
 		ms.pop();
+		
+		RenderSystem.enableDepthTest();
 	}
 
 	private void renderOverlay(MatrixStack ms, int i, float partialTicks) {

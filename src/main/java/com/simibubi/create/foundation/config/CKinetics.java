@@ -33,6 +33,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+	public ConfigEnum<SpawnerMovementSetting> spawnerMovement =
+			e(SpawnerMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 
 	public CStress stressValues = nested(1, CStress::new, Comments.stress);
 
@@ -92,10 +94,15 @@ public class CKinetics extends ConfigBase {
 		static String maxEjectorDistance = "Max Distance in blocks a Weighted Ejector can throw";
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
+		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 	}
 
-	public static enum DeployerAggroSetting {
+	public enum DeployerAggroSetting {
 		ALL, CREEPERS, NONE
+	}
+
+	public enum SpawnerMovementSetting {
+		MOVABLE, NO_PICKUP, UNMOVABLE
 	}
 
 }

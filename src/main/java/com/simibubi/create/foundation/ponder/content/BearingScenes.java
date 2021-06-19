@@ -46,6 +46,7 @@ public class BearingScenes {
 		scene.overlay.showSelectionWithText(util.select.position(anchorPos), 60)
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.blockSurface(windmill, Direction.WEST))
+			.attachKeyFrame()
 			.placeNearTarget()
 			.text("Windmill Bearings attach to the block in front of them");
 		scene.idle(50);
@@ -88,6 +89,7 @@ public class BearingScenes {
 
 		scene.overlay.showText(60)
 			.pointAt(util.vector.blockSurface(anchorPos, Direction.NORTH))
+			.attachKeyFrame()
 			.placeNearTarget()
 			.text("If enough Sail-like blocks are attached to the block, it can act as a Windmill");
 		scene.idle(70);
@@ -109,6 +111,7 @@ public class BearingScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.topOf(windmill))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Activated with Right-Click, the Windmill Bearing will start providing Rotational Force");
 		scene.idle(70);
 
@@ -125,6 +128,7 @@ public class BearingScenes {
 		scene.overlay.showCenteredScrollInput(windmill, Direction.WEST, 50);
 		scene.overlay.showText(60)
 			.pointAt(surface)
+			.attachKeyFrame()
 			.placeNearTarget()
 			.text("Use a Wrench to configure its rotation direction");
 		scene.idle(36);
@@ -184,6 +188,7 @@ public class BearingScenes {
 		scene.overlay.showOutline(PonderPalette.BLUE, bearingPos, util.select.fromTo(3, 2, 1, 3, 3, 2), 80);
 		scene.overlay.showSelectionWithText(util.select.fromTo(3, 2, 4, 3, 3, 5), 80)
 			.colored(PonderPalette.BLUE)
+			.attachKeyFrame()
 			.text("Any Structure can count as a valid Windmill, as long as it contains at least 8 sail-like Blocks.");
 
 		scene.idle(90);
@@ -225,6 +230,7 @@ public class BearingScenes {
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Mechanical Bearings attach to the block in front of them");
 		scene.idle(50);
 
@@ -245,6 +251,7 @@ public class BearingScenes {
 		scene.overlay.showText(80)
 			.pointAt(util.vector.topOf(bearingPos.up()))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Upon receiving Rotational Force, it will assemble it into a Rotating Contraption");
 		scene.idle(37 * 2);
 		scene.world.setKineticSpeed(all, 0);
@@ -273,6 +280,7 @@ public class BearingScenes {
 		scene.overlay.showText(120)
 			.pointAt(util.vector.topOf(bearingPos.up()))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("movement_anchors");
 
 		scene.idle(37 * 4);
@@ -331,6 +339,7 @@ public class BearingScenes {
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
 			.colored(PonderPalette.RED)
+			.attachKeyFrame()
 			.text("When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle");
 		scene.idle(110);
 
@@ -343,6 +352,7 @@ public class BearingScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("behaviour_modify_wrench");
 		scene.idle(70);
 
@@ -389,6 +399,7 @@ public class BearingScenes {
 
 		scene.overlay.showSelectionWithText(util.select.position(bearingPos), 60)
 			.text("Whenever Mechanical Bearings are themselves part of a moving Structure..")
+			.attachKeyFrame()
 			.placeNearTarget();
 		scene.idle(70);
 
@@ -410,6 +421,7 @@ public class BearingScenes {
 		scene.overlay.showSelectionWithText(util.select.position(bearingPos.north()), 60)
 			.colored(PonderPalette.GREEN)
 			.text("Once again, the bearing will attach to the block in front of it")
+			.attachKeyFrame()
 			.placeNearTarget();
 		scene.idle(70);
 
@@ -455,6 +467,7 @@ public class BearingScenes {
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Clockwork Bearings attach to blocks in front of them");
 		scene.idle(50);
 
@@ -472,6 +485,7 @@ public class BearingScenes {
 		scene.overlay.showText(80)
 			.pointAt(util.vector.blockSurface(bearingPos.north(), Direction.NORTH))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Upon receiving Rotational Force, the structure will be rotated according to the hour of the day");
 		scene.idle(90);
 
@@ -501,6 +515,7 @@ public class BearingScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Right-Click the bearing to start or stop animating the structure");
 		scene.idle(70);
 
@@ -513,6 +528,7 @@ public class BearingScenes {
 		scene.idle(15);
 		scene.overlay.showSelectionWithText(util.select.fromTo(3, 3, 1, 3, 4, 2), 80)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("movement_anchors");
 		scene.idle(90);
 
@@ -525,6 +541,7 @@ public class BearingScenes {
 		scene.overlay.showSelectionWithText(util.select.position(bearingPos.north(3)), 80)
 			.placeNearTarget()
 			.colored(PonderPalette.BLUE)
+			.attachKeyFrame()
 			.text("In front of the Hour Hand, a second structure can be added");
 		scene.idle(90);
 		scene.overlay.showControls(clickTheBearingSide.rightClick(), 20);

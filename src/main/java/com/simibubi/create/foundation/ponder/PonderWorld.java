@@ -302,6 +302,11 @@ public class PonderWorld extends SchematicWorld {
 	protected BlockState processBlockStateForPrinting(BlockState state) {
 		return state;
 	}
+	
+	@Override
+	public boolean isBlockLoaded(BlockPos pos) {
+		return true; // fix particle lighting
+	}
 
 	@Override
 	public boolean chunkExists(int x, int y) {

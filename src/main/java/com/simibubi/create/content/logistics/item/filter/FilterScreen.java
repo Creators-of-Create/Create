@@ -40,7 +40,9 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	@Override
 	protected void init() {
+		setWindowOffset(-11, 5);
 		super.init();
+
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -59,6 +61,7 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		respectNBTIndicator = new Indicator(x + 60, y + 67, StringTextComponent.EMPTY);
 		ignoreNBTIndicator = new Indicator(x + 78, y + 67, StringTextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator));
+
 		handleIndicators();
 	}
 
