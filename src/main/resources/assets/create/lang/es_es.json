@@ -1513,7 +1513,7 @@
 	"create.ponder.tag.kinetic_relays.description": "Componentes que ayudan a transmitir la fuerza rotacional en otro lugar",
 	"create.ponder.tag.windmill_sails": "Velas para los rodamientos de los molinos de viento",
 	"create.ponder.tag.windmill_sails.description": "Bloques que cuentan para la fuerza de un artefacto de molino de viento cuando se ensamblan. Cada uno de ellos tiene la misma eficacia al hacerlo.",
-	"create.ponder.tag.contraption_assembly": "Utilidad para adjuntar bloques",
+	"create.ponder.tag.contraption_assembly": "Utilidades para adjuntar bloques",
 	"create.ponder.tag.contraption_assembly.description": "Herramientas y componentes utilizados para montar estructuras con movimiento, como un artilugio animado",
 	"create.ponder.tag.decoration": "Estética",
 	"create.ponder.tag.decoration.description": "Componentes utilizados principalmente con fines decorativos",
@@ -1524,19 +1524,19 @@
 	"create.ponder.tag.fluids": "Manipuladores de fluidos",
 	"create.ponder.tag.fluids.description": "Componentes que ayudan a transportar y utilizar fluidos",
 
-    "create.ponder.adjustable_pulse_repeater.header": "Control de señales mediante repetidores de pulsos ajustables",																										  
+    "create.ponder.adjustable_pulse_repeater.header": "Controlar señales mediante repetidores de pulsos ajustables",																										  
 	"create.ponder.adjustable_pulse_repeater.text_1": "Los repetidores de pulsos ajustables emiten un pulso corto con un retardo",
 	"create.ponder.adjustable_pulse_repeater.text_2": "Con la rueda del ratón se puede configurar el tiempo de carga",
 	"create.ponder.adjustable_pulse_repeater.text_3": "Los retrasos configurados pueden ser de hasta 30 minutos",
 
-	"create.ponder.adjustable_repeater.header": "Control de señales mediante repetidores ajustables",
+	"create.ponder.adjustable_repeater.header": "Controlar señales mediante repetidores ajustables",
 	"create.ponder.adjustable_repeater.text_1": "Los repetidores ajustables se comportan de forma similar a los repetidores normales",
 	"create.ponder.adjustable_repeater.text_2": "Se cargan durante un tiempo determinado...",
 	"create.ponder.adjustable_repeater.text_3": "...y se enfrían durante el mismo tiempo",
 	"create.ponder.adjustable_repeater.text_4": "Con la rueda del ratón se puede configurar el tiempo de carga",
 	"create.ponder.adjustable_repeater.text_5": "Los retrasos configurados pueden variar hasta 30 minutos",
 
-	"create.ponder.analog_lever.header": "Control de señales mediante la palanca analógica",
+	"create.ponder.analog_lever.header": "Controlar señales mediante la palanca analógica",
 	"create.ponder.analog_lever.text_1": "Las palancas analógicas son una fuente compacta y precisa de energía de redstone",
 	"create.ponder.analog_lever.text_2": "Haz click derecho para aumentar su potencia analógica",
 	"create.ponder.analog_lever.text_3": "Usa mayús izq. + click derecho para volver a disminuir su potencia",
@@ -1566,7 +1566,7 @@
 	"create.ponder.belt_casing.text_1": "Se puede utilizar revestidor de latón o andesita para decorar las correas",
 	"create.ponder.belt_casing.text_2": "Se puede utilizar una llave inglesa para quitar el revestimiento",
 	
-	"create.ponder.belt_connector.header": "Uso de correas mecánicas",
+	"create.ponder.belt_connector.header": "El uso de las correas mecánicas",
 	"create.ponder.belt_connector.text_1": "Al hacer click derecho en dos ejes con una correa mecánica se conectarán entre sí",
 	"create.ponder.belt_connector.text_2": "Las selecciones accidentales pueden ser canceladas con mayús izq. + click derecho",
 	"create.ponder.belt_connector.text_3": "Se pueden añadir ejes adicionales en toda la correa",
@@ -1574,7 +1574,7 @@
 	"create.ponder.belt_connector.text_5": "Los ejes añadidos se pueden quitar con la llave inglesa",
 	"create.ponder.belt_connector.text_6": "Las correas mecánicas se pueden teñir con fines estéticos",
 
-	"create.ponder.belt_directions.header": "Orientaciones válidas para correas mecánicas",
+	"create.ponder.belt_directions.header": "Orientaciones válidas para las correas mecánicas",
 	"create.ponder.belt_directions.text_1": "Las correas mecánicas no pueden conectarse en direcciones arbitrarias",
 	"create.ponder.belt_directions.text_2": "1. Pueden conectarse horizontalmente",
 	"create.ponder.belt_directions.text_3": "2. Pueden conectarse en diagonal",
@@ -1675,11 +1675,11 @@
 	"create.ponder.clockwork_bearing.text_7": "Asegúrese de que las dos estructuras no están unidas entre sí con súper pegamento o algo similar",
 	"create.ponder.clockwork_bearing.text_8": "La segunda estructura ahora girará como el minutero",
 
-	"create.ponder.clutch.header": "Controlando la fuerza rotacional mediante un embrague",
+	"create.ponder.clutch.header": "Controlar la fuerza rotacional mediante un embrague",
 	"create.ponder.clutch.text_1": "Los embragues transmitirán la rotación en línea recta",
 	"create.ponder.clutch.text_2": "Cuando se alimentan con redstone, rompen la conexión",
 
-	"create.ponder.cog_speedup.header": "Cambio de marchas con engranajes",
+	"create.ponder.cog_speedup.header": "Cambiar de marchas con engranajes",
 	"create.ponder.cog_speedup.text_1": "Los engranajes grandes y pequeños pueden conectarse en diagonal",
 	"create.ponder.cog_speedup.text_2": "Al cambiar de engranajes grandes a pequeños, la velocidad rotacional se duplicará",
 	"create.ponder.cog_speedup.text_3": "Inversamente, la velocidad rotacional se reducirá a la mitad",
@@ -1780,7 +1780,7 @@
 
 	"create.ponder.fluid_tank_sizes.header": "Dimensiones de un depósito de fluidos",
 
-	"create.ponder.fluid_tank_storage.header": "Almacenamiento de fluidos en depósitos de fluidos",
+	"create.ponder.fluid_tank_storage.header": "Almacenar fluidos en depósitos de fluidos",
 
 	"create.ponder.flywheel.header": "Generar fuerza de rotación con la rueda de inercia",
 	"create.ponder.flywheel.text_1": "Las ruedas de inercia son necesarias para generar fuerza de rotación con el motor de horno",
@@ -1803,7 +1803,7 @@
 	"create.ponder.funnel_intro.header": "Usar embudos",
 	"create.ponder.funnel_intro.text_1": "Los embudos son ideales para transferir objetos desde y hacia los inventarios",
 
-	"create.ponder.funnel_redstone.header": "Controlado por redstone",
+	"create.ponder.funnel_redstone.header": "Alimentados con redstone",
 	"create.ponder.funnel_redstone.text_1": "La energía de redstone impedirá la actuación de cualquier embudo",
 
 	"create.ponder.funnel_transfer.header": "Transferencia directa",
@@ -1861,13 +1861,13 @@
 
 	"create.ponder.hose_pulley_level.header": "Nivel de llenado y vaciado de las poleas de las mangueras",
 
-	"create.ponder.item_drain.header": "Vaciado de contenedores de fluidos mediante drenajes de objetos",
+	"create.ponder.item_drain.header": "Vaciar contenedores de fluidos mediante drenajes de objetos",
 
 	"create.ponder.large_cogwheel.header": "Transmitir fuerza de rotación mediante engranajes grandes",
 	"create.ponder.large_cogwheel.text_1": "Los engranajes grandes pueden conectarse entre sí en ángulo recto",
 	"create.ponder.large_cogwheel.text_2": "Ayudarán a transmitir la velocidad transportada a otros ejes de rotación.",
 
-	"create.ponder.linear_chassis_attachment.header": "Fijación de bloques mediante el chasis lineal",
+	"create.ponder.linear_chassis_attachment.header": "Fijar bloques mediante el chasis lineal",
 	"create.ponder.linear_chassis_attachment.text_1": "Las caras abiertas de un chasis lineal pueden hacerse pegajosas",
 	"create.ponder.linear_chassis_attachment.text_2": "Haz click de nuevo para que se pegue el lado opuesto",
 	"create.ponder.linear_chassis_attachment.text_3": "Mayús izq. + click derecho con la mano vacía para eliminar el pegamento",
@@ -1989,7 +1989,7 @@
 
 	"create.ponder.mechanical_pump_speed.header": "Rendimiento de las bombas mecánicas",
 
-	"create.ponder.mechanical_saw_breaker.header": "Cortando árboles con la sierra mecánica",
+	"create.ponder.mechanical_saw_breaker.header": "Cortar árboles con la sierra mecánica",
 	"create.ponder.mechanical_saw_breaker.text_1": "Cuando se le da una fuerza rotacional, la sierra mecánica cortará los árboles que estén directamente frente a ella",
 	"create.ponder.mechanical_saw_breaker.text_2": "Para poder cortar el árbol por completo, la sierra tiene que romper el último bloque que lo une al suelo",
 
@@ -2011,7 +2011,7 @@
 	"create.ponder.millstone.text_4": "Después de un tiempo, el resultado se puede obtener usando el click derecho del ratón",
 	"create.ponder.millstone.text_5": "Las salidas también pueden extraerse mediante la automatización",
 
-	"create.ponder.nixie_tube.header": "Uso de los tubos Nixie",
+	"create.ponder.nixie_tube.header": "Usar los tubos Nixie",
 	"create.ponder.nixie_tube.text_1": "Cuando son alimentados por redstone, los _tubos nixie_ mostrarán la fuerza de las señales de redstone",
 	"create.ponder.nixie_tube.text_2": "Con las etiquetas editadas en un yunque, pueden mostar un texto personalizado",
 
@@ -2036,19 +2036,19 @@
 	"create.ponder.portable_storage_interface_redstone.header": "Controlada por redstone",
 	"create.ponder.portable_storage_interface_redstone.text_1": "La energía de redstone impedirá que la interfaz de almacenamiento portátil se conecte",
 
-	"create.ponder.powered_latch.header": "Control de señales mediante la palanca motorizada",
+	"create.ponder.powered_latch.header": "Controlar señales mediante la palanca motorizada",
 	"create.ponder.powered_latch.text_1": "Los palancas motorizadas son palancas controlables por redstone",
 	"create.ponder.powered_latch.text_2": "Las señales en la parte trasera la encienden",
 	"create.ponder.powered_latch.text_3": "Las señales sobre un lateral la vuelven a apagar",
 	"create.ponder.powered_latch.text_4": "Las palancas motorizadas también se pueden accionar manualmente",
 
-	"create.ponder.powered_toggle_latch.header": "Control de señales mediante la palanca de cierre motorizada",
+	"create.ponder.powered_toggle_latch.header": "Controlar señales mediante la palanca de cierre motorizada",
 	"create.ponder.powered_toggle_latch.text_1": "Las palancas de cierre motorizadas son palancas controlables por redstone",
 	"create.ponder.powered_toggle_latch.text_2": "Las señales en la parte trasera cambiarán su estado...",
 	"create.ponder.powered_toggle_latch.text_3": "...encender y apagar",
 	"create.ponder.powered_toggle_latch.text_4": "Las palancas de cierre motorizadas también se pueden accionar manualmente",
 
-	"create.ponder.pulse_repeater.header": "Control de señales mediante repetidores de pulsos",
+	"create.ponder.pulse_repeater.header": "Controlar señales mediante repetidores de pulsos",
 	"create.ponder.pulse_repeater.text_1": "Los repetidores de pulsos acortan cualquier señal de redstone a un solo pulso",
 
 	"create.ponder.radial_chassis.header": "Fijar bloques mediante chasis radial",
@@ -2087,7 +2087,7 @@
 	"create.ponder.rope_pulley_modes.text_1": "Cuando las poleas de cuerda dejan de moverse, la estructura movida vuelve a los bloques",
 	"create.ponder.rope_pulley_modes.text_2": "Puede configurarse para que no vuelva nunca a los bloques sólidos, o sólo en la ubicación en la que comenzó",
 
-	"create.ponder.rotation_speed_controller.header": "Uso del controlador de velocidad rotacional",
+	"create.ponder.rotation_speed_controller.header": "Usar el controlador de velocidad rotacional",
 	"create.ponder.rotation_speed_controller.text_1": "Los controladores de velocidad rotacional transmiten la rotación de su eje a un engranaje grande situado encima.",
 	"create.ponder.rotation_speed_controller.text_2": "Utilizando la rueda de desplazamiento del ratón, puede configurarse la velocidad rotacional",
 
@@ -2127,11 +2127,11 @@
 	"create.ponder.speedometer.text_2": "Cuando se usan las gafas del constructor, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.speedometer.text_3": "Los comparadores pueden emitir señales analógicas de Restone en relación con las mediciones del velocímetro",
 
-    "create.ponder.spout_access.header": "Traslado de fluidos a los surtidores",
+    "create.ponder.spout_access.header": "Trasladar fluidos a los surtidores",
 
-	"create.ponder.spout_filling.header": "Llenado objetos con un surtidor",
+	"create.ponder.spout_filling.header": "Llenar objetos con un surtidor",
 
-	"create.ponder.stabilized_bearings.header": "Artilugios estabilizados",
+	"create.ponder.stabilized_bearings.header": "Estabilizar artilugios",
 	"create.ponder.stabilized_bearings.text_1": "Siempre que los rodamientos mecánicos formen parte de una estructura móvil...",
 	"create.ponder.stabilized_bearings.text_2": "...intentarán mantenerse derechos",
 	"create.ponder.stabilized_bearings.text_3": "Una vez más, el rodamiento se unirá al bloque de enfrente",
