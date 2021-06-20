@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -198,6 +200,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 			if (!entityIn.isAlive())
 				return;
+			if (BeltTunnelInteractionHandler.getTunnelOnPosition(worldIn, pos) != null)
+				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
 				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -362,7 +366,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		ISelectionContext context) {
 		if (state.getBlock() != this)
 			return VoxelShapes.empty();
-		
+
 		VoxelShape shape = getShape(state, worldIn, pos, context);
 		return getTileEntityOptional(worldIn, pos).map(te -> {
 			if (context.getEntity() == null)
@@ -371,10 +375,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) 
+			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity()))
 				return BeltShapes.getCollisionShape(state);
 			return shape;
-			
+
 		}).orElse(shape);
 	}
 
