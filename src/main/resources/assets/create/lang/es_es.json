@@ -1524,7 +1524,7 @@
 	"create.ponder.tag.fluids.description": "Componentes que ayudan a transportar y utilizar fluidos",
 
     "create.ponder.adjustable_pulse_repeater.header": "Control de señales mediante repetidores de pulsos ajustables",																										  
-	"create.ponder.adjustable_pulse_repeater.text_1": "Los _repetidores de pulsos ajustables_ emiten un pulso corto con un retardo"
+	"create.ponder.adjustable_pulse_repeater.text_1": "Los _repetidores de pulsos ajustables_ emiten un pulso corto con un retardo",
 	"create.ponder.adjustable_pulse_repeater.text_2": "Con la rueda del ratón se puede configurar el tiempo de carga",
 	"create.ponder.adjustable_pulse_repeater.text_3": "Los retrasos configurados pueden ser de hasta 30 minutos",
 
