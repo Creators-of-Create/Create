@@ -102,7 +102,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 		if (syncCooldown > 0) {
 			syncCooldown--;
-			if (syncCooldown == 0 && queuedSync) 
+			if (syncCooldown == 0 && queuedSync)
 				updateFluids();
 		}
 
@@ -203,7 +203,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 				return 0;
 			return super.fill(resource, action);
 		}
-		
+
 		public int forceFill(FluidStack resource, FluidAction action) {
 			return super.fill(resource, action);
 		}
@@ -244,6 +244,9 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			fluidLevel.chase(tank.getFluidAmount() / (float) tank.getCapacity(), .25, Chaser.EXP);
 			if (!getWorld().isRemote)
 				sendDataLazily();
+			if (tileEntity.isVirtual() && !tank.getFluid()
+				.isEmpty())
+				renderedFluid = tank.getFluid();
 		}
 
 		public FluidStack getRenderedFluid() {
@@ -272,7 +275,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 				.isEmpty())
 				renderedFluid = tank.getFluid();
 		}
-		
+
 		public boolean isEmpty(float partialTicks) {
 			FluidStack renderedFluid = getRenderedFluid();
 			if (renderedFluid.isEmpty())
