@@ -4,7 +4,7 @@
 	<a href="https://www.curseforge.com/minecraft/mc-mods/create/files"><img src="https://img.shields.io/badge/Available%20for-MC%201.14,%201.15,%201.16-c70039" alt="Supported Versions"></a>
 	<a href="https://github.com/Creators-of-Create/Create/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Creators-of-Create/Create?style=flat&color=900c3f" alt="License"></a>
 	<a href="https://discord.gg/hmaD7Se"><img src="https://img.shields.io/discord/620934202875183104?color=844685&label=Feedback%20%26%20Help&style=flat" alt="Discord"></a>
-	<a href="https://www.curseforge.com/minecraft/mc-mods/create"><img src="http://cf.way2muchnoise.eu/short_create.svg" alt="Curseforge Downloads"></a><br><br>
+	<a href="https://www.curseforge.com/minecraft/mc-mods/create"><img src="http://cf.way2muchnoise.eu/328085.svg" alt="CF"></a><br><br>
 </h1>
 
 Welcome to Create, a mod offering a variety of tools and blocks for Building, Decoration and Aesthetic Automation.
