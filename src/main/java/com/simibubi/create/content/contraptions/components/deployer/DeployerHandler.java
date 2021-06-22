@@ -5,9 +5,11 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 
 import net.minecraft.block.DoublePlantBlock;
@@ -150,7 +152,9 @@ public class DeployerHandler {
 
 		// Check for entities
 		final ServerWorld world = player.getServerWorld();
-		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(clickedPos));
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(clickedPos)).stream()
+			.filter(e -> !(e instanceof AbstractContraptionEntity))
+			.collect(Collectors.toList());
 		Hand hand = Hand.MAIN_HAND;
 		if (!entities.isEmpty()) {
 			Entity entity = entities.get(world.rand.nextInt(entities.size()));

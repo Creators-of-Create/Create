@@ -60,8 +60,8 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		super.tick();
 		World world = getWorld();
 		BlockPos pos = getPos();
-		boolean onClient = world.isRemote;
-		
+		boolean onServer = !world.isRemote || tileEntity.isVirtual();
+
 		if (interfaces == null)
 			return;
 		Collection<PipeConnection> connections = interfaces.values();
@@ -81,7 +81,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
-		if (!onClient) {
+		if (onServer) {
 			boolean sendUpdate = false;
 			for (PipeConnection connection : connections) {
 				sendUpdate |= connection.flipFlowsIfPressureReversed();
@@ -96,7 +96,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
-		if (!onClient) {
+		if (onServer) {
 			FluidStack availableFlow = FluidStack.EMPTY;
 			FluidStack collidingFlow = FluidStack.EMPTY;
 
@@ -131,7 +131,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 				sendUpdate |= connection.manageFlows(world, pos, internalFluid, extractionPredicate);
 			}
 
-			if (sendUpdate)
+			if (sendUpdate) 
 				tileEntity.notifyUpdate();
 		}
 
@@ -155,7 +155,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		}
 
 		interfaces.values()
-			.forEach(connection -> connection.deserializeNBT(nbt, clientPacket));
+			.forEach(connection -> connection.deserializeNBT(nbt, tileEntity.getPos(), clientPacket));
 	}
 
 	@Override

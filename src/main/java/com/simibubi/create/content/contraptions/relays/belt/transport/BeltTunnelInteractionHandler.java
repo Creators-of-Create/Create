@@ -43,8 +43,8 @@ public class BeltTunnelInteractionHandler {
 		World world = beltInventory.belt.getWorld();
 		boolean onServer = !world.isRemote || beltInventory.belt.isVirtual();
 		boolean removed = false;
-		BeltTunnelTileEntity nextTunnel = getTunnelOnSegement(beltInventory, upcomingSegment);
-		
+		BeltTunnelTileEntity nextTunnel = getTunnelOnSegment(beltInventory, upcomingSegment);
+
 		if (nextTunnel instanceof BrassTunnelTileEntity) {
 			BrassTunnelTileEntity brassTunnel = (BrassTunnelTileEntity) nextTunnel;
 			if (brassTunnel.hasDistributionBehaviour()) {
@@ -80,13 +80,13 @@ public class BeltTunnelInteractionHandler {
 						continue;
 					if (!behaviour.canInsertFromSide(d))
 						continue;
-					
+
 					ItemStack toinsert = ItemHandlerHelper.copyStackWithSize(current.stack, 1);
 					if (!behaviour.handleInsertion(toinsert, d, false).isEmpty())
 						return true;
-					if (onServer) 
+					if (onServer)
 						flapTunnel(beltInventory, upcomingSegment, d, false);
-					
+
 					current.stack.shrink(1);
 					beltInventory.belt.sendData();
 					if (current.stack.getCount() <= 1)
@@ -124,25 +124,25 @@ public class BeltTunnelInteractionHandler {
 	}
 
 	public static void flapTunnel(BeltInventory beltInventory, int offset, Direction side, boolean inward) {
-		BeltTunnelTileEntity te = getTunnelOnSegement(beltInventory, offset);
+		BeltTunnelTileEntity te = getTunnelOnSegment(beltInventory, offset);
 		if (te == null)
 			return;
 		te.flap(side, inward);
 	}
 
-	protected static BeltTunnelTileEntity getTunnelOnSegement(BeltInventory beltInventory, int offset) {
+	protected static BeltTunnelTileEntity getTunnelOnSegment(BeltInventory beltInventory, int offset) {
 		BeltTileEntity belt = beltInventory.belt;
 		if (belt.getBlockState()
 			.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 			return null;
-		BlockPos pos = BeltHelper.getPositionForOffset(belt, offset)
-			.up();
-		if (!(belt.getWorld()
-			.getBlockState(pos)
-			.getBlock() instanceof BeltTunnelBlock))
+		return getTunnelOnPosition(belt.getWorld(), BeltHelper.getPositionForOffset(belt, offset));
+	}
+
+	public static BeltTunnelTileEntity getTunnelOnPosition(World world, BlockPos pos) {
+		pos = pos.up();
+		if (!(world.getBlockState(pos).getBlock() instanceof BeltTunnelBlock))
 			return null;
-		TileEntity te = belt.getWorld()
-			.getTileEntity(pos);
+		TileEntity te = world.getTileEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
 			return null;
 		return ((BeltTunnelTileEntity) te);

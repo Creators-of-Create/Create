@@ -327,12 +327,13 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putBoolean("Powered", redstoneLocked);
 
 		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand()
-				.serializeNBT());
 			ListNBT invNBT = new ListNBT();
 			player.inventory.write(invNBT);
 			compound.put("Inventory", invNBT);
+			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
+		} else if (deferredInventoryList != null) {
+			compound.put("Inventory", deferredInventoryList);
 		}
 
 		super.write(compound, clientPacket);
