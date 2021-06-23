@@ -417,7 +417,7 @@
 	"entity.create.gantry_contraption": "Artilugio de grúa",
 	"entity.create.seat": "Asiento",
 	"entity.create.stationary_contraption": "Artilugio estacionario",
-	"entity.create.super_glue": "Super pegamento",
+	"entity.create.super_glue": "Pegamento",
 
 	"fluid.create.milk": "Leche",
 	"fluid.create.potion": "Poción",
@@ -489,7 +489,7 @@
 	"item.create.schematic": "Esquema",
 	"item.create.schematic_and_quill": "Esquema y pluma",
 	"item.create.shadow_steel": "Acero sombrío",
-	"item.create.super_glue": "Super pegamento",
+	"item.create.super_glue": "Pegamento",
 	"item.create.sweet_roll": "Pan dulce",
 	"item.create.tree_fertilizer": "Fertilizante para árboles",
 	"item.create.vertical_gearbox": "Caja de transmisión vertical",
@@ -1488,7 +1488,7 @@
 	"create.ponder.replay": "Repetición",
 	"create.ponder.think_back": "Volver atrás",
 	"create.ponder.slow_text": "Lectura cómoda",
-	"create.ponder.shared.movement_anchors": "Con la ayuda de un chasis o super pegamento, se pueden mover estructuras más grandes.",
+	"create.ponder.shared.movement_anchors": "Con la ayuda de un chasis o pegamento, se pueden mover estructuras más grandes.",
 	"create.ponder.shared.rpm32": "32 RPM",
 	"create.ponder.shared.sneak_and": "Mayús izq. +",
 	"create.ponder.shared.storage_on_contraption": "Los inventarios unidos al artilugio recogerán sus producciones automáticamente",
@@ -1672,7 +1672,7 @@
 	"create.ponder.clockwork_bearing.text_4": "4:00",
 	"create.ponder.clockwork_bearing.text_5": "Haz clic derecho en el rodamiento para iniciar o detener la animación de la estructura",
 	"create.ponder.clockwork_bearing.text_6": "Delante de la manecilla de las horas se puede añadir una segunda estructura",
-	"create.ponder.clockwork_bearing.text_7": "Asegúrese de que las dos estructuras no están unidas entre sí con súper pegamento o algo similar",
+	"create.ponder.clockwork_bearing.text_7": "Asegúrese de que las dos estructuras no están unidas entre sí con pegamento o algo similar",
 	"create.ponder.clockwork_bearing.text_8": "La segunda estructura ahora girará como el minutero",
 
 	"create.ponder.clutch.header": "Controlar la fuerza rotacional mediante un embrague",
@@ -1821,7 +1821,7 @@
 	"create.ponder.gantry_carriage.text_2": "Las instalaciones de grúa pueden mover bloques adjuntos",
 
 	"create.ponder.gantry_cascaded.header": "Grúas en cascada",
-	"create.ponder.gantry_cascaded.text_1": "Los ejes de grúas se unen a un carro de grúa sin necesidad de súper pegamento",
+	"create.ponder.gantry_cascaded.text_1": "Los ejes de grúas se unen a un carro de grúa sin necesidad de pegamento",
 	"create.ponder.gantry_cascaded.text_2": "Lo mismo se aplica a los carros de grúa en los ejes de grúas desplazados",
 	"create.ponder.gantry_cascaded.text_3": "Así, un sistema de grúas puede estar en cascada para cubrir múltiples ejes de movimiento",
 
@@ -1874,7 +1874,7 @@
 	"create.ponder.linear_chassis_attachment.text_4": "Las caras pegadas del chasis lineal fijarán una línea de bloques delante de él",
 	"create.ponder.linear_chassis_attachment.text_5": "Utilizando una llave inglesa, se puede especificar un rango preciso",
 	"create.ponder.linear_chassis_attachment.text_6": "Manteniendo pulsada la tecla CTRL y usando la rueda central del ratón, se ajusta el rango de todos los bloques de chasis adjuntos",
-	"create.ponder.linear_chassis_attachment.text_7": "Para fijar los bloques a cualquier otro lado es necesario utilizar super pegamento",
+	"create.ponder.linear_chassis_attachment.text_7": "Para fijar los bloques a cualquier otro lado es necesario utilizar pegamento",
 	"create.ponder.linear_chassis_attachment.text_8": "Utilizando esta mecánica, las estructuras de cualquier forma pueden moverse como un artilugio",
 
 	"create.ponder.linear_chassis_group.header": "Mover chasis lineales en grupos",
@@ -2093,13 +2093,13 @@
 
 	"create.ponder.sail.header": "Montar molinos de viento usando velas",
 	"create.ponder.sail.text_1": "Las velas son bloques muy útiles para crear molinos de viento",
-	"create.ponder.sail.text_2": "Se fijarán a los bloques y entre sí sin necesidad de súper pegamento o bloques de chasis",
+	"create.ponder.sail.text_2": "Se fijarán a los bloques y entre sí sin necesidad de pegamento o bloques de chasis",
 	"create.ponder.sail.text_3": "Clic derecho con un tinte para pintarlas",
 	"create.ponder.sail.text_4": "Clic derecho con una tijera para volver a convertirlas en marcos",
 
 	"create.ponder.sail_frame.header": "Montar molinos de viento con marcos de vela",
 	"create.ponder.sail_frame.text_1": "Los marcos de vela son prácticos bloques para crear molinos de viento",
-	"create.ponder.sail_frame.text_2": "Se fijarán a los bloques y entre sí sin necesidad de súper pegamento o bloques de chasis",
+	"create.ponder.sail_frame.text_2": "Se fijarán a los bloques y entre sí sin necesidad de pegamento o bloques de chasis",
 
 	"create.ponder.sequenced_gearshift.header": "Controlar la velocidad de rotación mediante la caja de cambios secuenciales",
 	"create.ponder.sequenced_gearshift.text_1": "La caja de cambios secuencial retransmite la rotación siguiendo una lista cronometrada de instrucciones",
@@ -2148,12 +2148,12 @@
 	"create.ponder.stressometer.text_2": "Cuando se usan las gafas del ingeniero, el jugador puede obtener información más detallada del medidor",
 	"create.ponder.stressometer.text_3": "Los comparadores pueden emitir señales analógicas de redstone en relación con las mediciones del estresómetro",
 
-	"create.ponder.super_glue.header": "Fijar bloques con super pegamento",
-	"create.ponder.super_glue.text_1": "Se puede utilizar súper pegamento entre dos bloques cualquiera",
+	"create.ponder.super_glue.header": "Fijar bloques con pegamento",
+	"create.ponder.super_glue.text_1": "Se puede utilizar pegamento entre dos bloques cualquiera",
 	"create.ponder.super_glue.text_2": "Los bloques fijados se moverán juntos cuando se ensamblen en un artilugio",
-	"create.ponder.super_glue.text_3": "Cada vez que el súper pegamento es sostenido en la mano...",
+	"create.ponder.super_glue.text_3": "Cada vez que el pegamento es sostenido en la mano...",
 	"create.ponder.super_glue.text_4": "...los bloques añadidos se pegarán a la cara en la que fueron colocados automáticamente",
-	"create.ponder.super_glue.text_5": "El súper pegamento se puede quitar con un clic izquierdo",
+	"create.ponder.super_glue.text_5": "El pegamento se puede quitar con un clic izquierdo",
 
 	"create.ponder.valve_handle.header": "Generar fuerza rotacional mediante asas de válvula",
 	"create.ponder.valve_handle.text_1": "Los jugadores pueden utilizar las asas de válvulas para aplicar fuerza rotacional manualmente",
