@@ -20,7 +20,7 @@ import net.minecraft.util.text.Style;
 
 public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
 
-	Random r = new Random();
+	private Random r = new Random();
 
 	public NixieTubeRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
@@ -38,7 +38,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		float height = blockState.get(NixieTubeBlock.CEILING) ? 2 : 6;
 		float scale = 1 / 20f;
 
-		Couple<String> s = te.getVisibleText();
+		Couple<String> s = te.getDisplayedStrings();
 
 		ms.push();
 		ms.translate(-4 / 16f, 0, 0);

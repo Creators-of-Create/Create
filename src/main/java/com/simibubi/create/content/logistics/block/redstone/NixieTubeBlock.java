@@ -154,7 +154,7 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.reactsToRedstone())
-				te.displayRedstoneStrength(getPower(worldIn, pos));
+				te.updateRedstoneStrength(getPower(worldIn, pos));
 		});
 	}
 
