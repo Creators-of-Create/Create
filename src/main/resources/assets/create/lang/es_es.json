@@ -741,7 +741,7 @@
 	"create.gui.scrollInput.scrollToModify": "Usa la rueda del ratón para modificar",
 	"create.gui.scrollInput.scrollToAdjustAmount": "Usa la rueda del ratón para ajustar la cantidad",
 	"create.gui.scrollInput.scrollToSelect": "Usa la rueda del ratón para seleccionar",
-	"create.gui.scrollInput.shiftScrollsFaster": "Shift para usar la rueda del ratón más rápido",
+	"create.gui.scrollInput.shiftScrollsFaster": "Mayús izq. para usar la rueda del ratón más rápido",
 	"create.gui.toolmenu.focusKey": "Mantenga [%1$s] para enfocar",
 	"create.gui.toolmenu.cycle": "[RUEDA DEL RATÓN] para el ciclo",
 	"create.gui.symmetryWand.mirrorType": "Espejado",
@@ -785,7 +785,7 @@
 	"create.gui.terrainzapper.tool.overlay": "Superponer",
 	"create.gui.terrainzapper.tool.flatten": "Aplanar",
 
-	"create.terrainzapper.shiftRightClickToSet": "Shift + clic derecho para seleccionar una forma",
+	"create.terrainzapper.shiftRightClickToSet": "Mayús izq. + clic derecho para seleccionar una forma",
 	"create.terrainzapper.usingBlock": "Usando: %1$s",
 	"create.terrainzapper.leftClickToSet": "Clic izquierdo a un bloque para establecer el material",											  
 
@@ -1061,7 +1061,7 @@
 
 	"create.tooltip.holdForDescription": "Mantén [%1$s] para mas información",
 	"create.tooltip.holdForControls": "Mantén [%1$s] para ver los controles",
-	"create.tooltip.keyShift": "Shift",
+	"create.tooltip.keyShift": "Mayús izq.",
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Requisitos de velocidad: %1$s",
 	"create.tooltip.speedRequirement.none": "Ninguno",
@@ -1196,7 +1196,7 @@
 	"item.create.example_item.tooltip": "EJEMPLO DE OBJETO (sólo un marcador de que este consejo existe)",
 	"item.create.example_item.tooltip.summary": "Una breve descripción del objeto. Los guiones bajos resaltan un término",
 	"item.create.example_item.tooltip.condition1": "Cuando haces tal con el objeto",
-	"item.create.example_item.tooltip.behaviour1": "Entonces este objeto hace esto. (la información del comportamiento se muestra con la tecla Shift)",
+	"item.create.example_item.tooltip.behaviour1": "Entonces este objeto hace esto. (la información del comportamiento se muestra con la tecla Mayús izq.)",
 	"item.create.example_item.tooltip.condition2": "Y cuando esto",
 	"item.create.example_item.tooltip.behaviour2": "Puedes añadir tantos comportamientos como quieras",
 	"item.create.example_item.tooltip.control1": "Cuando se pulsa Ctrl",
@@ -1219,7 +1219,7 @@
 	"block.create.seat.tooltip": "ASIENTO",
 	"block.create.seat.tooltip.summary": "¡Siéntate y disfruta del viaje! Anclará a un jugador en un artilugio en movimiento. También es ideal para muebles estáticos. Viene en una variedad de colores.",
 	"block.create.seat.tooltip.condition1": "Cuando se hace clic derecho en el asiento",
-	"block.create.seat.tooltip.behaviour1": "Sienta al jugador en el _asiento_. Pulsa Shift para dejar el asiento.",
+	"block.create.seat.tooltip.behaviour1": "Sienta al jugador en el _asiento_. Pulsa Mayús izq. para dejar el asiento.",
 
 	"item.create.blaze_cake.tooltip": "PASTEL DE BLAZE",
 	"item.create.blaze_cake.tooltip.summary": "Un delicioso regalo para sus esforzados _quemadores de blaze_. ¡Los pone en marcha!.",
@@ -1291,7 +1291,7 @@
 	"item.create.wand_of_symmetry.tooltip.action1": "_Crea_ o _mueve_ el espejo.",
 	"item.create.wand_of_symmetry.tooltip.control2": "Cuando se hace clic derecho en el aire",
 	"item.create.wand_of_symmetry.tooltip.action2": "_Quita_ el espejo activo.",
-	"item.create.wand_of_symmetry.tooltip.control3": "Shift + clic derecho",
+	"item.create.wand_of_symmetry.tooltip.control3": "Mayús izq. + clic derecho",
 	"item.create.wand_of_symmetry.tooltip.action3": "Abre la interfaz de configuración.",
 
 	"item.create.handheld_worldshaper.tooltip": "WORLDSHAPER",
@@ -1300,7 +1300,7 @@
 	"item.create.handheld_worldshaper.tooltip.action1": "Establece los bloques colocados por la herramienta en el bloque objetivo.",
 	"item.create.handheld_worldshaper.tooltip.control2": "Cuando se hace clic derecho en un bloque",
 	"item.create.handheld_worldshaper.tooltip.action2": "Aplica el _pincel_ y la _herramienta_ actualmente seleccionadas en el lugar deseado.",
-	"item.create.handheld_worldshaper.tooltip.control3": "Shift + clic derecho",
+	"item.create.handheld_worldshaper.tooltip.control3": "Mayús izq. + clic derecho",
 	"item.create.handheld_worldshaper.tooltip.action3": "Abre la interfaz de configuración.",
 
 	"item.create.tree_fertilizer.tooltip": "FERTILIZANTE PARA ÁRBOLES",
@@ -1334,7 +1334,7 @@
 	"item.create.schematic.tooltip.summary": "Contiene una estructura para ser posicionada y colocada en el mundo. Posiciona el holograma como desees y utiliza un _cañón de esquemas_ para construirla.",
 	"item.create.schematic.tooltip.condition1": "Cuando se sostiene en la mano",
 	"item.create.schematic.tooltip.behaviour1": "Se puede posicionar utilizando las herramientas en pantalla.",
-	"item.create.schematic.tooltip.control1": "Shift + clic derecho",
+	"item.create.schematic.tooltip.control1": "Mayús izq. + clic derecho",
 	"item.create.schematic.tooltip.action1": "Abre una _interfaz_ para introducir las _coordenadas_ exactas.",
 
 	"item.create.schematic_and_quill.tooltip": "ESQUEMA Y PLUMA",
@@ -1347,7 +1347,7 @@
 	"item.create.schematic_and_quill.tooltip.action1": "Selecciona un punto de esquina / confirmar guardar.",
 	"item.create.schematic_and_quill.tooltip.control2": "Cuando mantiene Ctrl",
 	"item.create.schematic_and_quill.tooltip.action2": "Selecciona puntos en _medio del aire_. Rueda del ratón para ajustar la distancia.",
-	"item.create.schematic_and_quill.tooltip.control3": "Shift + clic derecho",
+	"item.create.schematic_and_quill.tooltip.control3": "Mayús izq. + clic derecho",
 	"item.create.schematic_and_quill.tooltip.action3": "_Reinicia_ y elimina la selección.",
 
 	"block.create.schematicannon.tooltip": "CAÑÓN DE ESQUEMAS",
@@ -1373,7 +1373,7 @@
 	"item.create.wrench.tooltip.summary": "Una herramienta útil para trabajar en artilugios cinéticos. Se puede utilizar para _rotar_, _desmantelar_ y para _configurar_ componentes.",
 	"item.create.wrench.tooltip.control1": "Cuando se hace clic derecho en un bloque cinético",
 	"item.create.wrench.tooltip.action1": "Rota los componentes hacia o desde la cara con la que ha interactuado.",
-	"item.create.wrench.tooltip.control2": "Shift + clic derecho",
+	"item.create.wrench.tooltip.control2": "Mayús izq. + clic derecho",
 	"item.create.wrench.tooltip.action2": "Desmonta los _componentes cinéticos_ y los devuelve a tu inventario_.",
 
 	"block.create.nozzle.tooltip": "BOQUILLA",
@@ -1439,7 +1439,7 @@
 	"item.create.linked_controller.tooltip.summary": "Permite el control manual de las frecuencias de _enlaces de redstone_ asignadas a sus seis botones..",
 	"item.create.linked_controller.tooltip.condition1": "Al hacer clic derecho",
 	"item.create.linked_controller.tooltip.behaviour1": "Activa el _controlador_. Los _controles de movimiento_ se adquieren mientras está activo.",
-	"item.create.linked_controller.tooltip.condition2": "Al usar Shift + clic derecho",
+	"item.create.linked_controller.tooltip.condition2": "Al usar Mayús izq. + clic derecho",
 	"item.create.linked_controller.tooltip.behaviour2": "Abre la interfaz de configuración manual.",
 	"item.create.linked_controller.tooltip.condition3": "Al usar clic derecho en un receptor de enlaces de redstone",
 	"item.create.linked_controller.tooltip.behaviour3": "Activa el _modo de vinculación_, pulsa uno de los _seis controles_ para vincularlo a la _frecuencia de los enlaces_.",
@@ -1490,7 +1490,7 @@
 	"create.ponder.slow_text": "Lectura cómoda",
 	"create.ponder.shared.movement_anchors": "Con la ayuda de un chasis o super pegamento, se pueden mover estructuras más grandes.",
 	"create.ponder.shared.rpm32": "32 RPM",
-	"create.ponder.shared.sneak_and": "Shift +",
+	"create.ponder.shared.sneak_and": "Mayús izq. +",
 	"create.ponder.shared.storage_on_contraption": "Los inventarios unidos al artilugio recogerán sus producciones automáticamente",
 	"create.ponder.shared.behaviour_modify_wrench": "Este comportamiento puede modificarse mediante una llave inglesa",
 	"create.ponder.shared.rpm8": "8 RPM",
@@ -1539,7 +1539,7 @@
 	"create.ponder.analog_lever.header": "Controlar señales mediante la palanca analógica",
 	"create.ponder.analog_lever.text_1": "Las palancas analógicas son una fuente compacta y precisa de energía de redstone",
 	"create.ponder.analog_lever.text_2": "Haz clic derecho para aumentar su potencia analógica",
-	"create.ponder.analog_lever.text_3": "Usa Shift + clic derecho para volver a disminuir su potencia",
+	"create.ponder.analog_lever.text_3": "Usa Mayús izq. + clic derecho para volver a disminuir su potencia",
 
 	"create.ponder.andesite_tunnel.header": "Usar túneles de andesita",
 	"create.ponder.andesite_tunnel.text_1": "Los túneles de andesita se pueden utilizar para tapar las correas",
@@ -1568,7 +1568,7 @@
 	
 	"create.ponder.belt_connector.header": "El uso de las correas mecánicas",
 	"create.ponder.belt_connector.text_1": "Al hacer clic derecho en dos ejes con una correa mecánica se conectarán entre sí",
-	"create.ponder.belt_connector.text_2": "Las selecciones accidentales pueden ser canceladas con Shift + clic derecho",
+	"create.ponder.belt_connector.text_2": "Las selecciones accidentales pueden ser canceladas con Mayús izq. + clic derecho",
 	"create.ponder.belt_connector.text_3": "Se pueden añadir ejes adicionales en toda la correa",
 	"create.ponder.belt_connector.text_4": "Los ejes conectados a través de correas girarán con velocidad y dirección idénticas",
 	"create.ponder.belt_connector.text_5": "Los ejes añadidos se pueden quitar con la llave inglesa",
@@ -1795,7 +1795,7 @@
 
 	"create.ponder.funnel_direction.header": "Dirección de la transferencia",
 	"create.ponder.funnel_direction.text_1": "Colocado normalmente, extrae objetos del inventario",
-	"create.ponder.funnel_direction.text_2": "Colocado mientras pulsa [Shift], pone objetos en el inventario",
+	"create.ponder.funnel_direction.text_2": "Colocado mientras pulsa [Mayús izq.], pone objetos en el inventario",
 	"create.ponder.funnel_direction.text_3": "Usando una llave inglesa, el embudo puede ser volteado después de su colocación",
 	"create.ponder.funnel_direction.text_4": "Se aplicarán las mismas reglas para la mayoría de las orientaciones",
 	"create.ponder.funnel_direction.text_5": "Los embudos en las correas extraerán/insertarán dependiendo de su dirección de movimiento",
@@ -1853,7 +1853,7 @@
 	"create.ponder.hand_crank.text_1": "Las manivelas pueden ser utilizadas para aplicar fuerza rotacional manualmente",
 	"create.ponder.hand_crank.text_2": "Mantén pulsado clic derecho para girar en sentido antihorario",
 	"create.ponder.hand_crank.text_3": "Su velocidad de transmisión es relativamente alta",
-	"create.ponder.hand_crank.text_4": "Shift + clic derecho pulsado para girar en sentido horario",
+	"create.ponder.hand_crank.text_4": "Mayús izq. + clic derecho pulsado para girar en sentido horario",
 
     "create.ponder.hose_pulley.header": "Llenado y vaciado de fuentes mediante poleas de manguera",
 
@@ -1870,7 +1870,7 @@
 	"create.ponder.linear_chassis_attachment.header": "Fijar bloques mediante el chasis lineal",
 	"create.ponder.linear_chassis_attachment.text_1": "Las caras abiertas de un chasis lineal pueden hacerse pegajosas",
 	"create.ponder.linear_chassis_attachment.text_2": "Haz clic de nuevo para que se pegue el lado opuesto",
-	"create.ponder.linear_chassis_attachment.text_3": "Shift + clic derecho con la mano vacía para eliminar el pegamento",
+	"create.ponder.linear_chassis_attachment.text_3": "Mayús izq. + clic derecho con la mano vacía para eliminar el pegamento",
 	"create.ponder.linear_chassis_attachment.text_4": "Las caras pegadas del chasis lineal fijarán una línea de bloques delante de él",
 	"create.ponder.linear_chassis_attachment.text_5": "Utilizando una llave inglesa, se puede especificar un rango preciso",
 	"create.ponder.linear_chassis_attachment.text_6": "Manteniendo pulsada la tecla CTRL y usando la rueda central del ratón, se ajusta el rango de todos los bloques de chasis adjuntos",
@@ -2056,7 +2056,7 @@
 	"create.ponder.radial_chassis.text_2": "Cuando uno es movido por un artilugio, los otros son arrastrados con él",
 	"create.ponder.radial_chassis.text_3": "Las caras laterales de un chasis radial pueden hacerse adhesivas",
 	"create.ponder.radial_chassis.text_4": "Haga clic de nuevo para que todos los demás lados sean pegajosos",
-	"create.ponder.radial_chassis.text_5": "Shift + clic derecho con la mano vacía para eliminar el pegamento",
+	"create.ponder.radial_chassis.text_5": "Mayús izq. + clic derecho con la mano vacía para eliminar el pegamento",
 	"create.ponder.radial_chassis.text_6": "Cada vez que un bloque está junto a una cara pegajosa...",
 	"create.ponder.radial_chassis.text_7": "...adjuntará todos los bloques alcanzables dentro de un radio en esa capa",
 	"create.ponder.radial_chassis.text_8": "Con una llave inglesa y usando la rueda de desplazamiento del ratón se puede especificar un radio preciso",
@@ -2068,7 +2068,7 @@
 
 	"create.ponder.redstone_link.header": "Usar los enlaces de redstone",
 	"create.ponder.redstone_link.text_1": "Los enlaces de redstone pueden transmitir señales redstone de forma inalámbrica",
-	"create.ponder.redstone_link.text_2": "Shift + clic derecho para cambiar el modo de recepción",
+	"create.ponder.redstone_link.text_2": "Mayús izq. + clic derecho para cambiar el modo de recepción",
 	"create.ponder.redstone_link.text_3": "Un simple clic derecho con una llave inglesa puede hacer lo mismo",
 	"create.ponder.redstone_link.text_4": "Los receptores emiten la potencia de redstone de los transmisores en 128 bloques",
 	"create.ponder.redstone_link.text_5": "Colocando objetos en las dos ranuras puede especificar una frecuencia",
@@ -2159,7 +2159,7 @@
 	"create.ponder.valve_handle.text_1": "Los jugadores pueden utilizar las asas de válvulas para aplicar fuerza rotacional manualmente",
 	"create.ponder.valve_handle.text_2": "Mantenga pulsado el clic derecho para rotar en sentido contrario a las agujas del reloj",
 	"create.ponder.valve_handle.text_3": "Su velocidad de transmisión es lenta y precisa",
-	"create.ponder.valve_handle.text_4": "Shift + clic derecho para rotar en el sentido de las agujas del reloj",
+	"create.ponder.valve_handle.text_4": "Mayús izq. + clic derecho para rotar en el sentido de las agujas del reloj",
 	"create.ponder.valve_handle.text_5": "Las asas de las válvulas pueden teñirse con fines estéticos",
 
     "create.ponder.valve_pipe.header": "Controlar el flujo de fluidos mediante válvulas",
@@ -2171,7 +2171,7 @@
 	"create.ponder.water_wheel.text_4": "Orientadas hacia el lado contrario, no serán tan eficaces",
 
 	"create.ponder.weighted_ejector.header": "Usar eyectores de peso",
-	"create.ponder.weighted_ejector.text_1": "Shift + clic derecho sosteniendo un eyector de peso para seleccionar la ubicación de destino",
+	"create.ponder.weighted_ejector.text_1": "Mayús izq. + clic derecho sosteniendo un eyector de peso para seleccionar la ubicación de destino",
 	"create.ponder.weighted_ejector.text_2": "El eyector colocado lanzará ahora los objetos al lugar marcado",
 	"create.ponder.weighted_ejector.text_3": "Un objetivo válido puede estar a cualquier altura o distancia dentro del alcance",
 	"create.ponder.weighted_ejector.text_4": "Sin embargo, no pueden estar a un costado",
