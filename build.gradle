@@ -137,7 +137,7 @@ dependencies {
     if (findProject(':Flywheel') != null) {
         compile project(':Flywheel') // jozu: I use a gradle workspace with both projects
     } else {
-        compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.0.2.7")
+        compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.0.2.8")
     }
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
