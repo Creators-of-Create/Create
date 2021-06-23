@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();

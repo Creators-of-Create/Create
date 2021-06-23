@@ -13,6 +13,10 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraftforge.api.distmarker.Dist;
+
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -63,7 +67,8 @@ import net.minecraftforge.fml.common.Mod;
 
 import org.lwjgl.opengl.GL20;
 
-@Mod.EventBusSubscriber
+@OnlyIn(Dist.CLIENT)
+@Mod.EventBusSubscriber(Dist.CLIENT)
 public class ContraptionRenderDispatcher {
 	private static final Lazy<BlockModelRenderer> MODEL_RENDERER = Lazy.of(() -> new BlockModelRenderer(Minecraft.getInstance().getBlockColors()));
 	private static final Lazy<BlockModelShapes> BLOCK_MODELS = Lazy.of(() -> Minecraft.getInstance().getModelManager().getBlockModelShapes());

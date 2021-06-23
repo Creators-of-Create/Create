@@ -12,10 +12,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.effects.EffectsContext;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@OnlyIn(Dist.CLIENT)
 public class CreateContexts {
 	private static final ResourceLocation CONTRAPTION = new ResourceLocation("create", "context/contraption");
 
@@ -23,7 +25,6 @@ public class CreateContexts {
 	public static WorldContext<ContraptionProgram> CWORLD;
 	public static WorldContext<ContraptionProgram> STRUCTURE;
 
-	@SubscribeEvent
 	public static void flwInit(GatherContextEvent event) {
 		Backend backend = event.getBackend();
 
