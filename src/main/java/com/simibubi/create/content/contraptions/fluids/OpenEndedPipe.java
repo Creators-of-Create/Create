@@ -208,8 +208,9 @@ public class OpenEndedPipe extends FlowSource {
 		return compound;
 	}
 
-	public static OpenEndedPipe fromNBT(CompoundNBT compound) {
-		OpenEndedPipe oep = new OpenEndedPipe(BlockFace.fromNBT(compound.getCompound("Location")));
+	public static OpenEndedPipe fromNBT(CompoundNBT compound, BlockPos tilePos) {
+		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
+		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(tilePos, fromNBT.getFace()));
 		oep.fluidHandler.readFromNBT(compound);
 		oep.wasPulling = compound.getBoolean("Pulling");
 		return oep;

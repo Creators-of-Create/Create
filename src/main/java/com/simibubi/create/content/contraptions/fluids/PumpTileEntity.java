@@ -70,7 +70,8 @@ public class PumpTileEntity extends KineticTileEntity {
 				return;
 			arrowDirection.chase(speed >= 0 ? 1 : -1, .5f, Chaser.EXP);
 			arrowDirection.tickChaser();
-			return;
+			if (!isVirtual())
+				return;
 		}
 
 		sidesToUpdate.forEachWithContext((update, isFront) -> {
@@ -96,7 +97,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			return;
 		if (speed != 0)
 			reversed = speed < 0;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		BlockPos frontPos = pos.offset(getFront());

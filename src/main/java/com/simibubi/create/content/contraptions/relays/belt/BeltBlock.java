@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -197,6 +199,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			if (entityIn.getMotion().y > 0)
 				return;
 			if (!entityIn.isAlive())
+				return;
+			if (BeltTunnelInteractionHandler.getTunnelOnPosition(worldIn, pos) != null)
 				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;

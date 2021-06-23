@@ -1783,6 +1783,9 @@
 	"create.ponder.empty_blaze_burner.text_5": "However, these are not suitable for industrial heating",
 
 	"create.ponder.encased_fluid_pipe.header": "Encasing Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_1": "Copper Casing can be used to decorate Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_2": "Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_3": "It will no longer react to any neighbouring blocks being added or removed",
 
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
@@ -1803,8 +1806,20 @@
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
 
 	"create.ponder.fluid_pipe_flow.header": "Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "Fluid Pipes can connect two or more fluid sources and targets",
+	"create.ponder.fluid_pipe_flow.text_2": "Using a wrench, a straight pipe segment can be given a window",
+	"create.ponder.fluid_pipe_flow.text_3": "Windowed pipes will not connect to any other adjacent pipe segments",
+	"create.ponder.fluid_pipe_flow.text_4": "Powered by Mechanical Pumps, the Pipes can transport Fluids",
+	"create.ponder.fluid_pipe_flow.text_5": "No fluid is being extracted at first",
+	"create.ponder.fluid_pipe_flow.text_6": "Once the flow connects them, the endpoints gradually transfer their contents",
+	"create.ponder.fluid_pipe_flow.text_7": "Thus, the Pipe blocks themselves never 'physically' contain any fluid",
 
 	"create.ponder.fluid_pipe_interaction.header": "Draining and Filling fluid containers",
+	"create.ponder.fluid_pipe_interaction.text_1": "Endpoints of a pipe network can interact with a variety of blocks",
+	"create.ponder.fluid_pipe_interaction.text_2": "Any block with fluid storage capabilities can be filled or drained",
+	"create.ponder.fluid_pipe_interaction.text_3": "Source blocks right in front of an open end can be picked up...",
+	"create.ponder.fluid_pipe_interaction.text_4": "...while spilling into empty spaces can create fluid sources",
+	"create.ponder.fluid_pipe_interaction.text_5": "Pipes can also extract fluids from a handful of other blocks directly",
 
 	"create.ponder.fluid_tank_sizes.header": "Dimensions of a Fluid tank",
 

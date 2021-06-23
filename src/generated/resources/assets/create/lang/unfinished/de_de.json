@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1043",
+	"_": "Missing Localizations: 1039",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -52,7 +52,6 @@
 	"block.create.chiseled_scoria": "Gemeißelte Schlacke",
 	"block.create.chiseled_weathered_limestone": "Gemeißelter verwitterter Kalkstein",
 	"block.create.chocolate": "Schokolade",
-	"block.create.chromatic_projector": "UNLOCALIZED: Chromatic Projector",
 	"block.create.chute": "Rinne",
 	"block.create.clockwork_bearing": "Uhrwerk-Lager",
 	"block.create.clutch": "Kupplung",
@@ -1475,37 +1474,6 @@
 	"item.create.minecart_coupling.tooltip.condition1": "UNLOCALIZED: When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "UNLOCALIZED: _Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
 
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "Work in progress!",
-	"create.tooltip.randomWipDescription0": "Bitte halte dies fern von Kindern",
-	"create.tooltip.randomWipDescription1": "Ein Babypanda stirbt jedes mal wenn du diesen Gegenstand benutzt. Jedes. Mal.",
-	"create.tooltip.randomWipDescription2": "Benutzung auf eigene Gefahr.",
-	"create.tooltip.randomWipDescription3": "Dies ist nicht der Gegenstand den du suchst, *wackelt mit Finger* bitte geht auseinander.",
-	"create.tooltip.randomWipDescription4": "Dieser Gegenstand wird sich in 10 Sekunden selbst zerstören. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Glaub mir, es ist nutzlos.",
-	"create.tooltip.randomWipDescription6": "Bei der Verwendung dieses Gegenstands stimmst du hiermit unserem Haftungsausschluss zu und nimmst dessen Bedingungen an.",
-	"create.tooltip.randomWipDescription7": "Dieser ist nicht für dich. Wie wäre es mit dem?",
-	"create.tooltip.randomWipDescription8": "Benutze es und bereue deine Entscheidung umgehend.",
-
-	"create.gui.chromatic_projector.title": "UNLOCALIZED: Chromatic Projector",
-	"create.gui.chromatic_projector.filter.invert": "UNLOCALIZED: Invert",
-	"create.gui.chromatic_projector.filter.sepia": "UNLOCALIZED: Sepia",
-	"create.gui.chromatic_projector.filter.grayscale": "UNLOCALIZED: Grayscale",
-	"create.gui.chromatic_projector.filter.saturate": "UNLOCALIZED: Saturate",
-	"create.gui.chromatic_projector.filter.hue_shift": "UNLOCALIZED: Hue shift",
-	"create.gui.chromatic_projector.filter.darken": "UNLOCALIZED: Darken",
-	"create.gui.chromatic_projector.filter.contrast": "UNLOCALIZED: Contrast",
-	"create.gui.chromatic_projector.filter.end": "UNLOCALIZED: End",
-	"create.gui.chromatic_projector.filter": "UNLOCALIZED: Filter",
-	"create.gui.chromatic_projector.surface": "UNLOCALIZED: Surface",
-	"create.gui.chromatic_projector.field": "UNLOCALIZED: Field",
-	"create.gui.chromatic_projector.strength": "UNLOCALIZED: Strength",
-	"create.gui.chromatic_projector.radius": "UNLOCALIZED: Radius",
-	"create.gui.chromatic_projector.feather": "UNLOCALIZED: Feather",
-	"create.gui.chromatic_projector.density": "UNLOCALIZED: Density",
-	"create.gui.chromatic_projector.fade": "UNLOCALIZED: Fade",
-	"create.gui.chromatic_projector.blend": "UNLOCALIZED: Blend",
-
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
 
@@ -1784,6 +1752,9 @@
 	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: However, these are not suitable for industrial heating",
 
 	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_2": "UNLOCALIZED: Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_3": "UNLOCALIZED: It will no longer react to any neighbouring blocks being added or removed",
 
 	"create.ponder.fan_direction.header": "UNLOCALIZED: Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "UNLOCALIZED: Encased Fans use Rotational Force to create an Air Current",
@@ -1804,8 +1775,20 @@
 	"create.ponder.fan_source.text_2": "UNLOCALIZED: When given a Redstone Signal, the Fans will start providing power",
 
 	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: Fluid Pipes can connect two or more fluid sources and targets",
+	"create.ponder.fluid_pipe_flow.text_2": "UNLOCALIZED: Using a wrench, a straight pipe segment can be given a window",
+	"create.ponder.fluid_pipe_flow.text_3": "UNLOCALIZED: Windowed pipes will not connect to any other adjacent pipe segments",
+	"create.ponder.fluid_pipe_flow.text_4": "UNLOCALIZED: Powered by Mechanical Pumps, the Pipes can transport Fluids",
+	"create.ponder.fluid_pipe_flow.text_5": "UNLOCALIZED: No fluid is being extracted at first",
+	"create.ponder.fluid_pipe_flow.text_6": "UNLOCALIZED: Once the flow connects them, the endpoints gradually transfer their contents",
+	"create.ponder.fluid_pipe_flow.text_7": "UNLOCALIZED: Thus, the Pipe blocks themselves never 'physically' contain any fluid",
 
 	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
+	"create.ponder.fluid_pipe_interaction.text_1": "UNLOCALIZED: Endpoints of a pipe network can interact with a variety of blocks",
+	"create.ponder.fluid_pipe_interaction.text_2": "UNLOCALIZED: Any block with fluid storage capabilities can be filled or drained",
+	"create.ponder.fluid_pipe_interaction.text_3": "UNLOCALIZED: Source blocks right in front of an open end can be picked up...",
+	"create.ponder.fluid_pipe_interaction.text_4": "UNLOCALIZED: ...while spilling into empty spaces can create fluid sources",
+	"create.ponder.fluid_pipe_interaction.text_5": "UNLOCALIZED: Pipes can also extract fluids from a handful of other blocks directly",
 
 	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
 

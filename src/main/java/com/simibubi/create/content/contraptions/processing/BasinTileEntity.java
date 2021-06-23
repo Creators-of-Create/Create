@@ -329,7 +329,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				update = true;
 				continue;
 			}
-			
+
 			if (targetInv == null) {
 				return;
 			}
@@ -338,7 +338,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				continue;
 			if (filter != null && !filter.test(itemStack))
 				continue;
-			
+
 			update = true;
 			ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), false);
 			iterator.remove();
@@ -426,7 +426,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		IItemHandler targetInv = null;
 		IFluidHandler targetTank = null;
 		TileEntity te = null;
-		
+
 		InvManipulationBehaviour inserter = null;
 
 		if (direction == Direction.DOWN) {
@@ -443,7 +443,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.offset(direction));
 			if (te == null)
 				return false;
-			
+
 			inserter = TileEntityBehaviour.get(world, te.getPos(), InvManipulationBehaviour.TYPE);
 			targetInv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
 					.orElse(inserter == null ? null : inserter.getInventory());
@@ -453,13 +453,13 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		if (targetInv == null && !outputItems.isEmpty())
 			return false;
-		FilteringBehaviour filter = TileEntityBehaviour.get(world, te.getPos(), FilteringBehaviour.TYPE);
+		FilteringBehaviour filter = world == null || te == null ? null : TileEntityBehaviour.get(world, te.getPos(), FilteringBehaviour.TYPE);
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
 			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
 				.isItemEqual(itemStack))
 				continue;
-			
+
 			if (simulate || direction == Direction.DOWN) {
 				if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 					.isEmpty() || (filter != null && !filter.test(itemStack)))

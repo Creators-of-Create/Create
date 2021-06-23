@@ -2,19 +2,24 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "buzzierbees"
+      "modid": "environmental"
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzierbees:bluebell"
+      "item": "environmental:pink_hibiscus"
     }
   ],
   "results": [
     {
-      "item": "minecraft:blue_dye",
+      "item": "minecraft:pink_dye",
       "count": 2
+    },
+    {
+      "item": "minecraft:pink_dye",
+      "count": 1,
+      "chance": 0.1
     }
   ],
   "processingTime": 50

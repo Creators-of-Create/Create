@@ -242,11 +242,11 @@ public class PonderIndex {
 		// Fluids
 
 		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
-			.addStoryBoard("debug/scene_1", PipeScenes::flow, PonderTag.FLUIDS)
-			.addStoryBoard("debug/scene_1", PipeScenes::interaction)
-			.addStoryBoard("debug/scene_1", PipeScenes::encasing);
+			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, PonderTag.FLUIDS)
+			.addStoryBoard("fluid_pipe/interaction", PipeScenes::interaction)
+			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
 		PonderRegistry.forComponents(AllBlocks.COPPER_CASING)
-			.addStoryBoard("debug/scene_1", PipeScenes::encasing);
+			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PUMP)
 			.addStoryBoard("debug/scene_1", PumpScenes::flow, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("debug/scene_1", PumpScenes::speed);
