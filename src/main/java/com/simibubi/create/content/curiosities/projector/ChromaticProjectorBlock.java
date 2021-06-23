@@ -54,7 +54,7 @@ public class ChromaticProjectorBlock extends Block implements ITE<ChromaticProje
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.CHROMATIC_PROJECTOR.create();
+		return null;//AllTileEntities.CHROMATIC_PROJECTOR.create();
 	}
 
 	@Override

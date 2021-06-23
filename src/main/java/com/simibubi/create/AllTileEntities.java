@@ -665,11 +665,5 @@ public class AllTileEntities {
 		.renderer(() -> CopperBacktankRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<ChromaticProjectorTileEntity> CHROMATIC_PROJECTOR =Create.registrate()
-		.tileEntity("chromatic_projector", ChromaticProjectorTileEntity::new)
-		.instance(() -> ChromaticProjectorInstance::new)
-		.validBlocks(AllBlocks.CHROMATIC_PROJECTOR)
-		.register();
-
 	public static void register() {}
 }

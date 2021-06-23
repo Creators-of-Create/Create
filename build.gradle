@@ -134,7 +134,11 @@ dependencies {
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
-    compile fg.deobf("curse.maven:flywheel-486392:3357100") // cursemaven for now
+    if (findProject(':Flywheel') != null) {
+        compile project(':Flywheel') // jozu: I use a gradle workspace with both projects
+    } else {
+        compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.0.2.7")
+    }
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
 

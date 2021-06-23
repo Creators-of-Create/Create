@@ -23,7 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class ChromaticProjectorScreen extends AbstractSimiScreen {
 
-	private final ItemStack renderedItem = AllBlocks.CHROMATIC_PROJECTOR.asStack();
+	private final ItemStack renderedItem = ItemStack.EMPTY;//AllBlocks.CHROMATIC_PROJECTOR.asStack();
 	private final AllGuiTextures background = AllGuiTextures.PROJECTOR;
 	private final int guiBottom = guiTop + background.height;
 	private final int guiRight = guiLeft + background.width;

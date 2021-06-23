@@ -1301,13 +1301,6 @@ public class AllBlocks {
 			})
 			.register();
 
-	public static final BlockEntry<ChromaticProjectorBlock> CHROMATIC_PROJECTOR =
-			REGISTRATE.block("chromatic_projector", ChromaticProjectorBlock::new)
-					.initialProperties(() -> Blocks.IRON_BLOCK)
-					.item()
-					.build()
-					.register();
-
 	// Materials
 
 	static {
