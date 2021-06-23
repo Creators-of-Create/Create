@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL13.glDisable;
 import static org.lwjgl.opengl.GL13.glEnable;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.util.List;
 import java.util.Random;
@@ -59,6 +60,8 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import org.lwjgl.opengl.GL20;
 
 @Mod.EventBusSubscriber
 public class ContraptionRenderDispatcher {
@@ -130,6 +133,7 @@ public class ContraptionRenderDispatcher {
 		layer.endDrawing();
 		glDisable(GL_TEXTURE_3D);
 		glActiveTexture(GL_TEXTURE0);
+		glUseProgram(0);
 	}
 
 	@SubscribeEvent
