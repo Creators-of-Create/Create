@@ -240,6 +240,9 @@ public class PonderIndex {
 			.addStoryBoard("plough", MovementActorScenes::plough);
 
 		// Fluids
+		
+		// ProgressTM
+		// [##### ####. ..... .....]
 
 		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
 			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, PonderTag.FLUIDS)
@@ -248,18 +251,18 @@ public class PonderIndex {
 		PonderRegistry.forComponents(AllBlocks.COPPER_CASING)
 			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
 		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PUMP)
-			.addStoryBoard("debug/scene_1", PumpScenes::flow, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
-			.addStoryBoard("debug/scene_1", PumpScenes::speed);
+			.addStoryBoard("mechanical_pump/flow", PumpScenes::flow, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_pump/speed", PumpScenes::speed);
 		PonderRegistry.forComponents(AllBlocks.FLUID_VALVE)
-			.addStoryBoard("debug/scene_1", PipeScenes::valve, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES);
+			.addStoryBoard("fluid_valve", PipeScenes::valve, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES);
 		PonderRegistry.forComponents(AllBlocks.SMART_FLUID_PIPE)
-			.addStoryBoard("debug/scene_1", PipeScenes::smart, PonderTag.FLUIDS);
+			.addStoryBoard("smart_pipe", PipeScenes::smart, PonderTag.FLUIDS);
 		PonderRegistry.forComponents(AllBlocks.FLUID_TANK)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::storage, PonderTag.FLUIDS)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes);
+			.addStoryBoard("fluid_tank/storage", FluidTankScenes::storage, PonderTag.FLUIDS)
+			.addStoryBoard("fluid_tank/sizes", FluidTankScenes::sizes);
 		PonderRegistry.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
-			.addStoryBoard("debug/scene_1", FluidTankScenes::sizes);
+			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
+			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
 		PonderRegistry.forComponents(AllBlocks.HOSE_PULLEY)
 			.addStoryBoard("debug/scene_1", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("debug/scene_1", HosePulleyScenes::level)

@@ -91,6 +91,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return ActionResultType.SUCCESS;
 	}
 
+	public BlockState getAxisState(Axis axis) {
+		BlockState defaultState = getDefaultState();
+		for (Direction d : Iterate.directions)
+			defaultState = defaultState.with(FACING_TO_PROPERTY_MAP.get(d), d.getAxis() == axis);
+		return defaultState;
+	}
+	
 	@Nullable
 	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
 		return FluidPropagator.getStraightPipeAxis(state);
