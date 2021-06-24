@@ -16,7 +16,7 @@ import net.minecraft.item.DyeColor;
 
 public class PonderIndex {
 
-	public static final boolean EDITOR_MODE = true;
+	public static final boolean EDITOR_MODE = false;
 
 	public static void register() {
 		// Register storyboards here
@@ -240,10 +240,6 @@ public class PonderIndex {
 			.addStoryBoard("plough", MovementActorScenes::plough);
 
 		// Fluids
-		
-		// ProgressTM
-		// [##### ##### ##### .....]
-
 		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
 			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, PonderTag.FLUIDS)
 			.addStoryBoard("fluid_pipe/interaction", PipeScenes::interaction)
@@ -268,14 +264,13 @@ public class PonderIndex {
 			.addStoryBoard("hose_pulley/level", HosePulleyScenes::level)
 			.addStoryBoard("hose_pulley/infinite", HosePulleyScenes::infinite);
 		PonderRegistry.forComponents(AllBlocks.SPOUT)
-			.addStoryBoard("debug/scene_1", SpoutScenes::filling, PonderTag.FLUIDS)
-			.addStoryBoard("debug/scene_1", SpoutScenes::access);
+			.addStoryBoard("spout", SpoutScenes::filling, PonderTag.FLUIDS);
 		PonderRegistry.forComponents(AllBlocks.ITEM_DRAIN)
-			.addStoryBoard("debug/scene_1", DrainScenes::emptying, PonderTag.FLUIDS);
+			.addStoryBoard("item_drain", DrainScenes::emptying, PonderTag.FLUIDS);
 		PonderRegistry.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
-			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::transfer, PonderTag.FLUIDS,
+			.addStoryBoard("portable_interface/transfer_fluid", FluidMovementActorScenes::transfer, PonderTag.FLUIDS,
 				PonderTag.CONTRAPTION_ACTOR)
-			.addStoryBoard("debug/scene_1", FluidMovementActorScenes::redstone);
+			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone
 		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)

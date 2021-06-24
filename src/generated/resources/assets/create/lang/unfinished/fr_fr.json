@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1291",
+	"_": "Missing Localizations: 1293",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1209,14 +1209,6 @@
 	"block.create.metal_bracket.tooltip": "UNLOCALIZED: METAL BRACKET",
 	"block.create.metal_bracket.tooltip.summary": "UNLOCALIZED: _Decorate_ your _Shafts, Cogwheels_ and _Pipes_ with an industrial and sturdy bit of reinforcement.",
 
-	"block.create.copper_casing.tooltip": "UNLOCALIZED: COPPER CASING",
-	"block.create.copper_casing.tooltip.summary": "UNLOCALIZED: Robust machine casing with a variety of uses. Safe for decoration.",
-	"block.create.copper_casing.tooltip.condition1": "UNLOCALIZED: When used on Fluid Pipe",
-	"block.create.copper_casing.tooltip.behaviour1": "UNLOCALIZED: _Encases_ the _Fluid Pipe_ with the _Copper Casing_. Encased Fluid pipes will _lock their connections_ in place, no longer reacting to changes to neighbouring pipes.",
-
-	"block.create.encased_fluid_pipe.tooltip": "UNLOCALIZED: ENCASED FLUID PIPE",
-	"block.create.encased_fluid_pipe.tooltip.summary": "UNLOCALIZED: A _Fluid Pipe_ encased with the _Copper Casing_.",
-
 	"block.create.seat.tooltip": "UNLOCALIZED: SEAT",
 	"block.create.seat.tooltip.summary": "UNLOCALIZED: Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
 	"block.create.seat.tooltip.condition1": "UNLOCALIZED: Right click on Seat",
@@ -1224,65 +1216,6 @@
 
 	"item.create.blaze_cake.tooltip": "UNLOCALIZED: BLAZE CAKE",
 	"item.create.blaze_cake.tooltip.summary": "UNLOCALIZED: A Delicious treat for your hard-working _Blaze Burners_. Gets them all fired up!",
-
-	"block.create.fluid_pipe.tooltip": "UNLOCALIZED: FLUID PIPE",
-	"block.create.fluid_pipe.tooltip.summary": "UNLOCALIZED: Used for moving _fluids_ around. Needs a _Mechanical Pump_ to get the _fluid_ moving.",
-	"block.create.fluid_pipe.tooltip.condition1": "UNLOCALIZED: Fluid Transfer",
-	"block.create.fluid_pipe.tooltip.behaviour1": "UNLOCALIZED: Can connect to _fluid containers_ such as _Tanks_ or _Basins_. Exposed _pipe_ ends can also drain or place fluid blocks. Be careful of leaks!",
-	"block.create.fluid_pipe.tooltip.condition2": "UNLOCALIZED: Right-clicked with Wrench",
-	"block.create.fluid_pipe.tooltip.behaviour2": "UNLOCALIZED: Places a window on the pipe if available",
-
-	"block.create.hose_pulley.tooltip": "UNLOCALIZED: HOSE PULLEY",
-	"block.create.hose_pulley.tooltip.summary": "UNLOCALIZED: Used for _placing_ or _draining_ large _fluid bodies_ in the world.",
-	"block.create.hose_pulley.tooltip.condition1": "UNLOCALIZED: When Powered by Kinetics",
-	"block.create.hose_pulley.tooltip.behaviour1": "UNLOCALIZED: _Raises_ or _Lowers_ the hose, location of the hose determines up to which _height extraction_ or _filling_ will act.",
-	"block.create.hose_pulley.tooltip.condition2": "UNLOCALIZED: When Fluids pulled from Pulley",
-	"block.create.hose_pulley.tooltip.behaviour2": "UNLOCALIZED: Starts _taking fluid_ blocks from the body the hose end was lowered into. Very _large bodies_ of fluids will be _considered infinite_.",
-	"block.create.hose_pulley.tooltip.condition3": "UNLOCALIZED: When Fluids pushed to Pulley",
-	"block.create.hose_pulley.tooltip.behaviour3": "UNLOCALIZED: Starts _filling fluid_ into the world _up to_ the _hose_ ends' _height_.",
-
-	"block.create.fluid_tank.tooltip": "UNLOCALIZED: FLUID TANK",
-	"block.create.fluid_tank.tooltip.summary": "UNLOCALIZED: _Stores_ all your favourite _fluids_. Scales in width and height.",
-	"block.create.fluid_tank.tooltip.condition1": "UNLOCALIZED: Right-clicked with Wrench",
-	"block.create.fluid_tank.tooltip.behaviour1": "UNLOCALIZED: Changes the optional window",
-
-	"block.create.creative_fluid_tank.tooltip": "UNLOCALIZED: CREATIVE FLUID TANK",
-	"block.create.creative_fluid_tank.tooltip.summary": "UNLOCALIZED: This _Fluid Tank_ allows infinite replication of any Fluid. Scales in width and height.",
-	"block.create.creative_fluid_tank.tooltip.condition1": "UNLOCALIZED: When Fluid in Tank",
-	"block.create.creative_fluid_tank.tooltip.behaviour1": "UNLOCALIZED: Anything _extracting_ from this tank will provide an _endless supply_ of the fluid specified. Fluids _inserted_ into this tank will be _voided._",
-	"block.create.creative_fluid_tank.tooltip.condition2": "UNLOCALIZED: Right-clicked with Wrench",
-	"block.create.creative_fluid_tank.tooltip.behaviour2": "UNLOCALIZED: Changes the optional window",
-
-	"block.create.fluid_valve.tooltip": "UNLOCALIZED: FLUID VALVE",
-	"block.create.fluid_valve.tooltip.summary": "UNLOCALIZED: Halts the flow of fluid down a pipe.",
-	"block.create.fluid_valve.tooltip.condition1": "UNLOCALIZED: Controllable flow",
-	"block.create.fluid_valve.tooltip.behaviour1": "UNLOCALIZED: Applied _rotational force_ will force the _valve_ to close, ceasing the flow of _fluids_. Reverse the direction of the _rotational force_ to re-open the valve.",
-
-	"block.create.mechanical_pump.tooltip": "UNLOCALIZED: MECHANICAL PUMP",
-	"block.create.mechanical_pump.tooltip.summary": "UNLOCALIZED: Takes _rotational force_ and uses it to move _fluid_ along a _pipe_. Has a maximum range of effect in both directions. (16 blocks by default)",
-	"block.create.mechanical_pump.tooltip.condition1": "UNLOCALIZED: Fluid Flow",
-	"block.create.mechanical_pump.tooltip.behaviour1": "UNLOCALIZED: Applied _rotational force_ creates pressure that forces _fluid_ through the _pipe_ network. Reverse the direction of the _rotational force_ to switch the direction that the _fluid_ flows.",
-	"block.create.mechanical_pump.tooltip.control1": "UNLOCALIZED: Right-clicked with Wrench",
-	"block.create.mechanical_pump.tooltip.action1": "UNLOCALIZED: Reverses the direction of the _pump_, switching the default direction of the flow",
-
-	"block.create.smart_fluid_pipe.tooltip": "UNLOCALIZED: SMART FLUID PIPE",
-	"block.create.smart_fluid_pipe.tooltip.summary": "UNLOCALIZED: A _fluid pipe_ with a filter. Can specify which _fluids_ pass through.",
-	"block.create.smart_fluid_pipe.tooltip.condition1": "UNLOCALIZED: When Fluids are pushed into it",
-	"block.create.smart_fluid_pipe.tooltip.behaviour1": "UNLOCALIZED: Smart pipes receiving fluid that does not match its filter will block the flow.",
-	"block.create.smart_fluid_pipe.tooltip.condition2": "UNLOCALIZED: When adjacent to fluid container",
-	"block.create.smart_fluid_pipe.tooltip.behaviour2": "UNLOCALIZED: Smart pipes _starting_ a _flow_ from any container will only extract fluids that _match_ its _filter._",
-
-	"block.create.spout.tooltip": "UNLOCALIZED: SPOUT",
-	"block.create.spout.tooltip.summary": "UNLOCALIZED: An injector for refilling your _fluid items._",
-	"block.create.spout.tooltip.condition1": "UNLOCALIZED: Fluid Transfer",
-	"block.create.spout.tooltip.behaviour1": "UNLOCALIZED: When a _fluid container item_ such as a _bucket_ or _bottle_ is placed underneath, the spout will attempt to refill it with it's own stored _fluid_.",
-	"block.create.spout.tooltip.condition2": "UNLOCALIZED: Fluid Automation",
-	"block.create.spout.tooltip.behaviour2": "UNLOCALIZED: The spout placed above a _belt_ or _depot_ will react automatically with a _fluid container item_ that passes beneath it.",
-
-	"block.create.item_drain.tooltip": "UNLOCALIZED: ITEM DRAIN",
-	"block.create.item_drain.tooltip.summary": "UNLOCALIZED: A grated depot for emptying your _fluid items._",
-	"block.create.item_drain.tooltip.condition1": "UNLOCALIZED: Fluid Transfer",
-	"block.create.item_drain.tooltip.behaviour1": "UNLOCALIZED: When a _fluid container item_ such as a _bucket_ or _bottle_ is inserted from the side, the drain will attempt to empty it into its own _fluid container_. The item will then be ejected on the opposite side.",
 
 	"item.create.wand_of_symmetry.tooltip": "BÂTON DE SYMÉTRIE",
 	"item.create.wand_of_symmetry.tooltip.summary": "Reflète parfaitement le placement des blocs sur les plans configurés.",
@@ -1387,13 +1320,6 @@
 
 	"block.create.turntable.tooltip": "PLAQUE TOURNANTE",
 	"block.create.turntable.tooltip.summary": "Transforme la _force_ _de_ _rotation_ en énergie cinétique.",
-
-	"block.create.portable_fluid_interface.tooltip": "UNLOCALIZED: PORTABLE FLUID INTERFACE",
-	"block.create.portable_fluid_interface.tooltip.summary": "UNLOCALIZED: A portable interchange point for _moving fluids_ to and from a _structure_ moved by a piston, bearing, minecart, or pulley. Two meeting interfaces have to _face each other_ and be spaced _1-2 blocks apart_.",
-	"block.create.portable_fluid_interface.tooltip.condition1": "UNLOCALIZED: While Moving",
-	"block.create.portable_fluid_interface.tooltip.behaviour1": "UNLOCALIZED: Interacts with stationary _portable storage interfaces_ to transfer fluids to or from the contraption. Pipes inserting into or extracting from the _Stationary Interface_ will interact with the tanks on the contraption _directly._ The structure will briefly stall as Fluids are exchanged.",
-	"block.create.portable_fluid_interface.tooltip.condition2": "UNLOCALIZED: When Powered by Redstone",
-	"block.create.portable_fluid_interface.tooltip.behaviour2": "UNLOCALIZED: _Disengages_ any active connection immediately.",
 
 	"block.create.stockpile_switch.tooltip": "DÉTÉCTEUR DE STOCKAGE",
 	"block.create.stockpile_switch.tooltip.summary": "Bascule un signal Redstone basé sur _l'espace_ _de_ _stockage_ dans le conteneur attaché.",
@@ -1690,6 +1616,10 @@
 	"create.ponder.cogwheel.text_2": "UNLOCALIZED: Neighbouring shafts connected like this will rotate in opposite directions",
 
 	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+	"create.ponder.creative_fluid_tank.text_1": "UNLOCALIZED: Creative Fluid Tanks can be used to provide a bottomless supply of fluid",
+	"create.ponder.creative_fluid_tank.text_2": "UNLOCALIZED: Right-Click with a fluid containing item to configure it",
+	"create.ponder.creative_fluid_tank.text_3": "UNLOCALIZED: Pipe Networks can now endlessly draw the assigned fluid from the tank",
+	"create.ponder.creative_fluid_tank.text_4": "UNLOCALIZED: Any Fluids pushed back into a Creative Fluid Tank will be voided",
 
 	"create.ponder.creative_motor.header": "UNLOCALIZED: Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "UNLOCALIZED: Creative motors are a compact and configurable source of Rotational Force",
@@ -1791,8 +1721,17 @@
 	"create.ponder.fluid_pipe_interaction.text_5": "UNLOCALIZED: Pipes can also extract fluids from a handful of other blocks directly",
 
 	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+	"create.ponder.fluid_tank_sizes.text_1": "UNLOCALIZED: Fluid Tanks can be combined to increase the total capacity",
+	"create.ponder.fluid_tank_sizes.text_2": "UNLOCALIZED: Their base square can be up to 3 blocks wide...",
+	"create.ponder.fluid_tank_sizes.text_3": "UNLOCALIZED: ...and grow in height by more than 30 additional layers",
+	"create.ponder.fluid_tank_sizes.text_4": "UNLOCALIZED: Using a Wrench, a tanks' window can be toggled",
 
 	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
+	"create.ponder.fluid_tank_storage.text_1": "UNLOCALIZED: Fluid Tanks can be used to store large amounts of fluid",
+	"create.ponder.fluid_tank_storage.text_2": "UNLOCALIZED: Pipe networks can push and pull fluids from any side",
+	"create.ponder.fluid_tank_storage.text_3": "UNLOCALIZED: The contained fluid can be measured by a Comparator",
+	"create.ponder.fluid_tank_storage.text_4": "UNLOCALIZED: However, in Survival Mode Fluids cannot be added or taken manually",
+	"create.ponder.fluid_tank_storage.text_5": "UNLOCALIZED: You can use Basins, Item Drains and Spouts to drain or fill fluid containing items",
 
 	"create.ponder.flywheel.header": "UNLOCALIZED: Generating Rotational Force using the Flywheel",
 	"create.ponder.flywheel.text_1": "UNLOCALIZED: Flywheels are required for generating rotational force with the Furnace Engine",
@@ -1868,12 +1807,32 @@
 	"create.ponder.hand_crank.text_4": "UNLOCALIZED: Sneak and Hold Right-Click to rotate it Clockwise",
 
 	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+	"create.ponder.hose_pulley.text_1": "UNLOCALIZED: Hose Pulleys can be used to fill or drain large bodies of Fluid",
+	"create.ponder.hose_pulley.text_2": "UNLOCALIZED: With the Kinetic Input, the height of the pulleys' hose can be controlled",
+	"create.ponder.hose_pulley.text_3": "UNLOCALIZED: The Pulley retracts while the input rotation is inverted",
+	"create.ponder.hose_pulley.text_4": "UNLOCALIZED: On the opposite side, pipes can be connected",
+	"create.ponder.hose_pulley.text_5": "UNLOCALIZED: Attached pipe networks can either provide fluid to the hose...",
+	"create.ponder.hose_pulley.text_6": "UNLOCALIZED: ...or pull from it, draining the pool instead",
+	"create.ponder.hose_pulley.text_7": "UNLOCALIZED: Fill and Drain speed of the pulley depends entirely on the fluid networks' throughput",
 
 	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+	"create.ponder.hose_pulley_infinite.text_1": "UNLOCALIZED: When deploying the Hose Pulley into a large enough ocean...",
+	"create.ponder.hose_pulley_infinite.text_2": "UNLOCALIZED: It will provide/dispose fluids without affecting the source",
+	"create.ponder.hose_pulley_infinite.text_3": "UNLOCALIZED: Pipe networks can limitlessly take fluids from/to such pulleys",
 
 	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+	"create.ponder.hose_pulley_level.text_1": "UNLOCALIZED: While fully retracted, the Hose Pulley cannot operate",
+	"create.ponder.hose_pulley_level.text_2": "UNLOCALIZED: Draining runs from top to bottom",
+	"create.ponder.hose_pulley_level.text_3": "UNLOCALIZED: The surface level will end up just below where the hose ends",
+	"create.ponder.hose_pulley_level.text_4": "UNLOCALIZED: Filling runs from bottom to top",
+	"create.ponder.hose_pulley_level.text_5": "UNLOCALIZED: The filled pool will not grow beyond the layer above the hose end",
 
 	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
+	"create.ponder.item_drain.text_1": "UNLOCALIZED: Item Drains can extract fluids from items",
+	"create.ponder.item_drain.text_2": "UNLOCALIZED: Right-click it to pour fluids from your held item into it",
+	"create.ponder.item_drain.text_3": "UNLOCALIZED: When items are inserted from the side...",
+	"create.ponder.item_drain.text_4": "UNLOCALIZED: ...they roll across, emptying out their contained fluid",
+	"create.ponder.item_drain.text_5": "UNLOCALIZED: Pipe Networks can now pull the fluid from the drains' internal buffer",
 
 	"create.ponder.large_cogwheel.header": "UNLOCALIZED: Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "UNLOCALIZED: Large cogwheels can connect to each other at right angles",
@@ -1998,8 +1957,19 @@
 	"create.ponder.mechanical_press_compacting.text_4": "UNLOCALIZED: The filter slot can be used in case two recipes are conflicting.",
 
 	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+	"create.ponder.mechanical_pump_flow.text_1": "UNLOCALIZED: Mechanical Pumps govern the flow of their attached pipe networks",
+	"create.ponder.mechanical_pump_flow.text_2": "UNLOCALIZED: When powered, their arrow indicates the direction of flow",
+	"create.ponder.mechanical_pump_flow.text_3": "UNLOCALIZED: The network behind is now pulling fluids...",
+	"create.ponder.mechanical_pump_flow.text_4": "UNLOCALIZED: ...while the network in front is transferring it outward",
+	"create.ponder.mechanical_pump_flow.text_5": "UNLOCALIZED: Reversing the input rotation reverses the direction of flow",
+	"create.ponder.mechanical_pump_flow.text_6": "UNLOCALIZED: Use a Wrench to reverse the orientation of pumps manually",
 
 	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+	"create.ponder.mechanical_pump_speed.text_1": "UNLOCALIZED: Regardless of speed, Mechanical Pumps affect pipes connected up to 16 blocks away",
+	"create.ponder.mechanical_pump_speed.text_2": "UNLOCALIZED: Speeding up the input rotation changes the speed of flow propagation...",
+	"create.ponder.mechanical_pump_speed.text_3": "UNLOCALIZED: ...aswell as how quickly fluids are transferred",
+	"create.ponder.mechanical_pump_speed.text_4": "UNLOCALIZED: Pumps can combine their throughputs within shared pipe networks",
+	"create.ponder.mechanical_pump_speed.text_5": "UNLOCALIZED: Alternating their orientation can help align their flow directions",
 
 	"create.ponder.mechanical_saw_breaker.header": "UNLOCALIZED: Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "UNLOCALIZED: When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
@@ -2032,8 +2002,14 @@
 	"create.ponder.piston_pole.text_2": "UNLOCALIZED: The Length of pole added at its back determines the Extension Range",
 
 	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
-
-	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
+	"create.ponder.portable_fluid_interface.text_1": "UNLOCALIZED: Fluid Tanks on moving contraptions cannot be accessed by any pipes",
+	"create.ponder.portable_fluid_interface.text_2": "UNLOCALIZED: This component can interact with fluid tanks without the need to stop the contraption",
+	"create.ponder.portable_fluid_interface.text_3": "UNLOCALIZED: Place a second one with a gap of 1 or 2 blocks inbetween",
+	"create.ponder.portable_fluid_interface.text_4": "UNLOCALIZED: Whenever they pass by each other, they will engage in a connection",
+	"create.ponder.portable_fluid_interface.text_5": "UNLOCALIZED: While engaged, the stationary interface will represent ALL Tanks on the contraption",
+	"create.ponder.portable_fluid_interface.text_6": "UNLOCALIZED: Fluid can now be inserted...",
+	"create.ponder.portable_fluid_interface.text_7": "UNLOCALIZED: ...or extracted from the contraption",
+	"create.ponder.portable_fluid_interface.text_8": "UNLOCALIZED: After no contents have been exchanged for a while, the contraption will continue on its way",
 
 	"create.ponder.portable_storage_interface.header": "UNLOCALIZED: Contraption Storage Exchange",
 	"create.ponder.portable_storage_interface.text_1": "UNLOCALIZED: Inventories on moving contraptions cannot be accessed by players.",
@@ -2133,15 +2109,23 @@
 	"create.ponder.smart_chute.text_4": "UNLOCALIZED: Redstone power will prevent Smart Chutes from acting.",
 
 	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+	"create.ponder.smart_pipe.text_1": "UNLOCALIZED: Smart pipes can help control flows by fluid type",
+	"create.ponder.smart_pipe.text_2": "UNLOCALIZED: When placed directly at the source, they can specify the type of fluid to extract",
+	"create.ponder.smart_pipe.text_3": "UNLOCALIZED: Simply Right-Click their filter slot with any item containing the desired fluid",
+	"create.ponder.smart_pipe.text_4": "UNLOCALIZED: When placed further down a pipe network, smart pipes will only let matching fluids continue",
 
 	"create.ponder.speedometer.header": "UNLOCALIZED: Monitoring Kinetic information using the Speedometer",
 	"create.ponder.speedometer.text_1": "UNLOCALIZED: The Speedometer displays the current Speed of the attached components",
 	"create.ponder.speedometer.text_2": "UNLOCALIZED: When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
 	"create.ponder.speedometer.text_3": "UNLOCALIZED: Comparators can emit analog Restone Signals relative to the Speedometer's measurements",
 
-	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
-
 	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
+	"create.ponder.spout_filling.text_1": "UNLOCALIZED: The Spout can fill fluid holding items provided beneath it",
+	"create.ponder.spout_filling.text_2": "UNLOCALIZED: The content of a Spout cannot be accessed manually",
+	"create.ponder.spout_filling.text_3": "UNLOCALIZED: Instead, Pipes can be used to supply it with fluids",
+	"create.ponder.spout_filling.text_4": "UNLOCALIZED: The Input items can be placed on a Depot under the Spout",
+	"create.ponder.spout_filling.text_5": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.spout_filling.text_6": "UNLOCALIZED: The Spout will hold and process them automatically",
 
 	"create.ponder.stabilized_bearings.header": "UNLOCALIZED: Stabilized Contraptions",
 	"create.ponder.stabilized_bearings.text_1": "UNLOCALIZED: Whenever Mechanical Bearings are themselves part of a moving Structure..",
@@ -2175,6 +2159,10 @@
 	"create.ponder.valve_handle.text_5": "UNLOCALIZED: Valve handles can be dyed for aesthetic purposes",
 
 	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
+	"create.ponder.valve_pipe.text_1": "UNLOCALIZED: Valve pipes help control fluids propagating through pipe networks",
+	"create.ponder.valve_pipe.text_2": "UNLOCALIZED: Their shaft input controls whether fluid is currently allowed through",
+	"create.ponder.valve_pipe.text_3": "UNLOCALIZED: Given Rotational Force in the opening direction, the valve will open up",
+	"create.ponder.valve_pipe.text_4": "UNLOCALIZED: It can be closed again by reversing the input rotation",
 
 	"create.ponder.water_wheel.header": "UNLOCALIZED: Generating Rotational Force using Water Wheels",
 	"create.ponder.water_wheel.text_1": "UNLOCALIZED: Water Wheels draw force from adjacent Water Currents",

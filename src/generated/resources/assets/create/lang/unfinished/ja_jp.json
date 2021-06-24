@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 121",
+	"_": "Missing Localizations: 185",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1209,14 +1209,6 @@
 	"block.create.metal_bracket.tooltip": "金属ブラケット",
 	"block.create.metal_bracket.tooltip.summary": "補強用の頑丈で工業的な欠片で_シャフト_、_歯車_、そして_パイプ_を_飾ろう_。",
 
-	"block.create.copper_casing.tooltip": "銅ケーシング",
-	"block.create.copper_casing.tooltip.summary": "様々な用途に使える丈夫なマシンケーシング。飾り付けにも安心してお使いいただけます。",
-	"block.create.copper_casing.tooltip.condition1": "液体パイプに使ったとき",
-	"block.create.copper_casing.tooltip.behaviour1": "_液体パイプ_を_銅ケーシング_で_覆います_。ケース入り液体パイプは_接続状態を固定_し、隣にパイプ等を置いても接続が変化しなくなります。",
-
-	"block.create.encased_fluid_pipe.tooltip": "ケース入り液体パイプ",
-	"block.create.encased_fluid_pipe.tooltip.summary": "銅ケーシングに覆われた液体パイプ",
-
 	"block.create.seat.tooltip": "シート",
 	"block.create.seat.tooltip.summary": "シートに座って乗り物を楽しもう！移動する_構造物_の上にプレイヤーを固定します。もちろん家具にも使えます。染色することも。",
 	"block.create.seat.tooltip.condition1": "右クリックしたとき",
@@ -1224,65 +1216,6 @@
 
 	"item.create.blaze_cake.tooltip": "ブレイズケーキ",
 	"item.create.blaze_cake.tooltip.summary": "働き者の_ブレイズバーナー_達に美味しいご馳走を。彼らを燃え上がらせよう(物理)！",
-
-	"block.create.fluid_pipe.tooltip": "液体パイプ",
-	"block.create.fluid_pipe.tooltip.summary": "_液体_の輸送に使います。_液体_輸送にはメカニカルポンプが必要です。",
-	"block.create.fluid_pipe.tooltip.condition1": "液体輸送",
-	"block.create.fluid_pipe.tooltip.behaviour1": "_タンク_や_鉢_などの_液体コンテナ_に繋がります。また、_パイプ_の端が露出しているので液体を吹き出したり設置したりできます。液漏れ注意！",
-	"block.create.fluid_pipe.tooltip.condition2": "レンチで右クリックしたとき",
-	"block.create.fluid_pipe.tooltip.behaviour2": "可能ならパイプに窓を設けます。",
-
-	"block.create.hose_pulley.tooltip": "ホースプーリー",
-	"block.create.hose_pulley.tooltip.summary": "ワールドの大量の_液体_を_吸引_したり、_放出_したりするのに使います。",
-	"block.create.hose_pulley.tooltip.condition1": "回転力を供給したとき",
-	"block.create.hose_pulley.tooltip.behaviour1": "ホースを_上げ下げ_して、どの程度の_高さ_まで_吸引_や_放出_を行うか決めます。",
-	"block.create.hose_pulley.tooltip.condition2": "プーリー本体から液体を吸い込むとき",
-	"block.create.hose_pulley.tooltip.behaviour2": "ホースの端がおろされた本体から_液体_ブロックを_吸引_し始めます。非常に_大量_の液体は_無限_と_みなされます_。",
-	"block.create.hose_pulley.tooltip.condition3": "プーリー本体に液体が押しこまれたとき",
-	"block.create.hose_pulley.tooltip.behaviour3": "ホースの端の_高さ_まで、_液体_の_放出_を始めます。",
-
-	"block.create.fluid_tank.tooltip": "液体タンク",
-	"block.create.fluid_tank.tooltip.summary": "あなたのお気に入りのあらゆる_液体_を_貯蔵_できます。縦横に並べて大きさを調整できます。",
-	"block.create.fluid_tank.tooltip.condition1": "レンチで右クリックしたとき",
-	"block.create.fluid_tank.tooltip.behaviour1": "窓の付けたり、外したりします。",
-
-	"block.create.creative_fluid_tank.tooltip": "クリエイティブ液体タンク",
-	"block.create.creative_fluid_tank.tooltip.summary": "この_液体タンク_は、あらゆる液体を無限に複製します。縦横に並べて大きさを調整できます。",
-	"block.create.creative_fluid_tank.tooltip.condition1": "液体がタンクに入っているとき",
-	"block.create.creative_fluid_tank.tooltip.behaviour1": "このタンクから何かを_取り出す_と、指定された液体が_無限_に_供給_されます。このタンクに_搬入_された液体は_消滅_します。",
-	"block.create.creative_fluid_tank.tooltip.condition2": "レンチで左クリックしたとき",
-	"block.create.creative_fluid_tank.tooltip.behaviour2": "窓を付け外しします。",
-
-	"block.create.fluid_valve.tooltip": "液体バルブ",
-	"block.create.fluid_valve.tooltip.summary": "パイプ内の液体の流れを止めます。",
-	"block.create.fluid_valve.tooltip.condition1": "液体制御",
-	"block.create.fluid_valve.tooltip.behaviour1": "_回転力_を加えると_バルブ_は強制的に閉じ、_液体_の流れを止めます。_回転_方向を逆にするとバルブが再び開きます。",
-
-	"block.create.mechanical_pump.tooltip": "メカニカルポンプ",
-	"block.create.mechanical_pump.tooltip.summary": "_回転力_を使って_パイプ_に沿って_液体_を輸送します。両方向に最大効果範囲があります。（デフォルト16ブロック）",
-	"block.create.mechanical_pump.tooltip.condition1": "液体輸送",
-	"block.create.mechanical_pump.tooltip.behaviour1": "_回転力_を加えると_パイプ_を流れる_液体_を移動させる圧力が発生します。_回転方向_を逆にすると、_液体_の流れる方向を切り替えられます。",
-	"block.create.mechanical_pump.tooltip.control1": "レンチで右クリックしたとき",
-	"block.create.mechanical_pump.tooltip.action1": "_ポンプ_の方向を反転させ、デフォルトの流れる方向を切り替えます。",
-
-	"block.create.smart_fluid_pipe.tooltip": "スマート液体パイプ",
-	"block.create.smart_fluid_pipe.tooltip.summary": "フィルター付きの_液体パイプ_。どの_液体_を通過させるか設定できます。",
-	"block.create.smart_fluid_pipe.tooltip.condition1": "液体を搬入したとき",
-	"block.create.smart_fluid_pipe.tooltip.behaviour1": "フィルターに合わない液体を搬入したスマート液体パイプは、流れを遮断します。",
-	"block.create.smart_fluid_pipe.tooltip.condition2": "液体コンテナに隣接しているとき",
-	"block.create.smart_fluid_pipe.tooltip.behaviour2": "あらゆる容器から_流れ出す_スマート液体パイプは、その_フィルター_に_合った_液体のみを搬入します。",
-
-	"block.create.spout.tooltip": "アイテム注液口",
-	"block.create.spout.tooltip.summary": "_液体_を注入する注液器。",
-	"block.create.spout.tooltip.condition1": "液体充填",
-	"block.create.spout.tooltip.behaviour1": "_バケツ_や_瓶_のような_容器アイテム_を下に置くと、貯蔵された_液体_でそれを満たします。",
-	"block.create.spout.tooltip.condition2": "液体自動化",
-	"block.create.spout.tooltip.behaviour2": "_ベルト_や_デポ_の上に置かれたアイテム注液口は、その下を通過する_容器アイテム_に反応します。",
-
-	"block.create.item_drain.tooltip": "アイテム排液口",
-	"block.create.item_drain.tooltip.summary": "_液体アイテム_を空にする格子の付いたデポ。",
-	"block.create.item_drain.tooltip.condition1": "液体排液",
-	"block.create.item_drain.tooltip.behaviour1": "_バケツ_や_ボトル_などの_液体入り容器_を横から搬入すると、アイテム排液口はその_液体入り容器_に空にしようとします。その後、アイテムは反対側に排出されます。",
 
 	"item.create.wand_of_symmetry.tooltip": "対称の杖",
 	"item.create.wand_of_symmetry.tooltip.summary": "対象の鏡をまたいだ範囲内のブロック設置を完全に複製します。",
@@ -1387,13 +1320,6 @@
 
 	"block.create.turntable.tooltip": "ターンテーブル",
 	"block.create.turntable.tooltip.summary": "_回転力_を洗練された乗り物酔いに変えます。",
-
-	"block.create.portable_fluid_interface.tooltip": "ポータブル液体インターフェース",
-	"block.create.portable_fluid_interface.tooltip.summary": "ピストン、ベアリング、トロッコ、またはプーリーで移動する_構造物_との間で_液体_を_移動_させる可搬式の交換ポイント。2つのインターフェースは、互いに_向かい合って_、_1~2ブロック離す_必要があります。",
-	"block.create.portable_fluid_interface.tooltip.condition1": "動かしたとき",
-	"block.create.portable_fluid_interface.tooltip.behaviour1": "設置してある_ポータブル液体インターフェース_と相互作用して、構造物との間で液体を移動させます。_設置してあるインターフェース_に搬入、または搬出するパイプは、構造物のタンクと_直接_相互作用します。液体が交換される間、構造物は一時的に停止します。",
-	"block.create.portable_fluid_interface.tooltip.condition2": "レッドストーン信号を受けたとき",
-	"block.create.portable_fluid_interface.tooltip.behaviour2": "アクティブな接続を即座に_切断_します。",
 
 	"block.create.stockpile_switch.tooltip": "在庫スイッチ",
 	"block.create.stockpile_switch.tooltip.summary": "接続されたコンテナの_空き容量_に基づいてレッドストーン信号を切り替えます。便利なフィルターが付属しています。_コンパレータ―_とは違って、_在庫スイッチ_は、信号が反転される_しきい値_を設定できます。",
@@ -1690,6 +1616,10 @@
 	"create.ponder.cogwheel.text_2": "このように連結された隣のシャフトは、逆方向に回転します",
 
 	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+	"create.ponder.creative_fluid_tank.text_1": "UNLOCALIZED: Creative Fluid Tanks can be used to provide a bottomless supply of fluid",
+	"create.ponder.creative_fluid_tank.text_2": "UNLOCALIZED: Right-Click with a fluid containing item to configure it",
+	"create.ponder.creative_fluid_tank.text_3": "UNLOCALIZED: Pipe Networks can now endlessly draw the assigned fluid from the tank",
+	"create.ponder.creative_fluid_tank.text_4": "UNLOCALIZED: Any Fluids pushed back into a Creative Fluid Tank will be voided",
 
 	"create.ponder.creative_motor.header": "クリエイティブモーターによる回転力の生成",
 	"create.ponder.creative_motor.text_1": "クリエイティブモーターは、コンパクトで調整できる原動機です",
@@ -1791,8 +1721,17 @@
 	"create.ponder.fluid_pipe_interaction.text_5": "UNLOCALIZED: Pipes can also extract fluids from a handful of other blocks directly",
 
 	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+	"create.ponder.fluid_tank_sizes.text_1": "UNLOCALIZED: Fluid Tanks can be combined to increase the total capacity",
+	"create.ponder.fluid_tank_sizes.text_2": "UNLOCALIZED: Their base square can be up to 3 blocks wide...",
+	"create.ponder.fluid_tank_sizes.text_3": "UNLOCALIZED: ...and grow in height by more than 30 additional layers",
+	"create.ponder.fluid_tank_sizes.text_4": "UNLOCALIZED: Using a Wrench, a tanks' window can be toggled",
 
 	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
+	"create.ponder.fluid_tank_storage.text_1": "UNLOCALIZED: Fluid Tanks can be used to store large amounts of fluid",
+	"create.ponder.fluid_tank_storage.text_2": "UNLOCALIZED: Pipe networks can push and pull fluids from any side",
+	"create.ponder.fluid_tank_storage.text_3": "UNLOCALIZED: The contained fluid can be measured by a Comparator",
+	"create.ponder.fluid_tank_storage.text_4": "UNLOCALIZED: However, in Survival Mode Fluids cannot be added or taken manually",
+	"create.ponder.fluid_tank_storage.text_5": "UNLOCALIZED: You can use Basins, Item Drains and Spouts to drain or fill fluid containing items",
 
 	"create.ponder.flywheel.header": "勢車による回転力の生成",
 	"create.ponder.flywheel.text_1": "かまどエンジンで回転力を生成するには、勢車が必要です",
@@ -1868,12 +1807,32 @@
 	"create.ponder.hand_crank.text_4": "スニークしながら右クリックし続けると、時計回りに回転します",
 
 	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+	"create.ponder.hose_pulley.text_1": "UNLOCALIZED: Hose Pulleys can be used to fill or drain large bodies of Fluid",
+	"create.ponder.hose_pulley.text_2": "UNLOCALIZED: With the Kinetic Input, the height of the pulleys' hose can be controlled",
+	"create.ponder.hose_pulley.text_3": "UNLOCALIZED: The Pulley retracts while the input rotation is inverted",
+	"create.ponder.hose_pulley.text_4": "UNLOCALIZED: On the opposite side, pipes can be connected",
+	"create.ponder.hose_pulley.text_5": "UNLOCALIZED: Attached pipe networks can either provide fluid to the hose...",
+	"create.ponder.hose_pulley.text_6": "UNLOCALIZED: ...or pull from it, draining the pool instead",
+	"create.ponder.hose_pulley.text_7": "UNLOCALIZED: Fill and Drain speed of the pulley depends entirely on the fluid networks' throughput",
 
 	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+	"create.ponder.hose_pulley_infinite.text_1": "UNLOCALIZED: When deploying the Hose Pulley into a large enough ocean...",
+	"create.ponder.hose_pulley_infinite.text_2": "UNLOCALIZED: It will provide/dispose fluids without affecting the source",
+	"create.ponder.hose_pulley_infinite.text_3": "UNLOCALIZED: Pipe networks can limitlessly take fluids from/to such pulleys",
 
 	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+	"create.ponder.hose_pulley_level.text_1": "UNLOCALIZED: While fully retracted, the Hose Pulley cannot operate",
+	"create.ponder.hose_pulley_level.text_2": "UNLOCALIZED: Draining runs from top to bottom",
+	"create.ponder.hose_pulley_level.text_3": "UNLOCALIZED: The surface level will end up just below where the hose ends",
+	"create.ponder.hose_pulley_level.text_4": "UNLOCALIZED: Filling runs from bottom to top",
+	"create.ponder.hose_pulley_level.text_5": "UNLOCALIZED: The filled pool will not grow beyond the layer above the hose end",
 
 	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
+	"create.ponder.item_drain.text_1": "UNLOCALIZED: Item Drains can extract fluids from items",
+	"create.ponder.item_drain.text_2": "UNLOCALIZED: Right-click it to pour fluids from your held item into it",
+	"create.ponder.item_drain.text_3": "UNLOCALIZED: When items are inserted from the side...",
+	"create.ponder.item_drain.text_4": "UNLOCALIZED: ...they roll across, emptying out their contained fluid",
+	"create.ponder.item_drain.text_5": "UNLOCALIZED: Pipe Networks can now pull the fluid from the drains' internal buffer",
 
 	"create.ponder.large_cogwheel.header": "大きな歯車による回転力の伝達",
 	"create.ponder.large_cogwheel.text_1": "大きな歯車は、直角に接続できます",
@@ -1998,8 +1957,19 @@
 	"create.ponder.mechanical_press_compacting.text_4": "フィルタースロットは、2つのレシピが競合する場合に使えます",
 
 	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+	"create.ponder.mechanical_pump_flow.text_1": "UNLOCALIZED: Mechanical Pumps govern the flow of their attached pipe networks",
+	"create.ponder.mechanical_pump_flow.text_2": "UNLOCALIZED: When powered, their arrow indicates the direction of flow",
+	"create.ponder.mechanical_pump_flow.text_3": "UNLOCALIZED: The network behind is now pulling fluids...",
+	"create.ponder.mechanical_pump_flow.text_4": "UNLOCALIZED: ...while the network in front is transferring it outward",
+	"create.ponder.mechanical_pump_flow.text_5": "UNLOCALIZED: Reversing the input rotation reverses the direction of flow",
+	"create.ponder.mechanical_pump_flow.text_6": "UNLOCALIZED: Use a Wrench to reverse the orientation of pumps manually",
 
 	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+	"create.ponder.mechanical_pump_speed.text_1": "UNLOCALIZED: Regardless of speed, Mechanical Pumps affect pipes connected up to 16 blocks away",
+	"create.ponder.mechanical_pump_speed.text_2": "UNLOCALIZED: Speeding up the input rotation changes the speed of flow propagation...",
+	"create.ponder.mechanical_pump_speed.text_3": "UNLOCALIZED: ...aswell as how quickly fluids are transferred",
+	"create.ponder.mechanical_pump_speed.text_4": "UNLOCALIZED: Pumps can combine their throughputs within shared pipe networks",
+	"create.ponder.mechanical_pump_speed.text_5": "UNLOCALIZED: Alternating their orientation can help align their flow directions",
 
 	"create.ponder.mechanical_saw_breaker.header": "メカニカルソーによる伐採",
 	"create.ponder.mechanical_saw_breaker.text_1": "メカニカルソーは回転力を供給すると、目の前の木を伐採できます",
@@ -2032,8 +2002,14 @@
 	"create.ponder.piston_pole.text_2": "後ろに付けたポールの長さによって、伸び縮みする長さが決まります",
 
 	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
-
-	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
+	"create.ponder.portable_fluid_interface.text_1": "UNLOCALIZED: Fluid Tanks on moving contraptions cannot be accessed by any pipes",
+	"create.ponder.portable_fluid_interface.text_2": "UNLOCALIZED: This component can interact with fluid tanks without the need to stop the contraption",
+	"create.ponder.portable_fluid_interface.text_3": "UNLOCALIZED: Place a second one with a gap of 1 or 2 blocks inbetween",
+	"create.ponder.portable_fluid_interface.text_4": "UNLOCALIZED: Whenever they pass by each other, they will engage in a connection",
+	"create.ponder.portable_fluid_interface.text_5": "UNLOCALIZED: While engaged, the stationary interface will represent ALL Tanks on the contraption",
+	"create.ponder.portable_fluid_interface.text_6": "UNLOCALIZED: Fluid can now be inserted...",
+	"create.ponder.portable_fluid_interface.text_7": "UNLOCALIZED: ...or extracted from the contraption",
+	"create.ponder.portable_fluid_interface.text_8": "UNLOCALIZED: After no contents have been exchanged for a while, the contraption will continue on its way",
 
 	"create.ponder.portable_storage_interface.header": "稼働中のからくりとの搬出入",
 	"create.ponder.portable_storage_interface.text_1": "稼働中のからくりに組み込まれた収納ブロックは、プレイヤーが開くことはできません",
@@ -2133,15 +2109,23 @@
 	"create.ponder.smart_chute.text_4": "レッドストーン信号で、スマートシュートを停止させることもできます",
 
 	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+	"create.ponder.smart_pipe.text_1": "UNLOCALIZED: Smart pipes can help control flows by fluid type",
+	"create.ponder.smart_pipe.text_2": "UNLOCALIZED: When placed directly at the source, they can specify the type of fluid to extract",
+	"create.ponder.smart_pipe.text_3": "UNLOCALIZED: Simply Right-Click their filter slot with any item containing the desired fluid",
+	"create.ponder.smart_pipe.text_4": "UNLOCALIZED: When placed further down a pipe network, smart pipes will only let matching fluids continue",
 
 	"create.ponder.speedometer.header": "速度メーターによる動力情報の監視",
 	"create.ponder.speedometer.text_1": "速度メーターは、接続された機械の現在の回転速度を表示します",
 	"create.ponder.speedometer.text_2": "エンジニアのゴーグルを装着していると、より詳細な情報を得られます",
 	"create.ponder.speedometer.text_3": "コンパレータは、速度メーターの測定値に応じたレッドストーン信号を出力します",
 
-	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
-
 	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
+	"create.ponder.spout_filling.text_1": "UNLOCALIZED: The Spout can fill fluid holding items provided beneath it",
+	"create.ponder.spout_filling.text_2": "UNLOCALIZED: The content of a Spout cannot be accessed manually",
+	"create.ponder.spout_filling.text_3": "UNLOCALIZED: Instead, Pipes can be used to supply it with fluids",
+	"create.ponder.spout_filling.text_4": "UNLOCALIZED: The Input items can be placed on a Depot under the Spout",
+	"create.ponder.spout_filling.text_5": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.spout_filling.text_6": "UNLOCALIZED: The Spout will hold and process them automatically",
 
 	"create.ponder.stabilized_bearings.header": "からくりの角度の固定",
 	"create.ponder.stabilized_bearings.text_1": "メカニカルベアリングが動いている構造物に組み込まれているとき　...",
@@ -2175,6 +2159,10 @@
 	"create.ponder.valve_handle.text_5": "バルブハンドルは、染色できます",
 
 	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
+	"create.ponder.valve_pipe.text_1": "UNLOCALIZED: Valve pipes help control fluids propagating through pipe networks",
+	"create.ponder.valve_pipe.text_2": "UNLOCALIZED: Their shaft input controls whether fluid is currently allowed through",
+	"create.ponder.valve_pipe.text_3": "UNLOCALIZED: Given Rotational Force in the opening direction, the valve will open up",
+	"create.ponder.valve_pipe.text_4": "UNLOCALIZED: It can be closed again by reversing the input rotation",
 
 	"create.ponder.water_wheel.header": "水車による回転力の生成",
 	"create.ponder.water_wheel.text_1": "水車は隣接する水流から回転力を生み出します",

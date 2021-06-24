@@ -258,11 +258,10 @@ public class PumpScenes {
 			.with(FluidPipeBlock.DOWN, false)
 			.with(FluidPipeBlock.UP, false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
-		scene.idle(20);
+		scene.idle(10);
 
 		scene.world.setBlock(east, pipeState, true);
 		scene.world.setBlock(west, pipeState, true);
-		scene.idle(5);
 
 		scene.world.setBlock(east.north(), pipeState.with(FluidPipeBlock.NORTH, false)
 			.with(FluidPipeBlock.EAST, false), false);
@@ -270,7 +269,6 @@ public class PumpScenes {
 			.with(FluidPipeBlock.EAST, false), false);
 		scene.world.showSection(util.select.position(east.north()), Direction.DOWN);
 		scene.world.showSection(util.select.position(east.south()), Direction.DOWN);
-		scene.idle(5);
 		Selection northPump = util.select.position(pumpPos.north());
 
 		scene.world.setBlock(west.north(), pipeState.with(FluidPipeBlock.NORTH, false)
@@ -279,14 +277,13 @@ public class PumpScenes {
 			.with(FluidPipeBlock.WEST, false), false);
 		scene.world.showSection(util.select.position(west.north()), Direction.DOWN);
 		scene.world.showSection(util.select.position(west.south()), Direction.DOWN);
-		scene.idle(10);
 
 		scene.world.restoreBlocks(southPump);
 		scene.world.modifyBlock(pumpPos.south(), s -> s.with(PumpBlock.FACING, Direction.EAST), false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.world.showSection(northPump, Direction.DOWN);
 		scene.world.modifyBlock(pumpPos.north(), s -> s.with(PumpBlock.FACING, Direction.EAST), false);
-		scene.idle(10);
+		scene.idle(4);
 
 		scene.world.setKineticSpeed(util.select.everywhere(), -16);
 		scene.world.setKineticSpeed(northPump, 16);

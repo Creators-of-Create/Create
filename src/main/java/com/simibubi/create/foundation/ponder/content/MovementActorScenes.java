@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -166,7 +167,7 @@ public class MovementActorScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
 
-		Class<PortableItemInterfaceTileEntity> psiClass = PortableItemInterfaceTileEntity.class;
+		Class<PortableStorageInterfaceTileEntity> psiClass = PortableStorageInterfaceTileEntity.class;
 		Selection psis = util.select.fromTo(1, 1, 3, 1, 3, 3);
 		scene.world.modifyTileNBT(psis, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
