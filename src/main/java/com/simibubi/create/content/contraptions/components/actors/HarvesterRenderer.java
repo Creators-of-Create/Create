@@ -36,7 +36,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
 		transform(te.getWorld(), blockState.get(HarvesterBlock.HORIZONTAL_FACING), superBuffer,
-				te.manuallyAnimatedSpeed);
+				te.getAnimatedSpeed());
 		superBuffer.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
